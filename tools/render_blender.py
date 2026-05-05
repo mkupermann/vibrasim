@@ -188,39 +188,89 @@ def add_box_outline(box_size):
 
 # ---------------------------------------------------------------------- vibrations
 
-def add_vibrations_instanced(positions, polarities, alive, vibration_radius, box_size):
-    """Vertex-instance a single low-poly sphere onto every alive vibration.
+def add_vibration_waves(positions, velocities, frequencies, polarities, alive, box_size):
+    """Render each vibration as a short wavy tube oriented along its velocity.
 
-    Splits even/odd polarity into two parent meshes so each gets its own colour.
-    Far cheaper than 4096 individual mesh objects.
+    Wave properties:
+    - oriented along the velocity direction
+    - amplitude direction: perpendicular to velocity, as close to world Z as possible
+    - wavelength inversely scales with log10(frequency) — faster vibrations look
+      tighter, slower vibrations look more stretched
+    - colour: blue (even polarity) or red (odd polarity), emissive
+
+    One Curve object per polarity, each with one POLY spline per vibration. The
+    curve's bevel_depth turns every spline into a tube in a single render pass.
     """
     bx, by, bz = box_size
+    diag = max(bx, by, bz)
+    wave_length = diag * 0.05         # one wave is 5% of the box across
+    wave_amplitude = diag * 0.012     # 1.2% of box for the amplitude
+    n_samples = 28                     # control points per wave
+    tube_radius = diag * 0.0008        # very thin tube
+    z_axis = np.array([0.0, 0.0, 1.0])
+
     for pol_value, color, name in [
-        (True, (0.29, 0.56, 0.89), "vibr_even"),
-        (False, (0.91, 0.30, 0.24), "vibr_odd"),
+        (True, (0.36, 0.65, 0.98), "vibr_even"),
+        (False, (0.96, 0.40, 0.32), "vibr_odd"),
     ]:
         mask = alive & (polarities == pol_value)
-        pts = positions[mask]
-        if len(pts) == 0:
+        if not mask.any():
             continue
 
-        # Build the instance sphere
-        bpy.ops.mesh.primitive_uv_sphere_add(radius=vibration_radius, segments=8, ring_count=4)
-        instance = bpy.context.object
-        instance.name = f"{name}_instance"
-        mat = make_emission_material(f"{name}_mat", color, strength=2.5)
-        instance.data.materials.append(mat)
+        curve_data = bpy.data.curves.new(f"{name}_curve", type="CURVE")
+        curve_data.dimensions = "3D"
+        curve_data.bevel_depth = tube_radius
+        curve_data.bevel_resolution = 1
 
-        # Build the points mesh
-        points_mesh = bpy.data.meshes.new(f"{name}_points")
-        points_mesh.from_pydata(pts.tolist(), [], [])
-        points_mesh.update()
-        points_obj = bpy.data.objects.new(f"{name}_points", points_mesh)
-        bpy.context.collection.objects.link(points_obj)
+        for idx in np.where(mask)[0]:
+            pos = positions[idx]
+            vel = velocities[idx]
+            freq = float(frequencies[idx])
 
-        # Parent the instance to the points mesh; instance at every vertex.
-        instance.parent = points_obj
-        points_obj.instance_type = "VERTS"
+            v_norm_len = float(np.linalg.norm(vel))
+            if v_norm_len < 1e-9:
+                continue
+            v_norm = vel / v_norm_len
+
+            # Amplitude direction: world-Z component perpendicular to velocity.
+            # If velocity is nearly parallel to Z, fall back to X-axis.
+            amp_dir = z_axis - float(np.dot(z_axis, v_norm)) * v_norm
+            amp_dir_len = float(np.linalg.norm(amp_dir))
+            if amp_dir_len < 0.05:
+                amp_dir = np.array([1.0, 0.0, 0.0])
+            else:
+                amp_dir = amp_dir / amp_dir_len
+
+            # Wavelength: shorter for higher frequency.
+            log_f = max(np.log10(freq), 1.0)  # log10(100)=2; log10(10000)=4
+            wavelength = wave_length / log_f
+
+            # Sample the wave centerline
+            ts = np.linspace(-wave_length / 2, wave_length / 2, n_samples)
+            spline = curve_data.splines.new("POLY")
+            spline.points.add(n_samples - 1)
+            for j, t in enumerate(ts):
+                amp = wave_amplitude * np.sin(2 * np.pi * t / wavelength)
+                p = pos + v_norm * t + amp_dir * amp
+                spline.points[j].co = (float(p[0]), float(p[1]), float(p[2]), 1.0)
+
+        obj = bpy.data.objects.new(f"{name}_obj", curve_data)
+        bpy.context.collection.objects.link(obj)
+        mat = make_emission_material(f"{name}_mat", color, strength=3.0)
+        obj.data.materials.append(mat)
+
+
+# Backward-compatibility alias kept for any external callers expecting the old name.
+def add_vibrations_instanced(positions, polarities, alive, vibration_radius, box_size):
+    """Legacy entry point — kept for backward compatibility but no longer used.
+
+    Real-world callers should use add_vibration_waves(), which produces wavelet
+    geometry instead of point-instanced spheres.
+    """
+    raise NotImplementedError(
+        "add_vibrations_instanced is deprecated; use add_vibration_waves with "
+        "velocity/frequency arrays for proper wave rendering."
+    )
 
 
 # ---------------------------------------------------------------------- nodes
@@ -276,6 +326,8 @@ def main():
     diag = max(bx, by, bz)
 
     s_pos = data["s_pos"]
+    s_vel = data["s_vel"]
+    s_freq = data["s_freq"]
     s_pol = data["s_pol"]
     s_alive = data["s_alive"]
     k_pos = data["k_pos"]
@@ -292,9 +344,8 @@ def main():
     setup_lights(box_size)
     add_box_outline(box_size)
 
-    # Vibrations radius = 0.8% of box diagonal — clearly visible at 1920×1080
-    vibration_radius = diag * 0.008
-    add_vibrations_instanced(s_pos, s_pol, s_alive, vibration_radius, box_size)
+    # Vibrations as wavy tubes oriented along their velocity vectors
+    add_vibration_waves(s_pos, s_vel, s_freq, s_pol, s_alive, box_size)
     add_node_spheres(k_pos, k_level, k_alive, box_size)
 
     # Render settings
