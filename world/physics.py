@@ -170,3 +170,12 @@ def decay_unstable_nodes(world, dt: float) -> int:
                 world.k_alive[idx] = True
             decayed += 1
     return decayed
+
+
+def tick(world, dt: float) -> None:
+    box = np.asarray(world.config.box_size, dtype=np.float64)
+    move_vibrations(world.s_pos, world.s_vel, world.s_alive, box, dt)
+    bind_vibrations_to_electrons(world)
+    bind_nodes_upward(world)
+    decay_unstable_nodes(world, dt)
+    world.t += dt

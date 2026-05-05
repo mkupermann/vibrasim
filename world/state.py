@@ -112,3 +112,23 @@ class World:
     def reset_tick_locks(self) -> None:
         self.s_locked_this_tick[:] = False
         self.k_locked_this_tick[:] = False
+
+    def compact(self) -> None:
+        """Pack alive vibrations into the front of the array. Node compaction is deferred."""
+        alive_idx = np.where(self.s_alive)[0]
+        n = len(alive_idx)
+        if n == 0:
+            self.s_pos[:] = 0
+            self.s_vel[:] = 0
+            self.s_freq[:] = 0
+            self.s_pol[:] = False
+            self.s_alive[:] = False
+            self.n_alive = 0
+            return
+        self.s_pos[:n] = self.s_pos[alive_idx]
+        self.s_vel[:n] = self.s_vel[alive_idx]
+        self.s_freq[:n] = self.s_freq[alive_idx]
+        self.s_pol[:n] = self.s_pol[alive_idx]
+        self.s_alive[:n] = True
+        self.s_alive[n:] = False
+        self.n_alive = n
