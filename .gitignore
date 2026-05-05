@@ -44,3 +44,6 @@ htmlcov/
 *.npz
 docs/logbook/*.png
 !docs/logbook/.gitkeep
+
+# Word lockfile artifacts
+~$*
