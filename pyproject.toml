@@ -1,18 +1,19 @@
 [project]
 name = "world"
-version = "0.1.0"
-description = "World of Vibrations — a simulated physical substrate built from vibrations alone."
+version = "0.2.0"
+description = "World of Vibrations — 3D physics simulator toward emergent brain-like structure (Phase 1 v2)."
 readme = "README.md"
 requires-python = ">=3.13"
 authors = [{ name = "Michael Kupermann", email = "michael@kupermann.com" }]
 dependencies = [
     "numpy >= 1.26",
     "numba >= 0.61",
-    "pygame >= 2.5",
+    "pyvista >= 0.45",
+    "optuna >= 4.0",
 ]
 
 [project.optional-dependencies]
-dev = ["pytest >= 8.0"]
+dev = ["pytest >= 8.0", "matplotlib >= 3.8"]
 
 [project.scripts]
 world = "world.run:main"

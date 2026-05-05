@@ -2,11 +2,11 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Migrate the existing 2D Phase 1 simulation to the 3D substrate of CONCEPT.md v2. Implement scale repulsion (§4.6) and ambient regeneration (§4.7). Replace the live Pygame renderer with a decoupled Open3D preview + headless Blender keyframe pipeline. Build the parameter sweep harness with Optuna backend. Add a frequency-histogram observation tool.
+**Goal:** Migrate the existing 2D Phase 1 simulation to the 3D substrate of CONCEPT.md v2. Implement scale repulsion (§4.6) and ambient regeneration (§4.7). Replace the live Pygame renderer with a decoupled PyVista preview + headless Blender keyframe pipeline. Build the parameter sweep harness with Optuna backend. Add a frequency-histogram observation tool.
 
-**Architecture:** Forward migration — 3D replaces 2D in `world/`. Three layers: headless physics writes snapshot NPZs; Open3D polls snapshots for live preview; Blender Cycles consumes snapshots offline for publication-grade keyframes. Calibration via parameter sweeps (grid/random + Optuna). Pygame is removed.
+**Architecture:** Forward migration — 3D replaces 2D in `world/`. Three layers: headless physics writes snapshot NPZs; PyVista polls snapshots for live preview; Blender Cycles consumes snapshots offline for publication-grade keyframes. Calibration via parameter sweeps (grid/random + Optuna). Pygame is removed.
 
-**Tech Stack:** Python 3.13+, NumPy 2.x, Numba 0.65+, Open3D 0.18+, Optuna 3.6+, pytest 9.x, headless Blender (Cycles) for keyframe rendering.
+**Tech Stack:** Python 3.13+, NumPy 2.x, Numba 0.65+, PyVista 0.18+, Optuna 3.6+, pytest 9.x, headless Blender (Cycles) for keyframe rendering.
 
 **Spec:** [`docs/superpowers/specs/2026-05-05-phase-1-v2-3d-and-risk-mitigation.md`](../specs/2026-05-05-phase-1-v2-3d-and-risk-mitigation.md). When this plan and the spec disagree, the spec wins.
 
@@ -16,7 +16,7 @@
 
 | Path | Status | What it holds |
 |---|---|---|
-| `pyproject.toml` | modify | drop pygame, add open3d, optuna |
+| `pyproject.toml` | modify | drop pygame, add pyvista, optuna |
 | `world/__init__.py` | unchanged | |
 | `world/__main__.py` | unchanged | |
 | `world/config.py` | rewrite | 3D box_size, lambda_gen, lambda_dec, repulsion_k, repulsion_cell_size, repulsion_threshold_ratio |
@@ -24,7 +24,7 @@
 | `world/spatial.py` | rewrite | 3D periodic-wrap grid, 27-cell neighbour iteration, 3D distance/midpoint |
 | `world/physics.py` | rewrite | 3D motion, 3D binding, decay+ambient regeneration, scale repulsion, tick composition |
 | `world/snapshot.py` | new | save/load NPZ + metadata |
-| `world/preview.py` | new | Open3D 3D viewer (replaces `world/render.py`) |
+| `world/preview.py` | new | PyVista 3D viewer (replaces `world/render.py`) |
 | `world/render.py` | delete | Pygame renderer is gone |
 | `world/run.py` | rewrite | snapshot-aware CLI, --preview, no Pygame window mode |
 | `tests/conftest.py` | modify | 3D fixtures |
@@ -63,7 +63,7 @@ authors = [{ name = "Michael Kupermann", email = "michael@kupermann.com" }]
 dependencies = [
     "numpy >= 1.26",
     "numba >= 0.61",
-    "open3d >= 0.18",
+    "pyvista >= 0.18",
     "optuna >= 3.6",
 ]
 
@@ -98,10 +98,10 @@ pip install -e ".[dev]"
 - [ ] **Step 3: Sanity import check**
 
 ```bash
-python -c "import open3d; import optuna; import numpy, numba; print('OK')"
+python -c "import pyvista; import optuna; import numpy, numba; print('OK')"
 ```
 
-Expected: `OK`. Note: open3d is large (~150 MB). First import may take a few seconds.
+Expected: `OK`. Note: pyvista is large (~150 MB). First import may take a few seconds.
 
 - [ ] **Step 4: Verify Blender available**
 
@@ -115,7 +115,7 @@ If Blender isn't installed: `brew install --cask blender` on macOS. Document the
 
 ```bash
 git add pyproject.toml
-git commit -m "build(deps): add open3d/optuna, drop pygame, bump to 0.2.0 for v2"
+git commit -m "build(deps): add pyvista/optuna, drop pygame, bump to 0.2.0 for v2"
 ```
 
 ---
@@ -1537,7 +1537,7 @@ git commit -m "feat(snapshot): NPZ save/load with config metadata, chronological
 
 ---
 
-## Task 10: CLI rewrite + Open3D preview scaffolding
+## Task 10: CLI rewrite + PyVista preview scaffolding
 
 **Files:** `world/run.py`, `world/preview.py` (new), `world/render.py` (delete)
 
@@ -1550,10 +1550,10 @@ git rm world/render.py
 - [ ] **Step 2: Write `world/preview.py`**
 
 ```python
-"""Open3D 3D live preview. Polls the world state at low frame rate. Read-only."""
+"""PyVista 3D live preview. Polls the world state at low frame rate. Read-only."""
 from __future__ import annotations
 import numpy as np
-import open3d as o3d
+import pyvista as o3d
 import threading
 
 
@@ -1564,7 +1564,7 @@ COLOR_ATOM = [1.0, 1.0, 1.0]
 
 
 class LivePreview:
-    """Non-blocking Open3D viewer that polls a World instance. Run in a thread."""
+    """Non-blocking PyVista viewer that polls a World instance. Run in a thread."""
 
     def __init__(self, world):
         self.world = world
@@ -1648,7 +1648,7 @@ def main(argv: list[str] | None = None) -> int:
     run.add_argument("--save", type=Path, default=None)
     run.add_argument("--seed", type=int, default=None)
     run.add_argument("--preview", action="store_true",
-                     help="open Open3D live preview alongside the simulation")
+                     help="open PyVista live preview alongside the simulation")
     args = parser.parse_args(argv)
 
     cfg = load_config(args.config)
@@ -1719,14 +1719,14 @@ Expected: 5 snapshot files created.
 python -m world run --duration 10 --preview
 ```
 
-Expected: Open3D window opens, simulation runs for 10 simulated seconds, window closes.
+Expected: PyVista window opens, simulation runs for 10 simulated seconds, window closes.
 
 - [ ] **Step 6: Commit**
 
 ```bash
 git add world/run.py world/preview.py
 git rm world/render.py 2>/dev/null || true
-git commit -m "feat(cli): snapshot-aware run, Open3D live preview, drop Pygame renderer"
+git commit -m "feat(cli): snapshot-aware run, PyVista live preview, drop Pygame renderer"
 ```
 
 ---
@@ -2263,7 +2263,7 @@ git push
 
 | Spec section | Covered by task |
 |---|---|
-| §3 architectural decisions | Tasks 0–10 (Pygame removed, Open3D added, snapshots central) |
+| §3 architectural decisions | Tasks 0–10 (Pygame removed, PyVista added, snapshots central) |
 | §4 substrate (3D, repulsion, ambient) | Tasks 1–8 |
 | §5 scale repulsion | Task 7 |
 | §6 ambient regeneration | Task 6 |

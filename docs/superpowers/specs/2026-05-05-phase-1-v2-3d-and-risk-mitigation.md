@@ -5,7 +5,7 @@
 **Source documents:** [`docs/CONCEPT.md`](../../CONCEPT.md) v2 (the conceptual paper this spec implements)
 **Supersedes:** Phase 1 v1 design at [`2026-05-05-world-of-vibrations-design.md`](2026-05-05-world-of-vibrations-design.md)
 
-**Scope:** Migrate the existing 2D Phase 1 implementation to the 3D substrate of CONCEPT.md v2 (§4.1), implement scale separation through repulsion (§4.6), implement ambient regeneration (§4.7), replace the live Pygame renderer with a decoupled Open3D preview + headless Blender Cycles keyframe pipeline (§7.1), build the parameter sweep harness with Optuna backend (§7.4), and add a frequency-histogram observation tool. Phases 2–8 are out of scope.
+**Scope:** Migrate the existing 2D Phase 1 implementation to the 3D substrate of CONCEPT.md v2 (§4.1), implement scale separation through repulsion (§4.6), implement ambient regeneration (§4.7), replace the live Pygame renderer with a decoupled PyVista preview + headless Blender Cycles keyframe pipeline (§7.1), build the parameter sweep harness with Optuna backend (§7.4), and add a frequency-histogram observation tool. Phases 2–8 are out of scope.
 
 ---
 
@@ -16,7 +16,7 @@ Bring the simulation to a state in which:
 1. The substrate is three-dimensional with periodic boundaries on all three axes.
 2. The four foundational laws of CONCEPT.md v2 §4 are all implemented (motion, binding, hierarchical formation, scale separation through repulsion).
 3. The §4.7 ambient regeneration mechanism is in place, maintaining steady-state vibration density.
-4. Physics is fully decoupled from rendering: headless tick + snapshot files; live preview via Open3D; high-quality keyframes via headless Blender Cycles.
+4. Physics is fully decoupled from rendering: headless tick + snapshot files; live preview via PyVista; high-quality keyframes via headless Blender Cycles.
 5. A calibration harness can sweep the parameter space programmatically, with both grid/random search and Optuna backends.
 6. A frequency-histogram observation tool reads any snapshot and produces per-level frequency distributions.
 
@@ -30,11 +30,11 @@ This satisfies CONCEPT.md v2 Phase 1 success criteria (§5 Phase 1, v2) — atom
 | Position arrays | `float64[N, 3]` everywhere | Cache-friendly, NumPy-natural, Numba-compatible |
 | Spatial hash | 3D periodic-wrap grid, 27 neighbour cells per query | Direct generalisation of v1's 2D grid |
 | Ambient regeneration | Per-tick Poisson generation of new vibrations + per-tick Poisson decay of unstable nodes back to free vibrations | Conservation-respecting (§4.7); two new parameters `lambda_gen`, `lambda_dec` |
-| Live preview | Open3D, ~10 fps polling, separate process or thread | Sanity-check long calibration runs without coupling to the tick loop |
+| Live preview | PyVista, ~10 fps polling, separate process or thread | Sanity-check long calibration runs without coupling to the tick loop |
 | Keyframe rendering | Headless Blender Cycles, scene constructed from snapshot NPZ | Publication-grade output, decoupled from physics |
 | Snapshot format | NPZ files, timestamped (`snapshot_t000123.5.npz`) | NumPy-native, zero-config, re-loadable for re-rendering |
 | Parameter sweep | Multi-process worker pool, JSON-line result log, optional Optuna integration | Simple now, smart later |
-| Pygame | Removed. The live preview is now Open3D; Pygame is no longer a dependency. | One renderer is enough. |
+| Pygame | Removed. The live preview is now PyVista; Pygame is no longer a dependency. | One renderer is enough. |
 
 ## 3. Project layout (changes from v1)
 
@@ -47,7 +47,7 @@ EQMOD/
 │   ├── spatial.py            # 3D periodic-wrap grid, 27-cell neighbour iteration, 3D distance/midpoint
 │   ├── config.py             # WorldConfig with 3D box_size, lambda_gen, lambda_dec, repulsion_k
 │   ├── snapshot.py           # NEW — write/read snapshot NPZ files
-│   ├── preview.py            # NEW — Open3D live preview (replaces Pygame render.py)
+│   ├── preview.py            # NEW — PyVista live preview (replaces Pygame render.py)
 │   └── run.py                # CLI: headless run with snapshot intervals, optional --preview flag
 ├── tools/                    # NEW directory — non-package Python scripts
 │   ├── render_blender.py     # NEW — Blender Cycles keyframe renderer (invoked via blender --python ...)
@@ -70,7 +70,7 @@ EQMOD/
     └── superpowers/specs/    # this spec lives here
 ```
 
-The `render.py` file (Pygame 2D renderer) is removed; the `world/preview.py` Open3D version takes its place. The `world/__main__.py` shim stays.
+The `render.py` file (Pygame 2D renderer) is removed; the `world/preview.py` PyVista version takes its place. The `world/__main__.py` shim stays.
 
 ## 4. Substrate changes (`world/state.py`, `world/spatial.py`)
 
@@ -225,7 +225,7 @@ def load_snapshot(path: Path) -> World: ...
 
 ## 8. Live preview (`world/preview.py`)
 
-### 8.1 Open3D viewer
+### 8.1 PyVista viewer
 
 A separate process polls a shared shared-memory or file-watcher reference to the latest snapshot. Renders:
 
@@ -433,7 +433,7 @@ python -m world run --headless --duration 3600 --snapshot-every 30 \
                    --snapshot-dir ./snapshots/calibration-001/ \
                    --config calibration_v1.toml
 
-# Headless + live Open3D preview alongside
+# Headless + live PyVista preview alongside
 python -m world run --headless --duration 3600 --snapshot-every 30 \
                    --snapshot-dir ./snapshots/calibration-001/ \
                    --preview
@@ -442,7 +442,7 @@ python -m world run --headless --duration 3600 --snapshot-every 30 \
 python -m world run --headless --duration 60 --save final.npz
 ```
 
-The `run` subcommand drops the old window mode (Pygame is gone). `--preview` opens Open3D in a side process.
+The `run` subcommand drops the old window mode (Pygame is gone). `--preview` opens PyVista in a side process.
 
 ## 14. Bootstrap
 
@@ -463,7 +463,7 @@ This spec is satisfied when:
 4. `tools/sweep.py --backend grid` runs at least one parameter sweep end-to-end and produces a JSON-line result log.
 5. `tools/histogram.py` reads any snapshot and produces both text and PNG output without errors.
 6. `tools/render_blender.py` produces at least one publication-quality image from a snapshot.
-7. The Open3D preview window opens and closes cleanly when invoked with `--preview` on a running simulation.
+7. The PyVista preview window opens and closes cleanly when invoked with `--preview` on a running simulation.
 8. CONCEPT.md v2 Phase 1 success criteria are demonstrably testable (atoms forming + spatial sorting + ambient stability) with at least one parameter setting.
 
 Calibrating the parameters to *meet* those Phase 1 success criteria is the next research phase, with the sweep harness and Blender pipeline as its tools — *that work is not part of this spec*.
@@ -473,7 +473,7 @@ Calibrating the parameters to *meet* those Phase 1 success criteria is the next 
 - Phases 2–8 of CONCEPT.md v2.
 - Multi-GPU or distributed simulation (single-machine only; GPU path is Phase 4+).
 - Cloud rendering (Blender pipeline runs locally).
-- A web-based preview (Open3D desktop window only).
+- A web-based preview (PyVista desktop window only).
 - Fancy materials in Blender (start with PBR spheres + glow; refined materials are a follow-up).
 - Time-series video rendering automation beyond a simple shell loop.
 - An interactive parameter-tuning UI (TOML edit + sweep is the calibration loop).
