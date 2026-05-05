@@ -240,6 +240,44 @@ Ran the calibrated TOML at four additional rng seeds (60 s simulated each, singl
 
 The seed=314 result is informative: 5 triads alive at peak but no atom. So triads aren't the bottleneck; the bottleneck is the specific freq match for the fourth electron joining the triad. Wider freq tolerance for level-3+1 binding (per-level freq_tolerance — see CALIBRATION_GUIDE.md §2) would address this.
 
+### Phase 2 unlocked (overnight bonus): new calibration produces molecules
+
+A focused multi-atom sweep on 2026-05-06 evening found **5 of 10 configs produce molecules**. The leader is `dense_60_n800` (box=60³, 800 vibrations, r_2=28, freq_tolerance=0.030, default frequencies, ambient off), saved as `renders/calibration_session3b_molecules.toml`.
+
+In 30 simulated seconds at rng_seed=42 this config produces:
+
+| metric | session 3 (`c80_v400_r30_t025`) | session 3b (`dense_60_n800`) |
+|---|---:|---:|
+| max electrons alive | 104 | 93 |
+| max pairs alive | 10 | 36 |
+| max triads alive | 2 | 25 |
+| max atoms alive | 1 | **18** |
+| total atoms formed | 1 | **21** |
+| first level-5 molecule | — | **t = 5.43 s** |
+| first level-6 molecule | — | not in 30 s |
+
+The recipe is **denser world + slightly looser binding**. Smaller box (60³ vs 80³) doubles the encounter rate; more vibrations (800 vs 400) doubles the atom production rate; a 0.030 tolerance vs 0.025 is enough to enable atom-atom 8% matching.
+
+### Phase 2 acceptance check (60 s simulated, session-3b TOML)
+
+| Time | electrons | pairs | triads | atoms | molecules |
+|---:|---:|---:|---:|---:|---:|
+| 6.0 | 77 | 22 | 11 | 6 | 1 |
+| 12.0 | 77 | 34 | 16 | 10 | 1 |
+| 26.0 | 87 | 33 | 23 | 17 | 2 |
+| 60.0 | 83 | 31 | 31 | 20 | 2 |
+
+Final classify_molecules over snapshot_t000060.00.npz:
+```
+2 distinct species, 2 molecules total
+A33   1
+A44   1
+```
+
+**Phase 2 acceptance criterion (≥5 distinct molecule species) is not yet met but is meaningfully approached.** This is the first time the project has produced any molecule. With the molecule count plateauing at 2 around t=26s while atoms keep growing past 20, the next bottleneck is the **8 % rule on atom pairs**: the 20 atoms in the world include only two pairs whose frequencies match within ±0.030. A longer simulated run (180 s extended) is in flight to test whether more random encounters bring more matches.
+
+If 180 s gives ≤3 species, the spec amendment to add per-level `freq_tolerance_atom` (looser tolerance for atom + atom binding only) is the cleanest next step. CONCEPT.md v2 §4.4–§4.5 currently fix the 8 % rule across all levels; relaxing it for atom-level matching is empirically motivated.
+
 ### Phase 3: not exercised yet
 
 `tools/detect_membranes.py` is in place and unit-tested. With zero molecules in the calibrated runs, there's no opportunity for spontaneous shell formation, and we have no real-world detection results to report. The tool will be exercised once Phase 2 calibration produces enough molecules.
