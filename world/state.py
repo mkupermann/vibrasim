@@ -114,7 +114,23 @@ class World:
         self.k_locked_this_tick[:] = False
 
     def compact(self) -> None:
-        """Pack alive vibrations into the front of the array. Node compaction is deferred."""
+        """Pack alive vibrations into the front of the array.
+
+        Refuses to compact when any nodes exist (`k_count > 0`) — vibration
+        compaction renames vibration indices, but `k_comp_indices` for level-1
+        nodes (electrons) holds the old indices and would be silently corrupted.
+
+        Node compaction is deferred to a future spec; until then, this method
+        is only safe to call before any electrons have formed (e.g. on a fresh
+        world for testing).
+        """
+        if self.k_count > 0:
+            raise RuntimeError(
+                "compact() refused: vibration compaction would corrupt "
+                f"k_comp_indices for the {self.k_count} existing nodes. "
+                "Compaction must be performed before any electrons form, or "
+                "extended to remap composition indices (deferred)."
+            )
         alive_idx = np.where(self.s_alive)[0]
         n = len(alive_idx)
         if n == 0:
