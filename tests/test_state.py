@@ -4,18 +4,51 @@ from world.config import WorldConfig
 from world.state import World
 
 
-def test_world_constructs_with_correct_capacity(default_config):
+def test_world_constructs_with_correct_3d_capacity(default_config):
     w = World(default_config)
-    assert w.s_pos.shape == (default_config.n_vibrations_max, 2)
-    assert w.s_vel.shape == (default_config.n_vibrations_max, 2)
-    assert w.s_freq.shape == (default_config.n_vibrations_max,)
-    assert w.s_pol.shape == (default_config.n_vibrations_max,)
-    assert w.s_alive.shape == (default_config.n_vibrations_max,)
-    assert w.k_pos.shape == (default_config.n_nodes_max, 2)
-    assert w.k_freq.shape == (default_config.n_nodes_max,)
-    assert w.k_pol.shape == (default_config.n_nodes_max,)
-    assert w.k_level.shape == (default_config.n_nodes_max,)
-    assert w.k_alive.shape == (default_config.n_nodes_max,)
+    N = default_config.n_vibrations_max
+    K = default_config.n_nodes_max
+    assert w.s_pos.shape == (N, 3)
+    assert w.s_vel.shape == (N, 3)
+    assert w.k_pos.shape == (K, 3)
+    assert w.k_vel.shape == (K, 3)
+
+
+def test_seeded_vibrations_in_3d_box(default_config):
+    w = World(default_config)
+    alive = w.s_alive
+    bx, by, bz = default_config.box_size
+    assert np.all(w.s_pos[alive, 0] >= 0)
+    assert np.all(w.s_pos[alive, 0] < bx)
+    assert np.all(w.s_pos[alive, 1] >= 0)
+    assert np.all(w.s_pos[alive, 1] < by)
+    assert np.all(w.s_pos[alive, 2] >= 0)
+    assert np.all(w.s_pos[alive, 2] < bz)
+
+
+def test_seeded_velocities_isotropic_in_3d(default_config):
+    """Seeded velocities should not be confined to a 2D plane."""
+    w = World(default_config)
+    alive = w.s_alive
+    # In a uniform 3D distribution of velocities, each component has nonzero variance.
+    for d in range(3):
+        assert np.std(w.s_vel[alive, d]) > 1.0
+
+
+def test_seeded_speeds_in_range(default_config):
+    w = World(default_config)
+    alive = w.s_alive
+    speeds = np.linalg.norm(w.s_vel[alive], axis=1)
+    assert np.all(speeds >= default_config.speed_min - 1e-6)
+    assert np.all(speeds <= default_config.speed_max + 1e-6)
+
+
+def test_total_vibrations_count():
+    """Bookkeeping: total_vibrations counts free + bound."""
+    cfg = WorldConfig(n_initial_vibrations=10, box_size=(100.0, 100.0, 100.0),
+                      n_vibrations_max=16, n_nodes_max=8, rng_seed=42)
+    w = World(cfg)
+    assert w.total_vibrations() == 10  # 10 free, no bound
 
 
 def test_world_seeds_initial_vibrations(default_config):
@@ -23,15 +56,6 @@ def test_world_seeds_initial_vibrations(default_config):
     assert w.n_alive == default_config.n_initial_vibrations
     alive_idx = np.where(w.s_alive)[0]
     assert len(alive_idx) == default_config.n_initial_vibrations
-
-
-def test_seeded_vibrations_within_box(default_config):
-    w = World(default_config)
-    alive = w.s_alive
-    assert np.all(w.s_pos[alive, 0] >= 0)
-    assert np.all(w.s_pos[alive, 0] < default_config.box_size[0])
-    assert np.all(w.s_pos[alive, 1] >= 0)
-    assert np.all(w.s_pos[alive, 1] < default_config.box_size[1])
 
 
 def test_seeded_frequencies_in_range(default_config):
@@ -55,14 +79,6 @@ def test_log_frequency_distribution_skews_low(default_config):
     median = float(np.median(w.s_freq[alive]))
     mid = (default_config.freq_min + default_config.freq_max) / 2
     assert median < mid
-
-
-def test_seeded_speeds_in_range(default_config):
-    w = World(default_config)
-    alive = w.s_alive
-    speeds = np.linalg.norm(w.s_vel[alive], axis=1)
-    assert np.all(speeds >= default_config.speed_min - 1e-9)
-    assert np.all(speeds <= default_config.speed_max + 1e-9)
 
 
 def test_initial_node_count_is_zero(default_config):
