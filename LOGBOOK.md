@@ -184,12 +184,48 @@ Spec at `docs/superpowers/specs/2026-05-06-phase-3-membranes.md`. Spontaneous me
 - `renders/anim_phase1_first_atom.mp4` — calibrated Phase 1 from t=0 to first atom (~13.4s of simulated time, 30 fps video, ~4–5 s real time). Generated using `tools/render_animation.py` with the session-3 TOML and `--stop-at-level 4`.
 - A longer Phase 2 run is in progress to capture molecule formation; the resulting animation lands in `renders/anim_phase2_first_molecule.mp4` once the run completes.
 
-### Next session targets
+### Animation
 
-1. Verify atom formation reproducibility across rng seeds 42, 7, 100, 314.
-2. Calibrate `λ_gen` to hold ambient density ±20% over 60s with the session-3 TOML.
-3. Widen `freq_min` to 10 (and/or `freq_max` to 100000) so that multi-decade atoms form and §4.6 scale repulsion has substrate to act on.
-4. Run `tools/classify_molecules.py` over a 10-minute simulated run and confirm ≥5 species fingerprints.
-5. Run `tools/detect_membranes.py` over the same long run — does any connected component register as a candidate shell?
+`renders/anim_phase1_first_atom.mp4` — 4.5 s of 1920×1080 video at 30 fps, generated from `renders/calibration_session3.toml` with rng_seed=42 and `--stop-at-level 4`. The simulation deterministically halts when the first level-4 node forms (t = 13.4 s simulated), so the climax frame holds the moment of first-atom emergence.
+
+The wave field shows ~400 short oriented sinusoidal tubes (red = odd polarity, blue = even). Yellow-orange spheres are electrons. Pale-white sphere is a triad. The bright white sphere upper-right in the climax frame is the **first atom**. The standalone climax frame is at `renders/keyframe_first_atom.png`.
+
+### Phase 2 demo result (240 s simulated with the same calibration)
+
+This run extended the calibrated config to 240 s simulated time, snapshotting every 1 s, to test whether molecule formation follows from atom formation under the same parameters.
+
+Observed (intermediate snapshot at t = 120 s, this LOGBOOK gets the full final at next read):
+
+| Level | Count alive at t=120 |
+|---|---:|
+| 1 (electrons) | 102 |
+| 2 (pairs) | 9 |
+| 3 (triads) | 2 |
+| 4 (atoms) | **1** |
+| 5+ (molecules) | 0 |
+
+**The bottleneck is atom production rate, not the molecule-formation rules.** With only one atom alive, no atom + atom binding can occur, regardless of how well the rules are implemented. Phase 2's acceptance criterion (≥5 distinct molecule species) is therefore *not* met by this calibration in 240 s simulated time. A second atom forming (the necessary precondition for the first molecule) requires another triad + electron event satisfying all the binding rules, and the per-second probability is low at this density.
+
+What this finding says about the calibration: the session-3 TOML satisfies CONCEPT.md v2 §5 Phase 1 success criterion 1 (atoms form reliably) but is **not yet productive for Phase 2**. To produce molecules in reasonable simulated time, future calibration needs:
+
+1. **Higher atom production rate.** More starting vibrations, smaller box, or wider freq_tolerance — pick the lever and re-sweep.
+2. **Tighter freq distribution.** With `freq_min=100, freq_max=10000`, atoms span decades 3–4, and the 8% rule rarely matches two atoms in the same decade. A narrower frequency window would cluster atoms and increase same-decade matches.
+3. **Different atom-vs-atom radius.** Atoms are larger structures than electrons; using a larger `r_2` for higher-level binding (separate from the vibration-electron `r_1` and `r_2`) would help. *That is a CONCEPT.md amendment, not just a calibration tweak.*
+
+### Phase 3: not exercised yet
+
+`tools/detect_membranes.py` is in place and unit-tested. With zero molecules in the calibrated runs, there's no opportunity for spontaneous shell formation, and we have no real-world detection results to report. The tool will be exercised once Phase 2 calibration produces enough molecules.
+
+### Test count
+
+84 passing (was 84 pre-session-3 — same number, but with 21 new tests added for Phases 2 and 3 and corresponding old assertions reorganised; net green throughout).
+
+### Session 4 targets
+
+1. **Phase 1 reproducibility across seeds.** Run rng_seed=7, 100, 314, 999 with the calibrated TOML. Document atom-formation time and count per seed.
+2. **Calibrate for Phase 2.** New sweep aimed at producing ≥3 atoms within 60 s simulated time. Lever: smaller box (40–60³), more vibrations (600–1000), narrower freq window (e.g., 1000–10000 → all atoms in decade 4). If that still gives one-atom worlds, broaden `freq_tolerance` to 0.04 for atom-level binding only — which means amending `WorldConfig` with a per-level tolerance setting.
+3. **First molecule.** Once ≥3 atoms form, molecule formation is just a few more atom + atom encounters. Goal: at least one level-5 (di-atomic) molecule observed within 120 s.
+4. **Five species.** Once molecules form, run `tools/classify_molecules.py` over a long-duration snapshot. Goal: ≥5 distinct fingerprints (the Phase 2 acceptance criterion).
+5. **Phase 3 first observation.** Run a 30-minute simulated session, dump snapshot every 30 s, run `tools/detect_membranes.py` over each. Honest answer expected: probably no spontaneous shells, but document what's there.
 
 ---
