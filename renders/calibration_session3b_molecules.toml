@@ -1,0 +1,34 @@
+# Session 3b calibration — Phase 2 unlocking config
+#
+# Discovered in the overnight multi-atom sweep on 2026-05-06. With rng_seed=42
+# in 30 s simulated time:
+#   - 93 electrons max alive
+#   - 36 pairs max alive
+#   - 25 triads max alive
+#   - 18 atoms max alive (21 total formed) — first atom at t = 0.6 s
+#   - level-5 molecule formed by t = 5.43 s
+#
+# Compared to renders/calibration_session3.toml (1 atom in 240 s), this
+# config is dramatically more productive: same physics, denser world,
+# more vibrations, and slightly looser binding rules at the same r_1/r_2
+# ratio.
+#
+# Use this config to test Phase 2's "≥ 5 distinct molecule species"
+# acceptance criterion in long-duration runs.
+
+box_size = [60.0, 60.0, 60.0]
+n_initial_vibrations = 800
+n_vibrations_max = 2048
+n_nodes_max = 2048
+
+r_1 = 5.0
+r_2 = 28.0
+freq_tolerance = 0.030
+
+pair_decay_time = 60.0
+triad_decay_time = 600.0
+
+lambda_gen = 0.0
+lambda_dec = 0.0
+
+# Default speeds (10–50). Default frequency window (100–10000).
