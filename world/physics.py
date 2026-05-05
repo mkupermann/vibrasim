@@ -248,3 +248,68 @@ def ambient_regeneration(world, dt: float) -> tuple[int, int]:
                 n_decayed += 1
 
     return n_new, n_decayed
+
+
+def apply_scale_repulsion(world, dt: float) -> None:
+    """Accumulate repulsive force into k_vel for nodes whose freq_ratio exceeds threshold."""
+    cfg = world.config
+    if cfg.repulsion_k == 0.0 or world.k_count == 0:
+        return
+    box = np.asarray(cfg.box_size, dtype=np.float64)
+    cell = cfg.repulsion_cell_size
+    threshold = cfg.repulsion_threshold_ratio
+    grid = build_grid(world.k_pos[:world.k_count], world.k_alive[:world.k_count], box, cell)
+
+    for i in range(world.k_count):
+        if not world.k_alive[i]:
+            continue
+        f_i = world.k_freq[i]
+        nbrs = neighbors_of(grid, world.k_pos[i], box, cell, exclude_self=True, query_index=i)
+        for j in nbrs:
+            if not world.k_alive[j]:
+                continue
+            f_j = world.k_freq[j]
+            ratio = max(f_i, f_j) / min(f_i, f_j)
+            if ratio <= threshold:
+                continue
+            # Direction vector from j to i (minimum-image periodic)
+            dx = world.k_pos[i, 0] - world.k_pos[j, 0]
+            dy = world.k_pos[i, 1] - world.k_pos[j, 1]
+            dz = world.k_pos[i, 2] - world.k_pos[j, 2]
+            # Apply periodic minimum-image wrap
+            if dx > box[0] * 0.5:
+                dx -= box[0]
+            elif dx < -box[0] * 0.5:
+                dx += box[0]
+            if dy > box[1] * 0.5:
+                dy -= box[1]
+            elif dy < -box[1] * 0.5:
+                dy += box[1]
+            if dz > box[2] * 0.5:
+                dz -= box[2]
+            elif dz < -box[2] * 0.5:
+                dz += box[2]
+            r2 = dx * dx + dy * dy + dz * dz
+            if r2 < 1e-9:
+                continue
+            r = math.sqrt(r2)
+            # F_magnitude = k * (ratio - threshold) / r²
+            F_mag = cfg.repulsion_k * (ratio - threshold) / r2
+            # Mass proportional to k_level (heavier nodes accelerate less)
+            mass_i = float(world.k_level[i])
+            ax = F_mag * dx / r / mass_i
+            ay = F_mag * dy / r / mass_i
+            az = F_mag * dz / r / mass_i
+            world.k_vel[i, 0] += ax * dt
+            world.k_vel[i, 1] += ay * dt
+            world.k_vel[i, 2] += az * dt
+
+
+def move_nodes(world, dt: float) -> None:
+    """Apply k_vel to k_pos with periodic wrap. Atoms move slowly because of mass."""
+    box = np.asarray(world.config.box_size, dtype=np.float64)
+    for i in range(world.k_count):
+        if not world.k_alive[i]:
+            continue
+        for d in range(3):
+            world.k_pos[i, d] = (world.k_pos[i, d] + world.k_vel[i, d] * dt) % box[d]
