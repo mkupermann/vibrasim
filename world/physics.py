@@ -145,3 +145,28 @@ def bind_nodes_upward(world) -> int:
             break
 
     return formed
+
+
+def decay_unstable_nodes(world, dt: float) -> int:
+    """Probabilistic exponential decay of pairs (level 2) and triads (level 3)."""
+    cfg = world.config
+    decay_time = {2: cfg.pair_decay_time, 3: cfg.triad_decay_time}
+    rng = world.rng
+    decayed = 0
+    for i in range(world.k_count):
+        if not world.k_alive[i]:
+            continue
+        level = int(world.k_level[i])
+        if level not in (2, 3):
+            continue
+        tau = decay_time[level]
+        p = dt / tau
+        if rng.random() < p:
+            world.k_alive[i] = False
+            start = world.k_comp_offset[i]
+            end = world.k_comp_offset[i + 1]
+            for j in range(start, end):
+                idx = int(world.k_comp_indices[j])
+                world.k_alive[idx] = True
+            decayed += 1
+    return decayed
