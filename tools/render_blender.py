@@ -24,13 +24,35 @@ else:
     argv = []
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--snapshot", type=Path, required=True)
-parser.add_argument("--output", type=Path, required=True)
+parser.add_argument("--snapshot", type=Path, default=None,
+                    help="path to a single snapshot NPZ (use this OR --snapshot-dir)")
+parser.add_argument("--output", type=Path, default=None,
+                    help="output PNG path (single-snapshot mode)")
+parser.add_argument("--snapshot-dir", type=Path, default=None,
+                    help="directory of snapshot NPZs to render in chronological order")
+parser.add_argument("--output-dir", type=Path, default=None,
+                    help="directory to write numbered frame_NNNNN.png files (batch mode)")
+parser.add_argument("--no-nodes", action="store_true",
+                    help="skip rendering nodes (electrons/pairs/atoms); show only the wave field")
 parser.add_argument("--quality", choices=["low", "medium", "high", "paper"], default="medium")
 parser.add_argument("--engine", choices=["cycles", "eevee"], default="cycles")
 parser.add_argument("--resolution", type=int, default=1920,
                     help="output width in px; height is 9/16 of width")
 args = parser.parse_args(argv)
+
+# Validate mode
+if args.snapshot_dir is not None:
+    if args.output_dir is None:
+        print("--snapshot-dir requires --output-dir", file=sys.stderr)
+        sys.exit(2)
+elif args.snapshot is not None:
+    if args.output is None:
+        print("--snapshot requires --output", file=sys.stderr)
+        sys.exit(2)
+else:
+    print("Must supply either --snapshot+--output or --snapshot-dir+--output-dir",
+          file=sys.stderr)
+    sys.exit(2)
 
 # Lazy imports — these only work inside Blender
 try:
@@ -318,12 +340,32 @@ def add_node_spheres(positions, levels, alive, box_size):
 
 # ---------------------------------------------------------------------- main
 
-def main():
-    data = np.load(args.snapshot, allow_pickle=True)
+def configure_render_settings():
+    """Apply engine, samples, resolution, and output format. Called once per Blender process."""
+    scene = bpy.context.scene
+    if args.engine == "cycles":
+        scene.render.engine = "CYCLES"
+        scene.cycles.samples = SAMPLES
+    else:
+        for engine_name in ("BLENDER_EEVEE_NEXT", "BLENDER_EEVEE"):
+            try:
+                scene.render.engine = engine_name
+                break
+            except TypeError:
+                continue
+        if hasattr(scene, "eevee"):
+            scene.eevee.taa_render_samples = SAMPLES
+    scene.render.image_settings.file_format = "PNG"
+    scene.render.resolution_x = args.resolution
+    scene.render.resolution_y = int(args.resolution * 9 // 16)
+    scene.render.film_transparent = False
+
+
+def render_one(snapshot_path, output_path, hide_nodes):
+    """Build the scene from one snapshot and render to one PNG."""
+    data = np.load(snapshot_path, allow_pickle=True)
     cfg_dict = eval(str(data["config_json"][0]))
     box_size = tuple(cfg_dict["box_size"])
-    bx, by, bz = box_size
-    diag = max(bx, by, bz)
 
     s_pos = data["s_pos"]
     s_vel = data["s_vel"]
@@ -336,7 +378,6 @@ def main():
 
     n_vibrations = int(s_alive.sum())
     n_nodes_total = int(k_alive.sum())
-    print(f"Snapshot: {n_vibrations} vibrations, {n_nodes_total} nodes; box {box_size}")
 
     clear_scene()
     setup_world_background()
@@ -344,34 +385,32 @@ def main():
     setup_lights(box_size)
     add_box_outline(box_size)
 
-    # Vibrations as wavy tubes oriented along their velocity vectors
     add_vibration_waves(s_pos, s_vel, s_freq, s_pol, s_alive, box_size)
-    add_node_spheres(k_pos, k_level, k_alive, box_size)
+    if not hide_nodes:
+        add_node_spheres(k_pos, k_level, k_alive, box_size)
 
-    # Render settings
-    scene = bpy.context.scene
-    if args.engine == "cycles":
-        scene.render.engine = "CYCLES"
-        scene.cycles.samples = SAMPLES
-    else:
-        # Blender 5.x reports either BLENDER_EEVEE or BLENDER_EEVEE_NEXT depending on build
-        for engine_name in ("BLENDER_EEVEE_NEXT", "BLENDER_EEVEE"):
-            try:
-                scene.render.engine = engine_name
-                break
-            except TypeError:
-                continue
-        if hasattr(scene, "eevee"):
-            scene.eevee.taa_render_samples = SAMPLES
-
-    scene.render.image_settings.file_format = "PNG"
-    scene.render.filepath = str(args.output)
-    scene.render.resolution_x = args.resolution
-    scene.render.resolution_y = int(args.resolution * 9 // 16)
-    scene.render.film_transparent = False
-
+    bpy.context.scene.render.filepath = str(output_path)
     bpy.ops.render.render(write_still=True)
-    print(f"Wrote {args.output}")
+    print(f"frame: t={float(data['t'][0]):.3f}s  vibr={n_vibrations}  nodes={n_nodes_total}  -> {output_path.name}")
+
+
+def main():
+    configure_render_settings()
+
+    if args.snapshot_dir is not None:
+        # Batch mode: render every snapshot in chronological order
+        snapshots = sorted(args.snapshot_dir.glob("snapshot_*.npz"))
+        if not snapshots:
+            print(f"No snapshots in {args.snapshot_dir}", file=sys.stderr)
+            sys.exit(1)
+        args.output_dir.mkdir(parents=True, exist_ok=True)
+        print(f"Batch render: {len(snapshots)} frames")
+        for i, snap in enumerate(snapshots):
+            output = args.output_dir / f"frame_{i:05d}.png"
+            render_one(snap, output, hide_nodes=args.no_nodes)
+        print(f"Wrote {len(snapshots)} frames to {args.output_dir}")
+    else:
+        render_one(args.snapshot, args.output, hide_nodes=args.no_nodes)
 
 
 if __name__ == "__main__":
