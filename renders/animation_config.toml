@@ -1,0 +1,24 @@
+# Animation-friendly config: a short pre-emergence buildup before the first
+# electron forms. Smaller box for higher density (binding likelier per second).
+# Ambient regeneration disabled — keeps the vibration count constant so the
+# field looks consistent across frames.
+
+box_size = [200.0, 200.0, 200.0]
+n_initial_vibrations = 600
+n_vibrations_max = 800
+n_nodes_max = 64
+
+# No ambient generation/decay during the buildup; we want the field to be
+# visually static and reproducible.
+lambda_gen = 0.0
+lambda_dec = 0.0
+
+# Standard binding params from the source spec.
+r_1 = 5.0
+r_2 = 10.0
+freq_ratio = 0.08
+freq_tolerance = 0.005
+
+# Slow down velocities to make the wave segments look less "smudged" between frames.
+speed_min = 5.0
+speed_max = 25.0
