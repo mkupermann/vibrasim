@@ -184,11 +184,16 @@ Spec at `docs/superpowers/specs/2026-05-06-phase-3-membranes.md`. Spontaneous me
 - `renders/anim_phase1_first_atom.mp4` — calibrated Phase 1 from t=0 to first atom (~13.4s of simulated time, 30 fps video, ~4–5 s real time). Generated using `tools/render_animation.py` with the session-3 TOML and `--stop-at-level 4`.
 - A longer Phase 2 run is in progress to capture molecule formation; the resulting animation lands in `renders/anim_phase2_first_molecule.mp4` once the run completes.
 
-### Animation
+### Animations
 
-`renders/anim_phase1_first_atom.mp4` — 4.5 s of 1920×1080 video at 30 fps, generated from `renders/calibration_session3.toml` with rng_seed=42 and `--stop-at-level 4`. The simulation deterministically halts when the first level-4 node forms (t = 13.4 s simulated), so the climax frame holds the moment of first-atom emergence.
+Both rendered from the same calibrated simulation (rng_seed=42, 30 s max-duration, `--stop-at-level 4`, simulation halts at the first level-4 node).
 
-The wave field shows ~400 short oriented sinusoidal tubes (red = odd polarity, blue = even). Yellow-orange spheres are electrons. Pale-white sphere is a triad. The bright white sphere upper-right in the climax frame is the **first atom**. The standalone climax frame is at `renders/keyframe_first_atom.png`.
+- `renders/anim_phase1_first_atom.mp4` — Eevee low-quality, 8.8 MB, fast iteration version
+- `renders/anim_phase1_first_atom_hq.mp4` — Cycles medium-quality (256 samples), 10.6 MB, cleaner output for review
+
+Both are 1920×1080, 30 fps, 4.5 seconds, 135 frames covering t = 0 to t = 13.4 simulated seconds.
+
+The wave field shows ~400 short oriented sinusoidal tubes (red = odd polarity, blue = even). Yellow-orange spheres are electrons. Pale-white spheres are triads. The bright white sphere upper-right in the climax frame is the **first atom**. The standalone climax frame is at `renders/keyframe_first_atom.png`.
 
 ### Phase 2 demo result (full 240 s simulated)
 
