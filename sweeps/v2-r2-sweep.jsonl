@@ -1,0 +1,3 @@
+{"params": {"r_2": 10.0}, "objective": null, "wall_s": 7.624957799911499, "final_counts": {"vibr": 4096, "e_": 2, "pair": 0, "triad": 0, "atom": 0}}
+{"params": {"r_2": 20.0}, "objective": null, "wall_s": 7.814439296722412, "final_counts": {"vibr": 4096, "e_": 2, "pair": 0, "triad": 0, "atom": 0}}
+{"params": {"r_2": 30.0}, "objective": null, "wall_s": 7.74861216545105, "final_counts": {"vibr": 4096, "e_": 2, "pair": 0, "triad": 0, "atom": 0}}
