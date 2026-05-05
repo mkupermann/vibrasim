@@ -28,5 +28,7 @@ triad_decay_time = 600.0
 lambda_gen = 0.0
 lambda_dec = 0.0
 
-speed_min = 5.0
-speed_max = 25.0
+# Default speeds match the calibration sweep (10–50 units/s). Slower speeds
+# also work but delay atom formation — keep these at default for the
+# documented "first atom at t=13.4s" reproducibility claim.
+# (Overriding speed_min/speed_max changes the dynamics significantly.)
