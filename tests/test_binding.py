@@ -90,3 +90,105 @@ def test_polarity_randomization_at_electron_level(default_config):
         assert 0.2 < even_share < 0.8
     else:
         pytest.skip(f"Not enough electrons formed for distribution check ({w.k_count})")
+
+
+from world.physics import bind_nodes_upward
+
+
+def _make_electron(w: World, idx: int, pos, freq, pol):
+    w.k_pos[idx] = pos
+    w.k_freq[idx] = freq
+    w.k_pol[idx] = pol
+    w.k_level[idx] = 1
+    w.k_alive[idx] = True
+    w.k_birth[idx] = w.t
+    if idx >= w.k_count:
+        w.k_count = idx + 1
+        w.k_comp_offset[idx + 1] = w.k_comp_offset[idx]
+
+
+def test_pair_forms(empty_world):
+    w = empty_world
+    _make_electron(w, 0, [10.0, 10.0], 2000.0, True)
+    _make_electron(w, 1, [13.0, 10.0], 2160.0, False)  # 8% diff
+    bind_nodes_upward(w)
+    pairs = [i for i in range(w.k_count) if w.k_alive[i] and w.k_level[i] == 2]
+    assert len(pairs) == 1
+    p = pairs[0]
+    assert w.k_freq[p] == pytest.approx(2000.0 + 2160.0)
+    assert not w.k_alive[0]
+    assert not w.k_alive[1]
+    start = w.k_comp_offset[p]
+    end = w.k_comp_offset[p + 1]
+    assert end - start == 2
+    assert sorted(w.k_comp_indices[start:end].tolist()) == [0, 1]
+    assert w.k_comp_kind[p] == 1
+
+
+def _make_node(w: World, idx: int, pos, freq, pol, level, constituents, kind):
+    w.k_pos[idx] = pos
+    w.k_freq[idx] = freq
+    w.k_pol[idx] = pol
+    w.k_level[idx] = level
+    w.k_alive[idx] = True
+    w.k_birth[idx] = w.t
+    n_comp = len(constituents)
+    start = w.k_comp_used
+    w.k_comp_indices[start:start + n_comp] = constituents
+    w.k_comp_offset[idx] = start
+    w.k_comp_offset[idx + 1] = start + n_comp
+    w.k_comp_used = start + n_comp
+    w.k_comp_kind[idx] = kind
+    if idx >= w.k_count:
+        w.k_count = idx + 1
+
+
+def test_triad_forms_pair_plus_electron(empty_world):
+    w = empty_world
+    _make_electron(w, 0, [10.0, 10.0], 2000.0, True)
+    _make_electron(w, 1, [10.0, 10.0], 2000.0, False)
+    _make_node(w, 2, [11.0, 10.0], 4160.0, True, level=2,
+               constituents=np.array([0, 1], dtype=np.int32), kind=1)
+    w.k_alive[0] = False
+    w.k_alive[1] = False
+    _make_electron(w, 3, [13.0, 10.0], 4493.0, False)  # 8% above 4160
+    bind_nodes_upward(w)
+    triads = [i for i in range(w.k_count) if w.k_alive[i] and w.k_level[i] == 3]
+    assert len(triads) == 1
+
+
+def test_atom_forms_triad_plus_electron(empty_world):
+    w = empty_world
+    _make_electron(w, 0, [10.0, 10.0], 2000.0, True)
+    _make_electron(w, 1, [10.0, 10.0], 2160.0, False)
+    w.k_alive[0] = False
+    w.k_alive[1] = False
+    _make_node(w, 2, [10.0, 10.0], 4160.0, True, level=2,
+               constituents=np.array([0, 1], dtype=np.int32), kind=1)
+    w.k_alive[2] = False
+    _make_electron(w, 3, [10.0, 10.0], 4493.0, False)
+    w.k_alive[3] = False
+    _make_node(w, 4, [11.0, 10.0], 8653.0, False, level=3,
+               constituents=np.array([2, 3], dtype=np.int32), kind=1)
+    _make_electron(w, 5, [12.0, 10.0], 9345.0, True)  # 8% above 8653
+    bind_nodes_upward(w)
+    atoms = [i for i in range(w.k_count) if w.k_alive[i] and w.k_level[i] == 4]
+    assert len(atoms) == 1
+
+
+def test_decade_isolation(empty_world):
+    w = empty_world
+    _make_electron(w, 0, [10.0, 10.0], 500.0, True)
+    _make_electron(w, 1, [13.0, 10.0], 540.0, False)  # 8% above 500, same decade
+    bind_nodes_upward(w)
+    pairs = [i for i in range(w.k_count) if w.k_alive[i] and w.k_level[i] == 2]
+    assert len(pairs) == 1, "same-decade pair should form"
+
+
+def test_decade_isolation_blocks_cross_decade(empty_world):
+    w = empty_world
+    _make_electron(w, 0, [10.0, 10.0], 9500.0, True)   # decade 3
+    _make_electron(w, 1, [13.0, 10.0], 10260.0, False)  # decade 4
+    bind_nodes_upward(w)
+    pairs = [i for i in range(w.k_count) if w.k_alive[i] and w.k_level[i] == 2]
+    assert len(pairs) == 0
