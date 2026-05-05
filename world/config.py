@@ -6,9 +6,9 @@ from pathlib import Path
 
 @dataclass(frozen=True)
 class WorldConfig:
-    # Seeding
+    # Seeding (3D)
     n_initial_vibrations: int = 1000
-    box_size: tuple[float, float] = (1000.0, 1000.0)
+    box_size: tuple[float, float, float] = (1000.0, 1000.0, 1000.0)
     freq_min: float = 100.0
     freq_max: float = 10000.0
     freq_distribution: str = "log"
@@ -25,6 +25,15 @@ class WorldConfig:
     # Decay (mean exponential lifetimes, seconds)
     pair_decay_time: float = 5.0
     triad_decay_time: float = 30.0
+
+    # Scale separation through repulsion (§4.6)
+    repulsion_k: float = 100.0
+    repulsion_cell_size: float = 100.0
+    repulsion_threshold_ratio: float = 1000.0
+
+    # Ambient regeneration (§4.7)
+    lambda_gen: float = 0.0001
+    lambda_dec: float = 0.001
 
     # Simulation
     dt: float = 1.0 / 60.0
