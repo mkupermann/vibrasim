@@ -6,7 +6,11 @@ This isn't a product. It's the substrate that the concept paper proposes, made c
 
 ![first atom](renders/keyframe_first_atom.png)
 
-> *The climax frame from `renders/anim_phase1_first_atom.mp4`: the world at t = 13.4 simulated seconds with rng_seed=42, the moment a triad absorbs its fourth electron and the first atom (bright sphere, upper-right) locks into place.*
+> *Phase 1 climax — t = 13.4 s simulated, the moment a triad absorbs its fourth electron and the first atom (bright sphere, upper-right) locks into place. Source: `renders/anim_phase1_first_atom.mp4` / `renders/anim_phase1_first_atom_hq.mp4`.*
+
+![first molecule](renders/keyframe_first_molecule.png)
+
+> *Phase 2 climax — t ≈ 5.5 s simulated under the `session-3b` calibration that unlocked molecule formation. Multiple atoms (large white spheres) plus the first di-atomic molecule (slightly larger pale sphere). Source: `renders/anim_phase2_first_molecule.mp4`.*
 
 ## Why this exists
 
@@ -82,9 +86,13 @@ For the physics specifically, [`files/SPECIFICATION.md`](files/SPECIFICATION.md)
 | `docs/TUTORIAL.md` | Fresh-clone-to-first-calibration walkthrough |
 | `docs/superpowers/specs/` | Design specs for Phases 1, 2, and 3 |
 | `docs/superpowers/plans/` | Implementation plans for Phases 1 and 2 |
-| `renders/calibration_session3.toml` | The atom-producing calibration |
-| `renders/anim_phase1_first_atom.mp4` | 4.5-second animation of the first-atom emergence at calibrated settings |
-| `renders/keyframe_first_atom.png` | The climax frame as a still image |
+| `renders/calibration_session3.toml` | The first atom-producing calibration |
+| `renders/calibration_session3b_molecules.toml` | The first molecule-producing calibration |
+| `renders/anim_phase1_first_atom.mp4` | 4.5-second animation of the first-atom emergence (Eevee) |
+| `renders/anim_phase1_first_atom_hq.mp4` | Same animation in Cycles medium quality |
+| `renders/anim_phase2_first_molecule.mp4` | 1.87-second animation of the first molecule emerging |
+| `renders/keyframe_first_atom.png` | Phase 1 climax as a still image |
+| `renders/keyframe_first_molecule.png` | Phase 2 climax as a still image |
 | `LOGBOOK.md` | Research diary — every calibration session, all observed outcomes |
 
 ## Honest expectations
