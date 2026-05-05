@@ -6,28 +6,28 @@ from world.state import World
 from world.physics import decay_unstable_nodes
 
 
-def _seed_pair(w: World, idx: int):
-    w.k_alive[idx] = True
-    w.k_level[idx] = 2
-    w.k_pol[idx] = True
-    w.k_freq[idx] = 4000.0
-    w.k_pos[idx] = [50.0, 50.0]
-    e0, e1 = idx + 100, idx + 101
-    if e1 + 1 >= w.k_alive.shape[0]:
-        return
-    w.k_alive[e0] = False
-    w.k_alive[e1] = False
-    w.k_level[e0] = 1
-    w.k_level[e1] = 1
+def _seed_pair(w: World, pair_slot: int, e0_slot: int, e1_slot: int):
+    """Seed one pair at pair_slot with constituents at e0_slot, e1_slot.
+    All three slots must be distinct and within capacity."""
+    w.k_alive[pair_slot] = True
+    w.k_level[pair_slot] = 2
+    w.k_pol[pair_slot] = True
+    w.k_freq[pair_slot] = 4000.0
+    w.k_pos[pair_slot] = [50.0, 50.0]
+    w.k_alive[e0_slot] = False
+    w.k_alive[e1_slot] = False
+    w.k_level[e0_slot] = 1
+    w.k_level[e1_slot] = 1
     start = w.k_comp_used
-    w.k_comp_indices[start] = e0
-    w.k_comp_indices[start + 1] = e1
-    w.k_comp_offset[idx] = start
-    w.k_comp_offset[idx + 1] = start + 2
-    w.k_comp_kind[idx] = 1
+    w.k_comp_indices[start] = e0_slot
+    w.k_comp_indices[start + 1] = e1_slot
+    w.k_comp_offset[pair_slot] = start
+    w.k_comp_offset[pair_slot + 1] = start + 2
+    w.k_comp_kind[pair_slot] = 1
     w.k_comp_used = start + 2
-    if idx >= w.k_count:
-        w.k_count = idx + 1
+    last = max(pair_slot, e0_slot, e1_slot)
+    if last >= w.k_count:
+        w.k_count = last + 1
 
 
 def test_pair_decays_eventually():
@@ -37,8 +37,10 @@ def test_pair_decays_eventually():
                       pair_decay_time=5.0, dt=1.0 / 60.0, rng_seed=42)
     n_pairs = 200
     w = World(cfg)
+    # Pair k at slot k; its two constituents at slots n_pairs + 2k, n_pairs + 2k + 1.
+    # No overlap: pair slots 0..199, constituent slots 200..599 — disjoint.
     for k in range(n_pairs):
-        _seed_pair(w, k)
+        _seed_pair(w, k, n_pairs + 2 * k, n_pairs + 2 * k + 1)
     t_end = 5.0
     n_ticks = int(t_end / cfg.dt)
     for _ in range(n_ticks):
@@ -46,7 +48,7 @@ def test_pair_decays_eventually():
     decayed = sum(1 for k in range(n_pairs) if not w.k_alive[k])
     expected_share = 1.0 - math.exp(-t_end / cfg.pair_decay_time)
     actual_share = decayed / n_pairs
-    assert abs(actual_share - expected_share) < 0.15
+    assert abs(actual_share - expected_share) < 0.08
 
 
 def test_atom_does_not_decay():
