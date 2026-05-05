@@ -313,3 +313,16 @@ def move_nodes(world, dt: float) -> None:
             continue
         for d in range(3):
             world.k_pos[i, d] = (world.k_pos[i, d] + world.k_vel[i, d] * dt) % box[d]
+
+
+def tick(world, dt: float) -> None:
+    """One simulation step. See CONCEPT.md v2 §4 + §7.1 for the canonical order."""
+    box = np.asarray(world.config.box_size, dtype=np.float64)
+    move_vibrations(world.s_pos, world.s_vel, world.s_alive, box, dt)
+    apply_scale_repulsion(world, dt)
+    move_nodes(world, dt)
+    bind_vibrations_to_electrons(world)
+    bind_nodes_upward(world)
+    decay_unstable_nodes(world, dt)
+    ambient_regeneration(world, dt)
+    world.t += dt
