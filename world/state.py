@@ -2,7 +2,12 @@ from __future__ import annotations
 import numpy as np
 from world.config import WorldConfig
 
-LEVEL_TO_VIBRATIONS = {1: 2, 2: 4, 3: 6, 4: 8}  # vibrations bound at each level
+LEVEL_TO_VIBRATIONS = {
+    # Phase 1
+    1: 2, 2: 4, 3: 6, 4: 8,
+    # Phase 2: each atom contributes 8 vibrations; molecule = N atoms.
+    5: 16, 6: 24, 7: 32, 8: 40, 9: 48, 10: 56, 11: 64,
+}
 
 
 class World:

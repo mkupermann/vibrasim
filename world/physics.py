@@ -73,9 +73,21 @@ def bind_vibrations_to_electrons(world) -> int:
 
 
 _UPGRADE_TARGET = {
+    # Phase 1: vibrations → electrons → pairs → triads → atoms
     (1, 1): 2,
     (1, 2): 3, (2, 1): 3,
     (1, 3): 4, (3, 1): 4,
+    # Phase 2: atoms binding into molecules. Each upgrade adds one atom; the
+    # upgrade table only allows level-4 (atom) on at least one side, so
+    # molecules cannot bind to each other.
+    (4, 4): 5,
+    (4, 5): 6, (5, 4): 6,
+    (4, 6): 7, (6, 4): 7,
+    (4, 7): 8, (7, 4): 8,
+    (4, 8): 9, (8, 4): 9,
+    (4, 9): 10, (9, 4): 10,
+    (4, 10): 11, (10, 4): 11,
+    # Cap at level 11 (deca-atomic). Phase 3+ may revisit.
 }
 
 
