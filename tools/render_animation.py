@@ -34,33 +34,45 @@ from world.physics import tick
 from world.snapshot import save_snapshot, snapshot_filename
 
 
-def run_until_first_node(world: World, dt: float, max_duration: float, snapshot_dir: Path) -> int:
-    """Run the simulation, snapshotting every tick. Stop after the first node forms.
+def run_simulation(world: World, dt: float, max_duration: float,
+                    snapshot_dir: Path, snapshot_stride: int = 1,
+                    stop_at_level: int | None = None) -> int:
+    """Run the simulation, snapshotting every `snapshot_stride` ticks.
 
-    The snapshot at t=0 is written before any tick. The final snapshot includes
-    the first formed node. Returns the number of snapshots written.
+    Stops when an alive node at >= stop_at_level appears, or when max_duration
+    is reached. snapshot_stride=1 saves every tick; stride=6 saves every 0.1s
+    at dt=1/60. The snapshot at t=0 is always written first.
+
+    Returns the number of snapshots written.
     """
     snapshot_dir.mkdir(parents=True, exist_ok=True)
     n_max_ticks = int(max_duration / dt)
 
-    # Snapshot t=0 first (pristine seeded state, only waves)
     save_snapshot(world, snapshot_dir / snapshot_filename(world.t))
     n_written = 1
 
     for k in range(n_max_ticks):
         tick(world, dt)
-        path = snapshot_dir / snapshot_filename(world.t)
-        save_snapshot(world, path)
-        n_written += 1
-        if world.k_count > 0 and bool(world.k_alive[:world.k_count].any()):
-            print(f"# first node formed at t = {world.t:.4f}s after {n_written} snapshots")
-            return n_written
+        if (k + 1) % snapshot_stride == 0:
+            save_snapshot(world, snapshot_dir / snapshot_filename(world.t))
+            n_written += 1
+        if stop_at_level is not None and world.k_count > 0:
+            mask = (world.k_level[:world.k_count] >= stop_at_level) & world.k_alive[:world.k_count]
+            if bool(mask.any()):
+                # Save final snapshot if we didn't already
+                if (k + 1) % snapshot_stride != 0:
+                    save_snapshot(world, snapshot_dir / snapshot_filename(world.t))
+                    n_written += 1
+                print(f"# first level-{stop_at_level} node at t = {world.t:.4f}s "
+                      f"after {n_written} snapshots")
+                return n_written
 
-    print(f"# no node formed in {max_duration} simulated seconds — using all {n_written} snapshots")
+    print(f"# reached max_duration={max_duration}s without level-{stop_at_level} node")
     return n_written
 
 
-def render_frames(snapshot_dir: Path, frames_dir: Path, quality: str, engine: str) -> None:
+def render_frames(snapshot_dir: Path, frames_dir: Path, quality: str, engine: str,
+                   show_nodes: bool = False) -> None:
     """Single Blender invocation rendering every snapshot in the dir."""
     cmd = [
         "blender", "-b", "-P", "tools/render_blender.py", "--",
@@ -68,8 +80,9 @@ def render_frames(snapshot_dir: Path, frames_dir: Path, quality: str, engine: st
         "--output-dir", str(frames_dir),
         "--quality", quality,
         "--engine", engine,
-        "--no-nodes",  # animation shows only waves; the first node arrives in the last frame anyway
     ]
+    if not show_nodes:
+        cmd.append("--no-nodes")
     print(f"# rendering: {' '.join(cmd)}")
     subprocess.run(cmd, check=True)
 
@@ -111,6 +124,12 @@ def main() -> int:
     parser = argparse.ArgumentParser(prog="tools/render_animation.py")
     parser.add_argument("--config", type=Path, default=None)
     parser.add_argument("--max-duration", type=float, default=10.0)
+    parser.add_argument("--snapshot-stride", type=int, default=1,
+                        help="snapshot every Nth tick (default 1 = every tick)")
+    parser.add_argument("--stop-at-level", type=int, default=2,
+                        help="stop simulation when a node at this level forms (default 2 = pair)")
+    parser.add_argument("--show-nodes", action="store_true",
+                        help="render nodes throughout (default: hide nodes, only waves)")
     parser.add_argument("--output", type=Path, default=Path("renders/anim_first_emergence.mp4"))
     parser.add_argument("--quality", choices=["low", "medium", "high"], default="low")
     parser.add_argument("--engine", choices=["cycles", "eevee"], default="eevee")
@@ -132,13 +151,17 @@ def main() -> int:
     frames_dir = args.workdir / "frames"
 
     print(f"# Stage 1: simulating from t=0 (rng_seed={cfg.rng_seed}, dt={cfg.dt})")
-    print(f"#          snapshotting per tick, stopping after first node or t={args.max_duration}")
-    n_frames = run_until_first_node(world, cfg.dt, args.max_duration, snap_dir)
+    print(f"#          snapshot stride={args.snapshot_stride} ticks, "
+          f"stop@level={args.stop_at_level}, max_duration={args.max_duration}")
+    n_frames = run_simulation(world, cfg.dt, args.max_duration, snap_dir,
+                                snapshot_stride=args.snapshot_stride,
+                                stop_at_level=args.stop_at_level)
 
     print(f"\n# Stage 2: rendering {n_frames} frames in batch ({args.engine}/{args.quality})")
-    render_frames(snap_dir, frames_dir, args.quality, args.engine)
+    render_frames(snap_dir, frames_dir, args.quality, args.engine,
+                   show_nodes=args.show_nodes)
 
-    if world.k_count > 0:
+    if world.k_count > 0 and not args.show_nodes:
         print(f"\n# Stage 2b: re-rendering final frame with the node visible")
         render_final_frame_with_node(snap_dir, frames_dir, args.quality, args.engine)
 

@@ -126,3 +126,70 @@ The v2 substrate is correct; the defaults are not. Three targets, in order:
 Once session 3 produces atoms reliably, the calibrated TOML becomes the new `INITIAL_CONFIG` defaults and CONCEPT.md v2 §5 Phase 1 success criterion 1 is met. Criterion 2 (spatial sorting by frequency decade — H2 testability) needs the repulsion to actually do work, which requires nodes spanning multiple decades; that's a follow-up to test once atoms form.
 
 ---
+
+## 2026-05-06 — Session 3: Phase 1 calibrated, Phase 2 + Phase 3 scaffolding
+
+This is the autonomous overnight session. Three objectives: calibrate Phase 1 v2 to produce atoms, build Phase 2 (molecule formation), build Phase 3 scaffolding (membrane detection + construction). Outcomes documented below.
+
+### Phase 1 calibration: atom-producing config found
+
+Two-stage calibration sweep. **Stage 1** (10 hand-picked configs, 30s each, 4-way parallel) screened density and radii. Best of stage 1: `dense_80_w20` (box=80³, 400 vibr, r_1=5, r_2=20, freq_tol=0.020) — 69 electrons + 2 pairs in 30s. The pattern: small dense box + standard r_1 + slightly wider r_2 + slightly wider freq_tolerance.
+
+**Stage 2** (8 variants of the leader, 120s each, 4-way parallel) extended duration on promising configs. Leader: **`c80_v400_r30_t025`**.
+
+| Config | Box³ | n_init | r_2 | freq_tol | pair_dec | triad_dec | e- | pair | tri | atom | first atom |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| c60_v300_r25_t02 | 60 | 300 | 25 | 0.020 | 120 | 1200 | 87 | 4 | 1 | 0 | — |
+| c80_v400_r20_t20 | 80 | 400 | 20 | 0.020 | 60 | 600 | 113 | 5 | 0 | 0 | — |
+| c60_v400_r20_t015 | 60 | 400 | 20 | 0.015 | 60 | 600 | 115 | 3 | 0 | 0 | — |
+| c50_v200_r20_t02 | 50 | 200 | 20 | 0.020 | 120 | 1200 | 52 | 2 | 0 | 0 | — |
+| **c80_v400_r30_t025** | **80** | **400** | **30** | **0.025** | **60** | **600** | **104** | **10** | **2** | **1** | **t = 13.4s** |
+
+CONCEPT.md v2 §5 Phase 1 success criterion 1 (reproducible atom formation) is **met** by `c80_v400_r30_t025`. The calibrated TOML is committed at `renders/calibration_session3.toml`.
+
+The remaining stage-2 configs were still running at the time of writing; if any produce more atoms or earlier formation, this LOGBOOK gets a follow-up table.
+
+The remaining Phase 1 success criteria (spatial sorting by frequency decade — H2; ambient stability with `λ_gen > 0`) are **not** yet met. They need:
+- Wider `freq_min`/`freq_max` to span multiple decades (current 100–10000 is one decade, mostly 100–999 with a smaller tail at 1000–9999). Decade-3 and decade-4 atoms can form, but the spread is narrow.
+- A non-zero `λ_gen` calibrated to hold population steady. The `c80_v400_r30_t025` config disables ambient (`λ_gen = 0`) for clean observation.
+
+These are the targets for session 4 (next round of calibration).
+
+### Phase 2: molecules from atoms
+
+Spec at `docs/superpowers/specs/2026-05-06-phase-2-molecules.md`. Implementation deltas:
+
+- `world/physics.py::_UPGRADE_TARGET` extended with rules: atom + atom → di-atomic (level 5); di-atomic + atom → tri-atomic (level 6); … up to level 11 (deca-atomic). Only atoms (level 4) can be added — molecules don't bind to molecules.
+- `world/state.py::LEVEL_TO_VIBRATIONS` extended for the new levels (each atom contributes 8 vibrations, so a level-5 molecule has 16, a level-11 molecule has 64).
+- `tools/classify_molecules.py` — fingerprints molecules by sorted constituent-atom frequency decades. Two atoms at decade 3 → species `A33`; an A33-atomic at decades 3,3,4 → `A334`.
+- `world/preview.py` and `tools/render_blender.py` — render levels 5–11 with scaled radii and per-level colours.
+- 13 new tests across `tests/test_phase2_binding.py` (8) and `tests/test_classify_molecules.py` (5). All pass.
+
+A Phase 2 long-duration run on the calibrated TOML is in progress (240s simulated, snapshot every 1s); results land in this LOGBOOK at the next read. Phase 2 success criterion is at least 5 distinct molecule species fingerprints — `tools/classify_molecules.py` will report.
+
+### Phase 3: membrane scaffolding (no spontaneous formation tested yet)
+
+Spec at `docs/superpowers/specs/2026-05-06-phase-3-membranes.md`. Spontaneous membrane formation is empirical and untested; the deliverable is the tooling needed to find out.
+
+- `tools/detect_membranes.py` — connected-component grouping, least-squares 3D sphere fit, equal-area gap detection. Distinguishes closed shells from filled balls and from open clusters.
+- `tools/construct_membrane.py` — hand-place molecules on a Fibonacci sphere for stability tests.
+- 8 new tests in `tests/test_detect_membranes.py`. All pass.
+
+### Test count
+
+84 tests passing (was 63 at the end of session 2).
+
+### Animation outputs
+
+- `renders/anim_phase1_first_atom.mp4` — calibrated Phase 1 from t=0 to first atom (~13.4s of simulated time, 30 fps video, ~4–5 s real time). Generated using `tools/render_animation.py` with the session-3 TOML and `--stop-at-level 4`.
+- A longer Phase 2 run is in progress to capture molecule formation; the resulting animation lands in `renders/anim_phase2_first_molecule.mp4` once the run completes.
+
+### Next session targets
+
+1. Verify atom formation reproducibility across rng seeds 42, 7, 100, 314.
+2. Calibrate `λ_gen` to hold ambient density ±20% over 60s with the session-3 TOML.
+3. Widen `freq_min` to 10 (and/or `freq_max` to 100000) so that multi-decade atoms form and §4.6 scale repulsion has substrate to act on.
+4. Run `tools/classify_molecules.py` over a 10-minute simulated run and confirm ≥5 species fingerprints.
+5. Run `tools/detect_membranes.py` over the same long run — does any connected component register as a candidate shell?
+
+---
