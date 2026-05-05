@@ -2,9 +2,11 @@ from __future__ import annotations
 import numpy as np
 from world.config import WorldConfig
 
+LEVEL_TO_VIBRATIONS = {1: 2, 2: 4, 3: 6, 4: 8}  # vibrations bound at each level
+
 
 class World:
-    """Plain data container for the simulation. No physics methods — those live in `world.physics`."""
+    """3D physics state. SoA NumPy arrays, periodic boundaries on all three axes."""
 
     def __init__(self, config: WorldConfig):
         self.config = config
@@ -14,17 +16,18 @@ class World:
         N = config.n_vibrations_max
         K = config.n_nodes_max
 
-        # Vibration arrays
-        self.s_pos = np.zeros((N, 2), dtype=np.float64)
-        self.s_vel = np.zeros((N, 2), dtype=np.float64)
+        # Vibration arrays (3D)
+        self.s_pos = np.zeros((N, 3), dtype=np.float64)
+        self.s_vel = np.zeros((N, 3), dtype=np.float64)
         self.s_freq = np.zeros(N, dtype=np.float64)
         self.s_pol = np.zeros(N, dtype=np.bool_)
         self.s_alive = np.zeros(N, dtype=np.bool_)
         self.s_locked_this_tick = np.zeros(N, dtype=np.bool_)
         self.n_alive: int = 0
 
-        # Node arrays
-        self.k_pos = np.zeros((K, 2), dtype=np.float64)
+        # Node arrays (3D, with velocity for repulsion)
+        self.k_pos = np.zeros((K, 3), dtype=np.float64)
+        self.k_vel = np.zeros((K, 3), dtype=np.float64)
         self.k_freq = np.zeros(K, dtype=np.float64)
         self.k_pol = np.zeros(K, dtype=np.bool_)
         self.k_level = np.zeros(K, dtype=np.uint8)
@@ -32,7 +35,7 @@ class World:
         self.k_alive = np.zeros(K, dtype=np.bool_)
         self.k_locked_this_tick = np.zeros(K, dtype=np.bool_)
 
-        # Composition (CSR-like)
+        # CSR composition
         comp_caps = K * 4
         self.k_comp_offset = np.zeros(K + 1, dtype=np.int32)
         self.k_comp_indices = np.zeros(comp_caps, dtype=np.int32)
@@ -42,18 +45,18 @@ class World:
 
         self._seed()
 
-    # ------------------------------------------------------------------ seeding
-
     def _seed(self) -> None:
         cfg = self.config
         n = cfg.n_initial_vibrations
         if n == 0:
             return
-        self.s_pos[:n, 0] = self.rng.uniform(0.0, cfg.box_size[0], size=n)
-        self.s_pos[:n, 1] = self.rng.uniform(0.0, cfg.box_size[1], size=n)
+        bx, by, bz = cfg.box_size
+        self.s_pos[:n, 0] = self.rng.uniform(0.0, bx, size=n)
+        self.s_pos[:n, 1] = self.rng.uniform(0.0, by, size=n)
+        self.s_pos[:n, 2] = self.rng.uniform(0.0, bz, size=n)
         self.s_freq[:n] = self._sample_frequencies(n)
         self.s_pol[:n] = self.rng.random(n) < cfg.polarity_split
-        self.s_vel[:n] = self._sample_velocities(n)
+        self.s_vel[:n] = self._sample_velocities_3d(n)
         self.s_alive[:n] = True
         self.n_alive = n
 
@@ -66,31 +69,29 @@ class World:
         else:
             raise ValueError(f"Unknown freq_distribution: {cfg.freq_distribution!r}")
 
-    def _sample_velocities(self, n: int) -> np.ndarray:
+    def _sample_velocities_3d(self, n: int) -> np.ndarray:
+        """Isotropic 3D velocities with magnitudes uniformly distributed in [speed_min, speed_max]."""
         cfg = self.config
         speeds = self.rng.uniform(cfg.speed_min, cfg.speed_max, size=n)
-        angles = self.rng.uniform(0.0, 2 * np.pi, size=n)
-        v = np.empty((n, 2), dtype=np.float64)
-        v[:, 0] = speeds * np.cos(angles)
-        v[:, 1] = speeds * np.sin(angles)
+        # Uniform points on the unit sphere (Marsaglia method)
+        z = self.rng.uniform(-1.0, 1.0, size=n)
+        phi = self.rng.uniform(0.0, 2 * np.pi, size=n)
+        sqrt_omz2 = np.sqrt(1 - z * z)
+        v = np.empty((n, 3), dtype=np.float64)
+        v[:, 0] = speeds * sqrt_omz2 * np.cos(phi)
+        v[:, 1] = speeds * sqrt_omz2 * np.sin(phi)
+        v[:, 2] = speeds * z
         return v
 
-    # --------------------------------------------------------------- allocation
-
     def allocate_node(
-        self,
-        pos: np.ndarray,
-        freq: float,
-        pol: bool,
-        level: int,
-        constituents: np.ndarray,
-        comp_kind: int,
+        self, pos: np.ndarray, freq: float, pol: bool, level: int,
+        constituents: np.ndarray, comp_kind: int,
     ) -> int:
-        """Append a new node. Returns its index."""
         i = self.k_count
         if i >= self.config.n_nodes_max:
-            raise RuntimeError("Node capacity exhausted; increase n_nodes_max or run compaction")
+            raise RuntimeError("Node capacity exhausted")
         self.k_pos[i] = pos
+        self.k_vel[i] = 0.0  # nodes start at rest; repulsion accumulates velocity
         self.k_freq[i] = freq
         self.k_pol[i] = pol
         self.k_level[i] = level
@@ -110,8 +111,24 @@ class World:
         return i
 
     def reset_tick_locks(self) -> None:
-        self.s_locked_this_tick[:] = False
-        self.k_locked_this_tick[:] = False
+        if self.n_alive > 0:
+            self.s_locked_this_tick[:self.n_alive] = False
+        if self.k_count > 0:
+            self.k_locked_this_tick[:self.k_count] = False
+
+    def total_vibrations(self) -> int:
+        """Count of vibrations free + bound (for ambient-stability bookkeeping)."""
+        free = int(self.s_alive.sum())
+        bound = 0
+        for level, vib_count in LEVEL_TO_VIBRATIONS.items():
+            n_level = int(((self.k_level == level) & self.k_alive).sum())
+            bound += n_level * vib_count
+        return free + bound
+
+    def ambient_density(self) -> float:
+        """Free vibrations per unit volume."""
+        bx, by, bz = self.config.box_size
+        return float(self.s_alive.sum()) / (bx * by * bz)
 
     def compact(self) -> None:
         """Pack alive vibrations into the front of the array.
@@ -119,10 +136,6 @@ class World:
         Refuses to compact when any nodes exist (`k_count > 0`) — vibration
         compaction renames vibration indices, but `k_comp_indices` for level-1
         nodes (electrons) holds the old indices and would be silently corrupted.
-
-        Node compaction is deferred to a future spec; until then, this method
-        is only safe to call before any electrons have formed (e.g. on a fresh
-        world for testing).
         """
         if self.k_count > 0:
             raise RuntimeError(
