@@ -212,6 +212,21 @@ What this finding says about the calibration: the session-3 TOML satisfies CONCE
 2. **Tighter freq distribution.** With `freq_min=100, freq_max=10000`, atoms span decades 3–4, and the 8% rule rarely matches two atoms in the same decade. A narrower frequency window would cluster atoms and increase same-decade matches.
 3. **Different atom-vs-atom radius.** Atoms are larger structures than electrons; using a larger `r_2` for higher-level binding (separate from the vibration-electron `r_1` and `r_2`) would help. *That is a CONCEPT.md amendment, not just a calibration tweak.*
 
+### Phase 1 reproducibility across seeds (mid-session check)
+
+Ran the calibrated TOML at four additional rng seeds (60 s simulated each, single-core). Result:
+
+| Seed | electrons | pairs | triads | atoms | first atom |
+|---:|---:|---:|---:|---:|---|
+| 42 | 104 | 10 | 2 | 1 | t = 13.4s |
+| 100 | 93 | 7 | 2 | **1** | t = 29.2s |
+| 314 | 78 | 7 | 5 | 0 | — |
+| 999 | 102 | 4 | 2 | 0 | — |
+
+(Seed 7 result lost to a `tail -3` truncation in the run wrapper.) **Reproducibility is partial**: 2 of 4 verified seeds form an atom in 60 s simulated. Seeds 314 and 999 produce triads but no fourth-electron capture within the run. The session-3 calibration produces atoms *consistently enough to be useful* but *not robustly enough across all seeds* — a session-4 calibration target.
+
+The seed=314 result is informative: 5 triads alive at peak but no atom. So triads aren't the bottleneck; the bottleneck is the specific freq match for the fourth electron joining the triad. Wider freq tolerance for level-3+1 binding (per-level freq_tolerance — see CALIBRATION_GUIDE.md §2) would address this.
+
 ### Phase 3: not exercised yet
 
 `tools/detect_membranes.py` is in place and unit-tested. With zero molecules in the calibrated runs, there's no opportunity for spontaneous shell formation, and we have no real-world detection results to report. The tool will be exercised once Phase 2 calibration produces enough molecules.
