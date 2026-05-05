@@ -1,12 +1,17 @@
-"""Headless Blender Cycles renderer for snapshot keyframes.
+"""Headless Blender Cycles renderer for World of Vibrations snapshots.
 
 Invoke via:
-    blender -b -P tools/render_blender.py -- --snapshot snap.npz --output frame.png
+    blender -b -P tools/render_blender.py -- --snapshot snap.npz --output frame.png [--quality QUALITY] [--engine ENGINE]
 
 Inside Blender's Python:
-- Load snapshot
-- Build scene (camera, lights, instanced spheres per level)
-- Render to PNG
+- Load snapshot NPZ.
+- Build a scene with the box outlined, vibrations as point-instanced spheres,
+  and individual node meshes (electrons, pairs/triads/atoms with halos).
+- Render with Cycles (default) or Eevee Next.
+
+Rendering 4096 vibrations as individual mesh objects is prohibitively slow
+in Cycles. Vibrations are instanced via vertex instancing on a points mesh,
+which is fast and memory-efficient.
 """
 import sys
 import argparse
@@ -22,6 +27,9 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--snapshot", type=Path, required=True)
 parser.add_argument("--output", type=Path, required=True)
 parser.add_argument("--quality", choices=["low", "medium", "high", "paper"], default="medium")
+parser.add_argument("--engine", choices=["cycles", "eevee"], default="cycles")
+parser.add_argument("--resolution", type=int, default=1920,
+                    help="output width in px; height is 9/16 of width")
 args = parser.parse_args(argv)
 
 # Lazy imports — these only work inside Blender
@@ -36,67 +44,280 @@ except ImportError:
 SAMPLES = {"low": 64, "medium": 256, "high": 1024, "paper": 4096}[args.quality]
 
 
+# ---------------------------------------------------------------------- helpers
+
 def clear_scene():
-    bpy.ops.object.select_all(action="SELECT")
-    bpy.ops.object.delete()
+    """Remove everything in the default scene — meshes, lights, cameras, materials."""
+    for collection in bpy.data.collections:
+        for obj in list(collection.objects):
+            bpy.data.objects.remove(obj, do_unlink=True)
+    for obj in list(bpy.data.objects):
+        bpy.data.objects.remove(obj, do_unlink=True)
+    for mesh in list(bpy.data.meshes):
+        bpy.data.meshes.remove(mesh)
+    for mat in list(bpy.data.materials):
+        bpy.data.materials.remove(mat)
+    for light in list(bpy.data.lights):
+        bpy.data.lights.remove(light)
+    for cam in list(bpy.data.cameras):
+        bpy.data.cameras.remove(cam)
 
 
-def setup_camera_and_lights(box_size):
-    # Camera at the long diagonal
-    cam_pos = (box_size[0] * 1.6, -box_size[1] * 1.2, box_size[2] * 1.4)
-    bpy.ops.object.camera_add(location=cam_pos)
-    cam = bpy.context.object
-    cam.rotation_euler = (1.0, 0, 0.7)
+def make_emission_material(name, color, strength=1.0):
+    mat = bpy.data.materials.new(name)
+    mat.use_nodes = True
+    nt = mat.node_tree
+    # Clear default nodes
+    for n in list(nt.nodes):
+        nt.nodes.remove(n)
+    out = nt.nodes.new("ShaderNodeOutputMaterial")
+    em = nt.nodes.new("ShaderNodeEmission")
+    em.inputs["Color"].default_value = (*color, 1.0)
+    em.inputs["Strength"].default_value = strength
+    nt.links.new(em.outputs["Emission"], out.inputs["Surface"])
+    return mat
+
+
+def make_glossy_material(name, color, emission_strength=0.0):
+    mat = bpy.data.materials.new(name)
+    mat.use_nodes = True
+    nt = mat.node_tree
+    bsdf = nt.nodes.get("Principled BSDF")
+    if bsdf is None:
+        bsdf = nt.nodes.new("ShaderNodeBsdfPrincipled")
+        out = nt.nodes.get("Material Output") or nt.nodes.new("ShaderNodeOutputMaterial")
+        nt.links.new(bsdf.outputs[0], out.inputs[0])
+    bsdf.inputs["Base Color"].default_value = (*color, 1.0)
+    if "Emission Color" in bsdf.inputs:
+        bsdf.inputs["Emission Color"].default_value = (*color, 1.0)
+        bsdf.inputs["Emission Strength"].default_value = emission_strength
+    if "Roughness" in bsdf.inputs:
+        bsdf.inputs["Roughness"].default_value = 0.4
+    return mat
+
+
+# ---------------------------------------------------------------------- camera
+
+def setup_camera_orthographic(box_size):
+    """Orthographic camera framing the entire box.
+
+    Looks at the box centre from outside one corner. Rotation set explicitly
+    via mathutils.Vector — track-to constraint isn't always evaluated during
+    background rendering.
+    """
+    import mathutils
+    bx, by, bz = box_size
+    centre = mathutils.Vector((bx * 0.5, by * 0.5, bz * 0.5))
+    longest = max(bx, by, bz)
+
+    # Camera along the (1, -1, 1) diagonal, far enough that it sees the whole box
+    cam_offset = mathutils.Vector((longest * 1.5, -longest * 1.5, longest * 1.5))
+    cam_pos = centre + cam_offset
+    direction = (centre - cam_pos).normalized()
+    rot_quat = direction.to_track_quat("-Z", "Y")
+
+    cam_data = bpy.data.cameras.new("camera")
+    cam_data.type = "ORTHO"
+    # Hexagonal projection of the box has diameter sqrt(2)·longest along the diagonal axis;
+    # use 1.8× to leave margin and accommodate node halos.
+    cam_data.ortho_scale = longest * 1.8
+    # Default clip_end is 100; our world is 1000+ units. Set explicit clip planes.
+    cam_data.clip_start = 0.1
+    cam_data.clip_end = longest * 10.0
+    cam = bpy.data.objects.new("camera", cam_data)
+    cam.location = cam_pos
+    cam.rotation_euler = rot_quat.to_euler()
+    bpy.context.collection.objects.link(cam)
     bpy.context.scene.camera = cam
 
-    # Three-point lighting
-    for loc, energy in [
-        ((box_size[0] * 1.5, -box_size[1] * 1.5, box_size[2] * 1.5), 1500.0),
-        ((-box_size[0] * 0.5, box_size[1] * 1.0, box_size[2] * 0.5), 800.0),
-        ((box_size[0] * 0.5, box_size[1] * 0.5, -box_size[2] * 0.3), 400.0),
+
+def setup_lights(box_size):
+    bx, by, bz = box_size
+    diag = max(bx, by, bz)
+    # Three-point lighting. Area-light energy in Watts; for a 1000-unit box
+    # values of a few thousand W give clean illumination in Eevee, ~10× that in Cycles.
+    # Scale linearly with box size so larger worlds stay correctly lit.
+    base = diag * 5.0  # 5000 W for a 1000-unit box; 50000 W for 10000-unit
+    for loc, energy_mult, name in [
+        ((bx * 1.4, -by * 0.4, bz * 1.5), 1.0, "key"),
+        ((-bx * 0.4, by * 1.4, bz * 0.6), 0.5, "fill"),
+        ((bx * 0.5, by * 0.5, -bz * 0.3), 0.25, "rim"),
     ]:
-        bpy.ops.object.light_add(type="AREA", location=loc)
-        light = bpy.context.object
-        light.data.energy = energy
+        light_data = bpy.data.lights.new(name=f"light_{name}", type="AREA")
+        light_data.energy = base * energy_mult
+        light_data.size = diag * 0.5
+        light_obj = bpy.data.objects.new(name=f"light_{name}", object_data=light_data)
+        light_obj.location = loc
+        bpy.context.collection.objects.link(light_obj)
 
 
-def add_node_meshes(positions, levels, alive):
-    """Add one sphere per alive node, sized by level."""
+def setup_world_background():
+    world = bpy.context.scene.world or bpy.data.worlds.new("World")
+    bpy.context.scene.world = world
+    world.use_nodes = True
+    nt = world.node_tree
+    bg = nt.nodes.get("Background")
+    if bg:
+        bg.inputs["Color"].default_value = (0.04, 0.04, 0.06, 1.0)
+        bg.inputs["Strength"].default_value = 0.8
+
+
+def add_box_outline(box_size):
+    """Wireframe box edges so the simulation volume is visible."""
+    bx, by, bz = box_size
+    corners = np.array([
+        [0, 0, 0], [bx, 0, 0], [bx, by, 0], [0, by, 0],
+        [0, 0, bz], [bx, 0, bz], [bx, by, bz], [0, by, bz],
+    ], dtype=np.float64)
+    edges = [
+        (0, 1), (1, 2), (2, 3), (3, 0),
+        (4, 5), (5, 6), (6, 7), (7, 4),
+        (0, 4), (1, 5), (2, 6), (3, 7),
+    ]
+    mesh = bpy.data.meshes.new("box_outline")
+    mesh.from_pydata(corners.tolist(), edges, [])
+    mesh.update()
+    obj = bpy.data.objects.new("box_outline", mesh)
+    bpy.context.collection.objects.link(obj)
+    # Wireframe modifier with a noticeable but not overwhelming width
+    mod = obj.modifiers.new("wireframe", "WIREFRAME")
+    mod.thickness = max(bx, by, bz) * 0.005
+    mat = make_emission_material("box_edges", (0.5, 0.55, 0.7), strength=4.0)
+    obj.data.materials.append(mat)
+
+
+# ---------------------------------------------------------------------- vibrations
+
+def add_vibrations_instanced(positions, polarities, alive, vibration_radius, box_size):
+    """Vertex-instance a single low-poly sphere onto every alive vibration.
+
+    Splits even/odd polarity into two parent meshes so each gets its own colour.
+    Far cheaper than 4096 individual mesh objects.
+    """
+    bx, by, bz = box_size
+    for pol_value, color, name in [
+        (True, (0.29, 0.56, 0.89), "vibr_even"),
+        (False, (0.91, 0.30, 0.24), "vibr_odd"),
+    ]:
+        mask = alive & (polarities == pol_value)
+        pts = positions[mask]
+        if len(pts) == 0:
+            continue
+
+        # Build the instance sphere
+        bpy.ops.mesh.primitive_uv_sphere_add(radius=vibration_radius, segments=8, ring_count=4)
+        instance = bpy.context.object
+        instance.name = f"{name}_instance"
+        mat = make_emission_material(f"{name}_mat", color, strength=2.5)
+        instance.data.materials.append(mat)
+
+        # Build the points mesh
+        points_mesh = bpy.data.meshes.new(f"{name}_points")
+        points_mesh.from_pydata(pts.tolist(), [], [])
+        points_mesh.update()
+        points_obj = bpy.data.objects.new(f"{name}_points", points_mesh)
+        bpy.context.collection.objects.link(points_obj)
+
+        # Parent the instance to the points mesh; instance at every vertex.
+        instance.parent = points_obj
+        points_obj.instance_type = "VERTS"
+
+
+# ---------------------------------------------------------------------- nodes
+
+def add_node_spheres(positions, levels, alive, box_size):
+    """Add individual spheres for nodes (electrons, pairs, triads, atoms)."""
+    bx, by, bz = box_size
+    diag = max(bx, by, bz)
+
+    # Sphere radii scaled to box size, large enough to be visible at 1920×1080
+    radius_for_level = {
+        1: diag * 0.020,    # electron: 2% of box diagonal
+        2: diag * 0.026,    # pair
+        3: diag * 0.032,    # triad
+        4: diag * 0.045,    # atom: 4.5% of box diagonal — clearly visible
+    }
+    color_for_level = {
+        1: (0.95, 0.61, 0.07),   # electron — orange
+        2: (0.85, 0.85, 0.90),   # pair — pale white
+        3: (0.95, 0.92, 0.85),   # triad — warm white
+        4: (1.0, 0.98, 0.90),    # atom — bright warm white
+    }
+    emission_for_level = {1: 4.0, 2: 1.5, 3: 2.5, 4: 8.0}
+
     for i in range(len(positions)):
         if not alive[i]:
             continue
         level = int(levels[i])
-        radius = {1: 1.5, 2: 2.0, 3: 2.5, 4: 4.0}.get(level, 1.0)
-        bpy.ops.mesh.primitive_uv_sphere_add(radius=radius, location=positions[i].tolist())
+        if level == 0:
+            continue
+        radius = radius_for_level.get(level, diag * 0.005)
+        color = color_for_level.get(level, (0.7, 0.7, 0.9))
+        emission = emission_for_level.get(level, 1.0)
+
+        bpy.ops.mesh.primitive_uv_sphere_add(
+            radius=radius,
+            segments=24, ring_count=12,
+            location=positions[i].tolist()
+        )
         obj = bpy.context.object
-        mat = bpy.data.materials.new(f"node_l{level}")
-        mat.use_nodes = True
-        bsdf = mat.node_tree.nodes.get("Principled BSDF")
-        color = {1: (1.0, 0.6, 0.07, 1), 4: (1.0, 1.0, 1.0, 1)}.get(level, (0.7, 0.7, 0.9, 1))
-        bsdf.inputs["Base Color"].default_value = color
-        if level == 4:
-            bsdf.inputs["Emission Strength"].default_value = 2.0
-            bsdf.inputs["Emission Color"].default_value = color
+        obj.name = f"node_l{level}_i{i}"
+        mat = make_glossy_material(f"node_l{level}_mat_{i}", color, emission_strength=emission)
         obj.data.materials.append(mat)
 
+
+# ---------------------------------------------------------------------- main
 
 def main():
     data = np.load(args.snapshot, allow_pickle=True)
     cfg_dict = eval(str(data["config_json"][0]))
     box_size = tuple(cfg_dict["box_size"])
+    bx, by, bz = box_size
+    diag = max(bx, by, bz)
+
+    s_pos = data["s_pos"]
+    s_pol = data["s_pol"]
+    s_alive = data["s_alive"]
+    k_pos = data["k_pos"]
+    k_level = data["k_level"]
+    k_alive = data["k_alive"]
+
+    n_vibrations = int(s_alive.sum())
+    n_nodes_total = int(k_alive.sum())
+    print(f"Snapshot: {n_vibrations} vibrations, {n_nodes_total} nodes; box {box_size}")
 
     clear_scene()
-    setup_camera_and_lights(box_size)
-    add_node_meshes(data["k_pos"], data["k_level"], data["k_alive"])
+    setup_world_background()
+    setup_camera_orthographic(box_size)
+    setup_lights(box_size)
+    add_box_outline(box_size)
+
+    # Vibrations radius = 0.8% of box diagonal — clearly visible at 1920×1080
+    vibration_radius = diag * 0.008
+    add_vibrations_instanced(s_pos, s_pol, s_alive, vibration_radius, box_size)
+    add_node_spheres(k_pos, k_level, k_alive, box_size)
 
     # Render settings
     scene = bpy.context.scene
-    scene.render.engine = "CYCLES"
-    scene.cycles.samples = SAMPLES
+    if args.engine == "cycles":
+        scene.render.engine = "CYCLES"
+        scene.cycles.samples = SAMPLES
+    else:
+        # Blender 5.x reports either BLENDER_EEVEE or BLENDER_EEVEE_NEXT depending on build
+        for engine_name in ("BLENDER_EEVEE_NEXT", "BLENDER_EEVEE"):
+            try:
+                scene.render.engine = engine_name
+                break
+            except TypeError:
+                continue
+        if hasattr(scene, "eevee"):
+            scene.eevee.taa_render_samples = SAMPLES
+
     scene.render.image_settings.file_format = "PNG"
     scene.render.filepath = str(args.output)
-    scene.render.resolution_x = 1920
-    scene.render.resolution_y = 1080
+    scene.render.resolution_x = args.resolution
+    scene.render.resolution_y = int(args.resolution * 9 // 16)
+    scene.render.film_transparent = False
 
     bpy.ops.render.render(write_still=True)
     print(f"Wrote {args.output}")
