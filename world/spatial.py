@@ -5,26 +5,22 @@ from numba import njit
 
 @njit(cache=True)
 def periodic_distance_sq(a: np.ndarray, b: np.ndarray, box: np.ndarray) -> float:
-    dx = a[0] - b[0]
-    dy = a[1] - b[1]
-    bx = box[0]
-    by = box[1]
-    if dx > bx * 0.5:
-        dx -= bx
-    elif dx < -bx * 0.5:
-        dx += bx
-    if dy > by * 0.5:
-        dy -= by
-    elif dy < -by * 0.5:
-        dy += by
-    return dx * dx + dy * dy
+    d2 = 0.0
+    for i in range(3):
+        dx = a[i] - b[i]
+        b_i = box[i]
+        if dx > b_i * 0.5:
+            dx -= b_i
+        elif dx < -b_i * 0.5:
+            dx += b_i
+        d2 += dx * dx
+    return d2
 
 
 @njit(cache=True)
 def periodic_midpoint(a: np.ndarray, b: np.ndarray, box: np.ndarray) -> np.ndarray:
-    """Midpoint under minimum-image convention. Wraps result into the box."""
-    out = np.empty(2, dtype=np.float64)
-    for d in range(2):
+    out = np.empty(3, dtype=np.float64)
+    for d in range(3):
         delta = b[d] - a[d]
         if delta > box[d] * 0.5:
             delta -= box[d]
@@ -41,20 +37,18 @@ def build_grid(
     alive: np.ndarray,
     box: np.ndarray,
     cell_size: float,
-) -> dict[tuple[int, int], list[int]]:
-    """Bucket alive points into a grid keyed by (cell_x, cell_y).
-
-    Cell size should equal the maximum query radius.
-    """
-    grid: dict[tuple[int, int], list[int]] = {}
+) -> dict[tuple[int, int, int], list[int]]:
+    grid: dict[tuple[int, int, int], list[int]] = {}
     nx = int(np.ceil(box[0] / cell_size))
     ny = int(np.ceil(box[1] / cell_size))
+    nz = int(np.ceil(box[2] / cell_size))
     for i in range(positions.shape[0]):
         if not alive[i]:
             continue
         cx = int(positions[i, 0] // cell_size) % nx
         cy = int(positions[i, 1] // cell_size) % ny
-        key = (cx, cy)
+        cz = int(positions[i, 2] // cell_size) % nz
+        key = (cx, cy, cz)
         if key not in grid:
             grid[key] = []
         grid[key].append(i)
@@ -62,7 +56,7 @@ def build_grid(
 
 
 def neighbors_of(
-    grid: dict[tuple[int, int], list[int]],
+    grid: dict[tuple[int, int, int], list[int]],
     pos: np.ndarray,
     box: np.ndarray,
     cell_size: float,
@@ -70,20 +64,23 @@ def neighbors_of(
     exclude_self: bool,
     query_index: int,
 ) -> list[int]:
-    """Return indices in the 9-cell (3x3) periodic neighborhood of `pos`."""
+    """Iterate the 27-cell (3³) periodic neighbourhood."""
     nx = int(np.ceil(box[0] / cell_size))
     ny = int(np.ceil(box[1] / cell_size))
+    nz = int(np.ceil(box[2] / cell_size))
     cx = int(pos[0] // cell_size) % nx
     cy = int(pos[1] // cell_size) % ny
+    cz = int(pos[2] // cell_size) % nz
     out: list[int] = []
     for dx in (-1, 0, 1):
         for dy in (-1, 0, 1):
-            key = ((cx + dx) % nx, (cy + dy) % ny)
-            bucket = grid.get(key)
-            if bucket is None:
-                continue
-            for idx in bucket:
-                if exclude_self and idx == query_index:
+            for dz in (-1, 0, 1):
+                key = ((cx + dx) % nx, (cy + dy) % ny, (cz + dz) % nz)
+                bucket = grid.get(key)
+                if bucket is None:
                     continue
-                out.append(idx)
+                for idx in bucket:
+                    if exclude_self and idx == query_index:
+                        continue
+                    out.append(idx)
     return out
