@@ -72,12 +72,20 @@ class LivePreview:
                 pl.add_mesh(cloud, scalars="colors", rgb=True,
                             style="points", point_size=4, render_points_as_spheres=True)
 
-        # Nodes as spheres sized by level
+        # Nodes as spheres sized by level (1-4 = Phase 1, 5-11 = Phase 2 molecules)
+        radius_by_level = {1: 1.0, 2: 1.5, 3: 2.0, 4: 3.0,
+                           5: 4.0, 6: 4.5, 7: 5.0, 8: 5.5, 9: 6.0, 10: 6.5, 11: 7.0}
+        color_by_level = {
+            1: COLOR_ELECTRON, 2: (0.85, 0.85, 0.90), 3: (0.95, 0.92, 0.85), 4: COLOR_ATOM,
+            5: (0.85, 0.88, 0.94), 6: (0.94, 0.92, 0.85), 7: (1.0, 0.96, 0.85),
+            8: (1.0, 0.88, 0.88), 9: (1.0, 0.84, 0.92), 10: (0.94, 0.80, 1.0),
+            11: (0.84, 0.84, 1.0),
+        }
         for i in range(w.k_count):
             if not w.k_alive[i]:
                 continue
             level = int(w.k_level[i])
-            radius = {1: 1.0, 2: 1.5, 3: 2.0, 4: 3.0}.get(level, 1.0)
-            color = COLOR_ELECTRON if level == 1 else COLOR_ATOM
+            radius = radius_by_level.get(level, 1.0)
+            color = color_by_level.get(level, COLOR_ATOM)
             sphere = pv.Sphere(radius=radius, center=w.k_pos[i].tolist())
             pl.add_mesh(sphere, color=color, smooth_shading=True)

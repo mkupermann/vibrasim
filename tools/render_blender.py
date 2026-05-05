@@ -302,20 +302,39 @@ def add_node_spheres(positions, levels, alive, box_size):
     bx, by, bz = box_size
     diag = max(bx, by, bz)
 
-    # Sphere radii scaled to box size, large enough to be visible at 1920×1080
+    # Sphere radii scaled to box size, large enough to be visible at 1920×1080.
+    # Levels 1-4 are Phase 1 (vibrations/electrons/atoms); levels 5-11 are
+    # Phase 2 molecules (di-atomic up through deca-atomic).
     radius_for_level = {
-        1: diag * 0.020,    # electron: 2% of box diagonal
+        1: diag * 0.020,    # electron
         2: diag * 0.026,    # pair
         3: diag * 0.032,    # triad
-        4: diag * 0.045,    # atom: 4.5% of box diagonal — clearly visible
+        4: diag * 0.045,    # atom
+        5: diag * 0.060,    # di-atomic molecule
+        6: diag * 0.070,    # tri-atomic
+        7: diag * 0.080,    # tetra-atomic
+        8: diag * 0.088,    # penta-atomic
+        9: diag * 0.094,    # hexa-atomic
+        10: diag * 0.099,   # hepta-atomic
+        11: diag * 0.103,   # octa-atomic
     }
     color_for_level = {
         1: (0.95, 0.61, 0.07),   # electron — orange
         2: (0.85, 0.85, 0.90),   # pair — pale white
         3: (0.95, 0.92, 0.85),   # triad — warm white
         4: (1.0, 0.98, 0.90),    # atom — bright warm white
+        5: (0.85, 0.88, 0.94),   # di-atomic — pale blue-white
+        6: (0.94, 0.92, 0.85),   # tri-atomic — warm white
+        7: (1.0, 0.96, 0.85),    # tetra-atomic — yellow-white
+        8: (1.0, 0.88, 0.88),    # penta-atomic — pinkish white
+        9: (1.0, 0.84, 0.92),    # hexa-atomic
+        10: (0.94, 0.80, 1.0),   # hepta-atomic
+        11: (0.84, 0.84, 1.0),   # octa-atomic
     }
-    emission_for_level = {1: 4.0, 2: 1.5, 3: 2.5, 4: 8.0}
+    emission_for_level = {
+        1: 4.0, 2: 1.5, 3: 2.5, 4: 8.0,
+        5: 2.0, 6: 2.5, 7: 3.0, 8: 3.5, 9: 4.0, 10: 4.5, 11: 5.0,
+    }
 
     for i in range(len(positions)):
         if not alive[i]:
