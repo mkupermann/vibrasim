@@ -190,19 +190,27 @@ Spec at `docs/superpowers/specs/2026-05-06-phase-3-membranes.md`. Spontaneous me
 
 The wave field shows ~400 short oriented sinusoidal tubes (red = odd polarity, blue = even). Yellow-orange spheres are electrons. Pale-white sphere is a triad. The bright white sphere upper-right in the climax frame is the **first atom**. The standalone climax frame is at `renders/keyframe_first_atom.png`.
 
-### Phase 2 demo result (240 s simulated with the same calibration)
+### Phase 2 demo result (full 240 s simulated)
 
-This run extended the calibrated config to 240 s simulated time, snapshotting every 1 s, to test whether molecule formation follows from atom formation under the same parameters.
+Ran the calibrated config to completion at 240 s simulated time, snapshotting every 1 s. **Final result:**
 
-Observed (intermediate snapshot at t = 120 s, this LOGBOOK gets the full final at next read):
+| Level | Max alive | First seen |
+|---|---:|---|
+| 1 (electrons) | 115 | t = 0.32 s |
+| 2 (pairs) | 10 | t = 2.95 s |
+| 3 (triads) | 4 | t = 6.28 s |
+| 4 (atoms) | **1** | t = 13.40 s |
+| 5+ (molecules) | 0 | — |
 
-| Level | Count alive at t=120 |
-|---|---:|
-| 1 (electrons) | 102 |
-| 2 (pairs) | 9 |
-| 3 (triads) | 2 |
-| 4 (atoms) | **1** |
-| 5+ (molecules) | 0 |
+Wall time: 5517 s (~92 minutes) for 240 s simulated. CPU was under heavy contention from concurrent renders and other tasks; in isolation the run would complete much faster.
+
+```
+$ python tools/classify_molecules.py renders/phase2-work/snapshots/snapshot_t000240.00.npz
+# (no molecules)
+
+$ python tools/detect_membranes.py renders/phase2-work/snapshots/snapshot_t000240.00.npz
+# (no candidates with the default thresholds)
+```
 
 **The bottleneck is atom production rate, not the molecule-formation rules.** With only one atom alive, no atom + atom binding can occur, regardless of how well the rules are implemented. Phase 2's acceptance criterion (≥5 distinct molecule species) is therefore *not* met by this calibration in 240 s simulated time. A second atom forming (the necessary precondition for the first molecule) requires another triad + electron event satisfying all the binding rules, and the per-second probability is low at this density.
 
