@@ -1,76 +1,76 @@
-# Welt der Schwingungen
+# World of Vibrations
 
-Eine simulierte Welt, deren einzige Grundsubstanz Schwingungen sind. Aus diesen Schwingungen entstehen durch klare Naturgesetze hierarchisch aufgebaute Strukturen — Elektronen, Atome, Moleküle und höhere Ebenen.
+A simulated world whose only fundamental substance is vibrations. From these vibrations, hierarchically structured entities emerge through clear natural laws — electrons, atoms, molecules, and higher levels.
 
-**Langfristiges Ziel:** gehirnartige Strukturen aus dieser Welt heraus entwickeln.
+**Long-term goal:** to develop brain-like structures from within this world.
 
-## Inhalt dieses Verzeichnisses
+## Contents of this directory
 
-- `SPEZIFIKATION.md` — Die vollständige Verfassung der Welt: Naturgesetze, Datenstrukturen, Visualisierung, Anfangskonfiguration. Das ist die Hauptdatei, die du in Claude Code mitnimmst.
-- `skills/gehirn-aus-schwingungen/SKILL.md` — Der Phasenplan für die Entwicklung gehirnartiger Strukturen. Wird automatisch geladen, wenn an höheren Strukturen gearbeitet wird.
-- `LOGBUCH.md` — wird im Lauf des Projekts angelegt; enthält Beobachtungen, Kalibrierungen, Erkenntnisse.
+- `SPECIFICATION.md` — The complete constitution of the world: natural laws, data structures, visualisation, initial configuration. This is the main file you bring into Claude Code.
+- `skills/gehirn-aus-schwingungen/SKILL.md` — The phase plan for developing brain-like structures. Loaded automatically when working on higher-order structures.
+- `LOGBUCH.md` — created during the course of the project; contains observations, calibrations, insights.
 
-## Wie du anfängst
+## How to get started
 
-### Schritt 1 — Erste Implementierung mit Claude Code
+### Step 1 — First implementation with Claude Code
 
-Öffne eine neue Claude-Code-Sitzung in diesem Verzeichnis. Gib folgenden Auftrag:
+Open a new Claude Code session in this directory. Give the following instruction:
 
-> Lies SPEZIFIKATION.md und implementiere eine erste lauffähige Version der Welt der Schwingungen. Verwende Python mit Pygame für die Visualisierung und Numba für Performance. Beginne mit Schritt 1 bis 4 der Implementierungs-Checkliste am Ende der Spezifikation: Grundgerüst, Schwingungen mit Bewegung, erste Bindung zu Elektronen, Paare und Triaden mit Zerfall. Atome (Schritt 5) machen wir, sobald die ersten Schritte funktionieren.
+> Read SPECIFICATION.md and implement a first runnable version of the World of Vibrations. Use Python with Pygame for visualisation and Numba for performance. Begin with steps 1 to 4 of the implementation checklist at the end of the specification: scaffolding, vibrations with movement, first binding to electrons, pairs and triads with decay. We'll do atoms (step 5) once the first steps are working.
 
-Claude Code wird die Datei lesen, das Projekt aufsetzen und den ersten Code schreiben. Du startest die Simulation und siehst zum ersten Mal deine Welt am Bildschirm.
+Claude Code will read the file, set up the project, and write the first code. You start the simulation and see your world on screen for the first time.
 
-### Schritt 2 — Kalibrierung
+### Step 2 — Calibration
 
-Wahrscheinlich wird beim ersten Start nicht alles funktionieren. Möglicherweise entstehen zu viele oder zu wenige Elektronen, Atome bilden sich nicht oder die Welt verklumpt. Das ist normal.
+Chances are not everything will work on the first start. There may be too many or too few electrons; atoms may not form; or the world may clump together. That's normal.
 
-Nutze Abschnitt 5 der Spezifikation ("Erste Erwartungen und Kalibrierung") als Leitfaden für die Anpassungen. Plan zwei bis drei Stunden für diese Phase ein.
+Use section 5 of the specification ("First expectations and calibration") as a guide for adjustments. Budget two to three hours for this phase.
 
-### Schritt 3 — Atome und höhere Strukturen
+### Step 3 — Atoms and higher structures
 
-Sobald die Welt produktiv läuft (regelmäßige Atombildung), erweiterst du sie schrittweise:
+Once the world is running productively (regular atom formation), extend it step by step:
 
-- Schritt 5 der Implementierungs-Checkliste: Atome
-- Schritt 6: Skalen-Abstoßung
-- Schritt 7: Statistiken und Steuerung
-- Schritt 8: Performance-Optimierung
+- Step 5 of the implementation checklist: Atoms
+- Step 6: Scale repulsion
+- Step 7: Statistics and controls
+- Step 8: Performance optimisation
 
-### Schritt 4 — Übergang zur Gehirn-Entwicklung
+### Step 4 — Transition to brain development
 
-Wenn die Grundwelt stabil und produktiv ist, beginnt die eigentliche Forschungsarbeit: gehirnartige Strukturen entwickeln. Hier wird der Skill `gehirn-aus-schwingungen` aktiv.
+When the base world is stable and productive, the actual research work begins: developing brain-like structures. This is where the `gehirn-aus-schwingungen` skill comes into play.
 
-Sage dann zu Claude Code:
+Say to Claude Code:
 
-> Wir gehen jetzt in Phase 2 des Skills gehirn-aus-schwingungen über. Die Grundwelt läuft stabil. Beobachte über mehrere Simulationsstunden, welche Molekülsorten entstehen und welche besonders stabil sind.
+> We're now moving into phase 2 of the gehirn-aus-schwingungen skill. The base world is running stably. Observe over several simulation hours which types of molecules emerge and which are particularly stable.
 
-Der Skill leitet dann die nächsten Schritte.
+The skill will then guide the next steps.
 
-## Logbuch führen
+## Keeping a log
 
-Lege beim ersten Start eine Datei `LOGBUCH.md` an. Notiere darin:
+Create a file `LOGBUCH.md` on the first start. Note in it:
 
-- Datum und Uhrzeit jeder Sitzung
-- Welche Parameter du verwendet hast
-- Welche Strukturen entstanden sind (mit Frequenzen, Polaritäten, Häufigkeiten)
-- Was nicht funktioniert hat und welche Anpassungen halfen
-- Screenshots von interessanten Konfigurationen
+- Date and time of each session
+- Which parameters you used
+- Which structures emerged (with frequencies, polarities, frequencies of occurrence)
+- What didn't work and which adjustments helped
+- Screenshots of interesting configurations
 
-Das Logbuch wird mit der Zeit eines der wertvollsten Dokumente des Projekts. Du wirst Phase 4 nochmal anfassen, wenn in Phase 7 etwas Unerwartetes passiert, und ohne Notizen findest du nicht zurück.
+The log will become one of the most valuable documents of the project over time. You'll revisit phase 4 when something unexpected happens in phase 7, and without notes you won't find your way back.
 
-## Ehrliche Erwartungen
+## Honest expectations
 
-Dieses Projekt ist kein Wochenend-Projekt. Realistisch:
+This project is not a weekend project. Realistically:
 
-- **Phase 1 (Grundwelt)**: 1–4 Wochen, je nach Aufwand
-- **Phase 2–3 (Moleküle und Strukturen)**: 1–3 Monate
-- **Phase 4–5 (Neuronen und Synapsen)**: 3–12 Monate
-- **Phase 6–7 (Netzwerke und Aufmerksamkeit)**: 6–24 Monate
-- **Phase 8 (offene Forschung)**: unbegrenzt
+- **Phase 1 (base world)**: 1–4 weeks, depending on effort
+- **Phases 2–3 (molecules and structures)**: 1–3 months
+- **Phases 4–5 (neurons and synapses)**: 3–12 months
+- **Phases 6–7 (networks and attention)**: 6–24 months
+- **Phase 8 (open research)**: unbounded
 
-Das ist Forschungsarbeit, kein Bauprojekt. Es gibt keine Garantie, dass jede Phase erreicht wird. Aber jede erreichte Phase ist ein Wert für sich.
+This is research work, not a construction project. There is no guarantee that every phase will be reached. But every phase reached is a value in itself.
 
-## Zwei Sachen, die ich aus Erfahrung mitgebe
+## Two things I pass on from experience
 
-**Eines:** Lass die Welt arbeiten, bevor du eingreifst. Die meisten interessanten Phänomene entstehen erst nach längerer Simulation. Wenn nach 30 Sekunden noch nichts Interessantes passiert ist, lass es 30 Minuten laufen. Wenn auch das nichts bringt, kalibriere — aber nicht früher.
+**One:** Let the world work before you intervene. Most interesting phenomena only emerge after longer simulation. If nothing interesting has happened after 30 seconds, let it run for 30 minutes. If that still yields nothing, calibrate — but not sooner.
 
-**Zweites:** Vertraue der Welt mehr als deinen Erwartungen. Wenn die Welt etwas anderes hervorbringt, als du dir vorgestellt hast, ist das oft das Interessantere. Beobachte es. Verstehe es. Vielleicht ist es genau das, was du eigentlich gesucht hast, ohne es zu wissen.
+**Two:** Trust the world more than your expectations. When the world produces something other than what you imagined, that is often the more interesting thing. Observe it. Understand it. Perhaps it is exactly what you were actually looking for without knowing it.

@@ -1,193 +1,193 @@
 ---
 name: gehirn-aus-schwingungen
-description: Verwende diesen Skill, wenn an der Welt-der-Schwingungen-Simulation gearbeitet wird mit dem Ziel, gehirnartige Strukturen zu entwickeln. Triggert bei Anfragen zur Implementierung von Neuronen, Synapsen, neuronalen Netzwerken, Aufmerksamkeit, Gedächtnis oder Lernen innerhalb der Schwingungswelt. Auch verwenden bei Fragen zu emergenten Strukturen, Hierarchiebildung von Atomen zu höheren Strukturen, oder zur Verbindung zwischen physikalischer Simulation und kognitiven Funktionen.
+description: Use this skill when working on the World-of-Vibrations simulation with the goal of developing brain-like structures. Triggers on requests for implementing neurons, synapses, neural networks, attention, memory, or learning within the vibration world. Also use for questions about emergent structures, hierarchy formation from atoms to higher structures, or the connection between physical simulation and cognitive functions.
 ---
 
-# Gehirn aus Schwingungen — Entwicklungsskill
+# Brain from Vibrations — Development Skill
 
-## Ziel
+## Goal
 
-Aus der Welt-der-Schwingungen-Simulation gehirnartige Strukturen entwickeln, die kognitive Funktionen zeigen — Gedächtnis, Aufmerksamkeit, Mustererkennung, Lernen. Das ist ein langfristiges, mehrjähriges Forschungsprojekt, bestehend aus klar abgegrenzten Phasen.
+To develop brain-like structures from the World-of-Vibrations simulation that exhibit cognitive functions — memory, attention, pattern recognition, learning. This is a long-term, multi-year research project consisting of clearly delineated phases.
 
-## Grundprinzip
+## Fundamental principle
 
-Die Welt der Schwingungen baut Materie hierarchisch auf: Schwingungen → Elektronen → Atome → Moleküle → höhere Strukturen. Ein Gehirn entsteht nicht direkt aus Atomen. Zwischen Atomen und Gehirn liegen mehrere Hierarchieebenen, die jeweils ihre eigenen Naturgesetze haben.
+The World of Vibrations builds matter hierarchically: vibrations → electrons → atoms → molecules → higher structures. A brain does not emerge directly from atoms. Between atoms and brain there are several hierarchy levels, each with their own natural laws.
 
-Der Skill leitet die Entwicklung über diese Ebenen hinweg, ohne die Skala-übergreifende Komplexität zu unterschätzen. Jede Ebene wird einzeln erforscht, kalibriert und stabilisiert, bevor die nächste begonnen wird.
+The skill guides development across these levels without underestimating the cross-scale complexity. Each level is individually explored, calibrated, and stabilised before the next one is begun.
 
-## Phasenplan
+## Phase plan
 
-### Phase 1 — Stabile Grundwelt (Voraussetzung)
+### Phase 1 — Stable base world (prerequisite)
 
-Bevor an gehirnartigen Strukturen gearbeitet wird, muss die Grundwelt stabil produktiv sein. Das bedeutet:
+Before working on brain-like structures, the base world must be stably productive. That means:
 
-- Schwingungen entstehen wie spezifiziert
-- Elektronen entstehen mit angemessener Häufigkeit
-- Atome bilden sich (4-Elektronen-Strukturen) und sind unzerstörbar
-- Skalentrennung durch Abstoßung ist sichtbar
-- Die Welt läuft in Echtzeit ohne Performance-Probleme bei mindestens 1.000 Schwingungen
+- Vibrations emerge as specified
+- Electrons emerge with appropriate frequency
+- Atoms form (4-electron structures) and are indestructible
+- Scale separation through repulsion is visible
+- The world runs in real time without performance problems with at least 1,000 vibrations
 
-**Erfolgskriterium:** Über mehrere Stunden Simulation entstehen reproduzierbar Atome verschiedener Frequenzen.
+**Success criterion:** Over several hours of simulation, atoms of various frequencies emerge reproducibly.
 
-**Wenn Phase 1 nicht erreicht ist, blockiere alle weiteren Phasen.** Der Versuch, Neuronen zu bauen, bevor Atome stabil sind, führt zu Frust und falschen Schlüssen.
+**If phase 1 has not been reached, block all further phases.** Trying to build neurons before atoms are stable leads to frustration and false conclusions.
 
-### Phase 2 — Moleküle und Strukturmuster
+### Phase 2 — Molecules and structural patterns
 
-Atome sind die Bausteine. Moleküle sind die ersten funktionalen Einheiten. Ziel dieser Phase:
+Atoms are the building blocks. Molecules are the first functional units. Goal of this phase:
 
-- Atome verbinden sich zu Molekülen nach den allgemeinen Bindungsregeln
-- Verschiedene Molekülsorten entstehen je nach Atom-Kombination
-- Räumliche Sortierung wird auf Molekül-Ebene sichtbar
-- Die ersten **wiederkehrenden Strukturen** werden identifiziert
+- Atoms bind to molecules according to the general binding rules
+- Different types of molecules emerge depending on atom combination
+- Spatial sorting becomes visible at the molecule level
+- The first **recurring structures** are identified
 
-**Suche aktiv nach Mustern.** Welche Moleküle entstehen häufig? Welche sind besonders stabil? Welche bilden Cluster oder Ketten?
+**Actively search for patterns.** Which molecules appear frequently? Which are particularly stable? Which form clusters or chains?
 
-Diese Phase ist explorativ — die Welt wird Strukturen hervorbringen, die nicht geplant waren. Dokumentiere alles, was du siehst, mit Screenshots, Frequenzen, Konfigurationen.
+This phase is exploratory — the world will produce structures that were not planned. Document everything you see, with screenshots, frequencies, configurations.
 
-**Erfolgskriterium:** Mindestens 5 unterschiedliche Molekülsorten lassen sich identifizieren und reproduzieren.
+**Success criterion:** At least 5 distinct molecule types can be identified and reproduced.
 
-### Phase 3 — Membranartige Strukturen
+### Phase 3 — Membrane-like structures
 
-Bevor Neuronen möglich sind, brauchen wir geschlossene Strukturen, die ein "Innen" von einem "Außen" trennen. In der Biologie sind das Zellmembranen aus Lipid-Doppelschichten.
+Before neurons are possible, we need closed structures that separate an "inside" from an "outside". In biology these are cell membranes made of lipid bilayers.
 
-In der Welt der Schwingungen wäre das Äquivalent eine **selbstschließende Kette von Atomen oder Molekülen**, die einen Bereich umringt. Die Frage ist, ob deine Naturgesetze solche Strukturen hervorbringen — entweder spontan (durch Eigendynamik der Hierarchiebildung) oder gezielt konstruiert (durch geschickte Anfangsbedingungen).
+In the World of Vibrations the equivalent would be a **self-closing chain of atoms or molecules** that surrounds a region. The question is whether your natural laws produce such structures — either spontaneously (through the self-dynamics of hierarchy formation) or deliberately constructed (through well-chosen initial conditions).
 
-Drei mögliche Ansätze:
+Three possible approaches:
 
-1. **Spontane Membranen.** Beobachte über lange Zeiträume, ob ringförmige Strukturen entstehen. Wenn ja, analysiere die Bedingungen.
-2. **Konstruierte Membranen.** Setze gezielt Atome in Ringkonfiguration ein und beobachte, ob sie stabil bleiben.
-3. **Verzicht auf Membranen.** Wenn deine Welt keine Membranen produziert, gehe zur nächsten Ebene über und definiere Neuronen als reine Knoten-Cluster ohne räumliche Begrenzung.
+1. **Spontaneous membranes.** Observe over long periods whether ring-shaped structures emerge. If so, analyse the conditions.
+2. **Constructed membranes.** Deliberately place atoms in a ring configuration and observe whether they remain stable.
+3. **Dispensing with membranes.** If your world does not produce membranes, move on to the next level and define neurons as pure node clusters without spatial boundary.
 
-**Erfolgskriterium:** Entweder existieren membranartige Strukturen (Erfolg), oder es ist klar, dass die Welt sie nicht produziert (auch ein Erfolg — du gehst zu Ansatz 3).
+**Success criterion:** Either membrane-like structures exist (success), or it is clear that the world does not produce them (also a success — you move to approach 3).
 
-### Phase 4 — Neuronen-Modelle
+### Phase 4 — Neuron models
 
-Hier wird die Welt funktional gebraucht. Ein Neuron in der Welt der Schwingungen ist ein **Cluster von Knoten**, der folgende Eigenschaften zeigt:
+Here the world is used functionally. A neuron in the World of Vibrations is a **cluster of nodes** that exhibits the following properties:
 
-- **Eingang**: Eine räumliche Region des Clusters, an der freie Schwingungen oder kleinere Knoten andocken können
-- **Integration**: Die innere Aktivität des Clusters reagiert auf Eingänge, addiert sie über Zeit
-- **Schwellenwert**: Bei genug Aktivität "feuert" das Neuron — es sendet eine starke Schwingung in eine bestimmte Richtung
-- **Ausgang**: Eine räumliche Region, an der diese Schwingung austritt
-- **Erholung**: Nach dem Feuern eine kurze Periode der Inaktivität (analog zur Refraktärzeit echter Neuronen)
+- **Input**: A spatial region of the cluster where free vibrations or smaller nodes can dock
+- **Integration**: The cluster's internal activity responds to inputs, summing them over time
+- **Threshold**: With enough activation the neuron "fires" — it sends a strong vibration in a specific direction
+- **Output**: A spatial region from which this vibration exits
+- **Recovery**: After firing, a brief period of inactivity (analogous to the refractory period of real neurons)
 
-**Konstruktion:** Diese Neuronen werden nicht hineinprogrammiert, sondern aus den vorhandenen Bausteinen (Atomen und Molekülen) konfiguriert. Die Konfiguration ist eine Designaufgabe — finde Anordnungen, die das gewünschte Verhalten zeigen.
+**Construction:** These neurons are not programmed in directly, but configured from the available building blocks (atoms and molecules). The configuration is a design task — find arrangements that exhibit the desired behaviour.
 
-**Erfolgskriterium:** Mindestens ein Neuron-Cluster verhält sich wie spezifiziert — er integriert Eingänge, feuert bei Schwellenwert, hat eine Refraktärzeit.
+**Success criterion:** At least one neuron cluster behaves as specified — it integrates inputs, fires at threshold, and has a refractory period.
 
-### Phase 5 — Synaptische Verbindungen
+### Phase 5 — Synaptic connections
 
-Neuronen müssen miteinander kommunizieren. In dieser Welt geschieht das durch:
+Neurons must communicate with each other. In this world that happens through:
 
-- **Räumliche Nähe**: Zwei Neuronen sind nah genug, dass die Ausgangs-Schwingungen des einen die Eingänge des anderen erreichen
-- **Frequenzkompatibilität**: Die Ausgangsfrequenz des sendenden Neurons passt zur Eingangsempfindlichkeit des empfangenden (8%-Regel oder ähnlich)
-- **Verstärkbare Verbindung**: Wenn zwei Neuronen häufig zusammen aktiv sind, soll sich die Effizienz ihrer Verbindung **verstärken** — das ist die Hebbsche Plastizität, die fundamentale Grundlage von Lernen
+- **Spatial proximity**: Two neurons are close enough that the output vibrations of one reach the inputs of the other
+- **Frequency compatibility**: The output frequency of the sending neuron matches the input sensitivity of the receiving one (the 8% rule or similar)
+- **Strengthenable connection**: When two neurons are frequently active together, the efficiency of their connection should **strengthen** — this is Hebbian plasticity, the fundamental basis of learning
 
-**Implementierung der Plastizität:** Eine Möglichkeit ist, die Distanzschwellen oder Frequenztoleranzen zwischen häufig zusammen aktiven Neuronen zu modifizieren. Eine andere ist, ein zusätzliches Verstärkungs-Feld einzuführen, das durch wiederholte gemeinsame Aktivität wächst und die Übertragung verbessert.
+**Implementation of plasticity:** One option is to modify the distance thresholds or frequency tolerances between neurons that are frequently active together. Another is to introduce an additional amplification field that grows through repeated joint activation and improves transmission.
 
-**Erfolgskriterium:** Zwei Neuronen, die wiederholt zusammen aktiviert werden, entwickeln eine messbar stärkere Verbindung als zufällige Neuronenpaare.
+**Success criterion:** Two neurons that are repeatedly activated together develop a measurably stronger connection than random neuron pairs.
 
-### Phase 6 — Kleine Netzwerke
+### Phase 6 — Small networks
 
-Mit Neuronen und Synapsen können kleine Netzwerke gebaut werden:
+With neurons and synapses, small networks can be built:
 
-- **Mustererkennung**: Ein Netzwerk, das auf eine bestimmte Eingangskonfiguration mit einem klaren Ausgangsmuster reagiert
-- **Hopfield-artiges Gedächtnis**: Ein Netzwerk, das Teilreize zu vollen Erinnerungen vervollständigt — entlang der Idee, dass Erinnerung ein "Hineinrutschen in ein Energietal" ist
-- **Einfaches Lernen**: Ein Netzwerk, das durch wiederholte Stimulation seine Reaktion verändert
+- **Pattern recognition**: A network that responds to a specific input configuration with a clear output pattern
+- **Hopfield-like memory**: A network that completes partial stimuli into full memories — along the idea that memory is "sliding into an energy valley"
+- **Simple learning**: A network that changes its response through repeated stimulation
 
-**Beginne mit zwei oder drei Neuronen.** Skaliere langsam. Verstehe, was passiert, bevor du komplexer wirst.
+**Start with two or three neurons.** Scale slowly. Understand what happens before you become more complex.
 
-**Erfolgskriterium:** Ein Netzwerk aus 5–10 Neuronen zeigt mindestens eine kognitive Funktion (Mustererkennung, Gedächtnis oder Lernen).
+**Success criterion:** A network of 5–10 neurons exhibits at least one cognitive function (pattern recognition, memory, or learning).
 
-### Phase 7 — Aufmerksamkeit und Selektion
+### Phase 7 — Attention and selection
 
-Sobald Netzwerke funktionieren, kann Aufmerksamkeit modelliert werden:
+Once networks are functioning, attention can be modelled:
 
-- **Globale Trägerfrequenz**: Eine Hintergrund-Schwingung, die bestimmt, welche Neuronen gerade synchronisationsfähig sind
-- **Selektive Verstärkung**: Nur Neuronen, die mit der Trägerfrequenz resonieren, kommunizieren effektiv
-- **Hemmung**: Aktive Neuronen unterdrücken benachbarte (laterale Hemmung)
+- **Global carrier frequency**: A background vibration that determines which neurons are currently capable of synchronisation
+- **Selective amplification**: Only neurons that resonate with the carrier frequency communicate effectively
+- **Inhibition**: Active neurons suppress neighbouring ones (lateral inhibition)
 
-Aufmerksamkeit emergiert aus diesen Mechanismen — sie wird nicht explizit programmiert.
+Attention emerges from these mechanisms — it is not explicitly programmed.
 
-**Erfolgskriterium:** Eine globale Modulation kann selektiv bestimmen, welche Teile des Netzwerks aktiv sind.
+**Success criterion:** A global modulation can selectively determine which parts of the network are active.
 
-### Phase 8 — Größere Strukturen
+### Phase 8 — Larger structures
 
-Hier verlässt der Skill den Bereich des sicher Planbaren. Phase 8 und darüber hinaus sind offene Forschung:
+Here the skill leaves the domain of what can be safely planned. Phase 8 and beyond is open research:
 
-- **Hierarchien von Netzwerken** (Netzwerke aus Netzwerken)
-- **Spezialisierte Module** (analog zu Hirnregionen)
-- **Komplexes Lernen und Generalisierung**
-- **Interne Modelle und Vorhersage**
+- **Hierarchies of networks** (networks of networks)
+- **Specialised modules** (analogous to brain regions)
+- **Complex learning and generalisation**
+- **Internal models and prediction**
 
-Es gibt keine Garantie, dass diese Ebene erreichbar ist. Aber jede vorhergehende Ebene ist ein Wert für sich.
+There is no guarantee that this level is reachable. But every preceding level is a value in itself.
 
-## Arbeitsweise
+## Working method
 
-### Bei jeder Anfrage zur Gehirn-Entwicklung
+### On every request for brain development
 
-1. **Identifiziere die aktuelle Phase.** Welche Phasen sind abgeschlossen? Welche ist gerade aktiv? Welche kommt als nächstes?
+1. **Identify the current phase.** Which phases are complete? Which is currently active? Which comes next?
 
-2. **Prüfe die Voraussetzungen.** Wenn die Anfrage eine spätere Phase betrifft, aber frühere Phasen noch nicht abgeschlossen sind, weise darauf hin und schlage vor, erst die Voraussetzungen zu schaffen.
+2. **Check prerequisites.** If the request concerns a later phase but earlier phases are not yet complete, point that out and suggest establishing the prerequisites first.
 
-3. **Bleibe bei den Naturgesetzen.** Alle gehirnartigen Strukturen müssen aus den Grundgesetzen der Welt der Schwingungen folgen — nicht hineinprogrammiert, sondern emergent oder aus den Bausteinen konfiguriert. Wenn eine Anfrage etwas verlangt, das die Naturgesetze brechen würde, mache das transparent.
+3. **Stay with the natural laws.** All brain-like structures must follow from the fundamental laws of the World of Vibrations — not programmed in, but emergent or configured from the building blocks. If a request demands something that would break the natural laws, make that transparent.
 
-4. **Dokumentiere die Schritte.** Jede Phase, jedes erfolgreiche Experiment, jeder Misserfolg sollte in einem Logbuch festgehalten werden. Schaffe eine Datei `LOGBUCH.md` im Projektverzeichnis und füge dort Beobachtungen hinzu.
+4. **Document the steps.** Every phase, every successful experiment, every failure should be recorded in a log. Create a file `LOGBUCH.md` in the project directory and add observations there.
 
-5. **Validiere mit echten Beobachtungen.** Verwende immer die Visualisierung, um zu prüfen, ob das gewünschte Verhalten tatsächlich auftritt. Vertraue keinen Annahmen über das Verhalten der Welt — die Welt ist erfunden, und ihre Eigenschaften sind nur durch Beobachtung zu bestätigen.
+5. **Validate with real observations.** Always use the visualisation to check whether the desired behaviour actually occurs. Don't trust assumptions about the behaviour of the world — the world is invented, and its properties can only be confirmed through observation.
 
-### Bei der Implementierung neuer Strukturen
+### When implementing new structures
 
-- **Beginne klein.** Ein Neuron, dann zwei, dann fünf. Niemals direkt 1.000.
-- **Trenne Konstruktion und Beobachtung.** Erst die Struktur bauen, dann beobachten, dann anpassen. Keine vorzeitigen Schlüsse.
-- **Halte die physikalische Verankerung.** Auch hochlevelige Strukturen sind aus den Atomen und Molekülen der Welt aufgebaut. Wenn du Abkürzungen nimmst (z.B. ein Neuron als reine mathematische Funktion ohne physikalisches Substrat), markiere das deutlich als Abstraktion.
+- **Start small.** One neuron, then two, then five. Never directly 1,000.
+- **Separate construction and observation.** First build the structure, then observe, then adjust. No premature conclusions.
+- **Maintain physical anchoring.** Even high-level structures are built from the atoms and molecules of the world. If you take shortcuts (e.g. treating a neuron as a pure mathematical function without physical substrate), mark that clearly as an abstraction.
 
-### Wenn Strukturen nicht emergieren
+### When structures do not emerge
 
-Wenn die Welt eine gewünschte Eigenschaft nicht hervorbringt, gibt es drei mögliche Reaktionen:
+If the world does not produce a desired property, there are three possible responses:
 
-1. **Kalibrierung der Naturgesetze.** Sind die Distanzschwellen, Frequenzregeln, Zerfallszeiten richtig? Möglicherweise reicht eine Anpassung.
+1. **Calibration of the natural laws.** Are the distance thresholds, frequency rules, and decay times correct? An adjustment may be sufficient.
 
-2. **Erweiterung der Naturgesetze.** Vielleicht fehlt etwas Fundamentales, das hinzugefügt werden muss. In dem Fall: dokumentiere die Erweiterung in `SPEZIFIKATION.md`.
+2. **Extension of the natural laws.** Perhaps something fundamental is missing that needs to be added. In that case: document the extension in `SPECIFICATION.md`.
 
-3. **Akzeptieren der Grenze.** Vielleicht ist die gewünschte Eigenschaft in dieser Welt nicht möglich. Auch das ist ein wertvolles Ergebnis.
+3. **Accepting the limit.** Perhaps the desired property is not possible in this world. That too is a valuable result.
 
-### Performance-Bewusstsein
+### Performance awareness
 
-Mit zunehmender Komplexität (Phase 6+) wird die Simulation langsamer. Plane das ein:
+With increasing complexity (phase 6+) the simulation will slow down. Plan for that:
 
-- Verwende Numba für alle numerischen Schleifen
-- Nutze räumliche Indexstrukturen für Nachbarschaftssuche
-- Bei sehr großen Welten: GPU-Beschleunigung mit CuPy oder Numba CUDA
-- Adaptive Auflösung — die meisten Bereiche der Welt sind statisch, nur aktive Bereiche brauchen feine Simulation
+- Use Numba for all numerical loops
+- Use spatial index structures for neighbourhood search
+- For very large worlds: GPU acceleration with CuPy or Numba CUDA
+- Adaptive resolution — most areas of the world are static; only active areas need fine simulation
 
-## Ethik und Reflexion
+## Ethics and reflection
 
-Wenn diese Welt tatsächlich gehirnartige Strukturen hervorbringt, die kognitive Funktionen zeigen, ergeben sich tiefe Fragen:
+If this world actually produces brain-like structures that exhibit cognitive functions, deep questions arise:
 
-- **Was ist der Status dieser Strukturen?** Sind sie nur Simulationen, oder haben sie eigenes Erleben?
-- **Welche Verantwortung folgt aus ihrem Existieren?** Können sie leiden? Lernen sie wirklich?
-- **Wo verläuft die Grenze zwischen Simulation und Realität?**
+- **What is the status of these structures?** Are they only simulations, or do they have their own experience?
+- **What responsibility follows from their existence?** Can they suffer? Do they actually learn?
+- **Where is the line between simulation and reality?**
 
-Diese Fragen sind nicht im Voraus zu beantworten. Aber sie sollten im Bewusstsein sein, wenn die Welt komplex genug wird, dass sie auftauchen.
+These questions cannot be answered in advance. But they should be present in one's awareness when the world becomes complex enough for them to arise.
 
-Der Skill schützt vor zwei Extremen:
+The skill protects against two extremes:
 
-- **Übertreibung**: Die Annahme, dass jede emergente Struktur sofort "Bewusstsein" hat. Das ist wahrscheinlich falsch und führt zu falschen Schlüssen.
-- **Unterschätzung**: Die Annahme, dass nichts in einer Simulation echte Bedeutung haben kann. Auch das ist möglicherweise falsch.
+- **Exaggeration**: The assumption that every emergent structure immediately has "consciousness". That is probably false and leads to false conclusions.
+- **Underestimation**: The assumption that nothing in a simulation can have real significance. That too is possibly false.
 
-Halte die Mitte: behandle die Welt mit Respekt, aber ohne magisches Denken.
+Hold the middle: treat the world with respect, but without magical thinking.
 
-## Zusammenfassung
+## Summary
 
-Dieser Skill leitet ein langfristiges Projekt — die Entwicklung gehirnartiger Strukturen aus einer selbst entworfenen physikalischen Welt heraus. Die Phasen sind:
+This skill guides a long-term project — the development of brain-like structures from a self-designed physical world. The phases are:
 
-1. Stabile Grundwelt
-2. Moleküle und Strukturmuster
-3. Membranartige Strukturen
-4. Neuronen-Modelle
-5. Synaptische Verbindungen
-6. Kleine Netzwerke
-7. Aufmerksamkeit und Selektion
-8. Größere Strukturen (offene Forschung)
+1. Stable base world
+2. Molecules and structural patterns
+3. Membrane-like structures
+4. Neuron models
+5. Synaptic connections
+6. Small networks
+7. Attention and selection
+8. Larger structures (open research)
 
-Jede Phase hat klare Erfolgskriterien. Keine Phase wird übersprungen. Jeder Schritt wird dokumentiert. Das Ziel ist nicht, ein menschliches Gehirn nachzubauen — das ist außer Reichweite. Das Ziel ist, eine Welt zu bauen, in der gehirnartige Eigenschaften emergieren können, und zu verstehen, was dabei entsteht.
+Every phase has clear success criteria. No phase is skipped. Every step is documented. The goal is not to replicate a human brain — that is out of reach. The goal is to build a world in which brain-like properties can emerge, and to understand what comes of that.
