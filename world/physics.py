@@ -491,10 +491,14 @@ def neuron_dynamics(world, dt: float) -> None:
 
 
 def _emit_vibrations(world, atom_idx: int) -> None:
-    """Emit n_emit vibrations isotropically around the firing atom's position."""
+    """Emit n_emit vibrations isotropically around the firing atom's position.
+
+    Frequencies are drawn uniformly across the configured emission band
+    ratios (e.g. [freq_ratio, 1.0, 1/freq_ratio]) so emitted vibrations can
+    climb the binding hierarchy via the existing freq_ratio rule.
+    """
     cfg = world.config
     n = cfg.n_emit
-    # Find n free vibration slots (alive=False)
     free_mask = ~world.s_alive
     free_idx = np.where(free_mask)[0][:n]
     if len(free_idx) == 0:
@@ -511,15 +515,20 @@ def _emit_vibrations(world, atom_idx: int) -> None:
     vx = sqrt_omz2 * np.cos(phi) * cfg.emit_speed
     vy = sqrt_omz2 * np.sin(phi) * cfg.emit_speed
     vz = z * cfg.emit_speed
+    # Frequency band fan: assign each emission to one of the band ratios.
+    band_ratios = np.asarray(cfg.emit_band_ratios, dtype=np.float64)
+    band_assignments = world.rng.integers(0, len(band_ratios), size=n)
+    # Small per-emission jitter (±5%) so within-band binding is possible
+    jitter = world.rng.uniform(0.95, 1.05, size=n)
+    base_freqs = band_ratios[band_assignments] * cfg.emit_freq * jitter
     for k, fi in enumerate(free_idx):
-        world.s_pos[fi] = pos % box  # spawn at firing position
+        world.s_pos[fi] = pos % box
         world.s_vel[fi, 0] = vx[k]
         world.s_vel[fi, 1] = vy[k]
         world.s_vel[fi, 2] = vz[k]
-        world.s_freq[fi] = cfg.emit_freq
+        world.s_freq[fi] = base_freqs[k]
         world.s_pol[fi] = bool(world.rng.random() < cfg.polarity_split)
         world.s_alive[fi] = True
-    # Update n_alive (high-water mark) so the new vibrations are scanned next tick.
     high = int(free_idx.max()) + 1
     if high > world.n_alive:
         world.n_alive = high
