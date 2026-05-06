@@ -561,32 +561,47 @@ def ambient_regeneration(world, dt: float) -> tuple[int, int]:
     return n_displaced + n_allocated, n_decayed
 
 
-def apply_scale_repulsion(world, dt: float) -> None:
-    """Accumulate repulsive force into k_vel for nodes whose freq_ratio exceeds threshold."""
-    cfg = world.config
-    if cfg.repulsion_k == 0.0 or world.k_count == 0:
-        return
-    box = np.asarray(cfg.box_size, dtype=np.float64)
-    cell = cfg.repulsion_cell_size
-    threshold = cfg.repulsion_threshold_ratio
-    grid = build_grid(world.k_pos[:world.k_count], world.k_alive[:world.k_count], box, cell)
+@njit(cache=True)
+def _apply_scale_repulsion_njit(
+    k_pos: np.ndarray,
+    k_vel: np.ndarray,
+    k_alive: np.ndarray,
+    k_freq: np.ndarray,
+    k_level: np.ndarray,
+    box: np.ndarray,
+    repulsion_k: float,
+    repulsion_threshold_ratio: float,
+    dt: float,
+    K: int,
+) -> None:
+    """JIT core for apply_scale_repulsion. Modifies k_vel in place.
 
-    for i in range(world.k_count):
-        if not world.k_alive[i]:
+    Plan A.5 Task 12: O(k²) double-loop over all alive node pairs. Implements
+    §4.6 scale-separation repulsion with periodic minimum-image distance.
+    Equivalent to the Python path when repulsion_cell_size >= box_size (all
+    pairs are neighbours), which is the typical production configuration.
+    """
+    for i in range(K):
+        if not k_alive[i]:
             continue
-        f_i = world.k_freq[i]
-        nbrs = neighbors_of(grid, world.k_pos[i], box, cell, exclude_self=True, query_index=i)
-        for j in nbrs:
-            if not world.k_alive[j]:
+        f_i = k_freq[i]
+        mass_i = float(k_level[i])
+        for j in range(K):
+            if i == j:
                 continue
-            f_j = world.k_freq[j]
-            ratio = max(f_i, f_j) / min(f_i, f_j)
-            if ratio <= threshold:
+            if not k_alive[j]:
+                continue
+            f_j = k_freq[j]
+            if f_i > f_j:
+                ratio = f_i / f_j
+            else:
+                ratio = f_j / f_i
+            if ratio <= repulsion_threshold_ratio:
                 continue
             # Direction vector from j to i (minimum-image periodic)
-            dx = world.k_pos[i, 0] - world.k_pos[j, 0]
-            dy = world.k_pos[i, 1] - world.k_pos[j, 1]
-            dz = world.k_pos[i, 2] - world.k_pos[j, 2]
+            dx = k_pos[i, 0] - k_pos[j, 0]
+            dy = k_pos[i, 1] - k_pos[j, 1]
+            dz = k_pos[i, 2] - k_pos[j, 2]
             # Apply periodic minimum-image wrap
             if dx > box[0] * 0.5:
                 dx -= box[0]
@@ -603,17 +618,84 @@ def apply_scale_repulsion(world, dt: float) -> None:
             r2 = dx * dx + dy * dy + dz * dz
             if r2 < 1e-9:
                 continue
-            r = math.sqrt(r2)
+            r = (r2) ** 0.5
             # F_magnitude = k * (ratio - threshold) / r²
-            F_mag = cfg.repulsion_k * (ratio - threshold) / r2
-            # Mass proportional to k_level (heavier nodes accelerate less)
-            mass_i = float(world.k_level[i])
+            F_mag = repulsion_k * (ratio - repulsion_threshold_ratio) / r2
             ax = F_mag * dx / r / mass_i
             ay = F_mag * dy / r / mass_i
             az = F_mag * dz / r / mass_i
-            world.k_vel[i, 0] += ax * dt
-            world.k_vel[i, 1] += ay * dt
-            world.k_vel[i, 2] += az * dt
+            k_vel[i, 0] += ax * dt
+            k_vel[i, 1] += ay * dt
+            k_vel[i, 2] += az * dt
+
+
+def apply_scale_repulsion(world, dt: float) -> None:
+    """§4.6 scale-separation repulsion.
+
+    Plan A.5 Task 12: JIT-compiled inner loop. No RNG; pure deterministic
+    numerical. Gated behind cfg.numba_jit_enabled.
+    """
+    cfg = world.config
+    if cfg.repulsion_k == 0.0 or world.k_count == 0:
+        return
+    box = np.asarray(cfg.box_size, dtype=np.float64)
+    K = world.k_count
+    if cfg.numba_jit_enabled:
+        _apply_scale_repulsion_njit(
+            world.k_pos[:K], world.k_vel[:K], world.k_alive[:K], world.k_freq[:K],
+            world.k_level[:K],
+            box, cfg.repulsion_k, cfg.repulsion_threshold_ratio,
+            dt, K,
+        )
+    else:
+        # Legacy Python path — preserved for regression diagnosis.
+        cell = cfg.repulsion_cell_size
+        threshold = cfg.repulsion_threshold_ratio
+        grid = build_grid(world.k_pos[:K], world.k_alive[:K], box, cell)
+
+        for i in range(K):
+            if not world.k_alive[i]:
+                continue
+            f_i = world.k_freq[i]
+            nbrs = neighbors_of(grid, world.k_pos[i], box, cell, exclude_self=True, query_index=i)
+            for j in nbrs:
+                if not world.k_alive[j]:
+                    continue
+                f_j = world.k_freq[j]
+                ratio = max(f_i, f_j) / min(f_i, f_j)
+                if ratio <= threshold:
+                    continue
+                # Direction vector from j to i (minimum-image periodic)
+                dx = world.k_pos[i, 0] - world.k_pos[j, 0]
+                dy = world.k_pos[i, 1] - world.k_pos[j, 1]
+                dz = world.k_pos[i, 2] - world.k_pos[j, 2]
+                # Apply periodic minimum-image wrap
+                if dx > box[0] * 0.5:
+                    dx -= box[0]
+                elif dx < -box[0] * 0.5:
+                    dx += box[0]
+                if dy > box[1] * 0.5:
+                    dy -= box[1]
+                elif dy < -box[1] * 0.5:
+                    dy += box[1]
+                if dz > box[2] * 0.5:
+                    dz -= box[2]
+                elif dz < -box[2] * 0.5:
+                    dz += box[2]
+                r2 = dx * dx + dy * dy + dz * dz
+                if r2 < 1e-9:
+                    continue
+                r = math.sqrt(r2)
+                # F_magnitude = k * (ratio - threshold) / r²
+                F_mag = cfg.repulsion_k * (ratio - threshold) / r2
+                # Mass proportional to k_level (heavier nodes accelerate less)
+                mass_i = float(world.k_level[i])
+                ax = F_mag * dx / r / mass_i
+                ay = F_mag * dy / r / mass_i
+                az = F_mag * dz / r / mass_i
+                world.k_vel[i, 0] += ax * dt
+                world.k_vel[i, 1] += ay * dt
+                world.k_vel[i, 2] += az * dt
 
 
 @njit(cache=True)
