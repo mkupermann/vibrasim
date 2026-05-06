@@ -1,0 +1,208 @@
+/* vibrasim research dashboard — clean blue / white / grey theme */
+
+:root {
+    --vs-blue: #2563eb;
+    --vs-blue-light: #60a5fa;
+    --vs-blue-pale: #eff6ff;
+    --vs-white: #ffffff;
+    --vs-grey-50: #f9fafb;
+    --vs-grey-100: #f3f4f6;
+    --vs-grey-200: #e5e7eb;
+    --vs-grey-300: #d1d5db;
+    --vs-grey-500: #6b7280;
+    --vs-grey-700: #374151;
+    --vs-grey-900: #1f2937;
+}
+
+/* Reset Streamlit defaults toward the cleaner palette */
+.stApp {
+    background-color: var(--vs-grey-50);
+}
+
+section[data-testid="stSidebar"] {
+    background-color: var(--vs-white);
+    border-right: 1px solid var(--vs-grey-200);
+}
+
+section[data-testid="stSidebar"] .stMarkdown p,
+section[data-testid="stSidebar"] label {
+    color: var(--vs-grey-700);
+}
+
+/* Headings */
+h1, h2, h3, h4 {
+    color: var(--vs-grey-900);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+h1 {
+    font-size: 1.75rem;
+    border-bottom: 2px solid var(--vs-blue);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.25rem;
+}
+
+/* Body text */
+.stMarkdown p, .stMarkdown li {
+    color: var(--vs-grey-700);
+    line-height: 1.6;
+}
+
+/* Buttons */
+.stButton > button {
+    background-color: var(--vs-blue);
+    color: var(--vs-white);
+    border: 1px solid var(--vs-blue);
+    border-radius: 6px;
+    font-weight: 500;
+    padding: 0.4rem 1rem;
+    transition: background-color 0.15s ease;
+}
+
+.stButton > button:hover {
+    background-color: #1d4ed8;
+    border-color: #1d4ed8;
+    color: var(--vs-white);
+}
+
+.stButton > button:disabled {
+    background-color: var(--vs-grey-300);
+    border-color: var(--vs-grey-300);
+    color: var(--vs-grey-500);
+}
+
+/* Secondary buttons (kind="secondary") */
+button[kind="secondary"] {
+    background-color: var(--vs-white) !important;
+    color: var(--vs-blue) !important;
+    border: 1px solid var(--vs-blue) !important;
+}
+
+button[kind="secondary"]:hover {
+    background-color: var(--vs-blue-pale) !important;
+}
+
+/* Inputs */
+.stTextInput input,
+.stTextArea textarea,
+.stNumberInput input,
+.stSelectbox div[data-baseweb="select"] > div {
+    border: 1px solid var(--vs-grey-300);
+    border-radius: 6px;
+    background-color: var(--vs-white);
+}
+
+.stTextInput input:focus,
+.stTextArea textarea:focus,
+.stNumberInput input:focus {
+    border-color: var(--vs-blue);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* Metrics */
+[data-testid="stMetric"] {
+    background-color: var(--vs-white);
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--vs-grey-200);
+    border-radius: 8px;
+    border-left: 3px solid var(--vs-blue);
+}
+
+[data-testid="stMetricLabel"] {
+    color: var(--vs-grey-500);
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+[data-testid="stMetricValue"] {
+    color: var(--vs-grey-900);
+    font-weight: 600;
+}
+
+/* Tables / dataframes */
+.stDataFrame, [data-testid="stTable"] {
+    border: 1px solid var(--vs-grey-200);
+    border-radius: 8px;
+    background-color: var(--vs-white);
+}
+
+.stDataFrame thead tr th {
+    background-color: var(--vs-grey-100) !important;
+    color: var(--vs-grey-700) !important;
+    font-weight: 600;
+    border-bottom: 1px solid var(--vs-grey-200) !important;
+}
+
+/* Tabs */
+.stTabs [data-baseweb="tab-list"] {
+    gap: 4px;
+    border-bottom: 1px solid var(--vs-grey-200);
+}
+
+.stTabs [data-baseweb="tab"] {
+    background-color: transparent;
+    color: var(--vs-grey-500);
+    border-radius: 6px 6px 0 0;
+    padding: 0.5rem 1rem;
+    border-bottom: 2px solid transparent;
+}
+
+.stTabs [aria-selected="true"] {
+    color: var(--vs-blue);
+    border-bottom-color: var(--vs-blue);
+    font-weight: 600;
+}
+
+/* Expanders */
+.streamlit-expanderHeader {
+    background-color: var(--vs-white);
+    border: 1px solid var(--vs-grey-200);
+    border-radius: 6px;
+    color: var(--vs-grey-700);
+}
+
+/* Status badges (used via st.markdown with classes) */
+.vs-badge {
+    display: inline-block;
+    padding: 0.15rem 0.55rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+.vs-badge-met        { background: #dcfce7; color: #15803d; }
+.vs-badge-partial    { background: #fef3c7; color: #b45309; }
+.vs-badge-pending    { background: var(--vs-grey-200); color: var(--vs-grey-700); }
+.vs-badge-blocked    { background: #fee2e2; color: #b91c1c; }
+.vs-badge-proposed   { background: var(--vs-blue-pale); color: var(--vs-blue); }
+.vs-badge-implemented{ background: #dcfce7; color: #15803d; }
+.vs-badge-rejected   { background: #fee2e2; color: #b91c1c; }
+.vs-badge-deferred   { background: var(--vs-grey-200); color: var(--vs-grey-700); }
+.vs-badge-active     { background: var(--vs-blue-pale); color: var(--vs-blue); }
+.vs-badge-completed  { background: #dcfce7; color: #15803d; }
+.vs-badge-paused     { background: #fef3c7; color: #b45309; }
+.vs-badge-running    { background: var(--vs-blue-pale); color: var(--vs-blue); }
+.vs-badge-failed     { background: #fee2e2; color: #b91c1c; }
+
+/* Subtle divider */
+hr {
+    border: none;
+    border-top: 1px solid var(--vs-grey-200);
+    margin: 1.5rem 0;
+}
+
+/* Code blocks (kept readable, neutral) */
+code {
+    background-color: var(--vs-grey-100);
+    color: var(--vs-grey-900);
+    padding: 0.1rem 0.35rem;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+/* Hide Streamlit footer + 'Made with Streamlit' clutter */
+footer { visibility: hidden; }
+#MainMenu { visibility: hidden; }
