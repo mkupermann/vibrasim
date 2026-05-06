@@ -13,39 +13,38 @@ from world.physics import tick
 def _growth_config(rng_seed: int = 42) -> WorldConfig:
     """Standard config for growth-foundation acceptance tests.
 
-    Tuned from the original spec to be feasible on a pure-Python substrate:
-    - freq_tolerance tightened from 0.10 → 0.005 (default) to keep binding
-      rate low and prevent monotonic k_count explosion over 60 min.
-    - lambda_gen/lambda_dec set to 0 so ambient regeneration doesn't
-      continuously re-fill the vibration buffer and drive k_count to grow
-      without bound; the periodic burst is the only input signal.
-    - n_vibrations_max reduced to 100 so the per-tick binding scan over free
-      vibrations stays fast enough for the 60-min run to complete in
-      reasonable wall-clock time.
-    - n_nodes_max increased to 4096 so the monotonic node-slot allocator
-      does not exhaust capacity over a 60-min run.
-    - pair_decay_time / triad_decay_time shortened so electrons and pairs
-      recycle back to free vibrations quickly, maintaining the free-vib
-      population without ambient_regeneration.
-    - r_1 tightened to 3.0 to further reduce per-tick binding encounters.
+    Tuned from the original spec for the pure-Python substrate:
+    - freq_tolerance=0.025 (between the spec's 0.10 which caused node-buffer
+      explosion and 0.005 which produced near-zero binding). Allows binding
+      at a sustainable rate so atoms and molecules actually form.
+    - n_nodes_max=32768: the node-slot allocator is monotonic (slots never
+      recycled); at ~6-7 new nodes/s the spec's 128-slot ceiling is hit in
+      under a second. 32768 gives headroom for the full 60-min run.
+    - lambda_dec=0.0005 (with lambda_gen=0.001): turns over the vibration
+      pool slowly so the periodic burst injector can actually land
+      vibrations. With lambda_dec=0 the buffer pinned at n_vibrations_max
+      and the F1 test passed trivially with zero atoms or molecules formed.
     """
     return WorldConfig(
-        n_initial_vibrations=50,
-        n_vibrations_max=100,
-        n_nodes_max=4096,
-        box_size=(40.0, 40.0, 40.0),
-        r_1=3.0, r_2=15.0,
-        freq_ratio=0.08, freq_tolerance=0.005,
-        pair_decay_time=5.0, triad_decay_time=20.0,
-        lambda_gen=0.0, lambda_dec=0.0,
+        n_initial_vibrations=80,
+        n_vibrations_max=200,
+        n_nodes_max=32768,
+        box_size=(60.0, 60.0, 60.0),
+        r_1=3.0, r_2=20.0,
+        freq_ratio=0.08,
+        freq_tolerance=0.025,
+        pair_decay_time=5.0,
+        triad_decay_time=30.0,
+        lambda_gen=0.001,
+        lambda_dec=0.0005,
         rng_seed=rng_seed,
         # PHASE4 dynamics
         neuron_dynamics_enabled=True,
-        theta_fire=4.0, n_emit=4, r_integrate=3.0,
+        theta_fire=4.0, n_emit=8, r_integrate=5.0,
         t_refractory=0.05, tau_membrane=0.3, emit_speed=15.0,
         # Plan A amendments
-        lambda_dec_mol=0.02,
-        r_strengthen=8.0,
+        lambda_dec_mol=0.01,
+        r_strengthen=10.0,
         emit_band_ratios=(0.08, 1.0, 12.5),
         mol_fusion_enabled=True,
     )
@@ -82,7 +81,7 @@ def test_F1_sustained_run_does_not_explode_or_collapse():
     Pass: total alive vibration count stays in [25%, 200%] of mean for ≥80% of run.
     """
     w = World(_growth_config())
-    burst_pos = [20.0, 20.0, 20.0]
+    burst_pos = [30.0, 30.0, 30.0]
     samples = []
     dt = w.config.dt
     # Sample every 60 simulated seconds across a 60-min run = 60 samples
