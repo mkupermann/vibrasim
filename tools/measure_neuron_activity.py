@@ -77,9 +77,16 @@ def measure_activity(snapshot_paths: list[Path], cluster_centre: np.ndarray,
             "baseline_output_rate": 0.0,
         }
 
-    # Baseline output rate: mean over all snapshots
+    # Baseline output rate: mean over all snapshots. When baseline is near zero
+    # (no ambient activity), require a stronger absolute spike before declaring
+    # a firing event — single transients drifting through the outlet sphere
+    # would otherwise register as firings.
     baseline_output = float(np.mean(output_counts))
-    firing_threshold = max(1.0, baseline_output * output_threshold_multiplier)
+    MIN_FIRING_FLOOR = 3
+    if baseline_output * output_threshold_multiplier < MIN_FIRING_FLOOR:
+        firing_threshold = float(MIN_FIRING_FLOOR)
+    else:
+        firing_threshold = baseline_output * output_threshold_multiplier
 
     # Detect firing events as contiguous windows where output exceeds threshold
     firing_events = []

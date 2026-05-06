@@ -45,10 +45,12 @@ def detect_synapses(world, neurons=None, *,
 
     candidates: list[dict] = []
     for i, pre in enumerate(accepted_neurons):
-        # In a snapshot we don't know which neuron is "pre" without the
-        # axis info from construction; we test BOTH orderings.
+        # We can't infer pre/post role from a static snapshot without axis
+        # info, so we report each unordered pair once with the lower-index
+        # neuron in `pre_index`. Callers that need axis-resolved direction
+        # supply that from construction info.
         for j, post in enumerate(accepted_neurons):
-            if i == j:
+            if j <= i:
                 continue
             pre_centre = np.array(pre["centre"])
             post_centre = np.array(post["centre"])

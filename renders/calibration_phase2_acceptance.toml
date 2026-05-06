@@ -1,0 +1,29 @@
+# Phase 2 acceptance calibration — first config that meets ≥5 distinct
+# molecule species (CONCEPT.md v2 §5 Phase 2).
+#
+# Discovered by the overnight teammate sweep on 2026-05-06. Single-knob
+# delta from session_3b: freq_tolerance widened from 0.030 to 0.200.
+#
+# In 60 simulated seconds at rng_seed=42 this config produces:
+#   - 6 distinct molecule species: A33, A44, A3334, A444, A33334, A3344
+#   - 17 alive molecules total at t=60
+#   - 18 atoms max alive
+#
+# A more aggressive config — wider boxes, n_init=1500, r_2=40 — produces
+# 10 species. This minimal-delta variant is preferred for traceability:
+# it shows the smallest spec-knob change that unlocks Phase 2.
+
+box_size = [60.0, 60.0, 60.0]
+n_initial_vibrations = 800
+n_vibrations_max = 2048
+n_nodes_max = 2048
+
+r_1 = 5.0
+r_2 = 28.0
+freq_tolerance = 0.200
+
+pair_decay_time = 60.0
+triad_decay_time = 600.0
+
+lambda_gen = 0.0
+lambda_dec = 0.0
