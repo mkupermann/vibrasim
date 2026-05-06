@@ -12,7 +12,7 @@ def _make_full_world(n_max: int = 32) -> World:
         n_vibrations_max=n_max,
         box_size=(100.0, 100.0, 100.0),
         lambda_gen=1000.0,
-        lambda_dec=0.0,
+        lambda_dec=1.0,   # target_count = int(1000/1 * 1e6) >> n_max
         rng_seed=42,
     )
     return World(cfg)

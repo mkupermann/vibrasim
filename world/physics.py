@@ -245,10 +245,12 @@ def ambient_regeneration(world, dt: float) -> tuple[int, int]:
             world.s_freq[i] = world._sample_frequencies(1)[0]
             world.s_pol[i] = bool(rng.random() < cfg.polarity_split)
             world.s_alive[i] = True
-            if int(i) + 1 > world.n_alive:
-                world.n_alive = int(i) + 1
             n_allocated += 1
             deficit -= 1
+        if n_allocated > 0:
+            # Single high-water-mark update; robust to any iteration order
+            # (uses the max actually-allocated index, not the loop's last `i`).
+            world.n_alive = max(world.n_alive, int(free_idx[:n_allocated].max()) + 1)
 
     # Decay: each alive node level 1/2/3 has Bernoulli(lambda_dec * dt) of decaying
     n_decayed = 0
