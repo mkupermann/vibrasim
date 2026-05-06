@@ -43,6 +43,9 @@ class World:
         # Only level-4 atoms use these; other rows stay at zero.
         self.k_charge = np.zeros(K, dtype=np.float64)
         self.k_refractory_until = np.zeros(K, dtype=np.float64)
+        # Plan A — per-node strength field (R2 strength-modulated decay).
+        # Default 1.0 so newly-allocated nodes are not immediately decayed away.
+        self.k_strength = np.ones(K, dtype=np.float64)
         # Firing log: (t, atom_index) tuples appended whenever an atom fires.
         # Keeps the substrate self-describing so measurements don't need
         # to re-derive firings from snapshot deltas.

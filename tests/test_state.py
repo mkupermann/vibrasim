@@ -94,3 +94,13 @@ def test_reproducible_seeding(default_config):
     np.testing.assert_array_equal(w1.s_vel, w2.s_vel)
     np.testing.assert_array_equal(w1.s_freq, w2.s_freq)
     np.testing.assert_array_equal(w1.s_pol, w2.s_pol)
+
+
+def test_k_strength_field_initialised_to_one():
+    """k_strength must default to 1.0 for every node slot — birth strength."""
+    cfg = WorldConfig(n_initial_vibrations=0, n_nodes_max=16)
+    w = World(cfg)
+    assert w.k_strength.shape == (16,)
+    assert w.k_strength.dtype == np.float64
+    # Every slot starts with strength 1.0
+    assert (w.k_strength == 1.0).all()
