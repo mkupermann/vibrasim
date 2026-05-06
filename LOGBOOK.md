@@ -296,6 +296,27 @@ The cleanest amendment for session 4: add `freq_tolerance_atom` to `WorldConfig`
 
 This amendment is a real CONCEPT.md change (§4.4 and §4.5 currently say "the frequencies differ by exactly 8 %") and should be reviewed before landing.
 
+### Phase 5 scaffolding
+
+Mirrors Phases 3 and 4: spec + construction tool + detection tool + plasticity-measurement tool + tests, no substrate change.
+
+- `docs/superpowers/specs/2026-05-06-phase-5-synapses.md` — operational definition: pair of neuron candidates at distance D ∈ [2·r_compact, 5·r_compact] with axes pointing at each other; cleft cylinder between their input/output regions; presynaptic store + postsynaptic receivers populated near the inlet/outlet sub-spheres
+- `tools/construct_synapse.py` — places two neurons + cleft + store + receivers with the right geometry
+- `tools/detect_synapses.py` — finds neuron-pair candidates at synapse distance from any snapshot; passes through detect_neurons output
+- `tools/measure_synapse_plasticity.py` — tracks cleft / store / receiver counts over a snapshot sequence, computes activity windows from `measure_neuron_activity`, identifies co-active vs inactive intervals, computes the Hebbian signal as `growth_rate_active − growth_rate_inactive`
+- 19 new tests; full suite 117/0
+
+**Known limitation flagged in tests and spec:** connectivity-based neuron detection merges constructed synapses (with cleft) into one cluster, because the cleft bridges the two neurons. Density-based clustering (DBSCAN-style) would solve this; for now, detect_synapses works on neuron pairs at synapse distance *without* a populated cleft (i.e. on snapshots from emergent runs, where the cleft is sparse ambient density). Documented in `tests/test_detect_synapses.py::test_constructed_synapse_detection_with_cleft`.
+
+Smoke:
+```
+$ python tools/construct_synapse.py --output /tmp/syn.npz \\
+    --pre-centre 80,100,100 --post-centre 120,100,100
+# distance=40 cleft=4 store=6 receivers=6
+```
+
+Phase 5 acceptance per CONCEPT.md v2 §5 (co-active synapses develop measurably stronger connections) is empirical and pending. The open thermodynamic question per §6.5 remains explicitly unanswered — this scaffolding makes it answerable.
+
 ### Phase 4 scaffolding (overnight bonus)
 
 Mirroring the Phase 3 pattern: spec + construction tool + detection tool + activity-measurement tool + tests, leaving the empirical "does it fire?" question to later calibration.
