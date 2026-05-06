@@ -453,6 +453,24 @@ def neuron_dynamics(world, dt: float) -> None:
         world.k_refractory_until[ai] = world.t + cfg.t_refractory
         world.firing_events.append((float(world.t), int(ai)))
 
+    # R2 strengthening: every level-5+ molecule within r_strengthen of any
+    # firing atom on this tick gets strength += dt.
+    if len(firing_atoms) > 0:
+        K = world.k_count
+        molecule_mask = world.k_alive[:K] & (world.k_level[:K] >= 5)
+        if molecule_mask.any():
+            molecule_indices = np.where(molecule_mask)[0]
+            molecule_pos = world.k_pos[molecule_indices]
+            r2 = cfg.r_strengthen ** 2
+            box = np.asarray(cfg.box_size, dtype=np.float64)
+            for ai in firing_atoms:
+                ap = world.k_pos[ai]
+                d = molecule_pos - ap
+                d -= box * np.round(d / box)  # periodic minimum image
+                d2 = (d * d).sum(axis=1)
+                near_mask = d2 <= r2
+                world.k_strength[molecule_indices[near_mask]] += dt
+
 
 def _emit_vibrations(world, atom_idx: int) -> None:
     """Emit n_emit vibrations isotropically around the firing atom's position."""

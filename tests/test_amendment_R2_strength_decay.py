@@ -77,3 +77,49 @@ def test_disabled_when_lambda_dec_mol_zero():
     for _ in range(600):
         decay_high_level_nodes(w, dt=1.0 / 60.0)
     assert w.k_alive[0], "R2 must not fire when lambda_dec_mol == 0"
+
+
+def test_molecule_near_firing_atom_gets_strengthened():
+    """Each tick, level-5+ molecules within r_strengthen of a firing atom
+    should have their strength incremented by dt."""
+    from world.physics import neuron_dynamics
+
+    cfg = WorldConfig(
+        n_initial_vibrations=0,
+        n_vibrations_max=128,
+        n_nodes_max=4,
+        rng_seed=42,
+        neuron_dynamics_enabled=True,
+        theta_fire=4.0, n_emit=8, r_integrate=5.0,
+        t_refractory=0.05, tau_membrane=0.5,
+        r_strengthen=10.0,
+    )
+    w = World(cfg)
+    # Atom at (50, 50, 50) — will fire when input vibrations arrive
+    w.k_pos[0] = [50.0, 50.0, 50.0]
+    w.k_level[0] = 4
+    w.k_alive[0] = True
+    # Molecule at (52, 50, 50) — within r_strengthen=10 of atom
+    w.k_pos[1] = [52.0, 50.0, 50.0]
+    w.k_level[1] = 5
+    w.k_alive[1] = True
+    w.k_strength[1] = 1.0
+    # Molecule at (100, 50, 50) — outside r_strengthen
+    w.k_pos[2] = [100.0, 50.0, 50.0]
+    w.k_level[2] = 5
+    w.k_alive[2] = True
+    w.k_strength[2] = 1.0
+    w.k_count = 3
+    # Seed 5 vibrations at the atom to make it fire
+    for i in range(5):
+        w.s_pos[i] = [50.0, 50.0, 50.0]
+        w.s_freq[i] = 1000.0
+        w.s_alive[i] = True
+    w.n_alive = 5
+
+    initial_strength_near = w.k_strength[1]
+    initial_strength_far = w.k_strength[2]
+    neuron_dynamics(w, dt=0.001)
+
+    assert w.k_strength[1] > initial_strength_near, "near molecule must be strengthened"
+    assert w.k_strength[2] == initial_strength_far, "far molecule must not be strengthened"
