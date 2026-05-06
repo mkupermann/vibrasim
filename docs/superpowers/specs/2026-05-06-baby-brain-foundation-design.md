@@ -14,6 +14,8 @@ The agent we are building has the following character. It listens via a micropho
 
 Nothing about this requires a learning algorithm bolted on top of the substrate. Every claim above reduces to the substrate's local laws.
 
+Plan A is conventionally named *substrate-growth foundation*, not *baby brain foundation*. The "baby brain" label is reserved for the post-Plan-D scope where the glass-of-water demo (M4) actually runs and the agent exhibits brain-like behaviour. Pre-Plan-D plans (A, A.5, B, C, D) are infrastructure.
+
 ## 2. Architecture overview
 
 The substrate is a 3D periodic-boundary box. Inside it, four spatial regions are designated as I/O ports. The substrate physics is unaware of these regions; the I/O code knows where to inject and where to read.
