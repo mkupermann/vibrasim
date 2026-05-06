@@ -106,6 +106,19 @@ _UPGRADE_TARGET_FUSION = {
     (8, 8): 9,
 }
 
+# Plan A.5 — numpy-array versions for Numba JIT lookup. Numba can't
+# index Python dicts efficiently; small dense arrays are the canonical
+# pattern. Built once at module import. Cells without an upgrade hold -1.
+# The dict versions above are kept for the Python (non-JIT) path.
+_MAX_LEVEL = 12
+_UPGRADE_TARGET_ARRAY = np.full((_MAX_LEVEL, _MAX_LEVEL), -1, dtype=np.int8)
+for (li, lj), target in _UPGRADE_TARGET.items():
+    _UPGRADE_TARGET_ARRAY[li, lj] = target
+
+_UPGRADE_TARGET_FUSION_ARRAY = np.full((_MAX_LEVEL, _MAX_LEVEL), -1, dtype=np.int8)
+for (li, lj), target in _UPGRADE_TARGET_FUSION.items():
+    _UPGRADE_TARGET_FUSION_ARRAY[li, lj] = target
+
 
 def _decade(freq: float) -> int:
     return int(math.floor(math.log10(freq)))
