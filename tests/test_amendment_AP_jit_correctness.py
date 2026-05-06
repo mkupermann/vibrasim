@@ -4,7 +4,7 @@ import pytest
 from dataclasses import replace
 from world.config import WorldConfig
 from world.state import World
-from world.physics import decay_unstable_nodes, decay_high_level_nodes, move_nodes
+from world.physics import decay_unstable_nodes, decay_high_level_nodes, move_nodes, apply_scale_repulsion
 
 
 def _build_test_world(jit: bool, rng_seed: int = 42):
@@ -88,4 +88,28 @@ def test_AP9_move_nodes_jit_matches_python():
 
     assert np.allclose(w_py.k_pos, w_jit.k_pos, rtol=1e-12, atol=1e-12), (
         "JIT and Python move_nodes paths produce different k_pos"
+    )
+
+
+def test_AP10_apply_scale_repulsion_jit_matches_python():
+    """JIT and Python paths must produce identical k_vel after one repulsion
+    tick. No RNG; pure deterministic numerical.
+
+    The JIT performs a full O(k²) double-loop (identical iteration order to the
+    Python path when repulsion_cell_size == box_size, which is the case in the
+    test world). rtol=1e-10 allows for negligible float reorder differences if
+    any; in practice the loops run in the same order so results are bit-exact."""
+    w_py = _build_test_world(jit=False, rng_seed=42)
+    _populate_nodes(w_py, n=80, level=4)
+    # Spread frequencies across decades to ensure scale separation triggers
+    w_py.k_freq[:80] = 10 ** w_py.rng.uniform(2, 5, size=80)
+    apply_scale_repulsion(w_py, dt=0.01)
+
+    w_jit = _build_test_world(jit=True, rng_seed=42)
+    _populate_nodes(w_jit, n=80, level=4)
+    w_jit.k_freq[:80] = 10 ** w_jit.rng.uniform(2, 5, size=80)
+    apply_scale_repulsion(w_jit, dt=0.01)
+
+    assert np.allclose(w_py.k_vel, w_jit.k_vel, rtol=1e-10, atol=1e-12), (
+        "JIT and Python apply_scale_repulsion paths produce different k_vel"
     )
