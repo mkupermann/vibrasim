@@ -4,7 +4,7 @@ import pytest
 from dataclasses import replace
 from world.config import WorldConfig
 from world.state import World
-from world.physics import decay_unstable_nodes
+from world.physics import decay_unstable_nodes, decay_high_level_nodes
 
 
 def _build_test_world(jit: bool, rng_seed: int = 42):
@@ -44,6 +44,28 @@ def test_AP7_decay_unstable_nodes_jit_matches_python():
     _populate_nodes(w_jit, n=50, level=2)
     w_jit.t = 5.0
     decay_unstable_nodes(w_jit, dt=0.1)
+
+    assert np.array_equal(w_py.k_alive, w_jit.k_alive), (
+        f"JIT and Python differ. py: {int(w_py.k_alive[:50].sum())} alive, "
+        f"jit: {int(w_jit.k_alive[:50].sum())} alive"
+    )
+
+
+def test_AP8_decay_high_level_nodes_jit_matches_python():
+    """JIT and Python paths must produce identical k_alive after one decay
+    tick on level-5+ molecules, given the same RNG seed."""
+    cfg_kwargs = dict(lambda_dec_mol=0.5)  # aggressive enough to drive multiple decays
+    w_py = _build_test_world(jit=False, rng_seed=42)
+    w_py.config = replace(w_py.config, **cfg_kwargs)
+    _populate_nodes(w_py, n=50, level=5)
+    w_py.k_strength[:50] = w_py.rng.uniform(1.0, 50.0, size=50)
+    decay_high_level_nodes(w_py, dt=0.01)
+
+    w_jit = _build_test_world(jit=True, rng_seed=42)
+    w_jit.config = replace(w_jit.config, **cfg_kwargs)
+    _populate_nodes(w_jit, n=50, level=5)
+    w_jit.k_strength[:50] = w_jit.rng.uniform(1.0, 50.0, size=50)
+    decay_high_level_nodes(w_jit, dt=0.01)
 
     assert np.array_equal(w_py.k_alive, w_jit.k_alive), (
         f"JIT and Python differ. py: {int(w_py.k_alive[:50].sum())} alive, "
