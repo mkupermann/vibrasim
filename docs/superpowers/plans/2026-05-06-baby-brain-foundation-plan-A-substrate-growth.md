@@ -2,13 +2,19 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Make the substrate capable of activity-driven growth with use-dependent decay over many simulated minutes — landing amendments R1 (recycling regen), R2 (strength-modulated decay), PHASE3-R1 (molecule fusion), tuned PHASE4 emissions, and the `k_strength` field.
+**Plan name:** Substrate-growth foundation (Plan A). The "baby brain" label is reserved for post-Plan-D scope where the glass-of-water demo (M4) actually runs and the agent exhibits brain-like behaviour. Pre-Plan-D plans (A, A.5, B, C, D) are infrastructure.
+
+**Goal:** Establish that the substrate, with the five amendments R1/R2/PHASE3-R1/tuned-PHASE4-emissions/k_strength enabled, exhibits **F2 — activity-coupled growth (≥3× level-5+ density at the input location vs distant, bootstrap 95% CI lower bound)** — the substrate-statistics weak form of CONCEPT §8 H2 ("structures grow in response to repeated activity"). The five amendments are the mechanism; F2 across a held-out seed grid is the result.
 
 **Architecture:** All additions are guarded by `neuron_dynamics_enabled` (already in config from prior PHASE4-R1/R2/R3 work). Existing tests must remain green. New behaviour is unit-tested in isolation, then validated end-to-end via four integration tests (F1–F4 from the foundation spec §6.1).
 
 **Tech Stack:** Python 3.13, NumPy, Numba @njit (existing), pytest. No new dependencies.
 
-**Spec reference:** `docs/superpowers/specs/2026-05-06-baby-brain-foundation-design.md` §3.1–§3.4 + §6.1 (F1–F4, partial P1).
+**Spec reference:** `docs/superpowers/specs/2026-05-06-baby-brain-foundation-design.md` §3.1–§3.4 + §6.1 (F1–F4, partial P1). Plan A additionally adds **F5 (Conservation ledger)** — see Task 9.5 below. F5 is not in the foundation spec §6.1 but is required by this plan's acceptance contract.
+
+**F5 row (Plan A addition to §6.1 Necessary tests):**
+
+| F5 | Conservation ledger | Σ generated − Σ decayed − Σ bound ≈ 0 within ±20% over the F1 sim duration |
 
 **Out of scope for this plan** (covered by later plans): STDP and bridge-orientation vectors (Plan B), audio/video I/O (Plans C/D), reward channel (Plan E), brain checkpoint (Plan F), end-to-end demos (Plan G).
 
@@ -27,6 +33,70 @@
 | `tests/test_amendment_PHASE3R1_molecule_fusion.py` | Create | Unit tests for molecule + molecule binding |
 | `tests/test_tuned_emissions.py` | Create | Unit tests for the frequency-band emission fan |
 | `tests/test_substrate_growth_e2e.py` | Create | F1–F4 integration tests |
+
+---
+
+## Pre-registered acceptance contract
+
+Before Task 9 runs, commit `tests/acceptance.toml` containing:
+
+```toml
+# Frozen acceptance contract — Plan A.
+# All thresholds and seeds locked here. Changes require a CONCEPT amendment
+# commit. F1-F4 read this file, not their own constants.
+
+[seeds]
+calibration = [42, 43, 44]            # used during development to set defaults
+held_out = [7, 100, 314, 999, 2024]   # used for the actual acceptance run; never tuned against
+
+[F1]
+duration_sim_sec = 300                # 5-min sim (post-A.5: 3600 for full 60-min)
+in_band_low_mult = 0.5
+in_band_high_mult = 2.0
+in_band_min_pct = 0.80
+
+[F2]
+training_sim_sec = 300
+measurement_radius = 8.0
+ratio_min = 3.0       # bootstrap 95% CI lower bound
+
+[F3a]
+silent_sim_sec = 300
+weak_strength_max = 5.0
+decay_min_pct = 0.80
+
+[F3b]
+training_sim_sec = 600
+silent_sim_sec = 300
+strong_strength_min = 50.0
+persistence_min_pct = 0.80
+n_strong_required = 5     # if fewer formed, F3b is a PRECONDITION FAILURE, not a trivial pass
+
+[F4]
+sustained_sim_sec = 1800
+target_max_level_min = 7
+
+[F5]
+duration_sim_sec = 300
+conservation_tolerance_pct = 0.20    # |Σ generated − Σ decayed − Σ bound| / Σ generated ≤ 20%
+```
+
+The plan **MUST NOT modify these thresholds**. If empirics indicate a threshold is wrong, raise a CONCEPT amendment and rerun on a *fresh* held-out seed set, never the same one.
+
+The {7, 100, 314, 999, 2024} held-out grid is the acceptance run; the {42, 43, 44} grid is for development only and tests must NOT report results on it.
+
+---
+
+## Task 0: Decision claim — which CONCEPT.md hypothesis does Plan A bear on?
+
+Plan A is meant to bear on **CONCEPT.md §8 hypothesis H2**: *"the same set of binding rules that produces atoms and molecules also produces structures that grow in response to repeated activity and decay in its absence — without explicit synaptic-weight machinery."*
+
+Plan A's F2 (activity-coupled growth) is the falsification candidate for H2.
+
+If F2 passes on the held-out seed grid: H2 is supported (substrate-statistics weak form).
+If F2 fails: H2 is **falsified for this substrate parameterisation**, and the project's next move is either (a) propose a CONCEPT amendment that changes the binding rules, or (b) accept that H2 is wrong as stated and revise §8.
+
+**Action:** write `docs/research/plan-A-decision-claim.md` containing the above paragraph, the H2 quote from CONCEPT.md, and the F2 link. Commit before Task 9.
 
 ---
 
@@ -1040,6 +1110,8 @@ freq_ratio=0.08. Activity-driven growth emerges from existing physics."
 
 ## Task 9: Integration test F1 — Sustained run
 
+**Statistical methodology.** All F1-F4 tests run across **n ≥ 10 seeds** drawn from a frozen held-out seed set (committed to `tests/acceptance.toml`). The pass criterion is **bootstrap 95% CI lower bound** clearing the threshold (not median). Use `scipy.stats.bootstrap` or a vectorised `np.random.choice`-based resample with 1000 iterations. F1's in-band band is **restored to [0.5×, 2.0×]** matching the foundation spec §6.1 (the prior `[0.25×, 2.0×]` relaxation was an unauthorised concession).
+
 **Files:**
 - Create: `tests/test_substrate_growth_e2e.py`
 
@@ -1142,7 +1214,7 @@ def test_F1_sustained_run_does_not_explode_or_collapse():
 uv run pytest tests/test_substrate_growth_e2e.py::test_F1_sustained_run_does_not_explode_or_collapse -v -s
 ```
 
-Expected: PASS within ~5-10 wall-clock minutes. If it fails, the substrate is exploding or collapsing — diagnose by adjusting `lambda_dec_mol`, `lambda_gen`, or `r_strengthen` until F1 holds. Iterate within reasonable bounds; if no parameter set works, escalate to spec review.
+Expected: PASS. If acceptance fails on the held-out seed grid, the run is a **failure to be logged in `LOGBOOK.md`**, not retuned. Parameter changes require a CONCEPT amendment commit and a fresh held-out seed set. The frozen `acceptance.toml` is the contract; iterating it constitutes calibration-on-the-test-set.
 
 - [ ] **Step 9.3: Commit**
 
@@ -1154,6 +1226,24 @@ git commit -m "test(growth): F1 — sustained run does not explode or collapse
 stays in [25%, 200%] of mean for ≥80% of samples. First of four F1-F4
 acceptance criteria from the substrate growth foundation."
 ```
+
+---
+
+## Task 9.5: F5 — Conservation ledger
+
+**Purpose.** The §6.5 thermodynamic framing ("ambient density holds bounded fluctuation") is currently unfalsified. F5 makes it falsifiable.
+
+**Mechanism.** Instrument the substrate to count, over the F1 sim duration:
+- `n_generated`: vibrations spawned by `ambient_regeneration` (both displacement and allocation paths)
+- `n_decayed`: vibrations destroyed by `ambient_regeneration`'s decay branch + `decay_unstable_nodes` releasing constituents back + `decay_high_level_nodes` releasing constituents back
+- `n_bound`: net change in vibrations bound into level-1+ nodes (delta(LEVEL_TO_VIBRATIONS-weighted alive node count))
+
+The ledger asserts:
+```
+abs(n_generated - n_decayed - n_bound) / max(n_generated, 1) <= acceptance["F5"]["conservation_tolerance_pct"]
+```
+
+**Pass criterion.** Bootstrap 95% CI lower bound of the conservation residual is within ±20% of zero across the held-out seed grid.
 
 ---
 
@@ -1170,18 +1260,23 @@ Append to `tests/test_substrate_growth_e2e.py`:
 @pytest.mark.slow
 def test_F2_activity_coupled_growth_at_input_location():
     """F2: input only at A. After 5 sim min, level-5+ density at A
-    must be ≥ 3× density at distant B (median across 3 rng seeds).
+    must be ≥ 3× density at distant B.
 
-    Pass: median(density_A / density_B) ≥ 3.
+    Pass: bootstrap 95% CI lower bound of (density_A / density_B) ≥ 3.0
+    across n ≥ 10 seeds from the frozen held-out seed set in acceptance.toml.
+    Seeds used: acceptance["seeds"]["held_out"] (never the calibration set).
     """
+    import tomllib
+    from pathlib import Path
+    acceptance = tomllib.loads(Path("tests/acceptance.toml").read_text())
     ratios = []
     A = np.array([15.0, 30.0, 30.0])
     B = np.array([45.0, 30.0, 30.0])
-    measurement_radius = 8.0
-    for seed in [42, 43, 44]:
+    measurement_radius = acceptance["F2"]["measurement_radius"]
+    for seed in acceptance["seeds"]["held_out"]:
         w = World(replace(_growth_config(), rng_seed=seed))
-        _evolve(w, n_seconds=300.0, burst_position=A.tolist(), burst_period_s=0.5)
-        # Count level-5+ alive nodes near A vs near B
+        _evolve(w, n_seconds=float(acceptance["F2"]["training_sim_sec"]),
+                burst_position=A.tolist(), burst_period_s=0.5)
         K = w.k_count
         mask5 = w.k_alive[:K] & (w.k_level[:K] >= 5)
         if not mask5.any():
@@ -1195,8 +1290,17 @@ def test_F2_activity_coupled_growth_at_input_location():
         ratio = n_A / max(n_B, 1)
         ratios.append(ratio)
         print(f"  seed {seed}: A={n_A}, B={n_B}, ratio={ratio:.2f}")
-    median_ratio = float(np.median(ratios))
-    assert median_ratio >= 3.0, f"F2 violation: median ratio {median_ratio:.2f} < 3.0"
+    ratios_arr = np.array(ratios)
+    rng = np.random.default_rng(0)
+    boot = np.array([
+        np.mean(rng.choice(ratios_arr, size=len(ratios_arr), replace=True))
+        for _ in range(1000)
+    ])
+    ci_lower = float(np.percentile(boot, 2.5))
+    threshold = acceptance["F2"]["ratio_min"]
+    assert ci_lower >= threshold, (
+        f"F2 violation: bootstrap 95% CI lower bound {ci_lower:.2f} < {threshold}"
+    )
 ```
 
 - [ ] **Step 10.2: Run F2**
@@ -1205,7 +1309,7 @@ def test_F2_activity_coupled_growth_at_input_location():
 uv run pytest tests/test_substrate_growth_e2e.py::test_F2_activity_coupled_growth_at_input_location -v -s
 ```
 
-Expected: PASS. If median ratio is below 3, growth-amendment parameters need re-tuning (likely `r_strengthen`, `lambda_dec_mol`, or `emit_band_ratios`).
+Expected: PASS. If acceptance fails on the held-out seed grid, the run is a **failure to be logged in `LOGBOOK.md`**, not retuned. Parameter changes require a CONCEPT amendment commit and a fresh held-out seed set. The frozen `acceptance.toml` is the contract; iterating it constitutes calibration-on-the-test-set.
 
 - [ ] **Step 10.3: Add F3a (weak structures decay)**
 
@@ -1215,33 +1319,38 @@ Append:
 @pytest.mark.slow
 def test_F3a_weak_structures_decay_after_input_stops():
     """F3a: After F2-style training, stop input. After 5 more min,
-    density at A must drop ≥ 80% toward B's baseline."""
+    density at A must drop ≥ 80% toward B's baseline.
+
+    Pass: bootstrap 95% CI lower bound of decay_fraction ≥ 0.80
+    across n ≥ 10 seeds from the frozen held-out seed set in acceptance.toml.
+    Seeds used: acceptance["seeds"]["held_out"] (never the calibration set).
+    """
+    import tomllib
+    from pathlib import Path
+    acceptance = tomllib.loads(Path("tests/acceptance.toml").read_text())
     A = np.array([15.0, 30.0, 30.0])
     B = np.array([45.0, 30.0, 30.0])
-    measurement_radius = 8.0
+    measurement_radius = acceptance["F2"]["measurement_radius"]
+    weak_strength_max = acceptance["F3a"]["weak_strength_max"]
     decay_fractions = []
-    for seed in [42, 43, 44]:
+    for seed in acceptance["seeds"]["held_out"]:
         w = World(replace(_growth_config(), rng_seed=seed))
-        # 5-min training at A
-        _evolve(w, n_seconds=300.0, burst_position=A.tolist(), burst_period_s=0.5)
+        _evolve(w, n_seconds=float(acceptance["F3a"]["silent_sim_sec"]),
+                burst_position=A.tolist(), burst_period_s=0.5)
         K = w.k_count
         mask5 = w.k_alive[:K] & (w.k_level[:K] >= 5)
         positions = w.k_pos[:K][mask5]
         d_A = np.linalg.norm(positions - A, axis=1)
         n_A_before = int((d_A < measurement_radius).sum())
-        # Filter to UNREINFORCED (strength <= 5) — the "weak" subset that should decay
-        weak_mask_before = mask5 & (w.k_strength[:K] <= 5.0)
+        weak_mask_before = mask5 & (w.k_strength[:K] <= weak_strength_max)
         weak_positions_before = w.k_pos[:K][weak_mask_before]
         d_A_weak = np.linalg.norm(weak_positions_before - A, axis=1)
         n_A_weak_before = int((d_A_weak < measurement_radius).sum())
-        # 5-min silence
-        _evolve(w, n_seconds=300.0, burst_position=None)
+        _evolve(w, n_seconds=float(acceptance["F3a"]["silent_sim_sec"]),
+                burst_position=None)
         K = w.k_count
         mask5_after = w.k_alive[:K] & (w.k_level[:K] >= 5)
-        positions_after = w.k_pos[:K][mask5_after]
-        d_A_after = np.linalg.norm(positions_after - A, axis=1)
-        # Count weak structures still alive at A
-        weak_mask_after = mask5_after & (w.k_strength[:K] <= 5.0)
+        weak_mask_after = mask5_after & (w.k_strength[:K] <= weak_strength_max)
         weak_positions_after = w.k_pos[:K][weak_mask_after]
         d_A_weak_after = np.linalg.norm(weak_positions_after - A, axis=1)
         n_A_weak_after = int((d_A_weak_after < measurement_radius).sum())
@@ -1249,8 +1358,17 @@ def test_F3a_weak_structures_decay_after_input_stops():
         decay_fractions.append(decay_fraction)
         print(f"  seed {seed}: weak A {n_A_weak_before}→{n_A_weak_after}, "
               f"decay={decay_fraction*100:.0f}%")
-    median_decay = float(np.median(decay_fractions))
-    assert median_decay >= 0.8, f"F3a violation: median decay {median_decay*100:.0f}% < 80%"
+    decay_arr = np.array(decay_fractions)
+    rng = np.random.default_rng(0)
+    boot = np.array([
+        np.mean(rng.choice(decay_arr, size=len(decay_arr), replace=True))
+        for _ in range(1000)
+    ])
+    ci_lower = float(np.percentile(boot, 2.5))
+    threshold = acceptance["F3a"]["decay_min_pct"]
+    assert ci_lower >= threshold, (
+        f"F3a violation: bootstrap 95% CI lower bound {ci_lower*100:.0f}% < {threshold*100:.0f}%"
+    )
 ```
 
 - [ ] **Step 10.4: Run F3a**
@@ -1269,37 +1387,59 @@ Append:
 @pytest.mark.slow
 def test_F3b_strong_structures_persist_after_input_stops():
     """F3b: structures with strength > 50 (heavily reinforced) decay
-    < 20% over the same 5-min silent period."""
+    < 20% over the same 5-min silent period.
+
+    Pass: bootstrap 95% CI lower bound of persistence_fraction ≥ 0.80
+    across n ≥ 10 seeds from the frozen held-out seed set in acceptance.toml.
+    Seeds used: acceptance["seeds"]["held_out"] (never the calibration set).
+    If a seed forms fewer than n_strong_required strong structures during
+    training, F3b raises a precondition failure (not a trivial pass).
+    """
+    import tomllib
+    from pathlib import Path
+    acceptance = tomllib.loads(Path("tests/acceptance.toml").read_text())
     A = np.array([15.0, 30.0, 30.0])
-    measurement_radius = 8.0
+    measurement_radius = acceptance["F2"]["measurement_radius"]
     persistence_fractions = []
-    for seed in [42, 43, 44]:
+    for seed in acceptance["seeds"]["held_out"]:
         w = World(replace(_growth_config(), rng_seed=seed))
-        # Long training (10 min) so some structures reach strength > 50
-        _evolve(w, n_seconds=600.0, burst_position=A.tolist(), burst_period_s=0.5)
+        _evolve(w, n_seconds=float(acceptance["F3b"]["training_sim_sec"]),
+                burst_position=A.tolist(), burst_period_s=0.5)
         K = w.k_count
         strong_mask_before = (
-            w.k_alive[:K] & (w.k_level[:K] >= 5) & (w.k_strength[:K] > 50.0)
+            w.k_alive[:K] & (w.k_level[:K] >= 5)
+            & (w.k_strength[:K] > acceptance["F3b"]["strong_strength_min"])
         )
         n_strong_before = int(strong_mask_before.sum())
-        if n_strong_before == 0:
-            print(f"  seed {seed}: no strong structures formed (n=0)")
-            persistence_fractions.append(1.0)  # trivially persistent
-            continue
-        # 5-min silence
-        _evolve(w, n_seconds=300.0, burst_position=None)
+        if n_strong_before < acceptance["F3b"]["n_strong_required"]:
+            pytest.fail(
+                f"F3b precondition: seed {seed} formed only {n_strong_before} "
+                f"strong structures (< required {acceptance['F3b']['n_strong_required']}). "
+                "This is a precondition failure, not a trivial pass — F3b cannot be "
+                "evaluated when no strong structures formed during training."
+            )
+        _evolve(w, n_seconds=float(acceptance["F3b"]["silent_sim_sec"]),
+                burst_position=None)
         K = w.k_count
         strong_mask_after = (
-            w.k_alive[:K] & (w.k_level[:K] >= 5) & (w.k_strength[:K] > 50.0)
+            w.k_alive[:K] & (w.k_level[:K] >= 5)
+            & (w.k_strength[:K] > acceptance["F3b"]["strong_strength_min"])
         )
         n_strong_after = int(strong_mask_after.sum())
         persistence = n_strong_after / max(n_strong_before, 1)
         persistence_fractions.append(persistence)
         print(f"  seed {seed}: strong before={n_strong_before}, after={n_strong_after}, "
               f"persistence={persistence*100:.0f}%")
-    median_persistence = float(np.median(persistence_fractions))
-    assert median_persistence >= 0.8, (
-        f"F3b violation: median persistence {median_persistence*100:.0f}% < 80%"
+    pers_arr = np.array(persistence_fractions)
+    rng = np.random.default_rng(0)
+    boot = np.array([
+        np.mean(rng.choice(pers_arr, size=len(pers_arr), replace=True))
+        for _ in range(1000)
+    ])
+    ci_lower = float(np.percentile(boot, 2.5))
+    threshold = acceptance["F3b"]["persistence_min_pct"]
+    assert ci_lower >= threshold, (
+        f"F3b violation: bootstrap 95% CI lower bound {ci_lower*100:.0f}% < {threshold*100:.0f}%"
     )
 ```
 
@@ -1309,7 +1449,7 @@ def test_F3b_strong_structures_persist_after_input_stops():
 uv run pytest tests/test_substrate_growth_e2e.py::test_F3b_strong_structures_persist_after_input_stops -v -s
 ```
 
-Expected: PASS. If `n_strong_before == 0` consistently, increase the training duration or reduce `r_strengthen`/`lambda_dec_mol` to allow strength to build up faster.
+Expected: PASS. If acceptance fails on the held-out seed grid, the run is a **failure to be logged in `LOGBOOK.md`**, not retuned. Parameter changes require a CONCEPT amendment commit and a fresh held-out seed set. The frozen `acceptance.toml` is the contract; iterating it constitutes calibration-on-the-test-set.
 
 - [ ] **Step 10.7: Add F4 (molecule fusion)**
 
@@ -1320,22 +1460,38 @@ Append:
 def test_F4_molecule_fusion_produces_level_7_plus_structures():
     """F4: 30-min sim with sustained input must produce level-7+ molecules.
 
-    Control: same run with mol_fusion_enabled=False produces zero level-7+.
+    Pass: treatment (mol_fusion_enabled=True) produces at least one level-7+
+    node across n ≥ 10 seeds from acceptance.toml held-out set; control
+    (mol_fusion_enabled=False) produces zero level-7+ across the same seeds.
+    Seeds used: acceptance["seeds"]["held_out"] (never the calibration set).
     """
+    import tomllib
+    from pathlib import Path
+    acceptance = tomllib.loads(Path("tests/acceptance.toml").read_text())
     A = [30.0, 30.0, 30.0]
-    # Treatment: mol_fusion enabled
-    w_treat = World(_growth_config())
-    _evolve(w_treat, n_seconds=1800.0, burst_position=A, burst_period_s=0.5)
-    K_t = w_treat.k_count
-    n_l7_treat = int((w_treat.k_alive[:K_t] & (w_treat.k_level[:K_t] >= 7)).sum())
-    # Control: mol_fusion disabled
-    w_ctrl = World(replace(_growth_config(), mol_fusion_enabled=False))
-    _evolve(w_ctrl, n_seconds=1800.0, burst_position=A, burst_period_s=0.5)
-    K_c = w_ctrl.k_count
-    n_l7_ctrl = int((w_ctrl.k_alive[:K_c] & (w_ctrl.k_level[:K_c] >= 7)).sum())
-    print(f"F4: treatment level-7+={n_l7_treat}, control level-7+={n_l7_ctrl}")
-    assert n_l7_treat > 0, "F4 violation: zero level-7+ structures with fusion enabled"
-    assert n_l7_ctrl == 0, "F4 violation: control produced level-7+ without fusion enabled"
+    n_l7_treat_total = 0
+    n_l7_ctrl_total = 0
+    for seed in acceptance["seeds"]["held_out"]:
+        w_treat = World(replace(_growth_config(), rng_seed=seed))
+        _evolve(w_treat, n_seconds=float(acceptance["F4"]["sustained_sim_sec"]),
+                burst_position=A, burst_period_s=0.5)
+        K_t = w_treat.k_count
+        n_l7_treat = int((w_treat.k_alive[:K_t] & (w_treat.k_level[:K_t] >= acceptance["F4"]["target_max_level_min"])).sum())
+        n_l7_treat_total += n_l7_treat
+        w_ctrl = World(replace(_growth_config(), rng_seed=seed, mol_fusion_enabled=False))
+        _evolve(w_ctrl, n_seconds=float(acceptance["F4"]["sustained_sim_sec"]),
+                burst_position=A, burst_period_s=0.5)
+        K_c = w_ctrl.k_count
+        n_l7_ctrl = int((w_ctrl.k_alive[:K_c] & (w_ctrl.k_level[:K_c] >= acceptance["F4"]["target_max_level_min"])).sum())
+        n_l7_ctrl_total += n_l7_ctrl
+        print(f"  seed {seed}: treatment level-{acceptance['F4']['target_max_level_min']}+={n_l7_treat}, "
+              f"control level-{acceptance['F4']['target_max_level_min']}+={n_l7_ctrl}")
+    assert n_l7_treat_total > 0, (
+        f"F4 violation: zero level-{acceptance['F4']['target_max_level_min']}+ structures with fusion enabled across all held-out seeds"
+    )
+    assert n_l7_ctrl_total == 0, (
+        f"F4 violation: control produced level-{acceptance['F4']['target_max_level_min']}+ without fusion enabled"
+    )
 ```
 
 - [ ] **Step 10.8: Run F4**
@@ -1344,7 +1500,7 @@ def test_F4_molecule_fusion_produces_level_7_plus_structures():
 uv run pytest tests/test_substrate_growth_e2e.py::test_F4_molecule_fusion_produces_level_7_plus_structures -v -s
 ```
 
-Expected: PASS within ~10–15 wall-clock minutes per case. If the treatment produces zero level-7+, extend the training duration or lower `freq_tolerance` to allow more molecule pairs to qualify for fusion.
+Expected: PASS. If acceptance fails on the held-out seed grid, the run is a **failure to be logged in `LOGBOOK.md`**, not retuned. Parameter changes require a CONCEPT amendment commit and a fresh held-out seed set. The frozen `acceptance.toml` is the contract; iterating it constitutes calibration-on-the-test-set.
 
 - [ ] **Step 10.9: Commit**
 
@@ -1358,6 +1514,23 @@ F3b: strong (strength > 50) structures persist ≥ 80% in same silence.
 F4: molecule fusion produces level-7+ structures (zero in control).
 Plan A foundation acceptance — substrate is now ready for Plan B (STDP)."
 ```
+
+---
+
+## Task 10.5: Per-amendment ablation gate (necessary)
+
+**Purpose.** Five amendments land simultaneously in Plan A (R1, R2, PHASE3-R1, tuned PHASE4 emissions, k_strength). If F2 fails on the held-out grid, we cannot tell which amendment caused it. This task adds an ablation suite that runs F2 with each amendment turned OFF in turn.
+
+**Test:** new file `tests/test_amendment_ablation.py`. For each of the five amendments:
+- Build the growth config with `<that_amendment>_enabled=False` (or equivalent zero default).
+- Run F2 against the held-out seed set.
+- Record the result in `docs/research/ablation_results.md`.
+
+**Pass criterion.** F2 must FAIL on at least one ablation (otherwise the amendment isn't load-bearing) AND pass on the all-amendments-on configuration. If an amendment isn't load-bearing, escalate as an amendment-redundancy finding, not a test failure.
+
+**Slow-marked.** Each ablation is a full F2 (n=10 seeds × 5-min sim). Five ablations = 25 F2 runs; expected wall-time = several hours post-A.5, not feasible pre-A.5.
+
+This task is the gate before Task 11 (DB amendment marking). Skipped status pre-A.5.
 
 ---
 
@@ -1395,9 +1568,22 @@ Expected output: status `implemented` for all three, `impl_commit` set to the re
 
 ---
 
+## Task 12: Verdict — one-page H2 verdict at the end
+
+After Tasks 1-11 land and the held-out F1-F5 results are in, write `docs/research/plan-A-verdict.md` (one page). Required sections:
+
+- **Claim assessed.** H2, verbatim from CONCEPT §8.
+- **Evidence collected.** F1, F2, F3a, F3b, F4, F5 results from the held-out seed grid (10 seeds), each with bootstrap 95% CI.
+- **Verdict.** One of: "supported", "falsified", "underdetermined" (with reason — e.g., F1 failed so substrate isn't in steady state, can't ask whether structure forms preferentially).
+- **What this commits us to.** If supported → Plan B is unblocked. If falsified → CONCEPT amendment required before Plan B. If underdetermined → A.5 / A.7 / further work named.
+
+This task is the deliverable that makes Plan A a research result, not just code that compiles.
+
+---
+
 ## Plan A complete
 
-After Task 11, the substrate has all four growth amendments in place (R1, R2, PHASE3-R1, tuned emissions, k_strength) plus F1-F4 acceptance tests passing. The substrate now grows where it fires, decays where it doesn't, retains long-term memory via the strength field, and produces tall structures via molecule fusion.
+After Tasks 1-12, the substrate has all five growth amendments in place (R1, R2, PHASE3-R1, tuned emissions, k_strength) plus F1-F5 acceptance tests passing on the held-out seed grid and a one-page H2 verdict. The substrate now grows where it fires, decays where it doesn't, retains long-term memory via the strength field, and produces tall structures via molecule fusion.
 
 **Verify final state:**
 
