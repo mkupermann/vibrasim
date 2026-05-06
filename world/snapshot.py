@@ -62,6 +62,12 @@ def load_snapshot(path: Path | str) -> World:
     w.k_comp_offset[:] = data["k_comp_offset"]
     if "k_comp_end" in data.files:
         w.k_comp_end[:] = data["k_comp_end"]
+    else:
+        # Backward compat: pre-Plan-A.5 snapshots stored end-pointers in
+        # k_comp_offset[i+1] (the bug we just fixed). Reconstruct k_comp_end
+        # from the loaded k_comp_offset so old snapshots load with intact
+        # composition spans.
+        w.k_comp_end[:] = data["k_comp_offset"][1:len(w.k_comp_end) + 1]
     w.k_comp_indices[:] = data["k_comp_indices"]
     w.k_comp_kind[:] = data["k_comp_kind"]
     if "k_charge" in data.files:
