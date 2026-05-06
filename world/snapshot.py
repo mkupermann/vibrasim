@@ -24,6 +24,7 @@ def save_snapshot(world: World, path: Path | str) -> None:
         k_charge=world.k_charge,
         k_refractory_until=world.k_refractory_until,
         k_strength=world.k_strength,
+        k_ref_count=world.k_ref_count,
         t=np.array([world.t]),
         n_alive=np.array([world.n_alive]),
         k_count=np.array([world.k_count]),
@@ -66,6 +67,8 @@ def load_snapshot(path: Path | str) -> World:
         w.k_refractory_until[:] = data["k_refractory_until"]
     if "k_strength" in data.files:
         w.k_strength[:] = data["k_strength"]
+    if "k_ref_count" in data.files:
+        w.k_ref_count[:] = data["k_ref_count"]
     if "firing_events" in data.files and len(data["firing_events"]):
         w.firing_events = [(float(t), int(i)) for t, i in data["firing_events"]]
     w.t = float(data["t"][0])
