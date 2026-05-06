@@ -616,14 +616,37 @@ def apply_scale_repulsion(world, dt: float) -> None:
             world.k_vel[i, 2] += az * dt
 
 
-def move_nodes(world, dt: float) -> None:
-    """Apply k_vel to k_pos with periodic wrap. Atoms move slowly because of mass."""
-    box = np.asarray(world.config.box_size, dtype=np.float64)
-    for i in range(world.k_count):
-        if not world.k_alive[i]:
+@njit(cache=True)
+def _move_nodes_njit(k_pos: np.ndarray, k_vel: np.ndarray, k_alive: np.ndarray,
+                     box: np.ndarray, dt: float, K: int) -> None:
+    """JIT core for move_nodes. Modifies k_pos in place with periodic wrap."""
+    for i in range(K):
+        if not k_alive[i]:
             continue
         for d in range(3):
-            world.k_pos[i, d] = (world.k_pos[i, d] + world.k_vel[i, d] * dt) % box[d]
+            k_pos[i, d] = (k_pos[i, d] + k_vel[i, d] * dt) % box[d]
+
+
+def move_nodes(world, dt: float) -> None:
+    """Apply k_vel to k_pos with periodic wrap. Atoms move slowly because of mass.
+
+    Plan A.5 Task 11: JIT-compiled inner loop. No RNG; deterministic numerical.
+    Gated behind cfg.numba_jit_enabled.
+    """
+    cfg = world.config
+    K = world.k_count
+    if K == 0:
+        return
+    box = np.asarray(cfg.box_size, dtype=np.float64)
+    if cfg.numba_jit_enabled:
+        _move_nodes_njit(world.k_pos, world.k_vel, world.k_alive, box, dt, K)
+    else:
+        # Legacy Python path — preserved for regression diagnosis.
+        for i in range(K):
+            if not world.k_alive[i]:
+                continue
+            for d in range(3):
+                world.k_pos[i, d] = (world.k_pos[i, d] + world.k_vel[i, d] * dt) % box[d]
 
 
 def neuron_dynamics(world, dt: float) -> None:

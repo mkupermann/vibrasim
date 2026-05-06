@@ -4,7 +4,7 @@ import pytest
 from dataclasses import replace
 from world.config import WorldConfig
 from world.state import World
-from world.physics import decay_unstable_nodes, decay_high_level_nodes
+from world.physics import decay_unstable_nodes, decay_high_level_nodes, move_nodes
 
 
 def _build_test_world(jit: bool, rng_seed: int = 42):
@@ -70,4 +70,22 @@ def test_AP8_decay_high_level_nodes_jit_matches_python():
     assert np.array_equal(w_py.k_alive, w_jit.k_alive), (
         f"JIT and Python differ. py: {int(w_py.k_alive[:50].sum())} alive, "
         f"jit: {int(w_jit.k_alive[:50].sum())} alive"
+    )
+
+
+def test_AP9_move_nodes_jit_matches_python():
+    """JIT and Python paths must produce identical k_pos after one move tick.
+
+    No RNG involved; pure numerical equality (within float64 tolerance)
+    is the right assertion."""
+    w_py = _build_test_world(jit=False, rng_seed=42)
+    _populate_nodes(w_py, n=100, level=4)
+    move_nodes(w_py, dt=0.01)
+
+    w_jit = _build_test_world(jit=True, rng_seed=42)
+    _populate_nodes(w_jit, n=100, level=4)
+    move_nodes(w_jit, dt=0.01)
+
+    assert np.allclose(w_py.k_pos, w_jit.k_pos, rtol=1e-12, atol=1e-12), (
+        "JIT and Python move_nodes paths produce different k_pos"
     )
