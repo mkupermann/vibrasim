@@ -21,10 +21,14 @@ def save_snapshot(world: World, path: Path | str) -> None:
         k_alive=world.k_alive,
         k_comp_offset=world.k_comp_offset, k_comp_indices=world.k_comp_indices,
         k_comp_kind=world.k_comp_kind,
+        k_charge=world.k_charge,
+        k_refractory_until=world.k_refractory_until,
         t=np.array([world.t]),
         n_alive=np.array([world.n_alive]),
         k_count=np.array([world.k_count]),
         k_comp_used=np.array([world.k_comp_used]),
+        firing_events=np.array(world.firing_events, dtype=object) if world.firing_events
+                      else np.array([], dtype=object),
         config_json=np.array([str(cfg_dict)], dtype=object),
     )
 
@@ -34,6 +38,10 @@ def load_snapshot(path: Path | str) -> World:
     cfg_dict = eval(str(data["config_json"][0]))
     if "box_size" in cfg_dict and isinstance(cfg_dict["box_size"], list):
         cfg_dict["box_size"] = tuple(cfg_dict["box_size"])
+    # Drop fields the current WorldConfig doesn't know about (forward-compat
+    # for snapshots saved before new config fields were added).
+    valid_fields = {f.name for f in dataclasses.fields(WorldConfig)}
+    cfg_dict = {k: v for k, v in cfg_dict.items() if k in valid_fields}
     cfg = WorldConfig(**cfg_dict)
     w = World(cfg)
     w.s_pos[:] = data["s_pos"]
@@ -51,6 +59,12 @@ def load_snapshot(path: Path | str) -> World:
     w.k_comp_offset[:] = data["k_comp_offset"]
     w.k_comp_indices[:] = data["k_comp_indices"]
     w.k_comp_kind[:] = data["k_comp_kind"]
+    if "k_charge" in data.files:
+        w.k_charge[:] = data["k_charge"]
+    if "k_refractory_until" in data.files:
+        w.k_refractory_until[:] = data["k_refractory_until"]
+    if "firing_events" in data.files and len(data["firing_events"]):
+        w.firing_events = [(float(t), int(i)) for t, i in data["firing_events"]]
     w.t = float(data["t"][0])
     w.n_alive = int(data["n_alive"][0])
     w.k_count = int(data["k_count"][0])

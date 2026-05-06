@@ -62,12 +62,20 @@ def measure_network_activity(snapshot_paths, neuron_definitions: list[dict],
 
     T = len(times)
     firing_matrix = np.zeros((T, n), dtype=np.int8)
+    times_arr = np.asarray(times, dtype=np.float64)
     for ni, result in enumerate(per_neuron_results):
         for fe in result["firing_events"]:
-            # Mark firing in the time window of the event
-            for ti, t in enumerate(times):
-                if fe["start_t"] <= t <= fe["start_t"] + fe["duration"]:
-                    firing_matrix[ti, ni] = 1
+            # For point events (duration == 0, substrate firing log), bucket
+            # into the nearest snapshot index so a point firing still registers
+            # in the firing matrix. For interval events keep the original window
+            # check.
+            if fe["duration"] == 0.0:
+                ti = int(np.argmin(np.abs(times_arr - fe["start_t"])))
+                firing_matrix[ti, ni] = 1
+            else:
+                for ti, t in enumerate(times):
+                    if fe["start_t"] <= t <= fe["start_t"] + fe["duration"]:
+                        firing_matrix[ti, ni] = 1
 
     firing_rates = firing_matrix.mean(axis=0)
 

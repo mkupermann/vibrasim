@@ -327,6 +327,103 @@ def move_nodes(world, dt: float) -> None:
             world.k_pos[i, d] = (world.k_pos[i, d] + world.k_vel[i, d] * dt) % box[d]
 
 
+def neuron_dynamics(world, dt: float) -> None:
+    """PHASE4-R1/R2/R3: per-atom integrate-and-fire with refractory.
+
+    Each level-4 (or higher) atom is treated as a leaky integrator. Free
+    vibrations within `r_integrate` of the atom contribute to its charge.
+    The charge decays exponentially with time constant `tau_membrane`. When
+    the charge crosses `theta_fire` and the atom is not in its refractory
+    window, the atom emits `n_emit` vibrations isotropically at its position
+    and locks for `t_refractory` seconds.
+
+    No-op when `neuron_dynamics_enabled` is False.
+    """
+    cfg = world.config
+    if not cfg.neuron_dynamics_enabled:
+        return
+
+    K = world.k_count
+    if K == 0:
+        return
+
+    # 1. Decay all atom charges
+    decay_factor = float(np.exp(-dt / max(cfg.tau_membrane, 1e-9)))
+    atom_mask = (world.k_level[:K] >= 4) & world.k_alive[:K]
+    if not atom_mask.any():
+        return
+    atom_indices = np.where(atom_mask)[0]
+    world.k_charge[atom_indices] *= decay_factor
+
+    # 2. For each atom not in refractory: count nearby vibrations + add to charge
+    r2 = cfg.r_integrate ** 2
+    box = np.asarray(cfg.box_size, dtype=np.float64)
+    n_alive_v = world.n_alive
+    if n_alive_v > 0:
+        v_pos = world.s_pos[:n_alive_v]
+        v_alive = world.s_alive[:n_alive_v]
+    for ai in atom_indices:
+        if world.t < world.k_refractory_until[ai]:
+            continue
+        if n_alive_v == 0:
+            continue
+        ap = world.k_pos[ai]
+        # Periodic-image squared distance
+        d = v_pos - ap
+        # wrap to [-box/2, box/2]
+        d -= box * np.round(d / box)
+        d2 = (d * d).sum(axis=1)
+        n_in = int(((d2 <= r2) & v_alive).sum())
+        if n_in > 0:
+            world.k_charge[ai] += float(n_in)
+
+    # 3. Fire: any atom with charge ≥ theta_fire and not refractory emits.
+    can_fire = (world.k_charge[atom_indices] >= cfg.theta_fire) & (
+        world.t >= world.k_refractory_until[atom_indices]
+    )
+    firing_atoms = atom_indices[can_fire]
+    for ai in firing_atoms:
+        _emit_vibrations(world, ai)
+        world.k_charge[ai] = 0.0
+        world.k_refractory_until[ai] = world.t + cfg.t_refractory
+        world.firing_events.append((float(world.t), int(ai)))
+
+
+def _emit_vibrations(world, atom_idx: int) -> None:
+    """Emit n_emit vibrations isotropically around the firing atom's position."""
+    cfg = world.config
+    n = cfg.n_emit
+    # Find n free vibration slots (alive=False)
+    free_mask = ~world.s_alive
+    free_idx = np.where(free_mask)[0][:n]
+    if len(free_idx) == 0:
+        return
+    if len(free_idx) < n:
+        n = len(free_idx)
+        free_idx = free_idx[:n]
+    box = np.asarray(cfg.box_size, dtype=np.float64)
+    pos = world.k_pos[atom_idx]
+    # Isotropic unit vectors via Marsaglia
+    z = world.rng.uniform(-1.0, 1.0, size=n)
+    phi = world.rng.uniform(0.0, 2 * np.pi, size=n)
+    sqrt_omz2 = np.sqrt(1 - z * z)
+    vx = sqrt_omz2 * np.cos(phi) * cfg.emit_speed
+    vy = sqrt_omz2 * np.sin(phi) * cfg.emit_speed
+    vz = z * cfg.emit_speed
+    for k, fi in enumerate(free_idx):
+        world.s_pos[fi] = pos % box  # spawn at firing position
+        world.s_vel[fi, 0] = vx[k]
+        world.s_vel[fi, 1] = vy[k]
+        world.s_vel[fi, 2] = vz[k]
+        world.s_freq[fi] = cfg.emit_freq
+        world.s_pol[fi] = bool(world.rng.random() < cfg.polarity_split)
+        world.s_alive[fi] = True
+    # Update n_alive (high-water mark) so the new vibrations are scanned next tick.
+    high = int(free_idx.max()) + 1
+    if high > world.n_alive:
+        world.n_alive = high
+
+
 def tick(world, dt: float) -> None:
     """One simulation step. See CONCEPT.md v2 §4 + §7.1 for the canonical order."""
     box = np.asarray(world.config.box_size, dtype=np.float64)
@@ -337,4 +434,5 @@ def tick(world, dt: float) -> None:
     bind_nodes_upward(world)
     decay_unstable_nodes(world, dt)
     ambient_regeneration(world, dt)
+    neuron_dynamics(world, dt)
     world.t += dt

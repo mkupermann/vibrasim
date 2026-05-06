@@ -43,6 +43,19 @@ class WorldConfig:
     n_vibrations_max: int = 4096
     n_nodes_max: int = 1024
 
+    # Neuron dynamics — PHASE4-R1/R2/R3 amendments. Off by default so legacy
+    # configurations behave exactly as before. When enabled, level-4 atoms
+    # accumulate charge from nearby vibrations, fire when charge ≥ theta_fire,
+    # and lock for t_refractory seconds after each firing.
+    neuron_dynamics_enabled: bool = False
+    tau_membrane: float = 0.5            # charge decay time constant (s)
+    theta_fire: float = 4.0              # firing threshold (integrated count)
+    n_emit: int = 8                      # vibrations emitted per firing
+    t_refractory: float = 0.05           # refractory window after firing (s)
+    r_integrate: float = 5.0             # radius around atom to count incoming vibrations
+    emit_speed: float = 30.0             # speed magnitude of emitted vibrations
+    emit_freq: float = 30000.0           # nominal frequency of emitted vibrations
+
 
 INITIAL_CONFIG = WorldConfig()
 
