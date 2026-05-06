@@ -4,7 +4,7 @@
 
 **Plan name:** Substrate-growth foundation (Plan A). The "baby brain" label is reserved for post-Plan-D scope where the glass-of-water demo (M4) actually runs and the agent exhibits brain-like behaviour. Pre-Plan-D plans (A, A.5, B, C, D) are infrastructure.
 
-**Goal:** Establish that the substrate, with the five amendments R1/R2/PHASE3-R1/tuned-PHASE4-emissions/k_strength enabled, exhibits **F2 — activity-coupled growth (≥3× level-5+ density at the input location vs distant, bootstrap 95% CI lower bound)** — the substrate-statistics weak form of CONCEPT §8 H2 ("structures grow in response to repeated activity"). The five amendments are the mechanism; F2 across a held-out seed grid is the result.
+**Goal:** Establish that the substrate, with the five amendments R1/R2/PHASE3-R1/tuned-PHASE4-emissions/k_strength enabled, exhibits **F2 — activity-coupled growth (≥3× level-5+ density at the input location vs distant, bootstrap 95% CI lower bound)** — the substrate-statistics weak form of CONCEPT §8 H5. The five amendments are the mechanism; F2 across a held-out seed grid is the result.
 
 **Architecture:** All additions are guarded by `neuron_dynamics_enabled` (already in config from prior PHASE4-R1/R2/R3 work). Existing tests must remain green. New behaviour is unit-tested in isolation, then validated end-to-end via four integration tests (F1–F4 from the foundation spec §6.1).
 
@@ -89,14 +89,18 @@ The {7, 100, 314, 999, 2024} held-out grid is the acceptance run; the {42, 43, 4
 
 ## Task 0: Decision claim — which CONCEPT.md hypothesis does Plan A bear on?
 
-Plan A is meant to bear on **CONCEPT.md §8 hypothesis H2**: *"the same set of binding rules that produces atoms and molecules also produces structures that grow in response to repeated activity and decay in its absence — without explicit synaptic-weight machinery."*
+Plan A is meant to bear on **CONCEPT.md §8 hypothesis H5**. H5 verbatim from CONCEPT.md §8:
 
-Plan A's F2 (activity-coupled growth) is the falsification candidate for H2.
+> *"Clusters that are repeatedly co-active develop a measurably stronger synaptic connection than random cluster pairs. This strengthening manifests in the physical configuration of the synapse region. The ambient vibration field maintains bounded steady-state density throughout — this stability is itself part of what the hypothesis claims."*
 
-If F2 passes on the held-out seed grid: H2 is supported (substrate-statistics weak form).
-If F2 fails: H2 is **falsified for this substrate parameterisation**, and the project's next move is either (a) propose a CONCEPT amendment that changes the binding rules, or (b) accept that H2 is wrong as stated and revise §8.
+Plan A tests the **substrate-statistics weak form** of H5 — molecule-density at the input location as a proxy for "connection strength" in H5's full claim. H2 is about spatial sorting by frequency order of magnitude, driven by §4.6 scale repulsion; F2 tests activity-coupled structural growth, which is H5 territory.
 
-**Action:** write `docs/research/plan-A-decision-claim.md` containing the above paragraph, the H2 quote from CONCEPT.md, and the F2 link. Commit before Task 9.
+Plan A's F2 (activity-coupled growth) is the falsification candidate for H5's weak form.
+
+If F2 passes on the held-out seed grid: H5 is supported (substrate-statistics weak form).
+If F2 fails: H5's weak form is **falsified for this substrate parameterisation**, and the project's next move is either (a) propose a CONCEPT amendment that changes the binding rules, or (b) accept that H5's weak form is wrong as stated and revise §8.
+
+**Action:** write `docs/research/plan-A-decision-claim.md` containing the above paragraph, the H5 verbatim quote from CONCEPT.md, and the F2 link. Commit before Task 9.
 
 ---
 
@@ -1377,7 +1381,7 @@ def test_F3a_weak_structures_decay_after_input_stops():
 uv run pytest tests/test_substrate_growth_e2e.py::test_F3a_weak_structures_decay_after_input_stops -v -s
 ```
 
-Expected: PASS.
+Expected: PASS. If acceptance fails on the held-out seed grid, the run is a failure to be logged in `LOGBOOK.md`, not retuned. Parameter changes require a CONCEPT amendment commit and a fresh held-out seed set.
 
 - [ ] **Step 10.5: Add F3b (strong structures persist)**
 
@@ -1569,13 +1573,19 @@ checked in. Document the merge SHA and amendment IDs in the next session note vi
 
 ---
 
-## Task 12: Verdict — one-page H2 verdict at the end
+## Task 12: Verdict — one-page H5 verdict at the end
 
 After Tasks 1-11 land and the held-out F1-F5 results are in, write `docs/research/plan-A-verdict.md` (one page). Required sections:
 
-- **Claim assessed.** H2, verbatim from CONCEPT §8.
+- **Claim assessed.** H5, verbatim from CONCEPT §8.
 - **Evidence collected.** F1, F2, F3a, F3b, F4, F5 results from the held-out seed grid (10 seeds), each with bootstrap 95% CI.
-- **Verdict.** One of: "supported", "falsified", "underdetermined" (with reason — e.g., F1 failed so substrate isn't in steady state, can't ask whether structure forms preferentially).
+
+**Attribution.** State whether Task 10.5 ablation results are available.
+
+- If Task 10.5 has run: cite the ablation log, name which amendments are load-bearing.
+- If Task 10.5 has NOT run: the verdict MUST be `underdetermined` or `supported (attribution pending)` — never plain `supported`. Rationale: F2 passing with all five amendments enabled does not distinguish mechanism contribution from co-deployed redundancy. A clean "supported" verdict requires per-amendment attribution evidence.
+
+- **Verdict.** One of: "supported", "falsified", "underdetermined", or "supported (attribution pending)" (with reason — e.g., F1 failed so substrate isn't in steady state, can't ask whether structure forms preferentially).
 - **What this commits us to.** If supported → Plan B is unblocked. If falsified → CONCEPT amendment required before Plan B. If underdetermined → A.5 / A.7 / further work named.
 
 This task is the deliverable that makes Plan A a research result, not just code that compiles.
@@ -1584,7 +1594,7 @@ This task is the deliverable that makes Plan A a research result, not just code 
 
 ## Plan A complete
 
-After Tasks 1-12, the substrate has all five growth amendments in place (R1, R2, PHASE3-R1, tuned emissions, k_strength) plus F1-F5 acceptance tests passing on the held-out seed grid and a one-page H2 verdict. The substrate now grows where it fires, decays where it doesn't, retains long-term memory via the strength field, and produces tall structures via molecule fusion.
+After Tasks 1-12, the substrate has all five growth amendments in place (R1, R2, PHASE3-R1, tuned emissions, k_strength) plus F1-F5 acceptance tests passing on the held-out seed grid and a one-page H5 verdict. The substrate now grows where it fires, decays where it doesn't, retains long-term memory via the strength field, and produces tall structures via molecule fusion.
 
 **Verify final state:**
 

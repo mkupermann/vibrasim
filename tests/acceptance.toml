@@ -4,7 +4,7 @@
 
 [seeds]
 calibration = [42, 43, 44]            # used during development to set defaults
-held_out = [7, 100, 314, 999, 2024]   # used for the actual acceptance run; never tuned against
+held_out = [7, 100, 314, 999, 2024, 17, 77, 256, 512, 1337]   # used for the actual acceptance run; never tuned against
 
 [F1]
 duration_sim_sec = 300                # 5-min sim (post-A.5: 3600 for full 60-min)
@@ -36,3 +36,17 @@ target_max_level_min = 7
 [F5]
 duration_sim_sec = 300
 conservation_tolerance_pct = 0.20    # |Σ generated − Σ decayed − Σ bound| / Σ generated ≤ 20%
+
+[provenance]
+# Honest pre-registration provenance. The Methods/Stats reviewer flagged that
+# this file (commit f6c84f7) was created AFTER config-tuning commits
+# f0f8911 (initial F1 attempt) and 7bc2412 (re-tune for real substrate dynamics).
+# Calibration seeds {42, 43, 44} were used implicitly during that config search
+# (rng_seed=42 was the simulator's hardcoded default). The held-out seeds
+# {7, 100, 314, 999, 2024, ...} were NEVER used during config tuning; they remain
+# clean for acceptance evaluation.
+locked_at = "2026-05-06"
+locked_at_commit = "f6c84f7"
+calibration_seeds_were_used_during_config_search = true   # for rigour
+held_out_seeds_were_used_during_config_search = false     # the actual contract
+config_tuning_log_commits = ["f0f8911", "7bc2412"]

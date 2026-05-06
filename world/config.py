@@ -57,7 +57,10 @@ class WorldConfig:
     emit_freq: float = 30000.0           # nominal frequency of emitted vibrations
 
     # Plan A — substrate growth amendments
-    lambda_dec_mol: float = 0.0           # baseline decay rate for level-5+ molecules
+    lambda_dec_mol: float = 0.0           # baseline decay rate for level-5+ molecules.
+                                          # 0.0 disables R2 (legacy-compat default).
+                                          # Plan A's growth-amendment config sets this
+                                          # to 0.001 (≈1-min half-life at strength=1).
     r_strengthen: float = 5.0             # radius around firings for level-5+ strengthening
     emit_band_ratios: tuple[float, float, float] = (0.08, 1.0, 12.5)  # PHASE4 emission band multipliers
     mol_fusion_enabled: bool = False      # PHASE3-R1: allow molecule + molecule binding
