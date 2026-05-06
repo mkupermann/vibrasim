@@ -350,6 +350,36 @@ def decay_unstable_nodes(world, dt: float) -> int:
         return decayed
 
 
+@njit(cache=True)
+def _decay_high_level_njit(k_alive: np.ndarray, k_level: np.ndarray,
+                            k_strength: np.ndarray, rolls: np.ndarray,
+                            lambda_dec_mol: float, dt: float,
+                            K: int) -> np.ndarray:
+    """JIT core for decay_high_level_nodes.
+
+    Returns a boolean array of length K marking which slots must be killed.
+    rolls has length == number of qualifying (alive, level >= 5) slots.
+    Slots are visited in ascending index order; the k-th qualifying slot
+    consumes rolls[k]. Non-qualifying slots are never killed.
+    Decay formula: p = lambda_dec_mol * dt / max(strength, 1.0)
+    """
+    decayed = np.zeros(K, dtype=np.bool_)
+    roll_idx = 0
+    for i in range(K):
+        if not k_alive[i]:
+            continue
+        if k_level[i] < 5:
+            continue
+        strength = k_strength[i]
+        if strength < 1.0:
+            strength = 1.0
+        p = lambda_dec_mol * dt / strength
+        if rolls[roll_idx] < p:
+            decayed[i] = True
+        roll_idx += 1
+    return decayed
+
+
 def decay_high_level_nodes(world, dt: float) -> int:
     """R2: strength-modulated decay for level-5+ molecules.
 
@@ -361,6 +391,11 @@ def decay_high_level_nodes(world, dt: float) -> int:
     live in their own slots and stay alive=True there.
 
     Returns the count of nodes that decayed this tick.
+
+    Plan A.5 Task 10: JIT-compiled inner loop. RNG rolls are pre-generated
+    in Python and passed to the @njit core so the RNG stream is identical
+    to the legacy Python path. The Python wrapper handles _kill_node
+    bookkeeping (free-list management). Gated behind cfg.numba_jit_enabled.
     """
     cfg = world.config
     if cfg.lambda_dec_mol <= 0.0:
@@ -368,18 +403,41 @@ def decay_high_level_nodes(world, dt: float) -> int:
     K = world.k_count
     if K == 0:
         return 0
-    mask = world.k_alive[:K] & (world.k_level[:K] >= 5)
-    if not mask.any():
-        return 0
-    indices = np.where(mask)[0]
-    strengths = np.maximum(world.k_strength[indices], 1.0)
-    p_decay = cfg.lambda_dec_mol * dt / strengths
-    rolls = world.rng.random(len(indices))
-    decayed_mask = rolls < p_decay
-    n_decayed = int(decayed_mask.sum())
-    for i in indices[decayed_mask]:
-        _kill_node(world, i)
-    return n_decayed
+
+    if cfg.numba_jit_enabled:
+        # Identify qualifying slots (alive, level >= 5) in Python; consume
+        # exactly that many rolls. Order matches legacy path.
+        n_qualifying = 0
+        for i in range(K):
+            if world.k_alive[i] and world.k_level[i] >= 5:
+                n_qualifying += 1
+        if n_qualifying == 0:
+            return 0
+        rolls = world.rng.random(n_qualifying)
+        decayed = _decay_high_level_njit(
+            world.k_alive[:K], world.k_level[:K], world.k_strength[:K],
+            rolls, cfg.lambda_dec_mol, dt, K,
+        )
+        n_decayed = 0
+        for i in range(K):
+            if decayed[i]:
+                _kill_node(world, i)
+                n_decayed += 1
+        return n_decayed
+    else:
+        # Legacy Python path — preserved for regression diagnosis.
+        mask = world.k_alive[:K] & (world.k_level[:K] >= 5)
+        if not mask.any():
+            return 0
+        indices = np.where(mask)[0]
+        strengths = np.maximum(world.k_strength[indices], 1.0)
+        p_decay = cfg.lambda_dec_mol * dt / strengths
+        rolls = world.rng.random(len(indices))
+        decayed_mask = rolls < p_decay
+        n_decayed = int(decayed_mask.sum())
+        for i in indices[decayed_mask]:
+            _kill_node(world, i)
+        return n_decayed
 
 
 def ambient_regeneration(world, dt: float) -> tuple[int, int]:
