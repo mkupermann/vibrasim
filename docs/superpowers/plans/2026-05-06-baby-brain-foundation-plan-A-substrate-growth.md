@@ -1537,34 +1537,35 @@ This task is the gate before Task 11 (DB amendment marking). Skipped status pre-
 ## Task 11: Document amendment status in the dashboard
 
 **Files:**
-- Modify: `db/seed.sql` (mark amendments R1, R2, PHASE3-R1 as `implemented`)
+- `db/migrations/0004_mark_planA_implemented.sql` (checked-in migration — run after merge)
+- `Makefile` target `db-migrate-planA-mark-implemented`
 
-- [ ] **Step 11.1: Update amendment statuses with the new commit SHA**
+- [ ] **Step 11.1: Update amendment statuses with the merge commit SHA**
+
+After Plan A is merged to `main`, run the checked-in migration via the Makefile target:
 
 ```bash
-# Get the SHA of the F4 commit (last one)
-COMMIT_SHA=$(git rev-parse HEAD)
-
-# Connect to Postgres and update the amendments
-docker exec vibrasim-postgres psql -U vibrasim -d vibrasim -c "
-UPDATE amendments SET status = 'implemented', impl_commit = '$COMMIT_SHA',
-                      decided_at = NOW()
-WHERE number IN ('R1', 'R2', 'PHASE3-R1');
-"
+make db-migrate-planA-mark-implemented MERGE_SHA=$(git rev-parse main)
 ```
+
+This applies `db/migrations/0004_mark_planA_implemented.sql`, which updates R1, R2, and
+PHASE3-R1 to `status = 'implemented'` and records the merge SHA in `impl_commit`.
 
 - [ ] **Step 11.2: Verify in dashboard**
 
 ```bash
-docker exec vibrasim-postgres psql -U vibrasim -d vibrasim -c "
+PGPASSWORD=vibrasim psql -h localhost -p 5433 -U vibrasim -d vibrasim -c "
 SELECT number, title, status, impl_commit FROM amendments
 WHERE number IN ('R1', 'R2', 'PHASE3-R1');
 "
 ```
 
-Expected output: status `implemented` for all three, `impl_commit` set to the recent SHA.
+Expected output: status `implemented` for all three, `impl_commit` set to the merge SHA.
 
-- [ ] **Step 11.3: No commit needed** — the seed.sql is unchanged; only DB state. Document the SHA and amendment IDs in the next session note via the dashboard.
+Alternatively open http://localhost:8502/Amendments and confirm the three rows show `implemented`.
+
+- [ ] **Step 11.3: No additional commit needed** — `0004_mark_planA_implemented.sql` is already
+checked in. Document the merge SHA and amendment IDs in the next session note via the dashboard.
 
 ---
 
