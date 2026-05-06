@@ -90,6 +90,22 @@ _UPGRADE_TARGET = {
     # Cap at level 11 (deca-atomic). Phase 3+ may revisit.
 }
 
+# PHASE3-R1: additional molecule+molecule entries, gated by cfg.mol_fusion_enabled.
+# These are appended to the lookup at runtime so legacy behaviour is preserved
+# when the flag is off.
+_UPGRADE_TARGET_FUSION = {
+    (5, 5): 6,
+    (5, 6): 7, (6, 5): 7,
+    (5, 7): 8, (7, 5): 8,
+    (6, 6): 7,
+    (6, 7): 8, (7, 6): 8,
+    (7, 7): 8,
+    (5, 8): 9, (8, 5): 9,
+    (6, 8): 9, (8, 6): 9,
+    (7, 8): 9, (8, 7): 9,
+    (8, 8): 9,
+}
+
 
 def _decade(freq: float) -> int:
     return int(math.floor(math.log10(freq)))
@@ -121,6 +137,8 @@ def bind_nodes_upward(world) -> int:
             li = int(world.k_level[i])
             lj = int(world.k_level[j])
             target = _UPGRADE_TARGET.get((li, lj))
+            if target is None and cfg.mol_fusion_enabled:
+                target = _UPGRADE_TARGET_FUSION.get((li, lj))
             if target is None:
                 continue
             if world.k_pol[i] == world.k_pol[j]:
