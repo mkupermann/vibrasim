@@ -296,6 +296,29 @@ The cleanest amendment for session 4: add `freq_tolerance_atom` to `WorldConfig`
 
 This amendment is a real CONCEPT.md change (§4.4 and §4.5 currently say "the frequencies differ by exactly 8 %") and should be reviewed before landing.
 
+### Phase 7 scaffolding
+
+Different shape from Phases 3-6 because attention is a property of *firing histories*, not of physical configuration: no construction tool needed.
+
+- `docs/superpowers/specs/2026-05-06-phase-7-attention.md` — operational definition: per-neuron resonance score = correlation between firing history and a sine wave at carrier frequency `f_c`. Selectivity index = std/mean of |resonance|. Resonating subset = neurons above threshold. Phase coherence = circular concentration of phase offsets among resonators.
+- `tools/synthesize_carrier_firing.py` — generate synthetic firing matrices with known resonating indices + phase offsets (test data)
+- `tools/measure_attention_selectivity.py` — phase grid search to find each neuron's best phase offset and resonance score, then aggregate stats
+- 13 new tests; full suite 146/0
+
+End-to-end smoke:
+```
+$ python tools/synthesize_carrier_firing.py --output /tmp/f.json \\
+    --n-neurons 5 --n-snapshots 100 --dt 0.1 \\
+    --carrier-frequency 2.0 --resonating-indices 0,2
+
+$ python tools/measure_attention_selectivity.py --firing-json /tmp/f.json --carrier-frequency 2.0
+# resonating neurons: [0, 2]
+# phase coherence: 1.000
+# selectivity index: 0.658
+```
+
+Phase 7 acceptance per CONCEPT.md v2 §5 (global modulation selects network subsets) requires **both** a substrate-level carrier mechanism *and* measurable selectivity in the resulting firing data. The substrate mechanism is an open spec amendment (or empirical observation of natural rhythms in calibrated runs). The selectivity-measurement piece is shipped.
+
 ### Phase 6 scaffolding
 
 Same pattern as Phases 3-5: spec + construction tool + detection tool + activity-measurement tool + tests, no substrate change.
