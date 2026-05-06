@@ -183,42 +183,72 @@ def decay_unstable_nodes(world, dt: float) -> int:
 def ambient_regeneration(world, dt: float) -> tuple[int, int]:
     """Generate new free vibrations and decay unstable nodes back to vibrations.
 
-    Returns (n_generated, n_decayed).
+    R1 recycling rule: when the buffer is full, displace a far-field vibration
+    instead of silently no-op'ing.  Active regions (within 2*r_2 of any
+    level-4+ node) are protected from displacement.
+
+    Returns (n_displaced_or_allocated, n_decayed).
     """
     cfg = world.config
     rng = world.rng
     box = np.asarray(cfg.box_size, dtype=np.float64)
-    volume = box[0] * box[1] * box[2]
+    box_volume = box[0] * box[1] * box[2]
 
-    # Generation: Poisson(lambda_gen * volume * dt)
-    expected = cfg.lambda_gen * volume * dt
-    n_new = rng.poisson(expected)
-    n_max = world.s_pos.shape[0]
-    n_alive_now = int(world.s_alive.sum())
-    capacity = n_max - n_alive_now
-    n_new = min(n_new, capacity)
-    if n_new > 0:
-        # Find slot indices that are dead
-        dead_idx = np.where(~world.s_alive)[0][:n_new]
-        # Sample new vibrations
-        for d in range(3):
-            world.s_pos[dead_idx, d] = rng.uniform(0.0, box[d], size=n_new)
-        if cfg.freq_distribution == "log":
-            world.s_freq[dead_idx] = np.exp(rng.uniform(np.log(cfg.freq_min),
-                                                        np.log(cfg.freq_max), size=n_new))
-        else:
-            world.s_freq[dead_idx] = rng.uniform(cfg.freq_min, cfg.freq_max, size=n_new)
-        world.s_pol[dead_idx] = rng.random(n_new) < cfg.polarity_split
-        # Isotropic 3D velocities
-        speeds = rng.uniform(cfg.speed_min, cfg.speed_max, size=n_new)
-        z = rng.uniform(-1.0, 1.0, size=n_new)
-        phi = rng.uniform(0.0, 2 * np.pi, size=n_new)
-        sqz = np.sqrt(1 - z * z)
-        world.s_vel[dead_idx, 0] = speeds * sqz * np.cos(phi)
-        world.s_vel[dead_idx, 1] = speeds * sqz * np.sin(phi)
-        world.s_vel[dead_idx, 2] = speeds * z
-        world.s_alive[dead_idx] = True
-        world.n_alive += n_new
+    # Target steady-state count from equilibrium density
+    if cfg.lambda_dec <= 0:
+        target_density = 0.0
+    else:
+        target_density = cfg.lambda_gen / cfg.lambda_dec
+    target_count = int(target_density * box_volume)
+    current_count = int(world.s_alive.sum())
+    deficit = max(0, target_count - current_count)
+    if deficit == 0:
+        return (0, 0)
+
+    # Active-region positions: alive nodes at level 4+
+    if world.k_count > 0:
+        active_mask = world.k_alive[:world.k_count] & (world.k_level[:world.k_count] >= 4)
+        active_pos = world.k_pos[:world.k_count][active_mask]
+    else:
+        active_pos = np.empty((0, 3), dtype=np.float64)
+    safe_radius_sq = (2.0 * cfg.r_2) ** 2
+
+    n_displaced = 0
+    n_allocated = 0
+
+    # --- Pass 1: displace far-field alive vibrations ---
+    alive_idx = np.where(world.s_alive)[0]
+    rng.shuffle(alive_idx)
+    for i in alive_idx:
+        if deficit <= 0:
+            break
+        if len(active_pos):
+            d = world.s_pos[i] - active_pos
+            d -= box * np.round(d / box)  # periodic minimum-image
+            d2 = (d * d).sum(axis=1)
+            if (d2 < safe_radius_sq).any():
+                continue  # inside an active region; skip
+        # Displace: re-randomise position, velocity, frequency, polarity
+        world.s_pos[i] = rng.uniform(low=np.zeros(3), high=box)
+        world.s_vel[i] = world._sample_velocities_3d(1)[0]
+        world.s_freq[i] = world._sample_frequencies(1)[0]
+        world.s_pol[i] = bool(rng.random() < cfg.polarity_split)
+        n_displaced += 1
+        deficit -= 1
+
+    # --- Pass 2: fallback — allocate from unused buffer slots if any remain ---
+    if deficit > 0:
+        free_idx = np.where(~world.s_alive)[0]
+        for i in free_idx[:deficit]:
+            world.s_pos[i] = rng.uniform(low=np.zeros(3), high=box)
+            world.s_vel[i] = world._sample_velocities_3d(1)[0]
+            world.s_freq[i] = world._sample_frequencies(1)[0]
+            world.s_pol[i] = bool(rng.random() < cfg.polarity_split)
+            world.s_alive[i] = True
+            if int(i) + 1 > world.n_alive:
+                world.n_alive = int(i) + 1
+            n_allocated += 1
+            deficit -= 1
 
     # Decay: each alive node level 1/2/3 has Bernoulli(lambda_dec * dt) of decaying
     n_decayed = 0
@@ -259,7 +289,7 @@ def ambient_regeneration(world, dt: float) -> tuple[int, int]:
                         world.k_alive[idx] = True
                 n_decayed += 1
 
-    return n_new, n_decayed
+    return n_displaced + n_allocated, n_decayed
 
 
 def apply_scale_repulsion(world, dt: float) -> None:
