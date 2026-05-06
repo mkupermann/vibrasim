@@ -70,3 +70,10 @@ def test_growth_amendment_fields_have_safe_defaults():
     assert cfg.r_strengthen == 5.0
     assert cfg.emit_band_ratios == (0.08, 1.0, 12.5)  # freq_ratio, 1, 1/freq_ratio
     assert cfg.mol_fusion_enabled is False
+
+
+def test_AP_perf_flags_default_true():
+    """Plan A.5 perf flags default ON (production path uses both)."""
+    cfg = WorldConfig()
+    assert cfg.slot_recycling_enabled is True
+    assert cfg.numba_jit_enabled is True

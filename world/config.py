@@ -62,6 +62,10 @@ class WorldConfig:
     emit_band_ratios: tuple[float, float, float] = (0.08, 1.0, 12.5)  # PHASE4 emission band multipliers
     mol_fusion_enabled: bool = False      # PHASE3-R1: allow molecule + molecule binding
 
+    # Plan A.5 — substrate performance
+    slot_recycling_enabled: bool = True   # World.allocate_node reuses dead slots before extending k_count
+    numba_jit_enabled: bool = True        # @njit cores for hot loops
+
 
 INITIAL_CONFIG = WorldConfig()
 
