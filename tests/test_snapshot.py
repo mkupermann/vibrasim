@@ -61,3 +61,17 @@ def test_snapshot_preserves_k_strength(tmp_path):
     assert w2.k_strength[3] == 99.9
     # Untouched slots round-trip too
     assert w2.k_strength[1] == 1.0
+
+
+def test_AP_snapshot_preserves_k_ref_count(tmp_path):
+    """k_ref_count round-trips through save/load."""
+    cfg = WorldConfig(n_initial_vibrations=0, n_nodes_max=8)
+    w = World(cfg)
+    w.k_ref_count[2] = 7
+    w.k_ref_count[5] = 3
+    p = tmp_path / "snapshot_t000000.00.npz"
+    save_snapshot(w, p)
+    w2 = load_snapshot(p)
+    assert w2.k_ref_count[2] == 7
+    assert w2.k_ref_count[5] == 3
+    assert w2.k_ref_count[0] == 0
