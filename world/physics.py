@@ -228,42 +228,126 @@ def bind_nodes_upward(world) -> int:
     return formed
 
 
+@njit(cache=True)
+def _decay_unstable_njit(k_alive: np.ndarray, k_level: np.ndarray,
+                         k_birth: np.ndarray, rolls: np.ndarray,
+                         t: float, pair_decay_time: float,
+                         triad_decay_time: float, K: int,
+                         dt: float) -> np.ndarray:
+    """JIT core for decay_unstable_nodes.
+
+    Returns a boolean array of length K marking which slots must be killed.
+    The Python wrapper handles RNG generation and free-list bookkeeping.
+    Decay formula: p = dt / tau  (linear per-tick probability, matching the
+    legacy Python path exactly).
+    """
+    decayed = np.zeros(K, dtype=np.bool_)
+    for i in range(K):
+        if not k_alive[i]:
+            continue
+        level = k_level[i]
+        if level == 2:
+            tau = pair_decay_time
+        elif level == 3:
+            tau = triad_decay_time
+        else:
+            continue
+        # Match the existing Python decay formula exactly: p = dt / tau.
+        if rolls[i] < dt / tau:
+            decayed[i] = True
+    return decayed
+
+
 def decay_unstable_nodes(world, dt: float) -> int:
     """Probabilistic exponential decay of pairs (level 2) and triads (level 3).
 
     Atoms (level 4) are permanent. Electrons (level 1) are handled by the
     ambient_regeneration channel, not here.
+
+    When cfg.numba_jit_enabled is True, the inner decision loop runs in a
+    @njit core. RNG rolls are pre-generated in Python so the RNG stream is
+    identical to the legacy path. Free-list bookkeeping and constituent
+    revival always run in Python.
     """
     cfg = world.config
-    decay_time = {2: cfg.pair_decay_time, 3: cfg.triad_decay_time}
-    rng = world.rng
-    decayed = 0
-    for i in range(world.k_count):
-        if not world.k_alive[i]:
-            continue
-        level = int(world.k_level[i])
-        if level not in (2, 3):
-            continue
-        tau = decay_time[level]
-        p = dt / tau
-        if rng.random() < p:
-            start = world.k_comp_offset[i]
-            end = world.k_comp_offset[i + 1]
-            _kill_node(world, i)
-            for j in range(start, end):
-                idx = int(world.k_comp_indices[j])
-                # Revive the constituent; if _kill_node pushed it onto the
-                # free list (ref count dropped to 0), remove it first so the
-                # slot isn't recycled out from under the revived node.
-                if idx in world._free_slots_set:
-                    world._free_slots_set.discard(idx)
-                    try:
-                        world._free_slots.remove(idx)
-                    except ValueError:
-                        pass
-                world.k_alive[idx] = True
-            decayed += 1
-    return decayed
+    K = world.k_count
+    if K == 0:
+        return 0
+
+    if cfg.numba_jit_enabled:
+        # Pre-generate RNG rolls for qualifying slots only — one roll per alive
+        # level-2/3 slot, in ascending slot order — so the RNG stream is
+        # identical to the legacy Python path given the same seed.
+        k_alive_slice = world.k_alive[:K]
+        k_level_slice = world.k_level[:K]
+        qualifying = np.where(
+            k_alive_slice & ((k_level_slice == 2) | (k_level_slice == 3))
+        )[0]
+        n_qualifying = len(qualifying)
+        if n_qualifying == 0:
+            return 0
+        batch_rolls = world.rng.random(n_qualifying)
+        # Build a per-slot roll array (size K) so the JIT core can index by
+        # slot without needing a ragged mapping.  Non-qualifying slots get 1.0
+        # (guaranteed not to decay).
+        raw_rolls = np.ones(K, dtype=np.float64)
+        raw_rolls[qualifying] = batch_rolls
+        decayed_mask = _decay_unstable_njit(
+            k_alive_slice, k_level_slice, world.k_birth[:K],
+            raw_rolls, world.t, cfg.pair_decay_time, cfg.triad_decay_time,
+            K, dt,
+        )
+        n_decayed = 0
+        for i in range(K):
+            if decayed_mask[i]:
+                start = int(world.k_comp_offset[i])
+                end = int(world.k_comp_offset[i + 1])
+                _kill_node(world, i)
+                for j in range(start, end):
+                    idx = int(world.k_comp_indices[j])
+                    # Revive the constituent; if _kill_node pushed it onto the
+                    # free list (ref count dropped to 0), remove it first so
+                    # the slot isn't recycled out from under the revived node.
+                    if idx in world._free_slots_set:
+                        world._free_slots_set.discard(idx)
+                        try:
+                            world._free_slots.remove(idx)
+                        except ValueError:
+                            pass
+                    world.k_alive[idx] = True
+                n_decayed += 1
+        return n_decayed
+    else:
+        # Legacy Python path — preserved for regression diagnosis.
+        decay_time = {2: cfg.pair_decay_time, 3: cfg.triad_decay_time}
+        rng = world.rng
+        decayed = 0
+        for i in range(K):
+            if not world.k_alive[i]:
+                continue
+            level = int(world.k_level[i])
+            if level not in (2, 3):
+                continue
+            tau = decay_time[level]
+            p = dt / tau
+            if rng.random() < p:
+                start = world.k_comp_offset[i]
+                end = world.k_comp_offset[i + 1]
+                _kill_node(world, i)
+                for j in range(start, end):
+                    idx = int(world.k_comp_indices[j])
+                    # Revive the constituent; if _kill_node pushed it onto the
+                    # free list (ref count dropped to 0), remove it first so
+                    # the slot isn't recycled out from under the revived node.
+                    if idx in world._free_slots_set:
+                        world._free_slots_set.discard(idx)
+                        try:
+                            world._free_slots.remove(idx)
+                        except ValueError:
+                            pass
+                    world.k_alive[idx] = True
+                decayed += 1
+        return decayed
 
 
 def decay_high_level_nodes(world, dt: float) -> int:
