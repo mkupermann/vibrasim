@@ -1,6 +1,5 @@
 """Tests for Plan A.5 slot recycling correctness (AP3, AP4)."""
 import numpy as np
-import pytest
 from world.config import WorldConfig
 from world.state import World
 from world.physics import _kill_node
@@ -55,7 +54,6 @@ def test_AP4b_kill_atom_with_pending_reference_does_not_recycle():
     assert 0 in w._free_slots_set
 
 
-@pytest.mark.xfail(strict=True, reason="awaits Plan A.5 Task 5: allocate_node recycling path")
 def test_AP3_slot_reused_after_decay():
     """When allocate_node is called and a slot is on the free list, it's reused."""
     w = _make_world()
