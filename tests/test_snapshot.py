@@ -75,3 +75,54 @@ def test_AP_snapshot_preserves_k_ref_count(tmp_path):
     assert w2.k_ref_count[2] == 7
     assert w2.k_ref_count[5] == 3
     assert w2.k_ref_count[0] == 0
+
+
+def test_snapshot_load_reconstructs_k_comp_end_for_old_format(tmp_path):
+    """Pre-Plan-A.5 snapshots stored composition end-pointers in
+    k_comp_offset[i+1]. load_snapshot must reconstruct k_comp_end from
+    that data when the new field is absent — otherwise compositions
+    silently read as empty."""
+    import numpy as np
+    from world.config import WorldConfig
+    from world.state import World
+    from world.snapshot import save_snapshot, load_snapshot
+
+    # Build a world with a real composition so k_comp_end matters
+    cfg = WorldConfig(n_initial_vibrations=0, n_nodes_max=8)
+    w = World(cfg)
+    # Seed a single molecule at slot 0 with constituents at slots 1, 2
+    w.k_alive[0] = True
+    w.k_level[0] = 5
+    w.k_alive[1] = True
+    w.k_level[1] = 4
+    w.k_alive[2] = True
+    w.k_level[2] = 4
+    w.k_count = 3
+    w.k_comp_indices[0] = 1
+    w.k_comp_indices[1] = 2
+    w.k_comp_offset[0] = 0
+    w.k_comp_end[0] = 2          # new field: slot 0's composition span ends at 2
+    w.k_comp_offset[1] = 2        # legacy: also points at the boundary
+    w.k_comp_used = 2
+
+    # Save the snapshot
+    p = tmp_path / "snapshot.npz"
+    save_snapshot(w, p)
+
+    # Simulate an old-format snapshot by re-saving WITHOUT k_comp_end.
+    # We do this by loading the npz, dropping the key, re-saving.
+    data = dict(np.load(p, allow_pickle=True))
+    if "k_comp_end" in data:
+        del data["k_comp_end"]
+    np.savez(p, **data)
+
+    # Load the legacy-format snapshot
+    w2 = load_snapshot(p)
+
+    # k_comp_end[0] must be reconstructed to 2 (matching k_comp_offset[1])
+    assert w2.k_comp_end[0] == 2, (
+        f"Backward-compat load did not reconstruct k_comp_end[0]; "
+        f"got {w2.k_comp_end[0]}, expected 2"
+    )
+    # Slots 1 and 2 are atoms with no composition — k_comp_end should be 2 (k_comp_offset[2])
+    assert w2.k_comp_end[1] == w2.k_comp_offset[2]
