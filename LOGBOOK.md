@@ -296,6 +296,28 @@ The cleanest amendment for session 4: add `freq_tolerance_atom` to `WorldConfig`
 
 This amendment is a real CONCEPT.md change (§4.4 and §4.5 currently say "the frequencies differ by exactly 8 %") and should be reviewed before landing.
 
+### Phase 4 scaffolding (overnight bonus)
+
+Mirroring the Phase 3 pattern: spec + construction tool + detection tool + activity-measurement tool + tests, leaving the empirical "does it fire?" question to later calibration.
+
+- `docs/superpowers/specs/2026-05-06-phase-4-neurons.md` — operational definition: connected, compact cluster of ≥6 atoms + ≥4 molecules with hand-set input/output axis
+- `tools/construct_neuron.py` — hand-place a candidate cluster
+- `tools/detect_neurons.py` — find compact mass-meeting clusters in any snapshot
+- `tools/measure_neuron_activity.py` — track input/output activity across a snapshot sequence, detect firing events as output bursts above 5× baseline, compute integration lag + refractory period
+- 14 new tests across `tests/test_construct_neuron.py`, `tests/test_detect_neurons.py`, `tests/test_measure_neuron_activity.py` — all green
+
+Smoke test:
+```
+$ python tools/construct_neuron.py --output /tmp/n.npz --centre 100,100,100 --radius 6 --axis 1,0,0 --n-atoms 8 --n-molecules 6
+# wrote /tmp/n.npz, atoms=8 molecules=6, inlet=[103.6, 100, 100] outlet=[96.4, 100, 100]
+
+$ python tools/detect_neurons.py /tmp/n.npz
+# 1 cluster(s); 1 pass neuron criteria
+  [0] n_total=14  atoms=8  molecules=6  R=4.99  ✔ neuron candidate
+```
+
+Phase 4 acceptance per CONCEPT.md v2 §5 (cluster shows integration + threshold + refractory under simulation) is empirical. To exercise: construct a cluster in a calibrated world, run forward 30+ s, measure activity, look for firing events. That's session 5+ work.
+
 ### Phase 3: not exercised yet
 
 `tools/detect_membranes.py` is in place and unit-tested. With zero molecules in the calibrated runs, there's no opportunity for spontaneous shell formation, and we have no real-world detection results to report. The tool will be exercised once Phase 2 calibration produces enough molecules.
