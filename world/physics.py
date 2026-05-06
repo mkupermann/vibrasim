@@ -111,6 +111,50 @@ def _decade(freq: float) -> int:
     return int(math.floor(math.log10(freq)))
 
 
+def _kill_node(world, i: int) -> None:
+    """Mark node i dead, decrement ref counts of its constituents, and
+    push newly-recyclable slots onto the free list.
+
+    Single source of truth for slot bookkeeping. Every code path that
+    deactivates a node must funnel through this helper, otherwise ref
+    counts go stale and slots are recycled prematurely.
+
+    A slot is recyclable iff k_alive[i] == False AND k_ref_count[i] == 0.
+
+    When `cfg.slot_recycling_enabled` is False, falls back to the legacy
+    "just deactivate, no bookkeeping" behaviour — preserved for regression
+    diagnosis.
+    """
+    cfg = world.config
+    if not cfg.slot_recycling_enabled:
+        # Legacy path: just deactivate
+        world.k_alive[i] = False
+        return
+
+    if not world.k_alive[i]:
+        return  # already dead — no-op
+
+    world.k_alive[i] = False
+
+    # Decrement ref counts of constituents
+    start = int(world.k_comp_offset[i])
+    end = int(world.k_comp_offset[i + 1])
+    for j in range(start, end):
+        c = int(world.k_comp_indices[j])
+        if 0 <= c < world.k_count:
+            world.k_ref_count[c] -= 1
+            if world.k_ref_count[c] <= 0 and not world.k_alive[c]:
+                if c not in world._free_slots_set:
+                    world._free_slots.append(c)
+                    world._free_slots_set.add(c)
+
+    # Maybe i itself is now recyclable
+    if world.k_ref_count[i] == 0:
+        if i not in world._free_slots_set:
+            world._free_slots.append(i)
+            world._free_slots_set.add(i)
+
+
 def bind_nodes_upward(world) -> int:
     cfg = world.config
     box = np.asarray(cfg.box_size, dtype=np.float64)
