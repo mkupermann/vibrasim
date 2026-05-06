@@ -205,8 +205,8 @@ def bind_nodes_upward(world) -> int:
             constituents = np.array([i, j], dtype=np.int32)
             world.allocate_node(mid, new_freq, new_pol, level=target,
                                 constituents=constituents, comp_kind=1)
-            world.k_alive[i] = False
-            world.k_alive[j] = False
+            _kill_node(world, i)
+            _kill_node(world, j)
             world.k_locked_this_tick[i] = True
             world.k_locked_this_tick[j] = True
             formed += 1
@@ -234,11 +234,20 @@ def decay_unstable_nodes(world, dt: float) -> int:
         tau = decay_time[level]
         p = dt / tau
         if rng.random() < p:
-            world.k_alive[i] = False
             start = world.k_comp_offset[i]
             end = world.k_comp_offset[i + 1]
+            _kill_node(world, i)
             for j in range(start, end):
                 idx = int(world.k_comp_indices[j])
+                # Revive the constituent; if _kill_node pushed it onto the
+                # free list (ref count dropped to 0), remove it first so the
+                # slot isn't recycled out from under the revived node.
+                if idx in world._free_slots_set:
+                    world._free_slots_set.discard(idx)
+                    try:
+                        world._free_slots.remove(idx)
+                    except ValueError:
+                        pass
                 world.k_alive[idx] = True
             decayed += 1
     return decayed
@@ -272,8 +281,7 @@ def decay_high_level_nodes(world, dt: float) -> int:
     decayed_mask = rolls < p_decay
     n_decayed = int(decayed_mask.sum())
     for i in indices[decayed_mask]:
-        world.k_alive[i] = False
-        world.k_strength[i] = 1.0  # reset for slot reuse
+        _kill_node(world, i)
     return n_decayed
 
 
@@ -361,10 +369,10 @@ def ambient_regeneration(world, dt: float) -> tuple[int, int]:
                 continue  # atoms (level 4) immune
             if rng.random() < p:
                 # Cascade decay: revive constituents
-                world.k_alive[i] = False
                 start = world.k_comp_offset[i]
                 end = world.k_comp_offset[i + 1]
                 kind = int(world.k_comp_kind[i])
+                _kill_node(world, i)
                 if kind == 0:
                     # constituents are vibrations; bring them back to life
                     for jj in range(start, end):
@@ -382,9 +390,16 @@ def ambient_regeneration(world, dt: float) -> tuple[int, int]:
                             world.s_vel[idx, 2] = speed * z_val
                             world.n_alive += 1
                 else:
-                    # constituents are nodes; revive them
+                    # constituents are nodes; revive them (remove from free list
+                    # if _kill_node pushed them there when ref count hit 0).
                     for jj in range(start, end):
                         idx = int(world.k_comp_indices[jj])
+                        if idx in world._free_slots_set:
+                            world._free_slots_set.discard(idx)
+                            try:
+                                world._free_slots.remove(idx)
+                            except ValueError:
+                                pass
                         world.k_alive[idx] = True
                 n_decayed += 1
 
