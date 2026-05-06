@@ -47,3 +47,15 @@ docs/logbook/*.png
 
 # Word lockfile artifacts
 ~$*
+
+# Local agent + browser state
+.claude/
+.playwright-mcp/
+
+# Debugging screenshots
+vibrasim_*.png
+
+# Snapshot directories
+snapshots/
+
+# uv lockfile - tracked but verify

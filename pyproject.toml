@@ -14,6 +14,13 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest >= 8.0", "matplotlib >= 3.8"]
+dashboard = [
+    "streamlit >= 1.40",
+    "psycopg[binary] >= 3.2",
+    "pandas >= 2.2",
+    "reportlab >= 4.2",
+    "plotly >= 5.24",
+]
 
 [project.scripts]
 world = "world.run:main"
