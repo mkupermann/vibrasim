@@ -80,6 +80,7 @@ def construct_neuron(
         world.k_comp_kind[idx] = 1
         world.k_comp_offset[idx] = world.k_comp_used
         world.k_comp_offset[idx + 1] = world.k_comp_used
+        world.k_comp_end[idx] = world.k_comp_used
         world.k_count += 1
         atom_indices.append(idx)
 
@@ -100,6 +101,7 @@ def construct_neuron(
         world.k_comp_kind[idx] = 1
         world.k_comp_offset[idx] = world.k_comp_used
         world.k_comp_offset[idx + 1] = world.k_comp_used
+        world.k_comp_end[idx] = world.k_comp_used
         world.k_count += 1
         molecule_indices.append(idx)
 

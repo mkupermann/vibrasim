@@ -153,7 +153,7 @@ def _kill_node(world, i: int) -> None:
     # references node indices (comp_kind != 0), not vibration indices.
     if world.k_comp_kind[i] != 0:
         start = int(world.k_comp_offset[i])
-        end = int(world.k_comp_offset[i + 1])
+        end = int(world.k_comp_end[i])
         for j in range(start, end):
             c = int(world.k_comp_indices[j])
             if 0 <= c < world.k_count:
@@ -442,7 +442,7 @@ def decay_unstable_nodes(world, dt: float) -> int:
         for i in range(K):
             if decayed_mask[i]:
                 start = int(world.k_comp_offset[i])
-                end = int(world.k_comp_offset[i + 1])
+                end = int(world.k_comp_end[i])
                 _kill_node(world, i)
                 for j in range(start, end):
                     idx = int(world.k_comp_indices[j])
@@ -473,7 +473,7 @@ def decay_unstable_nodes(world, dt: float) -> int:
             p = dt / tau
             if rng.random() < p:
                 start = world.k_comp_offset[i]
-                end = world.k_comp_offset[i + 1]
+                end = world.k_comp_end[i]
                 _kill_node(world, i)
                 for j in range(start, end):
                     idx = int(world.k_comp_indices[j])
@@ -666,7 +666,7 @@ def ambient_regeneration(world, dt: float) -> tuple[int, int]:
             if rng.random() < p:
                 # Cascade decay: revive constituents
                 start = world.k_comp_offset[i]
-                end = world.k_comp_offset[i + 1]
+                end = world.k_comp_end[i]
                 kind = int(world.k_comp_kind[i])
                 _kill_node(world, i)
                 if kind == 0:

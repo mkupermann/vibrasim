@@ -29,6 +29,7 @@ def _populate_nodes(w, n=50, level=2):
         w.k_birth[i] = 0.0
         w.k_comp_offset[i] = 0
         w.k_comp_offset[i + 1] = 0
+        w.k_comp_end[i] = 0
     w.k_count = n
 
 
@@ -138,6 +139,8 @@ def test_AP11_bind_nodes_upward_jit_matches_python():
             w.k_birth[2*k + 1] = 0.0
             w.k_comp_offset[2*k] = 0
             w.k_comp_offset[2*k + 1] = 0
+            w.k_comp_end[2*k] = 0
+            w.k_comp_end[2*k + 1] = 0
         w.k_count = 16
         w.k_comp_offset[16] = 0
 

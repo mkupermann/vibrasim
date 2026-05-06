@@ -19,7 +19,8 @@ def save_snapshot(world: World, path: Path | str) -> None:
         k_pos=world.k_pos, k_vel=world.k_vel, k_freq=world.k_freq,
         k_pol=world.k_pol, k_level=world.k_level, k_birth=world.k_birth,
         k_alive=world.k_alive,
-        k_comp_offset=world.k_comp_offset, k_comp_indices=world.k_comp_indices,
+        k_comp_offset=world.k_comp_offset, k_comp_end=world.k_comp_end,
+        k_comp_indices=world.k_comp_indices,
         k_comp_kind=world.k_comp_kind,
         k_charge=world.k_charge,
         k_refractory_until=world.k_refractory_until,
@@ -59,6 +60,8 @@ def load_snapshot(path: Path | str) -> World:
     w.k_birth[:] = data["k_birth"]
     w.k_alive[:] = data["k_alive"]
     w.k_comp_offset[:] = data["k_comp_offset"]
+    if "k_comp_end" in data.files:
+        w.k_comp_end[:] = data["k_comp_end"]
     w.k_comp_indices[:] = data["k_comp_indices"]
     w.k_comp_kind[:] = data["k_comp_kind"]
     if "k_charge" in data.files:

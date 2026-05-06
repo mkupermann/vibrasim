@@ -34,6 +34,7 @@ def _make_atom(w: World, idx: int, pos, freq, pol):
     if idx >= w.k_count:
         w.k_count = idx + 1
         w.k_comp_offset[idx + 1] = w.k_comp_offset[idx]
+        w.k_comp_end[idx] = w.k_comp_offset[idx]
 
 
 def test_atom_atom_forms_molecule_l5():
@@ -151,6 +152,7 @@ def test_molecule_polarity_random_at_formation():
             w.k_alive[idx] = True
             w.k_comp_offset[idx] = w.k_comp_used
             w.k_comp_offset[idx + 1] = w.k_comp_used
+            w.k_comp_end[idx] = w.k_comp_used
     w.k_count = 2 * n_molecules
 
     bind_nodes_upward(w)
