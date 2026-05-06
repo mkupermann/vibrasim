@@ -46,6 +46,10 @@ class World:
         # Plan A — per-node strength field (R2 strength-modulated decay).
         # Default 1.0 so newly-allocated nodes are not immediately decayed away.
         self.k_strength = np.ones(K, dtype=np.float64)
+        # Plan A.5 — slot recycling
+        self.k_ref_count = np.zeros(K, dtype=np.int32)
+        self._free_slots: list[int] = []
+        self._free_slots_set: set[int] = set()
         # Firing log: (t, atom_index) tuples appended whenever an atom fires.
         # Keeps the substrate self-describing so measurements don't need
         # to re-derive firings from snapshot deltas.

@@ -104,3 +104,14 @@ def test_k_strength_field_initialised_to_one():
     assert w.k_strength.dtype == np.float64
     # Every slot starts with strength 1.0
     assert (w.k_strength == 1.0).all()
+
+
+def test_AP_k_ref_count_initialised_zero():
+    """Plan A.5: per-slot reference count is zero at world init."""
+    cfg = WorldConfig(n_initial_vibrations=0, n_nodes_max=16)
+    w = World(cfg)
+    assert w.k_ref_count.shape == (16,)
+    assert w.k_ref_count.dtype == np.int32
+    assert (w.k_ref_count == 0).all()
+    assert w._free_slots == []
+    assert w._free_slots_set == set()
