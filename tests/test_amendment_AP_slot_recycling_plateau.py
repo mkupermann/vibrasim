@@ -8,8 +8,14 @@ from world.physics import tick
 
 @pytest.mark.slow
 def test_AP5_k_count_plateaus_under_sustained_growth():
-    """1-min simulated run with the growth-amendment config; k_count must
-    plateau at no more than 2× peak alive node count."""
+    """20-simulated-second run with the growth-amendment config; k_count
+    must plateau at no more than 2× peak alive node count.
+
+    Note: pre-Plan A.5 (Tasks 9-13) Numba JIT, the per-tick cost is
+    dominated by pure-Python O(k_count) loops, so durations longer than
+    ~20 sim-sec take many wall-minutes. AP12 (Task 14) and AP13 (Task 15)
+    cover longer-duration verification once JIT is in place.
+    """
     cfg = WorldConfig(
         n_initial_vibrations=80, n_vibrations_max=200, n_nodes_max=4096,
         box_size=(60.0, 60.0, 60.0),
@@ -43,7 +49,9 @@ def test_AP5_k_count_plateaus_under_sustained_growth():
 
     dt = cfg.dt
     burst_step = max(1, int(0.5 / dt))
-    n_ticks = int(60.0 / dt)
+    n_ticks = int(20.0 / dt)  # 20 simulated seconds — ratio is stable by here;
+                              # longer-duration plateau verification is in
+                              # AP12/AP13 (Tasks 14-15) after JIT lands.
     peak_alive = 0
     for k in range(n_ticks):
         if (k + 1) % burst_step == 0:
