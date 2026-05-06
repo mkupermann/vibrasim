@@ -1,0 +1,38 @@
+# Frozen acceptance contract — Plan A.
+# All thresholds and seeds locked here. Changes require a CONCEPT amendment
+# commit. F1-F5 read this file, not their own constants.
+
+[seeds]
+calibration = [42, 43, 44]            # used during development to set defaults
+held_out = [7, 100, 314, 999, 2024]   # used for the actual acceptance run; never tuned against
+
+[F1]
+duration_sim_sec = 300                # 5-min sim (post-A.5: 3600 for full 60-min)
+in_band_low_mult = 0.5
+in_band_high_mult = 2.0
+in_band_min_pct = 0.80
+
+[F2]
+training_sim_sec = 300
+measurement_radius = 8.0
+ratio_min = 3.0       # bootstrap 95% CI lower bound
+
+[F3a]
+silent_sim_sec = 300
+weak_strength_max = 5.0
+decay_min_pct = 0.80
+
+[F3b]
+training_sim_sec = 600
+silent_sim_sec = 300
+strong_strength_min = 50.0
+persistence_min_pct = 0.80
+n_strong_required = 5     # if fewer formed, F3b is a PRECONDITION FAILURE, not a trivial pass
+
+[F4]
+sustained_sim_sec = 1800
+target_max_level_min = 7
+
+[F5]
+duration_sim_sec = 300
+conservation_tolerance_pct = 0.20    # |Σ generated − Σ decayed − Σ bound| / Σ generated ≤ 20%

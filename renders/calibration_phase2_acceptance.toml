@@ -13,6 +13,8 @@
 # 10 species. This minimal-delta variant is preferred for traceability:
 # it shows the smallest spec-knob change that unlocks Phase 2.
 
+rng_seed = 42
+
 box_size = [60.0, 60.0, 60.0]
 n_initial_vibrations = 800
 n_vibrations_max = 2048

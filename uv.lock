@@ -1581,14 +1581,14 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "matplotlib", marker = "extra == 'dev'", specifier = ">=3.8" },
-    { name = "numba", specifier = ">=0.61" },
-    { name = "numpy", specifier = ">=1.26" },
-    { name = "optuna", specifier = ">=4.0" },
+    { name = "numba", specifier = ">=0.61,<0.70" },
+    { name = "numpy", specifier = ">=1.26,<3.0" },
+    { name = "optuna", specifier = ">=4.0,<5.0" },
     { name = "pandas", marker = "extra == 'dashboard'", specifier = ">=2.2" },
     { name = "plotly", marker = "extra == 'dashboard'", specifier = ">=5.24" },
     { name = "psycopg", extras = ["binary"], marker = "extra == 'dashboard'", specifier = ">=3.2" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.0" },
-    { name = "pyvista", specifier = ">=0.45" },
+    { name = "pyvista", specifier = ">=0.45,<1.0" },
     { name = "reportlab", marker = "extra == 'dashboard'", specifier = ">=4.2" },
     { name = "streamlit", marker = "extra == 'dashboard'", specifier = ">=1.40" },
 ]
