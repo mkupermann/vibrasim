@@ -1,102 +1,138 @@
 # Vibrasim
 
-A 3D simulated world built from one primitive, the vibration, with frequency, polarity, position, velocity, and nothing else. Out of those, a small set of natural laws makes vibrations bind into electrons, electrons into pairs, pairs and electrons into triads, and a triad plus an electron into an indestructible atom. Atoms then bind into molecules through level 11 (deca-atomic). That's Phases 1 and 2 of an eight-phase research programme. The phases keep going: membrane-like structures, neurons, synapses with molecular transmission, networks, attention, and larger specialised structures. The full conceptual case is in [`docs/CONCEPT.md`](docs/CONCEPT.md).
+A 3D simulated world built from one primitive, the vibration, with frequency, polarity, position, velocity, and nothing else. Out of those, a small set of natural laws makes vibrations bind into electrons, electrons into pairs, pairs and electrons into triads, and a triad plus an electron into an indestructible atom. Atoms then bind into molecules. Molecules can grow into structures that fire, structures that talk to each other, and eventually into a substrate that listens, watches, learns, and talks back. The full conceptual case is in [`docs/CONCEPT.md`](docs/CONCEPT.md).
 
-This isn't a product. It's the substrate that the concept paper proposes, made concrete enough to actually run.
+This isn't a product. It's the substrate that the concept paper proposes, made concrete enough to actually run, and now extended into an explicit agent — the *baby brain* — whose first design is at [`docs/superpowers/specs/2026-05-06-baby-brain-foundation-design.md`](docs/superpowers/specs/2026-05-06-baby-brain-foundation-design.md).
 
 ![first atom](renders/keyframe_first_atom.png)
 
-> *Phase 1 climax — t = 13.4 s simulated, the moment a triad absorbs its fourth electron and the first atom (bright sphere, upper-right) locks into place. Source: `renders/anim_phase1_first_atom.mp4` / `renders/anim_phase1_first_atom_hq.mp4`.*
+> *Phase 1 climax — t = 13.4 s simulated, the moment a triad absorbs its fourth electron and the first atom (bright sphere, upper-right) locks into place.*
 
 ![first molecule](renders/keyframe_first_molecule.png)
 
-> *Phase 2 climax — t ≈ 5.5 s simulated under the `session-3b` calibration that unlocked molecule formation. Multiple atoms (large white spheres) plus the first di-atomic molecule (slightly larger pale sphere). Source: `renders/anim_phase2_first_molecule.mp4`.*
+> *Phase 2 climax — t ≈ 5.5 s under the `session-3b` calibration that unlocked molecule formation. Multiple atoms (large white spheres) and the first di-atomic molecule.*
 
-## Why this exists
+## Two things in one repo
 
-The concept paper asks whether a hierarchical, brain-like system can be built from a sparse set of local interaction rules between elementary vibrations, rather than being either biophysically simulated neuron by neuron (NEURON, Blue Brain) or abstracted away from the substrate entirely (deep learning). If yes, you get something neither tradition has. Every property in the model reduces all the way down to the same set of foundational laws, with no level left abstract. If no, you learn something specific about which extra rules nature actually needed at the level the world fell apart.
+This codebase carries two layers, and reading it is easier if you know which is which.
 
-Phase 1 is the precondition for the rest. Atoms have to form reliably before molecules can, molecules before membranes, membranes before neurons. The interesting work, the synapses with emergent Hebbian plasticity and the networks that recognise patterns, sits at Phase 5 and beyond. We're at Phase 1.
+**The substrate** — the original eight-phase research programme. Vibrations, electrons, atoms, molecules, membranes, neurons, synapses, networks, attention. Local rules only. No top-down structure. The substrate is what the concept paper specifies, and we run it to find out which rules nature actually needed at each level.
 
-## Running it
+**The baby brain** — the agent we are building on top of the substrate. It is multi-modal: it listens via a microphone, watches via a webcam, receives a reward signal, and speaks back through a speaker. It grows physical structure inside itself in response to its own experience. Repeated exposures form persistent structure; one-off coincidences fade. Cross-modal events (showing a glass of water while saying "water") form bridges between the regions that fire together, so that, after enough exposure, presenting one input pattern recalls the other. Nothing about this requires a learning algorithm bolted on top of the substrate. Every claim above reduces to the substrate's local laws.
+
+Where we are right now: the substrate's first three phases (atoms, molecules, partial membranes) reproduce reliably from calibrated configs. As of 2026-05-06 the substrate also fires individual atoms via integrate-and-fire dynamics with refractory windows. The baby-brain foundation — activity-driven growth, use-dependent decay, directional plasticity, audio + video I/O, reward — is designed and approved; implementation is the next step.
+
+## Quick start
 
 ```bash
 python3.13 -m venv .venv
 source .venv/bin/activate
 pip install -e ".[dev]"
 
-# Default config (uncalibrated, documentary):
+# Run the substrate at the calibrated Phase-1 config (atom at t = 13.4s):
 python -m world run --duration 60 --snapshot-every 5 \
-                   --snapshot-dir snapshots/run-001/
+                    --snapshot-dir snapshots/run-001/ \
+                    --config renders/calibration_session3.toml
 
-# Calibrated config that produces an atom at t = 13.4 s simulated:
+# Or the Phase-2 config (≥ 5 molecule species in 60 s):
 python -m world run --duration 60 --snapshot-every 1 \
-                   --snapshot-dir snapshots/run-002/ \
-                   --config renders/calibration_session3.toml
+                    --snapshot-dir snapshots/run-002/ \
+                    --config renders/calibration_phase2_acceptance.toml
 
-# Live preview (PyVista 3D viewer):
-python -m world run --preview --config renders/calibration_session3.toml \
-                   --duration 30
+# Or the integrate-and-fire test (Phase 4 dynamics, this session's amendment):
+pytest tests/test_neuron_dynamics.py -v
 ```
 
-`Esc` quits. `Space` pauses. `R` reseeds.
+## The research dashboard
 
-For high-quality offline rendering of any snapshot:
+A Postgres-backed Streamlit application records every research session, every config, every run, every observation, and every substrate amendment. It also generates natural-language run reports as both Markdown and PDF, and renders the substrate's state in 3D inside the browser with full zoom/rotate/hover.
 
 ```bash
-blender -b -P tools/render_blender.py -- \
-  --snapshot snapshots/run-002/snapshot_t000060.00.npz \
-  --output renders/frame.png \
-  --quality medium --engine cycles
+docker compose up -d              # Postgres + Streamlit, on :5433 + :8502
+# open http://localhost:8502
 ```
 
-For an animation from t = 0 to first emergence (atom or whatever level you choose):
+| Page | What it does |
+|---|---|
+| Dashboard | Programme-level snapshot — sessions, runs, amendments, acceptance |
+| Sessions | Each session is one research question and its outcome. Notes attach here. |
+| Config | Edit `WorldConfig` snapshots. Save them. Load them. |
+| Runs | Register a run, drive the simulator, import observations from snapshots, generate reports |
+| Results | Per-run observations, species, **3D viewer with frequency-coloured layers**, generated report (Markdown + PDF) |
+| Amendments | Substrate amendments to `CONCEPT.md` and their decision state |
+| Acceptance | The §5 acceptance criteria across all eight phases, with evidence pointers |
 
-```bash
-python tools/render_animation.py \
-  --config renders/calibration_session3.toml \
-  --max-duration 30 --snapshot-stride 6 --stop-at-level 4 \
-  --quality low --engine eevee --fps 30 \
-  --output renders/my_animation.mp4
-```
+The 3D viewer auto-fits its axes to the actual data so the cluster fills the canvas regardless of box size. Each entity type is its own toggleable layer in the legend. Hover for frequency, polarity, level, and species fingerprint.
 
-## What you'll see, what you won't
+The natural-language report describes the run in prose: setup, chronology of structure formation with timestamps, peak populations, distinct species, the phase reached in CONCEPT.md terms, operator notes, acceptance criteria touched. PDF rendering uses ReportLab, three pages, the same blue/grey/white palette as the dashboard.
 
-The defaults in `world/config.py` come straight from the source German spec at [`files/SPEZIFIKATION.de.md`](files/SPEZIFIKATION.de.md). They're documentary, taken from the spec, not calibrated. So a 60-second run at the defaults barely produces electrons and no pairs, which is exactly what the source README said to expect. The first calibration sweep is logged in [`LOGBOOK.md`](LOGBOOK.md).
+## What runs today
 
-The **calibrated** config at [`renders/calibration_session3.toml`](renders/calibration_session3.toml) produces an atom at t = 13.4 simulated seconds with rng_seed=42, in an 80³ box with 400 vibrations, `r_2 = 30`, `freq_tolerance = 0.025`. That's the lowest-friction reproducible Phase 1 success criterion this codebase has hit.
+The substrate works through Phase 2 and partially Phase 3. As of this session, integrate-and-fire dynamics are live (`world.physics.neuron_dynamics`), with per-atom charge accumulation, threshold firing, and refractory locking. The full test suite is 155 green.
 
-Calibration for Phases 2+ (≥5 distinct molecule species, then membrane formation) is open work — the tools are in place; the parameter regions aren't found yet.
+What runs **today**:
+
+- Phase 1: atoms form reproducibly (calibrated)
+- Phase 2: ≥ 5 molecule species, level 5–8 structures (calibrated)
+- Phase 3: shell-detection geometry, no spontaneous shells yet
+- Phase 4: integrate-and-fire dynamics, refractory works, firing log saved with each snapshot
+- Phase 6: 3-neuron chain firing patterns measured per-neuron
+- Phase 7: 8 Hz carrier-frequency selectivity recovered with 0.954 selectivity from synthetic firing histories — independently validates the measurement pipeline
+- Phase 5: Hebbian signal nonzero on the substrate but tuning-dependent — one of the things the baby-brain foundation makes properly testable
+
+What does **not** run yet, and is what the baby-brain foundation will land:
+
+- R1 — recycling regeneration (sustained vibration count over hours)
+- R2 — strength-modulated decay for level-5+ structures (long-term memory)
+- PHASE3-R1 — molecule + molecule binding (structures grow tall)
+- Tuned PHASE4 emissions across a frequency band (binding cascade from firings)
+- STDP with bridge-orientation vectors (directional plasticity)
+- Audio I/O (mic + speaker, buffered)
+- Video I/O (webcam, Gabor patch features, retinotopic port layout)
+- Reward channel (dashboard buttons → reward port)
+- Brain checkpoint / resume
+
+The full design is in [`docs/superpowers/specs/2026-05-06-baby-brain-foundation-design.md`](docs/superpowers/specs/2026-05-06-baby-brain-foundation-design.md). The headline acceptance test (the "glass-of-water demo") is M4 in §6.2 of that spec: webcam at a glass plus audio "water" 50× over 10 simulated minutes, then show the glass alone and read out the audio port. If the substrate's output spectrally correlates with "water" above 0.5, the foundation is done.
 
 ## Where to read further
 
-Start with [`docs/CONCEPT.md`](docs/CONCEPT.md) if you want the full conceptual case: motivation, related work, the eight phases with their biological reference points, the six testable hypotheses, and the ethical questions if it ever reaches the late phases. The German original is at [`docs/Konzeptpapier.docx`](docs/Konzeptpapier.docx) (and as plain text at [`docs/Konzeptpapier.de.md`](docs/Konzeptpapier.de.md)).
-
-For the physics specifically, [`files/SPECIFICATION.md`](files/SPECIFICATION.md) is the constitution of the world, translated from the German source. [`files/SKILL.md`](files/SKILL.md) is the same eight-phase programme in operational form. The Phase 1 design doc that drove this build is at [`docs/superpowers/specs/2026-05-05-world-of-vibrations-design.md`](docs/superpowers/specs/2026-05-05-world-of-vibrations-design.md). And there's a step-by-step walkthrough at [`docs/TUTORIAL.md`](docs/TUTORIAL.md), fresh clone to first calibrated run, with the failure modes documented honestly.
-
-## Layout
-
-| Path | What's there |
+| Document | What's in it |
 |---|---|
-| `world/` | The package — config, state, spatial hash, physics, renderer, CLI, snapshot |
-| `tools/` | Standalone analysis & rendering — `classify_molecules.py`, `detect_membranes.py`, `construct_membrane.py`, `render_blender.py`, `render_animation.py`, `histogram.py`, `sweep.py` |
-| `tests/` | Pytest suite — 84 tests covering Phases 1 and 2 plus Phase 3 detection geometry |
-| `files/` | Source spec documents in English, German originals preserved as `*.de.md` |
-| `docs/CONCEPT.md` | English concept paper, the full eight-phase programme (v2 incorporates peer-review feedback) |
-| `docs/TUTORIAL.md` | Fresh-clone-to-first-calibration walkthrough |
-| `docs/superpowers/specs/` | Design specs for Phases 1, 2, and 3 |
-| `docs/superpowers/plans/` | Implementation plans for Phases 1 and 2 |
-| `renders/calibration_session3.toml` | The first atom-producing calibration |
-| `renders/calibration_session3b_molecules.toml` | The first molecule-producing calibration |
-| `renders/anim_phase1_first_atom.mp4` | 4.5-second animation of the first-atom emergence (Eevee) |
-| `renders/anim_phase1_first_atom_hq.mp4` | Same animation in Cycles medium quality |
-| `renders/anim_phase2_first_molecule.mp4` | 1.87-second animation of the first molecule emerging |
-| `renders/keyframe_first_atom.png` | Phase 1 climax as a still image |
-| `renders/keyframe_first_molecule.png` | Phase 2 climax as a still image |
-| `LOGBOOK.md` | Research diary — every calibration session, all observed outcomes |
+| [`docs/CONCEPT.md`](docs/CONCEPT.md) | The full conceptual case: motivation, related work, the eight phases with biological reference points, the six testable hypotheses, the ethical questions if it ever reaches the late phases |
+| [`docs/Konzeptpapier.de.md`](docs/Konzeptpapier.de.md) | German original of the concept paper |
+| [`docs/superpowers/specs/2026-05-06-baby-brain-foundation-design.md`](docs/superpowers/specs/2026-05-06-baby-brain-foundation-design.md) | The foundation spec — what we just designed and approved |
+| [`docs/superpowers/specs/2026-05-05-world-of-vibrations-design.md`](docs/superpowers/specs/2026-05-05-world-of-vibrations-design.md) | The Phase-1 design that drove the original build |
+| [`docs/superpowers/specs/2026-05-06-phase-{2..7}-*.md`](docs/superpowers/specs/) | Per-phase design specs |
+| [`docs/RESEARCH_GUIDE.md`](docs/RESEARCH_GUIDE.md) | A 1000-line continuation guide — fresh clone to research session 5+ |
+| [`docs/TUTORIAL.md`](docs/TUTORIAL.md) | Fresh-clone-to-first-calibration walkthrough with failure modes documented honestly |
+| [`files/SPECIFICATION.md`](files/SPECIFICATION.md) | The substrate's constitution, translated from the German source |
+| [`files/SKILL.md`](files/SKILL.md) | The eight-phase programme in operational form |
+| [`LOGBOOK.md`](LOGBOOK.md) | Research diary — every calibration session, every observed outcome |
+
+## Repository layout
+
+```
+world/         # The substrate — config, state, spatial hash, physics, renderer, CLI, snapshot
+tools/         # Standalone analysis and rendering — classification, detection, construction, measurement
+agent/         # (forthcoming, baby-brain foundation) audio I/O, video I/O, reward, agent loop
+app/           # Streamlit dashboard — Postgres-backed sessions, configs, runs, reports, 3D viewer
+db/            # Schema and seed for the dashboard's Postgres database
+docker/        # Streamlit container
+tests/         # Pytest suite — 155 tests across substrate, tools, dashboard
+files/         # Source spec documents in English; German originals as *.de.md
+docs/          # Concept paper, tutorial, research guide, design specs and plans, logbook
+renders/       # Calibrated TOMLs and the keyframe renders / animations
+snapshots/     # Per-run snapshot directories (gitignored at the binary level)
+```
 
 ## Honest expectations
 
-The concept paper gives realistic timelines: weeks for Phase 1, months for molecules and membranes, a year or more for neurons, and Phase 5 (synapses with plasticity) is openly named as the most likely point of failure. There's no guarantee any given phase is reached. Each phase that is reached is a result on its own, and that's true even of a well-documented failure, which would tell us specifically which extra rules were missing.
+The substrate's claim is falsifiable: a hierarchical, brain-like system can be built from a sparse set of local rules between elementary vibrations, no neuron-by-neuron biophysics, no learned weights. If the substrate produces atoms, molecules, integrate-and-fire neurons, directional synapses, networks, and an agent that listens and learns to associate "water" with a glass, the claim is supported. If it stops at any of those layers, the failure tells us which rules nature actually needed there.
 
-But two things from doing it. Let the world run before you intervene; the interesting behaviour shows up after minutes, not seconds. And trust the world more than your own expectations. If it produces something you didn't have in mind, that's often the more interesting thing.
+We are partway up that ladder. The lower layers (atoms, molecules, integrate-and-fire) are reproducible. The middle layers (sustained growth, long-term memory, directional plasticity, audio + video I/O) are the foundation we just designed and are about to implement. The upper layers (real-time speed, video output, multi-agent) are openly named as later sub-projects.
+
+Two things from doing this so far. Let the world run before you intervene; the interesting behaviour shows up after minutes of simulated time, not seconds. And trust the world more than your own expectations. If it produces something you did not have in mind, that is often the more interesting thing.
+
+## License and attribution
+
+Concept paper © 2026 Michael Kupermann. Codebase MIT. Citations and prior work referenced inline in `docs/CONCEPT.md`.
