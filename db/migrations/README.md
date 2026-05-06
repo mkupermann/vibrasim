@@ -23,6 +23,8 @@ make db-migrate-planA-mark-implemented MERGE_SHA=$(git rev-parse main)
 
 The `make db-migrate` target applies migrations 0001–0003 in order. Migration 0004 is intentionally excluded from the default target because it requires a real merge SHA.
 
+**Customised passwords.** The Makefile and Docker Compose default both use `vibrasim` as the password. If you changed `POSTGRES_PASSWORD` in `docker-compose.yml`, pass it explicitly: `PGPASSWORD=<your-password> make db-migrate`.
+
 ## Relationship to db/schema.sql and db/seed.sql
 
 `db/schema.sql` and `db/seed.sql` are the **Docker init path** — mounted via `docker-compose.yml` as init scripts for the Postgres container on first start. They continue to work as before.

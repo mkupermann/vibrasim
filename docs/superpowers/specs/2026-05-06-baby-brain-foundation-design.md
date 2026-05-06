@@ -58,6 +58,8 @@ If yield turns out too low in practice, a fallback rule (with probability p, fir
 
 ### 3.5 STDP — directional bridge plasticity
 
+> **Framing disclaimer.** This rule uses STDP notation (τ_LTP, τ_LTD, δ_LTP, δ_LTD) by analogy with the spike-timing-dependent-potentiation literature. The substrate has no membrane voltage, no calcium transient, and no neurotransmitter delay — so the parameters here are free design choices, not fits to biological data. The shape of the timing curve (P2 acceptance test) is a substrate property, not a validation of biological STDP.
+
 Add a per-tick post-processing step. After each tick, scan `world.firing_events` for ordered pairs `(t₁, A) → (t₂, B)` with `0 < t₂ − t₁ ≤ τ_LTP` (default τ_LTP = 20 ms). For each such pair:
 
 1. Identify the bridge tube — molecules within radius `r_bridge` of the line segment from atom A to atom B.
@@ -150,6 +152,16 @@ The foundation is *done* when every test below passes on the standard configurat
 |---|---|---|
 | P2 | STDP timing curve | Vary Δt across [−50 ms, +50 ms]. Strengthening peaks at Δt = 5–10 ms, → 0 at Δt = ±50 ms, goes negative for Δt < 0 |
 | S2 | Long-run stability | 8 sim hours, mixed audio + video + reward. No crashes, no NaN/inf in any state, memory stable |
+
+### 6.5 Contingent Plan A.7 gate
+
+If F5's conservation residual exceeds 20% on the held-out seed grid (i.e., the substrate is operating outside a viable thermodynamic regime), Plan A.7 (thermodynamic-regime parameter sweep) becomes a hard prerequisite before Plan B begins.
+
+Plan B's spec document MUST open with either:
+- (a) a pointer to Plan A.7's results showing the substrate is in a viable regime, OR
+- (b) a CONCEPT amendment justifying why the out-of-regime result does not block learning.
+
+This gate is enforceable: Plan B cannot pass its own pre-Brainstorm review without one of (a) or (b).
 
 ## 7. Out of scope (future sub-projects)
 

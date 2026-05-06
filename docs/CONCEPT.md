@@ -94,6 +94,21 @@ The framework rests on four core assumptions, which we make explicit in order to
 
 **Communication-through-Coherence.** Fries (2005, 2015) developed the hypothesis that effective communication between brain regions depends on phase-coherent oscillations. This hypothesis is a central inspiration for the planned attention phase of our system.
 
+### 3.X Positioning against established simulators
+
+The substrate is not a neuron-by-neuron biophysical simulator (NEURON, NEST, Brian2) and not a learned-weight network (NEAT, deep RL, neural CAs in the Mordvintsev tradition). The closest comparators by mechanism, not by phenomenology, are listed below.
+
+| System | Mechanism | What it computes that we DON'T | What we compute that it doesn't |
+|---|---|---|---|
+| **NEST / Brian2** | LIF / Hodgkin-Huxley neurons with explicit synaptic-weight matrices and STDP rules | Membrane voltage, calcium dynamics, synaptic vesicle pools | Atoms forming from vibration binding without neuron primitives |
+| **Neural CA (Mordvintsev "growing neural cellular automata")** | Pixel-level update rules with learned per-cell parameters trained by backprop | Visual reconstruction tasks, learned weight tensors | Substrate physics that is not learned, only ruled |
+| **NEAT / HyperNEAT** | Neuroevolution of network topology; explicit weight + connection genome | Genome-level evolution, fitness landscape exploration | Self-organising structure from physics, no fitness function |
+| **Izhikevich** | Two-equation neuron model; rich firing patterns from minimal dynamics | Closed-form spike generation, no underlying chemistry | Atom + molecule formation as a precondition for firing |
+
+The contribution under test in this codebase is **not** "we beat NEST on speed" or "we recover STDP timing curves with bio-plausible parameters." The contribution is the falsifiable claim that **a single set of binding rules at the vibration scale produces all the structural levels (atoms, molecules, growth, decay) without weight-machinery primitives** — see CONCEPT §8 H1-H6. Whether that claim is supportable is what Plans A through G test.
+
+A quantitative head-to-head on shared metrics (e.g. growth rate at an input location vs Brian2's STDP-tutorial trajectory) is **out of scope for this codebase**; it would require running both systems under matched input statistics and is its own publication. We name it as future work.
+
 ---
 
 ## 4. The natural laws of the substrate
