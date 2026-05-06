@@ -180,6 +180,39 @@ def decay_unstable_nodes(world, dt: float) -> int:
     return decayed
 
 
+def decay_high_level_nodes(world, dt: float) -> int:
+    """R2: strength-modulated decay for level-5+ molecules.
+
+    Per-tick decay probability for each level-5+ alive node:
+        p = lambda_dec_mol * dt / max(strength, 1.0)
+
+    When a molecule decays, it disappears (k_alive=False). Constituent
+    atoms (level 4) inside its composition span are not destroyed — they
+    live in their own slots and stay alive=True there.
+
+    Returns the count of nodes that decayed this tick.
+    """
+    cfg = world.config
+    if cfg.lambda_dec_mol <= 0.0:
+        return 0
+    K = world.k_count
+    if K == 0:
+        return 0
+    mask = world.k_alive[:K] & (world.k_level[:K] >= 5)
+    if not mask.any():
+        return 0
+    indices = np.where(mask)[0]
+    strengths = np.maximum(world.k_strength[indices], 1.0)
+    p_decay = cfg.lambda_dec_mol * dt / strengths
+    rolls = world.rng.random(len(indices))
+    decayed_mask = rolls < p_decay
+    n_decayed = int(decayed_mask.sum())
+    for i in indices[decayed_mask]:
+        world.k_alive[i] = False
+        world.k_strength[i] = 1.0  # reset for slot reuse
+    return n_decayed
+
+
 def ambient_regeneration(world, dt: float) -> tuple[int, int]:
     """Generate new free vibrations and decay unstable nodes back to vibrations.
 
@@ -465,6 +498,7 @@ def tick(world, dt: float) -> None:
     bind_vibrations_to_electrons(world)
     bind_nodes_upward(world)
     decay_unstable_nodes(world, dt)
+    decay_high_level_nodes(world, dt)   # NEW (R2)
     ambient_regeneration(world, dt)
     neuron_dynamics(world, dt)
     world.t += dt
