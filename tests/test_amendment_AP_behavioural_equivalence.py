@@ -57,10 +57,6 @@ def test_AP1_slot_recycling_preserves_observable_behaviour():
 
 
 @pytest.mark.slow
-@pytest.mark.skip(
-    reason="awaiting Plan A.5 JIT migration (Tasks 9-13). The Python and "
-    "JIT paths are the same code today, so this test would pass vacuously."
-)
 def test_AP2_jit_preserves_observable_behaviour():
     """With same RNG seed, numba_jit_enabled=True and =False must produce
     identical observable counts."""

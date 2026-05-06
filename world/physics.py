@@ -170,6 +170,83 @@ def _kill_node(world, i: int) -> None:
             world._free_slots_set.add(i)
 
 
+@njit(cache=True)
+def _bind_check_pairs_njit(
+    candidate_i: np.ndarray, candidate_j: np.ndarray, n_candidates: int,
+    k_pos: np.ndarray, k_alive: np.ndarray, k_locked_this_tick: np.ndarray,
+    k_freq: np.ndarray, k_pol: np.ndarray, k_level: np.ndarray,
+    box: np.ndarray, r2_sq: float,
+    fmin_ratio: float, fmax_ratio: float,
+    upgrade_table: np.ndarray, fusion_table: np.ndarray, mol_fusion_enabled: bool,
+) -> tuple:
+    """JIT core for bind_nodes_upward.
+
+    For each candidate pair (i, j) in order, check all binding gates:
+    alive, locked, level-table lookup, polarity, distance, decade, freq-ratio.
+    Returns parallel arrays (out_i, out_j, out_target, n_out) of pairs that
+    pass all gates, preserving input order so the Python wrapper can apply
+    break-semantics correctly.
+
+    Note: k_alive and k_locked_this_tick are snapshots at call time; the
+    Python wrapper enforces the break / single-bind-per-i rule by checking
+    the lock array after each allocation.
+    """
+    out_i = np.zeros(n_candidates, dtype=np.int32)
+    out_j = np.zeros(n_candidates, dtype=np.int32)
+    out_target = np.zeros(n_candidates, dtype=np.int8)
+    n_out = 0
+    for k in range(n_candidates):
+        i = candidate_i[k]
+        j = candidate_j[k]
+        if not k_alive[i] or not k_alive[j]:
+            continue
+        if k_locked_this_tick[i] or k_locked_this_tick[j]:
+            continue
+        # Level-table lookup
+        li = int(k_level[i])
+        lj = int(k_level[j])
+        target = upgrade_table[li, lj]
+        if target == -1 and mol_fusion_enabled:
+            target = fusion_table[li, lj]
+        if target == -1:
+            continue
+        # Polarity gate
+        if k_pol[i] == k_pol[j]:
+            continue
+        # Periodic distance squared
+        dx = k_pos[i, 0] - k_pos[j, 0]
+        dy = k_pos[i, 1] - k_pos[j, 1]
+        dz = k_pos[i, 2] - k_pos[j, 2]
+        dx -= box[0] * round(dx / box[0])
+        dy -= box[1] * round(dy / box[1])
+        dz -= box[2] * round(dz / box[2])
+        d2 = dx*dx + dy*dy + dz*dz
+        if d2 >= r2_sq:
+            continue
+        # Decade gate — inline log10 floor
+        f1 = k_freq[i]
+        f2 = k_freq[j]
+        if f1 <= 0.0 or f2 <= 0.0:
+            continue
+        d1 = int(np.floor(np.log10(f1)))
+        d2_dec = int(np.floor(np.log10(f2)))
+        if d1 != d2_dec:
+            continue
+        # Freq ratio gate
+        if f1 < f2:
+            ratio = (f2 - f1) / f1
+        else:
+            ratio = (f1 - f2) / f2
+        if ratio < fmin_ratio or ratio > fmax_ratio:
+            continue
+        # Pair passes all gates
+        out_i[n_out] = i
+        out_j[n_out] = j
+        out_target[n_out] = target
+        n_out += 1
+    return out_i, out_j, out_target, n_out
+
+
 def bind_nodes_upward(world) -> int:
     cfg = world.config
     box = np.asarray(cfg.box_size, dtype=np.float64)
@@ -182,37 +259,58 @@ def bind_nodes_upward(world) -> int:
 
     world.k_locked_this_tick[:world.k_count] = False
     formed = 0
-    grid = build_grid(world.k_pos[:world.k_count], world.k_alive[:world.k_count], box, r2)
+    K = world.k_count
+    grid = build_grid(world.k_pos[:K], world.k_alive[:K], box, r2)
 
-    for i in range(world.k_count):
-        if not world.k_alive[i] or world.k_locked_this_tick[i]:
-            continue
-        nbrs = neighbors_of(grid, world.k_pos[i], box, r2, exclude_self=True, query_index=i)
-        for j in nbrs:
-            if j <= i:
+    if cfg.numba_jit_enabled:
+        # Build the full candidate list in Python (spatial-hash query stays
+        # in Python; it is already JIT'd internally).  Preserve the same
+        # iteration order as the legacy path so break-semantics are respected.
+        cand_i_list: list[int] = []
+        cand_j_list: list[int] = []
+        for i in range(K):
+            if not world.k_alive[i] or world.k_locked_this_tick[i]:
+                continue
+            nbrs = neighbors_of(grid, world.k_pos[i], box, r2,
+                                 exclude_self=True, query_index=i)
+            for j in nbrs:
+                if j <= i:
+                    continue
+                cand_i_list.append(i)
+                cand_j_list.append(j)
+
+        n_candidates = len(cand_i_list)
+        if n_candidates == 0:
+            return 0
+
+        candidate_i = np.array(cand_i_list, dtype=np.int32)
+        candidate_j = np.array(cand_j_list, dtype=np.int32)
+
+        out_i, out_j, out_target, n_out = _bind_check_pairs_njit(
+            candidate_i, candidate_j, n_candidates,
+            world.k_pos[:K], world.k_alive[:K], world.k_locked_this_tick[:K],
+            world.k_freq[:K], world.k_pol[:K], world.k_level[:K],
+            box, r2_sq, fmin_ratio, fmax_ratio,
+            _UPGRADE_TARGET_ARRAY, _UPGRADE_TARGET_FUSION_ARRAY,
+            bool(cfg.mol_fusion_enabled),
+        )
+
+        # Process JIT-returned pairs in order, enforcing break-per-i semantics:
+        # after a successful bind, both i and j are locked so subsequent pairs
+        # involving either are skipped — exactly matching the legacy `break`.
+        for k in range(n_out):
+            i = int(out_i[k])
+            j = int(out_j[k])
+            target = int(out_target[k])
+            # Re-check liveness and lock after earlier iterations may have
+            # consumed these slots.
+            if not world.k_alive[i] or world.k_locked_this_tick[i]:
                 continue
             if not world.k_alive[j] or world.k_locked_this_tick[j]:
                 continue
-            li = int(world.k_level[i])
-            lj = int(world.k_level[j])
-            target = _UPGRADE_TARGET.get((li, lj))
-            if target is None and cfg.mol_fusion_enabled:
-                target = _UPGRADE_TARGET_FUSION.get((li, lj))
-            if target is None:
-                continue
-            if world.k_pol[i] == world.k_pol[j]:
-                continue
-            d2 = periodic_distance_sq(world.k_pos[i], world.k_pos[j], box)
-            if d2 >= r2_sq:
-                continue
+            mid = periodic_midpoint(world.k_pos[i], world.k_pos[j], box)
             f1 = world.k_freq[i]
             f2 = world.k_freq[j]
-            if _decade(f1) != _decade(f2):
-                continue
-            ratio = abs(f1 - f2) / min(f1, f2)
-            if ratio < fmin_ratio or ratio > fmax_ratio:
-                continue
-            mid = periodic_midpoint(world.k_pos[i], world.k_pos[j], box)
             new_freq = f1 + f2
             new_pol = bool(world.rng.random() < 0.5)
             constituents = np.array([i, j], dtype=np.int32)
@@ -223,9 +321,52 @@ def bind_nodes_upward(world) -> int:
             world.k_locked_this_tick[i] = True
             world.k_locked_this_tick[j] = True
             formed += 1
-            break
+        return formed
+    else:
+        # Legacy Python path — preserved verbatim for regression diagnosis.
+        for i in range(K):
+            if not world.k_alive[i] or world.k_locked_this_tick[i]:
+                continue
+            nbrs = neighbors_of(grid, world.k_pos[i], box, r2,
+                                 exclude_self=True, query_index=i)
+            for j in nbrs:
+                if j <= i:
+                    continue
+                if not world.k_alive[j] or world.k_locked_this_tick[j]:
+                    continue
+                li = int(world.k_level[i])
+                lj = int(world.k_level[j])
+                target = _UPGRADE_TARGET.get((li, lj))
+                if target is None and cfg.mol_fusion_enabled:
+                    target = _UPGRADE_TARGET_FUSION.get((li, lj))
+                if target is None:
+                    continue
+                if world.k_pol[i] == world.k_pol[j]:
+                    continue
+                d2 = periodic_distance_sq(world.k_pos[i], world.k_pos[j], box)
+                if d2 >= r2_sq:
+                    continue
+                f1 = world.k_freq[i]
+                f2 = world.k_freq[j]
+                if _decade(f1) != _decade(f2):
+                    continue
+                ratio = abs(f1 - f2) / min(f1, f2)
+                if ratio < fmin_ratio or ratio > fmax_ratio:
+                    continue
+                mid = periodic_midpoint(world.k_pos[i], world.k_pos[j], box)
+                new_freq = f1 + f2
+                new_pol = bool(world.rng.random() < 0.5)
+                constituents = np.array([i, j], dtype=np.int32)
+                world.allocate_node(mid, new_freq, new_pol, level=target,
+                                    constituents=constituents, comp_kind=1)
+                _kill_node(world, i)
+                _kill_node(world, j)
+                world.k_locked_this_tick[i] = True
+                world.k_locked_this_tick[j] = True
+                formed += 1
+                break
 
-    return formed
+        return formed
 
 
 @njit(cache=True)

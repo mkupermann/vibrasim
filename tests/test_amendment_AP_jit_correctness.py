@@ -4,7 +4,7 @@ import pytest
 from dataclasses import replace
 from world.config import WorldConfig
 from world.state import World
-from world.physics import decay_unstable_nodes, decay_high_level_nodes, move_nodes, apply_scale_repulsion
+from world.physics import decay_unstable_nodes, decay_high_level_nodes, move_nodes, apply_scale_repulsion, bind_nodes_upward
 
 
 def _build_test_world(jit: bool, rng_seed: int = 42):
@@ -112,4 +112,49 @@ def test_AP10_apply_scale_repulsion_jit_matches_python():
 
     assert np.allclose(w_py.k_vel, w_jit.k_vel, rtol=1e-10, atol=1e-12), (
         "JIT and Python apply_scale_repulsion paths produce different k_vel"
+    )
+
+
+def test_AP11_bind_nodes_upward_jit_matches_python():
+    """JIT and Python paths must produce identical post-binding state.
+
+    Sets up 16 nodes (8 pairs of level-1+level-2 with matching freq ratio
+    0.08 and opposite polarity) close enough to bind. Both paths must
+    produce the same k_count, k_alive, k_level after one binding tick.
+    """
+    def _setup(w):
+        for k in range(8):
+            w.k_pos[2*k] = [10 + 5*k, 50, 50]
+            w.k_pos[2*k + 1] = [10 + 5*k + 1, 50, 50]  # within r_2
+            w.k_freq[2*k] = 1000.0
+            w.k_freq[2*k + 1] = 1080.0  # ratio = 0.08
+            w.k_pol[2*k] = True
+            w.k_pol[2*k + 1] = False
+            w.k_level[2*k] = 1
+            w.k_level[2*k + 1] = 2
+            w.k_alive[2*k] = True
+            w.k_alive[2*k + 1] = True
+            w.k_birth[2*k] = 0.0
+            w.k_birth[2*k + 1] = 0.0
+            w.k_comp_offset[2*k] = 0
+            w.k_comp_offset[2*k + 1] = 0
+        w.k_count = 16
+        w.k_comp_offset[16] = 0
+
+    w_py = _build_test_world(jit=False, rng_seed=42)
+    _setup(w_py)
+    bind_nodes_upward(w_py)
+
+    w_jit = _build_test_world(jit=True, rng_seed=42)
+    _setup(w_jit)
+    bind_nodes_upward(w_jit)
+
+    assert w_py.k_count == w_jit.k_count, (
+        f"k_count differs: py={w_py.k_count}, jit={w_jit.k_count}"
+    )
+    assert np.array_equal(w_py.k_alive[:w_py.k_count], w_jit.k_alive[:w_jit.k_count]), (
+        "k_alive differs after binding"
+    )
+    assert np.array_equal(w_py.k_level[:w_py.k_count], w_jit.k_level[:w_jit.k_count]), (
+        "k_level differs after binding"
     )
