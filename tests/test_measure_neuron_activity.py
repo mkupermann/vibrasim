@@ -87,6 +87,30 @@ def test_output_spike_detected_as_firing(tmp_path):
     assert abs(fe["peak_t"] - 2.0) < 0.1
 
 
+def test_single_transient_at_zero_baseline_not_a_firing(tmp_path):
+    """Regression test for C3: when output baseline is zero, a single
+    transient (count=1) at the outlet must NOT register as a firing event.
+    Previously the threshold floor was 1.0, so any single mobile node
+    drifting through registered as a firing."""
+    centre = np.array([100.0, 100.0, 100.0])
+    axis = np.array([1.0, 0.0, 0.0])
+    radius = 6.0
+    outlet_centre = centre - 6.0 * 0.6 * axis
+    paths = []
+    # 5 quiet snapshots, one with a single drift, 5 more quiet
+    for i in range(11):
+        p = tmp_path / f"snapshot_t{i:09.2f}.npz"
+        if i == 5:
+            positions = [outlet_centre.tolist()]  # single transient
+        else:
+            positions = [[10.0, 10.0, 10.0]]  # far away
+        _save_snapshot_with_vibrations(p, t=float(i), vibration_positions=positions)
+        paths.append(p)
+    result = measure_activity(paths, centre, axis, radius)
+    # Single transient should NOT be a firing event with the new floor.
+    assert result["firing_events"] == []
+
+
 def test_single_snapshot_returns_empty_lists(tmp_path):
     """One snapshot is not enough to detect activity."""
     centre = np.array([100.0, 100.0, 100.0])

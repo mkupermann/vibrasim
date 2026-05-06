@@ -32,14 +32,26 @@ def _intervals_from_firings(firing_events: list[dict]) -> list[tuple[float, floa
 
 
 def _co_active_windows(pre_intervals, post_intervals, max_lag: float):
-    """Return time windows where pre and post fired within max_lag seconds of each other."""
+    """Return time windows where pre and post fired within max_lag seconds of each other.
+
+    For each (pre_interval, post_interval) pair within max_lag, return the
+    union of the two intervals (not the convex hull). When the intervals
+    genuinely overlap, the union collapses to a single window. When they
+    don't overlap but their starts are within max_lag, both intervals are
+    reported separately so the silent gap between them isn't mistakenly
+    counted as 'active'. _merge_windows then dedupes overlapping output.
+    """
     windows = []
     for ps, pe in pre_intervals:
         for qs, qe in post_intervals:
-            if abs(ps - qs) <= max_lag or (ps <= qe and qs <= pe):
-                start = min(ps, qs)
-                end = max(pe, qe)
-                windows.append((start, end))
+            within_lag = abs(ps - qs) <= max_lag
+            overlapping = (ps <= qe and qs <= pe)
+            if overlapping:
+                windows.append((min(ps, qs), max(pe, qe)))
+            elif within_lag:
+                # Report each separately; silent gap is NOT active
+                windows.append((ps, pe))
+                windows.append((qs, qe))
     return _merge_windows(windows)
 
 
@@ -176,8 +188,18 @@ def measure_plasticity(
     inactive = _inactive_intervals(co_active, times[0], times[-1])
 
     sum_per_step = [s + r for s, r in zip(pre_store, post_recv)]
-    slopes_active = [s for s, e in co_active for slope in [_slope_in_window(times, sum_per_step, s, e)] if slope is not None]
-    slopes_inactive = [s for s, e in inactive for slope in [_slope_in_window(times, sum_per_step, s, e)] if slope is not None]
+    # Compute slopes per window. Using explicit loops rather than the prior
+    # comprehension which silently yielded the start time `s` instead of `slope`.
+    slopes_active: list[float] = []
+    for s_t, e_t in co_active:
+        slope = _slope_in_window(times, sum_per_step, s_t, e_t)
+        if slope is not None:
+            slopes_active.append(slope)
+    slopes_inactive: list[float] = []
+    for s_t, e_t in inactive:
+        slope = _slope_in_window(times, sum_per_step, s_t, e_t)
+        if slope is not None:
+            slopes_inactive.append(slope)
     growth_rate_active = float(np.mean(slopes_active)) if slopes_active else None
     growth_rate_inactive = float(np.mean(slopes_inactive)) if slopes_inactive else None
     hebbian_signal = (

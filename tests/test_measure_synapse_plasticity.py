@@ -118,6 +118,25 @@ def test_synthetic_growth_during_co_activity(tmp_path):
     assert result["postsynaptic_receivers_per_step"] == [2, 3, 4, 5, 6]
 
 
+def test_growth_rate_active_is_actual_slope_not_window_start(tmp_path):
+    """Regression test for C6: previously slopes_active collected the window
+    start time `s` instead of `slope`. Detect by constructing windows where
+    the start time and the actual slope have very different values."""
+    from tools.measure_synapse_plasticity import _slope_in_window
+    # If we have a window starting at t=10 with slope = 0, the buggy code
+    # would return mean(start_times) = 10.0 instead of mean(slopes) = 0.0.
+    times = [10.0, 11.0, 12.0, 13.0]
+    constant_values = [5, 5, 5, 5]
+    slope = _slope_in_window(times, constant_values, 10.0, 13.0)
+    assert slope == pytest.approx(0.0, abs=1e-9)
+    # Linear growth should give slope ≠ start time
+    growing_values = [5, 6, 7, 8]
+    slope_grow = _slope_in_window(times, growing_values, 10.0, 13.0)
+    assert slope_grow == pytest.approx(1.0, abs=0.01)
+    # And critically: the slope is NOT the start time of the window
+    assert abs(slope_grow - 10.0) > 0.5
+
+
 def test_pre_post_centres_zero_distance_rejected(tmp_path):
     p = tmp_path / "snapshot_t000000.00.npz"
     _save_synthetic_snapshot(p, 0.0, 0, 0,

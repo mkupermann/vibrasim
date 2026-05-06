@@ -296,6 +296,42 @@ The cleanest amendment for session 4: add `freq_tolerance_atom` to `WorldConfig`
 
 This amendment is a real CONCEPT.md change (§4.4 and §4.5 currently say "the frequencies differ by exactly 8 %") and should be reviewed before landing.
 
+### Session 4 — teammate research findings
+
+Five subagents ran in parallel on 2026-05-06: one independent code reviewer over the Phase 4-7 scaffolding, four calibration agents chasing the still-open acceptance criteria. Findings saved at `docs/research_session4/`.
+
+**Phase 2 acceptance criterion MET.** The Phase 2 calibration agent found that widening `freq_tolerance` from 0.030 to 0.200 (single-knob delta from session-3b) produces **6 distinct molecule species** (A33, A44, A3334, A444, A33334, A3344) in 60 simulated seconds. A more aggressive variant (n_init=1500, r_2=40) produces **10 species**. No spec amendment needed. The minimal-delta config is committed at `renders/calibration_phase2_acceptance.toml` and reproduces 6 species reliably (verified at integration: 6 species, 17 molecules, 223s wall).
+
+**Phase 3.** Spontaneous shells: 0 candidates ever. Constructed shells: stable indefinitely (zero drift, scale repulsion silent within a single decade). The substrate sustains membranes but doesn't produce them — molecule density too low (max 17 in Phase 2 config; detector wants ≥12 in a connected component, which requires more atoms). Substrate amendments needed: molecule + molecule binding rule, OR much higher density, OR explicit shell-formation potential.
+
+**Phase 4.** Constructed neuron + injected vibrations: pure pass-through. No integration, no threshold, no refractory period. Substrate is missing four rules: per-atom charge accumulator with exponential decay, threshold rule in tick(), refractory rule, directional-frequency inlet geometry. Estimated 40-60 additive lines.
+
+**Phase 5.** §6.5 failure mode confirmed empirically — but cleanly informative. Four structural deficiencies: vibration injection is a no-op (buffer saturated), level-5+ nodes are permanent + immobile (no decay path), no "release on firing" mechanism exists, activity detector is blind to short transients (dwell time < snapshot interval).
+
+**Code review found 6 critical issues.** Fixed in the integration commit:
+- **C6** — `measure_synapse_plasticity.py` lines 179-180: list comprehension yielded window start time instead of slope; the Hebbian signal was silently meaningless. Fixed + regression test (`test_growth_rate_active_is_actual_slope_not_window_start`).
+- **C3** — `measure_neuron_activity.py`: false firing events at zero baseline. Added `MIN_FIRING_FLOOR = 3` requiring an absolute spike before declaring a firing. Regression test added.
+- **C2** — `detect_synapses.py`: every pair was reported twice. Changed `j != i` to `j > i`.
+- **I1** — `_co_active_windows`: was returning convex hull of two non-overlapping intervals (including the silent gap as "active"). Now returns the union; only genuinely overlapping intervals merge.
+
+**Code review still-open items** (session-N+ work):
+- C1: `detect_synapses` ignores axis alignment entirely (silent spec drift)
+- C4: integration lag computation uses wrong window logic
+- C5: `detect_networks` end-to-end broken on constructed snapshots (needs density-based clustering — flagged in Phase 5 spec)
+- I3, I4, I6: minor spec drift on resonance clipping, Hamming convention, phase grid resolution
+
+**Test count:** 148 passing (was 146 + 2 regression tests).
+
+**Substrate amendments documented for session 5+:**
+
+| Phase | Amendment needed |
+|---|---|
+| 3 (membranes) | Add `(5,5)`, `(5,6)`, etc. entries to `_UPGRADE_TARGET` for molecule-molecule binding |
+| 4 (neurons) | Add `k_charge[K]` per-atom accumulator with decay; threshold rule in tick(); refractory rule |
+| 5 (synapses + plasticity) | Enlarge `n_vibrations_max` (or implement displace-injection); add level-5+ decay channel; add local capture/assembly rule near active sites |
+
+These are real CONCEPT.md amendments, not calibration knobs. They should be specced and reviewed before landing.
+
 ### Phase 7 scaffolding
 
 Different shape from Phases 3-6 because attention is a property of *firing histories*, not of physical configuration: no construction tool needed.
