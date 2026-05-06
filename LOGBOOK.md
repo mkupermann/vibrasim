@@ -296,6 +296,30 @@ The cleanest amendment for session 4: add `freq_tolerance_atom` to `WorldConfig`
 
 This amendment is a real CONCEPT.md change (§4.4 and §4.5 currently say "the frequencies differ by exactly 8 %") and should be reviewed before landing.
 
+### Phase 6 scaffolding
+
+Same pattern as Phases 3-5: spec + construction tool + detection tool + activity-measurement tool + tests, no substrate change.
+
+- `docs/superpowers/specs/2026-05-06-phase-6-networks.md` — operational definition: a network is N neurons + M directed synapses where each synapse pair is at synapse distance per Phase 5
+- `tools/construct_network.py` — places neurons + synapses from a topology JSON; self-synapses and out-of-range indices rejected
+- `tools/detect_networks.py` — connected-component analysis on the detected synapse graph; ≥3-neuron components are network candidates
+- `tools/measure_network_activity.py` — builds T×N firing matrix, computes pairwise correlation, exposes `score_pattern_recognition()` for Hamming-similarity scoring of output activity against expected patterns
+- 16 new tests across construct/detect/score; full suite 133/0
+
+Smoke:
+```
+$ cat /tmp/topology.json
+{"neurons": [{"centre": [80,100,100], "radius": 6.0},
+             {"centre": [120,100,100], "radius": 6.0},
+             {"centre": [160,100,100], "radius": 6.0}],
+ "synapses": [{"pre": 0, "post": 1}, {"pre": 1, "post": 2}]}
+
+$ python tools/construct_network.py --output /tmp/n.npz --topology /tmp/topology.json
+# neurons=3 synapses=2
+```
+
+Phase 6 acceptance per CONCEPT.md v2 §5 (5-50-neuron network shows pattern recognition / Hopfield memory / simple learning) is empirical and downstream of Phase 5 plasticity working — which itself is empirically untested. The compute regime is GPU territory; scaffolding is CPU-tested.
+
 ### Phase 5 scaffolding
 
 Mirrors Phases 3 and 4: spec + construction tool + detection tool + plasticity-measurement tool + tests, no substrate change.
