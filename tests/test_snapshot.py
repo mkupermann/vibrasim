@@ -45,3 +45,19 @@ def test_resumed_world_can_tick(tmp_path):
     save_snapshot(w, path)
     w2 = load_snapshot(path)
     tick(w2, cfg.dt)  # should not crash
+
+
+def test_snapshot_preserves_k_strength(tmp_path):
+    """k_strength must round-trip through save/load."""
+    cfg = WorldConfig(n_initial_vibrations=0, n_nodes_max=8)
+    w = World(cfg)
+    # Set distinctive strengths on a few nodes
+    w.k_strength[0] = 17.5
+    w.k_strength[3] = 99.9
+    p = tmp_path / "snapshot_t000000.00.npz"
+    save_snapshot(w, p)
+    w2 = load_snapshot(p)
+    assert w2.k_strength[0] == 17.5
+    assert w2.k_strength[3] == 99.9
+    # Untouched slots round-trip too
+    assert w2.k_strength[1] == 1.0
