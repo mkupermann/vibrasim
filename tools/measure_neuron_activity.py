@@ -36,7 +36,12 @@ def _count_in_sphere(positions: np.ndarray, alive: np.ndarray,
 def measure_activity(snapshot_paths: list[Path], cluster_centre: np.ndarray,
                      cluster_axis: np.ndarray, cluster_radius: float,
                      output_threshold_multiplier: float = 5.0) -> dict:
-    """Measure input + output activity across a snapshot sequence."""
+    """Measure input + output activity across a snapshot sequence.
+
+    When the substrate carries a firing-event log (PHASE4-R1/R2/R3 amendments),
+    that log is the authoritative source for output firings. The vibration-
+    density inference is kept as a fallback for substrates without the log.
+    """
     cluster_centre = np.asarray(cluster_centre, dtype=np.float64)
     axis = np.asarray(cluster_axis, dtype=np.float64)
     axis_norm = np.linalg.norm(axis)
@@ -52,8 +57,15 @@ def measure_activity(snapshot_paths: list[Path], cluster_centre: np.ndarray,
     input_counts: list[int] = []
     output_counts: list[int] = []
 
+    # Substrate firing log: (t, atom_index) tuples filtered to atoms inside
+    # this cluster. Captured once from the most recent snapshot so we use the
+    # cumulative log rather than per-snapshot deltas.
+    substrate_firings_in_cluster: list[tuple[float, int]] = []
+    last_world = None
+
     for path in sorted(snapshot_paths):
         w = load_snapshot(path)
+        last_world = w
         # Free vibrations
         vibr_in = _count_in_sphere(w.s_pos, w.s_alive, inlet_centre, r_io)
         vibr_out = _count_in_sphere(w.s_pos, w.s_alive, outlet_centre, r_io)
@@ -65,6 +77,51 @@ def measure_activity(snapshot_paths: list[Path], cluster_centre: np.ndarray,
         times.append(float(w.t))
         input_counts.append(vibr_in + node_in)
         output_counts.append(vibr_out + node_out)
+
+    # If the substrate logged firing events directly, use them as ground truth.
+    if last_world is not None and getattr(last_world, "firing_events", None):
+        # Keep only firings whose atom lies inside this cluster's sphere.
+        for t_fire, ai in last_world.firing_events:
+            if ai < 0 or ai >= last_world.k_count:
+                continue
+            d = last_world.k_pos[ai] - cluster_centre
+            if float((d * d).sum()) <= cluster_radius ** 2:
+                substrate_firings_in_cluster.append((t_fire, int(ai)))
+
+    # If the substrate provided ground-truth firings, prefer them and skip the
+    # output-density inference. Each substrate firing is a single, atomic event
+    # so we represent it with start=peak=t and duration=0 and peak_count=n_emit.
+    if substrate_firings_in_cluster:
+        # Use config of any loaded snapshot for n_emit
+        n_emit = int(getattr(last_world.config, "n_emit", 8))
+        firing_events = [
+            {"start_t": t, "peak_t": t, "peak_count": n_emit, "duration": 0.0}
+            for t, _ in substrate_firings_in_cluster
+        ]
+        # Integration lag = first input → first firing
+        integration_lag_ms = None
+        for t_fire, _ in substrate_firings_in_cluster:
+            preceding_inputs = [t for t, ic in zip(times, input_counts)
+                                if t <= t_fire and ic > 0]
+            if preceding_inputs:
+                integration_lag_ms = (t_fire - preceding_inputs[-1]) * 1000.0
+                break
+        # Refractory = mean inter-firing interval
+        refractory_ms = None
+        if len(substrate_firings_in_cluster) >= 2:
+            ts = [t for t, _ in substrate_firings_in_cluster]
+            intervals = np.diff(ts) * 1000.0
+            refractory_ms = float(intervals.mean())
+        return {
+            "times": times,
+            "input_count_per_step": input_counts,
+            "output_count_per_step": output_counts,
+            "firing_events": firing_events,
+            "integration_lag_ms": integration_lag_ms,
+            "refractory_ms": refractory_ms,
+            "baseline_output_rate": float(np.mean(output_counts)) if output_counts else 0.0,
+            "substrate_firing_log": True,
+        }
 
     if len(times) < 2:
         return {

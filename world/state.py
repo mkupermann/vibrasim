@@ -39,6 +39,14 @@ class World:
         self.k_birth = np.zeros(K, dtype=np.float64)
         self.k_alive = np.zeros(K, dtype=np.bool_)
         self.k_locked_this_tick = np.zeros(K, dtype=np.bool_)
+        # PHASE4-R1/R2/R3: per-node integrate-and-fire state.
+        # Only level-4 atoms use these; other rows stay at zero.
+        self.k_charge = np.zeros(K, dtype=np.float64)
+        self.k_refractory_until = np.zeros(K, dtype=np.float64)
+        # Firing log: (t, atom_index) tuples appended whenever an atom fires.
+        # Keeps the substrate self-describing so measurements don't need
+        # to re-derive firings from snapshot deltas.
+        self.firing_events: list[tuple[float, int]] = []
 
         # CSR composition
         comp_caps = K * 4

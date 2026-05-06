@@ -26,9 +26,22 @@ from world.snapshot import load_snapshot
 from tools.measure_neuron_activity import measure_activity, _count_in_sphere
 
 
-def _intervals_from_firings(firing_events: list[dict]) -> list[tuple[float, float]]:
-    """Return (start, end) tuples for each firing event."""
-    return [(fe["start_t"], fe["start_t"] + fe["duration"]) for fe in firing_events]
+def _intervals_from_firings(firing_events: list[dict],
+                             point_event_window: float = 0.1) -> list[tuple[float, float]]:
+    """Return (start, end) tuples for each firing event.
+
+    Substrate-logged firings are point events (duration == 0). Inflate them
+    to a `point_event_window`-second envelope so downstream slope-in-window
+    computations have at least a few samples to work with.
+    """
+    intervals: list[tuple[float, float]] = []
+    half = point_event_window / 2.0
+    for fe in firing_events:
+        if fe["duration"] == 0.0:
+            intervals.append((fe["start_t"] - half, fe["start_t"] + half))
+        else:
+            intervals.append((fe["start_t"], fe["start_t"] + fe["duration"]))
+    return intervals
 
 
 def _co_active_windows(pre_intervals, post_intervals, max_lag: float):
