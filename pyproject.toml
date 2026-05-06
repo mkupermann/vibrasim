@@ -36,3 +36,6 @@ packages = ["world"]
 testpaths = ["tests"]
 python_files = "test_*.py"
 addopts = "-v --strict-markers"
+markers = [
+    "slow: marks tests as slow (long-running integration/acceptance tests)",
+]
