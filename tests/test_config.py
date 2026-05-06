@@ -61,3 +61,12 @@ def test_toml_override(tmp_path: Path):
 
 def test_load_config_with_no_path_returns_defaults():
     assert load_config(None) == WorldConfig()
+
+
+def test_growth_amendment_fields_have_safe_defaults():
+    """Plan A new fields must default off so legacy configs are unaffected."""
+    cfg = WorldConfig()
+    assert cfg.lambda_dec_mol == 0.0
+    assert cfg.r_strengthen == 5.0
+    assert cfg.emit_band_ratios == (0.08, 1.0, 12.5)  # freq_ratio, 1, 1/freq_ratio
+    assert cfg.mol_fusion_enabled is False
