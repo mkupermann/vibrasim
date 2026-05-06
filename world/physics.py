@@ -136,17 +136,19 @@ def _kill_node(world, i: int) -> None:
 
     world.k_alive[i] = False
 
-    # Decrement ref counts of constituents
-    start = int(world.k_comp_offset[i])
-    end = int(world.k_comp_offset[i + 1])
-    for j in range(start, end):
-        c = int(world.k_comp_indices[j])
-        if 0 <= c < world.k_count:
-            world.k_ref_count[c] -= 1
-            if world.k_ref_count[c] <= 0 and not world.k_alive[c]:
-                if c not in world._free_slots_set:
-                    world._free_slots.append(c)
-                    world._free_slots_set.add(c)
+    # Decrement ref counts of constituents — only when this slot's composition
+    # references node indices (comp_kind != 0), not vibration indices.
+    if world.k_comp_kind[i] != 0:
+        start = int(world.k_comp_offset[i])
+        end = int(world.k_comp_offset[i + 1])
+        for j in range(start, end):
+            c = int(world.k_comp_indices[j])
+            if 0 <= c < world.k_count:
+                world.k_ref_count[c] -= 1
+                if world.k_ref_count[c] <= 0 and not world.k_alive[c]:
+                    if c not in world._free_slots_set:
+                        world._free_slots.append(c)
+                        world._free_slots_set.add(c)
 
     # Maybe i itself is now recyclable
     if world.k_ref_count[i] == 0:
