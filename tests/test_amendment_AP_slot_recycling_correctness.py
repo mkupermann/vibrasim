@@ -19,6 +19,7 @@ def test_AP4a_kill_atom_with_no_references_recycles():
     w.k_count = 1
     w.k_comp_offset[0] = 0
     w.k_comp_offset[1] = 0
+    w.k_comp_end[0] = 0
     w.k_ref_count[0] = 0
     _kill_node(w, 0)
     assert not w.k_alive[0]
@@ -35,6 +36,7 @@ def test_AP4b_kill_atom_with_pending_reference_does_not_recycle():
     w.k_alive[0] = True
     w.k_comp_offset[0] = 0
     w.k_comp_offset[1] = 0
+    w.k_comp_end[0] = 0
     w.k_ref_count[0] = 1  # referenced by molecule below
     w.k_pos[1] = [10, 10, 10]
     w.k_level[1] = 5
@@ -43,6 +45,7 @@ def test_AP4b_kill_atom_with_pending_reference_does_not_recycle():
     w.k_comp_indices[0] = 0  # molecule 1 contains atom 0
     w.k_comp_offset[1] = 0
     w.k_comp_offset[2] = 1
+    w.k_comp_end[1] = 1
     w.k_comp_used = 1
     w.k_count = 2
     _kill_node(w, 0)
@@ -63,6 +66,7 @@ def test_AP3_slot_reused_after_decay():
     w.k_alive[0] = False
     w.k_comp_offset[0] = 0
     w.k_comp_offset[1] = 0
+    w.k_comp_end[0] = 0
     w._free_slots = [0]
     w._free_slots_set = {0}
     new_idx = w.allocate_node(
@@ -96,6 +100,7 @@ def test_AP4c_kill_level_1_electron_does_not_corrupt_ref_counts():
     w.k_comp_indices[1] = 2
     w.k_comp_offset[0] = 0
     w.k_comp_offset[1] = 2
+    w.k_comp_end[0] = 2
     w.k_comp_used = 2
     w.k_count = 4
     initial_ref_3 = int(w.k_ref_count[3])

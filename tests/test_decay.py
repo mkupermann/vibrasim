@@ -23,6 +23,7 @@ def _seed_pair(w: World, pair_slot: int, e0_slot: int, e1_slot: int):
     w.k_comp_indices[start + 1] = e1_slot
     w.k_comp_offset[pair_slot] = start
     w.k_comp_offset[pair_slot + 1] = start + 2
+    w.k_comp_end[pair_slot] = start + 2
     w.k_comp_kind[pair_slot] = 1
     w.k_comp_used = start + 2
     last = max(pair_slot, e0_slot, e1_slot)
@@ -85,6 +86,7 @@ def test_pair_decay_returns_constituents_alive():
     w.k_comp_indices[start + 1] = 1
     w.k_comp_offset[2] = start
     w.k_comp_offset[3] = start + 2
+    w.k_comp_end[2] = start + 2
     w.k_comp_kind[2] = 1
     w.k_comp_used = start + 2
     w.k_count = 3

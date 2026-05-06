@@ -58,6 +58,10 @@ class World:
         # CSR composition
         comp_caps = K * 16  # Plan A.5: larger to accommodate slot recycling appending
         self.k_comp_offset = np.zeros(K + 1, dtype=np.int32)
+        # k_comp_end[i] stores the exclusive end of slot i's composition range.
+        # Separate from k_comp_offset[i+1] so that recycling slot i does not
+        # corrupt the start pointer of slot i+1 (which shares k_comp_offset[i+1]).
+        self.k_comp_end = np.zeros(K, dtype=np.int32)
         self.k_comp_indices = np.zeros(comp_caps, dtype=np.int32)
         self.k_comp_kind = np.zeros(K, dtype=np.uint8)
         self.k_comp_used: int = 0
@@ -151,7 +155,7 @@ class World:
             raise RuntimeError("Composition index capacity exhausted")
         self.k_comp_indices[start:end] = constituents
         self.k_comp_offset[i] = start
-        self.k_comp_offset[i + 1] = end
+        self.k_comp_end[i] = end
         self.k_comp_used = end
 
         # Increment ref counts of constituents (slot recycling bookkeeping).

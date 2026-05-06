@@ -37,6 +37,7 @@ def _add_mobile_molecule(world: World, pos: np.ndarray, freq: float, level: int 
     world.k_comp_kind[idx] = 1
     world.k_comp_offset[idx] = world.k_comp_used
     world.k_comp_offset[idx + 1] = world.k_comp_used
+    world.k_comp_end[idx] = world.k_comp_used
     world.k_count += 1
     return idx
 
