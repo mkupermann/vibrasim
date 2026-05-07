@@ -89,6 +89,19 @@ class WorldConfig:
     audio_output_port_origin: tuple[float, float, float] = (45.0, 0.0, 0.0)
     audio_output_port_size: tuple[float, float, float] = (15.0, 15.0, 15.0)
 
+    # Plan D — video I/O
+    video_io_enabled: bool = False
+    video_fps: int = 30
+    video_buffer_seconds: float = 5.0
+    video_patch_grid: tuple[int, int] = (16, 16)
+    video_n_orientations: int = 8
+    video_amplitude_threshold: float = 0.05
+    video_freq_min: float = 1000.0
+    video_freq_max: float = 12000.0
+    video_input_port_origin: tuple[float, float, float] = (0.0, 0.0, 45.0)
+    video_input_port_size: tuple[float, float, float] = (15.0, 15.0, 15.0)
+    video_webcam_index: int = 0
+
     # Plan A.5 — substrate performance
     slot_recycling_enabled: bool = True   # World.allocate_node reuses dead slots before extending k_count
     numba_jit_enabled: bool = True        # @njit cores for hot loops; safe with the 60³ default box
