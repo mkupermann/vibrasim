@@ -12,8 +12,8 @@ def test_grid_enumeration():
 
 def test_run_one_trial_returns_objective(tmp_path):
     """A short trial returns a finite objective value."""
-    params = {"box_size": [200.0, 200.0, 200.0], "duration": 5.0,
-              "objective": "time_to_first_atom"}
+    params = {"box_size": [200.0, 200.0, 200.0], "repulsion_cell_size": 200.0,
+              "duration": 5.0, "objective": "time_to_first_atom"}
     result = run_one_trial(params, snapshot_dir=tmp_path)
     assert "objective" in result
     assert "params" in result

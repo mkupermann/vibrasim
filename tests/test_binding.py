@@ -107,6 +107,7 @@ def test_polarity_randomization_at_electron_level_3d():
         n_vibrations_max=2 * n_pairs,
         n_nodes_max=n_pairs,
         rng_seed=42,
+        repulsion_cell_size=2000.0,
     )
     w = World(cfg)
     spacing = 20.0
@@ -140,6 +141,7 @@ def test_polarity_randomization_at_pair_level_3d():
         n_vibrations_max=4,
         n_nodes_max=3 * n_pairs,
         rng_seed=42,
+        repulsion_cell_size=2000.0,
     )
     w = World(cfg)
     spacing = 30.0

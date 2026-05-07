@@ -8,7 +8,7 @@ from pathlib import Path
 class WorldConfig:
     # Seeding (3D)
     n_initial_vibrations: int = 1000
-    box_size: tuple[float, float, float] = (1000.0, 1000.0, 1000.0)
+    box_size: tuple[float, float, float] = (60.0, 60.0, 60.0)   # matches calibration_session3.toml and calibration_phase2_acceptance.toml
     freq_min: float = 100.0
     freq_max: float = 10000.0
     freq_distribution: str = "log"
@@ -67,10 +67,8 @@ class WorldConfig:
 
     # Plan A.5 — substrate performance
     slot_recycling_enabled: bool = True   # World.allocate_node reuses dead slots before extending k_count
-    numba_jit_enabled: bool = False       # @njit cores for hot loops; False default keeps box-size guard
-                                          # from firing on bare WorldConfig() calls in unit tests.
-                                          # Production TOML configs explicitly set numba_jit_enabled=true
-                                          # alongside a valid repulsion_cell_size >= max(box_size).
+    numba_jit_enabled: bool = True        # @njit cores for hot loops; safe with the 60³ default box
+                                          # since repulsion_cell_size=100 >= max(60,60,60).
 
     def __post_init__(self) -> None:
         if self.numba_jit_enabled:

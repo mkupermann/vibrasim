@@ -14,6 +14,7 @@ def _empty_world(n_max_nodes=256):
         n_vibrations_max=64,
         n_nodes_max=n_max_nodes,
         rng_seed=42,
+        repulsion_cell_size=200.0,
     )
     return World(cfg)
 
