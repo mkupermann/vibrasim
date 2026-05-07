@@ -214,13 +214,28 @@ def apply_stdp(world) -> int:
             if v_len < 1e-9:
                 continue
             u = v_AB / v_len
+            # Plan E asymmetric reward physics — swap LTP/LTD when atom_j has
+            # k_reward_polarity == -1 (fire_negative origin). Atoms with polarity
+            # 0 (ambient default) take the existing alignment-based path unchanged.
+            swap_ltp_ltd = (world.k_reward_polarity[atom_j] == -1)
+
             # Per-molecule LTP/LTD decision based on orientation alignment
             for m in bridge_indices:
                 o = world.k_orientation[m]
                 o_norm = float(np.linalg.norm(o))
                 alignment = float(np.dot(o, u))
                 strength_old = float(world.k_strength[m])
-                if o_norm < 1e-6 or alignment >= 0:
+                # Determine LTP vs LTD based on alignment AND swap flag
+                if o_norm < 1e-6:
+                    # No prior orientation → LTP normally; LTD if swap
+                    do_ltp = not swap_ltp_ltd
+                elif alignment >= 0:
+                    # Aligned → LTP normally; LTD if swap
+                    do_ltp = not swap_ltp_ltd
+                else:
+                    # Anti-aligned → LTD normally; LTP if swap
+                    do_ltp = swap_ltp_ltd
+                if do_ltp:
                     # LTP: strengthen and update orientation toward u
                     weight = cfg.delta_LTP * float(np.exp(-dt_pair / cfg.tau_LTP))
                     world.k_strength[m] = min(strength_old + weight, 1000.0)
