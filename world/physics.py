@@ -167,9 +167,17 @@ def apply_stdp(world) -> int:
 
     Scans world.firing_events for ordered pairs (t_i, atom_i) → (t_j, atom_j)
     with 0 < (t_j - t_i) ≤ τ_LTP. For each such pair, finds the bridge tube
-    (level-5+ molecules between the two atoms) and applies LTP — strength
-    increment + orientation update toward A→B. Anti-causal pairs (LTD) are
-    handled in a follow-up task.
+    (level-5+ molecules between the two atoms) and applies per-molecule
+    LTP or LTD based on alignment of the molecule's existing orientation
+    with the firing pair's A→B unit vector:
+
+    - No orientation yet (|o| < 1e-6) or alignment ≥ 0 → LTP:
+      strengthen + update orientation toward u.
+    - Alignment < 0 → LTD: weaken only; orientation unchanged.
+      Floor at strength=1.0 so a bridge cannot disappear from LTD alone.
+
+    δ_LTD < δ_LTP by default so a balanced sequence of opposing pairs
+    nets to small positive (biological STDP asymmetry).
 
     Returns the count of (pair, molecule) reinforcement events.
     """
@@ -206,19 +214,27 @@ def apply_stdp(world) -> int:
             if v_len < 1e-9:
                 continue
             u = v_AB / v_len
-            weight_LTP = cfg.delta_LTP * float(np.exp(-dt_pair / cfg.tau_LTP))
-            # Apply LTP: strengthen and update orientation
+            # Per-molecule LTP/LTD decision based on orientation alignment
             for m in bridge_indices:
+                o = world.k_orientation[m]
+                o_norm = float(np.linalg.norm(o))
+                alignment = float(np.dot(o, u))
                 strength_old = float(world.k_strength[m])
-                world.k_strength[m] = min(strength_old + weight_LTP, 1000.0)
-                strength_new = float(world.k_strength[m])
-                if strength_new > 0:
-                    o_old = world.k_orientation[m]
-                    o_new = (o_old * strength_old + u * weight_LTP) / strength_new
-                    norm = float(np.linalg.norm(o_new))
-                    if norm > 1e-9:
-                        o_new = o_new / norm
-                    world.k_orientation[m] = o_new
+                if o_norm < 1e-6 or alignment >= 0:
+                    # LTP: strengthen and update orientation toward u
+                    weight = cfg.delta_LTP * float(np.exp(-dt_pair / cfg.tau_LTP))
+                    world.k_strength[m] = min(strength_old + weight, 1000.0)
+                    strength_new = float(world.k_strength[m])
+                    if strength_new > 0:
+                        o_new = (o * strength_old + u * weight) / strength_new
+                        new_norm = float(np.linalg.norm(o_new))
+                        if new_norm > 1e-9:
+                            o_new = o_new / new_norm
+                        world.k_orientation[m] = o_new
+                else:
+                    # LTD: weaken only; orientation unchanged
+                    weight = cfg.delta_LTD * float(np.exp(-dt_pair / cfg.tau_LTD))
+                    world.k_strength[m] = max(strength_old - weight, 1.0)
                 n_reinforcements += 1
     return n_reinforcements
 
