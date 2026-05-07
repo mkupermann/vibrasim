@@ -1272,6 +1272,81 @@ def _emit_vibrations(world, atom_idx: int) -> None:
         world.n_alive = high
 
 
+def apply_speech_loop(world, dt: float) -> int:
+    """Plan F: port-to-port firing coupling.
+
+    When an atom inside the audio input port fires THIS TICK, deposit
+    `speech_loop_burst_size` vibrations at random positions inside the audio
+    output port, all at the firing atom's frequency (with small Gaussian
+    jitter `speech_loop_jitter_hz`). Models biological auditory feedback —
+    the vocaliser hearing their own utterances closes the auditory-motor
+    loop that lets STDP bind input perceptions to output productions.
+
+    Default off via `cfg.speech_loop_strength=0.0`. When > 0, the rule fires
+    on each input-port atom-firing event from the current tick.
+
+    Returns count of ghost-burst events triggered this tick.
+    """
+    cfg = world.config
+    if cfg.speech_loop_strength <= 0.0:
+        return 0
+
+    burst_size = cfg.speech_loop_burst_size
+    if burst_size <= 0:
+        return 0
+
+    ai_origin = np.asarray(cfg.audio_input_port_origin, dtype=np.float64)
+    ai_size = np.asarray(cfg.audio_input_port_size, dtype=np.float64)
+    ao_origin = np.asarray(cfg.audio_output_port_origin, dtype=np.float64)
+    ao_size = np.asarray(cfg.audio_output_port_size, dtype=np.float64)
+
+    # Only firings appended this tick (their timestamp == world.t since
+    # neuron_dynamics ran during this tick before apply_speech_loop).
+    t_now = world.t
+    events = world.firing_events
+    n_events = 0
+    rng = world.rng
+
+    for t_fire, atom_idx in events:
+        # Heuristic: events appended this tick have t_fire close to t_now.
+        # neuron_dynamics uses world.t at append time; tick advances world.t
+        # AFTER apply_speech_loop. So all "this tick" events have t_fire == t_now.
+        if t_fire != t_now:
+            continue
+        if atom_idx >= world.k_count or not world.k_alive[atom_idx]:
+            continue
+        pos = world.k_pos[atom_idx]
+        # Inside audio input port?
+        if not (ai_origin[0] <= pos[0] <= ai_origin[0] + ai_size[0] and
+                ai_origin[1] <= pos[1] <= ai_origin[1] + ai_size[1] and
+                ai_origin[2] <= pos[2] <= ai_origin[2] + ai_size[2]):
+            continue
+        f_atom = float(world.k_freq[atom_idx])
+        pol_atom = bool(world.k_pol[atom_idx])
+
+        # Allocate burst_size vibrations at random positions inside the
+        # audio output port. Gracefully no-op if buffer is full.
+        free_idx = np.where(~world.s_alive)[0]
+        n_to_inject = min(burst_size, len(free_idx))
+        if n_to_inject == 0:
+            continue
+        for k in range(n_to_inject):
+            i = int(free_idx[k])
+            world.s_pos[i] = (
+                ao_origin[0] + float(rng.random()) * ao_size[0],
+                ao_origin[1] + float(rng.random()) * ao_size[1],
+                ao_origin[2] + float(rng.random()) * ao_size[2],
+            )
+            world.s_vel[i] = 0.0
+            world.s_freq[i] = f_atom + float(rng.normal(0.0, cfg.speech_loop_jitter_hz))
+            world.s_pol[i] = pol_atom
+            world.s_alive[i] = True
+        if n_to_inject > 0:
+            world.n_alive = max(world.n_alive, int(free_idx[:n_to_inject].max()) + 1)
+        n_events += 1
+    return n_events
+
+
 def tick(world, dt: float) -> None:
     """One simulation step. See CONCEPT.md v2 §4 + §7.1 for the canonical order."""
     box = np.asarray(world.config.box_size, dtype=np.float64)
@@ -1285,4 +1360,5 @@ def tick(world, dt: float) -> None:
     ambient_regeneration(world, dt)
     neuron_dynamics(world, dt)
     apply_stdp(world)              # NEW (Plan B)
+    apply_speech_loop(world, dt)   # NEW (Plan F)
     world.t += dt
