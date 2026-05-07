@@ -142,3 +142,20 @@ def test_stdp_amendment_fields_have_safe_defaults():
     assert cfg.r_bridge == 5.0
     assert cfg.synaptic_transmission_strength == 0.5
     assert cfg.synaptic_transmission_threshold == 5.0
+
+
+def test_plan_C_audio_fields_have_safe_defaults():
+    """Plan C audio fields default off so legacy configs are unaffected."""
+    cfg = WorldConfig()
+    assert cfg.audio_io_enabled is False
+    assert cfg.audio_sample_rate == 16000
+    assert cfg.audio_block_size == 256
+    assert cfg.audio_fft_size == 512
+    assert cfg.audio_buffer_seconds == 30.0
+    assert cfg.audio_amplitude_threshold == 0.01
+    assert cfg.audio_freq_min == 50.0
+    assert cfg.audio_freq_max == 8000.0
+    assert cfg.audio_input_port_origin == (0.0, 0.0, 0.0)
+    assert cfg.audio_input_port_size == (15.0, 15.0, 15.0)
+    assert cfg.audio_output_port_origin == (45.0, 0.0, 0.0)
+    assert cfg.audio_output_port_size == (15.0, 15.0, 15.0)
