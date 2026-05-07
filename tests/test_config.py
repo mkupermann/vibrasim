@@ -159,3 +159,19 @@ def test_plan_C_audio_fields_have_safe_defaults():
     assert cfg.audio_input_port_size == (15.0, 15.0, 15.0)
     assert cfg.audio_output_port_origin == (45.0, 0.0, 0.0)
     assert cfg.audio_output_port_size == (15.0, 15.0, 15.0)
+
+
+def test_plan_D_video_fields_have_safe_defaults():
+    """Plan D video fields default off so legacy configs are unaffected."""
+    cfg = WorldConfig()
+    assert cfg.video_io_enabled is False
+    assert cfg.video_fps == 30
+    assert cfg.video_buffer_seconds == 5.0
+    assert cfg.video_patch_grid == (16, 16)
+    assert cfg.video_n_orientations == 8
+    assert cfg.video_amplitude_threshold == 0.05
+    assert cfg.video_freq_min == 1000.0
+    assert cfg.video_freq_max == 12000.0
+    assert cfg.video_input_port_origin == (0.0, 0.0, 45.0)
+    assert cfg.video_input_port_size == (15.0, 15.0, 15.0)
+    assert cfg.video_webcam_index == 0
