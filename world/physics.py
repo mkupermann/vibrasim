@@ -239,6 +239,97 @@ def apply_stdp(world) -> int:
     return n_reinforcements
 
 
+def synaptic_transmission(world, dt: float) -> int:
+    """Plan B: strong oriented bridges deposit charge into post-synaptic atoms.
+
+    For each level-5+ molecule with k_strength ≥ synaptic_transmission_threshold
+    AND |k_orientation| > 0.5 (i.e. it has a stable, well-defined direction):
+        Find alive vibrations within r_bridge of the molecule.
+        For each: compute alignment = dot(v_unit, orientation_unit).
+        If alignment > 0: deposit alignment * w_synaptic * dt charge into every
+        level-4 atom within r_bridge of (M_pos + r_bridge * orientation).
+
+    Returns the count of (vibration, post-atom) charge-deposit events.
+    """
+    cfg = world.config
+    if not cfg.stdp_enabled:
+        return 0
+    K = world.k_count
+    if K == 0:
+        return 0
+
+    threshold = cfg.synaptic_transmission_threshold
+    bridge_mask = (
+        world.k_alive[:K]
+        & (world.k_level[:K] >= 5)
+        & (world.k_strength[:K] >= threshold)
+    )
+    if not bridge_mask.any():
+        return 0
+    bridge_indices = np.where(bridge_mask)[0]
+
+    box = np.asarray(cfg.box_size, dtype=np.float64)
+    r_bridge = cfg.r_bridge
+    r_bridge_sq = r_bridge ** 2
+    w_synaptic = cfg.synaptic_transmission_strength
+    n_events = 0
+
+    n_alive_v = world.n_alive
+    if n_alive_v == 0:
+        return 0
+    s_pos = world.s_pos[:n_alive_v]
+    s_vel = world.s_vel[:n_alive_v]
+    s_alive = world.s_alive[:n_alive_v]
+
+    # Pre-build atom-position matrix for post-synaptic search
+    atom_mask = world.k_alive[:K] & (world.k_level[:K] == 4)
+    if not atom_mask.any():
+        return 0
+    atom_indices = np.where(atom_mask)[0]
+    atom_pos = world.k_pos[atom_indices]
+
+    for m in bridge_indices:
+        M = world.k_pos[m]
+        o = world.k_orientation[m]
+        o_norm = float(np.linalg.norm(o))
+        if o_norm <= 0.5:
+            continue
+        o_unit = o / o_norm
+
+        # Vibrations within r_bridge of M (periodic min-image)
+        d_vM = s_pos - M
+        d_vM -= box * np.round(d_vM / box)
+        d_vM_sq = (d_vM * d_vM).sum(axis=1)
+        in_range = (d_vM_sq <= r_bridge_sq) & s_alive
+        if not in_range.any():
+            continue
+        v_in_range_indices = np.where(in_range)[0]
+
+        # Post-synaptic search centre = M + r_bridge * o_unit
+        post_centre = M + r_bridge * o_unit
+        d_aP = atom_pos - post_centre
+        d_aP -= box * np.round(d_aP / box)
+        d_aP_sq = (d_aP * d_aP).sum(axis=1)
+        post_mask = d_aP_sq <= r_bridge_sq
+        if not post_mask.any():
+            continue
+        post_atom_indices = atom_indices[post_mask]
+
+        for v_idx in v_in_range_indices:
+            v_vel = s_vel[v_idx]
+            v_speed = float(np.linalg.norm(v_vel))
+            if v_speed < 1e-9:
+                continue
+            alignment = float(np.dot(v_vel / v_speed, o_unit))
+            if alignment <= 0:
+                continue
+            charge_increment = alignment * w_synaptic * dt
+            for a_idx in post_atom_indices:
+                world.k_charge[a_idx] += charge_increment
+                n_events += 1
+    return n_events
+
+
 def _kill_node(world, i: int) -> None:
     """Mark node i dead, decrement ref counts of its constituents, and
     push newly-recyclable slots onto the free list.
@@ -1036,6 +1127,10 @@ def neuron_dynamics(world, dt: float) -> None:
         n_in = int(((d2 <= r2) & v_alive).sum())
         if n_in > 0:
             world.k_charge[ai] += float(n_in)
+
+    # Plan B: oriented bridges transmit aligned vibrations as charge before
+    # the threshold check, so a strong bridge can drive this-tick firing.
+    synaptic_transmission(world, dt)
 
     # 3. Fire: any atom with charge ≥ theta_fire and not refractory emits.
     can_fire = (world.k_charge[atom_indices] >= cfg.theta_fire) & (
