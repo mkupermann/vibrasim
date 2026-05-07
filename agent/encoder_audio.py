@@ -71,6 +71,7 @@ def decode_to_audio(
     v1: take the first block_size samples of the IFFT'd block. No
     overlap-add windowing — phase artifacts at block boundaries are
     tolerated; acceptance test I2 only requires spectral correlation.
+    Output samples are clamped to [-1, 1] to prevent downstream clipping.
     """
     spectrum = np.zeros(fft_size // 2 + 1, dtype=complex)
     bin_width = sample_rate / fft_size
@@ -83,4 +84,4 @@ def decode_to_audio(
         sign = 1.0 if polarity else -1.0
         spectrum[bin_idx] += a * fft_size * sign
     samples = np.fft.irfft(spectrum, n=fft_size)
-    return samples[:block_size].astype(np.float32)
+    return np.clip(samples[:block_size], -1.0, 1.0).astype(np.float32)
