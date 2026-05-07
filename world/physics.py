@@ -124,6 +124,44 @@ def _decade(freq: float) -> int:
     return int(math.floor(math.log10(freq)))
 
 
+def molecules_in_tube(world, A: np.ndarray, B: np.ndarray, r_bridge: float) -> np.ndarray:
+    """Return indices of alive level-5+ molecules whose perpendicular distance
+    to the segment A→B is ≤ r_bridge AND whose projection along the segment
+    falls within [0, |B-A|].
+
+    Periodic minimum-image is applied to the (M - A) and (B - A) vectors.
+    """
+    A = np.asarray(A, dtype=np.float64)
+    B = np.asarray(B, dtype=np.float64)
+    box = np.asarray(world.config.box_size, dtype=np.float64)
+    K = world.k_count
+    if K == 0:
+        return np.empty(0, dtype=np.int64)
+    mol_mask = world.k_alive[:K] & (world.k_level[:K] >= 5)
+    if not mol_mask.any():
+        return np.empty(0, dtype=np.int64)
+    indices = np.where(mol_mask)[0]
+    M_pos = world.k_pos[indices]
+
+    # Periodic minimum-image on (M - A) and (B - A)
+    rM = M_pos - A
+    rM -= box * np.round(rM / box)
+    v = B - A
+    v -= box * np.round(v / box)
+    v_len_sq = float((v * v).sum())
+    if v_len_sq < 1e-12:
+        return np.empty(0, dtype=np.int64)
+
+    # Projection scalar t per molecule
+    t = (rM * v).sum(axis=1) / v_len_sq
+    in_segment_mask = (t >= 0.0) & (t <= 1.0)
+    proj = t[:, None] * v
+    perp = rM - proj
+    perp_dist_sq = (perp * perp).sum(axis=1)
+    in_tube_mask = perp_dist_sq <= r_bridge ** 2
+    return indices[in_segment_mask & in_tube_mask]
+
+
 def _kill_node(world, i: int) -> None:
     """Mark node i dead, decrement ref counts of its constituents, and
     push newly-recyclable slots onto the free list.
