@@ -56,3 +56,31 @@ def encode_block(
         polarity = bool(c.real >= 0)
         out.append((f, min(a, 1.0), polarity))
     return out
+
+
+def decode_to_audio(
+    emissions: list[tuple[float, float, bool]],
+    block_size: int = 256,
+    sample_rate: int = 16000,
+    fft_size: int = 512,
+    freq_min: float = 50.0,
+    freq_max: float = 8000.0,
+) -> np.ndarray:
+    """Inverse-STFT a list of (freq, amplitude, polarity) triples to audio.
+
+    v1: take the first block_size samples of the IFFT'd block. No
+    overlap-add windowing — phase artifacts at block boundaries are
+    tolerated; acceptance test I2 only requires spectral correlation.
+    """
+    spectrum = np.zeros(fft_size // 2 + 1, dtype=complex)
+    bin_width = sample_rate / fft_size
+    for f, a, polarity in emissions:
+        if f < freq_min or f > freq_max:
+            continue
+        bin_idx = int(round(f / bin_width))
+        if bin_idx < 0 or bin_idx >= len(spectrum):
+            continue
+        sign = 1.0 if polarity else -1.0
+        spectrum[bin_idx] += a * fft_size * sign
+    samples = np.fft.irfft(spectrum, n=fft_size)
+    return samples[:block_size].astype(np.float32)
