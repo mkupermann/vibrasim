@@ -28,3 +28,31 @@ def freq_to_port_position(
     y = port_origin[1] + float(rng.random()) * port_size[1]
     z = port_origin[2] + float(rng.random()) * port_size[2]
     return (float(x), y, z)
+
+
+def encode_block(
+    samples: np.ndarray,
+    sample_rate: int = 16000,
+    fft_size: int = 512,
+    amplitude_threshold: float = 0.01,
+    freq_min: float = 50.0,
+    freq_max: float = 8000.0,
+) -> list[tuple[float, float, bool]]:
+    """STFT a block, return (freq, amplitude, polarity) per significant bin.
+
+    Polarity is encoded as the sign of the bin's real part (positive → True,
+    negative → False). Amplitude is the magnitude clipped to [0, 1].
+    """
+    spectrum = np.fft.rfft(samples, n=fft_size)
+    freqs = np.fft.rfftfreq(fft_size, d=1.0 / sample_rate)
+    out: list[tuple[float, float, bool]] = []
+    for i, c in enumerate(spectrum):
+        f = float(freqs[i])
+        if f < freq_min or f > freq_max:
+            continue
+        a = float(np.abs(c)) / fft_size
+        if a < amplitude_threshold:
+            continue
+        polarity = bool(c.real >= 0)
+        out.append((f, min(a, 1.0), polarity))
+    return out
