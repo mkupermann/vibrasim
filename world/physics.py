@@ -162,6 +162,67 @@ def molecules_in_tube(world, A: np.ndarray, B: np.ndarray, r_bridge: float) -> n
     return indices[in_segment_mask & in_tube_mask]
 
 
+def apply_stdp(world) -> int:
+    """Plan B: spike-timing-dependent plasticity post-tick scan.
+
+    Scans world.firing_events for ordered pairs (t_i, atom_i) → (t_j, atom_j)
+    with 0 < (t_j - t_i) ≤ τ_LTP. For each such pair, finds the bridge tube
+    (level-5+ molecules between the two atoms) and applies LTP — strength
+    increment + orientation update toward A→B. Anti-causal pairs (LTD) are
+    handled in a follow-up task.
+
+    Returns the count of (pair, molecule) reinforcement events.
+    """
+    cfg = world.config
+    if not cfg.stdp_enabled:
+        return 0
+    events = world.firing_events
+    if len(events) < 2:
+        return 0
+
+    n_reinforcements = 0
+    box = np.asarray(cfg.box_size, dtype=np.float64)
+
+    # Pair scan — for each ordered pair within tau_LTP
+    for i, (t_i, atom_i) in enumerate(events):
+        for j in range(i + 1, len(events)):
+            t_j, atom_j = events[j]
+            dt_pair = t_j - t_i
+            if dt_pair <= 0 or dt_pair > cfg.tau_LTP:
+                continue
+            if atom_i == atom_j:
+                continue
+            if atom_i >= world.k_count or atom_j >= world.k_count:
+                continue
+            A = world.k_pos[atom_i]
+            B = world.k_pos[atom_j]
+            bridge_indices = molecules_in_tube(world, A, B, cfg.r_bridge)
+            if len(bridge_indices) == 0:
+                continue
+            # Periodic-corrected unit vector A→B
+            v_AB = B - A
+            v_AB -= box * np.round(v_AB / box)
+            v_len = float(np.linalg.norm(v_AB))
+            if v_len < 1e-9:
+                continue
+            u = v_AB / v_len
+            weight_LTP = cfg.delta_LTP * float(np.exp(-dt_pair / cfg.tau_LTP))
+            # Apply LTP: strengthen and update orientation
+            for m in bridge_indices:
+                strength_old = float(world.k_strength[m])
+                world.k_strength[m] = min(strength_old + weight_LTP, 1000.0)
+                strength_new = float(world.k_strength[m])
+                if strength_new > 0:
+                    o_old = world.k_orientation[m]
+                    o_new = (o_old * strength_old + u * weight_LTP) / strength_new
+                    norm = float(np.linalg.norm(o_new))
+                    if norm > 1e-9:
+                        o_new = o_new / norm
+                    world.k_orientation[m] = o_new
+                n_reinforcements += 1
+    return n_reinforcements
+
+
 def _kill_node(world, i: int) -> None:
     """Mark node i dead, decrement ref counts of its constituents, and
     push newly-recyclable slots onto the free list.
@@ -1046,4 +1107,5 @@ def tick(world, dt: float) -> None:
     decay_high_level_nodes(world, dt)   # NEW (R2)
     ambient_regeneration(world, dt)
     neuron_dynamics(world, dt)
+    apply_stdp(world)              # NEW (Plan B)
     world.t += dt
