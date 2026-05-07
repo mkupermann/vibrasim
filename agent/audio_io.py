@@ -157,8 +157,48 @@ class AudioIO:
 
         Returns count of audio samples written.
         """
-        # Implemented in Task 6.
-        return 0
+        # Find firings inside the output port within (t-dt, t]
+        ox, oy, oz = self.output_port_origin
+        sx, sy, sz = self.output_port_size
+        n_blocks = int(dt * self.sample_rate / self.block_size)
+        if n_blocks == 0:
+            return 0
+        block_duration = self.block_size / self.sample_rate
+
+        # Group firings by block
+        per_block_emissions: list[list[tuple[float, float, bool]]] = [[] for _ in range(n_blocks)]
+        K = world.k_count
+        t_window_start = world.t - dt
+        for t_fire, atom_idx in world.firing_events:
+            if t_fire <= t_window_start or t_fire > world.t:
+                continue
+            if atom_idx >= K:
+                continue
+            pos = world.k_pos[atom_idx]
+            # Inside output port?
+            if not (ox <= pos[0] <= ox + sx and oy <= pos[1] <= oy + sy and oz <= pos[2] <= oz + sz):
+                continue
+            # Inverse log-mapping: x → freq
+            log_norm = (pos[0] - ox) / sx
+            log_freq = log_norm * (np.log(self.freq_max) - np.log(self.freq_min)) + np.log(self.freq_min)
+            f = float(np.exp(log_freq))
+            block_idx = int((t_fire - t_window_start) / block_duration)
+            if 0 <= block_idx < n_blocks:
+                per_block_emissions[block_idx].append((f, 0.5, True))
+
+        n_written = 0
+        for block_idx in range(n_blocks):
+            block_audio = decode_to_audio(
+                per_block_emissions[block_idx],
+                block_size=self.block_size,
+                sample_rate=self.sample_rate,
+                fft_size=self.fft_size,
+                freq_min=self.freq_min,
+                freq_max=self.freq_max,
+            )
+            self._write_output_buffer(block_audio)
+            n_written += len(block_audio)
+        return n_written
 
     def start(self) -> None:
         """Open mic + speaker streams and start threads. (Real-device path; lazy import sounddevice.)"""
