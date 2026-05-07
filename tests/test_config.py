@@ -7,7 +7,7 @@ from world.config import WorldConfig, INITIAL_CONFIG, load_config
 def test_default_config_matches_spec():
     cfg = WorldConfig()
     assert cfg.n_initial_vibrations == 1000
-    assert cfg.box_size == (1000.0, 1000.0, 1000.0)         # CHANGED: 3-tuple
+    assert cfg.box_size == (60.0, 60.0, 60.0)               # CHANGED: 3-tuple, matches calibration TOMLs
     assert cfg.r_1 == 5.0
     assert cfg.r_2 == 10.0
     assert cfg.repulsion_k == 100.0                         # NEW
@@ -33,10 +33,10 @@ def test_toml_box_size_list_to_tuple():
     import tempfile, pathlib
     from world.config import load_config
     with tempfile.NamedTemporaryFile(mode='w', suffix='.toml', delete=False) as f:
-        f.write('box_size = [500.0, 500.0, 500.0]\n')
+        f.write('box_size = [50.0, 50.0, 50.0]\n')
         path = pathlib.Path(f.name)
     cfg = load_config(path)
-    assert cfg.box_size == (500.0, 500.0, 500.0)
+    assert cfg.box_size == (50.0, 50.0, 50.0)
 
 
 def test_initial_config_singleton():
@@ -61,3 +61,71 @@ def test_toml_override(tmp_path: Path):
 
 def test_load_config_with_no_path_returns_defaults():
     assert load_config(None) == WorldConfig()
+
+
+def test_growth_amendment_fields_have_safe_defaults():
+    """Plan A new fields must default off so legacy configs are unaffected."""
+    cfg = WorldConfig()
+    assert cfg.lambda_dec_mol == 0.0
+    assert cfg.r_strengthen == 5.0
+    assert cfg.emit_band_ratios == (0.08, 1.0, 12.5)  # freq_ratio, 1, 1/freq_ratio
+    assert cfg.mol_fusion_enabled is False
+
+
+def test_AP_perf_flags_slot_recycling_default_true():
+    """Plan A.5 slot_recycling_enabled defaults ON."""
+    cfg = WorldConfig(numba_jit_enabled=False)
+    assert cfg.slot_recycling_enabled is True
+
+
+def test_AP_jit_guard_requires_valid_cell_to_enable():
+    """numba_jit_enabled=True with cell >= max(box_size) does not raise.
+
+    The default box_size=(60,60,60) and repulsion_cell_size=100 already
+    satisfy this; here we also verify an explicit oversized cell works.
+    """
+    cfg = WorldConfig(repulsion_cell_size=1000.0, numba_jit_enabled=True)
+    assert cfg.numba_jit_enabled is True
+    assert cfg.slot_recycling_enabled is True
+
+
+def test_jit_guard_fires_when_cell_lt_box():
+    """numba_jit_enabled=True with cell < box raises AssertionError.
+
+    The JIT core in apply_scale_repulsion does an unconditional O(K²)
+    all-pairs loop; the Python path uses a spatial grid keyed on
+    repulsion_cell_size. When cell < box the two paths diverge.
+    """
+    with pytest.raises(AssertionError, match="repulsion_cell_size"):
+        WorldConfig(
+            numba_jit_enabled=True,
+            box_size=(1000.0, 1000.0, 1000.0),
+            repulsion_cell_size=100.0,
+        )
+
+
+def test_jit_guard_silent_when_jit_disabled():
+    """numba_jit_enabled=False with cell < box does NOT raise.
+
+    The Python spatial-grid path is always correct; the guard only
+    protects the JIT path.
+    """
+    cfg = WorldConfig(
+        numba_jit_enabled=False,
+        box_size=(1000.0, 1000.0, 1000.0),
+        repulsion_cell_size=100.0,
+    )
+    assert cfg.numba_jit_enabled is False
+
+
+def test_default_worldconfig_constructs_without_raising():
+    """Regression: bare WorldConfig() must not raise.
+
+    With box_size=(60,60,60) and repulsion_cell_size=100, the JIT guard
+    condition (cell >= max(box)) is satisfied even when numba_jit_enabled
+    defaults to True.
+    """
+    cfg = WorldConfig()
+    assert cfg.numba_jit_enabled is True
+    assert cfg.box_size == (60.0, 60.0, 60.0)
+    assert cfg.repulsion_cell_size >= max(cfg.box_size)

@@ -11,6 +11,8 @@
 # within reasonable wall time, satisfying CONCEPT.md v2 §5 Phase 1
 # success criterion 1 (reproducible atom formation).
 
+rng_seed = 42
+
 box_size = [80.0, 80.0, 80.0]
 n_initial_vibrations = 400
 n_vibrations_max = 1024

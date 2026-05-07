@@ -43,14 +43,25 @@ class World:
         # Only level-4 atoms use these; other rows stay at zero.
         self.k_charge = np.zeros(K, dtype=np.float64)
         self.k_refractory_until = np.zeros(K, dtype=np.float64)
+        # Plan A — per-node strength field (R2 strength-modulated decay).
+        # Default 1.0 so newly-allocated nodes are not immediately decayed away.
+        self.k_strength = np.ones(K, dtype=np.float64)
+        # Plan A.5 — slot recycling
+        self.k_ref_count = np.zeros(K, dtype=np.int32)
+        self._free_slots: list[int] = []
+        self._free_slots_set: set[int] = set()
         # Firing log: (t, atom_index) tuples appended whenever an atom fires.
         # Keeps the substrate self-describing so measurements don't need
         # to re-derive firings from snapshot deltas.
         self.firing_events: list[tuple[float, int]] = []
 
         # CSR composition
-        comp_caps = K * 4
+        comp_caps = K * 16  # Plan A.5: larger to accommodate slot recycling appending
         self.k_comp_offset = np.zeros(K + 1, dtype=np.int32)
+        # k_comp_end[i] stores the exclusive end of slot i's composition range.
+        # Separate from k_comp_offset[i+1] so that recycling slot i does not
+        # corrupt the start pointer of slot i+1 (which shares k_comp_offset[i+1]).
+        self.k_comp_end = np.zeros(K, dtype=np.int32)
         self.k_comp_indices = np.zeros(comp_caps, dtype=np.int32)
         self.k_comp_kind = np.zeros(K, dtype=np.uint8)
         self.k_comp_used: int = 0
@@ -100,11 +111,37 @@ class World:
         self, pos: np.ndarray, freq: float, pol: bool, level: int,
         constituents: np.ndarray, comp_kind: int,
     ) -> int:
-        i = self.k_count
-        if i >= self.config.n_nodes_max:
-            raise RuntimeError("Node capacity exhausted")
+        # Try to recycle a dead, unreferenced slot first
+        if self.config.slot_recycling_enabled and self._free_slots:
+            i = self._free_slots.pop()
+            self._free_slots_set.discard(i)
+            # Reset all per-slot state (note: k_ref_count[i] is already 0 by
+            # free-list invariant)
+            self.k_pos[i] = 0
+            self.k_vel[i] = 0
+            self.k_freq[i] = 0
+            self.k_pol[i] = False
+            self.k_level[i] = 0
+            self.k_birth[i] = 0
+            self.k_alive[i] = False
+            self.k_locked_this_tick[i] = False
+            self.k_charge[i] = 0
+            self.k_refractory_until[i] = 0
+            self.k_strength[i] = 1.0
+            # k_ref_count[i] is already 0 by free-list invariant
+            # Ensure k_count covers this slot (it was previously allocated, so
+            # k_count >= i+1 in normal operation; guard for test setups)
+            if i >= self.k_count:
+                self.k_count = i + 1
+        else:
+            i = self.k_count
+            if i >= self.config.n_nodes_max:
+                raise RuntimeError("Node capacity exhausted")
+            self.k_count += 1
+
+        # Populate the slot
         self.k_pos[i] = pos
-        self.k_vel[i] = 0.0  # nodes start at rest; repulsion accumulates velocity
+        self.k_vel[i] = 0.0
         self.k_freq[i] = freq
         self.k_pol[i] = pol
         self.k_level[i] = level
@@ -118,9 +155,16 @@ class World:
             raise RuntimeError("Composition index capacity exhausted")
         self.k_comp_indices[start:end] = constituents
         self.k_comp_offset[i] = start
-        self.k_comp_offset[i + 1] = end
+        self.k_comp_end[i] = end
         self.k_comp_used = end
-        self.k_count += 1
+
+        # Increment ref counts of constituents (slot recycling bookkeeping).
+        # Only applicable when constituents are node indices (comp_kind != 0);
+        # comp_kind == 0 means constituents are vibration indices into s_* arrays.
+        if self.config.slot_recycling_enabled and comp_kind != 0:
+            for c in constituents:
+                self.k_ref_count[int(c)] += 1
+
         return i
 
     def reset_tick_locks(self) -> None:

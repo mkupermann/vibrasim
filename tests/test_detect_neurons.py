@@ -14,6 +14,7 @@ def _empty_world(n_max_nodes=256):
         n_vibrations_max=64,
         n_nodes_max=n_max_nodes,
         rng_seed=42,
+        repulsion_cell_size=200.0,
     )
     return World(cfg)
 
@@ -28,6 +29,7 @@ def _add_node(w, idx, pos, level):
     w.k_comp_kind[idx] = 1
     w.k_comp_offset[idx] = w.k_comp_used
     w.k_comp_offset[idx + 1] = w.k_comp_used
+    w.k_comp_end[idx] = w.k_comp_used
     if idx >= w.k_count:
         w.k_count = idx + 1
 

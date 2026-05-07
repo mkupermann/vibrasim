@@ -15,6 +15,7 @@ def _save_snapshot_with_vibrations(path, t, vibration_positions):
         n_vibrations_max=128,
         n_nodes_max=64,
         rng_seed=42,
+        repulsion_cell_size=200.0,
     )
     w = World(cfg)
     w.t = t
