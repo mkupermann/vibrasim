@@ -132,6 +132,7 @@ class World:
             self.k_charge[i] = 0
             self.k_refractory_until[i] = 0
             self.k_strength[i] = 1.0
+            self.k_orientation[i] = 0.0  # Plan B: clear stale direction inherited from dead predecessor
             # k_ref_count[i] is already 0 by free-list invariant
             # Ensure k_count covers this slot (it was previously allocated, so
             # k_count >= i+1 in normal operation; guard for test setups)
