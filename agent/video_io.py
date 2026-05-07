@@ -54,13 +54,16 @@ class VideoIO:
         max_frames = int(fps * buffer_seconds)
         self._frame_buffer: deque[np.ndarray] = deque(maxlen=max_frames)
         self._frame_lock = threading.Lock()
-        # Frame-id incremented on every _write_frame_buffer; encoded-features
-        # cache keyed on it. encode_frame is ~5 ms on a 128×128 frame and
-        # dominant when the same frame is shown across many ticks; the cache
-        # makes per-tick video.inject ~20× cheaper in that regime.
+        # Frame-id incremented on every _write_frame_buffer.
+        # Two pieces of state keyed on it:
+        #   _cached_features (saves encode_frame CPU when frame is unchanged)
+        #   _last_injected_frame_id (skips re-injection when frame is unchanged
+        #     so the same features don't pile up in the vibration buffer 60×
+        #     per sim-sec — the buffer would fill in the first tick otherwise.)
         self._frame_id: int = 0
         self._cached_frame_id: int = -1
         self._cached_features: list[tuple[int, int, int, float, bool]] = []
+        self._last_injected_frame_id: int = -1
 
         self._capture_thread: Optional[threading.Thread] = None
         self._capture_running = False
@@ -82,9 +85,18 @@ class VideoIO:
     def inject_into_substrate(self, world, dt: float) -> int:
         """Read the most-recent buffered frame; encode features (cached if
         frame unchanged since last call); inject one vibration per feature
-        at its retinotopic port position."""
+        at its retinotopic port position.
+
+        Skips injection entirely when the latest frame is the same one
+        already injected. Otherwise the same N features would re-inject
+        every tick — at 60 ticks/sim-sec × ~50 features/frame, the
+        substrate's vibration buffer fills in one tick. Fresh injections
+        only happen when _write_frame_buffer pushes a new frame.
+        """
         frame, frame_id = self._read_latest_frame()
         if frame is None:
+            return 0
+        if frame_id == self._last_injected_frame_id:
             return 0
         if frame_id == self._cached_frame_id:
             features = self._cached_features
@@ -121,6 +133,7 @@ class VideoIO:
             world.s_alive[i] = True
             world.n_alive = max(world.n_alive, i + 1)
             n_injected += 1
+        self._last_injected_frame_id = frame_id
         return n_injected
 
     def start(self) -> None:
