@@ -50,3 +50,20 @@ locked_at_commit = "f6c84f7"
 calibration_seeds_were_used_during_config_search = true   # for rigour
 held_out_seeds_were_used_during_config_search = false     # the actual contract
 config_tuning_log_commits = ["f0f8911", "7bc2412"]
+
+[M4]
+duration_sim_min = 10.0
+n_pairs = 50
+test_phase_sim_sec = 30.0
+cosine_min = 0.5
+
+[M5]
+n_trials = 100
+n_seeds = 5
+ci_confidence = 0.95
+margin_min = 0.10
+
+[provenance.plan_E]
+calibration_seeds = [42, 43, 44]
+held_out_seeds = [7, 100, 314, 999, 2024]
+thresholds_frozen_at_commit = "<filled at first calibration commit>"
