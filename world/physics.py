@@ -124,6 +124,212 @@ def _decade(freq: float) -> int:
     return int(math.floor(math.log10(freq)))
 
 
+def molecules_in_tube(world, A: np.ndarray, B: np.ndarray, r_bridge: float) -> np.ndarray:
+    """Return indices of alive level-5+ molecules whose perpendicular distance
+    to the segment A→B is ≤ r_bridge AND whose projection along the segment
+    falls within [0, |B-A|].
+
+    Periodic minimum-image is applied to the (M - A) and (B - A) vectors.
+    """
+    A = np.asarray(A, dtype=np.float64)
+    B = np.asarray(B, dtype=np.float64)
+    box = np.asarray(world.config.box_size, dtype=np.float64)
+    K = world.k_count
+    if K == 0:
+        return np.empty(0, dtype=np.int64)
+    mol_mask = world.k_alive[:K] & (world.k_level[:K] >= 5)
+    if not mol_mask.any():
+        return np.empty(0, dtype=np.int64)
+    indices = np.where(mol_mask)[0]
+    M_pos = world.k_pos[indices]
+
+    # Periodic minimum-image on (M - A) and (B - A)
+    rM = M_pos - A
+    rM -= box * np.round(rM / box)
+    v = B - A
+    v -= box * np.round(v / box)
+    v_len_sq = float((v * v).sum())
+    if v_len_sq < 1e-12:
+        return np.empty(0, dtype=np.int64)
+
+    # Projection scalar t per molecule
+    t = (rM * v).sum(axis=1) / v_len_sq
+    in_segment_mask = (t >= 0.0) & (t <= 1.0)
+    proj = t[:, None] * v
+    perp = rM - proj
+    perp_dist_sq = (perp * perp).sum(axis=1)
+    in_tube_mask = perp_dist_sq <= r_bridge ** 2
+    return indices[in_segment_mask & in_tube_mask]
+
+
+def apply_stdp(world) -> int:
+    """Plan B: spike-timing-dependent plasticity post-tick scan.
+
+    Scans world.firing_events for ordered pairs (t_i, atom_i) → (t_j, atom_j)
+    with 0 < (t_j - t_i) ≤ τ_LTP. For each such pair, finds the bridge tube
+    (level-5+ molecules between the two atoms) and applies per-molecule
+    LTP or LTD based on alignment of the molecule's existing orientation
+    with the firing pair's A→B unit vector:
+
+    - No orientation yet (|o| < 1e-6) or alignment ≥ 0 → LTP:
+      strengthen + update orientation toward u.
+    - Alignment < 0 → LTD: weaken only; orientation unchanged.
+      Floor at strength=1.0 so a bridge cannot disappear from LTD alone.
+
+    δ_LTD < δ_LTP by default so a balanced sequence of opposing pairs
+    nets to small positive (biological STDP asymmetry).
+
+    Returns the count of (pair, molecule) reinforcement events.
+    """
+    cfg = world.config
+    if not cfg.stdp_enabled:
+        return 0
+    events = world.firing_events
+    if len(events) < 2:
+        return 0
+
+    n_reinforcements = 0
+    box = np.asarray(cfg.box_size, dtype=np.float64)
+
+    # Pair scan — for each ordered pair within tau_LTP
+    for i, (t_i, atom_i) in enumerate(events):
+        for j in range(i + 1, len(events)):
+            t_j, atom_j = events[j]
+            dt_pair = t_j - t_i
+            if dt_pair <= 0 or dt_pair > cfg.tau_LTP:
+                continue
+            if atom_i == atom_j:
+                continue
+            if atom_i >= world.k_count or atom_j >= world.k_count:
+                continue
+            A = world.k_pos[atom_i]
+            B = world.k_pos[atom_j]
+            bridge_indices = molecules_in_tube(world, A, B, cfg.r_bridge)
+            if len(bridge_indices) == 0:
+                continue
+            # Periodic-corrected unit vector A→B
+            v_AB = B - A
+            v_AB -= box * np.round(v_AB / box)
+            v_len = float(np.linalg.norm(v_AB))
+            if v_len < 1e-9:
+                continue
+            u = v_AB / v_len
+            # Per-molecule LTP/LTD decision based on orientation alignment
+            for m in bridge_indices:
+                o = world.k_orientation[m]
+                o_norm = float(np.linalg.norm(o))
+                alignment = float(np.dot(o, u))
+                strength_old = float(world.k_strength[m])
+                if o_norm < 1e-6 or alignment >= 0:
+                    # LTP: strengthen and update orientation toward u
+                    weight = cfg.delta_LTP * float(np.exp(-dt_pair / cfg.tau_LTP))
+                    world.k_strength[m] = min(strength_old + weight, 1000.0)
+                    strength_new = float(world.k_strength[m])
+                    if strength_new > 0:
+                        o_new = (o * strength_old + u * weight) / strength_new
+                        new_norm = float(np.linalg.norm(o_new))
+                        if new_norm > 1e-9:
+                            o_new = o_new / new_norm
+                        world.k_orientation[m] = o_new
+                else:
+                    # LTD: weaken only; orientation unchanged
+                    weight = cfg.delta_LTD * float(np.exp(-dt_pair / cfg.tau_LTD))
+                    world.k_strength[m] = max(strength_old - weight, 1.0)
+                n_reinforcements += 1
+    return n_reinforcements
+
+
+def synaptic_transmission(world, dt: float) -> int:
+    """Plan B: strong oriented bridges deposit charge into post-synaptic atoms.
+
+    For each level-5+ molecule with k_strength ≥ synaptic_transmission_threshold
+    AND |k_orientation| > 0.5 (i.e. it has a stable, well-defined direction):
+        Find alive vibrations within r_bridge of the molecule.
+        For each: compute alignment = dot(v_unit, orientation_unit).
+        If alignment > 0: deposit alignment * w_synaptic * dt charge into every
+        level-4 atom within r_bridge of (M_pos + r_bridge * orientation).
+
+    Returns the count of (vibration, post-atom) charge-deposit events.
+    """
+    cfg = world.config
+    if not cfg.stdp_enabled:
+        return 0
+    K = world.k_count
+    if K == 0:
+        return 0
+
+    threshold = cfg.synaptic_transmission_threshold
+    bridge_mask = (
+        world.k_alive[:K]
+        & (world.k_level[:K] >= 5)
+        & (world.k_strength[:K] >= threshold)
+    )
+    if not bridge_mask.any():
+        return 0
+    bridge_indices = np.where(bridge_mask)[0]
+
+    box = np.asarray(cfg.box_size, dtype=np.float64)
+    r_bridge = cfg.r_bridge
+    r_bridge_sq = r_bridge ** 2
+    w_synaptic = cfg.synaptic_transmission_strength
+    n_events = 0
+
+    n_alive_v = world.n_alive
+    if n_alive_v == 0:
+        return 0
+    s_pos = world.s_pos[:n_alive_v]
+    s_vel = world.s_vel[:n_alive_v]
+    s_alive = world.s_alive[:n_alive_v]
+
+    # Pre-build atom-position matrix for post-synaptic search
+    atom_mask = world.k_alive[:K] & (world.k_level[:K] == 4)
+    if not atom_mask.any():
+        return 0
+    atom_indices = np.where(atom_mask)[0]
+    atom_pos = world.k_pos[atom_indices]
+
+    for m in bridge_indices:
+        M = world.k_pos[m]
+        o = world.k_orientation[m]
+        o_norm = float(np.linalg.norm(o))
+        if o_norm <= 0.5:
+            continue
+        o_unit = o / o_norm
+
+        # Vibrations within r_bridge of M (periodic min-image)
+        d_vM = s_pos - M
+        d_vM -= box * np.round(d_vM / box)
+        d_vM_sq = (d_vM * d_vM).sum(axis=1)
+        in_range = (d_vM_sq <= r_bridge_sq) & s_alive
+        if not in_range.any():
+            continue
+        v_in_range_indices = np.where(in_range)[0]
+
+        # Post-synaptic search centre = M + r_bridge * o_unit
+        post_centre = M + r_bridge * o_unit
+        d_aP = atom_pos - post_centre
+        d_aP -= box * np.round(d_aP / box)
+        d_aP_sq = (d_aP * d_aP).sum(axis=1)
+        post_mask = d_aP_sq <= r_bridge_sq
+        if not post_mask.any():
+            continue
+        post_atom_indices = atom_indices[post_mask]
+
+        for v_idx in v_in_range_indices:
+            v_vel = s_vel[v_idx]
+            v_speed = float(np.linalg.norm(v_vel))
+            if v_speed < 1e-9:
+                continue
+            alignment = float(np.dot(v_vel / v_speed, o_unit))
+            if alignment <= 0:
+                continue
+            charge_increment = alignment * w_synaptic * dt
+            for a_idx in post_atom_indices:
+                world.k_charge[a_idx] += charge_increment
+                n_events += 1
+    return n_events
+
+
 def _kill_node(world, i: int) -> None:
     """Mark node i dead, decrement ref counts of its constituents, and
     push newly-recyclable slots onto the free list.
@@ -922,6 +1128,10 @@ def neuron_dynamics(world, dt: float) -> None:
         if n_in > 0:
             world.k_charge[ai] += float(n_in)
 
+    # Plan B: oriented bridges transmit aligned vibrations as charge before
+    # the threshold check, so a strong bridge can drive this-tick firing.
+    synaptic_transmission(world, dt)
+
     # 3. Fire: any atom with charge ≥ theta_fire and not refractory emits.
     can_fire = (world.k_charge[atom_indices] >= cfg.theta_fire) & (
         world.t >= world.k_refractory_until[atom_indices]
@@ -1008,4 +1218,5 @@ def tick(world, dt: float) -> None:
     decay_high_level_nodes(world, dt)   # NEW (R2)
     ambient_regeneration(world, dt)
     neuron_dynamics(world, dt)
+    apply_stdp(world)              # NEW (Plan B)
     world.t += dt

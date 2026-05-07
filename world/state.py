@@ -46,6 +46,10 @@ class World:
         # Plan A — per-node strength field (R2 strength-modulated decay).
         # Default 1.0 so newly-allocated nodes are not immediately decayed away.
         self.k_strength = np.ones(K, dtype=np.float64)
+        # Plan B — per-molecule orientation vector for directional propagation.
+        # Zero = no orientation inferred yet. Updated as a strength-weighted
+        # running average when STDP detects a directional firing pair.
+        self.k_orientation = np.zeros((K, 3), dtype=np.float64)
         # Plan A.5 — slot recycling
         self.k_ref_count = np.zeros(K, dtype=np.int32)
         self._free_slots: list[int] = []
@@ -128,6 +132,7 @@ class World:
             self.k_charge[i] = 0
             self.k_refractory_until[i] = 0
             self.k_strength[i] = 1.0
+            self.k_orientation[i] = 0.0  # Plan B: clear stale direction inherited from dead predecessor
             # k_ref_count[i] is already 0 by free-list invariant
             # Ensure k_count covers this slot (it was previously allocated, so
             # k_count >= i+1 in normal operation; guard for test setups)

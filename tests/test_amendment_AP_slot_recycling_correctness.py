@@ -67,6 +67,8 @@ def test_AP3_slot_reused_after_decay():
     w.k_comp_offset[0] = 0
     w.k_comp_offset[1] = 0
     w.k_comp_end[0] = 0
+    # Simulate stale orientation from the dead predecessor (Plan B lifecycle fix)
+    w.k_orientation[0] = [0.8, 0.2, 0.0]
     w._free_slots = [0]
     w._free_slots_set = {0}
     new_idx = w.allocate_node(
@@ -80,6 +82,8 @@ def test_AP3_slot_reused_after_decay():
     assert w.k_count == 1
     assert w.k_alive[0]
     assert w.k_level[0] == 1
+    # Plan B lifecycle fix: stale orientation must be cleared on recycle
+    assert np.allclose(w.k_orientation[0], [0.0, 0.0, 0.0])
 
 
 def test_AP4c_kill_level_1_electron_does_not_corrupt_ref_counts():

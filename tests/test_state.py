@@ -115,3 +115,12 @@ def test_AP_k_ref_count_initialised_zero():
     assert (w.k_ref_count == 0).all()
     assert w._free_slots == []
     assert w._free_slots_set == set()
+
+
+def test_k_orientation_field_initialised_to_zero():
+    """k_orientation is a per-node 3-vector; default zero (no orientation inferred yet)."""
+    cfg = WorldConfig(n_initial_vibrations=0, n_nodes_max=16)
+    w = World(cfg)
+    assert w.k_orientation.shape == (16, 3)
+    assert w.k_orientation.dtype == np.float64
+    assert (w.k_orientation == 0.0).all()
