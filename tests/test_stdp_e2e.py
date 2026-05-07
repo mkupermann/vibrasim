@@ -149,9 +149,13 @@ def test_P3_plasticity_drives_prediction():
 
     After 50 paired-pulse trials: bridge strength climbs above threshold;
     synaptic_transmission deposits charge into B from A's emitted vibrations
-    crossing the bridge. Baseline ~ 0; test should be ≥ 2.
+    crossing the bridge. Baseline ~ 0; test should be ≥ 5.
 
-    Threshold: test_B_firings >= 2 * max(baseline_B_firings, 1).
+    Threshold: with baseline engineered to 0 (acoustic chain broken, ambient
+    gen off), the substantive claim is that trained transmission deposits
+    enough charge to drive B's firing at all. We assert baseline_B_firings == 0
+    explicitly to catch geometry/config regressions, then require
+    test_B_firings >= 5 as the absolute floor.
     """
     from world.physics import tick
 
@@ -239,8 +243,19 @@ def test_P3_plasticity_drives_prediction():
     )
 
     print(f"P3 test: B fires = {test_B_firings} "
-          f"(need >= 2 * max({baseline_B_firings}, 1) = "
-          f"{2 * max(baseline_B_firings, 1)})")
-    assert test_B_firings >= 2 * max(baseline_B_firings, 1), (
-        f"P3: test B firings {test_B_firings} not >= 2x baseline {baseline_B_firings}"
+          f"(baseline = {baseline_B_firings}, need baseline==0 and test>=5)")
+    # The geometry deliberately engineers baseline=0 (acoustic chain broken,
+    # ambient generation off). Assert that explicitly so a future regression
+    # that re-introduces ambient noise can't silently mask the test, then
+    # require an absolute floor on test firings.
+    assert baseline_B_firings == 0, (
+        f"P3: baseline_B_firings={baseline_B_firings}, expected 0. "
+        f"The geometry should isolate B from acoustic propagation; if baseline "
+        f"is non-zero, ambient generation has been re-enabled or the box wraps "
+        f"have re-aligned A and B."
+    )
+    assert test_B_firings >= 5, (
+        f"P3: test B firings {test_B_firings} below absolute floor of 5. "
+        f"Trained synaptic transmission should drive B at least 5 times "
+        f"in 5 sim-sec under the engineered isolation."
     )
