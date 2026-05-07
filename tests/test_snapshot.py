@@ -126,3 +126,18 @@ def test_snapshot_load_reconstructs_k_comp_end_for_old_format(tmp_path):
     )
     # Slots 1 and 2 are atoms with no composition — k_comp_end should be 2 (k_comp_offset[2])
     assert w2.k_comp_end[1] == w2.k_comp_offset[2]
+
+
+def test_snapshot_preserves_k_orientation(tmp_path):
+    """k_orientation must round-trip through save/load."""
+    cfg = WorldConfig(n_initial_vibrations=0, n_nodes_max=8)
+    w = World(cfg)
+    w.k_orientation[3] = [0.7, 0.3, 0.0]
+    w.k_orientation[5] = [-0.5, 0.5, 0.7]
+    p = tmp_path / "snapshot_t000000.00.npz"
+    save_snapshot(w, p)
+    w2 = load_snapshot(p)
+    assert np.allclose(w2.k_orientation[3], [0.7, 0.3, 0.0])
+    assert np.allclose(w2.k_orientation[5], [-0.5, 0.5, 0.7])
+    # Untouched slot is still zero
+    assert np.allclose(w2.k_orientation[0], [0.0, 0.0, 0.0])
