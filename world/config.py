@@ -102,6 +102,13 @@ class WorldConfig:
     video_input_port_size: tuple[float, float, float] = (15.0, 15.0, 15.0)
     video_webcam_index: int = 0
 
+    # Plan E — reward channel + orchestrator
+    reward_port_origin: tuple[float, float, float] = (45.0, 45.0, 0.0)
+    reward_port_size: tuple[float, float, float] = (15.0, 15.0, 15.0)
+    reward_burst_size: int = 12
+    reward_burst_freq: float = 30000.0
+    agent_dt_realtime_ms: int = 17
+
     # Plan A.5 — substrate performance
     slot_recycling_enabled: bool = True   # World.allocate_node reuses dead slots before extending k_count
     numba_jit_enabled: bool = True        # @njit cores for hot loops; safe with the 60³ default box
