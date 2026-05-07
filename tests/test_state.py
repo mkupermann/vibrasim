@@ -124,3 +124,16 @@ def test_k_orientation_field_initialised_to_zero():
     assert w.k_orientation.shape == (16, 3)
     assert w.k_orientation.dtype == np.float64
     assert (w.k_orientation == 0.0).all()
+
+
+def test_plan_E_reward_polarity_fields_init_zero():
+    """k_reward_polarity (per node) and s_reward_polarity (per vibration)
+    default to 0 (no reward signal)."""
+    cfg = WorldConfig(n_initial_vibrations=0, n_nodes_max=8, n_vibrations_max=8)
+    w = World(cfg)
+    assert w.k_reward_polarity.shape == (8,)
+    assert w.k_reward_polarity.dtype == np.int8
+    assert (w.k_reward_polarity == 0).all()
+    assert w.s_reward_polarity.shape == (8,)
+    assert w.s_reward_polarity.dtype == np.int8
+    assert (w.s_reward_polarity == 0).all()

@@ -141,3 +141,21 @@ def test_snapshot_preserves_k_orientation(tmp_path):
     assert np.allclose(w2.k_orientation[5], [-0.5, 0.5, 0.7])
     # Untouched slot is still zero
     assert np.allclose(w2.k_orientation[0], [0.0, 0.0, 0.0])
+
+
+def test_snapshot_preserves_k_reward_polarity(tmp_path):
+    """k_reward_polarity round-trips through save/load with int8 precision."""
+    from world.config import WorldConfig
+    from world.state import World
+    from world.snapshot import save_snapshot, load_snapshot
+
+    cfg = WorldConfig(n_initial_vibrations=0, n_nodes_max=8)
+    w = World(cfg)
+    w.k_reward_polarity[3] = 1
+    w.k_reward_polarity[5] = -1
+    p = tmp_path / "snapshot_t000000.00.npz"
+    save_snapshot(w, p)
+    w2 = load_snapshot(p)
+    assert int(w2.k_reward_polarity[3]) == 1
+    assert int(w2.k_reward_polarity[5]) == -1
+    assert int(w2.k_reward_polarity[0]) == 0
