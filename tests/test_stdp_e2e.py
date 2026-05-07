@@ -131,93 +131,116 @@ def test_P2_stdp_timing_curve():
 
 @pytest.mark.slow
 def test_P3_plasticity_drives_prediction():
-    """Train: 50 paired-pulse trials A→B at 10 ms lag using the full
-    substrate (tick()). Test: stimulate A only.
-    B's firing rate during test phase must be ≥ 2× B's baseline firing
-    rate before training.
+    """Plasticity-driven prediction: train A→B 50× with 10ms lag using the
+    full substrate. After training, stimulating A should drive B's firing
+    rate above baseline.
 
-    This requires the FULL substrate loop (neuron_dynamics + apply_stdp +
-    synaptic_transmission), so we use tick() rather than apply_stdp directly.
+    Geometry: box_x=160, A at (10,25,25), B at (90,25,25). Both the direct
+    distance (80) and the periodic-image distance (160-80=80) exceed the
+    75-unit emission reach (emit_speed=15 × 5 sec = 75). The acoustic chain
+    is broken in both periodic directions.
+
+    Ambient vibration generation disabled (lambda_gen=lambda_dec=0) so
+    background noise cannot fire B without synaptic transmission.
+
+    One bridge at (82,25,25), level-5, strength=4.0 (below threshold=5.0),
+    pre-oriented (1,0,0). With r_bridge=8, synaptic search centre at
+    (90,25,25) — exactly at B. Below threshold → no transmission at baseline.
+
+    After 50 paired-pulse trials: bridge strength climbs above threshold;
+    synaptic_transmission deposits charge into B from A's emitted vibrations
+    crossing the bridge. Baseline ~ 0; test should be ≥ 2.
+
+    Threshold: test_B_firings >= 2 * max(baseline_B_firings, 1).
     """
     from world.physics import tick
 
     cfg = WorldConfig(
         n_initial_vibrations=0,
-        n_vibrations_max=512, n_nodes_max=4096,
-        box_size=(100.0, 100.0, 100.0),
+        n_vibrations_max=512, n_nodes_max=2048,
+        # box_x=160 so both direct (80) and periodic-image (80) distances from
+        # A=(10) to B=(90) exceed the 75-unit emission reach at emit_speed=15
+        # in 5 sim-sec. The acoustic chain is broken in BOTH periodic directions.
+        box_size=(160.0, 50.0, 50.0),
         rng_seed=42,
+        repulsion_cell_size=160.0,
+        repulsion_k=0.0,        # disable repulsion (hand-placed atoms have no freq)
+        # Disable ambient vibration generation so background noise can't fire B.
+        lambda_gen=0.0, lambda_dec=0.0,
         # Substrate dynamics
         neuron_dynamics_enabled=True,
         theta_fire=4.0, n_emit=8, r_integrate=5.0,
         t_refractory=0.05, tau_membrane=0.3, emit_speed=15.0,
-        # Plan A (mol_fusion disabled: don't let the substrate grow new bridges
-        # during the trial; we seed them explicitly and track STDP-driven changes)
+        # Plan A
         lambda_dec_mol=0.001, r_strengthen=10.0,
         emit_band_ratios=(0.08, 1.0, 12.5),
         mol_fusion_enabled=False,
-        # Plan B (delta_LTP=4.0: aggressive enough to push strength over threshold
-        # within 50 training trials)
+        # Plan B
         stdp_enabled=True,
-        tau_LTP=0.020, delta_LTP=4.0, delta_LTD=0.5,
+        tau_LTP=0.020, delta_LTP=2.0, delta_LTD=0.5,
         r_bridge=8.0,
         synaptic_transmission_strength=1.0,
-        synaptic_transmission_threshold=10.0,
+        synaptic_transmission_threshold=5.0,
     )
     w = World(cfg)
-    # Atom A at (40,50,50), atom B at (60,50,50)
-    w.k_pos[0] = [40.0, 50.0, 50.0]
-    w.k_freq[0] = 30000.0
+    # Atom A at (10, 25, 25)
+    w.k_pos[0] = [10.0, 25.0, 25.0]
     w.k_level[0] = 4; w.k_alive[0] = True
-    w.k_pos[1] = [60.0, 50.0, 50.0]
-    w.k_freq[1] = 30000.0
+    # Atom B at (90, 25, 25) — direct distance 80, periodic distance 80; both > 75.
+    w.k_pos[1] = [90.0, 25.0, 25.0]
     w.k_level[1] = 4; w.k_alive[1] = True
-    # Pre-existing bridge molecules between A and B (seed so test focuses on plasticity)
-    for i in range(8):
-        x = 42.0 + 2.0 * i
-        w.k_pos[2 + i] = [x, 50.0, 50.0]
-        w.k_freq[2 + i] = 60000.0
-        w.k_level[2 + i] = 5; w.k_alive[2 + i] = True
-        w.k_strength[2 + i] = 9.0
-    w.k_count = 10
+    # Single bridge at (82, 25, 25): with orientation (1,0,0) and r_bridge=8,
+    # synaptic search centre lands at (90, 25, 25) — exactly at B.
+    w.k_pos[2] = [82.0, 25.0, 25.0]
+    w.k_level[2] = 5; w.k_alive[2] = True
+    w.k_strength[2] = 4.0  # BELOW synaptic_transmission_threshold=5.0
+    # Pre-orient bridge toward A→B (+x) so STDP LTP reinforces the correct direction.
+    # LTD from reversed pairs only reduces strength; orientation stays at (1,0,0).
+    w.k_orientation[2] = np.array([1.0, 0.0, 0.0])
+    w.k_count = 3
 
-    def burst_at(pos, n=6, freq=10000.0):
-        free_idx = np.where(~w.s_alive)[0][:n]
-        for i in free_idx:
-            w.s_pos[i] = np.asarray(pos) + w.rng.uniform(-0.5, 0.5, 3)
-            w.s_vel[i] = 0.0
-            w.s_freq[i] = freq + w.rng.uniform(-100, 100)
-            w.s_pol[i] = bool(w.rng.random() < 0.5)
-            w.s_alive[i] = True
-        if len(free_idx):
-            w.n_alive = max(w.n_alive, int(free_idx.max()) + 1)
+    def burst_at_atom(atom_idx: int) -> None:
+        """Force atom_idx to fire by depositing charge above threshold."""
+        w.k_charge[atom_idx] = cfg.theta_fire + 1.0
 
-    # Baseline: 2 simulated seconds, stimulate A only, count B firings
+    # ---- Baseline: 5 sim-sec stimulating A only ----
     baseline_start_idx = len(w.firing_events)
-    for k in range(int(2.0 / cfg.dt)):
+    for k in range(int(5.0 / cfg.dt)):
         if (k + 1) % 30 == 0:
-            burst_at([40.0, 50.0, 50.0])
+            burst_at_atom(0)  # fire A every 30 ticks
         tick(w, cfg.dt)
-    baseline_B_firings = sum(1 for t, ai in w.firing_events[baseline_start_idx:] if ai == 1)
+    baseline_B_firings = sum(
+        1 for t, ai in w.firing_events[baseline_start_idx:] if ai == 1
+    )
+    print(f"P3 baseline: B fires = {baseline_B_firings}")
 
-    # Training: 50 trials, A then B with 10 ms lag (0.1s rest between trials)
+    # ---- Training: 50 paired-pulse trials A→B with 10ms lag ----
     for trial in range(50):
-        burst_at([40.0, 50.0, 50.0])
+        burst_at_atom(0)   # A fires
         for _ in range(int(0.010 / cfg.dt)):
             tick(w, cfg.dt)
-        burst_at([60.0, 50.0, 50.0])
-        for _ in range(int(0.1 / cfg.dt)):
+        burst_at_atom(1)   # B fires 10ms later
+        for _ in range(int(0.5 / cfg.dt)):
             tick(w, cfg.dt)
 
-    # Test: 2 simulated seconds, stimulate A only
-    test_start_idx = len(w.firing_events)
-    for k in range(int(2.0 / cfg.dt)):
-        if (k + 1) % 30 == 0:
-            burst_at([40.0, 50.0, 50.0])
-        tick(w, cfg.dt)
-    test_B_firings = sum(1 for t, ai in w.firing_events[test_start_idx:] if ai == 1)
+    bridge_strength = float(w.k_strength[2])
+    bridge_orient = w.k_orientation[2].tolist()
+    print(f"P3 post-training: bridge strength = {bridge_strength:.2f}, "
+          f"orientation = {bridge_orient}")
 
-    print(f"P3: baseline B firings = {baseline_B_firings}, "
-          f"test B firings = {test_B_firings}")
+    # ---- Test: 5 sim-sec stimulating A only ----
+    test_start_idx = len(w.firing_events)
+    for k in range(int(5.0 / cfg.dt)):
+        if (k + 1) % 30 == 0:
+            burst_at_atom(0)
+        tick(w, cfg.dt)
+    test_B_firings = sum(
+        1 for t, ai in w.firing_events[test_start_idx:] if ai == 1
+    )
+
+    print(f"P3 test: B fires = {test_B_firings} "
+          f"(need >= 2 * max({baseline_B_firings}, 1) = "
+          f"{2 * max(baseline_B_firings, 1)})")
     assert test_B_firings >= 2 * max(baseline_B_firings, 1), (
-        f"P3: test B firings {test_B_firings} not ≥ 2× baseline {baseline_B_firings}"
+        f"P3: test B firings {test_B_firings} not >= 2x baseline {baseline_B_firings}"
     )
