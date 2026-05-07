@@ -72,8 +72,49 @@ def test_growth_amendment_fields_have_safe_defaults():
     assert cfg.mol_fusion_enabled is False
 
 
-def test_AP_perf_flags_default_true():
-    """Plan A.5 perf flags default ON (production path uses both)."""
-    cfg = WorldConfig()
+def test_AP_perf_flags_slot_recycling_default_true():
+    """Plan A.5 slot_recycling_enabled defaults ON."""
+    cfg = WorldConfig(numba_jit_enabled=False)
     assert cfg.slot_recycling_enabled is True
+
+
+def test_AP_jit_guard_requires_valid_cell_to_enable():
+    """numba_jit_enabled can be True, but only with cell >= max(box_size).
+
+    The flag default is False so that bare WorldConfig() calls in unit
+    tests don't require every caller to know repulsion_cell_size geometry.
+    Production TOML configs that want JIT must set both cell and jit
+    explicitly.
+    """
+    cfg = WorldConfig(repulsion_cell_size=1000.0, numba_jit_enabled=True)
     assert cfg.numba_jit_enabled is True
+    assert cfg.slot_recycling_enabled is True
+
+
+def test_jit_guard_fires_when_cell_lt_box():
+    """numba_jit_enabled=True with cell < box raises AssertionError.
+
+    The JIT core in apply_scale_repulsion does an unconditional O(K²)
+    all-pairs loop; the Python path uses a spatial grid keyed on
+    repulsion_cell_size. When cell < box the two paths diverge.
+    """
+    with pytest.raises(AssertionError, match="repulsion_cell_size"):
+        WorldConfig(
+            numba_jit_enabled=True,
+            box_size=(1000.0, 1000.0, 1000.0),
+            repulsion_cell_size=100.0,
+        )
+
+
+def test_jit_guard_silent_when_jit_disabled():
+    """numba_jit_enabled=False with cell < box does NOT raise.
+
+    The Python spatial-grid path is always correct; the guard only
+    protects the JIT path.
+    """
+    cfg = WorldConfig(
+        numba_jit_enabled=False,
+        box_size=(1000.0, 1000.0, 1000.0),
+        repulsion_cell_size=100.0,
+    )
+    assert cfg.numba_jit_enabled is False
