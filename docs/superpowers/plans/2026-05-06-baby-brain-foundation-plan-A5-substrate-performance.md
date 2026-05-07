@@ -1339,4 +1339,29 @@ git log --oneline feat/baby-brain-plan-A5  # ~16 commits
 - **Plan B** — STDP + bridge orientation. Now feasible at full P3 scale.
 - **Plan C** — Audio I/O.
 - **Plan D** — Video I/O.
+
+---
+
+## Mid-flight discoveries
+
+### k_comp_end data-corruption fix (commits 11fdf0a, a3330bb)
+
+While AP12 was running its sustained-load stress test, slot recycling
+exposed a latent bug in `World.allocate_node`: when recycling slot `i`,
+the code was clobbering `k_comp_offset[i+1]` — the start-pointer of
+the *next* slot, not slot `i`'s end-pointer. With the monotonic
+allocator that preceded recycling this was harmless because slot
+i+1 was always free. With recycling, slot i+1 was often a live node
+whose composition span got corrupted.
+
+Fix: split the start-pointer (`k_comp_offset`) and end-pointer
+(`k_comp_end`) into separate arrays. Updated four read sites in
+`physics.py` (`_kill_node`, the two decay paths, `ambient_regeneration`)
+and `tools/classify_molecules.py`. Added backward-compat in
+`snapshot.py` (commit a3330bb): legacy snapshots without `k_comp_end`
+reconstruct it from `k_comp_offset[1:K+1]` on load.
+
+This kind of bug is exactly what AP12-type sustained-load tests
+exist to catch. The fix is invariant-clean — there is now exactly one
+writer of each pointer per slot.
 - Subsequent: E (orchestrator + reward), F (checkpoint extension), G (M4 demo).
