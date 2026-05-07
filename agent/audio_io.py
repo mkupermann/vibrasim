@@ -201,11 +201,50 @@ class AudioIO:
         return n_written
 
     def start(self) -> None:
-        """Open mic + speaker streams and start threads. (Real-device path; lazy import sounddevice.)"""
-        # Implemented in Task 7.
-        raise NotImplementedError("AudioIO.start — coming in Task 7")
+        """Open mic and speaker streams; start capture and playback threads.
+
+        sounddevice is imported lazily so substrate-only users don't pay
+        for the portaudio system dep.
+        """
+        if self._running:
+            return
+        import sounddevice as sd
+
+        def _capture_callback(indata, frames, time_info, status):
+            self._write_input_buffer(indata[:, 0].astype(np.float32))
+
+        def _playback_callback(outdata, frames, time_info, status):
+            block = self._read_output_buffer(frames)
+            if len(block) < frames:
+                # Underrun: pad with silence
+                outdata[:] = 0.0
+                outdata[:len(block), 0] = block
+            else:
+                outdata[:, 0] = block
+
+        self._capture_stream = sd.InputStream(
+            samplerate=self.sample_rate, blocksize=self.block_size,
+            channels=1, dtype="float32", device=self.mic_device,
+            callback=_capture_callback,
+        )
+        self._playback_stream = sd.OutputStream(
+            samplerate=self.sample_rate, blocksize=self.block_size,
+            channels=1, dtype="float32", device=self.speaker_device,
+            callback=_playback_callback,
+        )
+        self._capture_stream.start()
+        self._playback_stream.start()
+        self._running = True
 
     def stop(self) -> None:
-        """Stop threads and close streams."""
-        # Implemented in Task 7.
-        raise NotImplementedError("AudioIO.stop — coming in Task 7")
+        if not self._running:
+            return
+        if self._capture_stream is not None:
+            self._capture_stream.stop()
+            self._capture_stream.close()
+            self._capture_stream = None
+        if self._playback_stream is not None:
+            self._playback_stream.stop()
+            self._playback_stream.close()
+            self._playback_stream = None
+        self._running = False
