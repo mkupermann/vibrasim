@@ -54,6 +54,13 @@ class VideoIO:
         max_frames = int(fps * buffer_seconds)
         self._frame_buffer: deque[np.ndarray] = deque(maxlen=max_frames)
         self._frame_lock = threading.Lock()
+        # Frame-id incremented on every _write_frame_buffer; encoded-features
+        # cache keyed on it. encode_frame is ~5 ms on a 128×128 frame and
+        # dominant when the same frame is shown across many ticks; the cache
+        # makes per-tick video.inject ~20× cheaper in that regime.
+        self._frame_id: int = 0
+        self._cached_frame_id: int = -1
+        self._cached_features: list[tuple[int, int, int, float, bool]] = []
 
         self._capture_thread: Optional[threading.Thread] = None
         self._capture_running = False
@@ -62,27 +69,35 @@ class VideoIO:
         """Direct write — used by tests and by the capture thread."""
         with self._frame_lock:
             self._frame_buffer.append(frame)
+            self._frame_id += 1
 
-    def _read_latest_frame(self) -> Optional[np.ndarray]:
-        """Read the most-recent frame; returns None if buffer is empty."""
+    def _read_latest_frame(self) -> tuple[Optional[np.ndarray], int]:
+        """Read the most-recent frame and its id; returns (None, frame_id) if
+        buffer is empty."""
         with self._frame_lock:
             if len(self._frame_buffer) == 0:
-                return None
-            return self._frame_buffer[-1]
+                return (None, self._frame_id)
+            return (self._frame_buffer[-1], self._frame_id)
 
     def inject_into_substrate(self, world, dt: float) -> int:
-        """Read the most-recent buffered frame; encode features; inject one
-        vibration per feature at its retinotopic port position."""
-        frame = self._read_latest_frame()
+        """Read the most-recent buffered frame; encode features (cached if
+        frame unchanged since last call); inject one vibration per feature
+        at its retinotopic port position."""
+        frame, frame_id = self._read_latest_frame()
         if frame is None:
             return 0
-        downsampled = downsample_frame(frame, output_size=(128, 128))
-        features = encode_frame(
-            downsampled,
-            patch_grid=self.patch_grid,
-            filter_bank=self._filter_bank,
-            amplitude_threshold=self.amplitude_threshold,
-        )
+        if frame_id == self._cached_frame_id:
+            features = self._cached_features
+        else:
+            downsampled = downsample_frame(frame, output_size=(128, 128))
+            features = encode_frame(
+                downsampled,
+                patch_grid=self.patch_grid,
+                filter_bank=self._filter_bank,
+                amplitude_threshold=self.amplitude_threshold,
+            )
+            self._cached_features = features
+            self._cached_frame_id = frame_id
         n_injected = 0
         for px, py, o, magnitude, sign in features:
             pos = patch_to_port_position(
