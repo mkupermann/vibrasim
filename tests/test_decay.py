@@ -35,7 +35,8 @@ def test_pair_decays_eventually():
     """Decayed-fraction over many seeded pairs and many ticks should match 1 - exp(-t/tau)."""
     cfg = WorldConfig(n_initial_vibrations=0, box_size=(1000.0, 1000.0, 1000.0),
                       n_vibrations_max=4096, n_nodes_max=1024,
-                      pair_decay_time=5.0, dt=1.0 / 60.0, rng_seed=42)
+                      pair_decay_time=5.0, dt=1.0 / 60.0, rng_seed=42,
+                      repulsion_cell_size=1000.0)
     n_pairs = 200
     w = World(cfg)
     # Pair k at slot k; its two constituents at slots n_pairs + 2k, n_pairs + 2k + 1.

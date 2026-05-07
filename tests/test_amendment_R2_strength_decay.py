@@ -88,11 +88,13 @@ def test_molecule_near_firing_atom_gets_strengthened():
         n_initial_vibrations=0,
         n_vibrations_max=128,
         n_nodes_max=4,
+        box_size=(200.0, 200.0, 200.0),
         rng_seed=42,
         neuron_dynamics_enabled=True,
         theta_fire=4.0, n_emit=8, r_integrate=5.0,
         t_refractory=0.05, tau_membrane=0.5,
         r_strengthen=10.0,
+        repulsion_cell_size=200.0,
     )
     w = World(cfg)
     # Atom at (50, 50, 50) — will fire when input vibrations arrive

@@ -18,6 +18,7 @@ def _empty_world(box=200.0, n_max=128):
         n_vibrations_max=128,
         n_nodes_max=n_max,
         rng_seed=42,
+        repulsion_cell_size=float(box),
     )
     return World(cfg)
 
@@ -137,6 +138,7 @@ def test_molecule_polarity_random_at_formation():
         n_vibrations_max=4,
         n_nodes_max=3 * n_molecules + 10,
         rng_seed=42,
+        repulsion_cell_size=2000.0,
     )
     w = World(cfg)
     spacing = 25.0

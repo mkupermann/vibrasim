@@ -17,6 +17,7 @@ def _world_with_atoms(box=200.0, n_max=64):
         n_vibrations_max=64,
         n_nodes_max=n_max,
         rng_seed=42,
+        repulsion_cell_size=float(box),
     )
     return World(cfg)
 

@@ -23,7 +23,8 @@ def test_tick_decay_then_bind_order():
     """A tick should update positions before binding scans."""
     # Smoke test — full tick on a world with 100 vibrations should not crash
     cfg = WorldConfig(n_initial_vibrations=100, box_size=(200., 200., 200.),
-                      n_vibrations_max=256, n_nodes_max=64, rng_seed=42)
+                      n_vibrations_max=256, n_nodes_max=64, rng_seed=42,
+                      repulsion_cell_size=200.0)
     w = World(cfg)
     for _ in range(10):
         tick(w, cfg.dt)

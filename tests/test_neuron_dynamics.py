@@ -21,6 +21,7 @@ def _world_with_atom(centre, *, enabled=True, theta_fire=4.0, n_emit=8,
         r_integrate=r_integrate,
         t_refractory=t_refractory,
         tau_membrane=tau_membrane,
+        repulsion_cell_size=200.0,
     )
     w = World(cfg)
     # One level-4 atom at centre

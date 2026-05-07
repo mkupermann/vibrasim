@@ -7,7 +7,7 @@ from world.config import WorldConfig, INITIAL_CONFIG, load_config
 def test_default_config_matches_spec():
     cfg = WorldConfig()
     assert cfg.n_initial_vibrations == 1000
-    assert cfg.box_size == (1000.0, 1000.0, 1000.0)         # CHANGED: 3-tuple
+    assert cfg.box_size == (60.0, 60.0, 60.0)               # CHANGED: 3-tuple, matches calibration TOMLs
     assert cfg.r_1 == 5.0
     assert cfg.r_2 == 10.0
     assert cfg.repulsion_k == 100.0                         # NEW
@@ -33,10 +33,10 @@ def test_toml_box_size_list_to_tuple():
     import tempfile, pathlib
     from world.config import load_config
     with tempfile.NamedTemporaryFile(mode='w', suffix='.toml', delete=False) as f:
-        f.write('box_size = [500.0, 500.0, 500.0]\n')
+        f.write('box_size = [50.0, 50.0, 50.0]\n')
         path = pathlib.Path(f.name)
     cfg = load_config(path)
-    assert cfg.box_size == (500.0, 500.0, 500.0)
+    assert cfg.box_size == (50.0, 50.0, 50.0)
 
 
 def test_initial_config_singleton():
@@ -79,12 +79,10 @@ def test_AP_perf_flags_slot_recycling_default_true():
 
 
 def test_AP_jit_guard_requires_valid_cell_to_enable():
-    """numba_jit_enabled can be True, but only with cell >= max(box_size).
+    """numba_jit_enabled=True with cell >= max(box_size) does not raise.
 
-    The flag default is False so that bare WorldConfig() calls in unit
-    tests don't require every caller to know repulsion_cell_size geometry.
-    Production TOML configs that want JIT must set both cell and jit
-    explicitly.
+    The default box_size=(60,60,60) and repulsion_cell_size=100 already
+    satisfy this; here we also verify an explicit oversized cell works.
     """
     cfg = WorldConfig(repulsion_cell_size=1000.0, numba_jit_enabled=True)
     assert cfg.numba_jit_enabled is True
@@ -118,3 +116,16 @@ def test_jit_guard_silent_when_jit_disabled():
         repulsion_cell_size=100.0,
     )
     assert cfg.numba_jit_enabled is False
+
+
+def test_default_worldconfig_constructs_without_raising():
+    """Regression: bare WorldConfig() must not raise.
+
+    With box_size=(60,60,60) and repulsion_cell_size=100, the JIT guard
+    condition (cell >= max(box)) is satisfied even when numba_jit_enabled
+    defaults to True.
+    """
+    cfg = WorldConfig()
+    assert cfg.numba_jit_enabled is True
+    assert cfg.box_size == (60.0, 60.0, 60.0)
+    assert cfg.repulsion_cell_size >= max(cfg.box_size)
