@@ -1467,4 +1467,43 @@ git log --oneline feat/baby-brain-plan-B                   # ~10 commits on Plan
 - **Plan D** — Video I/O (webcam, Gabor patch features)
 - **Plan E** — Reward channel + closed-loop orchestrator (depends on A, C, D)
 - **Plan F** — Brain checkpoint / resume (extend Plan A's k_strength persistence + Plan B's k_orientation persistence + firing event log)
+
+---
+
+## Mid-flight discoveries
+
+### P2 timing curve — pre-training required (Task 11)
+
+The plan's original P2 used a fresh world per Δt and ran 20 trials at the test Δt. In practice, this meant negative-Δt sweeps still applied LTP (because the bridge had no prior orientation, so the alignment guard routed them to LTP), making the LTD trough assertion impossible to meet.
+
+Fix: each Δt's fresh world is now pre-trained with 10 LTP cycles at Δt=+10ms before the timing-curve probe runs. This establishes A→B orientation; subsequent test trials at negative Δt are then correctly classified as anti-causal and trigger LTD. Implementation: `tests/test_stdp_e2e.py` Task 11 commit.
+
+### P3 plasticity-driven prediction — geometry redesign (Task 11 follow-up, commit `e4bbbc6`)
+
+The plan's original P3 (A=(40,50,50), B=(60,50,50), bridges at x=42-58, box=100³) had an acoustic propagation chain that drove B's baseline firing rate to 29 in 5 sim-sec — making the 2× margin unreachable.
+
+Two distinct issues:
+
+1. **Acoustic chain not actually broken**: A's emit_speed=15 vibrations cover 75 units in 5 sim-sec; B at distance 20 was directly within reach.
+2. **Periodic wrap collapse**: A naive geometry fix (A=10, B=90 in box=100³) had periodic-image distance min(80, 20) = 20, re-collapsing the path.
+3. **Ambient generation noise**: lambda_gen default filled the box with background vibrations, firing B ~80 times per 5 sec regardless of training.
+
+Final geometry (commit `e4bbbc6`):
+- box=(160, 50, 50) so periodic wrap can't shorten the A-B path
+- A at (10, 25, 25), B at (90, 25, 25), distance 80 (just over 75-unit emission reach)
+- Single bridge at (82, 25, 25) — synaptic search centre at (82+8, 25, 25) lands exactly on B
+- lambda_gen=0, lambda_dec=0 to eliminate ambient noise
+- Bridge starts at strength=4 (below transmission threshold=5)
+- After 50 LTP trials at delta_LTP=2.0: bridge saturated to ~999 strength, orientation [1, 0, 0], baseline=0, test=38
+
+The redesign engineered baseline cleanly to 0, so the assertion was reformulated from `2× max(baseline, 1)` to an absolute floor of 5 (with explicit `baseline == 0` guard) — see commit landing Plan B follow-ups.
+
+### firing_events pruning — deferred follow-up
+
+Final review identified that `apply_stdp` re-scans the full `firing_events` list every tick with no pruning. Two consequences:
+
+1. Long-run cost: ~400M inner iterations for 5 sim-sec at stdp_enabled=True (consistent with P3's 30-sec wall clock).
+2. Silent double-counting: a causal pair within τ_LTP straddles ~2 ticks at dt=1/60. Each tick processes it again, ~2× amplifying LTP/LTD per pair.
+
+Fix is small (end-of-`apply_stdp` pruning by `world.t - τ_LTP`) but changes the numeric behaviour of every STDP test — BS1's expected value would halve, P3's tuning would shift. **Deferred to a follow-up plan after Plan B merges**, with proper test recalibration as part of the scope.
 - **Plan G** — End-to-end demo (M1-M4 acceptance, depends on everything)
