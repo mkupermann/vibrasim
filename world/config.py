@@ -75,6 +75,20 @@ class WorldConfig:
     synaptic_transmission_strength: float = 0.5     # charge deposited per crossing aligned vibration
     synaptic_transmission_threshold: float = 5.0    # min bridge strength before transmission activates
 
+    # Plan C — audio I/O
+    audio_io_enabled: bool = False
+    audio_sample_rate: int = 16000
+    audio_block_size: int = 256
+    audio_fft_size: int = 512
+    audio_buffer_seconds: float = 30.0
+    audio_amplitude_threshold: float = 0.01
+    audio_freq_min: float = 50.0
+    audio_freq_max: float = 8000.0
+    audio_input_port_origin: tuple[float, float, float] = (0.0, 0.0, 0.0)
+    audio_input_port_size: tuple[float, float, float] = (15.0, 15.0, 15.0)
+    audio_output_port_origin: tuple[float, float, float] = (45.0, 0.0, 0.0)
+    audio_output_port_size: tuple[float, float, float] = (15.0, 15.0, 15.0)
+
     # Plan A.5 — substrate performance
     slot_recycling_enabled: bool = True   # World.allocate_node reuses dead slots before extending k_count
     numba_jit_enabled: bool = True        # @njit cores for hot loops; safe with the 60³ default box
