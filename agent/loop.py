@@ -41,8 +41,32 @@ class AgentLoop:
             self.audio_io.read_from_substrate(self.world, dt)
 
     def start_realtime(self) -> None:
-        """Spawn substrate thread. Filled in Task 9."""
-        raise NotImplementedError("AgentLoop.start_realtime — Task 9")
+        """Spawn a daemon substrate thread that calls step(dt) on a
+        target cadence of agent_dt_realtime_ms milliseconds, using
+        overshoot-compensated sleep to stay on schedule."""
+        if self._realtime_running:
+            return
+        import threading
+        dt = self.world.config.dt
+        sleep_s = self.world.config.agent_dt_realtime_ms / 1000.0
+        self._realtime_running = True
+
+        def _loop():
+            while self._realtime_running:
+                t0 = time.perf_counter()
+                self.step(dt)
+                elapsed = time.perf_counter() - t0
+                remaining = sleep_s - elapsed
+                if remaining > 0:
+                    time.sleep(remaining)
+
+        self._realtime_thread = threading.Thread(target=_loop, daemon=True)
+        self._realtime_thread.start()
 
     def stop_realtime(self) -> None:
-        raise NotImplementedError("AgentLoop.stop_realtime — Task 9")
+        """Signal the substrate thread to stop and join with a 2-second
+        timeout."""
+        self._realtime_running = False
+        if self._realtime_thread is not None:
+            self._realtime_thread.join(timeout=2.0)
+            self._realtime_thread = None
