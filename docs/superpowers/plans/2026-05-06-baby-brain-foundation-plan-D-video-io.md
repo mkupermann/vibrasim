@@ -1034,3 +1034,35 @@ git log --oneline feat/baby-brain-plan-D  # ~10 commits including the plan
 - **Plan E** — Reward channel + closed-loop orchestrator. Depends on A + C + D. **Spec needs to be brainstormed** (no spec exists yet) before writing the plan.
 - **Plan F** — Brain checkpoint / resume. Extends snapshot persistence to handle long-running brain state including audio/video buffers.
 - **Plan G** — End-to-end M4 demo (glass-of-water).
+
+---
+
+## Mid-flight discoveries and known limitations
+
+### encode_frame: per-orientation threshold (not winner-take-all)
+
+Final review (2026-05-07) flagged: a single perfect vertical edge fires 7 of 8 orientations — every filter except the one orthogonal to the edge — because the threshold gate (`magnitude < amplitude_threshold`) is applied independently per orientation. VC4/VC5 pass because filter 0 (resp. 4) is *among* the firing orientations, not because it's dominant.
+
+Consequences:
+- ~7× feature inflation per simple edge frame (224 features for a single edge at 16×16 patches × 8 orientations).
+- The video port's Z-axis (orientation depth) becomes a redundancy dimension rather than a discriminative one.
+- Real webcam frames could overflow the substrate's 2048-vibration capacity in a few frames.
+
+Fix is a deliberate spec decision (winner-take-all vs relative-magnitude gate vs current additive) deferred to a follow-up. Headline tests (I4, VC8) still discriminate well — redundancy dilutes information density, doesn't break discrimination. Plan E integration is the natural place to revisit because that's where audio + video + reward share the vibration pool.
+
+### encode_frame switch: centre-sampling → full-frame convolve2d
+
+The plan's original encode_frame (Task 4 Step 4.3) sampled a 5×5 region from each patch's centre. With 8×8 patches, the centre is 4 px from the boundary — an edge that falls between patches isn't visible to either patch's centre region, so VC4/VC5 (vertical/horizontal edge detection) failed.
+
+Fix: full-frame convolve2d (reflect-padded, pure NumPy — no scipy dep) followed by per-patch peak-abs response. The returned tuple structure, threshold logic, and sign semantics are unchanged.
+
+### VC8 test frame coordinates
+
+The plan's original VC8 used a 1-px vertical line at `x=320` (in a 640-wide frame) and a half-and-half edge at `x=320`. After 128×128 downsampling both inputs map to identical patch-column edges — Jaccard 1.0, not the < 0.5 the test asserted.
+
+Fix: vertical line moved to x=160 (left quarter), horizontal line to y=120 (top quarter), half-and-half stays at x=320. Three retinotopically distinct shapes that also have distinct orientation distributions. Final Jaccards: V↔H=0.04, V↔B=0.00, H↔B=0.06.
+
+### Deferred performance follow-ups (Plan E precondition)
+
+- `inject_into_substrate` recomputes `np.where(~world.s_alive)` per feature. At 224 features × 30 fps that's 6720 full alive-mask scans per second. Same pattern as audio's `inject_into_substrate`, but Plan D's higher feature density makes the cost meaningful. Cache the free-index list outside the loop. Same fix benefits both bridges.
+- `encode_frame` allocates 8 × 128 × 128 float32 intermediate response maps per call (~512 KB transient). Acceptable for a single bridge; worth pre-allocating buffers if Plan E runs both bridges at full rate.
