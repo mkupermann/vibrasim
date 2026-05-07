@@ -453,6 +453,31 @@ def _bind_check_pairs_njit(
     return out_i, out_j, out_target, n_out
 
 
+def _gather_leaf_vibration_indices(world, node_idx: int) -> np.ndarray:
+    """Walk the composition tree from a node down to its leaf vibrations.
+
+    Returns an int64 array of vibration indices (level-1 electrons store
+    vibration indices in their composition span — k_comp_kind == 0).
+    Internal nodes (k_comp_kind != 0) store node indices; they are traversed
+    recursively via an explicit stack.
+    """
+    out: list[int] = []
+    stack = [int(node_idx)]
+    while stack:
+        i = stack.pop()
+        start = int(world.k_comp_offset[i])
+        end = int(world.k_comp_end[i])
+        if int(world.k_comp_kind[i]) == 0:
+            # Leaf node — composition span is vibration indices
+            for k in range(start, end):
+                out.append(int(world.k_comp_indices[k]))
+        else:
+            # Internal node — composition span is node indices
+            for k in range(start, end):
+                stack.append(int(world.k_comp_indices[k]))
+    return np.array(out, dtype=np.int64)
+
+
 def bind_nodes_upward(world) -> int:
     cfg = world.config
     box = np.asarray(cfg.box_size, dtype=np.float64)
@@ -520,8 +545,16 @@ def bind_nodes_upward(world) -> int:
             new_freq = f1 + f2
             new_pol = bool(world.rng.random() < 0.5)
             constituents = np.array([i, j], dtype=np.int32)
-            world.allocate_node(mid, new_freq, new_pol, level=target,
-                                constituents=constituents, comp_kind=1)
+            new_node = world.allocate_node(mid, new_freq, new_pol, level=target,
+                                           constituents=constituents, comp_kind=1)
+            # Plan E: propagate reward polarity into newly formed atoms (level 4)
+            if target == 4:
+                vib_indices = _gather_leaf_vibration_indices(world, new_node)
+                if len(vib_indices) > 0:
+                    polarities = world.s_reward_polarity[vib_indices]
+                    if (polarities != 0).all() and (polarities == polarities[0]).all():
+                        world.k_reward_polarity[new_node] = int(polarities[0])
+                    # else: stays at default 0 (mixed or conflicting)
             _kill_node(world, i)
             _kill_node(world, j)
             world.k_locked_this_tick[i] = True
@@ -563,8 +596,16 @@ def bind_nodes_upward(world) -> int:
                 new_freq = f1 + f2
                 new_pol = bool(world.rng.random() < 0.5)
                 constituents = np.array([i, j], dtype=np.int32)
-                world.allocate_node(mid, new_freq, new_pol, level=target,
-                                    constituents=constituents, comp_kind=1)
+                new_node = world.allocate_node(mid, new_freq, new_pol, level=target,
+                                               constituents=constituents, comp_kind=1)
+                # Plan E: propagate reward polarity into newly formed atoms (level 4)
+                if target == 4:
+                    vib_indices = _gather_leaf_vibration_indices(world, new_node)
+                    if len(vib_indices) > 0:
+                        polarities = world.s_reward_polarity[vib_indices]
+                        if (polarities != 0).all() and (polarities == polarities[0]).all():
+                            world.k_reward_polarity[new_node] = int(polarities[0])
+                        # else: stays at default 0 (mixed or conflicting)
                 _kill_node(world, i)
                 _kill_node(world, j)
                 world.k_locked_this_tick[i] = True
