@@ -129,3 +129,16 @@ def test_default_worldconfig_constructs_without_raising():
     assert cfg.numba_jit_enabled is True
     assert cfg.box_size == (60.0, 60.0, 60.0)
     assert cfg.repulsion_cell_size >= max(cfg.box_size)
+
+
+def test_stdp_amendment_fields_have_safe_defaults():
+    """Plan B new fields must default off so legacy configs are unaffected."""
+    cfg = WorldConfig()
+    assert cfg.stdp_enabled is False
+    assert cfg.tau_LTP == 0.020
+    assert cfg.tau_LTD == 0.020
+    assert cfg.delta_LTP == 1.0
+    assert cfg.delta_LTD == 0.5
+    assert cfg.r_bridge == 5.0
+    assert cfg.synaptic_transmission_strength == 0.5
+    assert cfg.synaptic_transmission_threshold == 5.0

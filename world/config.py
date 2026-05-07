@@ -65,6 +65,16 @@ class WorldConfig:
     emit_band_ratios: tuple[float, float, float] = (0.08, 1.0, 12.5)  # PHASE4 emission band multipliers
     mol_fusion_enabled: bool = False      # PHASE3-R1: allow molecule + molecule binding
 
+    # Plan B — STDP and directional plasticity
+    stdp_enabled: bool = False              # master switch — off preserves legacy behaviour
+    tau_LTP: float = 0.020                  # pre-before-post window (s)
+    tau_LTD: float = 0.020                  # post-before-pre window (s)
+    delta_LTP: float = 1.0                  # LTP strength increment per qualifying pair
+    delta_LTD: float = 0.5                  # LTD strength decrement per qualifying pair
+    r_bridge: float = 5.0                   # bridge tube radius around the A→B line segment
+    synaptic_transmission_strength: float = 0.5     # charge deposited per crossing aligned vibration
+    synaptic_transmission_threshold: float = 5.0    # min bridge strength before transmission activates
+
     # Plan A.5 — substrate performance
     slot_recycling_enabled: bool = True   # World.allocate_node reuses dead slots before extending k_count
     numba_jit_enabled: bool = True        # @njit cores for hot loops; safe with the 60³ default box
