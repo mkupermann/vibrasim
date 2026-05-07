@@ -61,6 +61,7 @@ def _make_electron_3d(w: World, idx: int, pos, freq, pol):
     if idx >= w.k_count:
         w.k_count = idx + 1
         w.k_comp_offset[idx + 1] = w.k_comp_offset[idx]
+        w.k_comp_end[idx] = w.k_comp_offset[idx]
 
 
 def test_pair_forms_3d(empty_world):
@@ -106,6 +107,7 @@ def test_polarity_randomization_at_electron_level_3d():
         n_vibrations_max=2 * n_pairs,
         n_nodes_max=n_pairs,
         rng_seed=42,
+        repulsion_cell_size=2000.0,
     )
     w = World(cfg)
     spacing = 20.0
@@ -139,6 +141,7 @@ def test_polarity_randomization_at_pair_level_3d():
         n_vibrations_max=4,
         n_nodes_max=3 * n_pairs,
         rng_seed=42,
+        repulsion_cell_size=2000.0,
     )
     w = World(cfg)
     spacing = 30.0
@@ -158,8 +161,10 @@ def test_polarity_randomization_at_pair_level_3d():
         w.k_alive[idx1] = True
         w.k_comp_offset[idx0] = w.k_comp_used
         w.k_comp_offset[idx0 + 1] = w.k_comp_used
+        w.k_comp_end[idx0] = w.k_comp_used
         w.k_comp_offset[idx1] = w.k_comp_used
         w.k_comp_offset[idx1 + 1] = w.k_comp_used
+        w.k_comp_end[idx1] = w.k_comp_used
     w.k_count = 2 * n_pairs
 
     bind_nodes_upward(w)
@@ -181,6 +186,7 @@ def _make_electron(w: World, idx: int, pos, freq, pol):
     if idx >= w.k_count:
         w.k_count = idx + 1
         w.k_comp_offset[idx + 1] = w.k_comp_offset[idx]
+        w.k_comp_end[idx] = w.k_comp_offset[idx]
 
 
 def _make_node(w: World, idx: int, pos, freq, pol, level, constituents, kind):
@@ -195,6 +201,7 @@ def _make_node(w: World, idx: int, pos, freq, pol, level, constituents, kind):
     w.k_comp_indices[start:start + n_comp] = constituents
     w.k_comp_offset[idx] = start
     w.k_comp_offset[idx + 1] = start + n_comp
+    w.k_comp_end[idx] = start + n_comp
     w.k_comp_used = start + n_comp
     w.k_comp_kind[idx] = kind
     if idx >= w.k_count:
@@ -213,7 +220,7 @@ def test_pair_forms_with_3d_positions(empty_world):
     assert not w.k_alive[0]
     assert not w.k_alive[1]
     start = w.k_comp_offset[p]
-    end = w.k_comp_offset[p + 1]
+    end = w.k_comp_end[p]
     assert end - start == 2
     assert sorted(w.k_comp_indices[start:end].tolist()) == [0, 1]
     assert w.k_comp_kind[p] == 1

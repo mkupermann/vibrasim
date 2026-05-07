@@ -17,6 +17,7 @@ def _world_with_atoms(box=200.0, n_max=64):
         n_vibrations_max=64,
         n_nodes_max=n_max,
         rng_seed=42,
+        repulsion_cell_size=float(box),
     )
     return World(cfg)
 
@@ -32,6 +33,7 @@ def _add_atom(w: World, idx: int, freq: float, pol: bool = True):
     if idx >= w.k_count:
         w.k_count = idx + 1
         w.k_comp_offset[idx + 1] = w.k_comp_offset[idx]
+        w.k_comp_end[idx] = w.k_comp_offset[idx]
 
 
 def _add_molecule(w: World, idx: int, level: int, constituent_node_indices: list[int]):
@@ -49,6 +51,7 @@ def _add_molecule(w: World, idx: int, level: int, constituent_node_indices: list
         w.k_comp_indices[start + j] = cidx
     w.k_comp_offset[idx] = start
     w.k_comp_offset[idx + 1] = start + n
+    w.k_comp_end[idx] = start + n
     w.k_comp_used = start + n
     if idx >= w.k_count:
         w.k_count = idx + 1

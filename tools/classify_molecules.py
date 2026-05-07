@@ -34,7 +34,7 @@ def _ground_atom_decades(world, node_idx: int) -> list[int]:
         return []
     # Higher-order molecule: composition is other nodes (kind=1).
     start = int(world.k_comp_offset[node_idx])
-    end = int(world.k_comp_offset[node_idx + 1])
+    end = int(world.k_comp_end[node_idx])
     for j in range(start, end):
         child = int(world.k_comp_indices[j])
         out.extend(_ground_atom_decades(world, child))

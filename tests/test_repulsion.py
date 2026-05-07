@@ -22,6 +22,7 @@ def test_no_repulsion_below_threshold():
     """Frequency ratio < 1000 → no force."""
     cfg = WorldConfig(n_initial_vibrations=0, box_size=(1000., 1000., 1000.),
                       n_vibrations_max=4, n_nodes_max=4, repulsion_k=100.0,
+                      repulsion_cell_size=1000.0,
                       rng_seed=42)
     w = World(cfg)
     _two_nodes(w, 1000., 1500., [100., 100., 100.], [200., 100., 100.])  # ratio 1.5
@@ -36,6 +37,7 @@ def test_repulsion_above_threshold():
     """Frequency ratio > 1000 → nodes drift apart."""
     cfg = WorldConfig(n_initial_vibrations=0, box_size=(1000., 1000., 1000.),
                       n_vibrations_max=4, n_nodes_max=4, repulsion_k=1000.0,
+                      repulsion_cell_size=1000.0,
                       rng_seed=42)
     w = World(cfg)
     _two_nodes(w, 100., 200000., [100., 100., 100.], [200., 100., 100.])  # ratio 2000
@@ -51,6 +53,7 @@ def test_atoms_participate():
     """Heavier atoms move less under same force, but they do move."""
     cfg = WorldConfig(n_initial_vibrations=0, box_size=(1000., 1000., 1000.),
                       n_vibrations_max=4, n_nodes_max=4, repulsion_k=1000.0,
+                      repulsion_cell_size=1000.0,
                       rng_seed=42)
     w = World(cfg)
     _two_nodes(w, 100., 200000., [100., 100., 100.], [200., 100., 100.])

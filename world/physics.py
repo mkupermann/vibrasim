@@ -90,9 +90,161 @@ _UPGRADE_TARGET = {
     # Cap at level 11 (deca-atomic). Phase 3+ may revisit.
 }
 
+# PHASE3-R1: additional molecule+molecule entries, gated by cfg.mol_fusion_enabled.
+# These are appended to the lookup at runtime so legacy behaviour is preserved
+# when the flag is off.
+_UPGRADE_TARGET_FUSION = {
+    (5, 5): 6,
+    (5, 6): 7, (6, 5): 7,
+    (5, 7): 8, (7, 5): 8,
+    (6, 6): 7,
+    (6, 7): 8, (7, 6): 8,
+    (7, 7): 8,
+    (5, 8): 9, (8, 5): 9,
+    (6, 8): 9, (8, 6): 9,
+    (7, 8): 9, (8, 7): 9,
+    (8, 8): 9,
+}
+
+# Plan A.5 — numpy-array versions for Numba JIT lookup. Numba can't
+# index Python dicts efficiently; small dense arrays are the canonical
+# pattern. Built once at module import. Cells without an upgrade hold -1.
+# The dict versions above are kept for the Python (non-JIT) path.
+_MAX_LEVEL = 12
+_UPGRADE_TARGET_ARRAY = np.full((_MAX_LEVEL, _MAX_LEVEL), -1, dtype=np.int8)
+for (li, lj), target in _UPGRADE_TARGET.items():
+    _UPGRADE_TARGET_ARRAY[li, lj] = target
+
+_UPGRADE_TARGET_FUSION_ARRAY = np.full((_MAX_LEVEL, _MAX_LEVEL), -1, dtype=np.int8)
+for (li, lj), target in _UPGRADE_TARGET_FUSION.items():
+    _UPGRADE_TARGET_FUSION_ARRAY[li, lj] = target
+
 
 def _decade(freq: float) -> int:
     return int(math.floor(math.log10(freq)))
+
+
+def _kill_node(world, i: int) -> None:
+    """Mark node i dead, decrement ref counts of its constituents, and
+    push newly-recyclable slots onto the free list.
+
+    Single source of truth for slot bookkeeping. Every code path that
+    deactivates a node must funnel through this helper, otherwise ref
+    counts go stale and slots are recycled prematurely.
+
+    A slot is recyclable iff k_alive[i] == False AND k_ref_count[i] == 0.
+
+    When `cfg.slot_recycling_enabled` is False, falls back to the legacy
+    "just deactivate, no bookkeeping" behaviour — preserved for regression
+    diagnosis.
+    """
+    cfg = world.config
+    if not cfg.slot_recycling_enabled:
+        # Legacy path: just deactivate
+        world.k_alive[i] = False
+        return
+
+    if not world.k_alive[i]:
+        return  # already dead — no-op
+
+    world.k_alive[i] = False
+
+    # Decrement ref counts of constituents — only when this slot's composition
+    # references node indices (comp_kind != 0), not vibration indices.
+    if world.k_comp_kind[i] != 0:
+        start = int(world.k_comp_offset[i])
+        end = int(world.k_comp_end[i])
+        for j in range(start, end):
+            c = int(world.k_comp_indices[j])
+            if 0 <= c < world.k_count:
+                world.k_ref_count[c] -= 1
+                if world.k_ref_count[c] <= 0 and not world.k_alive[c]:
+                    if c not in world._free_slots_set:
+                        world._free_slots.append(c)
+                        world._free_slots_set.add(c)
+
+    # Maybe i itself is now recyclable
+    if world.k_ref_count[i] == 0:
+        if i not in world._free_slots_set:
+            world._free_slots.append(i)
+            world._free_slots_set.add(i)
+
+
+@njit(cache=True)
+def _bind_check_pairs_njit(
+    candidate_i: np.ndarray, candidate_j: np.ndarray, n_candidates: int,
+    k_pos: np.ndarray, k_alive: np.ndarray, k_locked_this_tick: np.ndarray,
+    k_freq: np.ndarray, k_pol: np.ndarray, k_level: np.ndarray,
+    box: np.ndarray, r2_sq: float,
+    fmin_ratio: float, fmax_ratio: float,
+    upgrade_table: np.ndarray, fusion_table: np.ndarray, mol_fusion_enabled: bool,
+) -> tuple:
+    """JIT core for bind_nodes_upward.
+
+    For each candidate pair (i, j) in order, check all binding gates:
+    alive, locked, level-table lookup, polarity, distance, decade, freq-ratio.
+    Returns parallel arrays (out_i, out_j, out_target, n_out) of pairs that
+    pass all gates, preserving input order so the Python wrapper can apply
+    break-semantics correctly.
+
+    Note: k_alive and k_locked_this_tick are snapshots at call time; the
+    Python wrapper enforces the break / single-bind-per-i rule by checking
+    the lock array after each allocation.
+    """
+    out_i = np.zeros(n_candidates, dtype=np.int32)
+    out_j = np.zeros(n_candidates, dtype=np.int32)
+    out_target = np.zeros(n_candidates, dtype=np.int8)
+    n_out = 0
+    for k in range(n_candidates):
+        i = candidate_i[k]
+        j = candidate_j[k]
+        if not k_alive[i] or not k_alive[j]:
+            continue
+        if k_locked_this_tick[i] or k_locked_this_tick[j]:
+            continue
+        # Level-table lookup
+        li = int(k_level[i])
+        lj = int(k_level[j])
+        target = upgrade_table[li, lj]
+        if target == -1 and mol_fusion_enabled:
+            target = fusion_table[li, lj]
+        if target == -1:
+            continue
+        # Polarity gate
+        if k_pol[i] == k_pol[j]:
+            continue
+        # Periodic distance squared
+        dx = k_pos[i, 0] - k_pos[j, 0]
+        dy = k_pos[i, 1] - k_pos[j, 1]
+        dz = k_pos[i, 2] - k_pos[j, 2]
+        dx -= box[0] * round(dx / box[0])
+        dy -= box[1] * round(dy / box[1])
+        dz -= box[2] * round(dz / box[2])
+        d2 = dx*dx + dy*dy + dz*dz
+        if d2 >= r2_sq:
+            continue
+        # Decade gate — inline log10 floor
+        f1 = k_freq[i]
+        f2 = k_freq[j]
+        if f1 <= 0.0 or f2 <= 0.0:
+            continue
+        d1 = int(np.floor(np.log10(f1)))
+        d2_dec = int(np.floor(np.log10(f2)))
+        if d1 != d2_dec:
+            continue
+        # Freq ratio gate
+        if f1 < f2:
+            ratio = (f2 - f1) / f1
+        else:
+            ratio = (f1 - f2) / f2
+        if ratio < fmin_ratio or ratio > fmax_ratio:
+            continue
+        # Pair passes all gates
+        out_i[n_out] = i
+        out_j[n_out] = j
+        out_target[n_out] = target
+        n_out += 1
+    return out_i, out_j, out_target, n_out
 
 
 def bind_nodes_upward(world) -> int:
@@ -107,48 +259,144 @@ def bind_nodes_upward(world) -> int:
 
     world.k_locked_this_tick[:world.k_count] = False
     formed = 0
-    grid = build_grid(world.k_pos[:world.k_count], world.k_alive[:world.k_count], box, r2)
+    K = world.k_count
+    grid = build_grid(world.k_pos[:K], world.k_alive[:K], box, r2)
 
-    for i in range(world.k_count):
-        if not world.k_alive[i] or world.k_locked_this_tick[i]:
-            continue
-        nbrs = neighbors_of(grid, world.k_pos[i], box, r2, exclude_self=True, query_index=i)
-        for j in nbrs:
-            if j <= i:
+    if cfg.numba_jit_enabled:
+        # Build the full candidate list in Python (spatial-hash query stays
+        # in Python; it is already JIT'd internally).  Preserve the same
+        # iteration order as the legacy path so break-semantics are respected.
+        cand_i_list: list[int] = []
+        cand_j_list: list[int] = []
+        for i in range(K):
+            if not world.k_alive[i] or world.k_locked_this_tick[i]:
+                continue
+            nbrs = neighbors_of(grid, world.k_pos[i], box, r2,
+                                 exclude_self=True, query_index=i)
+            for j in nbrs:
+                if j <= i:
+                    continue
+                cand_i_list.append(i)
+                cand_j_list.append(j)
+
+        n_candidates = len(cand_i_list)
+        if n_candidates == 0:
+            return 0
+
+        candidate_i = np.array(cand_i_list, dtype=np.int32)
+        candidate_j = np.array(cand_j_list, dtype=np.int32)
+
+        out_i, out_j, out_target, n_out = _bind_check_pairs_njit(
+            candidate_i, candidate_j, n_candidates,
+            world.k_pos[:K], world.k_alive[:K], world.k_locked_this_tick[:K],
+            world.k_freq[:K], world.k_pol[:K], world.k_level[:K],
+            box, r2_sq, fmin_ratio, fmax_ratio,
+            _UPGRADE_TARGET_ARRAY, _UPGRADE_TARGET_FUSION_ARRAY,
+            bool(cfg.mol_fusion_enabled),
+        )
+
+        # Process JIT-returned pairs in order, enforcing break-per-i semantics:
+        # after a successful bind, both i and j are locked so subsequent pairs
+        # involving either are skipped — exactly matching the legacy `break`.
+        for k in range(n_out):
+            i = int(out_i[k])
+            j = int(out_j[k])
+            target = int(out_target[k])
+            # Re-check liveness and lock after earlier iterations may have
+            # consumed these slots.
+            if not world.k_alive[i] or world.k_locked_this_tick[i]:
                 continue
             if not world.k_alive[j] or world.k_locked_this_tick[j]:
                 continue
-            li = int(world.k_level[i])
-            lj = int(world.k_level[j])
-            target = _UPGRADE_TARGET.get((li, lj))
-            if target is None:
-                continue
-            if world.k_pol[i] == world.k_pol[j]:
-                continue
-            d2 = periodic_distance_sq(world.k_pos[i], world.k_pos[j], box)
-            if d2 >= r2_sq:
-                continue
+            mid = periodic_midpoint(world.k_pos[i], world.k_pos[j], box)
             f1 = world.k_freq[i]
             f2 = world.k_freq[j]
-            if _decade(f1) != _decade(f2):
-                continue
-            ratio = abs(f1 - f2) / min(f1, f2)
-            if ratio < fmin_ratio or ratio > fmax_ratio:
-                continue
-            mid = periodic_midpoint(world.k_pos[i], world.k_pos[j], box)
             new_freq = f1 + f2
             new_pol = bool(world.rng.random() < 0.5)
             constituents = np.array([i, j], dtype=np.int32)
             world.allocate_node(mid, new_freq, new_pol, level=target,
                                 constituents=constituents, comp_kind=1)
-            world.k_alive[i] = False
-            world.k_alive[j] = False
+            _kill_node(world, i)
+            _kill_node(world, j)
             world.k_locked_this_tick[i] = True
             world.k_locked_this_tick[j] = True
             formed += 1
-            break
+        return formed
+    else:
+        # Legacy Python path — preserved verbatim for regression diagnosis.
+        for i in range(K):
+            if not world.k_alive[i] or world.k_locked_this_tick[i]:
+                continue
+            nbrs = neighbors_of(grid, world.k_pos[i], box, r2,
+                                 exclude_self=True, query_index=i)
+            for j in nbrs:
+                if j <= i:
+                    continue
+                if not world.k_alive[j] or world.k_locked_this_tick[j]:
+                    continue
+                li = int(world.k_level[i])
+                lj = int(world.k_level[j])
+                target = _UPGRADE_TARGET.get((li, lj))
+                if target is None and cfg.mol_fusion_enabled:
+                    target = _UPGRADE_TARGET_FUSION.get((li, lj))
+                if target is None:
+                    continue
+                if world.k_pol[i] == world.k_pol[j]:
+                    continue
+                d2 = periodic_distance_sq(world.k_pos[i], world.k_pos[j], box)
+                if d2 >= r2_sq:
+                    continue
+                f1 = world.k_freq[i]
+                f2 = world.k_freq[j]
+                if _decade(f1) != _decade(f2):
+                    continue
+                ratio = abs(f1 - f2) / min(f1, f2)
+                if ratio < fmin_ratio or ratio > fmax_ratio:
+                    continue
+                mid = periodic_midpoint(world.k_pos[i], world.k_pos[j], box)
+                new_freq = f1 + f2
+                new_pol = bool(world.rng.random() < 0.5)
+                constituents = np.array([i, j], dtype=np.int32)
+                world.allocate_node(mid, new_freq, new_pol, level=target,
+                                    constituents=constituents, comp_kind=1)
+                _kill_node(world, i)
+                _kill_node(world, j)
+                world.k_locked_this_tick[i] = True
+                world.k_locked_this_tick[j] = True
+                formed += 1
+                break
 
-    return formed
+        return formed
+
+
+@njit(cache=True)
+def _decay_unstable_njit(k_alive: np.ndarray, k_level: np.ndarray,
+                         k_birth: np.ndarray, rolls: np.ndarray,
+                         t: float, pair_decay_time: float,
+                         triad_decay_time: float, K: int,
+                         dt: float) -> np.ndarray:
+    """JIT core for decay_unstable_nodes.
+
+    Returns a boolean array of length K marking which slots must be killed.
+    The Python wrapper handles RNG generation and free-list bookkeeping.
+    Decay formula: p = dt / tau  (linear per-tick probability, matching the
+    legacy Python path exactly).
+    """
+    decayed = np.zeros(K, dtype=np.bool_)
+    for i in range(K):
+        if not k_alive[i]:
+            continue
+        level = k_level[i]
+        if level == 2:
+            tau = pair_decay_time
+        elif level == 3:
+            tau = triad_decay_time
+        else:
+            continue
+        # Match the existing Python decay formula exactly: p = dt / tau.
+        if rolls[i] < dt / tau:
+            decayed[i] = True
+    return decayed
 
 
 def decay_unstable_nodes(world, dt: float) -> int:
@@ -156,69 +404,254 @@ def decay_unstable_nodes(world, dt: float) -> int:
 
     Atoms (level 4) are permanent. Electrons (level 1) are handled by the
     ambient_regeneration channel, not here.
+
+    When cfg.numba_jit_enabled is True, the inner decision loop runs in a
+    @njit core. RNG rolls are pre-generated in Python so the RNG stream is
+    identical to the legacy path. Free-list bookkeeping and constituent
+    revival always run in Python.
     """
     cfg = world.config
-    decay_time = {2: cfg.pair_decay_time, 3: cfg.triad_decay_time}
-    rng = world.rng
-    decayed = 0
-    for i in range(world.k_count):
-        if not world.k_alive[i]:
+    K = world.k_count
+    if K == 0:
+        return 0
+
+    if cfg.numba_jit_enabled:
+        # Pre-generate RNG rolls for qualifying slots only — one roll per alive
+        # level-2/3 slot, in ascending slot order — so the RNG stream is
+        # identical to the legacy Python path given the same seed.
+        k_alive_slice = world.k_alive[:K]
+        k_level_slice = world.k_level[:K]
+        qualifying = np.where(
+            k_alive_slice & ((k_level_slice == 2) | (k_level_slice == 3))
+        )[0]
+        n_qualifying = len(qualifying)
+        if n_qualifying == 0:
+            return 0
+        batch_rolls = world.rng.random(n_qualifying)
+        # Build a per-slot roll array (size K) so the JIT core can index by
+        # slot without needing a ragged mapping.  Non-qualifying slots get 1.0
+        # (guaranteed not to decay).
+        raw_rolls = np.ones(K, dtype=np.float64)
+        raw_rolls[qualifying] = batch_rolls
+        decayed_mask = _decay_unstable_njit(
+            k_alive_slice, k_level_slice, world.k_birth[:K],
+            raw_rolls, world.t, cfg.pair_decay_time, cfg.triad_decay_time,
+            K, dt,
+        )
+        n_decayed = 0
+        for i in range(K):
+            if decayed_mask[i]:
+                start = int(world.k_comp_offset[i])
+                end = int(world.k_comp_end[i])
+                _kill_node(world, i)
+                for j in range(start, end):
+                    idx = int(world.k_comp_indices[j])
+                    # Revive the constituent; if _kill_node pushed it onto the
+                    # free list (ref count dropped to 0), remove it first so
+                    # the slot isn't recycled out from under the revived node.
+                    if idx in world._free_slots_set:
+                        world._free_slots_set.discard(idx)
+                        try:
+                            world._free_slots.remove(idx)
+                        except ValueError:
+                            pass
+                    world.k_alive[idx] = True
+                n_decayed += 1
+        return n_decayed
+    else:
+        # Legacy Python path — preserved for regression diagnosis.
+        decay_time = {2: cfg.pair_decay_time, 3: cfg.triad_decay_time}
+        rng = world.rng
+        decayed = 0
+        for i in range(K):
+            if not world.k_alive[i]:
+                continue
+            level = int(world.k_level[i])
+            if level not in (2, 3):
+                continue
+            tau = decay_time[level]
+            p = dt / tau
+            if rng.random() < p:
+                start = world.k_comp_offset[i]
+                end = world.k_comp_end[i]
+                _kill_node(world, i)
+                for j in range(start, end):
+                    idx = int(world.k_comp_indices[j])
+                    # Revive the constituent; if _kill_node pushed it onto the
+                    # free list (ref count dropped to 0), remove it first so
+                    # the slot isn't recycled out from under the revived node.
+                    if idx in world._free_slots_set:
+                        world._free_slots_set.discard(idx)
+                        try:
+                            world._free_slots.remove(idx)
+                        except ValueError:
+                            pass
+                    world.k_alive[idx] = True
+                decayed += 1
+        return decayed
+
+
+@njit(cache=True)
+def _decay_high_level_njit(k_alive: np.ndarray, k_level: np.ndarray,
+                            k_strength: np.ndarray, rolls: np.ndarray,
+                            lambda_dec_mol: float, dt: float,
+                            K: int) -> np.ndarray:
+    """JIT core for decay_high_level_nodes.
+
+    Returns a boolean array of length K marking which slots must be killed.
+    rolls has length == number of qualifying (alive, level >= 5) slots.
+    Slots are visited in ascending index order; the k-th qualifying slot
+    consumes rolls[k]. Non-qualifying slots are never killed.
+    Decay formula: p = lambda_dec_mol * dt / max(strength, 1.0)
+    """
+    decayed = np.zeros(K, dtype=np.bool_)
+    roll_idx = 0
+    for i in range(K):
+        if not k_alive[i]:
             continue
-        level = int(world.k_level[i])
-        if level not in (2, 3):
+        if k_level[i] < 5:
             continue
-        tau = decay_time[level]
-        p = dt / tau
-        if rng.random() < p:
-            world.k_alive[i] = False
-            start = world.k_comp_offset[i]
-            end = world.k_comp_offset[i + 1]
-            for j in range(start, end):
-                idx = int(world.k_comp_indices[j])
-                world.k_alive[idx] = True
-            decayed += 1
+        strength = k_strength[i]
+        if strength < 1.0:
+            strength = 1.0
+        p = lambda_dec_mol * dt / strength
+        if rolls[roll_idx] < p:
+            decayed[i] = True
+        roll_idx += 1
     return decayed
+
+
+def decay_high_level_nodes(world, dt: float) -> int:
+    """R2: strength-modulated decay for level-5+ molecules.
+
+    Per-tick decay probability for each level-5+ alive node:
+        p = lambda_dec_mol * dt / max(strength, 1.0)
+
+    When a molecule decays, it disappears (k_alive=False). Constituent
+    atoms (level 4) inside its composition span are not destroyed — they
+    live in their own slots and stay alive=True there.
+
+    Returns the count of nodes that decayed this tick.
+
+    Plan A.5 Task 10: JIT-compiled inner loop. RNG rolls are pre-generated
+    in Python and passed to the @njit core so the RNG stream is identical
+    to the legacy Python path. The Python wrapper handles _kill_node
+    bookkeeping (free-list management). Gated behind cfg.numba_jit_enabled.
+    """
+    cfg = world.config
+    if cfg.lambda_dec_mol <= 0.0:
+        return 0
+    K = world.k_count
+    if K == 0:
+        return 0
+
+    if cfg.numba_jit_enabled:
+        # Identify qualifying slots (alive, level >= 5) in Python; consume
+        # exactly that many rolls. Order matches legacy path.
+        n_qualifying = 0
+        for i in range(K):
+            if world.k_alive[i] and world.k_level[i] >= 5:
+                n_qualifying += 1
+        if n_qualifying == 0:
+            return 0
+        rolls = world.rng.random(n_qualifying)
+        decayed = _decay_high_level_njit(
+            world.k_alive[:K], world.k_level[:K], world.k_strength[:K],
+            rolls, cfg.lambda_dec_mol, dt, K,
+        )
+        n_decayed = 0
+        for i in range(K):
+            if decayed[i]:
+                _kill_node(world, i)
+                n_decayed += 1
+        return n_decayed
+    else:
+        # Legacy Python path — preserved for regression diagnosis.
+        mask = world.k_alive[:K] & (world.k_level[:K] >= 5)
+        if not mask.any():
+            return 0
+        indices = np.where(mask)[0]
+        strengths = np.maximum(world.k_strength[indices], 1.0)
+        p_decay = cfg.lambda_dec_mol * dt / strengths
+        rolls = world.rng.random(len(indices))
+        decayed_mask = rolls < p_decay
+        n_decayed = int(decayed_mask.sum())
+        for i in indices[decayed_mask]:
+            _kill_node(world, i)
+        return n_decayed
 
 
 def ambient_regeneration(world, dt: float) -> tuple[int, int]:
     """Generate new free vibrations and decay unstable nodes back to vibrations.
 
-    Returns (n_generated, n_decayed).
+    R1 recycling rule: when the buffer is full, displace a far-field vibration
+    instead of silently no-op'ing.  Active regions (within 2*r_2 of any
+    level-4+ node) are protected from displacement.
+
+    Returns (n_displaced_or_allocated, n_decayed).
     """
     cfg = world.config
     rng = world.rng
     box = np.asarray(cfg.box_size, dtype=np.float64)
-    volume = box[0] * box[1] * box[2]
+    box_volume = box[0] * box[1] * box[2]
 
-    # Generation: Poisson(lambda_gen * volume * dt)
-    expected = cfg.lambda_gen * volume * dt
-    n_new = rng.poisson(expected)
-    n_max = world.s_pos.shape[0]
-    n_alive_now = int(world.s_alive.sum())
-    capacity = n_max - n_alive_now
-    n_new = min(n_new, capacity)
-    if n_new > 0:
-        # Find slot indices that are dead
-        dead_idx = np.where(~world.s_alive)[0][:n_new]
-        # Sample new vibrations
-        for d in range(3):
-            world.s_pos[dead_idx, d] = rng.uniform(0.0, box[d], size=n_new)
-        if cfg.freq_distribution == "log":
-            world.s_freq[dead_idx] = np.exp(rng.uniform(np.log(cfg.freq_min),
-                                                        np.log(cfg.freq_max), size=n_new))
-        else:
-            world.s_freq[dead_idx] = rng.uniform(cfg.freq_min, cfg.freq_max, size=n_new)
-        world.s_pol[dead_idx] = rng.random(n_new) < cfg.polarity_split
-        # Isotropic 3D velocities
-        speeds = rng.uniform(cfg.speed_min, cfg.speed_max, size=n_new)
-        z = rng.uniform(-1.0, 1.0, size=n_new)
-        phi = rng.uniform(0.0, 2 * np.pi, size=n_new)
-        sqz = np.sqrt(1 - z * z)
-        world.s_vel[dead_idx, 0] = speeds * sqz * np.cos(phi)
-        world.s_vel[dead_idx, 1] = speeds * sqz * np.sin(phi)
-        world.s_vel[dead_idx, 2] = speeds * z
-        world.s_alive[dead_idx] = True
-        world.n_alive += n_new
+    # Target steady-state count from equilibrium density
+    if cfg.lambda_dec <= 0:
+        target_density = 0.0
+    else:
+        target_density = cfg.lambda_gen / cfg.lambda_dec
+    target_count = int(target_density * box_volume)
+    current_count = int(world.s_alive.sum())
+    deficit = max(0, target_count - current_count)
+    if deficit == 0:
+        return (0, 0)
+
+    # Active-region positions: alive nodes at level 4+
+    if world.k_count > 0:
+        active_mask = world.k_alive[:world.k_count] & (world.k_level[:world.k_count] >= 4)
+        active_pos = world.k_pos[:world.k_count][active_mask]
+    else:
+        active_pos = np.empty((0, 3), dtype=np.float64)
+    safe_radius_sq = (2.0 * cfg.r_2) ** 2
+
+    n_displaced = 0
+    n_allocated = 0
+
+    # --- Pass 1: displace far-field alive vibrations ---
+    alive_idx = np.where(world.s_alive)[0]
+    rng.shuffle(alive_idx)
+    for i in alive_idx:
+        if deficit <= 0:
+            break
+        if len(active_pos):
+            d = world.s_pos[i] - active_pos
+            d -= box * np.round(d / box)  # periodic minimum-image
+            d2 = (d * d).sum(axis=1)
+            if (d2 < safe_radius_sq).any():
+                continue  # inside an active region; skip
+        # Displace: re-randomise position, velocity, frequency, polarity
+        world.s_pos[i] = rng.uniform(low=np.zeros(3), high=box)
+        world.s_vel[i] = world._sample_velocities_3d(1)[0]
+        world.s_freq[i] = world._sample_frequencies(1)[0]
+        world.s_pol[i] = bool(rng.random() < cfg.polarity_split)
+        n_displaced += 1
+        deficit -= 1
+
+    # --- Pass 2: fallback — allocate from unused buffer slots if any remain ---
+    if deficit > 0:
+        free_idx = np.where(~world.s_alive)[0]
+        for i in free_idx[:deficit]:
+            world.s_pos[i] = rng.uniform(low=np.zeros(3), high=box)
+            world.s_vel[i] = world._sample_velocities_3d(1)[0]
+            world.s_freq[i] = world._sample_frequencies(1)[0]
+            world.s_pol[i] = bool(rng.random() < cfg.polarity_split)
+            world.s_alive[i] = True
+            n_allocated += 1
+            deficit -= 1
+        if n_allocated > 0:
+            # Single high-water-mark update; robust to any iteration order
+            # (uses the max actually-allocated index, not the loop's last `i`).
+            world.n_alive = max(world.n_alive, int(free_idx[:n_allocated].max()) + 1)
 
     # Decay: each alive node level 1/2/3 has Bernoulli(lambda_dec * dt) of decaying
     n_decayed = 0
@@ -232,10 +665,10 @@ def ambient_regeneration(world, dt: float) -> tuple[int, int]:
                 continue  # atoms (level 4) immune
             if rng.random() < p:
                 # Cascade decay: revive constituents
-                world.k_alive[i] = False
                 start = world.k_comp_offset[i]
-                end = world.k_comp_offset[i + 1]
+                end = world.k_comp_end[i]
                 kind = int(world.k_comp_kind[i])
+                _kill_node(world, i)
                 if kind == 0:
                     # constituents are vibrations; bring them back to life
                     for jj in range(start, end):
@@ -253,41 +686,63 @@ def ambient_regeneration(world, dt: float) -> tuple[int, int]:
                             world.s_vel[idx, 2] = speed * z_val
                             world.n_alive += 1
                 else:
-                    # constituents are nodes; revive them
+                    # constituents are nodes; revive them (remove from free list
+                    # if _kill_node pushed them there when ref count hit 0).
                     for jj in range(start, end):
                         idx = int(world.k_comp_indices[jj])
+                        if idx in world._free_slots_set:
+                            world._free_slots_set.discard(idx)
+                            try:
+                                world._free_slots.remove(idx)
+                            except ValueError:
+                                pass
                         world.k_alive[idx] = True
                 n_decayed += 1
 
-    return n_new, n_decayed
+    return n_displaced + n_allocated, n_decayed
 
 
-def apply_scale_repulsion(world, dt: float) -> None:
-    """Accumulate repulsive force into k_vel for nodes whose freq_ratio exceeds threshold."""
-    cfg = world.config
-    if cfg.repulsion_k == 0.0 or world.k_count == 0:
-        return
-    box = np.asarray(cfg.box_size, dtype=np.float64)
-    cell = cfg.repulsion_cell_size
-    threshold = cfg.repulsion_threshold_ratio
-    grid = build_grid(world.k_pos[:world.k_count], world.k_alive[:world.k_count], box, cell)
+@njit(cache=True)
+def _apply_scale_repulsion_njit(
+    k_pos: np.ndarray,
+    k_vel: np.ndarray,
+    k_alive: np.ndarray,
+    k_freq: np.ndarray,
+    k_level: np.ndarray,
+    box: np.ndarray,
+    repulsion_k: float,
+    repulsion_threshold_ratio: float,
+    dt: float,
+    K: int,
+) -> None:
+    """JIT core for apply_scale_repulsion. Modifies k_vel in place.
 
-    for i in range(world.k_count):
-        if not world.k_alive[i]:
+    Plan A.5 Task 12: O(k²) double-loop over all alive node pairs. Implements
+    §4.6 scale-separation repulsion with periodic minimum-image distance.
+    Equivalent to the Python path when repulsion_cell_size >= box_size (all
+    pairs are neighbours), which is the typical production configuration.
+    """
+    for i in range(K):
+        if not k_alive[i]:
             continue
-        f_i = world.k_freq[i]
-        nbrs = neighbors_of(grid, world.k_pos[i], box, cell, exclude_self=True, query_index=i)
-        for j in nbrs:
-            if not world.k_alive[j]:
+        f_i = k_freq[i]
+        mass_i = float(k_level[i])
+        for j in range(K):
+            if i == j:
                 continue
-            f_j = world.k_freq[j]
-            ratio = max(f_i, f_j) / min(f_i, f_j)
-            if ratio <= threshold:
+            if not k_alive[j]:
+                continue
+            f_j = k_freq[j]
+            if f_i > f_j:
+                ratio = f_i / f_j
+            else:
+                ratio = f_j / f_i
+            if ratio <= repulsion_threshold_ratio:
                 continue
             # Direction vector from j to i (minimum-image periodic)
-            dx = world.k_pos[i, 0] - world.k_pos[j, 0]
-            dy = world.k_pos[i, 1] - world.k_pos[j, 1]
-            dz = world.k_pos[i, 2] - world.k_pos[j, 2]
+            dx = k_pos[i, 0] - k_pos[j, 0]
+            dy = k_pos[i, 1] - k_pos[j, 1]
+            dz = k_pos[i, 2] - k_pos[j, 2]
             # Apply periodic minimum-image wrap
             if dx > box[0] * 0.5:
                 dx -= box[0]
@@ -304,27 +759,117 @@ def apply_scale_repulsion(world, dt: float) -> None:
             r2 = dx * dx + dy * dy + dz * dz
             if r2 < 1e-9:
                 continue
-            r = math.sqrt(r2)
+            r = (r2) ** 0.5
             # F_magnitude = k * (ratio - threshold) / r²
-            F_mag = cfg.repulsion_k * (ratio - threshold) / r2
-            # Mass proportional to k_level (heavier nodes accelerate less)
-            mass_i = float(world.k_level[i])
+            F_mag = repulsion_k * (ratio - repulsion_threshold_ratio) / r2
             ax = F_mag * dx / r / mass_i
             ay = F_mag * dy / r / mass_i
             az = F_mag * dz / r / mass_i
-            world.k_vel[i, 0] += ax * dt
-            world.k_vel[i, 1] += ay * dt
-            world.k_vel[i, 2] += az * dt
+            k_vel[i, 0] += ax * dt
+            k_vel[i, 1] += ay * dt
+            k_vel[i, 2] += az * dt
+
+
+def apply_scale_repulsion(world, dt: float) -> None:
+    """§4.6 scale-separation repulsion.
+
+    Plan A.5 Task 12: JIT-compiled inner loop. No RNG; pure deterministic
+    numerical. Gated behind cfg.numba_jit_enabled.
+    """
+    cfg = world.config
+    if cfg.repulsion_k == 0.0 or world.k_count == 0:
+        return
+    box = np.asarray(cfg.box_size, dtype=np.float64)
+    K = world.k_count
+    if cfg.numba_jit_enabled:
+        _apply_scale_repulsion_njit(
+            world.k_pos[:K], world.k_vel[:K], world.k_alive[:K], world.k_freq[:K],
+            world.k_level[:K],
+            box, cfg.repulsion_k, cfg.repulsion_threshold_ratio,
+            dt, K,
+        )
+    else:
+        # Legacy Python path — preserved for regression diagnosis.
+        cell = cfg.repulsion_cell_size
+        threshold = cfg.repulsion_threshold_ratio
+        grid = build_grid(world.k_pos[:K], world.k_alive[:K], box, cell)
+
+        for i in range(K):
+            if not world.k_alive[i]:
+                continue
+            f_i = world.k_freq[i]
+            nbrs = neighbors_of(grid, world.k_pos[i], box, cell, exclude_self=True, query_index=i)
+            for j in nbrs:
+                if not world.k_alive[j]:
+                    continue
+                f_j = world.k_freq[j]
+                ratio = max(f_i, f_j) / min(f_i, f_j)
+                if ratio <= threshold:
+                    continue
+                # Direction vector from j to i (minimum-image periodic)
+                dx = world.k_pos[i, 0] - world.k_pos[j, 0]
+                dy = world.k_pos[i, 1] - world.k_pos[j, 1]
+                dz = world.k_pos[i, 2] - world.k_pos[j, 2]
+                # Apply periodic minimum-image wrap
+                if dx > box[0] * 0.5:
+                    dx -= box[0]
+                elif dx < -box[0] * 0.5:
+                    dx += box[0]
+                if dy > box[1] * 0.5:
+                    dy -= box[1]
+                elif dy < -box[1] * 0.5:
+                    dy += box[1]
+                if dz > box[2] * 0.5:
+                    dz -= box[2]
+                elif dz < -box[2] * 0.5:
+                    dz += box[2]
+                r2 = dx * dx + dy * dy + dz * dz
+                if r2 < 1e-9:
+                    continue
+                r = math.sqrt(r2)
+                # F_magnitude = k * (ratio - threshold) / r²
+                F_mag = cfg.repulsion_k * (ratio - threshold) / r2
+                # Mass proportional to k_level (heavier nodes accelerate less)
+                mass_i = float(world.k_level[i])
+                ax = F_mag * dx / r / mass_i
+                ay = F_mag * dy / r / mass_i
+                az = F_mag * dz / r / mass_i
+                world.k_vel[i, 0] += ax * dt
+                world.k_vel[i, 1] += ay * dt
+                world.k_vel[i, 2] += az * dt
+
+
+@njit(cache=True)
+def _move_nodes_njit(k_pos: np.ndarray, k_vel: np.ndarray, k_alive: np.ndarray,
+                     box: np.ndarray, dt: float, K: int) -> None:
+    """JIT core for move_nodes. Modifies k_pos in place with periodic wrap."""
+    for i in range(K):
+        if not k_alive[i]:
+            continue
+        for d in range(3):
+            k_pos[i, d] = (k_pos[i, d] + k_vel[i, d] * dt) % box[d]
 
 
 def move_nodes(world, dt: float) -> None:
-    """Apply k_vel to k_pos with periodic wrap. Atoms move slowly because of mass."""
-    box = np.asarray(world.config.box_size, dtype=np.float64)
-    for i in range(world.k_count):
-        if not world.k_alive[i]:
-            continue
-        for d in range(3):
-            world.k_pos[i, d] = (world.k_pos[i, d] + world.k_vel[i, d] * dt) % box[d]
+    """Apply k_vel to k_pos with periodic wrap. Atoms move slowly because of mass.
+
+    Plan A.5 Task 11: JIT-compiled inner loop. No RNG; deterministic numerical.
+    Gated behind cfg.numba_jit_enabled.
+    """
+    cfg = world.config
+    K = world.k_count
+    if K == 0:
+        return
+    box = np.asarray(cfg.box_size, dtype=np.float64)
+    if cfg.numba_jit_enabled:
+        _move_nodes_njit(world.k_pos, world.k_vel, world.k_alive, box, dt, K)
+    else:
+        # Legacy Python path — preserved for regression diagnosis.
+        for i in range(K):
+            if not world.k_alive[i]:
+                continue
+            for d in range(3):
+                world.k_pos[i, d] = (world.k_pos[i, d] + world.k_vel[i, d] * dt) % box[d]
 
 
 def neuron_dynamics(world, dt: float) -> None:
@@ -388,12 +933,34 @@ def neuron_dynamics(world, dt: float) -> None:
         world.k_refractory_until[ai] = world.t + cfg.t_refractory
         world.firing_events.append((float(world.t), int(ai)))
 
+    # R2 strengthening: every level-5+ molecule within r_strengthen of any
+    # firing atom on this tick gets strength += dt.
+    if len(firing_atoms) > 0:
+        K = world.k_count
+        molecule_mask = world.k_alive[:K] & (world.k_level[:K] >= 5)
+        if molecule_mask.any():
+            molecule_indices = np.where(molecule_mask)[0]
+            molecule_pos = world.k_pos[molecule_indices]
+            r2 = cfg.r_strengthen ** 2
+            box = np.asarray(cfg.box_size, dtype=np.float64)
+            for ai in firing_atoms:
+                ap = world.k_pos[ai]
+                d = molecule_pos - ap
+                d -= box * np.round(d / box)  # periodic minimum image
+                d2 = (d * d).sum(axis=1)
+                near_mask = d2 <= r2
+                world.k_strength[molecule_indices[near_mask]] += dt
+
 
 def _emit_vibrations(world, atom_idx: int) -> None:
-    """Emit n_emit vibrations isotropically around the firing atom's position."""
+    """Emit n_emit vibrations isotropically around the firing atom's position.
+
+    Frequencies are drawn uniformly across the configured emission band
+    ratios (e.g. [freq_ratio, 1.0, 1/freq_ratio]) so emitted vibrations can
+    climb the binding hierarchy via the existing freq_ratio rule.
+    """
     cfg = world.config
     n = cfg.n_emit
-    # Find n free vibration slots (alive=False)
     free_mask = ~world.s_alive
     free_idx = np.where(free_mask)[0][:n]
     if len(free_idx) == 0:
@@ -410,15 +977,20 @@ def _emit_vibrations(world, atom_idx: int) -> None:
     vx = sqrt_omz2 * np.cos(phi) * cfg.emit_speed
     vy = sqrt_omz2 * np.sin(phi) * cfg.emit_speed
     vz = z * cfg.emit_speed
+    # Frequency band fan: assign each emission to one of the band ratios.
+    band_ratios = np.asarray(cfg.emit_band_ratios, dtype=np.float64)
+    band_assignments = world.rng.integers(0, len(band_ratios), size=n)
+    # Small per-emission jitter (±5%) so within-band binding is possible
+    jitter = world.rng.uniform(0.95, 1.05, size=n)
+    base_freqs = band_ratios[band_assignments] * cfg.emit_freq * jitter
     for k, fi in enumerate(free_idx):
-        world.s_pos[fi] = pos % box  # spawn at firing position
+        world.s_pos[fi] = pos % box
         world.s_vel[fi, 0] = vx[k]
         world.s_vel[fi, 1] = vy[k]
         world.s_vel[fi, 2] = vz[k]
-        world.s_freq[fi] = cfg.emit_freq
+        world.s_freq[fi] = base_freqs[k]
         world.s_pol[fi] = bool(world.rng.random() < cfg.polarity_split)
         world.s_alive[fi] = True
-    # Update n_alive (high-water mark) so the new vibrations are scanned next tick.
     high = int(free_idx.max()) + 1
     if high > world.n_alive:
         world.n_alive = high
@@ -433,6 +1005,7 @@ def tick(world, dt: float) -> None:
     bind_vibrations_to_electrons(world)
     bind_nodes_upward(world)
     decay_unstable_nodes(world, dt)
+    decay_high_level_nodes(world, dt)   # NEW (R2)
     ambient_regeneration(world, dt)
     neuron_dynamics(world, dt)
     world.t += dt

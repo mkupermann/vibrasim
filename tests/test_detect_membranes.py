@@ -82,6 +82,7 @@ def test_detect_constructed_shell_is_closed(tmp_path):
         n_nodes_max=256,
         r_2=15.0,
         rng_seed=42,
+        repulsion_cell_size=200.0,
     )
     w = World(cfg)
     centre = np.array([100.0, 100.0, 100.0])
@@ -113,6 +114,7 @@ def test_detect_filled_ball_is_not_closed(tmp_path):
         n_nodes_max=512,
         r_2=20.0,
         rng_seed=42,
+        repulsion_cell_size=200.0,
     )
     w = World(cfg)
     rng = np.random.default_rng(42)

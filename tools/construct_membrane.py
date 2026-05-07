@@ -60,6 +60,7 @@ def construct_shell(world: World, centre: np.ndarray, radius: float,
         # No constituents — synthetic molecule with empty composition.
         world.k_comp_offset[idx] = world.k_comp_used
         world.k_comp_offset[idx + 1] = world.k_comp_used
+        world.k_comp_end[idx] = world.k_comp_used
         world.k_count += 1
         indices.append(idx)
     return indices
