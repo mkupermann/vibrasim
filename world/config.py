@@ -109,6 +109,16 @@ class WorldConfig:
     reward_burst_freq: float = 30000.0
     agent_dt_realtime_ms: int = 17
 
+    # Plan F — speech-loop port-to-port firing coupling
+    # When > 0, atoms firing inside the audio input port deposit a small
+    # burst of vibrations at the audio output port at the firing frequency.
+    # Models biological auditory feedback (vocaliser hears their own
+    # utterances); closes the path that lets STDP form bridges across
+    # input/output port pairs.
+    speech_loop_strength: float = 0.0   # 0 = off; > 0 enables coupling
+    speech_loop_burst_size: int = 6     # vibrations injected per firing event
+    speech_loop_jitter_hz: float = 50.0 # random-jitter bandwidth around firing freq
+
     # Plan A.5 — substrate performance
     slot_recycling_enabled: bool = True   # World.allocate_node reuses dead slots before extending k_count
     numba_jit_enabled: bool = True        # @njit cores for hot loops; safe with the 60³ default box
