@@ -120,3 +120,34 @@ def encode_frame(
                 sign = peak_signed >= 0.0
                 out.append((int(px), int(py), int(o), min(peak_abs, 1.0), bool(sign)))
     return out
+
+
+def patch_to_port_position(
+    patch_x: int,
+    patch_y: int,
+    orientation_id: int,
+    patch_grid: tuple[int, int] = (16, 16),
+    n_orientations: int = 8,
+    port_origin: tuple[float, float, float] = (0.0, 0.0, 45.0),
+    port_size: tuple[float, float, float] = (15.0, 15.0, 15.0),
+) -> tuple[float, float, float]:
+    """Map a (patch_x, patch_y, orientation_id) to a 3D position in the video port.
+
+    XY is retinotopic — patch centre maps to the matching XY-fraction of the
+    port. Z is the orientation axis — orientation_id 0..n_orientations-1 maps
+    to evenly-spaced depth bins.
+    """
+    pg_x, pg_y = patch_grid
+    x = port_origin[0] + (patch_x + 0.5) / pg_x * port_size[0]
+    y = port_origin[1] + (patch_y + 0.5) / pg_y * port_size[1]
+    z = port_origin[2] + (orientation_id + 0.5) / n_orientations * port_size[2]
+    return (float(x), float(y), float(z))
+
+
+def feature_magnitude_to_frequency(
+    magnitude: float,
+    freq_min: float = 1000.0,
+    freq_max: float = 12000.0,
+) -> float:
+    """Map magnitude in [0, 1] linearly to a frequency in [freq_min, freq_max]."""
+    return float(freq_min + magnitude * (freq_max - freq_min))
