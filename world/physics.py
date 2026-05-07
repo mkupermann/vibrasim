@@ -251,6 +251,16 @@ def apply_stdp(world) -> int:
                     weight = cfg.delta_LTD * float(np.exp(-dt_pair / cfg.tau_LTD))
                     world.k_strength[m] = max(strength_old - weight, 1.0)
                 n_reinforcements += 1
+    # Plan B.5 follow-up (deferred from mid-flight discovery): prune
+    # firing_events older than tau_LTP. Without this the list grows
+    # unboundedly across ticks, the O(N²) pair scan above goes quadratic
+    # in run length, and double-counting amplifies LTP/LTD ~2× per pair.
+    # All STDP behaviour is preserved because events older than tau_LTP
+    # contribute no qualifying pairs anyway (dt_pair > tau_LTP would be
+    # filtered by the inner continue).
+    cutoff = world.t - cfg.tau_LTP
+    if events and events[0][0] < cutoff:
+        world.firing_events = [e for e in events if e[0] >= cutoff]
     return n_reinforcements
 
 
