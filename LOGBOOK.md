@@ -439,3 +439,20 @@ Phase 4 acceptance per CONCEPT.md v2 §5 (cluster shows integration + threshold 
 5. **Phase 3 first observation.** Run a 30-minute simulated session, dump snapshot every 30 s, run `tools/detect_membranes.py` over each. Honest answer expected: probably no spontaneous shells, but document what's there.
 
 ---
+
+## 2026-05-07 — Plan A.5 mid-flight: k_comp_end data-corruption fix
+
+While running the AP12 sustained-load stress test, slot recycling exposed a
+latent bug in `World.allocate_node`: the code was clobbering `k_comp_offset[i+1]`
+(the start-pointer of the *next* slot) instead of slot `i`'s end-pointer. The
+monotonic allocator masked this because slot i+1 was always free; with recycling
+it was often live, silently corrupting its composition span.
+
+Fix (commit `11fdf0a`): split `k_comp_offset` and `k_comp_end` into separate
+arrays; updated four read sites in `physics.py` and `tools/classify_molecules.py`.
+Backward-compat (commit `a3330bb`): legacy snapshots without `k_comp_end`
+reconstruct it from `k_comp_offset[1:K+1]` on load. Full write-up in
+`docs/superpowers/plans/2026-05-06-baby-brain-foundation-plan-A5-substrate-performance.md`
+§ Mid-flight discoveries.
+
+---
