@@ -22,6 +22,75 @@ def move_vibrations(
             s_pos[i, d] = (s_pos[i, d] + s_vel[i, d] * dt) % box[d]
 
 
+@njit(cache=True)
+def _bind_vibrations_check_pairs_njit(
+    candidate_i: np.ndarray, candidate_j: np.ndarray, n_candidates: int,
+    s_pos: np.ndarray, s_alive: np.ndarray, s_locked_this_tick: np.ndarray,
+    s_freq: np.ndarray, s_pol: np.ndarray,
+    box: np.ndarray, r1_sq: float,
+    fmin_ratio: float, fmax_ratio: float,
+) -> tuple:
+    """JIT core for bind_vibrations_to_electrons.
+
+    Mirrors `_bind_check_pairs_njit` (which serves bind_nodes_upward) but for
+    vibration-level binding. Filters candidate pairs by alive, locked,
+    polarity-difference, periodic-distance, and the 8 % frequency rule.
+
+    Returns parallel arrays (out_i, out_j, out_freq, out_mid, n_out) preserving
+    input order. The new electron's frequency is f_i + f_j; mid is the periodic
+    midpoint. The Python wrapper enforces break-per-i semantics by re-checking
+    the lock array after each allocation.
+    """
+    out_i = np.zeros(n_candidates, dtype=np.int32)
+    out_j = np.zeros(n_candidates, dtype=np.int32)
+    out_freq = np.zeros(n_candidates, dtype=np.float64)
+    out_mid = np.zeros((n_candidates, 3), dtype=np.float64)
+    n_out = 0
+    for k in range(n_candidates):
+        i = candidate_i[k]
+        j = candidate_j[k]
+        if not s_alive[i] or not s_alive[j]:
+            continue
+        if s_locked_this_tick[i] or s_locked_this_tick[j]:
+            continue
+        if s_pol[i] == s_pol[j]:
+            continue
+        # Periodic distance (3D)
+        dx = s_pos[i, 0] - s_pos[j, 0]
+        dy = s_pos[i, 1] - s_pos[j, 1]
+        dz = s_pos[i, 2] - s_pos[j, 2]
+        dx -= box[0] * round(dx / box[0])
+        dy -= box[1] * round(dy / box[1])
+        dz -= box[2] * round(dz / box[2])
+        d2 = dx * dx + dy * dy + dz * dz
+        if d2 >= r1_sq:
+            continue
+        # 8 % frequency rule
+        f1 = s_freq[i]
+        f2 = s_freq[j]
+        if f1 < f2:
+            ratio = (f2 - f1) / f1
+        else:
+            ratio = (f1 - f2) / f2
+        if ratio < fmin_ratio or ratio > fmax_ratio:
+            continue
+        # Periodic midpoint, per-axis (matches periodic_midpoint() semantics)
+        for d in range(3):
+            delta = s_pos[j, d] - s_pos[i, d]
+            if delta > box[d] * 0.5:
+                delta -= box[d]
+            elif delta < -box[d] * 0.5:
+                delta += box[d]
+            m = s_pos[i, d] + delta * 0.5
+            m = m % box[d]
+            out_mid[n_out, d] = m
+        out_i[n_out] = i
+        out_j[n_out] = j
+        out_freq[n_out] = f1 + f2
+        n_out += 1
+    return out_i, out_j, out_freq, out_mid, n_out
+
+
 def bind_vibrations_to_electrons(world) -> int:
     cfg = world.config
     box = np.asarray(cfg.box_size, dtype=np.float64)
@@ -34,8 +103,62 @@ def bind_vibrations_to_electrons(world) -> int:
 
     world.reset_tick_locks()
     grid = build_grid(world.s_pos, world.s_alive, box, r1)
-    formed = 0
 
+    if cfg.numba_jit_enabled:
+        # G1: JIT path. Build candidate pairs in Python (spatial-hash query
+        # is already JITted internally) preserving the legacy iteration order
+        # so break-per-i semantics carry. JIT filters by predicates; Python
+        # applies allocations in order.
+        cand_i_list: list[int] = []
+        cand_j_list: list[int] = []
+        for i in range(world.s_pos.shape[0]):
+            if not world.s_alive[i]:
+                continue
+            nbrs = neighbors_of(grid, world.s_pos[i], box, r1,
+                                 exclude_self=True, query_index=i)
+            for j in nbrs:
+                if j <= i:
+                    continue
+                cand_i_list.append(i)
+                cand_j_list.append(j)
+
+        n_candidates = len(cand_i_list)
+        if n_candidates == 0:
+            return 0
+
+        candidate_i = np.array(cand_i_list, dtype=np.int32)
+        candidate_j = np.array(cand_j_list, dtype=np.int32)
+
+        out_i, out_j, out_freq, out_mid, n_out = _bind_vibrations_check_pairs_njit(
+            candidate_i, candidate_j, n_candidates,
+            world.s_pos, world.s_alive, world.s_locked_this_tick,
+            world.s_freq, world.s_pol,
+            box, r1_sq, fmin_ratio, fmax_ratio,
+        )
+
+        formed = 0
+        for k in range(n_out):
+            i = int(out_i[k])
+            j = int(out_j[k])
+            # Re-check after earlier iterations may have consumed these slots
+            if not world.s_alive[i] or world.s_locked_this_tick[i]:
+                continue
+            if not world.s_alive[j] or world.s_locked_this_tick[j]:
+                continue
+            new_pol = bool(world.rng.random() < 0.5)
+            constituents = np.array([i, j], dtype=np.int32)
+            world.allocate_node(out_mid[k], float(out_freq[k]), new_pol, level=1,
+                                constituents=constituents, comp_kind=0)
+            world.s_alive[i] = False
+            world.s_alive[j] = False
+            world.s_locked_this_tick[i] = True
+            world.s_locked_this_tick[j] = True
+            world.n_alive -= 2
+            formed += 1
+        return formed
+
+    # Legacy Python path — preserved verbatim for regression diagnosis
+    formed = 0
     for i in range(world.s_pos.shape[0]):
         if not world.s_alive[i] or world.s_locked_this_tick[i]:
             continue
