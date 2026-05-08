@@ -20,7 +20,7 @@ This codebase carries two layers, and reading it is easier if you know which is 
 
 **The baby brain** — the agent we are building on top of the substrate. It is multi-modal: it listens via a microphone, watches via a webcam, receives a reward signal, and speaks back through a speaker. It grows physical structure inside itself in response to its own experience. Repeated exposures form persistent structure; one-off coincidences fade. Cross-modal events (showing a glass of water while saying "water") form bridges between the regions that fire together, so that, after enough exposure, presenting one input pattern recalls the other. Nothing about this requires a learning algorithm bolted on top of the substrate. Every claim above reduces to the substrate's local laws.
 
-Where we are right now: the substrate's first three phases (atoms, molecules, partial membranes) reproduce reliably from calibrated configs. As of 2026-05-06 the substrate also fires individual atoms via integrate-and-fire dynamics with refractory windows. The substrate-growth foundation (Plan A) — activity-driven growth, use-dependent decay, directional plasticity, audio + video I/O, reward — is designed and approved; implementation is the next step.
+Where we are right now: the substrate's first three phases (atoms, molecules, partial membranes) reproduce reliably from calibrated configs. As of 2026-05-08 the substrate also fires individual atoms via integrate-and-fire dynamics with refractory windows, and the baby-brain foundation has landed in full. Plans A (substrate growth), A.5 (Numba JIT performance), B (STDP with directional bridges), C (audio I/O), D (video I/O), E (reward + agent loop), and F (speech-loop port-to-port coupling) are all merged on `main`. Suite is 272 non-slow tests + 18 slow tests passing or xfailed with documented reasons. The headline acceptance test (M4 "glass-of-water") is partially demonstrated at component level and partially xfailed at chain composition — see "What runs today" below for the empirical state.
 
 ## Quick start
 
@@ -94,7 +94,7 @@ The natural-language report describes the run in prose: setup, chronology of str
 - **Phase 2**: ≥ 5 distinct molecule species in 60 simulated seconds (`renders/calibration_phase2_acceptance.toml`, same seed). Keyframe: `renders/keyframe_first_molecule.png`.
 - **Phase 7**: 0.954 carrier-frequency selectivity recovered from synthetic firing histories — independently validates the measurement pipeline (pipeline validation on synthetic data; end-to-end substrate validation is post-Plan-A). (`tools/synthesize_carrier_firing.py` + `tools/measure_attention_selectivity.py`)
 
-The substrate works through Phase 2 and partially Phase 3. As of this session, integrate-and-fire dynamics are live (`world.physics.neuron_dynamics`), with per-atom charge accumulation, threshold firing, and refractory locking. The full test suite is 155 green.
+The substrate works through Phase 2 and partially Phase 3, plus Phase 4 (integrate-and-fire) and the entire baby-brain foundation. The full test suite is 272 non-slow tests + 18 slow tests, all passing or xfailed with documented reasons.
 
 What runs **today**:
 
@@ -104,21 +104,20 @@ What runs **today**:
 - Phase 4: integrate-and-fire dynamics, refractory works, firing log saved with each snapshot
 - Phase 6: 3-neuron chain firing patterns measured per-neuron
 - Phase 7: 8 Hz carrier-frequency selectivity recovered with 0.954 selectivity from synthetic firing histories — independently validates the measurement pipeline
-- Phase 5: Hebbian signal nonzero on the substrate but tuning-dependent — one of the things the baby-brain foundation makes properly testable
+- **Plan A (substrate growth)** — recycling regeneration, strength-aware decay for level-5+ structures, molecule + molecule binding, tuned Phase 4 emissions across a frequency band
+- **Plan A.5 (Numba JIT performance)** — five inner physics loops JIT-compiled, slot recycling for high-churn loops; per-tick wall cost roughly an order of magnitude lower than pure-Python on bound K. (`bind_vibrations_to_electrons` and `bind_nodes_upward` remain pure-Python because of `allocate_node` side effects — the next perf gap.)
+- **Plan B (STDP with directional bridges)** — orientation vectors on bridge molecules, asymmetric LTP/LTD by causal vs anti-causal pair timing, synaptic transmission across bridges
+- **Plan C (audio I/O)** — log-mapped tonotopic encoder/decoder, 0.954 selectivity recovered (I2 headline)
+- **Plan D (video I/O)** — oriented filter bank + retinotopic XY + orientation-Z encoder, distinct shapes produce distinct port patterns (I4 headline)
+- **Plan E (reward + agent loop)** — tristate `k_reward_polarity` field, reward channel, asymmetric STDP swap at firing time, stepped + real-time agent loop
+- **Plan F (speech-loop port-to-port coupling)** — engineered audio_input → audio_output ghost-burst at firing frequency, default off, SL1–SL5 unit tests green
 
-What does **not** run yet, and is what the baby-brain foundation will land:
+What's currently xfailed with empirical findings on record:
 
-- R1 — recycling regeneration (sustained vibration count over hours)
-- R2 — strength-modulated decay for level-5+ structures (long-term memory)
-- PHASE3-R1 — molecule + molecule binding (structures grow tall)
-- Tuned PHASE4 emissions across a frequency band (binding cascade from firings)
-- STDP with bridge-orientation vectors (directional plasticity)
-- Audio I/O (mic + speaker, buffered)
-- Video I/O (webcam, Gabor patch features, retinotopic port layout)
-- Reward channel (dashboard buttons → reward port)
-- Brain checkpoint / resume
+- **M4 (glass-of-water) substrate-bootstrap** — currently xfailed at the original 30 pairs × 4 sim-sec scope (substrate self-bootstrap from input-only stimuli) and at the scoped-down 1 × 1 sim-sec minimal-smoke (cosine = 0.000 measured). The chain composition gap is documented in CONCEPT §10.8: components individually pass, but the four alignment requirements (atom firing + bridge near port + vibration flow + post-atom existence) do not compose at the present substrate's wall-time budget under deterministic stimuli.
+- **M5 (reward shaping)** — xfailed for the same chain-composition reason at the original scope.
 
-The full design is in [`docs/superpowers/specs/2026-05-06-baby-brain-foundation-design.md`](docs/superpowers/specs/2026-05-06-baby-brain-foundation-design.md). The headline acceptance test (the "glass-of-water demo") is M4 in §6.2 of that spec: webcam at a glass plus audio "water" 50× over 10 simulated minutes, then show the glass alone and read out the audio port. If the substrate's output spectrally correlates with "water" above 0.5, the foundation is done.
+The full foundation design is in [`docs/superpowers/specs/2026-05-06-baby-brain-foundation-design.md`](docs/superpowers/specs/2026-05-06-baby-brain-foundation-design.md). The Plan F speech-loop spec is in [`docs/superpowers/specs/2026-05-08-plan-F-speech-loop-design.md`](docs/superpowers/specs/2026-05-08-plan-F-speech-loop-design.md). The empirical record of the chain composition under M4 is in [`docs/CONCEPT.md`](docs/CONCEPT.md) §10.8.
 
 ## Where to read further
 
@@ -144,7 +143,7 @@ agent/         # (forthcoming, baby-brain foundation) audio I/O, video I/O, rewa
 app/           # Streamlit dashboard — Postgres-backed sessions, configs, runs, reports, 3D viewer
 db/            # Schema and seed for the dashboard's Postgres database
 docker/        # Streamlit container
-tests/         # Pytest suite — 155 tests across substrate, tools, dashboard
+tests/         # Pytest suite — 272 non-slow + 18 slow tests across substrate, tools, dashboard, agent
 files/         # Source spec documents in English; German originals as *.de.md
 docs/          # Concept paper, tutorial, research guide, design specs and plans, logbook
 renders/       # Calibrated TOMLs and the keyframe renders / animations
@@ -155,7 +154,7 @@ snapshots/     # Per-run snapshot directories (gitignored at the binary level)
 
 The substrate's claim is falsifiable: a hierarchical, brain-like system can be built from a sparse set of local rules between elementary vibrations, no neuron-by-neuron biophysics, no learned weights. If the substrate produces atoms, molecules, integrate-and-fire neurons, directional synapses, networks, and an agent that listens and learns to associate "water" with a glass, the claim is supported. If it stops at any of those layers, the failure tells us which rules nature actually needed there.
 
-We are partway up that ladder. The lower layers (atoms, molecules, integrate-and-fire) are reproducible. The middle layers (sustained growth, long-term memory, directional plasticity, audio + video I/O) are the foundation we just designed and are about to implement. The upper layers (real-time speed, video output, multi-agent) are openly named as later sub-projects.
+We are partway up that ladder. The lower layers (atoms, molecules, integrate-and-fire) are reproducible. The middle layers (sustained growth, long-term memory, directional plasticity, audio + video I/O, reward, port-to-port coupling) are now built and tested at component level. The chain composition into a substrate-bootstrapped cross-modal association — the full M4 acceptance criterion — is the present empirical ceiling; CONCEPT §10.8 records what was measured and which substrate amendments are candidates for the next iteration. The upper layers (real-time speed, video output, multi-agent) are openly named as later sub-projects.
 
 Two things from doing this so far. Let the world run before you intervene; the interesting behaviour shows up after minutes of simulated time, not seconds. And trust the world more than your own expectations. If it produces something you did not have in mind, that is often the more interesting thing.
 

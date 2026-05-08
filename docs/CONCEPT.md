@@ -2,11 +2,15 @@
 
 A research programme for the bottom-up construction of neural networks from self-defined natural laws — from vibrations through atoms and molecules to synapses and cognitive functions
 
-**Concept paper · Version 2.0** (English revision incorporating peer-review feedback)
+**Concept paper · Version 3.0** (amendment incorporating empirical findings from substrate implementation, 2026-04 to 2026-05)
 
-> **Note on this revision.** This is a substantive amendment of the original German Konzeptpapier (preserved at [`Konzeptpapier.de.md`](Konzeptpapier.de.md) and [`Konzeptpapier.docx`](Konzeptpapier.docx)). It integrates four pieces of peer-review feedback that named real risks: (1) the 2D substrate is structurally inadequate for membrane formation in Phase 3; (2) scale separation through repulsion was deferred when it should have been foundational; (3) the Phase 5 plasticity mechanism — "matter capture from vacuum" — was thermodynamically loose; (4) realtime rendering targets distorted the engineering priorities. Each is addressed in its own marked section.
+> **Note on this revision.** v3.0 amends v2.0 (which itself amended the original German Konzeptpapier, preserved at [`Konzeptpapier.de.md`](Konzeptpapier.de.md) and [`Konzeptpapier.docx`](Konzeptpapier.docx)). v2.0's substantive shifts (3D substrate, scale repulsion as foundational, ambient regeneration, decoupled rendering) remain in force. v3.0 layers on three findings that came out of actually building Plans A through F and trying to run the headline acceptance test (the M4 "glass-of-water demo"):
 >
-> Decisions reflected: the substrate is now 3D periodic; scale repulsion is promoted to foundational law and required for Phase 1; an ambient-regeneration mechanism (§4.7) makes the synapse-strengthening story conservation-respecting; rendering is decoupled from physics with quality prioritised over framerate.
+> 1. **Positioning honesty** (§3.2 amendment). The substrate's binding rule uses categorical labels — `k_freq` and `k_pol` are scalar tags, not Kuramoto phases. The closest predecessor in the literature is Sayama's Swarm Chemistry (2009), not the Swarmalators tradition (O'Keeffe et al. 2017). The earlier Kuramoto framing was misdirection and has been retired.
+> 2. **The 8% rule is load-bearing fragile** (§4.4 amendment). The frequency rule was calibrated for a random-Gaussian initial vibration distribution. Under deterministic structured stimuli (e.g. fixed-frequency audio tones), atoms form only when the input frequency density and the ratio between input frequencies happen to match the rule. This is a real fragility, named here because it shaped the M4 result.
+> 3. **Ports are engineered topology, not emergent CTC** (new §4.8). The agent layer's input/output ports — and the speech-loop coupling between the audio_input and audio_output ports (Plan F) — are *engineered* non-localities, the analogue of axonal projections in biology. They are not emergent Communication-through-Coherence. Plan F creates the path for cross-port firing coupling; whether genuinely emergent CTC arises in the substrate is still an open question.
+>
+> v3.0 also adds §10.8 — a written record of what was actually built and what the empirical chain composition under M4 looked like, so future readers can re-run from the same starting point.
 
 ---
 
@@ -86,7 +90,9 @@ The framework rests on four core assumptions, which we make explicit in order to
 
 **Cellular automata and Game of Life.** Conway (1970) and Wolfram (2002) showed that simple local rules can give rise to phenomena that reach Turing-completeness. Our approach shares this inspiration but uses continuous rather than discrete states and a 3D embedding.
 
-**Coupled-oscillator systems.** Kuramoto (1975) showed that coupled oscillators can synchronise spontaneously. Strogatz (2003) popularised this phenomenon broadly. Hopfield's energy-landscape model of associative memory (Hopfield, 1982) formalises how a system of coupled units can store memories as energy minima. Our approach extends this tradition with three-dimensional spatial dynamics, a polarity property, and hierarchical binding aimed ultimately at synaptic plasticity.
+**Coupled-oscillator systems.** Kuramoto (1975) showed that coupled oscillators can synchronise spontaneously. Strogatz (2003) popularised this phenomenon broadly. Hopfield's energy-landscape model of associative memory (Hopfield, 1982) formalises how a system of coupled units can store memories as energy minima. The Kuramoto tradition is an *inspiration* for the framework; it is not the closest mechanistic predecessor (see "Swarm Chemistry" below).
+
+**Swarm Chemistry — the closest predecessor (revised in v3).** Sayama (2009, *Artificial Life*) introduced "Swarm Chemistry": agent populations whose behaviour is governed by per-agent categorical labels — kinetic-parameter tags — rather than continuous phases. Pairs of agents bind when their labels are compatible. The substrate's `k_freq` and `k_pol` fields are categorical labels in exactly this sense; they are scalar tags evaluated against a binding rule, not Kuramoto phases that integrate over time. The 8 % frequency rule (§4.4) is the categorical-compatibility test, not a phase-locking criterion. Earlier drafts of this paper used Kuramoto language for the binding mechanism, which was misdirection. v3.0 corrects this: the substrate is closer to Swarm Chemistry's discrete-compatibility lineage than to the continuous-phase swarmalators tradition (O'Keeffe et al. 2017). This matters for related-work positioning and for what the substrate is allowed to claim about emergent oscillator phenomena.
 
 **Ising machines and reservoir computing.** These approaches show that vibration-based computation is practically possible. We differ in that we do not optimise for a specific task; we simulate an open world in which structures — and in the end, functional neurons with synapses — are to emerge spontaneously or be constructible.
 
@@ -142,6 +148,8 @@ When two vibrations meet, a first-order node — an electron — can arise. Thre
 
 Where the conditions are met, the electron arises at the binding point. Its frequency is the sum of the two component frequencies. The node is fixed in space. Inside, the two source vibrations continue to oscillate.
 
+> **Why the 8 % rule is load-bearing fragile (new in v3).** The frequency rule was calibrated for a *random-Gaussian* initial vibration distribution: a wide spread of frequencies in which 8 %-apart pairs occur densely, with enough pairs at the boundary to feed the binding chain. Under deterministic structured stimuli — the regime the agent layer (Plans C and D) actually feeds the substrate, where audio tones are at specific frequencies (e.g. 500 / 1000 / 1500 Hz) and video features at oriented-filter outputs — the input frequency density is not Gaussian, and 8 %-apart pairs are scarce or absent. Atoms then form only when the input frequency ladder happens to include 8 %-spaced rungs, or when ambient-regeneration broadens the local frequency spectrum sufficiently. This is a real fragility, not a calibration knob. It shaped the M4 result documented in §10.8 and is one of the candidate amendments named there. v3.0 surfaces it because hiding it would be dishonest about what the substrate currently does and does not handle.
+
 ### 4.5 Atom formation
 
 Atoms emerge from several electrons in a stepwise, quantising process:
@@ -177,6 +185,21 @@ The two new parameters are:
 - **λ_dec** — bound-node decay rate back to free vibrations (per node per unit time, applied uniformly to electrons, pairs, triads; atoms excluded by §4.5)
 
 Both are calibration targets. Initial values: chosen so that ambient density at equilibrium roughly matches the seeded density (i.e. the world maintains itself rather than emptying or filling).
+
+### 4.8 Engineered topology vs emergent communication (new in v3)
+
+Between §§4.1 – 4.7 (the substrate's foundational laws, all strictly local) and the agent layer that listens, watches, and speaks, there is one architectural layer that needs to be named openly: **a small set of engineered non-localities**. The agent's input and output ports are spatially fixed regions of the substrate at which audio and video encoders inject vibrations and from which the audio decoder reads firings. Plan F adds one further engineered non-locality: a port-to-port firing coupling between the audio_input and audio_output ports, an explicit ghost-burst that fires at the audio_output port whenever an atom inside the audio_input port fires. Both the port locations and the speech-loop coupling are *fixed by construction*; they are not the outcome of binding rules.
+
+The biological analogue is axonal projection. Real cortex contains long-range axonal connections between regions that are not produced by local cellular dynamics; they are laid down developmentally and are part of the substrate's topology. The substrate's ports + speech-loop are this kind of engineered topology, condensed to its minimum: a small number of named non-localities, with clear spatial extents and a clear coupling rule, on top of which all further dynamics remain local.
+
+This is a **deliberate compromise**, and v3 names it because earlier framings risked overclaiming. The substrate's core thesis — *hierarchical structure from local rules + a sparse engineered topology* — is more honest than *everything from local rules alone*. The Communication-through-Coherence hypothesis (Fries 2005, 2015) describes how phase-coherent oscillation can preferentially gate communication between regions; whether genuinely emergent CTC arises in this substrate at the agent's port topology is an *open question*. Plan F provides the architectural precondition for testing it (a coupled cross-port path); it does not prove emergence.
+
+Two consequences follow:
+
+1. **Phase 7 (attention by global modulation) remains a local-rules claim.** The carrier-frequency selection mechanism in Phase 7 does not require non-local couplings; it operates on the substrate's existing binding rules. v3 leaves this claim untouched.
+2. **Cross-modal binding (Plan B + Plans C/D + Plan F)** is now framed honestly. The bridge molecules that form between video_input and audio_output ports under Plan B's STDP are local-rules dynamics. The port locations and the speech-loop are engineered topology. The bridge formation between them is what the substrate actually computes; the architectural skeleton is given.
+
+The cleanest test of this layered claim is the M4 acceptance criterion (§10.8 below). What the substrate gets to claim from a positive M4 result is precisely: "starting from a sparse engineered topology of 4 ports + 1 cross-port coupling, the local binding + STDP rules produce a path from video input to audio output that recovers the trained association." Nothing more. Nothing less.
 
 ---
 
@@ -441,9 +464,43 @@ The Phase-6 micronetwork goal remains realistic on a single high-end GPU (consum
 
 Decoupling physics from rendering (§7.1) means the live experience is no longer "watching atoms form in 1× real-time". Calibration runs are time-shifted: simulation produces snapshots, snapshots produce images and video, and the human looks at the result later. This is the right trade for research purposes but worth naming explicitly so that expectations match the artefact.
 
----
+### 10.8 Empirical findings from the substrate implementation, 2026-04 to 2026-05 (new in v3)
 
-## 11. Ethical implications
+Between 2026-04-21 and 2026-05-08 the substrate moved from "Phase 1 atom + Phase 2 molecule reproducible" to "all of Plans A (substrate growth), A.5 (perf), B (STDP), C (audio I/O), D (video I/O), E (reward + agent loop), F (speech-loop) merged on `main`". The full test suite is 272 non-slow tests + 18 slow tests, all passing or xfailed with documented reasons. This section records what the build produced, what the empirical chain composition under the M4 headline test looked like, and which substrate amendments are candidates for the next iteration.
+
+**What works at component level**
+
+- **Phase 1 / 2** — atom-at-13.4 s and ≥ 5 molecule species in 60 s reproducible from calibrated TOMLs with `rng_seed=42`.
+- **Plan A growth amendments** — recycling regeneration, strength-aware decay, molecule + molecule binding to higher levels: all green.
+- **Plan A.5 performance** — Numba JIT applied to five inner physics loops; per-tick wall cost reduced by an order of magnitude on bound K. `bind_vibrations_to_electrons` and `bind_nodes_upward` were not JITted because they perform `allocate_node` side effects; this is the next perf gap (§10.8 candidate amendment 1).
+- **Plan B STDP** — directional bridges with orientation vectors, asymmetric LTP/LTD, synaptic transmission across bridges. Plan B P3 (pre-seeded atoms + STDP → bridge propagates firings) passes at module level.
+- **Plan C audio I/O** — log-mapped tonotopic encoder + decoder with 0.954 selectivity recovered from synthetic firing patterns (I2 headline acceptance test).
+- **Plan D video I/O** — oriented filter bank + retinotopic XY + orientation-Z encoder; distinct shapes produce distinct port patterns (I4).
+- **Plan E reward** — tristate `k_reward_polarity` field, reward channel, asymmetric STDP swap at firing time. Substrate-bootstrap M4/M5 currently xfailed at this scale (see below).
+- **Plan F speech-loop** — engineered cross-port coupling (§4.8). SL1 – SL5 unit tests all pass; default off at `speech_loop_strength = 0.0`.
+
+**The M4 chain composition under measurement**
+
+The headline acceptance test is "glass-of-water demo": webcam at a glass + audio "water" trained 50× over 10 simulated minutes; then show the glass alone and read out the audio port. Target: spectral cosine ≥ 0.5 between substrate output audio and the trained "water" target.
+
+A scoped-down minimal-smoke version (1 pair × 1 sim-sec, threshold cosine ≥ 0.2, with pre-seeded port atoms + 8 pre-seeded bridge molecules + Plan F speech-loop) was constructed in May 2026 to isolate which of the chain's preconditions hold. The measured result: substrate forms K = 166 nodes, atoms = 16, bridge molecules survive at strength up to 495 after STDP, atoms inside the audio_input and video_input ports fire (3 and 4 times respectively in the 1 sim-sec window), but no atom fires inside the audio_output port and the audio output buffer is zero throughout. Cosine = 0.000.
+
+The diagnostic finding: `synaptic_transmission`'s post-atom search at `M + r_bridge · orientation` lands inside the audio_output port only for bridge molecules placed near that port — bridges spread along the full diagonal between video_input and audio_output produce post-search centres that are also along the diagonal, mostly outside the output port. The chain has four alignment requirements (atom firing + bridge near port + vibration flow through the bridge + post-atom existing at the search centre) that do not compose at the 1 sim-sec scope with deterministic stimuli.
+
+**What this tells us, framed honestly**
+
+- The substrate's individual components work, including Plan B's directional plasticity and Plan F's speech-loop machinery.
+- The chain composition into a substrate-bootstrapped cross-modal association does not hold at the budget tested. This is the empirical ceiling of the present substrate.
+- The 8 % rule's fragility under deterministic stimuli (§4.4 box) is part of why: input-port atom formation is sparse, which limits the rate at which the LTP/LTD loop can re-organise bridges into output-port-anchored geometries.
+
+**Candidate amendments (not chosen yet, recorded for the next iteration)**
+
+1. **JIT `bind_vibrations_to_electrons` + `bind_nodes_upward`** — the per-tick hotspots under sustained drive. Either rewrite to batch allocations or accept the side-effect cost. Would relax the wall-time ceiling and let M4 train at the original 30 pairs × 4 sim-sec scope rather than the scoped-down 1 × 1.
+2. **Relax `synaptic_transmission`'s geometric search** — currently searches at exactly `M + r_bridge · orientation`; a wider search radius or an integral over the bridge's span would relax the bridge-placement requirement that broke the M4 chain.
+3. **Frequency-broadening at input ports** — either widen the encoder's emitted frequency band (Plan C / Plan D amendment) or add an explicit "frequency-spread" rule at port boundaries that produces 8 %-spaced ladders from concentrated input. This addresses §4.4's fragility at the substrate edge rather than in the binding rule itself.
+4. **Re-spec M4** — accept that the substrate-bootstrapped self-association from input-only stimuli is currently out of budget at the original scope, and replace the headline acceptance with a scoped variant that tests the partial composition (which already passes at component level).
+
+These four are research-direction candidates. v3.0 does not commit to any of them; it names them so the empirical state of the question is on record.
 
 If the programme reaches its end goal and produces a functional neural network with emergent cognitive properties, serious ethical questions arise that we want to name explicitly.
 
@@ -481,6 +538,10 @@ Hopfield, J. J. (1982). Neural networks and physical systems with emergent colle
 
 Kuramoto, Y. (1975). Self-entrainment of a population of coupled non-linear oscillators. In *International Symposium on Mathematical Problems in Theoretical Physics* (pp. 420–422). Springer.
 
+O'Keeffe, K. P., Hong, H., & Strogatz, S. H. (2017). Oscillators that sync and swarm. *Nature Communications*, 8, 1504.
+
+Sayama, H. (2009). Swarm Chemistry. *Artificial Life*, 15(1), 105–114.
+
 Strogatz, S. H. (2003). *Sync: The emerging science of spontaneous order.* Hyperion.
 
 Wolfram, S. (2002). *A new kind of science.* Wolfram Media.
@@ -488,6 +549,12 @@ Wolfram, S. (2002). *A new kind of science.* Wolfram Media.
 ---
 
 ## Changelog
+
+**v3.0 (2026-05-08)** — Empirical-findings amendment incorporating Plan A through F implementation results.
+- §3.2 amended: Sayama Swarm Chemistry (2009) named as the closest mechanistic predecessor; Kuramoto framing demoted to inspiration. The substrate's `k_freq` and `k_pol` are categorical labels, not phases.
+- §4.4 amended: explicit honesty box on the 8 % rule's fragility under deterministic structured stimuli (the regime the agent layer feeds).
+- §4.8 new: engineered topology vs emergent communication. The agent's input/output ports and Plan F's speech-loop coupling are *engineered* non-localities — the analogue of axonal projection — not emergent CTC. The substrate's claim is "hierarchical structure from local rules + a sparse engineered topology", not "everything from local rules alone".
+- §10.8 new: empirical findings from the substrate implementation 2026-04 to 2026-05. What Plans A–F produced, the M4 chain composition under measurement (cosine = 0.000 at 1 × 1 sim-sec), and four candidate amendments named but not chosen.
 
 **v2.0 (2026-05-05)** — Substantive revision incorporating peer-review feedback.
 - §4.1 Substrate dimensionality: 2D → 3D (periodic on all three axes).
