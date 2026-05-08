@@ -55,6 +55,17 @@ class World:
         # Plan E — reward polarity tristate (-1, 0, +1) per node
         # 0 = not from reward channel; +1 = fire_positive origin; -1 = fire_negative origin
         self.k_reward_polarity = np.zeros(K, dtype=np.int8)
+        # G10 — pattern_id ('memory cell') per node. 0 = ambient/unassigned.
+        # When the user trains a specific pattern, world.active_pattern_id
+        # is set to a positive int; new atoms + bridges formed during that
+        # training inherit it. G6 propagation only fires bridges whose
+        # pattern_id matches the firing atom's, so different trained
+        # patterns can't cross-fire each other.
+        self.k_pattern_id = np.zeros(K, dtype=np.int16)
+        # Current pattern_id assigned to newly-formed nodes during the
+        # next physics tick. Set externally by the caller (training loop)
+        # before training a new pair, then reset to 0 for talk phase.
+        self.active_pattern_id: int = 0
         # Plan A.5 — slot recycling
         self.k_ref_count = np.zeros(K, dtype=np.int32)
         self._free_slots: list[int] = []
@@ -139,6 +150,7 @@ class World:
             self.k_strength[i] = 1.0
             self.k_orientation[i] = 0.0  # Plan B: clear stale direction inherited from dead predecessor
             self.k_reward_polarity[i] = 0  # Plan E: clear stale reward tag from dead predecessor
+            self.k_pattern_id[i] = 0  # G10: clear stale pattern tag from dead predecessor
             # k_ref_count[i] is already 0 by free-list invariant
             # Ensure k_count covers this slot (it was previously allocated, so
             # k_count >= i+1 in normal operation; guard for test setups)
@@ -161,6 +173,9 @@ class World:
         self.k_birth[i] = self.t
         self.k_alive[i] = True
         self.k_comp_kind[i] = comp_kind
+        # G10: tag the new node with the currently active pattern_id so
+        # downstream STDP / G6 can route by memory cell.
+        self.k_pattern_id[i] = int(self.active_pattern_id)
         n_comp = len(constituents)
         start = self.k_comp_used
         end = start + n_comp

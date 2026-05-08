@@ -385,6 +385,19 @@ def apply_stdp(world) -> int:
                     weight = cfg.delta_LTP * float(np.exp(-dt_pair / cfg.tau_LTP))
                     world.k_strength[m] = min(strength_old + weight, 1000.0)
                     strength_new = float(world.k_strength[m])
+                    # G10: when a bridge crosses lock threshold AND both
+                    # constituents (pre-atom and post-atom) share the
+                    # same non-zero pattern_id, commit the bridge to that
+                    # cell. This prevents cross-pattern bridges (e.g.
+                    # visual1's atom firing with audio2's atom by
+                    # coincidence during pair1 training) from being
+                    # tagged with pattern_id=1.
+                    if (lock_threshold > 0.0 and strength_new >= lock_threshold
+                            and int(world.k_pattern_id[m]) == 0):
+                        pid_i = int(world.k_pattern_id[atom_i])
+                        pid_j = int(world.k_pattern_id[atom_j])
+                        if pid_i != 0 and pid_i == pid_j:
+                            world.k_pattern_id[m] = pid_i
                     if strength_new > 0:
                         o_new = (o * strength_old + u * weight) / strength_new
                         new_norm = float(np.linalg.norm(o_new))
@@ -607,11 +620,28 @@ def apply_bridge_atom_propagation(world, dt: float) -> int:
             continue
         A_pos = world.k_pos[atom_idx]
 
+        # G10: pattern-cell gating. If the firing atom has a non-zero
+        # pattern_id (i.e. was committed to a specific pattern during
+        # training), restrict bridge candidates to ones that share that
+        # pattern_id OR are unassigned (pattern_id=0, ambient).
+        firing_pattern = int(world.k_pattern_id[atom_idx])
+
         # Find strong oriented bridges within r_bridge of the firing atom.
         d_AM = world.k_pos[bridge_indices] - A_pos
         d_AM -= box * np.round(d_AM / box)
         d_AM_sq = (d_AM * d_AM).sum(axis=1)
         nearby_mask = d_AM_sq <= r_bridge_sq
+
+        # G10: filter by pattern_id when the firing atom has one.
+        # STRICT mode: only fire bridges with the EXACT same pattern_id.
+        # Untagged ambient bridges (pattern_id=0) are excluded so they
+        # can't cross-talk between patterns. The firing atom must have
+        # been tagged during training; pre-seeded atoms (pattern_id=0)
+        # fire all bridges for backward compatibility with B.
+        if firing_pattern != 0:
+            bridge_pids = world.k_pattern_id[bridge_indices]
+            pattern_mask = (bridge_pids == firing_pattern)
+            nearby_mask = nearby_mask & pattern_mask
         if not nearby_mask.any():
             continue
         nearby_bridge_indices = bridge_indices[nearby_mask]

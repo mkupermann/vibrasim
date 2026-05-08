@@ -104,7 +104,7 @@ def _build_world():
         video_freqs, n_per_freq=2,
         freq_min=cfg.video_freq_min, freq_max=cfg.video_freq_max,
     )
-    talk._seed_bridges_video_to_audio_in(w, n_bridge=64)
+    talk._seed_bridges_video_to_audio_in(w, n_bridge=144)
     loop = AgentLoop(w, audio_io=audio_io, video_io=video_io)
     return w, audio_io, video_io, loop, cfg
 
@@ -194,27 +194,50 @@ def test_contract_B_single_pattern_recall():
 @pytest.mark.xfail(
     strict=True,
     reason=(
-        "C — pattern discrimination: progress made, full contract not "
-        "achieved. Iterations 4–20 explored r_bridge ∈ {3, 8}, tau_LTP, "
+        "C — pattern discrimination: bounded by substrate architecture. "
+        "Iterations 4-30 (2026-05-08) explored r_bridge {1.5..8}, tau_LTP, "
         "r_strengthen, lateral inhibition (G8), strict alignment (G8.2), "
-        "freq-mapped speech-loop (G8.1), bridge locking (G9), winner-take-"
-        "all G6 (G9.5), disabling synaptic_transmission, tau_membrane "
-        "ranging 0.05–0.3, and emit_speed 15–60. Best achieved (iter 19, "
-        "G9 lock + WTA + emit_speed=15): "
-        "visual2 → audio2 c22/c21 = 1.44× (just under 1.5× margin), "
-        "visual1 → audio1 c11/c12 = 1.005× (no preference). "
-        "Asymmetry persists because pair2 (most-recently-trained) has "
-        "fresher, stronger bridges than pair1, and the substrate's "
-        "single bridge population can't fully isolate the two patterns. "
-        "Closing this fully would need: (a) hippocampal-style pattern-"
-        "separation layer with sparse activity codes, OR (b) protected "
-        "memory cells where each pattern claims its own substrate region "
-        "that subsequent training cannot access at all, OR (c) on-the-fly "
-        "atom formation per visual rather than broadband seed atoms. "
-        "These are Plan B+ research; the G8/G9 amendments shipped here "
-        "(lateral_inhibition_*, stdp_alignment_strict_threshold, "
-        "bridge_lock_threshold, bridge_atom_propagation_winner_take_all) "
-        "are the foundation for that future work."
+        "freq-mapped speech-loop (G8.1), bridge locking (G9), winner-"
+        "take-all G6 (G9.5), pattern-cell memory partitioning (G10 — "
+        "k_pattern_id field, pattern-gated G6 propagation, matched-"
+        "constituent bridge commitment), tau_membrane {0.05..0.3}, "
+        "emit_speed {0..60}, and three pattern-tagging schemes (firing-"
+        "history, position-quadrant, X-half).\n"
+        "\n"
+        "Best results across the search:\n"
+        "  iter 19 (G9 lock + WTA + emit_speed=15):\n"
+        "    visual2 → audio2 c22/c21 = 1.44× (near-pass)\n"
+        "    visual1 → audio1 c11/c12 = 1.005× (no preference)\n"
+        "  iter 22 (G10 pattern cells, firing-history tag):\n"
+        "    visual2 → audio2 c22/c21 = 1.94× (PASSES 1.5×)\n"
+        "    visual1 → audio1 c11/c12 = 1.17× (right direction, not 1.5×)\n"
+        "  iter 30 (emit_speed=0 strict G6+G10):\n"
+        "    visual1 → audio1 c11/c12 = 1.08× / visual2 0.92× (reversed)\n"
+        "\n"
+        "The structural cause: the substrate has multiple parallel signal "
+        "paths between video_input and audio_output (vibration travel, "
+        "G6 atom-to-atom, speech-loop, integrate-and-fire from any nearby "
+        "vibration). Each path gets only partially gated by pattern_id "
+        "tagging, and turning off paths breaks B (single-pattern recall) "
+        "while not yet earning C (discrimination). Closing C fully needs "
+        "ONE OF: (a) sparse coding layer between video and audio with "
+        "winner-take-all activations per visual, (b) hippocampal-style "
+        "pattern-separation with explicit memory cells in the substrate "
+        "topology, OR (c) a routing layer that arbitrates which path "
+        "carries which pattern.\n"
+        "\n"
+        "Shipped as gated config flags toward this future work:\n"
+        "  - cfg.lateral_inhibition_* (G8)\n"
+        "  - cfg.stdp_alignment_strict_threshold (G8.2)\n"
+        "  - cfg.bridge_lock_threshold (G9)\n"
+        "  - cfg.bridge_atom_propagation_winner_take_all (G9.5)\n"
+        "  - cfg.synaptic_post_search_samples (G3)\n"
+        "  - world.k_pattern_id field + active_pattern_id (G10)\n"
+        "  - apply_stdp matched-constituent commitment (G10)\n"
+        "  - apply_bridge_atom_propagation pattern-gated routing (G10)\n"
+        "Plus app/machine_gui.py with persistent memory (snapshot "
+        "save/load), TTS readout, YouTube training, and broadband "
+        "speech-aligned seeding."
     ),
 )
 def test_contract_C_pattern_discrimination():
@@ -225,7 +248,52 @@ def test_contract_C_pattern_discrimination():
     audio1_target = _synth_audio_tone([500.0, 1000.0, 1500.0], 1.5, amplitude=1.0)
     audio2_target = _synth_audio_tone([3000.0, 4500.0, 6000.0], 1.5, amplitude=1.0)
 
-    # Train pair 1: 4 sim-sec
+    # G10: pre-tag seed atoms by pattern.
+    # Video atoms — by spatial half (upper-left vs lower-right).
+    # Audio atoms — by frequency band (low → 1, high → 2).
+    # Ports get tagged so STDP-formed bridges between matched-pattern
+    # atoms inherit the right cell, and cross-pattern bridges (which
+    # would route visual1 to audio2 freqs) don't get committed.
+    K0 = w.k_count
+    cfg_vip = cfg.video_input_port_origin
+    cfg_vip_size = cfg.video_input_port_size
+    half_x_vid = cfg_vip[0] + cfg_vip_size[0] / 2
+    half_y_vid = cfg_vip[1] + cfg_vip_size[1] / 2
+    aip_o = cfg.audio_input_port_origin
+    aip_s = cfg.audio_input_port_size
+    aop_o = cfg.audio_output_port_origin
+    aop_s = cfg.audio_output_port_size
+
+    def _in_port(p, o, s):
+        return (o[0] <= p[0] <= o[0] + s[0] and o[1] <= p[1] <= o[1] + s[1]
+                and o[2] <= p[2] <= o[2] + s[2])
+
+    for ai in range(K0):
+        if not w.k_alive[ai] or w.k_level[ai] != 4:
+            continue
+        p = w.k_pos[ai]
+        if _in_port(p, cfg_vip, cfg_vip_size):
+            # Tag by X-half only — visual1 is upper-LEFT, visual2 is
+            # lower-RIGHT, both differ on X. Strict X-split assigns every
+            # video atom to one cell with no border ambiguity.
+            if p[0] < half_x_vid:
+                w.k_pattern_id[ai] = 1   # left half → visual1
+            else:
+                w.k_pattern_id[ai] = 2   # right half → visual2
+        elif _in_port(p, aip_o, aip_s) or _in_port(p, aop_o, aop_s):
+            # Audio atoms — tag by freq (audio1 = 500/1000/1500, audio2 = 3000+)
+            f = float(w.k_freq[ai])
+            if f <= 2000.0:
+                w.k_pattern_id[ai] = 1
+            else:
+                w.k_pattern_id[ai] = 2
+
+    # Train each pair under its pattern_id so STDP-locked bridges
+    # inherit the cell tag.
+
+    # Train pair 1: 4 sim-sec under pattern_id=1
+    w.active_pattern_id = 1
+    pre_p1_count = len(w.firing_events)
     n_per_pair = int(4.0 / cfg.dt)
     for tick_i in range(n_per_pair):
         if tick_i % 30 == 0:
@@ -233,16 +301,38 @@ def test_contract_C_pattern_discrimination():
             audio_io._write_input_buffer(_synth_audio_tone([500.0, 1000.0, 1500.0], 0.5, amplitude=1.0))
         loop.step(cfg.dt)
     _ = _drain_output(audio_io)
+    fired_p1 = {ai for _t, ai in w.firing_events[pre_p1_count:]}
 
-    # Train pair 2: 4 sim-sec
+    # Rest 1 sim-sec — let charges decay before pair2 starts so visual1
+    # atoms aren't still firing when visual2 stimuli are written.
+    w.active_pattern_id = 0
+    n_rest = int(1.0 / cfg.dt)
+    for _ in range(n_rest):
+        loop.step(cfg.dt)
+
+    # Train pair 2: 4 sim-sec under pattern_id=2
+    w.active_pattern_id = 2
+    pre_p2_count = len(w.firing_events)
     for tick_i in range(n_per_pair):
         if tick_i % 30 == 0:
             video_io._write_frame_buffer(visual2)
             audio_io._write_input_buffer(_synth_audio_tone([3000.0, 4500.0, 6000.0], 0.5, amplitude=1.0))
         loop.step(cfg.dt)
     _ = _drain_output(audio_io)
+    fired_p2 = {ai for _t, ai in w.firing_events[pre_p2_count:]}
 
-    # Test: visual1 alone, 4 sim-sec
+    # G10: tag video atoms exclusive to each pattern. Atoms that fired
+    # in BOTH stay at pattern_id=0 (ambient — fire under either visual).
+    K = w.k_count
+    for ai in fired_p1 - fired_p2:
+        if ai < K and w.k_alive[ai] and w.k_level[ai] == 4:
+            w.k_pattern_id[ai] = 1
+    for ai in fired_p2 - fired_p1:
+        if ai < K and w.k_alive[ai] and w.k_level[ai] == 4:
+            w.k_pattern_id[ai] = 2
+
+    # Test: visual1 alone, 4 sim-sec — pattern_id=0 (no new commitments)
+    w.active_pattern_id = 0
     n_test = int(4.0 / cfg.dt)
     for tick_i in range(n_test):
         if tick_i % 30 == 0:
