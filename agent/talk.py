@@ -183,7 +183,14 @@ def _build_config() -> WorldConfig:
         theta_fire=1.0,                   # was 2.0 — fire on minimal input
         n_emit=8,
         r_integrate=8.0,                  # was 5.0 — wider integration radius
-        t_refractory=0.05, tau_membrane=0.3, emit_speed=60.0,
+        # tau_membrane=0.05: short charge decay so atoms forget quickly
+        # between training pulses. Otherwise pair1's visual atoms still
+        # have residual charge during pair2's training and form spurious
+        # cross-pair bridges.
+        # emit_speed=15: emitted vibrations don't traverse the full box
+        # diagonal in a 4-sec test phase, so discrimination relies on
+        # G6 atom-to-atom propagation, not vibration broadcast.
+        t_refractory=0.05, tau_membrane=0.05, emit_speed=15.0,
         # Plan B + Plan E STDP. r_bridge=3 (was 8) tightens the tube
         # search radius for STDP — different patterns' bridge tubes don't
         # overlap, so visual1's training doesn't lift visual2's bridges.
@@ -192,7 +199,11 @@ def _build_config() -> WorldConfig:
         stdp_enabled=True,
         tau_LTP=0.025, delta_LTP=3.0, delta_LTD=0.5,
         r_bridge=3.0,
-        synaptic_transmission_strength=0.5,
+        # synaptic_transmission_strength=0 disables the vibration-flow
+        # propagation path entirely. With G6 + WTA active we route signals
+        # only via the strongest committed bridge per firing atom — no
+        # broadband cross-talk through the slower vibration-traveling path.
+        synaptic_transmission_strength=0.0,
         # threshold=50 — pre-seeded bridges START at strength=1.0 (50× below).
         # Training strengthens trained-tube bridges by delta_LTP=3.0 per
         # causal pair × ~30 pairs/sec × 4 sec ≈ 360 cumulative — well above
@@ -218,6 +229,20 @@ def _build_config() -> WorldConfig:
         lateral_inhibition_radius=6.0,
         lateral_inhibition_strength=2.0,
         stdp_alignment_strict_threshold=0.0,  # legacy STDP behaviour
+        # G9: bridge locking — once a bridge crosses this strength via
+        # training, future STDP and lateral inhibition skip it. New
+        # patterns must use unlocked bridges in different spatial regions,
+        # so multi-pattern memory accumulates instead of overwriting.
+        # Threshold 50: at delta_LTP=3 × ~30 pairs/sec, a tube's bridges
+        # cross 50 within ~0.6 sec of training. Comfortable for any
+        # training session ≥ 1 sec.
+        bridge_lock_threshold=50.0,
+        # G9.5: winner-take-all bridge propagation. Each firing pre-atom
+        # fires only the strongest+best-aligned bridge nearby, not every
+        # bridge in radius. Combined with G9 lock, this enforces pattern-
+        # specific routing — visual1's atoms fire visual1's committed
+        # bridge, visual2's atoms fire visual2's committed bridge.
+        bridge_atom_propagation_winner_take_all=True,
         # Plan F speech-loop — burst_size 20 gives ~3 ghosts per audio_out
         # atom in r_integrate, enough to fire at theta_fire=1.0 in one tick.
         speech_loop_strength=1.0,

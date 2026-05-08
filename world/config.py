@@ -113,6 +113,22 @@ class WorldConfig:
                                                     #     whose orientation TIGHTLY matches the new pair's
                                                     #     direction get re-strengthened — bridges committed
                                                     #     to a different pattern get LTD instead.
+    bridge_atom_propagation_winner_take_all: bool = False  # G9.5: when True, apply_bridge_atom_propagation
+                                                            #     fires only the SINGLE strongest bridge near
+                                                            #     each pre-atom (rather than every bridge in
+                                                            #     radius). Combined with bridge_lock_threshold,
+                                                            #     this enforces pattern-specific propagation:
+                                                            #     each visual fires only its own committed
+                                                            #     bridge, not every nearby bridge.
+    bridge_lock_threshold: float = 0.0              # G9: once a level-5+ molecule's strength crosses this
+                                                    #     threshold, it becomes 'locked' — apply_stdp skips
+                                                    #     it (no LTP / LTD / orientation update) and lateral
+                                                    #     inhibition exempts it. Locked bridges form the
+                                                    #     substrate's persistent multi-pattern memory: once a
+                                                    #     pattern's bridges commit, subsequent training cannot
+                                                    #     overwrite them, so different (visual, audio) pairs
+                                                    #     coexist on disjoint bridge subsets.
+                                                    #     Default 0.0 = disabled (legacy behaviour).
 
     # Plan C — audio I/O
     audio_io_enabled: bool = False
