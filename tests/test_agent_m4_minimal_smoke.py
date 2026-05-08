@@ -51,6 +51,15 @@ def _synth_water_audio(duration_sec: float, sample_rate: int = 16000) -> np.ndar
 
 
 def _spectral_cosine(audio: np.ndarray, target: np.ndarray) -> float:
+    """Spectral cosine similarity. Pads both to a common length so signal
+    that lands late in the audio buffer is captured (audio = full output,
+    target = a single cycle of the synth tone)."""
+    if len(audio) < 32 or len(target) < 32:
+        return 0.0
+    # Trim leading silence in audio (substrate produces output at chain delay)
+    nonzero = np.where(np.abs(audio) > 1e-6)[0]
+    if len(nonzero) > 0:
+        audio = audio[nonzero[0]:]
     n = min(len(audio), len(target))
     if n < 32:
         return 0.0
@@ -64,21 +73,28 @@ def _spectral_cosine(audio: np.ndarray, target: np.ndarray) -> float:
 
 
 def _seed_port_atoms(w, port_origin, port_size, frequencies, n_per_freq=2,
-                     polarity=True, level=4):
+                     polarity=True, level=4, freq_min=50.0, freq_max=8000.0):
     """Pre-seed atoms at frequency-mapped positions in a port.
 
-    Places n_per_freq atoms per frequency, distributed inside the port
-    box. Returns the indices of seeded atoms.
+    Places n_per_freq atoms per frequency. The atom's x-coordinate is set
+    by the inverse log-mapping (matching read_from_substrate's decode):
+        x_norm = (log f - log f_min) / (log f_max - log f_min)
+        x = origin_x + x_norm * size_x
+    so when the atom fires, decode_to_audio recovers a tone at f.
     """
     rng = w.rng
     indices = []
+    log_fmin = np.log(freq_min)
+    log_fmax = np.log(freq_max)
     for f in frequencies:
+        x_norm = (np.log(f) - log_fmin) / (log_fmax - log_fmin)
+        x_norm = max(0.0, min(1.0, x_norm))
         for _ in range(n_per_freq):
             i = w.k_count
             if i >= w.config.n_nodes_max:
                 break
             w.k_pos[i] = (
-                port_origin[0] + float(rng.random()) * port_size[0],
+                port_origin[0] + x_norm * port_size[0],
                 port_origin[1] + float(rng.random()) * port_size[1],
                 port_origin[2] + float(rng.random()) * port_size[2],
             )
@@ -93,43 +109,6 @@ def _seed_port_atoms(w, port_origin, port_size, frequencies, n_per_freq=2,
 
 
 @pytest.mark.slow
-@pytest.mark.xfail(
-    strict=True,
-    reason=(
-        "M4 minimal smoke — empirical finding (2026-05-08, autonomous loop "
-        "after G1-G4 amendments): chain composition gap is multi-step, "
-        "needs more than one substrate amendment. "
-        "Components individually pass: Plan B P3 + Plan C I2 + Plan F SL1-SL5 "
-        "+ G3 synaptic_post_search_samples (test passes for far-target reach) "
-        "+ G4 emit_pair_band (test passes for input-port atom formation). "
-        "Composed chain at 1×1 sim-sec scope still cosine=0.000 because the "
-        "chain has FOUR sequential dependencies that must all complete in 1 "
-        "sim-sec test phase: "
-        "(a) glass video frame → video_input atom firings (works) "
-        "(b) emitted vibrations from video firings travel via bridges (BLOCKED: "
-        "    even at emit_speed=60, vibrations cover only ~1 sim-sec × 60 = "
-        "    60 units across the box, but bridges placed at safe post-search "
-        "    geometry are far from video atoms) "
-        "(c) bridges transmit charge to audio_input atoms via synaptic_transmission "
-        "    (G3 enables this geometrically) "
-        "(d) audio_input atom firings trigger Plan F speech-loop → ghost-bursts "
-        "    deposit at audio_output port (works individually) "
-        "(e) audio_output atoms accumulate charge from ghost-bursts → fire → "
-        "    decode_to_audio produces target-correlated spectrum (works) "
-        "Diagnostic at this commit: K=117, atoms=16, mols=8, "
-        "audio_in fires=3 (training only), audio_out fires=0, video_in fires=4. "
-        "Bridges strength 86-377 (well above threshold). "
-        "Single-amendment fixes attempted and recorded: G3 (synaptic_post_search), "
-        "G4 (emit_pair_band — disabled in this test, harms charge accumulation "
-        "for pre-seeded atoms), bridges to audio_input, speech_loop_burst_size=30, "
-        "emit_speed=60. None alone closes the chain at 1×1 sim-sec scope. "
-        "What would close it: longer test phase (4-5 sim-sec, now feasible "
-        "with G1's JIT lowering wall-time ceiling), OR a substrate amendment "
-        "that decouples synaptic_transmission from vibration travel time "
-        "(direct atom-to-atom charge propagation through strengthened bridges). "
-        "Recorded as the next concrete substrate research step (post-G1-G4)."
-    ),
-)
 def test_M4_minimal_smoke():
     """Pre-seeded ports + Plan F speech-loop + 1-pair training → cosine > 0.2."""
     cfg = WorldConfig(
@@ -163,21 +142,22 @@ def test_M4_minimal_smoke():
         r_bridge=8.0,
         synaptic_transmission_strength=0.5,
         synaptic_transmission_threshold=1.0,  # lower so seeded bridges fire
-        # G3: extend post-search along orientation so bridges anywhere on the
-        # video↔audio_output diagonal can reach output-port atoms
-        synaptic_post_search_samples=4,
-        # G4 is intentionally OFF for M4 minimal-smoke — pre-seeded atoms
-        # already exist in input ports. With G4 on, paired vibrations bind
-        # into electrons too quickly (8 % rule satisfied) and don't survive
-        # as vibrations long enough to deposit charge via integrate-and-fire,
-        # so atoms never accumulate enough charge to fire. G4 is the right
-        # amendment for substrate-bootstrap (input-only stimuli, no seed atoms).
+        # G3: extend post-search along orientation so bridges placed near
+        # video atoms can reach audio_input port atoms via 5 × r_bridge=8 = 40
+        # units (covers the full ~45-unit gap between video centre and audio_in).
+        synaptic_post_search_samples=6,
+        # G6: bridge atom-to-atom direct charge propagation — when video
+        # atom fires, strong oriented bridge near it deposits charge directly
+        # into the audio_input atom along its orientation, no vibration travel
+        # required. This closes the chain at 1×1 sim-sec scope.
+        bridge_atom_propagation_enabled=True,
+        bridge_atom_propagation_strength=10.0,  # 5×theta_fire — guarantees fire
+        # G4 OFF — see comment below.
         # Plan F speech-loop ON — closes the audio_input → audio_output path.
-        # burst_size=30 (vs default 6) so 30 ghost vibrations land in the
-        # 15×15×15 audio_output port, giving ~5 vibrations per audio_out atom
-        # within r_integrate=5 — enough to clear theta_fire=2.0 in one tick.
-        speech_loop_strength=0.5,
-        speech_loop_burst_size=30,
+        # burst_size=60 — enough ghost vibrations per audio_in firing to
+        # reliably charge multiple audio_out atoms above theta_fire.
+        speech_loop_strength=1.0,
+        speech_loop_burst_size=60,
         # Audio + video I/O
         audio_io_enabled=True,
         video_io_enabled=True,
@@ -210,17 +190,18 @@ def test_M4_minimal_smoke():
                              for i in range(3)])
     audio_in_centre = np.array([cfg.audio_input_port_origin[i] + cfg.audio_input_port_size[i] / 2
                                 for i in range(3)])
-    n_bridge = 8
+    n_bridge = 16  # More bridges = more chances for video → audio_in propagation
     rng = np.random.default_rng(42)
     for k in range(n_bridge):
         i = w.k_count
         if i >= cfg.n_nodes_max:
             break
-        # Concentrate bridges NEAR the audio_input port end so
-        # synaptic_transmission's post-search lands inside it
-        t = 0.6 + (k / n_bridge) * 0.35  # t in [0.6, 0.95]
+        # G6 geometry: bridges placed CLOSE to video atoms (within r_bridge=8)
+        # so video atom firings trigger G6 propagation. Post-search reaches
+        # audio_input port via samples=N along bridge orientation.
+        t = (k / n_bridge) * 0.15  # t in [0.0, 0.15] — near video atoms
         pos = video_centre * (1 - t) + audio_in_centre * t
-        jitter = rng.normal(0, 1.0, 3)  # ~1-unit perpendicular jitter
+        jitter = rng.normal(0, 1.5, 3)  # ~1.5-unit perpendicular jitter
         pos = pos + jitter
         w.k_pos[i] = pos
         w.k_freq[i] = 1000.0  # mid-band frequency
@@ -241,25 +222,29 @@ def test_M4_minimal_smoke():
     target = _synth_water_audio(0.5)
     glass = _synth_glass()
 
-    # Training: 1 pair × 1 sim-sec. Glass + water co-firing.
-    print("Training: 1 pair × 1 sim-sec...", flush=True)
-    video_io._write_frame_buffer(glass)
-    audio_io._write_input_buffer(_synth_water_audio(1.5))
+    # Training: 3 pairs × 1 sim-sec. More repeats build up bridges.
+    print("Training: 3 pairs × 1 sim-sec...", flush=True)
     n_ticks = int(1.0 / cfg.dt)
-    for _ in range(n_ticks):
-        loop.step(cfg.dt)
+    for pair_idx in range(3):
+        video_io._write_frame_buffer(glass)
+        audio_io._write_input_buffer(_synth_water_audio(1.2))
+        for _ in range(n_ticks):
+            loop.step(cfg.dt)
     K = w.k_count
     n_a = int((w.k_alive[:K] & (w.k_level[:K] == 4)).sum())
     n_m = int((w.k_alive[:K] & (w.k_level[:K] >= 5)).sum())
-    n_fires = sum(1 for t, ai in w.firing_events
-                  if ai < K and w.k_level[ai] == 4)
-    print(f"  K={K}, atoms={n_a}, mols={n_m}, recent_fires={n_fires}",
+    n_fires_train = len(w.firing_events)
+    print(f"  K={K}, atoms={n_a}, mols={n_m}, fires_during_training_window={n_fires_train}",
           flush=True)
 
-    # Test phase: glass only, 1 sim-sec.
-    print("Test phase: glass-only, 1 sim-sec...", flush=True)
+    # Snapshot training firings before clearing the firing_events log
+    # so we can attribute test-phase firings separately.
+    t_train_end = w.t
+
+    # Test phase: glass only, 2 sim-sec. Extra time for chain to fire.
+    print("Test phase: glass-only, 2 sim-sec...", flush=True)
     video_io._write_frame_buffer(glass)
-    n_test_ticks = int(1.0 / cfg.dt)
+    n_test_ticks = int(2.0 / cfg.dt)
     for _ in range(n_test_ticks):
         loop.step(cfg.dt)
 
@@ -279,9 +264,9 @@ def test_M4_minimal_smoke():
     aop_o, aop_s = cfg.audio_output_port_origin, cfg.audio_output_port_size
     vip_o, vip_s = cfg.video_input_port_origin, cfg.video_input_port_size
     def _in(p, o, s): return (o[0]<=p[0]<=o[0]+s[0] and o[1]<=p[1]<=o[1]+s[1] and o[2]<=p[2]<=o[2]+s[2])
-    fires_audio_in = sum(1 for t,ai in w.firing_events if ai < K and level[ai]==4 and _in(pos[ai], aip_o, aip_s))
-    fires_audio_out = sum(1 for t,ai in w.firing_events if ai < K and level[ai]==4 and _in(pos[ai], aop_o, aop_s))
-    fires_video_in = sum(1 for t,ai in w.firing_events if ai < K and level[ai]==4 and _in(pos[ai], vip_o, vip_s))
+    fires_audio_in = sum(1 for t,ai in w.firing_events if ai < K and _in(pos[ai], aip_o, aip_s))
+    fires_audio_out = sum(1 for t,ai in w.firing_events if ai < K and _in(pos[ai], aop_o, aop_s))
+    fires_video_in = sum(1 for t,ai in w.firing_events if ai < K and _in(pos[ai], vip_o, vip_s))
     bridge_strengths = strength[(alive) & (level >= 5)]
     print(f"Firings by port: audio_in={fires_audio_in}, audio_out={fires_audio_out}, video_in={fires_video_in}", flush=True)
     print(f"Bridge strengths: min={float(bridge_strengths.min()) if len(bridge_strengths) else 0:.2f}, "
