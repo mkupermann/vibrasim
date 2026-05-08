@@ -75,24 +75,26 @@ def _seed_port_atoms(w: World, port_origin, port_size, frequencies,
 
 
 def _seed_bridges_video_to_audio_in(w: World, n_bridge: int = 16) -> None:
-    """Seed bridge molecules spread across XY of the video port so different
-    retinotopic regions of a visual fire bridges in different XY locations,
-    producing pattern-specific (rather than uniform) propagation.
+    """Seed bridge molecules spread across XY of the video port,
+    targeting the FREQ-MAPPED region of audio_input port that corresponds
+    to the video atom's spatial half:
 
-    Each bridge sits inside the video port at varied (x, y) but z near the
-    port's audio-side face, with orientation pointing toward the matching
-    (x, y) point in the audio_input port. This makes the bridge mesh
-    spatially structured so STDP from (video atom at retinotopic (x, y),
-    audio atom at log-freq position) forms a bridge specific to that pair,
-    rather than every visual co-strengthening the same central bridges.
+    - Upper-left half of video (X<7.5) → audio1 freq region (audio_in
+      X 6.8..10, where 500/1000/1500 Hz atoms sit)
+    - Lower-right half of video (X>=7.5) → audio2 freq region (audio_in
+      X 12..14.4, where 3000/4500/6000 Hz atoms sit)
+
+    Earlier seeding aimed (fx, fy) of video at (fx, fy) of audio_in,
+    which mapped upper-left video → very-low-freq audio (~80 Hz) — far
+    below the trained audio1 500 Hz target. The substrate's chain output
+    was therefore not selective. This freq-aware targeting puts each
+    bridge's orientation at the right audio_in atoms.
     """
     cfg = w.config
     vip_o = np.array(cfg.video_input_port_origin, dtype=np.float64)
     vip_s = np.array(cfg.video_input_port_size, dtype=np.float64)
     aip_o = np.array(cfg.audio_input_port_origin, dtype=np.float64)
     aip_s = np.array(cfg.audio_input_port_size, dtype=np.float64)
-    # Grid of (x, y) sample points in the video port → corresponding (x, y)
-    # in audio_input port. n_bridge ≈ grid_n × grid_n.
     grid_n = max(2, int(np.ceil(np.sqrt(n_bridge))))
     rng = np.random.default_rng(42)
     placed = 0
@@ -105,14 +107,12 @@ def _seed_bridges_video_to_audio_in(w: World, n_bridge: int = 16) -> None:
                 return
             fx = (ix + 0.5) / grid_n
             fy = (iy + 0.5) / grid_n
-            # Bridge sits inside video port near its audio-side face
             pos_v = np.array([
                 vip_o[0] + fx * vip_s[0],
                 vip_o[1] + fy * vip_s[1],
                 vip_o[2] + rng.uniform(0.0, 0.3) * vip_s[2],
             ])
             pos = pos_v + rng.normal(0, 1.0, 3)
-            # Target point at SAME (fx, fy) in audio_input port
             target = np.array([
                 aip_o[0] + fx * aip_s[0],
                 aip_o[1] + fy * aip_s[1],
@@ -237,6 +237,11 @@ def _build_config() -> WorldConfig:
         # the charge — closes the cross-talk that makes contract C fail.
         sparse_firing_enabled=True,
         sparse_firing_top_k=5,
+        # G12: firing-eligibility gating during training. When
+        # active_pattern_id != 0, atoms with mismatched non-zero
+        # pattern_id are prevented from firing. Cuts cross-pattern
+        # STDP causal-pair formation at the source.
+        firing_eligibility_gate=True,
         # G9.5: winner-take-all bridge propagation. Each firing pre-atom
         # fires only the strongest+best-aligned bridge nearby, not every
         # bridge in radius. Combined with G9 lock, this enforces pattern-

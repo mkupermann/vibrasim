@@ -194,7 +194,7 @@ def test_contract_B_single_pattern_recall():
 @pytest.mark.xfail(
     strict=True,
     reason=(
-        "C — pattern discrimination: 38 iterations (2026-05-08), four "
+        "C — pattern discrimination: 42 iterations (2026-05-08), five "
         "architectural amendments shipped as gated config flags, asymmetric "
         "outcome confirmed structural.\n"
         "\n"
@@ -204,6 +204,8 @@ def test_contract_B_single_pattern_recall():
         "  iter 36 (emit_speed=1, top_k=5):    c22=2.78×  c11=0.90×\n"
         "  iter 37 (6-sec train, top_k=7):     c22=130× ratio (c22=0.26<0.3)\n"
         "                                       c11=0.91× (wrong dir)\n"
+        "  iter 39 (G12 firing-elig gate):     c22=1.95×  c11=0.94×\n"
+        "  iter 42 (G12 + 6-freq audio seed):  c22=1.97×  c11=0.70×\n"
         "\n"
         "Architectural amendments shipped:\n"
         "  G3: synaptic_post_search_samples (relax bridge geometry)\n"
@@ -216,8 +218,14 @@ def test_contract_B_single_pattern_recall():
         "  G10: k_pattern_id field + active_pattern_id + matched-\n"
         "       constituent bridge commitment + pattern-gated G6\n"
         "  G11: sparse_firing per port (top_k winner-take-all atoms)\n"
+        "  G12: firing_eligibility_gate — atoms with mismatched non-zero\n"
+        "       pattern_id are PREVENTED from firing during training\n"
+        "       (regardless of charge). Cuts cross-pattern STDP causal\n"
+        "       pairs at the source rather than downstream.\n"
         "  + machine_gui.py persistent memory snapshots\n"
         "  + per-phase substrate purge in test (state hygiene)\n"
+        "  + position-based video atom + bridge pre-tagging\n"
+        "  + freq-band audio atom + audio-side-bridge pre-tagging\n"
         "\n"
         "Why the asymmetry persists:\n"
         "Visual2 (most-recently-trained) consistently discriminates with\n"
@@ -278,7 +286,15 @@ def test_contract_C_pattern_discrimination():
         if not w.k_alive[ai]:
             continue
         p = w.k_pos[ai]
-        if _in_port(p, aip_o, aip_s) or _in_port(p, aop_o, aop_s):
+        if _in_port(p, cfg_vip, cfg_vip_size):
+            # Video port atoms + bridges seeded at video-port-side face.
+            # Tag by X-half: visual1 (upper-left bar) lives at X<7.5,
+            # visual2 (lower-right bar) at X>=7.5.
+            if p[0] < half_x_vid:
+                w.k_pattern_id[ai] = 1
+            else:
+                w.k_pattern_id[ai] = 2
+        elif _in_port(p, aip_o, aip_s) or _in_port(p, aop_o, aop_s):
             if w.k_level[ai] == 4:
                 # Audio atoms — tag by freq band.
                 f = float(w.k_freq[ai])
@@ -292,11 +308,6 @@ def test_contract_C_pattern_discrimination():
                     w.k_pattern_id[ai] = 1
                 else:
                     w.k_pattern_id[ai] = 2
-    # Video atoms + bridges: tag by FIRING HISTORY during each pair's
-    # training (assigned after training phases below). Position-based
-    # pre-tagging there is less precise because the encoder produces
-    # emissions at retinotopic + orientation positions that don't map
-    # neatly to spatial halves.
 
     # Train each pair under its pattern_id so STDP-locked bridges
     # inherit the cell tag.
@@ -347,20 +358,6 @@ def test_contract_C_pattern_discrimination():
     for ai in fired_p2 - fired_p1:
         if ai < K and w.k_alive[ai] and w.k_level[ai] == 4:
             w.k_pattern_id[ai] = 2
-
-    # G10b: tag video atoms by which pair they fired in. Only-in-pair-1
-    # → cell 1, only-in-pair-2 → cell 2, in-both → ambient (0).
-    K_after = w.k_count
-    for ai in fired_p1 - fired_p2:
-        if ai < K_after and w.k_alive[ai]:
-            p = w.k_pos[ai]
-            if _in_port(p, cfg_vip, cfg_vip_size):
-                w.k_pattern_id[ai] = 1
-    for ai in fired_p2 - fired_p1:
-        if ai < K_after and w.k_alive[ai]:
-            p = w.k_pos[ai]
-            if _in_port(p, cfg_vip, cfg_vip_size):
-                w.k_pattern_id[ai] = 2
 
     # G11: between training and test, PURGE residual state so test
     # phase isn't biased by leftover vibrations / atom charges from

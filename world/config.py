@@ -130,6 +130,14 @@ class WorldConfig:
     sparse_firing_top_k: int = 3                    # G11: how many atoms per port can fire per tick under
                                                     #     sparse-firing. Lower = sparser representation,
                                                     #     stronger discrimination, weaker absolute output.
+    firing_eligibility_gate: bool = False           # G12: when True AND world.active_pattern_id != 0,
+                                                    #     atoms with mismatched non-zero pattern_id are
+                                                    #     PREVENTED from firing (regardless of charge).
+                                                    #     Atoms with pattern_id=0 (ambient) or matching
+                                                    #     active_pattern_id fire normally. Use during
+                                                    #     training to prevent cross-pattern STDP causal
+                                                    #     pairs from forming. Reset active_pattern_id=0
+                                                    #     during test to allow any pattern to recall.
     bridge_lock_threshold: float = 0.0              # G9: once a level-5+ molecule's strength crosses this
                                                     #     threshold, it becomes 'locked' — apply_stdp skips
                                                     #     it (no LTP / LTD / orientation update) and lateral

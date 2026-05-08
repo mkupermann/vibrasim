@@ -1555,6 +1555,17 @@ def neuron_dynamics(world, dt: float) -> None:
     can_fire = (world.k_charge[atom_indices] >= cfg.theta_fire) & (
         world.t >= world.k_refractory_until[atom_indices]
     )
+    # G12: firing-eligibility gating during training. When a pattern is
+    # active, atoms with a mismatched non-zero pattern_id are prevented
+    # from firing — even if charged. This stops cross-pattern STDP
+    # causal pairs from forming entirely at the firing-event source,
+    # not just downstream during bridge propagation.
+    if cfg.firing_eligibility_gate and int(world.active_pattern_id) != 0:
+        active = int(world.active_pattern_id)
+        atom_pids = world.k_pattern_id[atom_indices]
+        # Allow ambient (0) and matching-pattern atoms; suppress others.
+        eligibility = (atom_pids == 0) | (atom_pids == active)
+        can_fire = can_fire & eligibility
     firing_atoms = atom_indices[can_fire]
 
     # G11: sparse-firing winner-take-all per port. When enabled, only the
