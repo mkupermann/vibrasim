@@ -94,7 +94,7 @@ The natural-language report describes the run in prose: setup, chronology of str
 - **Phase 2**: ≥ 5 distinct molecule species in 60 simulated seconds (`renders/calibration_phase2_acceptance.toml`, same seed). Keyframe: `renders/keyframe_first_molecule.png`.
 - **Phase 7**: 0.954 carrier-frequency selectivity recovered from synthetic firing histories — independently validates the measurement pipeline (pipeline validation on synthetic data; end-to-end substrate validation is post-Plan-A). (`tools/synthesize_carrier_firing.py` + `tools/measure_attention_selectivity.py`)
 
-The substrate works through Phase 2 and partially Phase 3, plus Phase 4 (integrate-and-fire) and the entire baby-brain foundation. The full test suite is 272 non-slow tests + 18 slow tests, all passing or xfailed with documented reasons.
+The substrate works through Phase 2 and partially Phase 3, plus Phase 4 (integrate-and-fire) and the entire baby-brain foundation. The full test suite is 280 non-slow tests + 18 slow tests, all passing or xfailed with documented reasons.
 
 What runs **today**:
 
@@ -111,6 +111,9 @@ What runs **today**:
 - **Plan D (video I/O)** — oriented filter bank + retinotopic XY + orientation-Z encoder, distinct shapes produce distinct port patterns (I4 headline)
 - **Plan E (reward + agent loop)** — tristate `k_reward_polarity` field, reward channel, asymmetric STDP swap at firing time, stepped + real-time agent loop
 - **Plan F (speech-loop port-to-port coupling)** — engineered audio_input → audio_output ghost-burst at firing frequency, default off, SL1–SL5 unit tests green
+- **G1 (JIT bind_vibrations_to_electrons)** — candidate-batch refactor, equivalence test green
+- **G3 (synaptic_post_search_samples)** — extends bridge reach along orientation, default 1 (legacy), 3 tests green
+- **G4 (encoder emit_pair_band)** — audio/video encoder injects 8 %-paired vibrations under deterministic stimuli, default 0.0 (legacy), 4 tests green
 
 What's currently xfailed with empirical findings on record:
 
@@ -143,7 +146,7 @@ agent/         # (forthcoming, baby-brain foundation) audio I/O, video I/O, rewa
 app/           # Streamlit dashboard — Postgres-backed sessions, configs, runs, reports, 3D viewer
 db/            # Schema and seed for the dashboard's Postgres database
 docker/        # Streamlit container
-tests/         # Pytest suite — 272 non-slow + 18 slow tests across substrate, tools, dashboard, agent
+tests/         # Pytest suite — 280 non-slow + 18 slow tests across substrate, tools, dashboard, agent
 files/         # Source spec documents in English; German originals as *.de.md
 docs/          # Concept paper, tutorial, research guide, design specs and plans, logbook
 renders/       # Calibrated TOMLs and the keyframe renders / animations
