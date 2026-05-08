@@ -147,8 +147,14 @@ def bind_vibrations_to_electrons(world) -> int:
                 continue
             new_pol = bool(world.rng.random() < 0.5)
             constituents = np.array([i, j], dtype=np.int32)
-            world.allocate_node(out_mid[k], float(out_freq[k]), new_pol, level=1,
-                                constituents=constituents, comp_kind=0)
+            new_node = world.allocate_node(
+                out_mid[k], float(out_freq[k]), new_pol, level=1,
+                constituents=constituents, comp_kind=0,
+            )
+            if new_node < 0:
+                # Capacity exhausted (graceful_capacity mode); stop binding
+                # for this tick. Vibrations stay alive.
+                break
             world.s_alive[i] = False
             world.s_alive[j] = False
             world.s_locked_this_tick[i] = True
@@ -182,8 +188,12 @@ def bind_vibrations_to_electrons(world) -> int:
             new_freq = f1 + f2
             new_pol = bool(world.rng.random() < 0.5)
             constituents = np.array([i, j], dtype=np.int32)
-            world.allocate_node(mid, new_freq, new_pol, level=1,
-                                constituents=constituents, comp_kind=0)
+            new_node = world.allocate_node(
+                mid, new_freq, new_pol, level=1,
+                constituents=constituents, comp_kind=0,
+            )
+            if new_node < 0:
+                return formed
             world.s_alive[i] = False
             world.s_alive[j] = False
             world.s_locked_this_tick[i] = True
@@ -804,6 +814,9 @@ def bind_nodes_upward(world) -> int:
             constituents = np.array([i, j], dtype=np.int32)
             new_node = world.allocate_node(mid, new_freq, new_pol, level=target,
                                            constituents=constituents, comp_kind=1)
+            if new_node < 0:
+                # Capacity exhausted (graceful_capacity mode); stop.
+                break
             # Plan E: propagate reward polarity into newly formed atoms (level 4)
             if target == 4:
                 vib_indices = _gather_leaf_vibration_indices(world, new_node)
@@ -855,6 +868,8 @@ def bind_nodes_upward(world) -> int:
                 constituents = np.array([i, j], dtype=np.int32)
                 new_node = world.allocate_node(mid, new_freq, new_pol, level=target,
                                                constituents=constituents, comp_kind=1)
+                if new_node < 0:
+                    return formed
                 # Plan E: propagate reward polarity into newly formed atoms (level 4)
                 if target == 4:
                     vib_indices = _gather_leaf_vibration_indices(world, new_node)

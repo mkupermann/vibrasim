@@ -147,6 +147,8 @@ class World:
         else:
             i = self.k_count
             if i >= self.config.n_nodes_max:
+                if getattr(self.config, "graceful_capacity", False):
+                    return -1
                 raise RuntimeError("Node capacity exhausted")
             self.k_count += 1
 
