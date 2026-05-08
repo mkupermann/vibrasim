@@ -28,6 +28,8 @@ class World:
         self.s_pol = np.zeros(N, dtype=np.bool_)
         self.s_alive = np.zeros(N, dtype=np.bool_)
         self.s_locked_this_tick = np.zeros(N, dtype=np.bool_)
+        # Plan E — reward polarity tristate per vibration
+        self.s_reward_polarity = np.zeros(N, dtype=np.int8)
         self.n_alive: int = 0
 
         # Node arrays (3D, with velocity for repulsion)
@@ -50,6 +52,9 @@ class World:
         # Zero = no orientation inferred yet. Updated as a strength-weighted
         # running average when STDP detects a directional firing pair.
         self.k_orientation = np.zeros((K, 3), dtype=np.float64)
+        # Plan E — reward polarity tristate (-1, 0, +1) per node
+        # 0 = not from reward channel; +1 = fire_positive origin; -1 = fire_negative origin
+        self.k_reward_polarity = np.zeros(K, dtype=np.int8)
         # Plan A.5 — slot recycling
         self.k_ref_count = np.zeros(K, dtype=np.int32)
         self._free_slots: list[int] = []
@@ -133,6 +138,7 @@ class World:
             self.k_refractory_until[i] = 0
             self.k_strength[i] = 1.0
             self.k_orientation[i] = 0.0  # Plan B: clear stale direction inherited from dead predecessor
+            self.k_reward_polarity[i] = 0  # Plan E: clear stale reward tag from dead predecessor
             # k_ref_count[i] is already 0 by free-list invariant
             # Ensure k_count covers this slot (it was previously allocated, so
             # k_count >= i+1 in normal operation; guard for test setups)

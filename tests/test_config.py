@@ -175,3 +175,13 @@ def test_plan_D_video_fields_have_safe_defaults():
     assert cfg.video_input_port_origin == (0.0, 0.0, 45.0)
     assert cfg.video_input_port_size == (15.0, 15.0, 15.0)
     assert cfg.video_webcam_index == 0
+
+
+def test_plan_E_reward_fields_have_safe_defaults():
+    """Plan E reward + orchestrator fields default off / inert."""
+    cfg = WorldConfig()
+    assert cfg.reward_port_origin == (45.0, 45.0, 0.0)
+    assert cfg.reward_port_size == (15.0, 15.0, 15.0)
+    assert cfg.reward_burst_size == 12
+    assert cfg.reward_burst_freq == 30000.0
+    assert cfg.agent_dt_realtime_ms == 17

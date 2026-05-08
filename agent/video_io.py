@@ -32,6 +32,7 @@ class VideoIO:
         video_port_size: tuple[float, float, float] = (15.0, 15.0, 15.0),
         freq_min: float = 1000.0,
         freq_max: float = 12000.0,
+        emit_pair_band: float = 0.0,
         webcam_index: int = 0,
         rng: Optional[np.random.Generator] = None,
     ):
@@ -44,6 +45,7 @@ class VideoIO:
         self.video_port_size = video_port_size
         self.freq_min = freq_min
         self.freq_max = freq_max
+        self.emit_pair_band = float(emit_pair_band)
         self.webcam_index = webcam_index
         self.rng = rng if rng is not None else np.random.default_rng()
 
@@ -54,6 +56,16 @@ class VideoIO:
         max_frames = int(fps * buffer_seconds)
         self._frame_buffer: deque[np.ndarray] = deque(maxlen=max_frames)
         self._frame_lock = threading.Lock()
+        # Frame-id incremented on every _write_frame_buffer.
+        # Two pieces of state keyed on it:
+        #   _cached_features (saves encode_frame CPU when frame is unchanged)
+        #   _last_injected_frame_id (skips re-injection when frame is unchanged
+        #     so the same features don't pile up in the vibration buffer 60×
+        #     per sim-sec — the buffer would fill in the first tick otherwise.)
+        self._frame_id: int = 0
+        self._cached_frame_id: int = -1
+        self._cached_features: list[tuple[int, int, int, float, bool]] = []
+        self._last_injected_frame_id: int = -1
 
         self._capture_thread: Optional[threading.Thread] = None
         self._capture_running = False
@@ -62,27 +74,44 @@ class VideoIO:
         """Direct write — used by tests and by the capture thread."""
         with self._frame_lock:
             self._frame_buffer.append(frame)
+            self._frame_id += 1
 
-    def _read_latest_frame(self) -> Optional[np.ndarray]:
-        """Read the most-recent frame; returns None if buffer is empty."""
+    def _read_latest_frame(self) -> tuple[Optional[np.ndarray], int]:
+        """Read the most-recent frame and its id; returns (None, frame_id) if
+        buffer is empty."""
         with self._frame_lock:
             if len(self._frame_buffer) == 0:
-                return None
-            return self._frame_buffer[-1]
+                return (None, self._frame_id)
+            return (self._frame_buffer[-1], self._frame_id)
 
     def inject_into_substrate(self, world, dt: float) -> int:
-        """Read the most-recent buffered frame; encode features; inject one
-        vibration per feature at its retinotopic port position."""
-        frame = self._read_latest_frame()
+        """Read the most-recent buffered frame; encode features (cached if
+        frame unchanged since last call); inject one vibration per feature
+        at its retinotopic port position.
+
+        Skips injection entirely when the latest frame is the same one
+        already injected. Otherwise the same N features would re-inject
+        every tick — at 60 ticks/sim-sec × ~50 features/frame, the
+        substrate's vibration buffer fills in one tick. Fresh injections
+        only happen when _write_frame_buffer pushes a new frame.
+        """
+        frame, frame_id = self._read_latest_frame()
         if frame is None:
             return 0
-        downsampled = downsample_frame(frame, output_size=(128, 128))
-        features = encode_frame(
-            downsampled,
-            patch_grid=self.patch_grid,
-            filter_bank=self._filter_bank,
-            amplitude_threshold=self.amplitude_threshold,
-        )
+        if frame_id == self._last_injected_frame_id:
+            return 0
+        if frame_id == self._cached_frame_id:
+            features = self._cached_features
+        else:
+            downsampled = downsample_frame(frame, output_size=(128, 128))
+            features = encode_frame(
+                downsampled,
+                patch_grid=self.patch_grid,
+                filter_bank=self._filter_bank,
+                amplitude_threshold=self.amplitude_threshold,
+            )
+            self._cached_features = features
+            self._cached_frame_id = frame_id
         n_injected = 0
         for px, py, o, magnitude, sign in features:
             pos = patch_to_port_position(
@@ -106,6 +135,21 @@ class VideoIO:
             world.s_alive[i] = True
             world.n_alive = max(world.n_alive, i + 1)
             n_injected += 1
+            # G4: optional 8 %-band pair injection (same semantics as
+            # AudioIO.inject_into_substrate).
+            if self.emit_pair_band > 0.0:
+                free_idx = np.where(~world.s_alive)[0]
+                if len(free_idx) == 0:
+                    break
+                j = int(free_idx[0])
+                world.s_pos[j] = pos
+                world.s_vel[j] = 0.0
+                world.s_freq[j] = float(f) * (1.0 + self.emit_pair_band)
+                world.s_pol[j] = (not bool(sign))
+                world.s_alive[j] = True
+                world.n_alive = max(world.n_alive, j + 1)
+                n_injected += 1
+        self._last_injected_frame_id = frame_id
         return n_injected
 
     def start(self) -> None:

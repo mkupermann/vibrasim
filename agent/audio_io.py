@@ -28,6 +28,7 @@ class AudioIO:
         freq_max: float = 8000.0,
         fft_size: int = 512,
         amplitude_threshold: float = 0.01,
+        emit_pair_band: float = 0.0,
         mic_device: Optional[int] = None,
         speaker_device: Optional[int] = None,
         rng: Optional[np.random.Generator] = None,
@@ -43,6 +44,7 @@ class AudioIO:
         self.freq_max = freq_max
         self.fft_size = fft_size
         self.amplitude_threshold = amplitude_threshold
+        self.emit_pair_band = float(emit_pair_band)
         self.mic_device = mic_device
         self.speaker_device = speaker_device
         self.rng = rng if rng is not None else np.random.default_rng()
@@ -149,6 +151,21 @@ class AudioIO:
                 world.s_alive[i] = True
                 world.n_alive = max(world.n_alive, i + 1)
                 n_injected += 1
+                # G4: optional 8 %-band pair injection. The pair satisfies
+                # the binding rule directly so atoms form quickly at the
+                # input port even under deterministic stimuli.
+                if self.emit_pair_band > 0.0:
+                    free_idx = np.where(~world.s_alive)[0]
+                    if len(free_idx) == 0:
+                        break
+                    j = int(free_idx[0])
+                    world.s_pos[j] = pos
+                    world.s_vel[j] = 0.0
+                    world.s_freq[j] = float(f) * (1.0 + self.emit_pair_band)
+                    world.s_pol[j] = (not polarity)
+                    world.s_alive[j] = True
+                    world.n_alive = max(world.n_alive, j + 1)
+                    n_injected += 1
         return n_injected
 
     def read_from_substrate(self, world, dt: float) -> int:
@@ -170,7 +187,10 @@ class AudioIO:
         K = world.k_count
         t_window_start = world.t - dt
         for t_fire, atom_idx in world.firing_events:
-            if t_fire <= t_window_start or t_fire > world.t:
+            # Include firings AT t_window_start (neuron_dynamics records
+            # firings at world.t before tick increments it, so t_fire equals
+            # the start of the half-open window the read should cover).
+            if t_fire < t_window_start or t_fire > world.t:
                 continue
             if atom_idx >= K:
                 continue

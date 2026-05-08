@@ -74,6 +74,21 @@ class WorldConfig:
     r_bridge: float = 5.0                   # bridge tube radius around the A→B line segment
     synaptic_transmission_strength: float = 0.5     # charge deposited per crossing aligned vibration
     synaptic_transmission_threshold: float = 5.0    # min bridge strength before transmission activates
+    synaptic_post_search_samples: int = 1           # G3: number of post-search samples along bridge orientation
+                                                    #     (samples at d = (k+1) * r_bridge for k in 0..N-1).
+                                                    #     1 = legacy behaviour (single sample at r_bridge);
+                                                    #     2+ extends reach for bridges placed mid-segment.
+    bridge_atom_propagation_enabled: bool = False   # G6: when True, a strong oriented bridge near a firing
+                                                    #     pre-atom deposits charge directly into the post-atom
+                                                    #     (no vibration-travel required). Closes the M4 chain
+                                                    #     by decoupling synaptic transmission from emit_speed.
+                                                    #     Models the propagation step of biological chemical
+                                                    #     synapses, where action-potential transit is fast vs
+                                                    #     the cleft-crossing of vesicle contents.
+    bridge_atom_propagation_strength: float = 4.0   # charge deposited per (firing pre-atom, strong bridge,
+                                                    #     post-atom) triple. Default 4.0 = 2 × theta_fire so
+                                                    #     one propagation event clears the post-atom threshold
+                                                    #     by itself.
 
     # Plan C — audio I/O
     audio_io_enabled: bool = False
@@ -84,6 +99,10 @@ class WorldConfig:
     audio_amplitude_threshold: float = 0.01
     audio_freq_min: float = 50.0
     audio_freq_max: float = 8000.0
+    audio_emit_pair_band: float = 0.0   # G4: if > 0, inject a paired vibration at f * (1 + band) with
+                                        #     opposite polarity for every emission. The pair satisfies
+                                        #     the 8 % rule directly so atoms form quickly at the input
+                                        #     port under deterministic stimuli. 0 = off (legacy).
     audio_input_port_origin: tuple[float, float, float] = (0.0, 0.0, 0.0)
     audio_input_port_size: tuple[float, float, float] = (15.0, 15.0, 15.0)
     audio_output_port_origin: tuple[float, float, float] = (45.0, 0.0, 0.0)
@@ -98,9 +117,29 @@ class WorldConfig:
     video_amplitude_threshold: float = 0.05
     video_freq_min: float = 1000.0
     video_freq_max: float = 12000.0
+    video_emit_pair_band: float = 0.0   # G4: if > 0, inject a paired vibration at f * (1 + band) with
+                                        #     opposite polarity for every emission. Same semantics as
+                                        #     audio_emit_pair_band.
     video_input_port_origin: tuple[float, float, float] = (0.0, 0.0, 45.0)
     video_input_port_size: tuple[float, float, float] = (15.0, 15.0, 15.0)
     video_webcam_index: int = 0
+
+    # Plan E — reward channel + orchestrator
+    reward_port_origin: tuple[float, float, float] = (45.0, 45.0, 0.0)
+    reward_port_size: tuple[float, float, float] = (15.0, 15.0, 15.0)
+    reward_burst_size: int = 12
+    reward_burst_freq: float = 30000.0
+    agent_dt_realtime_ms: int = 17
+
+    # Plan F — speech-loop port-to-port firing coupling
+    # When > 0, atoms firing inside the audio input port deposit a small
+    # burst of vibrations at the audio output port at the firing frequency.
+    # Models biological auditory feedback (vocaliser hears their own
+    # utterances); closes the path that lets STDP form bridges across
+    # input/output port pairs.
+    speech_loop_strength: float = 0.0   # 0 = off; > 0 enables coupling
+    speech_loop_burst_size: int = 6     # vibrations injected per firing event
+    speech_loop_jitter_hz: float = 50.0 # random-jitter bandwidth around firing freq
 
     # Plan A.5 — substrate performance
     slot_recycling_enabled: bool = True   # World.allocate_node reuses dead slots before extending k_count
