@@ -23,6 +23,7 @@ from agent.audio_io import AudioIO
 from agent.video_io import VideoIO
 from agent.loop import AgentLoop
 from agent import talk
+from agent.speak import Speaker
 
 
 # ---------- substrate lifecycle (cached across reruns) ----------------------
@@ -39,6 +40,13 @@ def _machine_singleton():
         "running": False,
         "started_at": None,
         "log": [],  # rolling event log
+        "speaker": Speaker(label="", cooldown_seconds=3.0),
+        "speak_threshold": 8,   # fires_audio_out per second to trigger speak
+        "spoken_count": 0,
+        # Growth tracking — running min/max of K so user sees substrate
+        # actually growing structures vs. staying at the seed.
+        "k_seed": 0,
+        "k_max_seen": 0,
     }
 
 
@@ -104,7 +112,12 @@ def _start(state: dict) -> str:
     state["loop"] = loop
     state["running"] = True
     state["started_at"] = time.time()
-    state["log"] = [(time.time(), f"started — substrate K={w.k_count}")]
+    state["k_seed"] = int(w.k_count)
+    state["k_max_seen"] = int(w.k_count)
+    state["spoken_count"] = 0
+    state["log"] = [(time.time(),
+                     f"started — substrate seed K={w.k_count}, "
+                     f"speak backend={state['speaker'].backend}")]
     return "started"
 
 
@@ -208,15 +221,36 @@ with control_col:
         st.rerun()
 
     st.divider()
+    st.markdown("**Speech readout (TTS)**")
+    new_label = st.text_input(
+        "Label to speak when the substrate fires",
+        value=state["speaker"].label,
+        placeholder="e.g. water",
+    )
+    if new_label != state["speaker"].label:
+        state["speaker"].set_label(new_label)
+    state["speak_threshold"] = st.slider(
+        "Trigger threshold — fires/s on audio_out",
+        min_value=1, max_value=30,
+        value=state["speak_threshold"],
+    )
+    st.caption(
+        f"Backend: `{state['speaker'].backend}`. "
+        "On macOS this uses the built-in `say` command. "
+        "Set a label, click Start, train, then show the trained visual."
+    )
+
+    st.divider()
     st.markdown("**How to use**")
     st.markdown(
-        "1. Click **Start** — macOS prompts for camera + mic permission.\n"
-        "2. Show what you want it to learn to the camera AND say the word.\n"
-        "3. Both inputs together for ~20 sec — substrate forms cross-modal "
-        "bridges.\n"
-        "4. Stop talking, keep showing — substrate echoes correlated audio "
-        "from speaker.\n"
-        "5. Click **Stop** when done."
+        "1. Type a **label** above (e.g. `water`).\n"
+        "2. Click **Start** — macOS prompts for camera + mic permission.\n"
+        "3. Show what you want it to learn AND say the word for ~20 sec.\n"
+        "4. Stop talking, keep showing — when activation crosses threshold,\n"
+        "   the speaker says the label.\n"
+        "5. Click **Stop** when done.\n\n"
+        "_Single label per session — multi-label discrimination still fails "
+        "(see `tests/test_machine_contract.py` contract C)._"
     )
 
 with status_col:
@@ -239,6 +273,25 @@ with status_col:
         n_mols = int((w.k_alive[:K] & (w.k_level[:K] >= 5)).sum()) if K else 0
         n_alive_v = int(w.s_alive.sum())
         fires_ai, fires_ao, fires_vi = _per_port_firings(w, dt=1.0)
+
+        # Growth tracking: K-since-seed shows the substrate forming new
+        # structures via the binding chain (vibrations → electrons →
+        # pairs → triads → atoms → molecules) on top of the seeded ports
+        # and bridges. New molecules are NEW bridges formed by STDP and
+        # binding cascades — that's the "growth" the substrate does at
+        # runtime.
+        if K > state["k_max_seen"]:
+            state["k_max_seen"] = K
+        k_grown = K - state["k_seed"]
+
+        # Speech trigger: when audio_out fires/s exceeds threshold AND a
+        # label is set, trigger the speaker.
+        if state["speaker"].label and fires_ao >= state["speak_threshold"]:
+            if state["speaker"].maybe_say():
+                state["spoken_count"] += 1
+                state["log"].append((time.time(),
+                                     f'said "{state["speaker"].label}" '
+                                     f'(fires_ao={fires_ao})'))
 
         # Mic + speaker dB
         mic_db = _level_db(audio_io._input_buffer,
@@ -266,9 +319,10 @@ with status_col:
                     st.metric("Fires/s — video_in", fires_vi)
                     st.metric("Fires/s — audio_in", fires_ai)
                 with b:
-                    st.metric("Bridges", n_mols)
-                    st.metric("K total", K)
+                    st.metric("Bridges (mols)", n_mols)
+                    st.metric("K total", K, delta=f"+{k_grown} since seed")
                     st.metric("Fires/s — audio_out", fires_ao)
+                    st.metric("Spoken", state["spoken_count"])
 
                 # Audio meters as progress bars (-60 dB → 0 dB scaled to 0..1)
                 mic_norm = max(0.0, min(1.0, (mic_db + 60) / 60))
