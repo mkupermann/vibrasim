@@ -41,19 +41,27 @@ pip install -e ".[dev,agent]"
 
 ## Talk to the substrate
 
-After installing the `agent` extra, the live mic + webcam + speaker app is one command:
+After installing the `agent` and `dashboard` extras, two interfaces are available.
+
+### Graphical interface (recommended)
 
 ```bash
-# List available audio + video devices (find your --mic, --speaker, --cam indices):
-uv run python -m agent.talk --list-devices
+uv run streamlit run app/machine_gui.py --server.port 8503
+# open http://localhost:8503
+```
 
-# 20-second training pass (show + speak together), then talk-only:
+The page has a **Start / Stop / Reset** button column, a live webcam preview, mic-input and speaker-output dB meters, per-port firing counts, atom/bridge/vibration counters, and the live audio-output spectrum. macOS prompts for camera + mic permission the first time you press Start.
+
+### Terminal interface
+
+```bash
+# 20-second training, then talk-only — status line every half-second:
 uv run python -m agent.talk
 
-# Tune duration + device indices:
-uv run python -m agent.talk --train 30 --mic 1 --speaker 2 --cam 0
+# List devices to find indices:
+uv run python -m agent.talk --list-devices
 
-# CI / no-hardware mode — synthetic sources:
+# Synthetic mode (CI / no hardware required):
 uv run python -m agent.talk --synthetic
 ```
 
