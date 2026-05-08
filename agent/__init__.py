@@ -9,10 +9,14 @@ from agent.encoder_video import (
     feature_magnitude_to_frequency,
 )
 from agent.video_io import VideoIO
+from agent.reward import RewardChannel
+from agent.loop import AgentLoop
 
 __all__ = [
     "AudioIO",
     "VideoIO",
+    "RewardChannel",
+    "AgentLoop",
     "freq_to_port_position",
     "encode_block",
     "decode_to_audio",

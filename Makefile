@@ -1,4 +1,4 @@
-.PHONY: db-migrate db-migrate-planA-mark-implemented db-migrate-planA5-mark-implemented db-migrate-planB-mark-implemented db-migrate-planC-mark-implemented db-migrate-planD-mark-implemented
+.PHONY: db-migrate db-migrate-planA-mark-implemented db-migrate-planA5-mark-implemented db-migrate-planB-mark-implemented db-migrate-planC-mark-implemented db-migrate-planD-mark-implemented db-migrate-planE-mark-implemented
 
 DB_HOST ?= localhost
 DB_PORT ?= 5433
@@ -37,3 +37,8 @@ db-migrate-planD-mark-implemented:
 	@if [ -z "$(MERGE_SHA)" ]; then echo "MERGE_SHA= required"; exit 1; fi
 	PGPASSWORD=vibrasim psql -h $(DB_HOST) -p $(DB_PORT) -U $(DB_USER) -d $(DB_NAME) \
 	  -v merge_sha="'$(MERGE_SHA)'" -f db/migrations/0008_planD_video_io_amendment.sql
+
+db-migrate-planE-mark-implemented:
+	@if [ -z "$(MERGE_SHA)" ]; then echo "MERGE_SHA= required"; exit 1; fi
+	PGPASSWORD=vibrasim psql -h $(DB_HOST) -p $(DB_PORT) -U $(DB_USER) -d $(DB_NAME) \
+	  -v merge_sha="'$(MERGE_SHA)'" -f db/migrations/0009_planE_reward_orchestrator_amendment.sql

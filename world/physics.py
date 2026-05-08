@@ -22,6 +22,75 @@ def move_vibrations(
             s_pos[i, d] = (s_pos[i, d] + s_vel[i, d] * dt) % box[d]
 
 
+@njit(cache=True)
+def _bind_vibrations_check_pairs_njit(
+    candidate_i: np.ndarray, candidate_j: np.ndarray, n_candidates: int,
+    s_pos: np.ndarray, s_alive: np.ndarray, s_locked_this_tick: np.ndarray,
+    s_freq: np.ndarray, s_pol: np.ndarray,
+    box: np.ndarray, r1_sq: float,
+    fmin_ratio: float, fmax_ratio: float,
+) -> tuple:
+    """JIT core for bind_vibrations_to_electrons.
+
+    Mirrors `_bind_check_pairs_njit` (which serves bind_nodes_upward) but for
+    vibration-level binding. Filters candidate pairs by alive, locked,
+    polarity-difference, periodic-distance, and the 8 % frequency rule.
+
+    Returns parallel arrays (out_i, out_j, out_freq, out_mid, n_out) preserving
+    input order. The new electron's frequency is f_i + f_j; mid is the periodic
+    midpoint. The Python wrapper enforces break-per-i semantics by re-checking
+    the lock array after each allocation.
+    """
+    out_i = np.zeros(n_candidates, dtype=np.int32)
+    out_j = np.zeros(n_candidates, dtype=np.int32)
+    out_freq = np.zeros(n_candidates, dtype=np.float64)
+    out_mid = np.zeros((n_candidates, 3), dtype=np.float64)
+    n_out = 0
+    for k in range(n_candidates):
+        i = candidate_i[k]
+        j = candidate_j[k]
+        if not s_alive[i] or not s_alive[j]:
+            continue
+        if s_locked_this_tick[i] or s_locked_this_tick[j]:
+            continue
+        if s_pol[i] == s_pol[j]:
+            continue
+        # Periodic distance (3D)
+        dx = s_pos[i, 0] - s_pos[j, 0]
+        dy = s_pos[i, 1] - s_pos[j, 1]
+        dz = s_pos[i, 2] - s_pos[j, 2]
+        dx -= box[0] * round(dx / box[0])
+        dy -= box[1] * round(dy / box[1])
+        dz -= box[2] * round(dz / box[2])
+        d2 = dx * dx + dy * dy + dz * dz
+        if d2 >= r1_sq:
+            continue
+        # 8 % frequency rule
+        f1 = s_freq[i]
+        f2 = s_freq[j]
+        if f1 < f2:
+            ratio = (f2 - f1) / f1
+        else:
+            ratio = (f1 - f2) / f2
+        if ratio < fmin_ratio or ratio > fmax_ratio:
+            continue
+        # Periodic midpoint, per-axis (matches periodic_midpoint() semantics)
+        for d in range(3):
+            delta = s_pos[j, d] - s_pos[i, d]
+            if delta > box[d] * 0.5:
+                delta -= box[d]
+            elif delta < -box[d] * 0.5:
+                delta += box[d]
+            m = s_pos[i, d] + delta * 0.5
+            m = m % box[d]
+            out_mid[n_out, d] = m
+        out_i[n_out] = i
+        out_j[n_out] = j
+        out_freq[n_out] = f1 + f2
+        n_out += 1
+    return out_i, out_j, out_freq, out_mid, n_out
+
+
 def bind_vibrations_to_electrons(world) -> int:
     cfg = world.config
     box = np.asarray(cfg.box_size, dtype=np.float64)
@@ -34,8 +103,62 @@ def bind_vibrations_to_electrons(world) -> int:
 
     world.reset_tick_locks()
     grid = build_grid(world.s_pos, world.s_alive, box, r1)
-    formed = 0
 
+    if cfg.numba_jit_enabled:
+        # G1: JIT path. Build candidate pairs in Python (spatial-hash query
+        # is already JITted internally) preserving the legacy iteration order
+        # so break-per-i semantics carry. JIT filters by predicates; Python
+        # applies allocations in order.
+        cand_i_list: list[int] = []
+        cand_j_list: list[int] = []
+        for i in range(world.s_pos.shape[0]):
+            if not world.s_alive[i]:
+                continue
+            nbrs = neighbors_of(grid, world.s_pos[i], box, r1,
+                                 exclude_self=True, query_index=i)
+            for j in nbrs:
+                if j <= i:
+                    continue
+                cand_i_list.append(i)
+                cand_j_list.append(j)
+
+        n_candidates = len(cand_i_list)
+        if n_candidates == 0:
+            return 0
+
+        candidate_i = np.array(cand_i_list, dtype=np.int32)
+        candidate_j = np.array(cand_j_list, dtype=np.int32)
+
+        out_i, out_j, out_freq, out_mid, n_out = _bind_vibrations_check_pairs_njit(
+            candidate_i, candidate_j, n_candidates,
+            world.s_pos, world.s_alive, world.s_locked_this_tick,
+            world.s_freq, world.s_pol,
+            box, r1_sq, fmin_ratio, fmax_ratio,
+        )
+
+        formed = 0
+        for k in range(n_out):
+            i = int(out_i[k])
+            j = int(out_j[k])
+            # Re-check after earlier iterations may have consumed these slots
+            if not world.s_alive[i] or world.s_locked_this_tick[i]:
+                continue
+            if not world.s_alive[j] or world.s_locked_this_tick[j]:
+                continue
+            new_pol = bool(world.rng.random() < 0.5)
+            constituents = np.array([i, j], dtype=np.int32)
+            world.allocate_node(out_mid[k], float(out_freq[k]), new_pol, level=1,
+                                constituents=constituents, comp_kind=0)
+            world.s_alive[i] = False
+            world.s_alive[j] = False
+            world.s_locked_this_tick[i] = True
+            world.s_locked_this_tick[j] = True
+            world.n_alive -= 2
+            formed += 1
+        return formed
+
+    # Legacy Python path — preserved verbatim for regression diagnosis
+    formed = 0
     for i in range(world.s_pos.shape[0]):
         if not world.s_alive[i] or world.s_locked_this_tick[i]:
             continue
@@ -214,13 +337,28 @@ def apply_stdp(world) -> int:
             if v_len < 1e-9:
                 continue
             u = v_AB / v_len
+            # Plan E asymmetric reward physics — swap LTP/LTD when atom_j has
+            # k_reward_polarity == -1 (fire_negative origin). Atoms with polarity
+            # 0 (ambient default) take the existing alignment-based path unchanged.
+            swap_ltp_ltd = (world.k_reward_polarity[atom_j] == -1)
+
             # Per-molecule LTP/LTD decision based on orientation alignment
             for m in bridge_indices:
                 o = world.k_orientation[m]
                 o_norm = float(np.linalg.norm(o))
                 alignment = float(np.dot(o, u))
                 strength_old = float(world.k_strength[m])
-                if o_norm < 1e-6 or alignment >= 0:
+                # Determine LTP vs LTD based on alignment AND swap flag
+                if o_norm < 1e-6:
+                    # No prior orientation → LTP normally; LTD if swap
+                    do_ltp = not swap_ltp_ltd
+                elif alignment >= 0:
+                    # Aligned → LTP normally; LTD if swap
+                    do_ltp = not swap_ltp_ltd
+                else:
+                    # Anti-aligned → LTD normally; LTP if swap
+                    do_ltp = swap_ltp_ltd
+                if do_ltp:
                     # LTP: strengthen and update orientation toward u
                     weight = cfg.delta_LTP * float(np.exp(-dt_pair / cfg.tau_LTP))
                     world.k_strength[m] = min(strength_old + weight, 1000.0)
@@ -236,6 +374,16 @@ def apply_stdp(world) -> int:
                     weight = cfg.delta_LTD * float(np.exp(-dt_pair / cfg.tau_LTD))
                     world.k_strength[m] = max(strength_old - weight, 1.0)
                 n_reinforcements += 1
+    # Plan B.5 follow-up (deferred from mid-flight discovery): prune
+    # firing_events older than tau_LTP. Without this the list grows
+    # unboundedly across ticks, the O(N²) pair scan above goes quadratic
+    # in run length, and double-counting amplifies LTP/LTD ~2× per pair.
+    # All STDP behaviour is preserved because events older than tau_LTP
+    # contribute no qualifying pairs anyway (dt_pair > tau_LTP would be
+    # filtered by the inner continue).
+    cutoff = world.t - cfg.tau_LTP
+    if events and events[0][0] < cutoff:
+        world.firing_events = [e for e in events if e[0] >= cutoff]
     return n_reinforcements
 
 
@@ -305,12 +453,20 @@ def synaptic_transmission(world, dt: float) -> int:
             continue
         v_in_range_indices = np.where(in_range)[0]
 
-        # Post-synaptic search centre = M + r_bridge * o_unit
-        post_centre = M + r_bridge * o_unit
-        d_aP = atom_pos - post_centre
-        d_aP -= box * np.round(d_aP / box)
-        d_aP_sq = (d_aP * d_aP).sum(axis=1)
-        post_mask = d_aP_sq <= r_bridge_sq
+        # G3: post-synaptic search at one or more samples along o_unit.
+        # Sample k (k=0..N-1) is at distance (k+1) * r_bridge from M.
+        # n_samples=1 (default) ↔ legacy behaviour (single sample at r_bridge).
+        # Higher values extend reach so bridges placed mid-segment can still
+        # find post-atoms at the destination port end of the orientation ray.
+        n_samples = max(1, int(cfg.synaptic_post_search_samples))
+        post_mask = np.zeros(atom_pos.shape[0], dtype=np.bool_)
+        for k in range(n_samples):
+            distance = (k + 1) * r_bridge
+            post_centre = M + distance * o_unit
+            d_aP = atom_pos - post_centre
+            d_aP -= box * np.round(d_aP / box)
+            d_aP_sq = (d_aP * d_aP).sum(axis=1)
+            post_mask |= d_aP_sq <= r_bridge_sq
         if not post_mask.any():
             continue
         post_atom_indices = atom_indices[post_mask]
@@ -326,6 +482,107 @@ def synaptic_transmission(world, dt: float) -> int:
             charge_increment = alignment * w_synaptic * dt
             for a_idx in post_atom_indices:
                 world.k_charge[a_idx] += charge_increment
+                n_events += 1
+    return n_events
+
+
+def apply_bridge_atom_propagation(world, dt: float) -> int:
+    """G6: when a level-4 atom A fires this tick AND there is a strong
+    oriented bridge molecule near A pointing toward another atom B, deposit
+    charge directly into B without requiring vibrations to travel from A
+    through the bridge to B.
+
+    This decouples synaptic transmission from vibration-travel time and
+    closes the M4 chain at small sim-time scopes. Models the propagation
+    step of biological chemical synapses, where action-potential transit
+    between presynaptic and postsynaptic neurons is fast relative to
+    individual neurotransmitter molecules diffusing across the cleft.
+
+    Default off via `cfg.bridge_atom_propagation_enabled = False`.
+
+    Returns the count of (pre-atom, bridge, post-atom) propagation events
+    triggered this tick.
+    """
+    cfg = world.config
+    if not cfg.bridge_atom_propagation_enabled:
+        return 0
+    K = world.k_count
+    if K == 0:
+        return 0
+
+    threshold = cfg.synaptic_transmission_threshold
+    bridge_mask = (
+        world.k_alive[:K]
+        & (world.k_level[:K] >= 5)
+        & (world.k_strength[:K] >= threshold)
+    )
+    if not bridge_mask.any():
+        return 0
+    bridge_indices = np.where(bridge_mask)[0]
+
+    box = np.asarray(cfg.box_size, dtype=np.float64)
+    r_bridge = cfg.r_bridge
+    r_bridge_sq = r_bridge ** 2
+    n_samples = max(1, int(cfg.synaptic_post_search_samples))
+    propagation_strength = cfg.bridge_atom_propagation_strength
+
+    atom_mask = world.k_alive[:K] & (world.k_level[:K] == 4)
+    if not atom_mask.any():
+        return 0
+    atom_indices = np.where(atom_mask)[0]
+    atom_pos = world.k_pos[atom_indices]
+
+    # Restrict to firings appended this tick (t_fire == world.t).
+    t_now = world.t
+    n_events = 0
+    for t_fire, atom_idx in world.firing_events:
+        if t_fire != t_now:
+            continue
+        if atom_idx >= K or not world.k_alive[atom_idx]:
+            continue
+        if int(world.k_level[atom_idx]) != 4:
+            continue
+        A_pos = world.k_pos[atom_idx]
+
+        # Find strong oriented bridges within r_bridge of the firing atom.
+        d_AM = world.k_pos[bridge_indices] - A_pos
+        d_AM -= box * np.round(d_AM / box)
+        d_AM_sq = (d_AM * d_AM).sum(axis=1)
+        nearby_mask = d_AM_sq <= r_bridge_sq
+        if not nearby_mask.any():
+            continue
+        nearby_bridge_indices = bridge_indices[nearby_mask]
+
+        for m in nearby_bridge_indices:
+            o = world.k_orientation[m]
+            o_norm = float(np.linalg.norm(o))
+            if o_norm <= 0.5:
+                continue
+            o_unit = o / o_norm
+            M = world.k_pos[m]
+
+            # Sign convention: orientation points from pre to post. We want
+            # post-atom B that is "ahead" of M in direction o_unit. Sample at
+            # d = r_bridge, 2 * r_bridge, ..., n_samples * r_bridge.
+            post_mask = np.zeros(atom_pos.shape[0], dtype=np.bool_)
+            for k in range(n_samples):
+                distance = (k + 1) * r_bridge
+                post_centre = M + distance * o_unit
+                d_aP = atom_pos - post_centre
+                d_aP -= box * np.round(d_aP / box)
+                d_aP_sq = (d_aP * d_aP).sum(axis=1)
+                post_mask |= d_aP_sq <= r_bridge_sq
+
+            # Don't propagate back to the firing atom itself
+            if atom_idx in atom_indices:
+                self_local_idx = int(np.where(atom_indices == atom_idx)[0][0])
+                post_mask[self_local_idx] = False
+
+            if not post_mask.any():
+                continue
+            post_atom_indices = atom_indices[post_mask]
+            for a_idx in post_atom_indices:
+                world.k_charge[int(a_idx)] += propagation_strength
                 n_events += 1
     return n_events
 
@@ -453,6 +710,31 @@ def _bind_check_pairs_njit(
     return out_i, out_j, out_target, n_out
 
 
+def _gather_leaf_vibration_indices(world, node_idx: int) -> np.ndarray:
+    """Walk the composition tree from a node down to its leaf vibrations.
+
+    Returns an int64 array of vibration indices (level-1 electrons store
+    vibration indices in their composition span — k_comp_kind == 0).
+    Internal nodes (k_comp_kind != 0) store node indices; they are traversed
+    recursively via an explicit stack.
+    """
+    out: list[int] = []
+    stack = [int(node_idx)]
+    while stack:
+        i = stack.pop()
+        start = int(world.k_comp_offset[i])
+        end = int(world.k_comp_end[i])
+        if int(world.k_comp_kind[i]) == 0:
+            # Leaf node — composition span is vibration indices
+            for k in range(start, end):
+                out.append(int(world.k_comp_indices[k]))
+        else:
+            # Internal node — composition span is node indices
+            for k in range(start, end):
+                stack.append(int(world.k_comp_indices[k]))
+    return np.array(out, dtype=np.int64)
+
+
 def bind_nodes_upward(world) -> int:
     cfg = world.config
     box = np.asarray(cfg.box_size, dtype=np.float64)
@@ -520,8 +802,16 @@ def bind_nodes_upward(world) -> int:
             new_freq = f1 + f2
             new_pol = bool(world.rng.random() < 0.5)
             constituents = np.array([i, j], dtype=np.int32)
-            world.allocate_node(mid, new_freq, new_pol, level=target,
-                                constituents=constituents, comp_kind=1)
+            new_node = world.allocate_node(mid, new_freq, new_pol, level=target,
+                                           constituents=constituents, comp_kind=1)
+            # Plan E: propagate reward polarity into newly formed atoms (level 4)
+            if target == 4:
+                vib_indices = _gather_leaf_vibration_indices(world, new_node)
+                if len(vib_indices) > 0:
+                    polarities = world.s_reward_polarity[vib_indices]
+                    if (polarities != 0).all() and (polarities == polarities[0]).all():
+                        world.k_reward_polarity[new_node] = int(polarities[0])
+                    # else: stays at default 0 (mixed or conflicting)
             _kill_node(world, i)
             _kill_node(world, j)
             world.k_locked_this_tick[i] = True
@@ -563,8 +853,16 @@ def bind_nodes_upward(world) -> int:
                 new_freq = f1 + f2
                 new_pol = bool(world.rng.random() < 0.5)
                 constituents = np.array([i, j], dtype=np.int32)
-                world.allocate_node(mid, new_freq, new_pol, level=target,
-                                    constituents=constituents, comp_kind=1)
+                new_node = world.allocate_node(mid, new_freq, new_pol, level=target,
+                                               constituents=constituents, comp_kind=1)
+                # Plan E: propagate reward polarity into newly formed atoms (level 4)
+                if target == 4:
+                    vib_indices = _gather_leaf_vibration_indices(world, new_node)
+                    if len(vib_indices) > 0:
+                        polarities = world.s_reward_polarity[vib_indices]
+                        if (polarities != 0).all() and (polarities == polarities[0]).all():
+                            world.k_reward_polarity[new_node] = int(polarities[0])
+                        # else: stays at default 0 (mixed or conflicting)
                 _kill_node(world, i)
                 _kill_node(world, j)
                 world.k_locked_this_tick[i] = True
@@ -1206,6 +1504,81 @@ def _emit_vibrations(world, atom_idx: int) -> None:
         world.n_alive = high
 
 
+def apply_speech_loop(world, dt: float) -> int:
+    """Plan F: port-to-port firing coupling.
+
+    When an atom inside the audio input port fires THIS TICK, deposit
+    `speech_loop_burst_size` vibrations at random positions inside the audio
+    output port, all at the firing atom's frequency (with small Gaussian
+    jitter `speech_loop_jitter_hz`). Models biological auditory feedback —
+    the vocaliser hearing their own utterances closes the auditory-motor
+    loop that lets STDP bind input perceptions to output productions.
+
+    Default off via `cfg.speech_loop_strength=0.0`. When > 0, the rule fires
+    on each input-port atom-firing event from the current tick.
+
+    Returns count of ghost-burst events triggered this tick.
+    """
+    cfg = world.config
+    if cfg.speech_loop_strength <= 0.0:
+        return 0
+
+    burst_size = cfg.speech_loop_burst_size
+    if burst_size <= 0:
+        return 0
+
+    ai_origin = np.asarray(cfg.audio_input_port_origin, dtype=np.float64)
+    ai_size = np.asarray(cfg.audio_input_port_size, dtype=np.float64)
+    ao_origin = np.asarray(cfg.audio_output_port_origin, dtype=np.float64)
+    ao_size = np.asarray(cfg.audio_output_port_size, dtype=np.float64)
+
+    # Only firings appended this tick (their timestamp == world.t since
+    # neuron_dynamics ran during this tick before apply_speech_loop).
+    t_now = world.t
+    events = world.firing_events
+    n_events = 0
+    rng = world.rng
+
+    for t_fire, atom_idx in events:
+        # Heuristic: events appended this tick have t_fire close to t_now.
+        # neuron_dynamics uses world.t at append time; tick advances world.t
+        # AFTER apply_speech_loop. So all "this tick" events have t_fire == t_now.
+        if t_fire != t_now:
+            continue
+        if atom_idx >= world.k_count or not world.k_alive[atom_idx]:
+            continue
+        pos = world.k_pos[atom_idx]
+        # Inside audio input port?
+        if not (ai_origin[0] <= pos[0] <= ai_origin[0] + ai_size[0] and
+                ai_origin[1] <= pos[1] <= ai_origin[1] + ai_size[1] and
+                ai_origin[2] <= pos[2] <= ai_origin[2] + ai_size[2]):
+            continue
+        f_atom = float(world.k_freq[atom_idx])
+        pol_atom = bool(world.k_pol[atom_idx])
+
+        # Allocate burst_size vibrations at random positions inside the
+        # audio output port. Gracefully no-op if buffer is full.
+        free_idx = np.where(~world.s_alive)[0]
+        n_to_inject = min(burst_size, len(free_idx))
+        if n_to_inject == 0:
+            continue
+        for k in range(n_to_inject):
+            i = int(free_idx[k])
+            world.s_pos[i] = (
+                ao_origin[0] + float(rng.random()) * ao_size[0],
+                ao_origin[1] + float(rng.random()) * ao_size[1],
+                ao_origin[2] + float(rng.random()) * ao_size[2],
+            )
+            world.s_vel[i] = 0.0
+            world.s_freq[i] = f_atom + float(rng.normal(0.0, cfg.speech_loop_jitter_hz))
+            world.s_pol[i] = pol_atom
+            world.s_alive[i] = True
+        if n_to_inject > 0:
+            world.n_alive = max(world.n_alive, int(free_idx[:n_to_inject].max()) + 1)
+        n_events += 1
+    return n_events
+
+
 def tick(world, dt: float) -> None:
     """One simulation step. See CONCEPT.md v2 §4 + §7.1 for the canonical order."""
     box = np.asarray(world.config.box_size, dtype=np.float64)
@@ -1218,5 +1591,7 @@ def tick(world, dt: float) -> None:
     decay_high_level_nodes(world, dt)   # NEW (R2)
     ambient_regeneration(world, dt)
     neuron_dynamics(world, dt)
+    apply_bridge_atom_propagation(world, dt)  # NEW (G6) — direct atom→atom charge through strong bridges
     apply_stdp(world)              # NEW (Plan B)
+    apply_speech_loop(world, dt)   # NEW (Plan F)
     world.t += dt
