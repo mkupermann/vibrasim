@@ -120,6 +120,16 @@ class WorldConfig:
                                                             #     this enforces pattern-specific propagation:
                                                             #     each visual fires only its own committed
                                                             #     bridge, not every nearby bridge.
+    sparse_firing_enabled: bool = False             # G11: per-tick winner-take-all firing. Instead of every
+                                                    #     atom whose charge ≥ theta_fire firing, only the
+                                                    #     top-K atoms per port fire (per pre-defined port
+                                                    #     volumes from agent I/O config). This forces sparse
+                                                    #     pattern-specific activation: different visuals fire
+                                                    #     DIFFERENT specific atoms, so different bridges and
+                                                    #     thus different audio output.
+    sparse_firing_top_k: int = 3                    # G11: how many atoms per port can fire per tick under
+                                                    #     sparse-firing. Lower = sparser representation,
+                                                    #     stronger discrimination, weaker absolute output.
     bridge_lock_threshold: float = 0.0              # G9: once a level-5+ molecule's strength crosses this
                                                     #     threshold, it becomes 'locked' — apply_stdp skips
                                                     #     it (no LTP / LTD / orientation update) and lateral

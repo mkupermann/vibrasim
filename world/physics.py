@@ -632,12 +632,13 @@ def apply_bridge_atom_propagation(world, dt: float) -> int:
         d_AM_sq = (d_AM * d_AM).sum(axis=1)
         nearby_mask = d_AM_sq <= r_bridge_sq
 
-        # G10: filter by pattern_id when the firing atom has one.
-        # STRICT mode: only fire bridges with the EXACT same pattern_id.
-        # Untagged ambient bridges (pattern_id=0) are excluded so they
-        # can't cross-talk between patterns. The firing atom must have
-        # been tagged during training; pre-seeded atoms (pattern_id=0)
-        # fire all bridges for backward compatibility with B.
+        # G10: strict pattern-cell routing. When the firing atom has a
+        # non-zero pattern_id, only fire bridges with the EXACT same
+        # pattern_id. Ambient bridges (pattern_id=0) are excluded so
+        # they can't cross-talk between patterns. Requires the caller
+        # to pre-tag bridges (e.g. by position) for the chain to stay
+        # active in test scenarios where ambient bridges previously
+        # carried the signal.
         if firing_pattern != 0:
             bridge_pids = world.k_pattern_id[bridge_indices]
             pattern_mask = (bridge_pids == firing_pattern)
@@ -1555,6 +1556,52 @@ def neuron_dynamics(world, dt: float) -> None:
         world.t >= world.k_refractory_until[atom_indices]
     )
     firing_atoms = atom_indices[can_fire]
+
+    # G11: sparse-firing winner-take-all per port. When enabled, only the
+    # top-K atoms per port (by charge) fire each tick. This forces sparse
+    # pattern-specific activation: different stimuli charge different
+    # specific atoms, so different bridges fire downstream and the chain
+    # output is selective by pattern, not broadband.
+    if cfg.sparse_firing_enabled and len(firing_atoms) > 0:
+        top_k = max(1, int(cfg.sparse_firing_top_k))
+        # Group firing atoms by which port they're in. Atoms outside any
+        # named port fall in the "other" group.
+        ports = []
+        if cfg.audio_io_enabled:
+            ports.append(("audio_in", cfg.audio_input_port_origin,
+                           cfg.audio_input_port_size))
+            ports.append(("audio_out", cfg.audio_output_port_origin,
+                           cfg.audio_output_port_size))
+        if cfg.video_io_enabled:
+            ports.append(("video_in", cfg.video_input_port_origin,
+                           cfg.video_input_port_size))
+        if ports:
+            keep = []
+            assigned = np.zeros(len(firing_atoms), dtype=np.bool_)
+            for _name, port_o, port_s in ports:
+                in_port = np.zeros(len(firing_atoms), dtype=np.bool_)
+                for k_i, ai in enumerate(firing_atoms):
+                    if assigned[k_i]:
+                        continue
+                    p = world.k_pos[ai]
+                    if (port_o[0] <= p[0] <= port_o[0] + port_s[0]
+                            and port_o[1] <= p[1] <= port_o[1] + port_s[1]
+                            and port_o[2] <= p[2] <= port_o[2] + port_s[2]):
+                        in_port[k_i] = True
+                        assigned[k_i] = True
+                if in_port.any():
+                    port_indices = np.where(in_port)[0]
+                    port_charges = world.k_charge[firing_atoms[port_indices]]
+                    # Pick top-K by charge
+                    n_keep = min(top_k, len(port_indices))
+                    top = np.argpartition(-port_charges, n_keep - 1)[:n_keep]
+                    keep.extend(port_indices[top].tolist())
+            # Atoms outside any port: keep all (they're rare and not
+            # subject to discrimination).
+            for k_i in range(len(firing_atoms)):
+                if not assigned[k_i]:
+                    keep.append(k_i)
+            firing_atoms = firing_atoms[np.array(sorted(keep), dtype=np.int64)]
     for ai in firing_atoms:
         _emit_vibrations(world, ai)
         world.k_charge[ai] = 0.0
