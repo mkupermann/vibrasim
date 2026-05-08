@@ -96,26 +96,38 @@ def _seed_port_atoms(w, port_origin, port_size, frequencies, n_per_freq=2,
 @pytest.mark.xfail(
     strict=True,
     reason=(
-        "M4 minimal smoke — empirical finding (2026-05-08, autonomous loop): "
-        "components work individually, composition doesn't fit budget. "
-        "Diagnostic measurements at 1-pair × 1 sim-sec scope: 16 seed atoms + "
-        "8 seed bridge molecules; STDP strengthens bridges to max=495 (works); "
-        "audio_in fires=3, video_in fires=4, but audio_out fires=0 and audio "
-        "output buffer is all-zero (cosine=0.000 vs threshold 0.2). "
-        "Root cause: synaptic_transmission's post-search at "
-        "(M + r_bridge * orientation) doesn't land inside audio_output port "
-        "for bridges placed along the full diagonal — only bridges NEAR the "
-        "output port have post-centres inside it. Plus vibration flow through "
-        "bridges depends on _emit_vibrations geometry. The chain has 4+ "
-        "alignment requirements (atom firing + bridge near port + vibration "
-        "flow through bridge + post-atom existing) that don't compose at "
-        "this scale. "
-        "Components individually pass: Plan B P3 (pre-seeded atoms + bridge → "
-        "propagates), Plan C I2 (atoms in audio output → decoded spectrum). "
-        "What's missing: bridge placement precisely tuned to synaptic_transmission "
-        "geometry, plus vibration density through bridges. Out of autonomous-loop "
-        "budget; needs deliberate substrate-tuning expedition or substrate "
-        "amendment to relax synaptic_transmission's geometric requirements."
+        "M4 minimal smoke — empirical finding (2026-05-08, autonomous loop "
+        "after G1-G4 amendments): chain composition gap is multi-step, "
+        "needs more than one substrate amendment. "
+        "Components individually pass: Plan B P3 + Plan C I2 + Plan F SL1-SL5 "
+        "+ G3 synaptic_post_search_samples (test passes for far-target reach) "
+        "+ G4 emit_pair_band (test passes for input-port atom formation). "
+        "Composed chain at 1×1 sim-sec scope still cosine=0.000 because the "
+        "chain has FOUR sequential dependencies that must all complete in 1 "
+        "sim-sec test phase: "
+        "(a) glass video frame → video_input atom firings (works) "
+        "(b) emitted vibrations from video firings travel via bridges (BLOCKED: "
+        "    even at emit_speed=60, vibrations cover only ~1 sim-sec × 60 = "
+        "    60 units across the box, but bridges placed at safe post-search "
+        "    geometry are far from video atoms) "
+        "(c) bridges transmit charge to audio_input atoms via synaptic_transmission "
+        "    (G3 enables this geometrically) "
+        "(d) audio_input atom firings trigger Plan F speech-loop → ghost-bursts "
+        "    deposit at audio_output port (works individually) "
+        "(e) audio_output atoms accumulate charge from ghost-bursts → fire → "
+        "    decode_to_audio produces target-correlated spectrum (works) "
+        "Diagnostic at this commit: K=117, atoms=16, mols=8, "
+        "audio_in fires=3 (training only), audio_out fires=0, video_in fires=4. "
+        "Bridges strength 86-377 (well above threshold). "
+        "Single-amendment fixes attempted and recorded: G3 (synaptic_post_search), "
+        "G4 (emit_pair_band — disabled in this test, harms charge accumulation "
+        "for pre-seeded atoms), bridges to audio_input, speech_loop_burst_size=30, "
+        "emit_speed=60. None alone closes the chain at 1×1 sim-sec scope. "
+        "What would close it: longer test phase (4-5 sim-sec, now feasible "
+        "with G1's JIT lowering wall-time ceiling), OR a substrate amendment "
+        "that decouples synaptic_transmission from vibration travel time "
+        "(direct atom-to-atom charge propagation through strengthened bridges). "
+        "Recorded as the next concrete substrate research step (post-G1-G4)."
     ),
 )
 def test_M4_minimal_smoke():
@@ -141,16 +153,31 @@ def test_M4_minimal_smoke():
         theta_fire=2.0,  # lower than default 4.0 to make small training fire
         n_emit=8,
         r_integrate=5.0,
-        t_refractory=0.05, tau_membrane=0.3, emit_speed=15.0,
+        t_refractory=0.05, tau_membrane=0.3, emit_speed=60.0,  # Increased so emitted
+                                                                 # vibrations from video firings reach
+                                                                 # mid-diagonal bridges within 1 sim-sec
+                                                                 # test phase
         # Plan B + Plan E STDP
         stdp_enabled=True,
         tau_LTP=0.020, delta_LTP=2.0, delta_LTD=0.5,
         r_bridge=8.0,
         synaptic_transmission_strength=0.5,
         synaptic_transmission_threshold=1.0,  # lower so seeded bridges fire
-        # Plan F speech-loop ON — closes the audio_input → audio_output path
+        # G3: extend post-search along orientation so bridges anywhere on the
+        # video↔audio_output diagonal can reach output-port atoms
+        synaptic_post_search_samples=4,
+        # G4 is intentionally OFF for M4 minimal-smoke — pre-seeded atoms
+        # already exist in input ports. With G4 on, paired vibrations bind
+        # into electrons too quickly (8 % rule satisfied) and don't survive
+        # as vibrations long enough to deposit charge via integrate-and-fire,
+        # so atoms never accumulate enough charge to fire. G4 is the right
+        # amendment for substrate-bootstrap (input-only stimuli, no seed atoms).
+        # Plan F speech-loop ON — closes the audio_input → audio_output path.
+        # burst_size=30 (vs default 6) so 30 ghost vibrations land in the
+        # 15×15×15 audio_output port, giving ~5 vibrations per audio_out atom
+        # within r_integrate=5 — enough to clear theta_fire=2.0 in one tick.
         speech_loop_strength=0.5,
-        speech_loop_burst_size=6,
+        speech_loop_burst_size=30,
         # Audio + video I/O
         audio_io_enabled=True,
         video_io_enabled=True,
@@ -169,24 +196,30 @@ def test_M4_minimal_smoke():
     _seed_port_atoms(w, cfg.video_input_port_origin, cfg.video_input_port_size,
                      [2000.0, 4000.0, 6000.0, 8000.0], n_per_freq=1)
 
-    # Pre-seed BRIDGE MOLECULES (level=5) along the diagonal between
-    # video_input port (0,0,45) and audio_output port (45,0,0). STDP
-    # strengthens these existing molecules; without them the segment
-    # has no candidates and bridges never form. Plan B's P3 used the
-    # same pattern (one bridge molecule per pair) and passed.
+    # Pre-seed BRIDGE MOLECULES (level=5) between video_input port (0,0,45)
+    # and AUDIO_INPUT port (0,0,0). The chain composition for cross-modal
+    # recall in this test:
+    #   1. Test phase: glass video fires → video atoms fire
+    #   2. Bridges propagate firing to audio_INPUT atoms (synaptic_transmission)
+    #   3. Audio_input atoms fire → Plan F speech-loop ghost-bursts at audio_OUTPUT
+    #   4. Audio_output atoms charge from those ghost bursts → fire → decode
+    # This uses the speech-loop as the engineered axonal-projection between
+    # input and output ports (CONCEPT §4.8) rather than relying on vibrations
+    # to travel the full diagonal in 1 sim-sec.
     video_centre = np.array([cfg.video_input_port_origin[i] + cfg.video_input_port_size[i] / 2
                              for i in range(3)])
-    audio_out_centre = np.array([cfg.audio_output_port_origin[i] + cfg.audio_output_port_size[i] / 2
-                                 for i in range(3)])
+    audio_in_centre = np.array([cfg.audio_input_port_origin[i] + cfg.audio_input_port_size[i] / 2
+                                for i in range(3)])
     n_bridge = 8
     rng = np.random.default_rng(42)
     for k in range(n_bridge):
         i = w.k_count
         if i >= cfg.n_nodes_max:
             break
-        # Distribute along the segment with small perpendicular jitter
-        t = (k + 0.5) / n_bridge
-        pos = video_centre * (1 - t) + audio_out_centre * t
+        # Concentrate bridges NEAR the audio_input port end so
+        # synaptic_transmission's post-search lands inside it
+        t = 0.6 + (k / n_bridge) * 0.35  # t in [0.6, 0.95]
+        pos = video_centre * (1 - t) + audio_in_centre * t
         jitter = rng.normal(0, 1.0, 3)  # ~1-unit perpendicular jitter
         pos = pos + jitter
         w.k_pos[i] = pos
@@ -195,8 +228,8 @@ def test_M4_minimal_smoke():
         w.k_level[i] = 5  # molecule
         w.k_alive[i] = True
         w.k_strength[i] = 1.0
-        # Initial orientation pointing roughly from video → audio_out
-        seg = audio_out_centre - video_centre
+        # Initial orientation pointing roughly from video → audio_INPUT
+        seg = audio_in_centre - video_centre
         seg_norm = float(np.linalg.norm(seg))
         if seg_norm > 1e-9:
             w.k_orientation[i] = seg / seg_norm
