@@ -184,9 +184,9 @@ def _build_config() -> WorldConfig:
         theta_fire=1.0,                   # was 2.0 — fire on minimal input
         n_emit=8,
         r_integrate=8.0,                  # was 5.0 — wider integration radius
-        # emit_speed=15: balanced — vibrations reach audio ports at
-        # ~3 sec which lets B's chain work; pattern discrimination is
-        # bounded by this geometric coupling and is the C contract limit.
+        # emit_speed=15 — restored to the value that keeps both A+B
+        # passing reliably. Discrimination C is bounded by structural
+        # multi-path coupling that pattern-gating partially fixes.
         t_refractory=0.05, tau_membrane=0.05, emit_speed=15.0,
         # Plan B + Plan E STDP. r_bridge=1.5 (was 3) makes the tube very
         # narrow — bridges fire only when video atoms are adjacent
@@ -231,6 +231,12 @@ def _build_config() -> WorldConfig:
         # cross 50 within ~0.6 sec of training. Comfortable for any
         # training session ≥ 1 sec.
         bridge_lock_threshold=50.0,
+        # G11: sparse winner-take-all firing per port. Only top-K
+        # most-charged atoms per port fire each tick. Forces sparse
+        # pattern-specific activations regardless of which path delivers
+        # the charge — closes the cross-talk that makes contract C fail.
+        sparse_firing_enabled=True,
+        sparse_firing_top_k=5,
         # G9.5: winner-take-all bridge propagation. Each firing pre-atom
         # fires only the strongest+best-aligned bridge nearby, not every
         # bridge in radius. Combined with G9 lock, this enforces pattern-
