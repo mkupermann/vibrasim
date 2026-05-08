@@ -89,6 +89,10 @@ class WorldConfig:
                                                     #     post-atom) triple. Default 4.0 = 2 × theta_fire so
                                                     #     one propagation event clears the post-atom threshold
                                                     #     by itself.
+    graceful_capacity: bool = False                 # When True, allocate_node returns -1 instead of raising
+                                                    #     RuntimeError on n_nodes_max exhaustion. Used by the
+                                                    #     real-time talk app so binding cascades don't crash
+                                                    #     the realtime thread when capacity fills.
 
     # Plan C — audio I/O
     audio_io_enabled: bool = False

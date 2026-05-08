@@ -29,11 +29,37 @@ Where we are right now: the substrate's first three phases (atoms, molecules, pa
 uv sync --extra dev --extra dashboard
 uv run pytest
 
+# To talk to the substrate with real mic / webcam / speaker, also install
+# the `agent` extra (pulls sounddevice + opencv-python-headless):
+uv sync --extra dev --extra dashboard --extra agent
+
 # Or with pip:
 python3.13 -m venv .venv
 source .venv/bin/activate
-pip install -e ".[dev]"
+pip install -e ".[dev,agent]"
 ```
+
+## Talk to the substrate
+
+After installing the `agent` extra, the live mic + webcam + speaker app is one command:
+
+```bash
+# List available audio + video devices (find your --mic, --speaker, --cam indices):
+uv run python -m agent.talk --list-devices
+
+# 20-second training pass (show + speak together), then talk-only:
+uv run python -m agent.talk
+
+# Tune duration + device indices:
+uv run python -m agent.talk --train 30 --mic 1 --speaker 2 --cam 0
+
+# CI / no-hardware mode — synthetic sources:
+uv run python -m agent.talk --synthetic
+```
+
+Inside the app: pre-seeded atoms in audio + video ports, pre-seeded bridges from video → audio_input, G3 (synaptic_post_search_samples=6) and G6 (bridge atom-to-atom direct propagation) enabled, Plan F speech-loop closing the audio_input → audio_output coupling. Same configuration as `tests/test_agent_m4_minimal_smoke.py`, which passes at cosine ≥ 0.475.
+
+While running, the app prints a per-second status line — substrate node count, atom + bridge counts, vibration count, total firings, and the audio output level in dB. Press Ctrl-C to stop.
 
 Verified on macOS-arm64 (Python 3.13.12) and Linux-x86_64 CI. Numba JIT (Plan A.5) targets the same platforms; Windows is untested.
 
