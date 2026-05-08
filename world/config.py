@@ -93,6 +93,26 @@ class WorldConfig:
                                                     #     RuntimeError on n_nodes_max exhaustion. Used by the
                                                     #     real-time talk app so binding cascades don't crash
                                                     #     the realtime thread when capacity fills.
+    lateral_inhibition_enabled: bool = False        # G8: when an STDP causal-pair LTP fires on a bridge,
+                                                    #     apply LTD to all other level-5+ molecules within
+                                                    #     `lateral_inhibition_radius` of the LTP'd bridge.
+                                                    #     Creates competition between bridges so different
+                                                    #     patterns settle on different bridge subsets.
+    lateral_inhibition_radius: float = 6.0          # spatial radius for the LTD scan around a strengthening
+                                                    #     bridge. Should be ≥ r_bridge × 1.5 so neighbours
+                                                    #     in adjacent tubes are reached but distant bridges
+                                                    #     are not.
+    lateral_inhibition_strength: float = 1.0        # multiplier on delta_LTD applied to inhibited bridges.
+                                                    #     1.0 = same magnitude as anti-causal LTD; higher
+                                                    #     values make competition more aggressive.
+    stdp_alignment_strict_threshold: float = 0.0    # G8.2: STDP LTP only fires on a bridge if the
+                                                    #     alignment between its existing orientation and the
+                                                    #     causal pair's direction is ≥ this threshold.
+                                                    #     Default 0.0 = legacy behaviour (any non-negative).
+                                                    #     Set higher (e.g. 0.95) to enforce that only bridges
+                                                    #     whose orientation TIGHTLY matches the new pair's
+                                                    #     direction get re-strengthened — bridges committed
+                                                    #     to a different pattern get LTD instead.
 
     # Plan C — audio I/O
     audio_io_enabled: bool = False
