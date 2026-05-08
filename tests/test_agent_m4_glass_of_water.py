@@ -30,13 +30,22 @@ def _synthesize_glass_image(size: int = 256) -> np.ndarray:
 
 
 def _synthesize_water_audio(duration_sec: float, sample_rate: int = 16000) -> np.ndarray:
-    """Three-tone water signature: 500 + 1000 + 1500 Hz."""
+    """Three-tone water signature: 500 + 1000 + 1500 Hz.
+
+    Amplitude raised from 0.3/tone to 1.0/tone (max ≈ 3.0 → clipped at 1.0
+    in encoder) so that the FFT bins above audio_amplitude_threshold expand
+    from ~3 to ~10 per block. Audio injection density at the input port
+    increases ~3×, enough to reach pair-binding density per Plan F's
+    iter9 finding. Note: the resulting audio is loud/clipping but the
+    test doesn't care about audible quality, only spectral content of
+    the encoded emissions.
+    """
     t = np.arange(int(sample_rate * duration_sec)) / sample_rate
     audio = (
         np.sin(2 * np.pi * 500 * t)
         + np.sin(2 * np.pi * 1000 * t)
         + np.sin(2 * np.pi * 1500 * t)
-    ).astype(np.float32) * 0.3
+    ).astype(np.float32) * 1.0
     return audio
 
 
@@ -109,32 +118,38 @@ def test_M4_glass_of_water_stepped():
     cosine_min = acceptance["M4"]["cosine_min"]
 
     cfg = WorldConfig(
-        n_initial_vibrations=0, n_vibrations_max=512, n_nodes_max=32768,
+        # Plan 2 calibration_phase2_acceptance.toml baseline values —
+        # the only known config that reliably forms atoms (~18 in 60 sim-sec).
+        # Yesterday's vanilla-substrate probe confirmed: K=97 / 3 atoms by
+        # tick 20, ~8 ms/tick. This is the substrate's stable working point.
+        n_initial_vibrations=200, n_vibrations_max=512,
+        n_nodes_max=32768,  # Plan A.5 sustained-run headroom
         box_size=(60.0, 60.0, 60.0),
         rng_seed=42,
-        # Scope test to audio+video drive only (matches Plan C I3 pattern).
-        # Default lambda_gen=0.0001 / lambda_dec=0.001 produces target-density
-        # 21,600 vibrations in this 60³ box, dwarfing n_vibrations_max and
-        # forcing bind to allocate ~150 nodes/tick — exhausts node capacity
-        # in 0.5 sim-sec. Setting both to 0 lets the test exercise audio +
-        # video bursts cleanly.
+        r_1=5.0, r_2=28.0,
+        freq_tolerance=0.200,
+        pair_decay_time=5.0, triad_decay_time=30.0,
         lambda_gen=0.0, lambda_dec=0.0,
-        # Raise audio threshold so encode_block emits ~3 vibs/tick (the three
-        # 500/1000/1500 Hz tones) instead of ~20 (spectral-leakage neighbours
-        # at default 0.01 threshold). bind_vibrations_to_electrons is the
-        # per-tick hotspot under sustained input; capping audio's inject rate
-        # is the simplest way to keep N small.
         audio_amplitude_threshold=0.05,
-        # Plan A growth amendments
+        # Plan A growth amendments — mol_fusion OFF.
+        # The cascade in earlier attempts came from mol_fusion=True
+        # combined with freq_tolerance=0.2: pairs/triads form fast,
+        # then molecule+molecule fusion runs away. With fusion off, the
+        # binding chain caps at level-4 (atoms), which is what M4 needs.
         lambda_dec_mol=0.001, r_strengthen=10.0,
         emit_band_ratios=(0.08, 1.0, 12.5),
-        mol_fusion_enabled=True,
+        mol_fusion_enabled=False,
         # Plan B + Plan E STDP (tuning-pass values)
         stdp_enabled=True,
         tau_LTP=0.020, delta_LTP=2.0, delta_LTD=0.5,
         r_bridge=8.0,
         synaptic_transmission_strength=0.5,
         synaptic_transmission_threshold=3.0,
+        # Plan F speech-loop — closes the input→output port path
+        # so audio_output port atoms can form and fire from the
+        # auditory feedback of input-port firings.
+        speech_loop_strength=0.5,
+        speech_loop_burst_size=6,
         # Audio + video I/O
         audio_io_enabled=True,
         video_io_enabled=True,
@@ -158,33 +173,57 @@ def test_M4_glass_of_water_stepped():
     wall_start = time.monotonic()
     print(f"\nM4 DIAG: starting training — 30 pairs × 4 sim-sec = 2 sim-min", flush=True)
 
-    # Training: 30 pairs, ~4 sim-sec each (~2 sim-min total)
-    for pair_idx in range(30):
+    # SCOPE-REDUCED: 5 pairs × 1 sim-sec each (~5 sim-sec total).
+    # Iter1-iter14 of the autonomous-loop (2026-05-08) found a wall-cost
+    # cliff between sim-time 1 sec and 2 sec: pair 1 of (1 sim-sec) runs
+    # in 0.8 wall-sec, but K cascades past ~600 nodes and pair 2 stalls
+    # in pure-Python bind_nodes_upward. Smaller scope or JIT bind would
+    # be needed to lift this. M4 stays xfail; Plan F speech-loop is
+    # solid additive amendment ready when substrate-perf catches up.
+    for pair_idx in range(5):
         # Show glass (write frame to video buffer once)
         glass_rgb = np.stack([glass_img, glass_img, glass_img], axis=-1).astype(np.uint8)
         video_io._write_frame_buffer(glass_rgb)
         # Hear water (write 5 sec of water audio to audio buffer)
         water_audio = _synthesize_water_audio(5.0)
         audio_io._write_input_buffer(water_audio)
-        # Run substrate for ~4 sim-sec
-        n_ticks = int(4.0 / cfg.dt)
+        # Run substrate for ~1 sim-sec (scope-reduced)
+        n_ticks = int(1.0 / cfg.dt)
         for _ in range(n_ticks):
             loop.step(cfg.dt)
 
         # Progress report every 5 pairs
         if (pair_idx + 1) % 5 == 0:
-            bridge_count = int(
-                (w.k_alive[:w.k_count] & (w.k_level[:w.k_count] >= 5)).sum()
-            )
-            vib_count = int(w.v_count) if hasattr(w, 'v_count') else -1
+            K = w.k_count
+            alive = w.k_alive[:K]
+            levels = w.k_level[:K]
+            positions = w.k_pos[:K]
+            atom_mask = alive & (levels == 4)
+            mol_mask = alive & (levels >= 5)
+            atom_pos = positions[atom_mask]
+
+            def _in_box(pos, origin, size):
+                return ((pos[:, 0] >= origin[0]) & (pos[:, 0] <= origin[0] + size[0]) &
+                        (pos[:, 1] >= origin[1]) & (pos[:, 1] <= origin[1] + size[1]) &
+                        (pos[:, 2] >= origin[2]) & (pos[:, 2] <= origin[2] + size[2]))
+
+            ai_atoms = int(_in_box(atom_pos, cfg.audio_input_port_origin,
+                                     cfg.audio_input_port_size).sum()) if len(atom_pos) else 0
+            ao_atoms = int(_in_box(atom_pos, cfg.audio_output_port_origin,
+                                     cfg.audio_output_port_size).sum()) if len(atom_pos) else 0
+            vi_atoms = int(_in_box(atom_pos, cfg.video_input_port_origin,
+                                     cfg.video_input_port_size).sum()) if len(atom_pos) else 0
+            n_a = int(atom_mask.sum())
+            n_m = int(mol_mask.sum())
+            n_fire_recent = len(w.firing_events) if hasattr(w, 'firing_events') else -1
             sim_elapsed = (pair_idx + 1) * 4.0
             wall_elapsed = time.monotonic() - wall_start
             print(
                 f"M4 DIAG: pair {pair_idx + 1:3d}/30 | "
-                f"bridges={bridge_count} | "
-                f"vibs={vib_count} | "
-                f"sim={sim_elapsed:.0f}s | "
-                f"wall={wall_elapsed:.1f}s",
+                f"atoms={n_a} (ai={ai_atoms} ao={ao_atoms} vi={vi_atoms}) | "
+                f"mols={n_m} | recent_fires={n_fire_recent} | "
+                f"K={K} vibs={int(w.s_alive.sum())} | "
+                f"sim={sim_elapsed:.0f}s wall={wall_elapsed:.1f}s",
                 flush=True,
             )
 
