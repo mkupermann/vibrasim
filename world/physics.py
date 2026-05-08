@@ -358,15 +358,20 @@ def apply_stdp(world) -> int:
                 o_norm = float(np.linalg.norm(o))
                 alignment = float(np.dot(o, u))
                 strength_old = float(world.k_strength[m])
+                # G8.2: alignment threshold tightens "aligned" so bridges
+                # committed to a different pattern (alignment between 0 and
+                # the threshold) get LTD instead of LTP. Default 0.0 keeps
+                # legacy behaviour.
+                strict_threshold = float(cfg.stdp_alignment_strict_threshold)
                 # Determine LTP vs LTD based on alignment AND swap flag
                 if o_norm < 1e-6:
                     # No prior orientation → LTP normally; LTD if swap
                     do_ltp = not swap_ltp_ltd
-                elif alignment >= 0:
-                    # Aligned → LTP normally; LTD if swap
+                elif alignment >= strict_threshold:
+                    # Sufficiently aligned → LTP normally; LTD if swap
                     do_ltp = not swap_ltp_ltd
                 else:
-                    # Anti-aligned → LTD normally; LTP if swap
+                    # Insufficiently aligned (or anti-aligned) → LTD normally
                     do_ltp = swap_ltp_ltd
                 if do_ltp:
                     # LTP: strengthen and update orientation toward u
@@ -379,6 +384,40 @@ def apply_stdp(world) -> int:
                         if new_norm > 1e-9:
                             o_new = o_new / new_norm
                         world.k_orientation[m] = o_new
+                    # G8: lateral inhibition — competing bridges nearby get
+                    # LTD so different patterns settle on disjoint bridge
+                    # subsets. Only applied on LTP events, not LTD events,
+                    # because LTD already weakens the focal bridge.
+                    if cfg.lateral_inhibition_enabled:
+                        K = world.k_count
+                        all_mol_mask = (world.k_alive[:K]
+                                        & (world.k_level[:K] >= 5))
+                        if all_mol_mask.any():
+                            r_inh_sq = cfg.lateral_inhibition_radius ** 2
+                            d_inh = world.k_pos[:K] - world.k_pos[m]
+                            d_inh -= box * np.round(d_inh / box)
+                            d_inh_sq = (d_inh * d_inh).sum(axis=1)
+                            inhibit_mask = (
+                                all_mol_mask
+                                & (d_inh_sq <= r_inh_sq)
+                                & (d_inh_sq > 0.0)
+                            )
+                            inhibit_mask[m] = False  # never inhibit self
+                            # Only inhibit molecules NOT in the current
+                            # tube (the tube was the "winning" set this
+                            # tick).
+                            for bidx in bridge_indices:
+                                inhibit_mask[bidx] = False
+                            inhib_idx = np.where(inhibit_mask)[0]
+                            if len(inhib_idx) > 0:
+                                inhib_weight = (cfg.delta_LTD
+                                                * cfg.lateral_inhibition_strength
+                                                * float(np.exp(-dt_pair
+                                                               / cfg.tau_LTD)))
+                                for ii in inhib_idx:
+                                    world.k_strength[int(ii)] = max(
+                                        float(world.k_strength[int(ii)])
+                                        - inhib_weight, 1.0)
                 else:
                     # LTD: weaken only; orientation unchanged
                     weight = cfg.delta_LTD * float(np.exp(-dt_pair / cfg.tau_LTD))
@@ -1571,16 +1610,35 @@ def apply_speech_loop(world, dt: float) -> int:
         f_atom = float(world.k_freq[atom_idx])
         pol_atom = bool(world.k_pol[atom_idx])
 
-        # Allocate burst_size vibrations at random positions inside the
-        # audio output port. Gracefully no-op if buffer is full.
+        # G8.1: Deposit ghosts at the freq-mapped POSITION inside the
+        # audio output port (inverse log-mapping of f_atom), not at random
+        # positions. read_from_substrate decodes audio_out atom firings via
+        # position → freq, so depositing at f_atom's position concentrates
+        # the chain's effect on the audio_out atom at that exact freq, not
+        # any audio_out atom that happens to be near a random ghost. This
+        # is the load-bearing change that lets pattern discrimination work:
+        # the input freq is conserved through the speech-loop.
+        log_norm = ((np.log(max(f_atom, cfg.audio_freq_min))
+                     - np.log(cfg.audio_freq_min))
+                    / (np.log(cfg.audio_freq_max) - np.log(cfg.audio_freq_min)))
+        log_norm = max(0.0, min(1.0, log_norm))
+        target_x = ao_origin[0] + log_norm * ao_size[0]
+
+        # Allocate burst_size vibrations at the freq-mapped X with random
+        # Y/Z inside the audio output port. Gracefully no-op if buffer is
+        # full.
         free_idx = np.where(~world.s_alive)[0]
         n_to_inject = min(burst_size, len(free_idx))
         if n_to_inject == 0:
             continue
         for k in range(n_to_inject):
             i = int(free_idx[k])
+            # Small jitter on x (within ±0.5 unit) so multiple ghosts
+            # don't collide at the exact same position
+            x_jitter = float(rng.normal(0.0, 0.5))
             world.s_pos[i] = (
-                ao_origin[0] + float(rng.random()) * ao_size[0],
+                max(ao_origin[0],
+                    min(ao_origin[0] + ao_size[0], target_x + x_jitter)),
                 ao_origin[1] + float(rng.random()) * ao_size[1],
                 ao_origin[2] + float(rng.random()) * ao_size[2],
             )

@@ -193,17 +193,31 @@ def _build_config() -> WorldConfig:
         tau_LTP=0.025, delta_LTP=3.0, delta_LTD=0.5,
         r_bridge=3.0,
         synaptic_transmission_strength=0.5,
-        # threshold=10 — pre-seeded bridges START at strength=1.0 (well
-        # below). The chain is SILENT until training strengthens bridges
-        # past threshold via Plan A R2 (nearby-firing strengthening) and
-        # Plan B STDP (causal-pair LTP). This is what makes training
-        # *matter* — without it the chain doesn't fire on webcam alone.
-        synaptic_transmission_threshold=10.0,
+        # threshold=50 — pre-seeded bridges START at strength=1.0 (50× below).
+        # Training strengthens trained-tube bridges by delta_LTP=3.0 per
+        # causal pair × ~30 pairs/sec × 4 sec ≈ 360 cumulative — well above
+        # 50. Untrained bridges stay near 1.0. The high gate forces the
+        # chain to fire ONLY through trained-pattern-specific bridges.
+        synaptic_transmission_threshold=50.0,
         synaptic_post_search_samples=6,
         # G6 — bridge atom-to-atom direct propagation, gated on the same
         # threshold above
         bridge_atom_propagation_enabled=True,
         bridge_atom_propagation_strength=10.0,
+        # G8 — lateral inhibition between bridges. When STDP applies LTP
+        # to a tube of bridges, OTHER nearby bridges get LTD. Forces
+        # different patterns to settle on different bridge subsets and
+        # is the substrate amendment that lets pattern discrimination work.
+        # G8 lateral inhibition: enabled at moderate strength helps single
+        # pattern recall (B passes at cosine 0.42) without harming silence (A).
+        # For multi-pattern discrimination see test_machine_contract.py
+        # contract C xfail — substrate's single bridge population can't
+        # hold multiple patterns simultaneously without an architectural
+        # memory-partitioning amendment.
+        lateral_inhibition_enabled=True,
+        lateral_inhibition_radius=6.0,
+        lateral_inhibition_strength=2.0,
+        stdp_alignment_strict_threshold=0.0,  # legacy STDP behaviour
         # Plan F speech-loop — burst_size 20 gives ~3 ghosts per audio_out
         # atom in r_integrate, enough to fire at theta_fire=1.0 in one tick.
         speech_loop_strength=1.0,
