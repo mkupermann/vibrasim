@@ -88,6 +88,10 @@ class WorldConfig:
     audio_amplitude_threshold: float = 0.01
     audio_freq_min: float = 50.0
     audio_freq_max: float = 8000.0
+    audio_emit_pair_band: float = 0.0   # G4: if > 0, inject a paired vibration at f * (1 + band) with
+                                        #     opposite polarity for every emission. The pair satisfies
+                                        #     the 8 % rule directly so atoms form quickly at the input
+                                        #     port under deterministic stimuli. 0 = off (legacy).
     audio_input_port_origin: tuple[float, float, float] = (0.0, 0.0, 0.0)
     audio_input_port_size: tuple[float, float, float] = (15.0, 15.0, 15.0)
     audio_output_port_origin: tuple[float, float, float] = (45.0, 0.0, 0.0)
@@ -102,6 +106,9 @@ class WorldConfig:
     video_amplitude_threshold: float = 0.05
     video_freq_min: float = 1000.0
     video_freq_max: float = 12000.0
+    video_emit_pair_band: float = 0.0   # G4: if > 0, inject a paired vibration at f * (1 + band) with
+                                        #     opposite polarity for every emission. Same semantics as
+                                        #     audio_emit_pair_band.
     video_input_port_origin: tuple[float, float, float] = (0.0, 0.0, 45.0)
     video_input_port_size: tuple[float, float, float] = (15.0, 15.0, 15.0)
     video_webcam_index: int = 0
