@@ -159,7 +159,8 @@ def _build_config() -> WorldConfig:
         # 24 bridges = 136 nodes; the cap leaves headroom for ~120 binding
         # events before the substrate is full and per-tick is bounded.
         n_vibrations_max=512,
-        n_nodes_max=512,
+        n_nodes_max=1024,        # raised so 144 bridges + 51 atoms + binding
+                                  # cascades all fit
         graceful_capacity=True,  # don't crash the realtime thread on full
         box_size=(60.0, 60.0, 60.0),
         rng_seed=42,
@@ -183,22 +184,17 @@ def _build_config() -> WorldConfig:
         theta_fire=1.0,                   # was 2.0 — fire on minimal input
         n_emit=8,
         r_integrate=8.0,                  # was 5.0 — wider integration radius
-        # tau_membrane=0.05: short charge decay so atoms forget quickly
-        # between training pulses. Otherwise pair1's visual atoms still
-        # have residual charge during pair2's training and form spurious
-        # cross-pair bridges.
-        # emit_speed=15: emitted vibrations don't traverse the full box
-        # diagonal in a 4-sec test phase, so discrimination relies on
-        # G6 atom-to-atom propagation, not vibration broadcast.
+        # emit_speed=15: balanced — vibrations reach audio ports at
+        # ~3 sec which lets B's chain work; pattern discrimination is
+        # bounded by this geometric coupling and is the C contract limit.
         t_refractory=0.05, tau_membrane=0.05, emit_speed=15.0,
-        # Plan B + Plan E STDP. r_bridge=3 (was 8) tightens the tube
-        # search radius for STDP — different patterns' bridge tubes don't
-        # overlap, so visual1's training doesn't lift visual2's bridges.
-        # tau_LTP=0.025 widens the causal window slightly without blowing
-        # up STDP's O(N²) pair scan.
+        # Plan B + Plan E STDP. r_bridge=1.5 (was 3) makes the tube very
+        # narrow — bridges fire only when video atoms are adjacent
+        # (≤1.5 units), so spatially-separated patterns don't share
+        # bridges at all.
         stdp_enabled=True,
         tau_LTP=0.025, delta_LTP=3.0, delta_LTD=0.5,
-        r_bridge=3.0,
+        r_bridge=1.5,
         # synaptic_transmission_strength=0 disables the vibration-flow
         # propagation path entirely. With G6 + WTA active we route signals
         # only via the strongest committed bridge per firing atom — no
@@ -211,8 +207,6 @@ def _build_config() -> WorldConfig:
         # chain to fire ONLY through trained-pattern-specific bridges.
         synaptic_transmission_threshold=50.0,
         synaptic_post_search_samples=6,
-        # G6 — bridge atom-to-atom direct propagation, gated on the same
-        # threshold above
         bridge_atom_propagation_enabled=True,
         bridge_atom_propagation_strength=10.0,
         # G8 — lateral inhibition between bridges. When STDP applies LTP
@@ -415,7 +409,9 @@ def run_app(
         video_freqs, n_per_freq=2,
         freq_min=cfg.video_freq_min, freq_max=cfg.video_freq_max,
     )
-    _seed_bridges_video_to_audio_in(w, n_bridge=64)
+    _seed_bridges_video_to_audio_in(w, n_bridge=144)  # 12×12 grid — denser
+                                                        # so r_bridge=1.5 still
+                                                        # finds nearby bridges
     print(f"Seeded substrate: K={w.k_count} (broadband audio_in + audio_out + video_in atoms, "
           f"24 bridges video→audio_in)")
 
