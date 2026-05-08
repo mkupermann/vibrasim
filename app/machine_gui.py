@@ -18,12 +18,20 @@ from typing import Optional
 import numpy as np
 import streamlit as st
 
+from pathlib import Path
+
 from world.state import World
+from world.snapshot import save_snapshot, load_snapshot
 from agent.audio_io import AudioIO
 from agent.video_io import VideoIO
 from agent.loop import AgentLoop
 from agent import talk
 from agent.speak import Speaker
+from agent.youtube_feeder import YouTubeFeeder, _have_ytdlp, _have_ffmpeg
+
+
+MEMORY_DIR = Path.home() / ".eqmod" / "memory"
+MEMORY_DIR.mkdir(parents=True, exist_ok=True)
 
 
 # ---------- substrate lifecycle (cached across reruns) ----------------------
@@ -47,6 +55,15 @@ def _machine_singleton():
         # actually growing structures vs. staying at the seed.
         "k_seed": 0,
         "k_max_seen": 0,
+        # YouTube feeder — populated when user pastes a URL and clicks
+        # 'Train from URL'. The feeder runs in its own thread, downloading
+        # and streaming audio + video into the IO buffers at real-time
+        # rate so the substrate trains on the content.
+        "yt_feeder": None,
+        # If a snapshot path is set when the user clicks Start, the
+        # substrate is loaded from that file instead of being seeded
+        # fresh. This is how memory persists across sessions.
+        "load_from_snapshot": None,
     }
 
 
@@ -96,10 +113,30 @@ def _build_substrate():
 
 
 def _start(state: dict) -> str:
-    """Open real devices + start the realtime substrate thread."""
+    """Open real devices + start the realtime substrate thread.
+
+    If state['load_from_snapshot'] is set, the World is restored from
+    that path (memory persists across sessions). Otherwise a fresh
+    substrate is seeded.
+    """
     if state["running"]:
         return "already running"
     w, audio_io, video_io, loop = _build_substrate()
+    if state["load_from_snapshot"] is not None:
+        snap_path = Path(state["load_from_snapshot"])
+        if snap_path.exists():
+            try:
+                w_loaded = load_snapshot(snap_path)
+                w_loaded.config = w.config  # keep current config
+                w = w_loaded
+                loop = AgentLoop(w, audio_io=audio_io, video_io=video_io)
+                state["log"] = []
+                state.setdefault("_load_msg",
+                                  f"loaded snapshot from {snap_path.name} "
+                                  f"(K={w.k_count})")
+            except Exception as exc:  # pragma: no cover
+                state.setdefault("_load_msg",
+                                  f"snapshot load failed: {exc} (using fresh seed)")
     try:
         audio_io.start()
         video_io.start()
@@ -125,6 +162,9 @@ def _stop(state: dict) -> str:
     if not state["running"]:
         return "not running"
     try:
+        if state.get("yt_feeder") is not None:
+            state["yt_feeder"].stop()
+            state["yt_feeder"] = None
         state["loop"].stop_realtime()
         state["audio_io"].stop()
         state["video_io"].stop()
@@ -133,6 +173,44 @@ def _stop(state: dict) -> str:
     state["running"] = False
     state["log"].append((time.time(), "stopped"))
     return "stopped"
+
+
+def _save_memory(state: dict, name: str) -> str:
+    if state["world"] is None:
+        return "no substrate to save"
+    path = MEMORY_DIR / f"{name}.npz"
+    try:
+        save_snapshot(state["world"], path)
+        state["log"].append((time.time(),
+                             f"saved memory '{name}' "
+                             f"(K={state['world'].k_count})"))
+        return f"saved {path.name}"
+    except Exception as exc:  # pragma: no cover
+        return f"save error: {exc}"
+
+
+def _list_memories():
+    return sorted([p.stem for p in MEMORY_DIR.glob("*.npz")])
+
+
+def _start_yt_feed(state: dict, url: str, duration_s: float) -> str:
+    if not state["running"]:
+        return "start the substrate first"
+    if not _have_ytdlp() or not _have_ffmpeg():
+        return ("needs yt-dlp and ffmpeg. "
+                "uv sync --extra agent  +  brew install ffmpeg")
+    if state.get("yt_feeder") is not None and state["yt_feeder"].is_running:
+        return "feed already running"
+    feeder = YouTubeFeeder(
+        url=url,
+        audio_io=state["audio_io"],
+        video_io=state["video_io"],
+        duration_seconds=duration_s,
+    )
+    feeder.start()
+    state["yt_feeder"] = feeder
+    state["log"].append((time.time(), f"YouTube feed started: {url}"))
+    return "feed started"
 
 
 def _reset(state: dict) -> str:
@@ -241,15 +319,65 @@ with control_col:
     )
 
     st.divider()
+    st.markdown("**Train from YouTube**")
+    yt_url = st.text_input("YouTube URL", placeholder="https://youtu.be/...")
+    yt_duration = st.slider("Duration (sec)", min_value=10, max_value=600,
+                            value=60, step=10)
+    if st.button("📺 Train from URL", use_container_width=True,
+                 disabled=not state["running"]):
+        msg = _start_yt_feed(state, yt_url, float(yt_duration))
+        st.toast(msg)
+    feeder = state.get("yt_feeder")
+    if feeder is not None and feeder.is_running:
+        prog = feeder.progress
+        st.progress(min(1.0, prog.get("frac", 0.0)),
+                    text=f"{prog.get('phase')}: {prog.get('msg','')[:40]}")
+
+    st.divider()
+    st.markdown("**Memory (persistent across sessions)**")
+    mem_name = st.text_input("Snapshot name", value="lesson_1",
+                              placeholder="lesson_1")
+    sm_col, lm_col = st.columns(2)
+    with sm_col:
+        if st.button("💾 Save", use_container_width=True,
+                     disabled=not state["running"]):
+            st.toast(_save_memory(state, mem_name or "untitled"))
+    with lm_col:
+        existing = _list_memories()
+        if existing:
+            chosen = st.selectbox("Load on next Start",
+                                  [""] + existing, index=0,
+                                  key="load_choice")
+            if chosen:
+                state["load_from_snapshot"] = MEMORY_DIR / f"{chosen}.npz"
+            else:
+                state["load_from_snapshot"] = None
+        else:
+            st.caption("No snapshots yet")
+    if state.get("load_from_snapshot") is not None:
+        st.caption(f"⏎ Will load **{state['load_from_snapshot'].stem}** "
+                   "on next Start")
+
+    st.divider()
     st.markdown("**How to use**")
     st.markdown(
-        "1. Type a **label** above (e.g. `water`).\n"
+        "**Live training (mic + webcam):**\n"
+        "1. Type a **label** (e.g. `water`).\n"
         "2. Click **Start** — macOS prompts for camera + mic permission.\n"
-        "3. Show what you want it to learn AND say the word for ~20 sec.\n"
-        "4. Stop talking, keep showing — when activation crosses threshold,\n"
-        "   the speaker says the label.\n"
-        "5. Click **Stop** when done.\n\n"
-        "_Single label per session — multi-label discrimination still fails "
+        "3. Show + say together for ~20 sec — substrate forms bridges.\n"
+        "4. Stop talking, keep showing — speaker says the label.\n\n"
+        "**YouTube training:**\n"
+        "1. **Start** the substrate.\n"
+        "2. Paste a YouTube URL above, set duration, **Train from URL**.\n"
+        "3. The video's audio + frames stream into the substrate at\n"
+        "   real-time rate.\n\n"
+        "**Memory:**\n"
+        "- **Save** the substrate state to `~/.eqmod/memory/<name>.npz`.\n"
+        "- Pick a saved snapshot in the **Load on next Start** dropdown,\n"
+        "  then **Stop** + **Start** — substrate restored from that state.\n\n"
+        "_What 'learning' means here: STDP-Hebbian — bridges between video\n"
+        "and audio atoms strengthen when they co-fire. Single trained\n"
+        "pattern at a time; multi-pattern discrimination is still open\n"
         "(see `tests/test_machine_contract.py` contract C)._"
     )
 
