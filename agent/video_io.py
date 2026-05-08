@@ -32,6 +32,7 @@ class VideoIO:
         video_port_size: tuple[float, float, float] = (15.0, 15.0, 15.0),
         freq_min: float = 1000.0,
         freq_max: float = 12000.0,
+        emit_pair_band: float = 0.0,
         webcam_index: int = 0,
         rng: Optional[np.random.Generator] = None,
     ):
@@ -44,6 +45,7 @@ class VideoIO:
         self.video_port_size = video_port_size
         self.freq_min = freq_min
         self.freq_max = freq_max
+        self.emit_pair_band = float(emit_pair_band)
         self.webcam_index = webcam_index
         self.rng = rng if rng is not None else np.random.default_rng()
 
@@ -133,6 +135,20 @@ class VideoIO:
             world.s_alive[i] = True
             world.n_alive = max(world.n_alive, i + 1)
             n_injected += 1
+            # G4: optional 8 %-band pair injection (same semantics as
+            # AudioIO.inject_into_substrate).
+            if self.emit_pair_band > 0.0:
+                free_idx = np.where(~world.s_alive)[0]
+                if len(free_idx) == 0:
+                    break
+                j = int(free_idx[0])
+                world.s_pos[j] = pos
+                world.s_vel[j] = 0.0
+                world.s_freq[j] = float(f) * (1.0 + self.emit_pair_band)
+                world.s_pol[j] = (not bool(sign))
+                world.s_alive[j] = True
+                world.n_alive = max(world.n_alive, j + 1)
+                n_injected += 1
         self._last_injected_frame_id = frame_id
         return n_injected
 
