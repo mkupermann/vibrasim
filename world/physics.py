@@ -352,12 +352,19 @@ def apply_stdp(world) -> int:
             # 0 (ambient default) take the existing alignment-based path unchanged.
             swap_ltp_ltd = (world.k_reward_polarity[atom_j] == -1)
 
+            # G9: lock threshold for bridges that have already committed
+            # to a pattern. Locked bridges are skipped entirely.
+            lock_threshold = float(cfg.bridge_lock_threshold)
             # Per-molecule LTP/LTD decision based on orientation alignment
             for m in bridge_indices:
+                strength_old = float(world.k_strength[m])
+                # G9: skip locked bridges so previously-committed memory
+                # patterns survive subsequent training.
+                if lock_threshold > 0.0 and strength_old >= lock_threshold:
+                    continue
                 o = world.k_orientation[m]
                 o_norm = float(np.linalg.norm(o))
                 alignment = float(np.dot(o, u))
-                strength_old = float(world.k_strength[m])
                 # G8.2: alignment threshold tightens "aligned" so bridges
                 # committed to a different pattern (alignment between 0 and
                 # the threshold) get LTD instead of LTP. Default 0.0 keeps
@@ -415,9 +422,16 @@ def apply_stdp(world) -> int:
                                                 * float(np.exp(-dt_pair
                                                                / cfg.tau_LTD)))
                                 for ii in inhib_idx:
+                                    s_ii = float(world.k_strength[int(ii)])
+                                    # G9: locked bridges exempt from
+                                    # lateral inhibition LTD too —
+                                    # otherwise old patterns get bleed-
+                                    # weakened by every new training pair.
+                                    if (lock_threshold > 0.0
+                                            and s_ii >= lock_threshold):
+                                        continue
                                     world.k_strength[int(ii)] = max(
-                                        float(world.k_strength[int(ii)])
-                                        - inhib_weight, 1.0)
+                                        s_ii - inhib_weight, 1.0)
                 else:
                     # LTD: weaken only; orientation unchanged
                     weight = cfg.delta_LTD * float(np.exp(-dt_pair / cfg.tau_LTD))
@@ -601,6 +615,28 @@ def apply_bridge_atom_propagation(world, dt: float) -> int:
         if not nearby_mask.any():
             continue
         nearby_bridge_indices = bridge_indices[nearby_mask]
+
+        # G9.5: winner-take-all — fire only the single strongest oriented
+        # bridge near this firing atom. Without this, every bridge in
+        # radius fires, so different patterns' bridges all activate
+        # together when their video atoms are adjacent in the port. WTA
+        # forces selectivity: each firing atom picks its committed bridge
+        # by max strength and fires only that one.
+        if cfg.bridge_atom_propagation_winner_take_all:
+            best_m = -1
+            best_score = -1.0
+            for m in nearby_bridge_indices:
+                o = world.k_orientation[m]
+                o_norm = float(np.linalg.norm(o))
+                if o_norm <= 0.5:
+                    continue
+                score = float(world.k_strength[m]) * o_norm
+                if score > best_score:
+                    best_score = score
+                    best_m = int(m)
+            if best_m < 0:
+                continue
+            nearby_bridge_indices = np.array([best_m], dtype=np.int64)
 
         for m in nearby_bridge_indices:
             o = world.k_orientation[m]
