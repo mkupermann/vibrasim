@@ -453,12 +453,20 @@ def synaptic_transmission(world, dt: float) -> int:
             continue
         v_in_range_indices = np.where(in_range)[0]
 
-        # Post-synaptic search centre = M + r_bridge * o_unit
-        post_centre = M + r_bridge * o_unit
-        d_aP = atom_pos - post_centre
-        d_aP -= box * np.round(d_aP / box)
-        d_aP_sq = (d_aP * d_aP).sum(axis=1)
-        post_mask = d_aP_sq <= r_bridge_sq
+        # G3: post-synaptic search at one or more samples along o_unit.
+        # Sample k (k=0..N-1) is at distance (k+1) * r_bridge from M.
+        # n_samples=1 (default) ↔ legacy behaviour (single sample at r_bridge).
+        # Higher values extend reach so bridges placed mid-segment can still
+        # find post-atoms at the destination port end of the orientation ray.
+        n_samples = max(1, int(cfg.synaptic_post_search_samples))
+        post_mask = np.zeros(atom_pos.shape[0], dtype=np.bool_)
+        for k in range(n_samples):
+            distance = (k + 1) * r_bridge
+            post_centre = M + distance * o_unit
+            d_aP = atom_pos - post_centre
+            d_aP -= box * np.round(d_aP / box)
+            d_aP_sq = (d_aP * d_aP).sum(axis=1)
+            post_mask |= d_aP_sq <= r_bridge_sq
         if not post_mask.any():
             continue
         post_atom_indices = atom_indices[post_mask]
