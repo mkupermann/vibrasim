@@ -493,14 +493,19 @@ The diagnostic finding: `synaptic_transmission`'s post-atom search at `M + r_bri
 - The chain composition into a substrate-bootstrapped cross-modal association does not hold at the budget tested. This is the empirical ceiling of the present substrate.
 - The 8 % rule's fragility under deterministic stimuli (§4.4 box) is part of why: input-port atom formation is sparse, which limits the rate at which the LTP/LTD loop can re-organise bridges into output-port-anchored geometries.
 
-**Candidate amendments (not chosen yet, recorded for the next iteration)**
+**Candidate amendments — the four named in the first v3 draft, all four now landed (G1–G4) with G5 the retry result**
 
-1. **JIT `bind_vibrations_to_electrons` + `bind_nodes_upward`** — the per-tick hotspots under sustained drive. Either rewrite to batch allocations or accept the side-effect cost. Would relax the wall-time ceiling and let M4 train at the original 30 pairs × 4 sim-sec scope rather than the scoped-down 1 × 1.
-2. **Relax `synaptic_transmission`'s geometric search** — currently searches at exactly `M + r_bridge · orientation`; a wider search radius or an integral over the bridge's span would relax the bridge-placement requirement that broke the M4 chain.
-3. **Frequency-broadening at input ports** — either widen the encoder's emitted frequency band (Plan C / Plan D amendment) or add an explicit "frequency-spread" rule at port boundaries that produces 8 %-spaced ladders from concentrated input. This addresses §4.4's fragility at the substrate edge rather than in the binding rule itself.
-4. **Re-spec M4** — accept that the substrate-bootstrapped self-association from input-only stimuli is currently out of budget at the original scope, and replace the headline acceptance with a scoped variant that tests the partial composition (which already passes at component level).
+1. **G1: JIT `bind_vibrations_to_electrons`** — landed. New `_bind_vibrations_check_pairs_njit` mirrors Plan A.5's `_bind_check_pairs_njit` pattern. Equivalence test (30-tick scope, exact-count match between JIT and Python paths) green. `bind_nodes_upward`'s candidate-batch + JIT pattern was already in place from Plan A.5 Task 13; the remaining Python pre-build of candidate lists is microseconds at M4 scale and a deeper amendment (JIT-eligible spatial index) would be a separate research direction.
+2. **G3: Relax `synaptic_transmission`'s geometric search** — landed. New `cfg.synaptic_post_search_samples` (default 1, legacy behaviour). At N > 1, the post-search samples post-atoms at distances `r_bridge`, `2 · r_bridge`, …, `N · r_bridge` along the orientation ray, OR-ing the hits. Three tests cover the regression case, the far-target reach case, and the default-off invariant.
+3. **G4: Encoder frequency-pair broadening** — landed. New `cfg.audio_emit_pair_band` and `cfg.video_emit_pair_band` (both default 0.0, off). When > 0, the encoder injects an 8 %-pair partner alongside every primary emission with opposite polarity, producing a binding-eligible pair in one inject call. Four tests cover audio off/on and video off/on. Useful for substrate-bootstrap when no seed atoms exist; intentionally OFF in M4 minimal-smoke because pre-seeded atoms in input ports lose charge accumulation when paired vibrations bind too quickly to deposit into integrate-and-fire.
+4. **G5: M4 minimal-smoke retry with G1–G4 active** — empirical retry. cosine = 0.000 still. The chain has four sequential 1-sim-sec dependencies (video atom firings → vibration travel to bridges → bridge transmission to audio_input → speech-loop ghost-bursts → audio_output atom firings → decode) that do not all complete in 1 sim-sec even with G1, G3, bridges re-targeted to audio_input, `speech_loop_burst_size = 30`, and `emit_speed = 60`. The blocking step is (b) — vibrations from video atom firings need to travel ~30 units to reach the closest geometrically-safe bridges, which at `emit_speed = 60` takes ~0.5 sim-sec, leaving only 0.5 sim-sec for the remaining three chain steps under exponential charge decay (`tau_membrane = 0.3`).
 
-These four are research-direction candidates. v3.0 does not commit to any of them; it names them so the empirical state of the question is on record.
+**Research-direction candidates that follow from G5 (recorded but not chosen)**
+
+- **Longer test phase (4–5 sim-sec).** G1's JIT lowers the wall-time ceiling enough that running the chain at 4–5 sim-sec test phase becomes feasible. The chain composition would have time to complete.
+- **Substrate amendment to decouple `synaptic_transmission` from vibration travel time.** The current rule requires aligned moving vibrations *passing through* the bridge to trigger charge deposit at the post-atom search location. An amendment in which a strongly-strengthened bridge propagates charge ATOM-to-ATOM directly (bridge molecule → both endpoint atoms) when one endpoint fires would remove the vibration-travel requirement entirely. This is closer to biological synaptic transmission, where the action potential is propagated nearly instantaneously between connected neurons regardless of cleft-crossing speed.
+
+The first of these is a contract relaxation that the G1 JIT enables; the second is a Plan B amendment that would change the load-bearing physics. Either move would close the M4 chain at 1×1 sim-sec scope. v3.0 does not commit to either; the choice belongs to the next research iteration.
 
 If the programme reaches its end goal and produces a functional neural network with emergent cognitive properties, serious ethical questions arise that we want to name explicitly.
 
@@ -549,6 +554,10 @@ Wolfram, S. (2002). *A new kind of science.* Wolfram Media.
 ---
 
 ## Changelog
+
+**v3.1 (2026-05-08, late session)** — G1–G5 amendments landed; §10.8 updated with retry result.
+- §10.8 amended: G1 (JIT bind_vibrations_to_electrons), G3 (synaptic_post_search_samples), G4 (encoder emit_pair_band) all landed with tests. G5 (M4 minimal-smoke retry) measured cosine = 0.000 still; root cause now isolated to a four-step chain in 1 sim-sec test phase, with vibration-travel time from video firings to bridges as the blocking step. Two research-direction candidates recorded for the next iteration: longer test phase (G1 JIT enables this) or substrate amendment to decouple synaptic_transmission from vibration travel time.
+- Suite: 280 non-slow + 18 slow tests (was 272 + 18 at v3.0).
 
 **v3.0 (2026-05-08)** — Empirical-findings amendment incorporating Plan A through F implementation results.
 - §3.2 amended: Sayama Swarm Chemistry (2009) named as the closest mechanistic predecessor; Kuramoto framing demoted to inspiration. The substrate's `k_freq` and `k_pol` are categorical labels, not phases.
