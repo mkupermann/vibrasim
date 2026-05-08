@@ -486,6 +486,107 @@ def synaptic_transmission(world, dt: float) -> int:
     return n_events
 
 
+def apply_bridge_atom_propagation(world, dt: float) -> int:
+    """G6: when a level-4 atom A fires this tick AND there is a strong
+    oriented bridge molecule near A pointing toward another atom B, deposit
+    charge directly into B without requiring vibrations to travel from A
+    through the bridge to B.
+
+    This decouples synaptic transmission from vibration-travel time and
+    closes the M4 chain at small sim-time scopes. Models the propagation
+    step of biological chemical synapses, where action-potential transit
+    between presynaptic and postsynaptic neurons is fast relative to
+    individual neurotransmitter molecules diffusing across the cleft.
+
+    Default off via `cfg.bridge_atom_propagation_enabled = False`.
+
+    Returns the count of (pre-atom, bridge, post-atom) propagation events
+    triggered this tick.
+    """
+    cfg = world.config
+    if not cfg.bridge_atom_propagation_enabled:
+        return 0
+    K = world.k_count
+    if K == 0:
+        return 0
+
+    threshold = cfg.synaptic_transmission_threshold
+    bridge_mask = (
+        world.k_alive[:K]
+        & (world.k_level[:K] >= 5)
+        & (world.k_strength[:K] >= threshold)
+    )
+    if not bridge_mask.any():
+        return 0
+    bridge_indices = np.where(bridge_mask)[0]
+
+    box = np.asarray(cfg.box_size, dtype=np.float64)
+    r_bridge = cfg.r_bridge
+    r_bridge_sq = r_bridge ** 2
+    n_samples = max(1, int(cfg.synaptic_post_search_samples))
+    propagation_strength = cfg.bridge_atom_propagation_strength
+
+    atom_mask = world.k_alive[:K] & (world.k_level[:K] == 4)
+    if not atom_mask.any():
+        return 0
+    atom_indices = np.where(atom_mask)[0]
+    atom_pos = world.k_pos[atom_indices]
+
+    # Restrict to firings appended this tick (t_fire == world.t).
+    t_now = world.t
+    n_events = 0
+    for t_fire, atom_idx in world.firing_events:
+        if t_fire != t_now:
+            continue
+        if atom_idx >= K or not world.k_alive[atom_idx]:
+            continue
+        if int(world.k_level[atom_idx]) != 4:
+            continue
+        A_pos = world.k_pos[atom_idx]
+
+        # Find strong oriented bridges within r_bridge of the firing atom.
+        d_AM = world.k_pos[bridge_indices] - A_pos
+        d_AM -= box * np.round(d_AM / box)
+        d_AM_sq = (d_AM * d_AM).sum(axis=1)
+        nearby_mask = d_AM_sq <= r_bridge_sq
+        if not nearby_mask.any():
+            continue
+        nearby_bridge_indices = bridge_indices[nearby_mask]
+
+        for m in nearby_bridge_indices:
+            o = world.k_orientation[m]
+            o_norm = float(np.linalg.norm(o))
+            if o_norm <= 0.5:
+                continue
+            o_unit = o / o_norm
+            M = world.k_pos[m]
+
+            # Sign convention: orientation points from pre to post. We want
+            # post-atom B that is "ahead" of M in direction o_unit. Sample at
+            # d = r_bridge, 2 * r_bridge, ..., n_samples * r_bridge.
+            post_mask = np.zeros(atom_pos.shape[0], dtype=np.bool_)
+            for k in range(n_samples):
+                distance = (k + 1) * r_bridge
+                post_centre = M + distance * o_unit
+                d_aP = atom_pos - post_centre
+                d_aP -= box * np.round(d_aP / box)
+                d_aP_sq = (d_aP * d_aP).sum(axis=1)
+                post_mask |= d_aP_sq <= r_bridge_sq
+
+            # Don't propagate back to the firing atom itself
+            if atom_idx in atom_indices:
+                self_local_idx = int(np.where(atom_indices == atom_idx)[0][0])
+                post_mask[self_local_idx] = False
+
+            if not post_mask.any():
+                continue
+            post_atom_indices = atom_indices[post_mask]
+            for a_idx in post_atom_indices:
+                world.k_charge[int(a_idx)] += propagation_strength
+                n_events += 1
+    return n_events
+
+
 def _kill_node(world, i: int) -> None:
     """Mark node i dead, decrement ref counts of its constituents, and
     push newly-recyclable slots onto the free list.
@@ -1490,6 +1591,7 @@ def tick(world, dt: float) -> None:
     decay_high_level_nodes(world, dt)   # NEW (R2)
     ambient_regeneration(world, dt)
     neuron_dynamics(world, dt)
+    apply_bridge_atom_propagation(world, dt)  # NEW (G6) — direct atom→atom charge through strong bridges
     apply_stdp(world)              # NEW (Plan B)
     apply_speech_loop(world, dt)   # NEW (Plan F)
     world.t += dt

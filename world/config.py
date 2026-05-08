@@ -78,6 +78,17 @@ class WorldConfig:
                                                     #     (samples at d = (k+1) * r_bridge for k in 0..N-1).
                                                     #     1 = legacy behaviour (single sample at r_bridge);
                                                     #     2+ extends reach for bridges placed mid-segment.
+    bridge_atom_propagation_enabled: bool = False   # G6: when True, a strong oriented bridge near a firing
+                                                    #     pre-atom deposits charge directly into the post-atom
+                                                    #     (no vibration-travel required). Closes the M4 chain
+                                                    #     by decoupling synaptic transmission from emit_speed.
+                                                    #     Models the propagation step of biological chemical
+                                                    #     synapses, where action-potential transit is fast vs
+                                                    #     the cleft-crossing of vesicle contents.
+    bridge_atom_propagation_strength: float = 4.0   # charge deposited per (firing pre-atom, strong bridge,
+                                                    #     post-atom) triple. Default 4.0 = 2 × theta_fire so
+                                                    #     one propagation event clears the post-atom threshold
+                                                    #     by itself.
 
     # Plan C — audio I/O
     audio_io_enabled: bool = False

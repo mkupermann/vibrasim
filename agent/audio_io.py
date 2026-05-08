@@ -187,7 +187,10 @@ class AudioIO:
         K = world.k_count
         t_window_start = world.t - dt
         for t_fire, atom_idx in world.firing_events:
-            if t_fire <= t_window_start or t_fire > world.t:
+            # Include firings AT t_window_start (neuron_dynamics records
+            # firings at world.t before tick increments it, so t_fire equals
+            # the start of the half-open window the read should cover).
+            if t_fire < t_window_start or t_fire > world.t:
                 continue
             if atom_idx >= K:
                 continue
