@@ -107,27 +107,52 @@ def _seed_bridges_video_to_audio_in(w: World, n_bridge: int = 16) -> None:
 
 
 def _build_config() -> WorldConfig:
-    """Same config as test_M4_minimal_smoke — the working configuration."""
+    """Live-app config: same chain as test_M4_minimal_smoke but tuned for
+    real-world broadband mic + webcam input (vs. the test's three pure
+    sine tones).
+
+    Key differences from the test config:
+    - audio_amplitude_threshold: 0.05 → 0.005 — let normal-volume speech
+      through the encoder. The test uses 1.0-amplitude pure tones; mic
+      input is typically 0.01–0.1 RMS for conversational speech.
+    - video_amplitude_threshold (passed to VideoIO): 0.05 → 0.02 — pick up
+      moderate-contrast webcam edges.
+    - theta_fire: 2.0 → 1.0 — fire on a single nearby vibration so atoms
+      respond to sparse real-world input.
+    - r_integrate: 5.0 → 8.0 — atoms collect vibrations from a wider area
+      (real input lands at varied retinotopic / freq-mapped positions, not
+      tightly at seed atom positions).
+    """
     return WorldConfig(
         n_initial_vibrations=0,
-        n_vibrations_max=2048,
-        n_nodes_max=8192,
+        # Capped capacity so per-tick wall stays under the 17 ms real-time
+        # budget. Once full, new vibrations get dropped instead of expanding
+        # the cost. The chain only needs vibrations CONCURRENTLY enough to
+        # charge atoms, not unbounded.
+        # Tight caps so per-tick wall stays under 17 ms. Seed is 112 atoms +
+        # 24 bridges = 136 nodes; the cap leaves headroom for ~120 binding
+        # events before the substrate is full and per-tick is bounded.
+        n_vibrations_max=512,
+        n_nodes_max=256,
+        graceful_capacity=True,  # don't crash the realtime thread on full
         box_size=(60.0, 60.0, 60.0),
         rng_seed=42,
         # Tight binding window so seed atoms don't promiscuously merge
         r_1=5.0, r_2=10.0, freq_tolerance=0.025,
         pair_decay_time=5.0, triad_decay_time=30.0,
         lambda_gen=0.0, lambda_dec=0.0,
-        audio_amplitude_threshold=0.05,
+        # Encoder threshold: 0.05 was too tight for normal speech; 0.005 was
+        # so loose K exploded under sine input. 0.02 is the middle.
+        audio_amplitude_threshold=0.02,
         # Plan A growth
         lambda_dec_mol=0.001, r_strengthen=10.0,
         emit_band_ratios=(0.08, 1.0, 12.5),
         mol_fusion_enabled=False,
         # Phase 4: integrate-and-fire neuron dynamics
         neuron_dynamics_enabled=True,
-        theta_fire=2.0,
+        theta_fire=1.0,                   # was 2.0 — fire on minimal input
         n_emit=8,
-        r_integrate=5.0,
+        r_integrate=8.0,                  # was 5.0 — wider integration radius
         t_refractory=0.05, tau_membrane=0.3, emit_speed=60.0,
         # Plan B + Plan E STDP
         stdp_enabled=True,
@@ -139,12 +164,14 @@ def _build_config() -> WorldConfig:
         # G6 — bridge atom-to-atom direct propagation
         bridge_atom_propagation_enabled=True,
         bridge_atom_propagation_strength=10.0,
-        # Plan F speech-loop ON
+        # Plan F speech-loop — burst_size 20 gives ~3 ghosts per audio_out
+        # atom in r_integrate, enough to fire at theta_fire=1.0 in one tick.
         speech_loop_strength=1.0,
-        speech_loop_burst_size=60,
+        speech_loop_burst_size=20,
         # Audio + video I/O
         audio_io_enabled=True,
         video_io_enabled=True,
+        video_amplitude_threshold=0.05,   # default — moderate-contrast edges
         # Real-time tick cadence (60 Hz)
         agent_dt_realtime_ms=17,
     )
@@ -174,14 +201,39 @@ def _list_devices() -> int:
     return 0
 
 
+def _in_port(p, origin, size) -> bool:
+    return (origin[0] <= p[0] <= origin[0] + size[0]
+            and origin[1] <= p[1] <= origin[1] + size[1]
+            and origin[2] <= p[2] <= origin[2] + size[2])
+
+
 def _format_status(w: World, audio_io: AudioIO, mode: str) -> str:
+    cfg = w.config
     K = w.k_count
     n_alive_v = int(w.s_alive.sum())
     n_atoms = int((w.k_alive[:K] & (w.k_level[:K] == 4)).sum()) if K else 0
     n_mols = int((w.k_alive[:K] & (w.k_level[:K] >= 5)).sum()) if K else 0
-    n_fires = len(w.firing_events)
 
-    # Audio output level — peek at the last block of buffer
+    # Per-port firings: scan firing_events from the last second.
+    t_now = w.t
+    aip_o, aip_s = cfg.audio_input_port_origin, cfg.audio_input_port_size
+    aop_o, aop_s = cfg.audio_output_port_origin, cfg.audio_output_port_size
+    vip_o, vip_s = cfg.video_input_port_origin, cfg.video_input_port_size
+    fires_ai = fires_ao = fires_vi = 0
+    for t_fire, atom_idx in w.firing_events:
+        if t_fire < t_now - 1.0:
+            continue
+        if atom_idx >= K or not w.k_alive[atom_idx]:
+            continue
+        p = w.k_pos[atom_idx]
+        if _in_port(p, vip_o, vip_s):
+            fires_vi += 1
+        elif _in_port(p, aip_o, aip_s):
+            fires_ai += 1
+        elif _in_port(p, aop_o, aop_s):
+            fires_ao += 1
+
+    # Audio output level — peek at the last block of buffer.
     out_buf = audio_io._output_buffer
     write_pos = audio_io._output_write_pos
     block_n = audio_io.block_size
@@ -194,9 +246,30 @@ def _format_status(w: World, audio_io: AudioIO, mode: str) -> str:
     bar = "█" * bar_n + "░" * (20 - bar_n)
 
     return (
-        f"[{mode:>5}] t={w.t:6.2f}s  K={K:5d}  atoms={n_atoms:3d}  mols={n_mols:3d}  "
-        f"vibs={n_alive_v:4d}  fires={n_fires:4d}  out: {bar} {db:+6.1f} dB"
+        f"[{mode:>5}] t={w.t:6.2f}s  K={K:4d}  vibs={n_alive_v:4d}  "
+        f"fires/s vi:{fires_vi:3d} ai:{fires_ai:3d} ao:{fires_ao:3d}  "
+        f"out: {bar} {db:+6.1f} dB"
     )
+
+
+def _synth_glass_frame(size: int = 256) -> np.ndarray:
+    img = np.zeros((size, size), dtype=np.uint8)
+    yy, xx = np.ogrid[:size, :size]
+    cx, cy, r = size // 2, size // 2, size * 60 // 256
+    mask = (xx - cx) ** 2 + (yy - cy) ** 2
+    img[(mask >= (r - 2) ** 2) & (mask <= (r + 2) ** 2)] = 255
+    return np.stack([img, img, img], axis=-1).astype(np.uint8)
+
+
+def _synth_water_audio_block(duration: float = 0.5, sample_rate: int = 16000,
+                              amplitude: float = 1.0) -> np.ndarray:
+    t = np.arange(int(sample_rate * duration)) / sample_rate
+    return (
+        amplitude
+        * (np.sin(2 * np.pi * 500 * t)
+           + np.sin(2 * np.pi * 1000 * t)
+           + np.sin(2 * np.pi * 1500 * t))
+    ).astype(np.float32)
 
 
 def run_app(
@@ -240,8 +313,10 @@ def run_app(
         rng=np.random.default_rng(42),
     )
 
-    # Pre-seed atoms + bridges (the M4-minimal-smoke pattern).
-    audio_freqs = [500.0, 1000.0, 1500.0]
+    # Pre-seed atoms + bridges. Broadband tiling so any speech frequency
+    # finds a nearby seed atom: 16 atoms per port covering 200..6000 Hz on
+    # a log-spaced grid (matches the encoder's log-mapping).
+    audio_freqs = list(np.geomspace(200.0, 6000.0, num=16))
     _seed_port_atoms(
         w, cfg.audio_input_port_origin, cfg.audio_input_port_size, audio_freqs,
         n_per_freq=2, freq_min=cfg.audio_freq_min, freq_max=cfg.audio_freq_max,
@@ -250,15 +325,21 @@ def run_app(
         w, cfg.audio_output_port_origin, cfg.audio_output_port_size, audio_freqs,
         n_per_freq=2, freq_min=cfg.audio_freq_min, freq_max=cfg.audio_freq_max,
     )
+    # Video port — also broadband over the video freq range.
+    video_freqs = list(np.geomspace(1500.0, 11000.0, num=12))
     _seed_port_atoms(
         w, cfg.video_input_port_origin, cfg.video_input_port_size,
-        [2000.0, 4000.0, 6000.0, 8000.0], n_per_freq=1,
-        freq_min=cfg.audio_freq_min, freq_max=cfg.audio_freq_max,
+        video_freqs, n_per_freq=2,
+        freq_min=cfg.video_freq_min, freq_max=cfg.video_freq_max,
     )
-    _seed_bridges_video_to_audio_in(w, n_bridge=16)
-    print(f"Seeded substrate: K={w.k_count} (atoms + bridges)")
+    _seed_bridges_video_to_audio_in(w, n_bridge=24)
+    print(f"Seeded substrate: K={w.k_count} (broadband audio_in + audio_out + video_in atoms, "
+          f"24 bridges video→audio_in)")
 
     loop = AgentLoop(w, audio_io=audio_io, video_io=video_io)
+
+    stim_thread: Optional[threading.Thread] = None
+    stim_running = False
 
     if not synthetic:
         try:
@@ -270,6 +351,20 @@ def run_app(
                   file=sys.stderr)
             print("or run with --synthetic to use synthetic sources.", file=sys.stderr)
             return 1
+    else:
+        # Synthetic mode: feed glass + water into the audio/video buffers
+        # in a background thread so the substrate has actual stimuli.
+        glass_frame = _synth_glass_frame()
+        stim_running = True
+
+        def _stim_loop():
+            while stim_running:
+                video_io._write_frame_buffer(glass_frame)
+                audio_io._write_input_buffer(_synth_water_audio_block(0.5))
+                time.sleep(0.5)
+
+        stim_thread = threading.Thread(target=_stim_loop, daemon=True)
+        stim_thread.start()
 
     loop.start_realtime()
 
@@ -297,6 +392,7 @@ def run_app(
     except KeyboardInterrupt:
         print("\nStopping.")
     finally:
+        stim_running = False
         loop.stop_realtime()
         if not synthetic:
             try:
