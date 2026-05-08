@@ -74,6 +74,10 @@ class WorldConfig:
     r_bridge: float = 5.0                   # bridge tube radius around the A→B line segment
     synaptic_transmission_strength: float = 0.5     # charge deposited per crossing aligned vibration
     synaptic_transmission_threshold: float = 5.0    # min bridge strength before transmission activates
+    synaptic_post_search_samples: int = 1           # G3: number of post-search samples along bridge orientation
+                                                    #     (samples at d = (k+1) * r_bridge for k in 0..N-1).
+                                                    #     1 = legacy behaviour (single sample at r_bridge);
+                                                    #     2+ extends reach for bridges placed mid-segment.
 
     # Plan C — audio I/O
     audio_io_enabled: bool = False
