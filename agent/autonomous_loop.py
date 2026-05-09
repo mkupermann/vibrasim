@@ -60,7 +60,7 @@ import threading
 import logging
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 
 import numpy as np
 
@@ -69,6 +69,9 @@ from world.state import World
 from world.physics import tick
 from world.dream import begin_dream_state, end_dream_state
 from world.snapshot import save_snapshot
+
+if TYPE_CHECKING:  # avoid runtime import cycle / portaudio dep
+    from agent.audio_io import AudioIO
 
 log = logging.getLogger(__name__)
 
@@ -101,6 +104,7 @@ class AutonomousLoopConfig:
     realtime_pacing: bool = False             # if True, sleep to match wall-clock
     metrics_log_path: Optional[str] = None    # if set, append CSV metrics to this path
     snapshot_dir: Optional[str] = None        # if set, save substrate snapshots here
+    audio_io: Optional["AudioIO"] = None      # if set, awake phase pulls one audio block per cycle
 
 
 class AutonomousLoop:
@@ -218,6 +222,12 @@ class AutonomousLoop:
         # and the prediction-error closed-loop marker never fires.
         if self.cycle > 3 and self._needs_perturbation():
             self._inject_perturbation_burst()
+        if self.cfg.audio_io is not None:
+            # Pull one block of audio (target_sec worth) and let AudioIO
+            # encode it into firings inside the audio_input port.
+            # Backward-compatible: if the buffer is empty, AudioIO
+            # returns 0 and the loop falls through to pre-seeded engrams.
+            self.cfg.audio_io.inject_into_substrate(self.world, target_sec)
         for _ in range(n_ticks):
             if self.stop_event.is_set():
                 return
