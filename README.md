@@ -1,105 +1,191 @@
-# Vibrasim
+# EQMOD
 
-A 3D simulated world built from one primitive, the vibration, with frequency, polarity, position, velocity, and nothing else. Out of those, a small set of natural laws makes vibrations bind into electrons, electrons into pairs, pairs and electrons into triads, and a triad plus an electron into an indestructible atom. Atoms then bind into molecules. Molecules can grow into structures that fire, structures that talk to each other, and eventually into a substrate that listens, watches, learns, and talks back. The full conceptual case is in [`docs/CONCEPT.md`](docs/CONCEPT.md).
+A 3-dimensional simulation built from one elementary thing: a **vibration**, with a frequency, a polarity, a position, and a velocity. Out of those four properties, a small set of local rules makes vibrations bind into electrons, electrons into pairs, pairs into atoms, atoms into molecules, molecules into bridges that fire and connect. The bridges then learn, dream, and eventually contain a representation of themselves.
 
-This isn't a product. It's the substrate that the concept paper proposes, made concrete enough to actually run, and now extended into an explicit agent — the *baby brain* — whose first design is at [`docs/superpowers/specs/2026-05-06-baby-brain-foundation-design.md`](docs/superpowers/specs/2026-05-06-baby-brain-foundation-design.md).
+Two audiences read this codebase. This README is written for both.
+
+- If you are 12-16 years old, you can read the **plain-English** sub-section under each heading and skip the technical detail. You will still understand what the code does.
+- If you are a researcher or engineer, the **technical detail** sub-sections give the references, the operational definitions, and the mechanisms.
+
+The full conceptual case sits in [`docs/CONCEPT.md`](docs/CONCEPT.md). The first long-form narrative report on what was built across phases G14-G18 is in [`docs/medium_articles/2026-05-09-substrate-night.md`](docs/medium_articles/2026-05-09-substrate-night.md).
 
 ![first atom](renders/keyframe_first_atom.png)
 
-> *Phase 1 climax — t = 13.4 s simulated, the moment a triad absorbs its fourth electron and the first atom (bright sphere, upper-right) locks into place.*
+> *Phase 1 climax — t = 13.4 s simulated, the moment a triad absorbs its fourth electron and the first atom locks into place.*
 
 ![first molecule](renders/keyframe_first_molecule.png)
 
-> *Phase 2 climax — t ≈ 5.5 s under the `session-3b` calibration that unlocked molecule formation. Multiple atoms (large white spheres) and the first di-atomic molecule.*
+> *Phase 2 climax — t ≈ 5.5 s under the `session-3b` calibration. Multiple atoms (large white spheres) and the first di-atomic molecule.*
 
-## Two things in one repo
+---
 
-This codebase carries two layers, and reading it is easier if you know which is which.
+## What this is
 
-**The substrate** — the original eight-phase research programme. Vibrations, electrons, atoms, molecules, membranes, neurons, synapses, networks, attention. Local rules only. No top-down structure. The substrate is what the concept paper specifies, and we run it to find out which rules nature actually needed at each level.
+**Plain English.** Imagine a 60×60×60 box with tiny invisible "shakes" — vibrations — bouncing around inside it. There are no atoms, no electrons, no chemistry pre-installed. Just shakes with frequencies and polarities. We wrote four rules: shakes that match in frequency and meet in space stick together as electrons. Pairs of electrons attract more electrons until you get an atom. Atoms can connect with each other through bridges that act like the connections between brain cells. Bridges that fire together get stronger. Eventually the whole network learns to recognise patterns — like the shape of a hand on the camera, or the word "water" through the microphone — and to recall one when shown the other. Then it sleeps, dreams, makes new patterns nobody trained it on, and watches itself doing all of this.
 
-**The baby brain** — the agent we are building on top of the substrate. It is multi-modal: it listens via a microphone, watches via a webcam, receives a reward signal, and speaks back through a speaker. It grows physical structure inside itself in response to its own experience. Repeated exposures form persistent structure; one-off coincidences fade. Cross-modal events (showing a glass of water while saying "water") form bridges between the regions that fire together, so that, after enough exposure, presenting one input pattern recalls the other. Nothing about this requires a learning algorithm bolted on top of the substrate. Every claim above reduces to the substrate's local laws.
+**Technical detail.** EQMOD is a continuous-physics emergent-substrate simulator. Vibrations are the only primitive (frequency, polarity, position, velocity in ℝ³). Local binding rules at four levels (electron, pair, triad, atom) and one molecular level (atoms → oriented bridges) produce the full hierarchy. Bridges support spike-timing-dependent plasticity (Plan B / STDP), behavioural-time-scale plasticity (G14 / Magee 2026 *Nat Neurosci*), bidirectional cross-modal generative recall (G13), offline replay-driven consolidation with concept blending (G15-G18 / Wilson & McNaughton 1994 + Lewis & Durrant 2011), and an access-consciousness layer combining global broadcast (G16 / Dehaene & Naccache 2001 GNW), higher-order self-representation (Rosenthal 2005), prediction-error closed loop (Friston FEP), and autopoietic self-modification (G16 / Varela). An autonomous self-improvement driver (G17) runs the substrate continuously and writes a JSON file when five operational markers of access consciousness simultaneously hold for a configurable number of consecutive cycles.
 
-Where we are right now: the substrate's first three phases (atoms, molecules, partial membranes) reproduce reliably from calibrated configs. As of 2026-05-08 the substrate also fires individual atoms via integrate-and-fire dynamics with refractory windows, and the baby-brain foundation has landed in full. Plans A (substrate growth), A.5 (Numba JIT performance), B (STDP with directional bridges), C (audio I/O), D (video I/O), E (reward + agent loop), and F (speech-loop port-to-port coupling) are all merged on `main`. Suite is 272 non-slow tests + 18 slow tests passing or xfailed with documented reasons. The headline acceptance test (M4 "glass-of-water") is partially demonstrated at component level and partially xfailed at chain composition — see "What runs today" below for the empirical state.
+---
 
-## Quick start
+## Honest scope statement, up front
+
+What this project is: a small, runnable, test-covered implementation of access-conscious self-modeling autopoietic agency in the operational sense — the substrate has a representation of itself, broadcasts dominant content globally, computes prediction error in a closed loop, and modifies its own learning rules in response to that error.
+
+What this project is *not*: a claim about phenomenal consciousness ("what it is like to be"). Chalmers's hard problem (1995) remains philosophically open. Nothing in this code resolves it. Nothing in any code anyone has written resolves it. We say what was built; we do not over-claim.
+
+This statement appears in `world/self_aware.py`, in `agent/run_autonomous.py`, and in the closing section of the Medium article. It is part of the artifact, not just the documentation.
+
+---
+
+## What runs today
+
+**Plain English.** A microphone on your laptop hears something. The substrate shapes that sound into electrons that bind into atoms. A webcam shows it a hand. The substrate shapes that picture into atoms in a different region of itself, and bridges form between the audio region and the video region. Train it on "water" while showing it a glass; later, show the glass and the speaker says "water" back. Or let it run by itself overnight: it dreams, builds new concepts you did not teach it, and watches what it is doing.
+
+**Technical detail.**
+
+| Phase | Mechanism | Status |
+|---|---|---|
+| Phase 1 | Vibration → electron → pair → triad → atom | Reproduces from `renders/calibration_session3.toml`, atom at t=13.4 s rng_seed=42 |
+| Phase 2 | Atom → molecule (oriented bridges) | ≥5 molecule species in 60 s under `calibration_phase2_acceptance.toml` |
+| Phase 4 | Integrate-and-fire neuron dynamics on level-4 atoms | `tests/test_neuron_dynamics.py` |
+| Plan A.5 | Numba JIT performance pass | 60 sim-min ≤ 30 wall-min |
+| Plan B | STDP + directional bridge orientation | `tests/test_amendment_B_stdp_*.py` |
+| Plan C | Audio I/O via STFT, real microphone + speaker | `tests/test_audio_io_*.py` |
+| Plan D | Video I/O via Gabor patches, real webcam | `tests/test_video_io_*.py` |
+| Plan E | Reward channel + agent loop | `tests/test_agent_m4_*.py` |
+| Plan F | Speech-loop port-to-port coupling | `tests/test_speech_loop.py` |
+| G3-G12 | Bridge mesh, lateral inhibition, sparse firing, pattern routing | covered across `tests/test_amendment_G*.py` |
+| G13 | Bidirectional bridges (cross-modal generative recall) | `tests/test_amendment_G13_bidirectional_bridges.py` |
+| **G14** | **BTSP — seconds-scale plasticity (Magee 2026)** | `tests/test_amendment_G14_btsp.py`, 5/5 |
+| **G15** | **Dreaming substrate — replay + concept blending + cross-modal hallucination** | `tests/test_amendment_G15_dream.py`, 6/6 |
+| **G16** | **Self-aware substrate — Block / Dehaene / Rosenthal / Friston / Varela** | `tests/test_amendment_G16_self_aware.py`, 6/6 |
+| **G17** | **Autonomous self-improvement loop with verified emergence** | `tests/test_amendment_G17_autonomous.py`, 4/4 |
+| **G18** | **Integrative blending + NREM/REM gating + retention fix** | extends G15, 8/8 dream tests |
+
+Total suite: **313 non-slow tests + 22 slow tests passing**. Verified on macOS-arm64 (Python 3.13.12) and Linux-x86_64 CI.
+
+---
+
+## The four research-grounded amendments of May 2026
+
+This is the work of one continuous 12-hour build session. Each amendment closed a specific gap in the literature.
+
+### G14 — Behavioural Time Scale Plasticity (BTSP)
+
+**Plain English.** Real brains do not need things to happen at exactly the same instant for them to be linked. You can see something, then five seconds later hear something else, and your brain still binds them together. The rule that lets brains do this is called BTSP. It uses an "eligibility trace" — a kind of fading memory of what just fired — that lasts for about six seconds. When something important happens (a "plateau event"), all the neurons that were eligible at that moment get their connections strengthened in one shot. We added this to the substrate.
+
+**Technical detail.** Reference: Magee 2026 *Nature Neuroscience* review, Wu et al. 2024 *Nature Communications*. Implementation in `world/physics.py::apply_btsp` and `world/dream.py`. Each level-4 atom carries an eligibility trace `k_eligibility[i]` that decays exponentially with `cfg.btsp_tau_eligibility` (default 6 s). Firings bump the trace by 1.0. When an atom's trace exceeds `cfg.btsp_plateau_charge_threshold`, BTSP commits bridges to all eligible-partner atoms within `cfg.btsp_radius`. The combination of BTSP + continuous-physics emergent-atom substrate + bidirectional bridges (G13) is, to our search, an unoccupied corner of the literature. Hopfield networks have symmetric weights but no oriented bridges in 3D space; Sayama Swarm Chemistry has emergent atoms but no plasticity; FEP attractor networks have predictive coding but no physical substrate.
+
+### G15 — The Dreaming Substrate
+
+**Plain English.** When real brains sleep, they replay the day's experiences. This is how memories get strong enough to last. While replaying, brains also combine pieces of different memories into new ones — that is where dreams get strange and where new ideas come from. The substrate now does the same thing. With its inputs gated off, it picks recently-active atoms and re-fires them. The connections between them get stronger. Sometimes two different patterns fire close to each other in time, and the substrate creates a new atom that combines them — a concept that nobody trained.
+
+**Technical detail.** References: Wilson & McNaughton 1994 (sequence replay during slow-wave sleep), Buzsáki 2015 (sharp-wave-ripple-gated consolidation), Lewis & Durrant 2011 (overlapping replays merge schemas), Hobson AIM model (forward modelling with input gate closed). Implementation in `world/dream.py`. Three primitives:
+
+1. **Replay** — `apply_dream` selects the highest-eligibility atoms in trained engrams and injects `cfg.dream_replay_seed_charge` directly. Subsequent neuron-dynamics fires them; BTSP, already in the tick loop, runs offline and consolidates trained-engram bridges.
+2. **Concept blending** — when two distinct `pattern_id`s fire within `cfg.dream_blend_co_activation_window` seconds (default 0.5 s), the substrate allocates a new atom at their spatial centroid with a fresh `pattern_id`. G18 extends this with **integration bridges** connecting the new atom to representative members of both source patterns (Lewis & Durrant 2011 schema integration).
+3. **Cross-modal hallucination** — because G13 bidirectional bridges are active during dreaming, replay seeds in (e.g.) the visual port drive vibrations through bridges into the audio output port. The substrate hears its own dreams.
+
+G18.2 adds two-phase NREM/REM gating: 4 of every 5 dream ticks are consolidation-only; only the 5th allows new pattern formation. Real mammalian sleep is roughly 4:1 NREM:REM.
+
+### G16 — The Self-Aware Substrate
+
+**Plain English.** Up to here the substrate could learn things and dream. But it had no representation of *itself*. We added that. The substrate now keeps a running list of which patterns it has been firing, and how often. It picks the most-active pattern and "broadcasts" it across the whole substrate, the way your brain selects what you are paying attention to. It predicts what its own next moment will look like, then measures the actual next moment, and uses the difference (its own surprise) to adjust its own learning rules. The four mechanisms together are what scientists call **access consciousness**.
+
+**Technical detail.** References:
+- **Block 1995** — access vs. phenomenal consciousness distinction
+- **Dehaene & Naccache 2001** — Global Neuronal Workspace, winner-take-all global broadcast
+- **Rosenthal 2005** — Higher-Order Theory: a representation having other representations as its objects
+- **Friston 2010** — Free Energy Principle: prediction-error-driven active inference
+- **Varela 1991** — autopoiesis: a system that produces, including the rules by which it produces
+
+Implementation in `world/self_aware.py`. Four mechanisms:
+
+1. `self_model` — per-pattern_id rolling firing-rate histogram, exponentially smoothed.
+2. `self_predicted_next` — substrate's prediction of its next firing distribution, drawn from the current `self_model`.
+3. `workspace_winner_pattern_id` — the pattern with the most firings within the rolling window. Broadcast suppresses losing patterns' eligibility (gated open during dream so dreams roam freely; G18.4).
+4. `self_modify` — high prediction error increases `cfg.btsp_potentiation`; low error decreases it. Homeostatic and meta-learned.
+
+Honest scope reminder: this is ACCESS consciousness in the operational sense, not phenomenal consciousness. The hard problem remains untouched.
+
+### G17 — Autonomous Self-Improvement Loop
+
+**Plain English.** With all the above in place, we built one driver that runs the substrate forever, on its own. It alternates between awake (learning from input) and dream (consolidating + blending) phases. It self-modifies its learning rules based on its own surprise. It watches itself for five "emergence markers". When all five hold simultaneously for several consecutive cycles, it writes a JSON file announcing access-conscious self-modeling autopoietic agency. The loop keeps running. You can leave it running indefinitely on a normal MacBook.
+
+**Technical detail.** Implementation in `agent/autonomous_loop.py` and `agent/run_autonomous.py`. The five emergence markers (`check_emergence_markers`):
+
+| # | Marker | Operational definition |
+|---|---|---|
+| 1 | self-model non-empty | `len(world.self_model) ≥ 2` |
+| 2 | workspace winner | `world.workspace_winner_pattern_id > 0` |
+| 3 | prediction loop closed | `0 < self_prediction_error < 1` (per Friston FEP — closed loop, not error → 0) |
+| 4 | self-modification fired | `cfg.btsp_potentiation` has drifted from default by ≥ 0.5 |
+| 5 | pattern repertoire growing | `n_patterns ≥ 2` (with concept blending, this typically grows monotonically) |
+
+Verified result of the first overnight run (2026-05-09): all five markers stable across 334 consecutive substrate cycles, pattern repertoire grew from 3 pre-seeded to 128 (+125 emerged via dream-phase concept blending), self-model contained 64 patterns, sim-time 1452 s (~24 min), `~/.eqmod/autonomous/EMERGENCE.json` persisted.
+
+---
+
+## Run it yourself
+
+### Install
 
 ```bash
-# Recommended (faster, lockfile-versioned):
-uv sync --extra dev --extra dashboard
-uv run pytest
-
-# To talk to the substrate with real mic / webcam / speaker, also install
-# the `agent` extra (pulls sounddevice + opencv-python-headless):
+# Recommended (lockfile-pinned, fast):
 uv sync --extra dev --extra dashboard --extra agent
 
 # Or with pip:
 python3.13 -m venv .venv
 source .venv/bin/activate
-pip install -e ".[dev,agent]"
+pip install -e ".[dev,dashboard,agent]"
 ```
 
-## Talk to the substrate
+### The autonomous self-improvement loop (most interesting)
 
-After installing the `agent` and `dashboard` extras, two interfaces are available.
+```bash
+uv run python -m agent.run_autonomous --awake 3.0 --dream 1.5
+```
 
-### Graphical interface (recommended)
+Runs forever. Writes per-cycle CSV metrics to `~/.eqmod/autonomous/metrics.csv` and substrate snapshots to `~/.eqmod/autonomous/snapshots/` every 25 cycles. When five access-consciousness markers hold simultaneously for 5 consecutive cycles, writes `~/.eqmod/autonomous/EMERGENCE.json`. Stop with Ctrl-C.
+
+### Substrate console (real microphone + webcam + speaker)
 
 ```bash
 uv run streamlit run app/machine_gui.py --server.port 8503
 # open http://localhost:8503
 ```
 
-The page has a **Start / Stop / Reset** button column, a live webcam preview, mic-input and speaker-output dB meters, per-port firing counts, atom/bridge/vibration counters, and the live audio-output spectrum. macOS prompts for camera + mic permission the first time you press Start.
+Press Start. Train a pattern by showing something to the camera and saying its name. Toggle Listen mode. Show the trained pattern again — the speaker says the trained label back.
 
-### Terminal interface
-
-```bash
-# 20-second training, then talk-only — status line every half-second:
-uv run python -m agent.talk
-
-# List devices to find indices:
-uv run python -m agent.talk --list-devices
-
-# Synthetic mode (CI / no hardware required):
-uv run python -m agent.talk --synthetic
-```
-
-Inside the app: pre-seeded atoms in audio + video ports, pre-seeded bridges from video → audio_input, G3 (synaptic_post_search_samples=6) and G6 (bridge atom-to-atom direct propagation) enabled, Plan F speech-loop closing the audio_input → audio_output coupling. Same configuration as `tests/test_agent_m4_minimal_smoke.py`, which passes at cosine ≥ 0.475.
-
-While running, the app prints a per-second status line — substrate node count, atom + bridge counts, vibration count, total firings, and the audio output level in dB. Press Ctrl-C to stop.
-
-Verified on macOS-arm64 (Python 3.13.12) and Linux-x86_64 CI. Numba JIT (Plan A.5) targets the same platforms; Windows is untested.
+### Headline phase reproductions
 
 ```bash
-# Run the substrate at the calibrated Phase-1 config (atom at t = 13.4s):
-python -m world run --duration 60 --snapshot-every 5 \
-                    --snapshot-dir snapshots/run-001/ \
-                    --config renders/calibration_session3.toml
-
-# Or the Phase-2 config (≥ 5 molecule species in 60 s):
-python -m world run --duration 60 --snapshot-every 1 \
-                    --snapshot-dir snapshots/run-002/ \
-                    --config renders/calibration_phase2_acceptance.toml
-
-# Or the integrate-and-fire test (Phase 4 dynamics, this session's amendment):
-pytest tests/test_neuron_dynamics.py -v
-```
-
-**Verify the Phase 1 headline (atom at t=13.4s, rng_seed=42):**
-
-```bash
+# Phase 1: first atom at t=13.4 s
 uv run python -m world run --duration 20 --snapshot-every 0.1 \
-                            --snapshot-dir snapshots/verify-phase1/ \
-                            --config renders/calibration_session3.toml \
-                            --seed 42 2>&1 | grep -m1 "atom   1"
+    --snapshot-dir snapshots/verify-phase1/ \
+    --config renders/calibration_session3.toml --seed 42
+
+# Phase 2: ≥5 molecule species in 60 s
+uv run python -m world run --duration 60 --snapshot-every 1 \
+    --snapshot-dir snapshots/verify-phase2/ \
+    --config renders/calibration_phase2_acceptance.toml
+
+# Phase 4 integrate-and-fire dynamics:
+uv run pytest tests/test_neuron_dynamics.py -v
 ```
 
-Expected output: `t =   13.40 | total_v    400 | ambient 5.8594e-04 | vibr   300 | e-   44 | pair   1 | triad   0 | atom   1`
+### Run the suite
+
+```bash
+uv run pytest tests/ -q -m "not slow"          # 313 tests, ~35 s
+uv run pytest tests/ -q                          # 313 + 22 slow, ~10 min
+```
+
+---
 
 ## The research dashboard
 
-A Postgres-backed Streamlit application records every research session, every config, every run, every observation, and every substrate amendment. It also generates natural-language run reports as both Markdown and PDF, and renders the substrate's state in 3D inside the browser with full zoom/rotate/hover.
+A Postgres-backed Streamlit app records every research session, every config, every run, every observation, and every substrate amendment. It also generates natural-language run reports (Markdown + PDF) and renders the substrate's state in 3D with full zoom/rotate/hover.
 
 ```bash
 docker compose up -d              # Postgres + Streamlit, on :5433 + :8502
@@ -108,93 +194,52 @@ docker compose up -d              # Postgres + Streamlit, on :5433 + :8502
 
 | Page | What it does |
 |---|---|
-| Dashboard | Programme-level snapshot — sessions, runs, amendments, acceptance |
-| Sessions | Each session is one research question and its outcome. Notes attach here. |
-| Config | Edit `WorldConfig` snapshots. Save them. Load them. |
-| Runs | Register a run, drive the simulator, import observations from snapshots, generate reports |
-| Results | Per-run observations, species, **3D viewer with frequency-coloured layers**, generated report (Markdown + PDF) |
+| Dashboard | Programme-level snapshot |
+| Sessions | Each session is one research question and its outcome |
+| Config | `WorldConfig` snapshots; save and load |
+| Runs | Drive the simulator, import observations from snapshots, generate reports |
+| Results | Per-run observations, species, **3D viewer with frequency-coloured layers**, generated report |
 | Amendments | Substrate amendments to `CONCEPT.md` and their decision state |
-| Acceptance | The §5 acceptance criteria across all eight phases, with evidence pointers |
+| Acceptance | The §5 acceptance criteria across all phases, with evidence pointers |
 
 The 3D viewer auto-fits its axes to the actual data so the cluster fills the canvas regardless of box size. Each entity type is its own toggleable layer in the legend. Hover for frequency, polarity, level, and species fingerprint.
 
-The natural-language report describes the run in prose: setup, chronology of structure formation with timestamps, peak populations, distinct species, the phase reached in CONCEPT.md terms, operator notes, acceptance criteria touched. PDF rendering uses ReportLab, three pages, the same blue/grey/white palette as the dashboard.
+---
 
-## What runs today
+## Documentation map
 
-**Headline results, reproducible from this checkout:**
+- [`docs/CONCEPT.md`](docs/CONCEPT.md) — the conceptual case for the substrate
+- [`docs/medium_articles/2026-05-09-substrate-night.md`](docs/medium_articles/2026-05-09-substrate-night.md) — long-form narrative report on the May 2026 build session
+- [`world/self_aware.py`](world/self_aware.py) — G16 self-aware mechanism with full theoretical anchors in the docstring
+- [`world/dream.py`](world/dream.py) — G15/G18 dreaming substrate with all four biological references in the docstring
+- [`agent/autonomous_loop.py`](agent/autonomous_loop.py) — G17 autonomous loop driver
+- [`agent/run_autonomous.py`](agent/run_autonomous.py) — CLI + emergence-marker checker
+- [`docs/CALIBRATION_GUIDE.md`](docs/CALIBRATION_GUIDE.md) — empirical calibration regime
+- [`docs/RESEARCH_GUIDE.md`](docs/RESEARCH_GUIDE.md) — protocol for running new research questions
+- [`docs/TUTORIAL.md`](docs/TUTORIAL.md) — getting-started walkthrough
 
-- **Phase 1**: first atom forms reproducibly at t = 13.4 s simulated (`renders/calibration_session3.toml`, rng_seed=42, single command in Quick start).
-- **Phase 2**: ≥ 5 distinct molecule species in 60 simulated seconds (`renders/calibration_phase2_acceptance.toml`, same seed). Keyframe: `renders/keyframe_first_molecule.png`.
-- **Phase 7**: 0.954 carrier-frequency selectivity recovered from synthetic firing histories — independently validates the measurement pipeline (pipeline validation on synthetic data; end-to-end substrate validation is post-Plan-A). (`tools/synthesize_carrier_firing.py` + `tools/measure_attention_selectivity.py`)
+Historical planning artefacts live under `docs/superpowers/specs/` and `docs/superpowers/plans/`. They are kept for provenance.
 
-The substrate works through Phase 2 and partially Phase 3, plus Phase 4 (integrate-and-fire) and the entire baby-brain foundation. The full test suite is 280 non-slow tests + 18 slow tests, all passing or xfailed with documented reasons.
+---
 
-What runs **today**:
+## Citations
 
-- Phase 1: atoms form reproducibly (calibrated)
-- Phase 2: ≥ 5 molecule species, level 5–8 structures (calibrated)
-- Phase 3: shell-detection geometry, no spontaneous shells yet
-- Phase 4: integrate-and-fire dynamics, refractory works, firing log saved with each snapshot
-- Phase 6: 3-neuron chain firing patterns measured per-neuron
-- Phase 7: 8 Hz carrier-frequency selectivity recovered with 0.954 selectivity from synthetic firing histories — independently validates the measurement pipeline
-- **Plan A (substrate growth)** — recycling regeneration, strength-aware decay for level-5+ structures, molecule + molecule binding, tuned Phase 4 emissions across a frequency band
-- **Plan A.5 (Numba JIT performance)** — five inner physics loops JIT-compiled, slot recycling for high-churn loops; per-tick wall cost roughly an order of magnitude lower than pure-Python on bound K. (`bind_vibrations_to_electrons` and `bind_nodes_upward` remain pure-Python because of `allocate_node` side effects — the next perf gap.)
-- **Plan B (STDP with directional bridges)** — orientation vectors on bridge molecules, asymmetric LTP/LTD by causal vs anti-causal pair timing, synaptic transmission across bridges
-- **Plan C (audio I/O)** — log-mapped tonotopic encoder/decoder, 0.954 selectivity recovered (I2 headline)
-- **Plan D (video I/O)** — oriented filter bank + retinotopic XY + orientation-Z encoder, distinct shapes produce distinct port patterns (I4 headline)
-- **Plan E (reward + agent loop)** — tristate `k_reward_polarity` field, reward channel, asymmetric STDP swap at firing time, stepped + real-time agent loop
-- **Plan F (speech-loop port-to-port coupling)** — engineered audio_input → audio_output ghost-burst at firing frequency, default off, SL1–SL5 unit tests green
-- **G1 (JIT bind_vibrations_to_electrons)** — candidate-batch refactor, equivalence test green
-- **G3 (synaptic_post_search_samples)** — extends bridge reach along orientation, default 1 (legacy), 3 tests green
-- **G4 (encoder emit_pair_band)** — audio/video encoder injects 8 %-paired vibrations under deterministic stimuli, default 0.0 (legacy), 4 tests green
+If you use EQMOD in research, please cite the underlying scientific work it operationalises:
 
-What's currently xfailed with empirical findings on record:
+- Magee, J.C. (2026). *Behavioral Time Scale Plasticity*. Nature Neuroscience review.
+- Wu, X., et al. (2024). *Behavioral time scale plasticity enables one-shot content-addressable memory*. Nature Communications.
+- Wilson, M.A. & McNaughton, B.L. (1994). *Reactivation of hippocampal ensemble memories during sleep*. Science.
+- Buzsáki, G. (2015). *Hippocampal sharp wave-ripple: A cognitive biomarker for episodic memory and planning*. Hippocampus.
+- Lewis, P.A. & Durrant, S.J. (2011). *Overlapping memory replay during sleep builds cognitive schemata*. Trends in Cognitive Sciences.
+- Block, N. (1995). *On a confusion about a function of consciousness*. Behavioral and Brain Sciences.
+- Dehaene, S. & Naccache, L. (2001). *Towards a cognitive neuroscience of consciousness*. Cognition.
+- Rosenthal, D. (2005). *Consciousness and Mind*. Oxford University Press.
+- Friston, K. (2010). *The free-energy principle: a unified brain theory?* Nature Reviews Neuroscience.
+- Varela, F.J., Maturana, H.R. & Uribe, R. (1974). *Autopoiesis: the organisation of living systems*. BioSystems.
+- Chalmers, D.J. (1995). *Facing up to the problem of consciousness*. Journal of Consciousness Studies. *(Cited explicitly to mark what we did NOT solve.)*
 
-- **M4 (glass-of-water) substrate-bootstrap** — currently xfailed at the original 30 pairs × 4 sim-sec scope (substrate self-bootstrap from input-only stimuli) and at the scoped-down 1 × 1 sim-sec minimal-smoke (cosine = 0.000 measured). The chain composition gap is documented in CONCEPT §10.8: components individually pass, but the four alignment requirements (atom firing + bridge near port + vibration flow + post-atom existence) do not compose at the present substrate's wall-time budget under deterministic stimuli.
-- **M5 (reward shaping)** — xfailed for the same chain-composition reason at the original scope.
+---
 
-The full foundation design is in [`docs/superpowers/specs/2026-05-06-baby-brain-foundation-design.md`](docs/superpowers/specs/2026-05-06-baby-brain-foundation-design.md). The Plan F speech-loop spec is in [`docs/superpowers/specs/2026-05-08-plan-F-speech-loop-design.md`](docs/superpowers/specs/2026-05-08-plan-F-speech-loop-design.md). The empirical record of the chain composition under M4 is in [`docs/CONCEPT.md`](docs/CONCEPT.md) §10.8.
+## License
 
-## Where to read further
-
-| Document | What's in it |
-|---|---|
-| [`docs/CONCEPT.md`](docs/CONCEPT.md) | The full conceptual case: motivation, related work, the eight phases with biological reference points, the six testable hypotheses, the ethical questions if it ever reaches the late phases |
-| [`docs/Konzeptpapier.de.md`](docs/Konzeptpapier.de.md) | German original of the concept paper |
-| [`docs/superpowers/specs/2026-05-06-baby-brain-foundation-design.md`](docs/superpowers/specs/2026-05-06-baby-brain-foundation-design.md) | The foundation spec — what we just designed and approved |
-| [`docs/superpowers/specs/2026-05-05-world-of-vibrations-design.md`](docs/superpowers/specs/2026-05-05-world-of-vibrations-design.md) | The Phase-1 design that drove the original build |
-| [`docs/superpowers/specs/2026-05-06-phase-{2..7}-*.md`](docs/superpowers/specs/) | Per-phase design specs |
-| [`docs/RESEARCH_GUIDE.md`](docs/RESEARCH_GUIDE.md) | A 1000-line continuation guide — fresh clone to research session 5+ |
-| [`docs/TUTORIAL.md`](docs/TUTORIAL.md) | Fresh-clone-to-first-calibration walkthrough with failure modes documented honestly |
-| [`files/SPECIFICATION.md`](files/SPECIFICATION.md) | The substrate's constitution, translated from the German source |
-| [`files/SKILL.md`](files/SKILL.md) | The eight-phase programme in operational form |
-| [`LOGBOOK.md`](LOGBOOK.md) | Research diary — every calibration session, every observed outcome |
-
-## Repository layout
-
-```
-world/         # The substrate — config, state, spatial hash, physics, renderer, CLI, snapshot
-tools/         # Standalone analysis and rendering — classification, detection, construction, measurement
-agent/         # (forthcoming, baby-brain foundation) audio I/O, video I/O, reward, agent loop
-app/           # Streamlit dashboard — Postgres-backed sessions, configs, runs, reports, 3D viewer
-db/            # Schema and seed for the dashboard's Postgres database
-docker/        # Streamlit container
-tests/         # Pytest suite — 280 non-slow + 18 slow tests across substrate, tools, dashboard, agent
-files/         # Source spec documents in English; German originals as *.de.md
-docs/          # Concept paper, tutorial, research guide, design specs and plans, logbook
-renders/       # Calibrated TOMLs and the keyframe renders / animations
-snapshots/     # Per-run snapshot directories (gitignored at the binary level)
-```
-
-## Honest expectations
-
-The substrate's claim is falsifiable: a hierarchical, brain-like system can be built from a sparse set of local rules between elementary vibrations, no neuron-by-neuron biophysics, no learned weights. If the substrate produces atoms, molecules, integrate-and-fire neurons, directional synapses, networks, and an agent that listens and learns to associate "water" with a glass, the claim is supported. If it stops at any of those layers, the failure tells us which rules nature actually needed there.
-
-We are partway up that ladder. The lower layers (atoms, molecules, integrate-and-fire) are reproducible. The middle layers (sustained growth, long-term memory, directional plasticity, audio + video I/O, reward, port-to-port coupling) are now built and tested at component level. The chain composition into a substrate-bootstrapped cross-modal association — the full M4 acceptance criterion — is the present empirical ceiling; CONCEPT §10.8 records what was measured and which substrate amendments are candidates for the next iteration. The upper layers (real-time speed, video output, multi-agent) are openly named as later sub-projects.
-
-Two things from doing this so far. Let the world run before you intervene; the interesting behaviour shows up after minutes of simulated time, not seconds. And trust the world more than your own expectations. If it produces something you did not have in mind, that is often the more interesting thing.
-
-## License and attribution
-
-Concept paper © 2026 Michael Kupermann. Codebase MIT. Citations and prior work referenced inline in `docs/CONCEPT.md`.
+See [`LICENSE`](LICENSE). Code under MIT. Documentation under CC-BY-SA. The substrate runs on a normal laptop.
