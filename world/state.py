@@ -104,6 +104,12 @@ class World:
         # workspace_history: deque of (t, winner_pid) for diagnostics
         self.workspace_history: list[tuple[float, int]] = []
 
+        # G18.2 — dream sub-phase tick counter. Apply_dream uses this
+        # to alternate consolidation-only ticks (NREM analogue) with
+        # creative blending ticks (REM analogue), at a ratio set by
+        # cfg.dream_consolidation_to_blend_ratio.
+        self.dream_subphase_counter: int = 0
+
         # CSR composition
         comp_caps = K * 16  # Plan A.5: larger to accommodate slot recycling appending
         self.k_comp_offset = np.zeros(K + 1, dtype=np.int32)

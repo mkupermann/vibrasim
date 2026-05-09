@@ -1,4 +1,4 @@
-"""The Machine contract — binary acceptance for talk.py's interactive demo.
+"""Substrate acceptance contract — binary acceptance for talk.py's interactive demo.
 
 Three clauses, all must pass:
 

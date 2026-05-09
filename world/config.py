@@ -174,6 +174,13 @@ class WorldConfig:
     dream_hallucination_strength: float = 1.0       # multiplier on cross-modal vibration emission during dream
                                                     #     (drives audio_out / video_out from dreamed bridges).
 
+    # G18.2 — two-phase dream (NREM/REM analogue). When > 0, every Nth
+    # dream tick blocks concept blending so existing patterns get a
+    # chance to consolidate before more are added. NREM:REM in real
+    # mammals is roughly 4:1 of total sleep time. We default to 4
+    # consolidation ticks per blending tick.
+    dream_consolidation_to_blend_ratio: int = 4
+
     # G16 — The Self-Aware Substrate.
     #
     # Operationalises the four most credible scientific theories of

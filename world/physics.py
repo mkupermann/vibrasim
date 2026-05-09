@@ -457,7 +457,20 @@ def apply_stdp(world) -> int:
     # All STDP behaviour is preserved because events older than tau_LTP
     # contribute no qualifying pairs anyway (dt_pair > tau_LTP would be
     # filtered by the inner continue).
-    cutoff = world.t - cfg.tau_LTP
+    #
+    # G18 amendment: BTSP (G14), self-aware (G16), and dream (G15) all
+    # need the firing log retained over a SECONDS-scale window, not a
+    # 25-ms one. Use the maximum of tau_LTP and the longest downstream
+    # window so STDP still gets its tight pruning while dream/self-aware
+    # can see co-active patterns within their 0.5-2 sec windows.
+    retention = float(cfg.tau_LTP)
+    if getattr(cfg, "self_aware_enabled", False):
+        retention = max(retention, float(cfg.self_model_window))
+    if getattr(cfg, "dream_blend_enabled", False):
+        retention = max(retention, float(cfg.dream_blend_co_activation_window))
+    if getattr(cfg, "btsp_enabled", False):
+        retention = max(retention, float(cfg.btsp_tau_eligibility))
+    cutoff = world.t - retention
     if events and events[0][0] < cutoff:
         world.firing_events = [e for e in events if e[0] >= cutoff]
     return n_reinforcements

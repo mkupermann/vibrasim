@@ -1,4 +1,4 @@
-"""The Machine — contract C via the substrate library architecture.
+"""Multi-pattern contract C via the substrate library architecture.
 
 The single-substrate contract `tests/test_machine_contract.py::
 test_contract_C_pattern_discrimination` is xfail-strict at 0.94× because

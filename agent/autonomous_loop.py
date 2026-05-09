@@ -397,7 +397,12 @@ def _preseed_engrams(world: World, n_patterns: int = 3,
 def build_autonomous_world() -> World:
     """Substrate config tuned for the autonomous self-improvement loop."""
     cfg = WorldConfig(
-        n_initial_vibrations=200,
+        # No ambient vibrations — the substrate's structure is the
+        # pre-seeded engrams. With n_initial_vibrations=200, awake
+        # phase fills n_nodes_max=512 with electrons that don't bind
+        # upward, so concept blending's allocate_node calls return
+        # -1 silently and the bridge mesh can't grow.
+        n_initial_vibrations=0,
         n_vibrations_max=2048,
         n_nodes_max=512,
         box_size=(60.0, 60.0, 60.0),
@@ -437,7 +442,14 @@ def build_autonomous_world() -> World:
         self_modify_rate=0.0005,
         self_modify_target_error=0.3,
         workspace_broadcast_enabled=True,
-        workspace_broadcast_strength=0.7,
+        # Workspace broadcast runs every tick (~60 Hz). With 0.7,
+        # losing-pattern eligibility decays as 0.7^N over N ticks —
+        # 180 ticks per awake cycle would take any non-winning
+        # pattern's eligibility to ~0. Real Global Neuronal Workspace
+        # suppression is much milder. 0.999 per tick → ~83% retention
+        # over a 3-sec cycle, leaving enough for dream-phase replay
+        # to still pick up minority patterns.
+        workspace_broadcast_strength=0.999,
         graceful_capacity=True,
     )
     world = World(cfg)

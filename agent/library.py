@@ -6,9 +6,11 @@ bridges via geometric coupling no matter how the chain is gated. The
 honest architecture is N parallel substrates, one per learned pattern,
 with a thin classifier that routes test-phase stimuli to the right one.
 
-This is how Person-of-Interest's "Machine" actually works in fiction —
-many specialised memory banks plus a classifier that decides which to
-query for any given input.
+Architecturally this is a mixture-of-experts memory: many specialised
+substrates plus a thin classifier that decides which to query for any
+given input. Each substrate retains its own committed bridges and is
+unable to overwrite another substrate's commitments. Pattern-specific
+fingerprints route incoming stimuli to the matched substrate.
 
 Usage:
     library = SubstrateLibrary()
