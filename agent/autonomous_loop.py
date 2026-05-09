@@ -210,10 +210,61 @@ class AutonomousLoop:
         dt = float(self.world.config.dt)
         target_sec = float(self.cfg.awake_seconds_per_cycle)
         n_ticks = int(target_sec / dt)
+        # Perturbation: if the substrate has settled into too-perfect
+        # prediction (err near 0 for 3+ cycles), inject a wakeup
+        # burst into the least-active pattern. Real brains do this
+        # via neuromodulators (acetylcholine, norepinephrine);
+        # without it, an undisturbed substrate stays in steady state
+        # and the prediction-error closed-loop marker never fires.
+        if self.cycle > 3 and self._needs_perturbation():
+            self._inject_perturbation_burst()
         for _ in range(n_ticks):
             if self.stop_event.is_set():
                 return
             tick(self.world, dt)
+
+    def _needs_perturbation(self) -> bool:
+        """Three or more recent cycles with err < 0.05 → substrate
+        has saturated and needs a wakeup."""
+        if len(self.metrics) < 3:
+            return False
+        recent = [m for m in self.metrics[-3:] if m.phase == "awake"]
+        if len(recent) < 3:
+            return False
+        return all(m.prediction_error < 0.05 for m in recent)
+
+    def _inject_perturbation_burst(self) -> None:
+        """Boost charge into atoms of the least-active pattern_id.
+        Drives the substrate's firing distribution off its fixed point."""
+        K = self.world.k_count
+        if K == 0:
+            return
+        # Pick the pattern_id with lowest rate in the self_model. If
+        # self_model is empty, pick a random non-zero pattern_id.
+        if self.world.self_model:
+            pid_target = min(self.world.self_model.items(),
+                             key=lambda kv: kv[1])[0]
+        else:
+            pids = sorted({int(p) for p in self.world.k_pattern_id[:K]
+                           if int(p) > 0})
+            if not pids:
+                return
+            pid_target = int(self.world.rng.choice(pids))
+        mask = ((self.world.k_pattern_id[:K] == pid_target)
+                & self.world.k_alive[:K]
+                & (self.world.k_level[:K] == 4))
+        targets = np.where(mask)[0]
+        if len(targets) == 0:
+            return
+        for idx in targets:
+            self.world.k_charge[int(idx)] += 5.0  # well above theta_fire
+            self.world.k_eligibility[int(idx)] = max(
+                float(self.world.k_eligibility[int(idx)]), 3.0,
+            )
+        log.info(
+            "cycle %d: perturbation burst — pattern_id=%d, %d atoms",
+            self.cycle, pid_target, len(targets),
+        )
 
     def _run_dream_phase(self) -> int:
         """Returns total blend_events that fired."""
@@ -404,7 +455,11 @@ def build_autonomous_world() -> World:
         # -1 silently and the bridge mesh can't grow.
         n_initial_vibrations=0,
         n_vibrations_max=2048,
-        n_nodes_max=512,
+        # G18 calibration: 4096 nodes give plenty of headroom for
+        # concept-blending allocations (each blend = 1 atom +
+        # 4 integration bridges) plus emitted-vibration cascades
+        # that turn into level-1/2/3 nodes during runtime.
+        n_nodes_max=4096,
         box_size=(60.0, 60.0, 60.0),
         rng_seed=42,
         # Phase 4 dynamics — must be on for firings to happen
@@ -413,8 +468,15 @@ def build_autonomous_world() -> World:
         n_emit=8,
         r_integrate=8.0,
         t_refractory=0.05, tau_membrane=0.05, emit_speed=15.0,
-        # Plan B + STDP
-        stdp_enabled=True,
+        # Plan B STDP — disabled in the autonomous loop. STDP's
+        # O(N²) firing-pair scan dominates wall time when the
+        # retention window is seconds-scale (which BTSP/dream/self-
+        # aware require). Per Magee 2026, BTSP is the dominant
+        # plasticity rule for hippocampal CA1 — STDP is more
+        # cortical and not strictly needed for the access-
+        # consciousness markers we are testing. Re-enable for
+        # awake-only experiments where firing rates are bounded.
+        stdp_enabled=False,
         tau_LTP=0.025,
         # G6
         bridge_atom_propagation_enabled=True,
@@ -422,7 +484,11 @@ def build_autonomous_world() -> World:
         bridge_lock_threshold=50.0,
         # G14 BTSP
         btsp_enabled=True,
-        btsp_tau_eligibility=6.0,
+        # 2.0 sec eligibility tau — still seconds-scale per Magee 2026
+        # (BTSP is reported between 1-10 sec across measurements);
+        # shorter tau here lets STDP's per-tick scan stay tractable
+        # without losing the science. 6.0 was over-conservative.
+        btsp_tau_eligibility=2.0,
         btsp_plateau_charge_threshold=4.0,
         btsp_potentiation=50.0,
         btsp_radius=30.0,

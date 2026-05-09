@@ -295,6 +295,31 @@ def molecules_in_tube(world, A: np.ndarray, B: np.ndarray, r_bridge: float) -> n
     return indices[in_segment_mask & in_tube_mask]
 
 
+def prune_firing_log(world) -> None:
+    """Trim world.firing_events to whatever the active mechanisms need.
+
+    Runs every tick regardless of stdp_enabled. Without it, BTSP /
+    dream / self-aware retain unbounded firing logs across cycles
+    even when STDP is off, and the substrate's wall time per tick
+    grows linearly with simulation time.
+    """
+    cfg = world.config
+    events = world.firing_events
+    if not events:
+        return
+    retention = float(cfg.tau_LTP)
+    if getattr(cfg, "self_aware_enabled", False):
+        retention = max(retention, float(cfg.self_model_window))
+    if getattr(cfg, "dream_blend_enabled", False):
+        retention = max(retention,
+                         float(cfg.dream_blend_co_activation_window))
+    if getattr(cfg, "btsp_enabled", False):
+        retention = max(retention, float(cfg.btsp_tau_eligibility))
+    cutoff = world.t - retention
+    if events[0][0] < cutoff:
+        world.firing_events = [e for e in events if e[0] >= cutoff]
+
+
 def apply_stdp(world) -> int:
     """Plan B: spike-timing-dependent plasticity post-tick scan.
 
@@ -1969,4 +1994,9 @@ def tick(world, dt: float) -> None:
     from world.self_aware import apply_self_aware
     apply_self_aware(world, dt)
     apply_speech_loop(world, dt)   # NEW (Plan F)
+    # G18.3: prune the firing log every tick regardless of
+    # stdp_enabled. apply_stdp does this internally only when STDP
+    # is on; with STDP disabled (autonomous loop default) the log
+    # would grow unboundedly otherwise.
+    prune_firing_log(world)
     world.t += dt
