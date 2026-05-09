@@ -364,6 +364,12 @@ def build_autonomous_world() -> World:
         # G16 Self-aware — must be on
         self_aware_enabled=True,
         self_modify_enabled=True,
+        # Self-modify runs every tick. With dt=1/60, a self_modify_rate
+        # of 0.05 means ~3.0 of effective rate per simulated second,
+        # which crashes btsp_potentiation to its floor in the first
+        # cycle. We use 0.0005 — effective 0.03/sec — so the substrate
+        # has room to drift over many cycles.
+        self_modify_rate=0.0005,
         self_modify_target_error=0.3,
         workspace_broadcast_enabled=True,
         workspace_broadcast_strength=0.7,
