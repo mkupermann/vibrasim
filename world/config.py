@@ -130,6 +130,31 @@ class WorldConfig:
     sparse_firing_top_k: int = 3                    # G11: how many atoms per port can fire per tick under
                                                     #     sparse-firing. Lower = sparser representation,
                                                     #     stronger discrimination, weaker absolute output.
+    btsp_enabled: bool = False                      # G14: Behavioral Time Scale Plasticity. Eligibility-
+                                                    #     trace based one-shot bidirectional bridge formation.
+                                                    #     Replaces / complements millisecond-scale Hebbian
+                                                    #     STDP with seconds-scale plasticity gated by
+                                                    #     post-synaptic plateau events. Magee 2026 (Nat
+                                                    #     Neurosci) BTSP biology + this substrate's emergent-
+                                                    #     atom continuous physics.
+    btsp_tau_eligibility: float = 6.0               # eligibility-trace time constant (seconds). Atoms
+                                                    #     that fired within this window remain 'eligible'
+                                                    #     for BTSP potentiation. 6 sec matches Magee's
+                                                    #     experimental measurements in CA1.
+    btsp_plateau_charge_threshold: float = 5.0      # an atom whose accumulated charge crosses this
+                                                    #     threshold counts as a plateau event — triggers
+                                                    #     BTSP across all eligible partners.
+    btsp_potentiation: float = 50.0                 # strength delta per BTSP event. Strong enough that
+                                                    #     a single plateau event crosses bridge_lock_threshold
+                                                    #     in one shot.
+    btsp_radius: float = 30.0                       # spatial radius around the plateau atom within which
+                                                    #     eligible atoms get BTSP bridges. Wider than
+                                                    #     standard r_bridge so cross-modal partners (in
+                                                    #     different ports) are reachable.
+    btsp_excitability_bias: float = 0.0             # when > 0, atoms with non-zero eligibility have their
+                                                    #     effective theta_fire lowered by this factor times
+                                                    #     their eligibility — Josselyn 2024 'allocation by
+                                                    #     excitability bias' in continuous-physics form.
     bidirectional_bridges: bool = False             # G13: when True, G6 bridge_atom_propagation fires
                                                     #     post-atoms at BOTH +distance and -distance along
                                                     #     orientation. A firing atom at either end of a

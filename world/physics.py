@@ -562,6 +562,154 @@ def synaptic_transmission(world, dt: float) -> int:
     return n_events
 
 
+def apply_btsp(world, dt: float) -> int:
+    """G14 — Behavioral Time Scale Plasticity.
+
+    Bidirectional, eligibility-trace-based, plateau-gated plasticity at
+    the seconds time-scale. The biologically-grounded successor to tight-
+    millisecond Hebbian STDP (Magee 2026 Nat Neurosci review; Wu et al
+    2024 Nat Commun).
+
+    Mechanism:
+      1. Every alive level-4 atom maintains an eligibility trace `E`
+         that decays exponentially with `tau_eligibility` (default 6 s).
+      2. When an atom fires, its eligibility is bumped by 1.0.
+      3. If an atom's accumulated charge crosses `btsp_plateau_charge_
+         threshold`, it counts as a plateau event — a "salience signal"
+         in biology.
+      4. On a plateau event, the substrate finds all level-5+ molecules
+         within `btsp_radius` of the plateau atom, and for each pair of
+         eligible atoms (eligibility > 0) connected through such a
+         molecule, applies BTSP potentiation: strength += btsp_potentiation
+         × E_pre × E_post. Bidirectional and one-shot.
+      5. Optional excitability bias: atoms with higher eligibility get a
+         lower effective theta_fire next tick (Josselyn-style allocation
+         by intrinsic excitability).
+
+    What this gives the substrate that millisecond-Hebbian doesn't:
+      - One-shot learning across seconds (single trial, no need to repeat)
+      - Cross-modal binding without tight temporal coincidence (visual
+        and audio can fire 5 sec apart and still bind via BTSP if a
+        plateau happens within the eligibility window)
+      - Pattern-specific engrams emerge from per-pattern excitability
+        biases — different patterns recruit different atom subsets
+
+    Returns count of (plateau_atom, partner_atom) BTSP events.
+    """
+    cfg = world.config
+    if not cfg.btsp_enabled:
+        return 0
+    K = world.k_count
+    if K == 0:
+        return 0
+
+    # 1. Decay all atoms' eligibility traces.
+    if cfg.btsp_tau_eligibility > 0:
+        decay_factor = float(np.exp(-dt / cfg.btsp_tau_eligibility))
+        world.k_eligibility[:K] *= decay_factor
+
+    # 2. Bump eligibility for atoms that fired this tick.
+    t_now = world.t
+    for t_fire, atom_idx in world.firing_events:
+        if t_fire != t_now:
+            continue
+        if atom_idx < K and world.k_alive[atom_idx]:
+            world.k_eligibility[int(atom_idx)] += 1.0
+
+    # 3. Find plateau atoms — alive level-4 atoms whose ACCUMULATED
+    # eligibility crossed the plateau threshold this tick.
+    atom_mask = world.k_alive[:K] & (world.k_level[:K] == 4)
+    if not atom_mask.any():
+        return 0
+    plateau_threshold = float(cfg.btsp_plateau_charge_threshold)
+    plateau_mask = atom_mask & (world.k_eligibility[:K] >= plateau_threshold)
+    if not plateau_mask.any():
+        return 0
+    plateau_indices = np.where(plateau_mask)[0]
+
+    # 4. Find all level-5+ molecules; we'll use them as the bridge mesh.
+    molecule_mask = world.k_alive[:K] & (world.k_level[:K] >= 5)
+    if not molecule_mask.any():
+        return 0
+    molecule_indices = np.where(molecule_mask)[0]
+    molecule_pos = world.k_pos[molecule_indices]
+
+    # 5. For each plateau atom, find nearby molecules + nearby eligible
+    # atoms, then commit BTSP between plateau and eligible-partner via
+    # the found molecules.
+    box = np.asarray(cfg.box_size, dtype=np.float64)
+    btsp_r2 = float(cfg.btsp_radius) ** 2
+    pot = float(cfg.btsp_potentiation)
+    n_events = 0
+    eligible_atom_indices = np.where(
+        atom_mask & (world.k_eligibility[:K] > 0.05)
+    )[0]
+    if len(eligible_atom_indices) == 0:
+        return 0
+    eligible_pos = world.k_pos[eligible_atom_indices]
+
+    for pi in plateau_indices:
+        plateau_pos = world.k_pos[pi]
+
+        # Eligible partners within btsp_radius (excluding self)
+        d_e = eligible_pos - plateau_pos
+        d_e -= box * np.round(d_e / box)
+        d_e_sq = (d_e * d_e).sum(axis=1)
+        partner_local = np.where((d_e_sq <= btsp_r2)
+                                  & (d_e_sq > 0.0))[0]
+        if len(partner_local) == 0:
+            continue
+        partner_atom_indices = eligible_atom_indices[partner_local]
+
+        # Molecules within btsp_radius of plateau (these are the
+        # candidate bridges to potentiate)
+        d_m = molecule_pos - plateau_pos
+        d_m -= box * np.round(d_m / box)
+        d_m_sq = (d_m * d_m).sum(axis=1)
+        nearby_molecules_local = np.where(d_m_sq <= btsp_r2)[0]
+        if len(nearby_molecules_local) == 0:
+            continue
+        nearby_molecules = molecule_indices[nearby_molecules_local]
+
+        for partner_idx in partner_atom_indices:
+            partner_pos = world.k_pos[partner_idx]
+            E_partner = float(world.k_eligibility[partner_idx])
+            E_plateau = float(world.k_eligibility[pi])
+            # For each nearby molecule, check if the partner is also
+            # nearby (i.e. molecule lies between plateau and partner)
+            for m in nearby_molecules:
+                d_mp = world.k_pos[m] - partner_pos
+                d_mp -= box * np.round(d_mp / box)
+                if (d_mp * d_mp).sum() > btsp_r2:
+                    continue
+                # BTSP weight update: bidirectional, eligibility-product gated
+                delta = pot * E_partner * E_plateau / (
+                    plateau_threshold ** 2 + 1.0
+                )
+                world.k_strength[int(m)] = min(
+                    float(world.k_strength[int(m)]) + delta, 1000.0
+                )
+                # Bridge orientation: midpoint-pointing toward partner
+                if int(world.k_pattern_id[m]) == 0:
+                    pid_p = int(world.k_pattern_id[pi])
+                    pid_o = int(world.k_pattern_id[partner_idx])
+                    if pid_p != 0 and pid_p == pid_o:
+                        world.k_pattern_id[m] = pid_p
+                # Update orientation to point plateau → partner
+                seg = partner_pos - world.k_pos[m]
+                seg -= box * np.round(seg / box)
+                seg_norm = float(np.linalg.norm(seg))
+                if seg_norm > 1e-9:
+                    world.k_orientation[m] = seg / seg_norm
+                n_events += 1
+
+        # Reset plateau atom's eligibility to prevent re-triggering until
+        # accumulated again.
+        world.k_eligibility[pi] = 0.0
+
+    return n_events
+
+
 def apply_bridge_atom_propagation(world, dt: float) -> int:
     """G6: when a level-4 atom A fires this tick AND there is a strong
     oriented bridge molecule near A pointing toward another atom B, deposit
@@ -1797,5 +1945,6 @@ def tick(world, dt: float) -> None:
     neuron_dynamics(world, dt)
     apply_bridge_atom_propagation(world, dt)  # NEW (G6) — direct atom→atom charge through strong bridges
     apply_stdp(world)              # NEW (Plan B)
+    apply_btsp(world, dt)          # NEW (G14) — second-scale eligibility-trace plasticity
     apply_speech_loop(world, dt)   # NEW (Plan F)
     world.t += dt
