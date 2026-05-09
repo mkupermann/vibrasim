@@ -204,6 +204,69 @@ def _list_memories():
     return sorted([p.stem for p in MEMORY_DIR.glob("*.npz")])
 
 
+def _train_library_pattern(state: dict, label: str, duration_s: float) -> str:
+    """Train a new pattern in the library using the currently-running
+    audio_io + video_io as the input source. Builds a fresh substrate,
+    pumps captured audio + video into it for `duration_s` seconds,
+    fingerprints the captured frames, stores under the label.
+    """
+    if not state["running"]:
+        return "start the substrate first (Start button) to open devices"
+    if not label.strip():
+        return "label is empty"
+    label = label.strip()
+    audio_io = state["audio_io"]
+    video_io = state["video_io"]
+
+    # Build a fresh substrate dedicated to this pattern. Share the
+    # already-running real-device I/O — the new loop drains the same
+    # capture buffers.
+    w_new, _, _, _ = _build_substrate()
+    from agent.loop import AgentLoop as _AL
+    loop_new = _AL(w_new, audio_io=audio_io, video_io=video_io)
+
+    # Capture frames for fingerprinting
+    captured_frames = []
+    n_ticks = int(duration_s / w_new.config.dt)
+    capture_every = max(1, n_ticks // 20)
+    for tick_i in range(n_ticks):
+        loop_new.step(w_new.config.dt)
+        if tick_i % capture_every == 0:
+            with video_io._frame_lock:
+                if len(video_io._frame_buffer) > 0:
+                    captured_frames.append(
+                        video_io._frame_buffer[-1].copy()
+                    )
+
+    if not captured_frames:
+        return "no webcam frames captured during training — is the camera on?"
+
+    # Fingerprint = mean of captured frames
+    from agent.library import _make_fingerprint
+    mean_frame = np.mean(
+        [f.astype(np.float32) for f in captured_frames], axis=0
+    )
+    fingerprint = _make_fingerprint(mean_frame)
+
+    from agent.library import LibraryEntry
+    state["library"].entries[label] = LibraryEntry(
+        label=label, world=w_new, audio_io=audio_io, video_io=video_io,
+        loop=loop_new, fingerprint=fingerprint,
+    )
+    state["log"].append((time.time(),
+                         f'trained pattern "{label}" '
+                         f'(K={w_new.k_count}, frames={len(captured_frames)})'))
+    return f'pattern "{label}" added to library'
+
+
+def _save_library(state: dict) -> str:
+    state["library"].save_to_dir(LIBRARY_DIR)
+    state["log"].append((time.time(),
+                         f'saved library ({len(state["library"])} patterns) to '
+                         f'{LIBRARY_DIR}'))
+    return f"saved {len(state['library'])} patterns"
+
+
 def _start_yt_feed(state: dict, url: str, duration_s: float) -> str:
     if not state["running"]:
         return "start the substrate first"
@@ -330,6 +393,40 @@ with control_col:
     )
 
     st.divider()
+    st.markdown("**📚 The Machine — multi-pattern memory**")
+    n_patterns = len(state["library"])
+    if n_patterns == 0:
+        st.caption("Library is empty. Train a pattern below.")
+    else:
+        st.caption(
+            f"Library has **{n_patterns} pattern(s)**: "
+            f"{', '.join(state['library'].labels())}"
+        )
+    new_label = st.text_input(
+        "Label", placeholder="e.g. water, hello, my face",
+        key="train_label",
+    )
+    train_dur = st.slider("Training duration (sec)", 10, 60, 15,
+                          key="train_duration")
+    if st.button("🧠 Train this pattern", use_container_width=True,
+                 disabled=not state["running"]):
+        msg = _train_library_pattern(state, new_label, float(train_dur))
+        st.toast(msg)
+
+    listen_active = st.toggle(
+        "🎧 Listen mode — classify webcam + speak matched label",
+        value=False, key="listen_mode",
+        disabled=(n_patterns == 0 or not state["running"]),
+    )
+    if state.get("last_recalled_label"):
+        st.caption(f"Last recalled: **{state['last_recalled_label']}**")
+    if st.button("💾 Save library to disk",
+                 use_container_width=True,
+                 disabled=(n_patterns == 0)):
+        st.toast(_save_library(state))
+    state["_listen_active"] = listen_active
+
+    st.divider()
     st.markdown("**Train from YouTube**")
     yt_url = st.text_input("YouTube URL", placeholder="https://youtu.be/...")
     yt_duration = st.slider("Duration (sec)", min_value=10, max_value=600,
@@ -431,6 +528,25 @@ with status_col:
                 state["log"].append((time.time(),
                                      f'said "{state["speaker"].label}" '
                                      f'(fires_ao={fires_ao})'))
+
+        # Listen mode: every iteration, classify the latest webcam frame
+        # against the library's fingerprints. If matched, set the speaker
+        # label to the matched pattern's name and trigger a speak. The
+        # speaker's cooldown_seconds prevents spamming.
+        if state.get("_listen_active") and len(state["library"]) > 0:
+            latest = _latest_video_frame(video_io)
+            if latest is not None:
+                matched = state["library"].classify(latest)
+                if matched is not None and matched != state["last_recalled_label"]:
+                    state["last_recalled_label"] = matched
+                    state["log"].append((time.time(),
+                                         f'classified webcam → "{matched}"'))
+                if matched is not None:
+                    state["speaker"].set_label(matched)
+                    if state["speaker"].maybe_say():
+                        state["spoken_count"] += 1
+                        state["log"].append((time.time(),
+                                             f'said "{matched}"'))
 
         # Mic + speaker dB
         mic_db = _level_db(audio_io._input_buffer,
