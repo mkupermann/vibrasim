@@ -55,6 +55,24 @@ class World:
         # Plan E — reward polarity tristate (-1, 0, +1) per node
         # 0 = not from reward channel; +1 = fire_positive origin; -1 = fire_negative origin
         self.k_reward_polarity = np.zeros(K, dtype=np.int8)
+        # G14 — BTSP eligibility trace per atom. Increases on each firing,
+        # decays exponentially with cfg.btsp_tau_eligibility (default 6 sec).
+        # When a 'plateau atom' (sustained-firing atom with charge above
+        # btsp_plateau_charge_threshold) is detected, BTSP commits bridges
+        # to all atoms with non-zero eligibility — one-shot learning at
+        # the seconds time-scale (Magee 2026, Wu et al 2024).
+        self.k_eligibility = np.zeros(K, dtype=np.float64)
+        # G10 — pattern_id ('memory cell') per node. 0 = ambient/unassigned.
+        # When the user trains a specific pattern, world.active_pattern_id
+        # is set to a positive int; new atoms + bridges formed during that
+        # training inherit it. G6 propagation only fires bridges whose
+        # pattern_id matches the firing atom's, so different trained
+        # patterns can't cross-fire each other.
+        self.k_pattern_id = np.zeros(K, dtype=np.int16)
+        # Current pattern_id assigned to newly-formed nodes during the
+        # next physics tick. Set externally by the caller (training loop)
+        # before training a new pair, then reset to 0 for talk phase.
+        self.active_pattern_id: int = 0
         # Plan A.5 — slot recycling
         self.k_ref_count = np.zeros(K, dtype=np.int32)
         self._free_slots: list[int] = []
@@ -63,6 +81,34 @@ class World:
         # Keeps the substrate self-describing so measurements don't need
         # to re-derive firings from snapshot deltas.
         self.firing_events: list[tuple[float, int]] = []
+
+        # G16 — Self-aware substrate state.
+        # self_model: per-pattern_id rolling firing-rate histogram. Updated
+        # on apply_self_aware ticks. Maps pattern_id -> running mean of
+        # firings/sec within self_model_window. This IS the substrate's
+        # self-representation — its model of which engrams are "alive in
+        # me right now". Higher-order theory (Rosenthal 2005) operational
+        # form: a representation that has other representations as its
+        # objects.
+        self.self_model: dict[int, float] = {}
+        # self_predicted_next: predicted firings/sec per pattern_id for the
+        # NEXT window, made by the substrate from its self_model.
+        self.self_predicted_next: dict[int, float] = {}
+        # self_prediction_error: scalar in [0, 1+] capturing how surprised
+        # the substrate was last cycle. Drives self-modification.
+        self.self_prediction_error: float = 0.0
+        # workspace_winner_pattern_id: the pattern_id that "owns the
+        # workspace" this tick — Global Neuronal Workspace's winner-take-
+        # all broadcast. 0 = no winner.
+        self.workspace_winner_pattern_id: int = 0
+        # workspace_history: deque of (t, winner_pid) for diagnostics
+        self.workspace_history: list[tuple[float, int]] = []
+
+        # G18.2 — dream sub-phase tick counter. Apply_dream uses this
+        # to alternate consolidation-only ticks (NREM analogue) with
+        # creative blending ticks (REM analogue), at a ratio set by
+        # cfg.dream_consolidation_to_blend_ratio.
+        self.dream_subphase_counter: int = 0
 
         # CSR composition
         comp_caps = K * 16  # Plan A.5: larger to accommodate slot recycling appending
@@ -139,6 +185,8 @@ class World:
             self.k_strength[i] = 1.0
             self.k_orientation[i] = 0.0  # Plan B: clear stale direction inherited from dead predecessor
             self.k_reward_polarity[i] = 0  # Plan E: clear stale reward tag from dead predecessor
+            self.k_pattern_id[i] = 0  # G10: clear stale pattern tag from dead predecessor
+            self.k_eligibility[i] = 0.0  # G14: clear stale eligibility trace
             # k_ref_count[i] is already 0 by free-list invariant
             # Ensure k_count covers this slot (it was previously allocated, so
             # k_count >= i+1 in normal operation; guard for test setups)
@@ -161,6 +209,9 @@ class World:
         self.k_birth[i] = self.t
         self.k_alive[i] = True
         self.k_comp_kind[i] = comp_kind
+        # G10: tag the new node with the currently active pattern_id so
+        # downstream STDP / G6 can route by memory cell.
+        self.k_pattern_id[i] = int(self.active_pattern_id)
         n_comp = len(constituents)
         start = self.k_comp_used
         end = start + n_comp

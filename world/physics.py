@@ -352,33 +352,99 @@ def apply_stdp(world) -> int:
             # 0 (ambient default) take the existing alignment-based path unchanged.
             swap_ltp_ltd = (world.k_reward_polarity[atom_j] == -1)
 
+            # G9: lock threshold for bridges that have already committed
+            # to a pattern. Locked bridges are skipped entirely.
+            lock_threshold = float(cfg.bridge_lock_threshold)
             # Per-molecule LTP/LTD decision based on orientation alignment
             for m in bridge_indices:
+                strength_old = float(world.k_strength[m])
+                # G9: skip locked bridges so previously-committed memory
+                # patterns survive subsequent training.
+                if lock_threshold > 0.0 and strength_old >= lock_threshold:
+                    continue
                 o = world.k_orientation[m]
                 o_norm = float(np.linalg.norm(o))
                 alignment = float(np.dot(o, u))
-                strength_old = float(world.k_strength[m])
+                # G8.2: alignment threshold tightens "aligned" so bridges
+                # committed to a different pattern (alignment between 0 and
+                # the threshold) get LTD instead of LTP. Default 0.0 keeps
+                # legacy behaviour.
+                strict_threshold = float(cfg.stdp_alignment_strict_threshold)
                 # Determine LTP vs LTD based on alignment AND swap flag
                 if o_norm < 1e-6:
                     # No prior orientation → LTP normally; LTD if swap
                     do_ltp = not swap_ltp_ltd
-                elif alignment >= 0:
-                    # Aligned → LTP normally; LTD if swap
+                elif alignment >= strict_threshold:
+                    # Sufficiently aligned → LTP normally; LTD if swap
                     do_ltp = not swap_ltp_ltd
                 else:
-                    # Anti-aligned → LTD normally; LTP if swap
+                    # Insufficiently aligned (or anti-aligned) → LTD normally
                     do_ltp = swap_ltp_ltd
                 if do_ltp:
                     # LTP: strengthen and update orientation toward u
                     weight = cfg.delta_LTP * float(np.exp(-dt_pair / cfg.tau_LTP))
                     world.k_strength[m] = min(strength_old + weight, 1000.0)
                     strength_new = float(world.k_strength[m])
+                    # G10: when a bridge crosses lock threshold AND both
+                    # constituents (pre-atom and post-atom) share the
+                    # same non-zero pattern_id, commit the bridge to that
+                    # cell. This prevents cross-pattern bridges (e.g.
+                    # visual1's atom firing with audio2's atom by
+                    # coincidence during pair1 training) from being
+                    # tagged with pattern_id=1.
+                    if (lock_threshold > 0.0 and strength_new >= lock_threshold
+                            and int(world.k_pattern_id[m]) == 0):
+                        pid_i = int(world.k_pattern_id[atom_i])
+                        pid_j = int(world.k_pattern_id[atom_j])
+                        if pid_i != 0 and pid_i == pid_j:
+                            world.k_pattern_id[m] = pid_i
                     if strength_new > 0:
                         o_new = (o * strength_old + u * weight) / strength_new
                         new_norm = float(np.linalg.norm(o_new))
                         if new_norm > 1e-9:
                             o_new = o_new / new_norm
                         world.k_orientation[m] = o_new
+                    # G8: lateral inhibition — competing bridges nearby get
+                    # LTD so different patterns settle on disjoint bridge
+                    # subsets. Only applied on LTP events, not LTD events,
+                    # because LTD already weakens the focal bridge.
+                    if cfg.lateral_inhibition_enabled:
+                        K = world.k_count
+                        all_mol_mask = (world.k_alive[:K]
+                                        & (world.k_level[:K] >= 5))
+                        if all_mol_mask.any():
+                            r_inh_sq = cfg.lateral_inhibition_radius ** 2
+                            d_inh = world.k_pos[:K] - world.k_pos[m]
+                            d_inh -= box * np.round(d_inh / box)
+                            d_inh_sq = (d_inh * d_inh).sum(axis=1)
+                            inhibit_mask = (
+                                all_mol_mask
+                                & (d_inh_sq <= r_inh_sq)
+                                & (d_inh_sq > 0.0)
+                            )
+                            inhibit_mask[m] = False  # never inhibit self
+                            # Only inhibit molecules NOT in the current
+                            # tube (the tube was the "winning" set this
+                            # tick).
+                            for bidx in bridge_indices:
+                                inhibit_mask[bidx] = False
+                            inhib_idx = np.where(inhibit_mask)[0]
+                            if len(inhib_idx) > 0:
+                                inhib_weight = (cfg.delta_LTD
+                                                * cfg.lateral_inhibition_strength
+                                                * float(np.exp(-dt_pair
+                                                               / cfg.tau_LTD)))
+                                for ii in inhib_idx:
+                                    s_ii = float(world.k_strength[int(ii)])
+                                    # G9: locked bridges exempt from
+                                    # lateral inhibition LTD too —
+                                    # otherwise old patterns get bleed-
+                                    # weakened by every new training pair.
+                                    if (lock_threshold > 0.0
+                                            and s_ii >= lock_threshold):
+                                        continue
+                                    world.k_strength[int(ii)] = max(
+                                        s_ii - inhib_weight, 1.0)
                 else:
                     # LTD: weaken only; orientation unchanged
                     weight = cfg.delta_LTD * float(np.exp(-dt_pair / cfg.tau_LTD))
@@ -391,7 +457,20 @@ def apply_stdp(world) -> int:
     # All STDP behaviour is preserved because events older than tau_LTP
     # contribute no qualifying pairs anyway (dt_pair > tau_LTP would be
     # filtered by the inner continue).
-    cutoff = world.t - cfg.tau_LTP
+    #
+    # G18 amendment: BTSP (G14), self-aware (G16), and dream (G15) all
+    # need the firing log retained over a SECONDS-scale window, not a
+    # 25-ms one. Use the maximum of tau_LTP and the longest downstream
+    # window so STDP still gets its tight pruning while dream/self-aware
+    # can see co-active patterns within their 0.5-2 sec windows.
+    retention = float(cfg.tau_LTP)
+    if getattr(cfg, "self_aware_enabled", False):
+        retention = max(retention, float(cfg.self_model_window))
+    if getattr(cfg, "dream_blend_enabled", False):
+        retention = max(retention, float(cfg.dream_blend_co_activation_window))
+    if getattr(cfg, "btsp_enabled", False):
+        retention = max(retention, float(cfg.btsp_tau_eligibility))
+    cutoff = world.t - retention
     if events and events[0][0] < cutoff:
         world.firing_events = [e for e in events if e[0] >= cutoff]
     return n_reinforcements
@@ -496,6 +575,154 @@ def synaptic_transmission(world, dt: float) -> int:
     return n_events
 
 
+def apply_btsp(world, dt: float) -> int:
+    """G14 — Behavioral Time Scale Plasticity.
+
+    Bidirectional, eligibility-trace-based, plateau-gated plasticity at
+    the seconds time-scale. The biologically-grounded successor to tight-
+    millisecond Hebbian STDP (Magee 2026 Nat Neurosci review; Wu et al
+    2024 Nat Commun).
+
+    Mechanism:
+      1. Every alive level-4 atom maintains an eligibility trace `E`
+         that decays exponentially with `tau_eligibility` (default 6 s).
+      2. When an atom fires, its eligibility is bumped by 1.0.
+      3. If an atom's accumulated charge crosses `btsp_plateau_charge_
+         threshold`, it counts as a plateau event — a "salience signal"
+         in biology.
+      4. On a plateau event, the substrate finds all level-5+ molecules
+         within `btsp_radius` of the plateau atom, and for each pair of
+         eligible atoms (eligibility > 0) connected through such a
+         molecule, applies BTSP potentiation: strength += btsp_potentiation
+         × E_pre × E_post. Bidirectional and one-shot.
+      5. Optional excitability bias: atoms with higher eligibility get a
+         lower effective theta_fire next tick (Josselyn-style allocation
+         by intrinsic excitability).
+
+    What this gives the substrate that millisecond-Hebbian doesn't:
+      - One-shot learning across seconds (single trial, no need to repeat)
+      - Cross-modal binding without tight temporal coincidence (visual
+        and audio can fire 5 sec apart and still bind via BTSP if a
+        plateau happens within the eligibility window)
+      - Pattern-specific engrams emerge from per-pattern excitability
+        biases — different patterns recruit different atom subsets
+
+    Returns count of (plateau_atom, partner_atom) BTSP events.
+    """
+    cfg = world.config
+    if not cfg.btsp_enabled:
+        return 0
+    K = world.k_count
+    if K == 0:
+        return 0
+
+    # 1. Decay all atoms' eligibility traces.
+    if cfg.btsp_tau_eligibility > 0:
+        decay_factor = float(np.exp(-dt / cfg.btsp_tau_eligibility))
+        world.k_eligibility[:K] *= decay_factor
+
+    # 2. Bump eligibility for atoms that fired this tick.
+    t_now = world.t
+    for t_fire, atom_idx in world.firing_events:
+        if t_fire != t_now:
+            continue
+        if atom_idx < K and world.k_alive[atom_idx]:
+            world.k_eligibility[int(atom_idx)] += 1.0
+
+    # 3. Find plateau atoms — alive level-4 atoms whose ACCUMULATED
+    # eligibility crossed the plateau threshold this tick.
+    atom_mask = world.k_alive[:K] & (world.k_level[:K] == 4)
+    if not atom_mask.any():
+        return 0
+    plateau_threshold = float(cfg.btsp_plateau_charge_threshold)
+    plateau_mask = atom_mask & (world.k_eligibility[:K] >= plateau_threshold)
+    if not plateau_mask.any():
+        return 0
+    plateau_indices = np.where(plateau_mask)[0]
+
+    # 4. Find all level-5+ molecules; we'll use them as the bridge mesh.
+    molecule_mask = world.k_alive[:K] & (world.k_level[:K] >= 5)
+    if not molecule_mask.any():
+        return 0
+    molecule_indices = np.where(molecule_mask)[0]
+    molecule_pos = world.k_pos[molecule_indices]
+
+    # 5. For each plateau atom, find nearby molecules + nearby eligible
+    # atoms, then commit BTSP between plateau and eligible-partner via
+    # the found molecules.
+    box = np.asarray(cfg.box_size, dtype=np.float64)
+    btsp_r2 = float(cfg.btsp_radius) ** 2
+    pot = float(cfg.btsp_potentiation)
+    n_events = 0
+    eligible_atom_indices = np.where(
+        atom_mask & (world.k_eligibility[:K] > 0.05)
+    )[0]
+    if len(eligible_atom_indices) == 0:
+        return 0
+    eligible_pos = world.k_pos[eligible_atom_indices]
+
+    for pi in plateau_indices:
+        plateau_pos = world.k_pos[pi]
+
+        # Eligible partners within btsp_radius (excluding self)
+        d_e = eligible_pos - plateau_pos
+        d_e -= box * np.round(d_e / box)
+        d_e_sq = (d_e * d_e).sum(axis=1)
+        partner_local = np.where((d_e_sq <= btsp_r2)
+                                  & (d_e_sq > 0.0))[0]
+        if len(partner_local) == 0:
+            continue
+        partner_atom_indices = eligible_atom_indices[partner_local]
+
+        # Molecules within btsp_radius of plateau (these are the
+        # candidate bridges to potentiate)
+        d_m = molecule_pos - plateau_pos
+        d_m -= box * np.round(d_m / box)
+        d_m_sq = (d_m * d_m).sum(axis=1)
+        nearby_molecules_local = np.where(d_m_sq <= btsp_r2)[0]
+        if len(nearby_molecules_local) == 0:
+            continue
+        nearby_molecules = molecule_indices[nearby_molecules_local]
+
+        for partner_idx in partner_atom_indices:
+            partner_pos = world.k_pos[partner_idx]
+            E_partner = float(world.k_eligibility[partner_idx])
+            E_plateau = float(world.k_eligibility[pi])
+            # For each nearby molecule, check if the partner is also
+            # nearby (i.e. molecule lies between plateau and partner)
+            for m in nearby_molecules:
+                d_mp = world.k_pos[m] - partner_pos
+                d_mp -= box * np.round(d_mp / box)
+                if (d_mp * d_mp).sum() > btsp_r2:
+                    continue
+                # BTSP weight update: bidirectional, eligibility-product gated
+                delta = pot * E_partner * E_plateau / (
+                    plateau_threshold ** 2 + 1.0
+                )
+                world.k_strength[int(m)] = min(
+                    float(world.k_strength[int(m)]) + delta, 1000.0
+                )
+                # Bridge orientation: midpoint-pointing toward partner
+                if int(world.k_pattern_id[m]) == 0:
+                    pid_p = int(world.k_pattern_id[pi])
+                    pid_o = int(world.k_pattern_id[partner_idx])
+                    if pid_p != 0 and pid_p == pid_o:
+                        world.k_pattern_id[m] = pid_p
+                # Update orientation to point plateau → partner
+                seg = partner_pos - world.k_pos[m]
+                seg -= box * np.round(seg / box)
+                seg_norm = float(np.linalg.norm(seg))
+                if seg_norm > 1e-9:
+                    world.k_orientation[m] = seg / seg_norm
+                n_events += 1
+
+        # Reset plateau atom's eligibility to prevent re-triggering until
+        # accumulated again.
+        world.k_eligibility[pi] = 0.0
+
+    return n_events
+
+
 def apply_bridge_atom_propagation(world, dt: float) -> int:
     """G6: when a level-4 atom A fires this tick AND there is a strong
     oriented bridge molecule near A pointing toward another atom B, deposit
@@ -554,14 +781,54 @@ def apply_bridge_atom_propagation(world, dt: float) -> int:
             continue
         A_pos = world.k_pos[atom_idx]
 
+        # G10: pattern-cell gating. If the firing atom has a non-zero
+        # pattern_id (i.e. was committed to a specific pattern during
+        # training), restrict bridge candidates to ones that share that
+        # pattern_id OR are unassigned (pattern_id=0, ambient).
+        firing_pattern = int(world.k_pattern_id[atom_idx])
+
         # Find strong oriented bridges within r_bridge of the firing atom.
         d_AM = world.k_pos[bridge_indices] - A_pos
         d_AM -= box * np.round(d_AM / box)
         d_AM_sq = (d_AM * d_AM).sum(axis=1)
         nearby_mask = d_AM_sq <= r_bridge_sq
+
+        # G10: strict pattern-cell routing. When the firing atom has a
+        # non-zero pattern_id, only fire bridges with the EXACT same
+        # pattern_id. Ambient bridges (pattern_id=0) are excluded so
+        # they can't cross-talk between patterns. Requires the caller
+        # to pre-tag bridges (e.g. by position) for the chain to stay
+        # active in test scenarios where ambient bridges previously
+        # carried the signal.
+        if firing_pattern != 0:
+            bridge_pids = world.k_pattern_id[bridge_indices]
+            pattern_mask = (bridge_pids == firing_pattern)
+            nearby_mask = nearby_mask & pattern_mask
         if not nearby_mask.any():
             continue
         nearby_bridge_indices = bridge_indices[nearby_mask]
+
+        # G9.5: winner-take-all — fire only the single strongest oriented
+        # bridge near this firing atom. Without this, every bridge in
+        # radius fires, so different patterns' bridges all activate
+        # together when their video atoms are adjacent in the port. WTA
+        # forces selectivity: each firing atom picks its committed bridge
+        # by max strength and fires only that one.
+        if cfg.bridge_atom_propagation_winner_take_all:
+            best_m = -1
+            best_score = -1.0
+            for m in nearby_bridge_indices:
+                o = world.k_orientation[m]
+                o_norm = float(np.linalg.norm(o))
+                if o_norm <= 0.5:
+                    continue
+                score = float(world.k_strength[m]) * o_norm
+                if score > best_score:
+                    best_score = score
+                    best_m = int(m)
+            if best_m < 0:
+                continue
+            nearby_bridge_indices = np.array([best_m], dtype=np.int64)
 
         for m in nearby_bridge_indices:
             o = world.k_orientation[m]
@@ -574,14 +841,21 @@ def apply_bridge_atom_propagation(world, dt: float) -> int:
             # Sign convention: orientation points from pre to post. We want
             # post-atom B that is "ahead" of M in direction o_unit. Sample at
             # d = r_bridge, 2 * r_bridge, ..., n_samples * r_bridge.
+            # G13 bidirectional: also sample at -distance so a firing atom
+            # at either end of the bridge propagates to atoms at the other
+            # end. This is the cross-modal generative recall mechanism —
+            # audio→video routing reuses the visual→audio bridges formed
+            # during training.
             post_mask = np.zeros(atom_pos.shape[0], dtype=np.bool_)
+            sign_signs = (1.0, -1.0) if cfg.bidirectional_bridges else (1.0,)
             for k in range(n_samples):
-                distance = (k + 1) * r_bridge
-                post_centre = M + distance * o_unit
-                d_aP = atom_pos - post_centre
-                d_aP -= box * np.round(d_aP / box)
-                d_aP_sq = (d_aP * d_aP).sum(axis=1)
-                post_mask |= d_aP_sq <= r_bridge_sq
+                for sign in sign_signs:
+                    distance = sign * (k + 1) * r_bridge
+                    post_centre = M + distance * o_unit
+                    d_aP = atom_pos - post_centre
+                    d_aP -= box * np.round(d_aP / box)
+                    d_aP_sq = (d_aP * d_aP).sum(axis=1)
+                    post_mask |= d_aP_sq <= r_bridge_sq
 
             # Don't propagate back to the firing atom itself
             if atom_idx in atom_indices:
@@ -1449,7 +1723,64 @@ def neuron_dynamics(world, dt: float) -> None:
     can_fire = (world.k_charge[atom_indices] >= cfg.theta_fire) & (
         world.t >= world.k_refractory_until[atom_indices]
     )
+    # G12: firing-eligibility gating during training. When a pattern is
+    # active, atoms with a mismatched non-zero pattern_id are prevented
+    # from firing — even if charged. This stops cross-pattern STDP
+    # causal pairs from forming entirely at the firing-event source,
+    # not just downstream during bridge propagation.
+    if cfg.firing_eligibility_gate and int(world.active_pattern_id) != 0:
+        active = int(world.active_pattern_id)
+        atom_pids = world.k_pattern_id[atom_indices]
+        # Allow ambient (0) and matching-pattern atoms; suppress others.
+        eligibility = (atom_pids == 0) | (atom_pids == active)
+        can_fire = can_fire & eligibility
     firing_atoms = atom_indices[can_fire]
+
+    # G11: sparse-firing winner-take-all per port. When enabled, only the
+    # top-K atoms per port (by charge) fire each tick. This forces sparse
+    # pattern-specific activation: different stimuli charge different
+    # specific atoms, so different bridges fire downstream and the chain
+    # output is selective by pattern, not broadband.
+    if cfg.sparse_firing_enabled and len(firing_atoms) > 0:
+        top_k = max(1, int(cfg.sparse_firing_top_k))
+        # Group firing atoms by which port they're in. Atoms outside any
+        # named port fall in the "other" group.
+        ports = []
+        if cfg.audio_io_enabled:
+            ports.append(("audio_in", cfg.audio_input_port_origin,
+                           cfg.audio_input_port_size))
+            ports.append(("audio_out", cfg.audio_output_port_origin,
+                           cfg.audio_output_port_size))
+        if cfg.video_io_enabled:
+            ports.append(("video_in", cfg.video_input_port_origin,
+                           cfg.video_input_port_size))
+        if ports:
+            keep = []
+            assigned = np.zeros(len(firing_atoms), dtype=np.bool_)
+            for _name, port_o, port_s in ports:
+                in_port = np.zeros(len(firing_atoms), dtype=np.bool_)
+                for k_i, ai in enumerate(firing_atoms):
+                    if assigned[k_i]:
+                        continue
+                    p = world.k_pos[ai]
+                    if (port_o[0] <= p[0] <= port_o[0] + port_s[0]
+                            and port_o[1] <= p[1] <= port_o[1] + port_s[1]
+                            and port_o[2] <= p[2] <= port_o[2] + port_s[2]):
+                        in_port[k_i] = True
+                        assigned[k_i] = True
+                if in_port.any():
+                    port_indices = np.where(in_port)[0]
+                    port_charges = world.k_charge[firing_atoms[port_indices]]
+                    # Pick top-K by charge
+                    n_keep = min(top_k, len(port_indices))
+                    top = np.argpartition(-port_charges, n_keep - 1)[:n_keep]
+                    keep.extend(port_indices[top].tolist())
+            # Atoms outside any port: keep all (they're rare and not
+            # subject to discrimination).
+            for k_i in range(len(firing_atoms)):
+                if not assigned[k_i]:
+                    keep.append(k_i)
+            firing_atoms = firing_atoms[np.array(sorted(keep), dtype=np.int64)]
     for ai in firing_atoms:
         _emit_vibrations(world, ai)
         world.k_charge[ai] = 0.0
@@ -1571,16 +1902,35 @@ def apply_speech_loop(world, dt: float) -> int:
         f_atom = float(world.k_freq[atom_idx])
         pol_atom = bool(world.k_pol[atom_idx])
 
-        # Allocate burst_size vibrations at random positions inside the
-        # audio output port. Gracefully no-op if buffer is full.
+        # G8.1: Deposit ghosts at the freq-mapped POSITION inside the
+        # audio output port (inverse log-mapping of f_atom), not at random
+        # positions. read_from_substrate decodes audio_out atom firings via
+        # position → freq, so depositing at f_atom's position concentrates
+        # the chain's effect on the audio_out atom at that exact freq, not
+        # any audio_out atom that happens to be near a random ghost. This
+        # is the load-bearing change that lets pattern discrimination work:
+        # the input freq is conserved through the speech-loop.
+        log_norm = ((np.log(max(f_atom, cfg.audio_freq_min))
+                     - np.log(cfg.audio_freq_min))
+                    / (np.log(cfg.audio_freq_max) - np.log(cfg.audio_freq_min)))
+        log_norm = max(0.0, min(1.0, log_norm))
+        target_x = ao_origin[0] + log_norm * ao_size[0]
+
+        # Allocate burst_size vibrations at the freq-mapped X with random
+        # Y/Z inside the audio output port. Gracefully no-op if buffer is
+        # full.
         free_idx = np.where(~world.s_alive)[0]
         n_to_inject = min(burst_size, len(free_idx))
         if n_to_inject == 0:
             continue
         for k in range(n_to_inject):
             i = int(free_idx[k])
+            # Small jitter on x (within ±0.5 unit) so multiple ghosts
+            # don't collide at the exact same position
+            x_jitter = float(rng.normal(0.0, 0.5))
             world.s_pos[i] = (
-                ao_origin[0] + float(rng.random()) * ao_size[0],
+                max(ao_origin[0],
+                    min(ao_origin[0] + ao_size[0], target_x + x_jitter)),
                 ao_origin[1] + float(rng.random()) * ao_size[1],
                 ao_origin[2] + float(rng.random()) * ao_size[2],
             )
@@ -1605,8 +1955,18 @@ def tick(world, dt: float) -> None:
     decay_unstable_nodes(world, dt)
     decay_high_level_nodes(world, dt)   # NEW (R2)
     ambient_regeneration(world, dt)
+    # G15: dream-state replay seeding. Must run BEFORE neuron_dynamics so
+    # injected charge triggers firings within the same tick. No-op when
+    # cfg.dream_mode_enabled is False.
+    from world.dream import apply_dream
+    apply_dream(world, dt)
     neuron_dynamics(world, dt)
     apply_bridge_atom_propagation(world, dt)  # NEW (G6) — direct atom→atom charge through strong bridges
     apply_stdp(world)              # NEW (Plan B)
+    apply_btsp(world, dt)          # NEW (G14) — second-scale eligibility-trace plasticity
+    # G16: self-aware substrate — must run after apply_btsp so
+    # eligibility traces and firings reflect this tick's reality.
+    from world.self_aware import apply_self_aware
+    apply_self_aware(world, dt)
     apply_speech_loop(world, dt)   # NEW (Plan F)
     world.t += dt
