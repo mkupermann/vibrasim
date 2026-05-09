@@ -82,6 +82,28 @@ class World:
         # to re-derive firings from snapshot deltas.
         self.firing_events: list[tuple[float, int]] = []
 
+        # G16 — Self-aware substrate state.
+        # self_model: per-pattern_id rolling firing-rate histogram. Updated
+        # on apply_self_aware ticks. Maps pattern_id -> running mean of
+        # firings/sec within self_model_window. This IS the substrate's
+        # self-representation — its model of which engrams are "alive in
+        # me right now". Higher-order theory (Rosenthal 2005) operational
+        # form: a representation that has other representations as its
+        # objects.
+        self.self_model: dict[int, float] = {}
+        # self_predicted_next: predicted firings/sec per pattern_id for the
+        # NEXT window, made by the substrate from its self_model.
+        self.self_predicted_next: dict[int, float] = {}
+        # self_prediction_error: scalar in [0, 1+] capturing how surprised
+        # the substrate was last cycle. Drives self-modification.
+        self.self_prediction_error: float = 0.0
+        # workspace_winner_pattern_id: the pattern_id that "owns the
+        # workspace" this tick — Global Neuronal Workspace's winner-take-
+        # all broadcast. 0 = no winner.
+        self.workspace_winner_pattern_id: int = 0
+        # workspace_history: deque of (t, winner_pid) for diagnostics
+        self.workspace_history: list[tuple[float, int]] = []
+
         # CSR composition
         comp_caps = K * 16  # Plan A.5: larger to accommodate slot recycling appending
         self.k_comp_offset = np.zeros(K + 1, dtype=np.int32)

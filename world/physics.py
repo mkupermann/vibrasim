@@ -1951,5 +1951,9 @@ def tick(world, dt: float) -> None:
     apply_bridge_atom_propagation(world, dt)  # NEW (G6) — direct atom→atom charge through strong bridges
     apply_stdp(world)              # NEW (Plan B)
     apply_btsp(world, dt)          # NEW (G14) — second-scale eligibility-trace plasticity
+    # G16: self-aware substrate — must run after apply_btsp so
+    # eligibility traces and firings reflect this tick's reality.
+    from world.self_aware import apply_self_aware
+    apply_self_aware(world, dt)
     apply_speech_loop(world, dt)   # NEW (Plan F)
     world.t += dt

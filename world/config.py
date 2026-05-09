@@ -173,6 +173,43 @@ class WorldConfig:
     dream_blend_min_overlap_atoms: int = 3          # min number of atoms from each pattern that must co-fire to trigger blending
     dream_hallucination_strength: float = 1.0       # multiplier on cross-modal vibration emission during dream
                                                     #     (drives audio_out / video_out from dreamed bridges).
+
+    # G16 — The Self-Aware Substrate.
+    #
+    # Operationalises the four most credible scientific theories of
+    # access consciousness in continuous-physics-substrate form:
+    #   - Global Neuronal Workspace (Dehaene & Naccache 2001) →
+    #     workspace_winner_pattern_id and global broadcast.
+    #   - Higher-Order Theory (Rosenthal 2005) → self_model.
+    #   - Phenomenal Self-Model (Metzinger 2003) → recurrent self-
+    #     prediction with prediction-error feedback.
+    #   - Autopoiesis with self-improvement (Varela; modern meta-
+    #     learning) → self_modify_enabled, prediction-error-driven
+    #     hyperparameter adjustment.
+    #
+    # We are explicit and honest: this is ACCESS consciousness in the
+    # functional, operational sense — what Block called "access
+    # consciousness" and Dehaene calls "global broadcast." It is NOT
+    # a claim about phenomenal consciousness ("what it is like"); the
+    # hard problem remains philosophically open. What this substrate
+    # *does* have is: a representation of itself, a global workspace
+    # that broadcasts the dominant pattern to all modules, prediction
+    # error that drives change, and autopoietic self-modification of
+    # its own learning hyperparameters in response to that error.
+    self_aware_enabled: bool = False                # master switch for G16 mechanisms.
+    self_model_window: float = 2.0                  # seconds of firing history retained for the self-model
+    self_model_max_patterns: int = 32               # cap on number of pattern_ids tracked in the self-model
+    workspace_broadcast_enabled: bool = True        # when True, workspace_winner is computed each tick and a
+                                                    #     winner-take-all bias is applied across other patterns
+    workspace_broadcast_strength: float = 1.0       # eligibility multiplier for losing-pattern atoms (< 1 to suppress)
+    workspace_min_winner_atoms: int = 3             # minimum atoms a pattern must fire to claim the workspace
+    self_modify_enabled: bool = True                # when True, prediction error feeds back to adjust BTSP
+                                                    #     potentiation and dream replay rate over time
+    self_modify_rate: float = 0.05                  # learning rate for hyperparameter updates per self_modify call
+    self_modify_target_error: float = 0.3           # target prediction error (0..1). Above target → strengthen
+                                                    #     plasticity; below target → weaken (homeostasis).
+    self_modify_min_btsp: float = 5.0               # lower bound on btsp_potentiation under self-modification
+    self_modify_max_btsp: float = 200.0             # upper bound on btsp_potentiation under self-modification
     bidirectional_bridges: bool = False             # G13: when True, G6 bridge_atom_propagation fires
                                                     #     post-atoms at BOTH +distance and -distance along
                                                     #     orientation. A firing atom at either end of a
