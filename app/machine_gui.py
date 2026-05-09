@@ -28,10 +28,13 @@ from agent.loop import AgentLoop
 from agent import talk
 from agent.speak import Speaker
 from agent.youtube_feeder import YouTubeFeeder, _have_ytdlp, _have_ffmpeg
+from agent.library import SubstrateLibrary
 
 
 MEMORY_DIR = Path.home() / ".eqmod" / "memory"
 MEMORY_DIR.mkdir(parents=True, exist_ok=True)
+LIBRARY_DIR = Path.home() / ".eqmod" / "library"
+LIBRARY_DIR.mkdir(parents=True, exist_ok=True)
 
 
 # ---------- substrate lifecycle (cached across reruns) ----------------------
@@ -64,6 +67,14 @@ def _machine_singleton():
         # substrate is loaded from that file instead of being seeded
         # fresh. This is how memory persists across sessions.
         "load_from_snapshot": None,
+        # SubstrateLibrary holds N (label → World) entries built up by
+        # successive train sessions. Pattern discrimination at recall
+        # time uses the library's classifier to pick the matching
+        # substrate, not a single shared substrate. This is what makes
+        # the system work like 'The Machine': multi-pattern memory with
+        # specialised banks plus a classifier.
+        "library": SubstrateLibrary(),
+        "last_recalled_label": None,
     }
 
 
