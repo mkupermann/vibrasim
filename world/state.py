@@ -55,6 +55,13 @@ class World:
         # Plan E — reward polarity tristate (-1, 0, +1) per node
         # 0 = not from reward channel; +1 = fire_positive origin; -1 = fire_negative origin
         self.k_reward_polarity = np.zeros(K, dtype=np.int8)
+        # G14 — BTSP eligibility trace per atom. Increases on each firing,
+        # decays exponentially with cfg.btsp_tau_eligibility (default 6 sec).
+        # When a 'plateau atom' (sustained-firing atom with charge above
+        # btsp_plateau_charge_threshold) is detected, BTSP commits bridges
+        # to all atoms with non-zero eligibility — one-shot learning at
+        # the seconds time-scale (Magee 2026, Wu et al 2024).
+        self.k_eligibility = np.zeros(K, dtype=np.float64)
         # G10 — pattern_id ('memory cell') per node. 0 = ambient/unassigned.
         # When the user trains a specific pattern, world.active_pattern_id
         # is set to a positive int; new atoms + bridges formed during that
@@ -151,6 +158,7 @@ class World:
             self.k_orientation[i] = 0.0  # Plan B: clear stale direction inherited from dead predecessor
             self.k_reward_polarity[i] = 0  # Plan E: clear stale reward tag from dead predecessor
             self.k_pattern_id[i] = 0  # G10: clear stale pattern tag from dead predecessor
+            self.k_eligibility[i] = 0.0  # G14: clear stale eligibility trace
             # k_ref_count[i] is already 0 by free-list invariant
             # Ensure k_count covers this slot (it was previously allocated, so
             # k_count >= i+1 in normal operation; guard for test setups)
