@@ -4,7 +4,7 @@ A 3-dimensional simulation built from one elementary thing: a **vibration**, wit
 
 Two audiences read this codebase. This README is written for both.
 
-- If you are 12-16 years old, you can read the **plain-English** sub-section under each heading and skip the technical detail. You will still understand what the code does.
+- If you are not in research or engineering, you can read the **plain-English** sub-section under each heading and skip the technical detail. You will still understand what the code does.
 - If you are a researcher or engineer, the **technical detail** sub-sections give the references, the operational definitions, and the mechanisms.
 
 The full conceptual case sits in [`docs/CONCEPT.md`](docs/CONCEPT.md). The first long-form narrative report on what was built across phases G14-G18 is in [`docs/medium_articles/2026-05-09-substrate-night.md`](docs/medium_articles/2026-05-09-substrate-night.md).
