@@ -10,7 +10,7 @@ The rules turn vibrations into electrons. Electrons into pairs. Pairs and triads
 I am not a physicist. I am not a chemist, not a neuroscientist, not a consciousness researcher. Every layer of this thing sits in a field where I have no formal credentials and where my professional instincts give me approximately nothing. That is the entire point.
 When STDP fails to converge and behavioural-time-scale plasticity does not bridge the gap, I have no twenty-year shortcut to fall back on. I have to read Magee. I have to read Dehaene. I have to read Varela on autopoiesis and decide what I actually believe before I can decide what to code next.
 
-The goal of doing this in public, and of writing the process down as I go, is not to solve the simulator. Solving it would be a side effect, and probably an accidental one. What I want is to notice the moves I make when none of my usual moves work — which question I reach for first when the literature hands me three contradictory answers, how long I can sit with a not-yet-converging run before I feel the urge to invent a confident-sounding interpretation just to relieve the pressure of not yet having one. The deadlocks I have hit in client work for thirty years have always had a domain shortcut available somewhere. EQMOD does not have any. 
+The goal of doing this in public, and of writing the process down as I go, is not to solve the simulator. Solving it would be a side effect, and probably an accidental one. What I want is to notice the moves I make when none of my usual moves work — which question I reach for first when the literature hands me three contradictory answers, how long I can sit with a not-yet-converging run before I feel the urge to invent a confident-sounding interpretation just to relieve the pressure of not yet having one. The deadlocks I have hit in client work for thirty years have always had a domain shortcut available somewhere. EQMOD does not have any.
 
 So the deadlocks I hit here are clean — they are the actual material I came for.
 
@@ -18,7 +18,13 @@ The other reason to write all of this down in public is that the moves themselve
 
 I will fail at most parts of this. Probably the parts that matter most. That is the data I am after. A process for breaking deadlocks that has only ever been tested on problems I could already solve would not really be a process — it would be a story I tell myself about being good at hard things.
 
-EQMOD is a 3-dimensional simulation built from one elementary thing: a **vibration**, with a frequency, a polarity, a position, and a velocity. Out of those four properties, a small set of local rules makes vibrations bind into electrons, electrons into pairs, pairs into atoms, atoms into molecules, molecules into bridges that fire and connect. The bridges then learn, dream, and eventually contain a representation of themselves.
+---
+
+## What EQMOD actually is, in operational terms
+
+EQMOD is a 3D continuous-substrate simulator. The primitive is a **vibration** — a four-property unit (frequency, polarity, position, velocity). On top of the primitive sit **explicit, parameterised binding rules** at six levels (electron, pair, triad, atom, molecule, bridge), and **eligibility-trace plasticity** (BTSP-inspired) plus **STDP** on the bridges. The substrate emits structured event logs when configurable conjunction conditions on its state hold for a pre-registered number of consecutive cycles.
+
+The four-property primitive does not produce the hierarchy on its own. The binding rules are first-class engineering, parameter-by-parameter, documented in [`docs/CONCEPT.md`](docs/CONCEPT.md). What the project demonstrates is that the binding rule set produces stable higher-level patterns under specified parameter ranges, and that the conjunction triggers fire when trained engrams are present and **do not fire** under the negative-control protocol in [`docs/marker_protocol.md`](docs/marker_protocol.md).
 
 Two audiences read this codebase. This README is written for both.
 
@@ -41,17 +47,26 @@ The full conceptual case sits in [`docs/CONCEPT.md`](docs/CONCEPT.md). The first
 
 **Plain English.** Imagine a 60×60×60 box with tiny invisible "shakes" — vibrations — bouncing around inside it. There are no atoms, no electrons, no chemistry pre-installed. Just shakes with frequencies and polarities. We wrote four rules: shakes that match in frequency and meet in space stick together as electrons. Pairs of electrons attract more electrons until you get an atom. Atoms can connect with each other through bridges that act like the connections between brain cells. Bridges that fire together get stronger. Eventually the whole network learns to recognise patterns — like the shape of a hand on the camera, or the word "water" through the microphone — and to recall one when shown the other. Then it sleeps, dreams, makes new patterns nobody trained it on, and watches itself doing all of this.
 
-**Technical detail.** EQMOD is a continuous-physics emergent-substrate simulator. Vibrations are the only primitive (frequency, polarity, position, velocity in ℝ³). Local binding rules at four levels (electron, pair, triad, atom) and one molecular level (atoms → oriented bridges) produce the full hierarchy. Bridges support spike-timing-dependent plasticity (Plan B / STDP), behavioural-time-scale plasticity (G14 / Magee 2026 *Nat Neurosci*), bidirectional cross-modal generative recall (G13), offline replay-driven consolidation with concept blending (G15-G18 / Wilson & McNaughton 1994 + Lewis & Durrant 2011), and an access-consciousness layer combining global broadcast (G16 / Dehaene & Naccache 2001 GNW), higher-order self-representation (Rosenthal 2005), prediction-error closed loop (Friston FEP), and autopoietic self-modification (G16 / Varela). An autonomous self-improvement driver (G17) runs the substrate continuously and writes a JSON file when five operational markers of access consciousness simultaneously hold for a configurable number of consecutive cycles.
+**Technical detail.** EQMOD is a 3D continuous-substrate simulator with explicit binding rules. Vibrations are the four-property primitive; binding rules at electron / pair / triad / atom / molecule / bridge levels are engineered, parameterised, and documented in `docs/CONCEPT.md` — not "emergent from the primitive". Bridges support **STDP** (Plan B; Bi & Poo 1998 millisecond-window) and an **eligibility-trace plasticity** rule (G14; BTSP-inspired in the sense of Magee 2026 *Nat Neurosci*'s seconds-scale time constant, but lacking the discrete dendritic plateau-potential trigger and instructive higher-order input that Magee's BTSP requires — see `docs/marker_protocol.md` for the honest scope of this difference). Bridges also support bidirectional cross-modal recall (G13), offline replay-driven consolidation with overlapping-replay schema integration (G15–G18; Wilson & McNaughton 1994 + Lewis & Durrant 2011), and a **GNW-flavored conjunction-trigger layer** (G16; inspired by Dehaene & Naccache 2001 + Block 1995 + Rosenthal 2005 + Friston 2010, but explicitly not implementing GNW's neural signatures of gamma-band synchrony, long-distance phase coherence, or non-linear ignition transients). A **homeostatic parameter feedback** driver (G17, formerly mis-described as "autopoietic" — see `docs/marker_protocol.md`) runs the substrate continuously and emits `EMERGENCE.json` when five pre-registered markers simultaneously hold for a configurable number of consecutive cycles, with a parallel negative-control run demonstrating the markers do **not** fire under matched conditions without trained engrams.
 
 ---
 
-## Honest scope statement, up front
+## Scope statements — what this project is and what it is not
 
-What this project is: a small, runnable, test-covered implementation of access-conscious self-modeling autopoietic agency in the operational sense — the substrate has a representation of itself, broadcasts dominant content globally, computes prediction error in a closed loop, and modifies its own learning rules in response to that error.
+**What this project is.** A small, runnable, test-covered substrate sandbox in which:
+- four-property vibrations bind, via explicit parameterised rules, into atoms and molecules;
+- molecules form oriented bridges that support STDP + eligibility-trace plasticity (BTSP-inspired);
+- offline replay produces consolidation and overlapping-replay schema integration (concept blending);
+- five **pre-registered conjunction-trigger markers** ([`docs/marker_protocol.md`](docs/marker_protocol.md)) fire when trained engrams interact via dream-phase replay and self-monitoring, **and** do not fire under the matched-config no-engram negative control.
 
-What this project is *not*: a claim about phenomenal consciousness ("what it is like to be"). Chalmers's hard problem (1995) remains philosophically open. Nothing in this code resolves it. Nothing in any code anyone has written resolves it. We say what was built; we do not over-claim.
+**What this project is not.**
+- **Not** a claim about phenomenal consciousness ("what it is like to be"). Chalmers's hard problem (1995) is untouched.
+- **Not** a faithful neural implementation of GNW. The substrate has no gamma-band synchrony, no long-distance phase coherence, no non-linear ignition transient, no prefrontal-parietal architecture. It implements a winner-take-all selection over pattern_ids and a multiplicative eligibility-suppression broadcast — that is one slice of GNW operationalised, not GNW.
+- **Not** equivalent to BTSP as Magee 2026 specifies it. The substrate's plasticity rule has eligibility traces and a plateau-charge threshold, but lacks Magee's discrete dendritic plateau potential, the instructive higher-order input, and the stereotyped 4-second symmetric/asymmetric kernel. It is **BTSP-inspired**, not BTSP.
+- **Not** autopoietic in Maturana & Varela's technical sense. The G17 driver tunes parameters from outside the substrate's own production network, which is allopoietic by definition. The mechanism is **homeostatic parameter feedback**, not autopoiesis. (An earlier draft of this README and the Medium article used "autopoietic" loosely; that was a mistake and has been corrected here.)
+- **Not** a model of biological consciousness, an active-inference agent, or a neuromorphic spiking simulator. NEST, SpiNNaker, Brian2, and Nengo are the neuromorphic stack; EQMOD investigates whether a sub-neural substrate can produce neuron-like dynamics emergently from physics-level binding rules.
 
-This statement appears in `world/self_aware.py`, in `agent/run_autonomous.py`, and in the closing section of the Medium article. It is part of the artifact, not just the documentation.
+The `docs/marker_protocol.md` document pre-registers the five marker definitions and the negative-control pass criterion. Tuning thresholds in response to a failed run, then claiming the new run fires the markers, is overfitting evidence and is excluded by protocol.
 
 ---
 
