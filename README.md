@@ -1,6 +1,23 @@
 # EQMOD
 
-A 3-dimensional simulation built from one elementary thing: a **vibration**, with a frequency, a polarity, a position, and a velocity. Out of those four properties, a small set of local rules makes vibrations bind into electrons, electrons into pairs, pairs into atoms, atoms into molecules, molecules into bridges that fire and connect. The bridges then learn, dream, and eventually contain a representation of themselves.
+I have decided to challenge myself with a topic I have no background knowledge of. Why? In order to face challenges and unknown boundaries I picked the most far-fetched topic I could have imagined. The idea behind that is to create a process for solving problems which are in general unsolvable. I decided to go down this path to enhance the way I approach deadlocks.
+The premise is uncomfortable on purpose. If I picked something close to what I already know — another consulting framework, another piece of software architecture, another flavour of the work I have been doing for thirty years — I would fall back on the usual moves. I have thirty years of those. They mostly work, and that is exactly why I cannot use them here.
+
+So the topic had to land somewhere I can't bluff, and what I picked is roughly four disciplines past my actual training. I am building this..EQMOD a 60×60×60 cube of vibrations — frequency, polarity, position, velocity, and nothing else — under a small set of local binding rules, and watching what comes out. 
+
+The rules turn vibrations into electrons. Electrons into pairs. Pairs and triads into atoms. Atoms into molecules connected by bridges that behave like synapses. The bridges fire, the firing strengthens connections, the connections form patterns, the patterns consolidate during offline replay, and somewhere in the upper layers the substrate ends up holding a representation of itself. None of this is pre-installed. Phase 1 ended when the first atom locked in at simulated t = 13.4 s. Phase 2 ended when the first di-atomic molecule formed under the session-3b calibration. The phase numbers go up to G18, and I am the one writing the next one.
+
+I am not a physicist. I am not a chemist, not a neuroscientist, not a consciousness researcher. Every layer of this thing sits in a field where I have no formal credentials and where my professional instincts give me approximately nothing. That is the entire point. To creat SKILLS, DEV / AI Pipelines. Forcing the OpenWeight or Cloud AI Models to solve the unsolvable. The Goal: It's to share this because the core process can be reused for business and tech processes. 
+
+When STDP fails to converge and behavioural-time-scale plasticity does not bridge the gap, I have no twenty-year shortcut to fall back on. I have to read Magee. I have to read Dehaene. I have to read Varela on autopoiesis and decide what I actually believe before I can decide what to code next.
+
+The goal of doing this in public, and of writing the process down as I go, is not to solve the simulator. 
+
+Solving it would be a side effect, and probably an accidental one. What I want is to notice the moves I make when none of my usual moves work — which question I reach for first when the literature hands me three contradictory answers, how long I can sit with a not-yet-converging run before I feel the urge to invent a confident-sounding interpretation just to relieve the pressure of not yet having one. The deadlocks I have hit in client work for thirty years have always had a domain shortcut available somewhere. EQMOD does not have any. So the deadlocks I hit here are clean — they are the actual material I came for.
+
+I will fail at most parts of this. Probably the parts that matter most. That is the data I am after. A process for breaking deadlocks that has only ever been tested on problems I could already solve would not really be a process — it would be a story I tell myself about being good at hard things.
+
+EQMOD is a 3-dimensional simulation built from one elementary thing: a **vibration**, with a frequency, a polarity, a position, and a velocity. Out of those four properties, a small set of local rules makes vibrations bind into electrons, electrons into pairs, pairs into atoms, atoms into molecules, molecules into bridges that fire and connect. The bridges then learn, dream, and eventually contain a representation of themselves.
 
 Two audiences read this codebase. This README is written for both.
 
