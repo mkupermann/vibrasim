@@ -680,14 +680,21 @@ def apply_bridge_atom_propagation(world, dt: float) -> int:
             # Sign convention: orientation points from pre to post. We want
             # post-atom B that is "ahead" of M in direction o_unit. Sample at
             # d = r_bridge, 2 * r_bridge, ..., n_samples * r_bridge.
+            # G13 bidirectional: also sample at -distance so a firing atom
+            # at either end of the bridge propagates to atoms at the other
+            # end. This is the cross-modal generative recall mechanism —
+            # audio→video routing reuses the visual→audio bridges formed
+            # during training.
             post_mask = np.zeros(atom_pos.shape[0], dtype=np.bool_)
+            sign_signs = (1.0, -1.0) if cfg.bidirectional_bridges else (1.0,)
             for k in range(n_samples):
-                distance = (k + 1) * r_bridge
-                post_centre = M + distance * o_unit
-                d_aP = atom_pos - post_centre
-                d_aP -= box * np.round(d_aP / box)
-                d_aP_sq = (d_aP * d_aP).sum(axis=1)
-                post_mask |= d_aP_sq <= r_bridge_sq
+                for sign in sign_signs:
+                    distance = sign * (k + 1) * r_bridge
+                    post_centre = M + distance * o_unit
+                    d_aP = atom_pos - post_centre
+                    d_aP -= box * np.round(d_aP / box)
+                    d_aP_sq = (d_aP * d_aP).sum(axis=1)
+                    post_mask |= d_aP_sq <= r_bridge_sq
 
             # Don't propagate back to the firing atom itself
             if atom_idx in atom_indices:

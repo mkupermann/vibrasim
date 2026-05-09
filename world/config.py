@@ -130,6 +130,17 @@ class WorldConfig:
     sparse_firing_top_k: int = 3                    # G11: how many atoms per port can fire per tick under
                                                     #     sparse-firing. Lower = sparser representation,
                                                     #     stronger discrimination, weaker absolute output.
+    bidirectional_bridges: bool = False             # G13: when True, G6 bridge_atom_propagation fires
+                                                    #     post-atoms at BOTH +distance and -distance along
+                                                    #     orientation. A firing atom at either end of a
+                                                    #     bridge propagates to the other end. Enables cross-
+                                                    #     modal generative recall: audio in → video out
+                                                    #     traverses the same bridges that visual in → audio
+                                                    #     out used during training.
+                                                    #     This is the novelty over Hopfield (which uses
+                                                    #     symmetric weights but not oriented physical
+                                                    #     bridges in 3D space) and Sayama Swarm Chemistry
+                                                    #     (categorical labels, no plasticity).
     firing_eligibility_gate: bool = False           # G12: when True AND world.active_pattern_id != 0,
                                                     #     atoms with mismatched non-zero pattern_id are
                                                     #     PREVENTED from firing (regardless of charge).
