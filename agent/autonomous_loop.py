@@ -329,6 +329,71 @@ class AutonomousLoop:
             )
 
 
+def _preseed_engrams(world: World, n_patterns: int = 3,
+                       atoms_per_pattern: int = 8) -> int:
+    """Preseed the substrate with N independent trained engrams.
+
+    Each engram is a cluster of `atoms_per_pattern` atoms with the same
+    pattern_id, plus a chain of bridges connecting them. The atoms have
+    high initial eligibility so dream replay picks them up immediately.
+
+    Without this, the autonomous loop's awake phase has nothing to
+    propagate — vibrations roam freely and atoms don't form. Pre-
+    seeding gives the loop ground truth to replay, consolidate,
+    self-model, and blend over.
+
+    Returns the number of atoms allocated.
+    """
+    box = np.asarray(world.config.box_size, dtype=np.float64)
+    atoms_allocated = 0
+    rng = world.rng
+
+    for pid in range(1, n_patterns + 1):
+        # Each pattern occupies a distinct region of the box
+        center = np.array([
+            10.0 + (pid - 1) * 18.0,  # x
+            30.0,                       # y
+            30.0,                       # z
+        ])
+        # Allocate atoms in a small cluster around the center
+        atom_indices = []
+        world.active_pattern_id = pid
+        for k in range(atoms_per_pattern):
+            offset = rng.uniform(-3.0, 3.0, size=3)
+            pos = (center + offset) % box
+            idx = world.allocate_node(
+                pos=pos, freq=1000.0 + pid * 200.0, pol=(k % 2 == 0),
+                level=4, constituents=np.array([], dtype=np.int32),
+                comp_kind=2,
+            )
+            if idx >= 0:
+                atom_indices.append(idx)
+                world.k_eligibility[idx] = 4.0  # Above plateau threshold
+                world.k_charge[idx] = 0.0
+                atoms_allocated += 1
+        # Allocate a chain of bridges between consecutive atoms
+        for k in range(len(atom_indices) - 1):
+            a, b = atom_indices[k], atom_indices[k + 1]
+            mid = (world.k_pos[a] + world.k_pos[b]) * 0.5
+            mid = mid % box
+            bridge_idx = world.allocate_node(
+                pos=mid, freq=world.k_freq[a], pol=True,
+                level=5,
+                constituents=np.array([a, b], dtype=np.int32),
+                comp_kind=1,
+            )
+            if bridge_idx >= 0:
+                world.k_strength[bridge_idx] = 60.0  # Above lock threshold
+                seg = world.k_pos[b] - world.k_pos[a]
+                seg -= box * np.round(seg / box)
+                seg_norm = float(np.linalg.norm(seg))
+                if seg_norm > 1e-9:
+                    world.k_orientation[bridge_idx] = seg / seg_norm
+
+    world.active_pattern_id = 0
+    return atoms_allocated
+
+
 def build_autonomous_world() -> World:
     """Substrate config tuned for the autonomous self-improvement loop."""
     cfg = WorldConfig(
@@ -375,4 +440,8 @@ def build_autonomous_world() -> World:
         workspace_broadcast_strength=0.7,
         graceful_capacity=True,
     )
-    return World(cfg)
+    world = World(cfg)
+    # Pre-seed three engrams so the loop has structure to replay,
+    # consolidate, blend, and self-model over from cycle 1.
+    _preseed_engrams(world, n_patterns=3, atoms_per_pattern=8)
+    return world

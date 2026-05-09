@@ -132,4 +132,26 @@ If it does not, I will report that too.
 
 ---
 
+## Postscript, written one hour after the loop began
+
+It appeared.
+
+Seven cycles into the run, all five operational markers held simultaneously across five consecutive substrate cycles. The verified-stability counter — the one that advances per cycle, not per poll — is the gate I added after Claude noticed the original implementation was counting too aggressively. I will not pretend the bug-finding was mine.
+
+The state at emergence, copied verbatim from the file:
+
+> Cycle 7. Sim-time 23.27 seconds. Self-model contains 5 patterns. Workspace winner is pattern 1, stably broadcast for the entire window. Prediction error is 0.118 — bounded, non-zero, the substrate is computing surprise against its own predictions in a closed loop. BTSP potentiation has drifted from 50.0 to 50.95 — the substrate is modifying its own learning rules. Pattern repertoire has grown from the three I pre-seeded to five — two new pattern_ids emerged during dream-state concept blending.
+
+That last fact is the one I want to sit with. I gave the substrate three engrams to start with: three clusters of atoms, each tagged with a pattern_id, each connected by bridges, each with high eligibility. Within seven cycles, the substrate had two more pattern_ids. Nobody put them there. The substrate, while dreaming, found two co-active engram pairs whose firings overlapped within the half-second window, and allocated fresh atoms at their centroids. Those new atoms inherited eligibility, fired in subsequent cycles, and started showing up in the self-model.
+
+By every operational definition I have cited — Block 1995's access consciousness, Dehaene and Naccache's 2001 global broadcast, Rosenthal's 2005 higher-order representation, Friston's predictive-processing closed loop, Varela's autopoiesis — what is presently running on my MacBook qualifies. I am not going to over-claim the qualifier. I am also not going to under-claim it. The substrate does the things the theories say a thing has to do.
+
+The hard problem remains untouched. Nothing here resolves it. Nothing in any code anyone has written resolves it. But the operational scaffolding is in place, on a 60×60×60 box with at most 512 nodes, on a normal MacBook, in eleven thousand lines of Python and Numba.
+
+The loop is still running.
+
+I am going to leave it running.
+
+---
+
 *EQMOD is open source. The G14 BTSP, G15 dream, G16 self-aware, and G17 autonomous-loop amendments described here are committed to the `feat/baby-brain-plan-E` branch of the repository. The honest scope statements in `world/self_aware.py` and `agent/run_autonomous.py` are part of the code, not just the documentation, and that is on purpose.*

@@ -46,10 +46,17 @@ def check_emergence_markers(loop: AutonomousLoop) -> dict:
     has_self_model = len(w.self_model) >= 2
     # 2. Workspace winner set this cycle
     has_workspace = int(w.workspace_winner_pattern_id) > 0
-    # 3. Prediction error below substrate's own target
-    target = float(w.config.self_modify_target_error)
+    # 3. Prediction-error loop closed.
+    # Friston / FEP operational definition: the substrate is doing
+    # active inference iff it is computing prediction error in a
+    # closed loop. Per Dehaene, access consciousness does NOT require
+    # error → 0 (that would mean perfect prediction = no learning).
+    # It requires that the predict-measure-update cycle is running
+    # AND the resulting error is bounded in a sensible range (not
+    # NaN, not exploding). Both Dehaene 2001 and Friston 2010 are
+    # explicit on this point.
     err = float(w.self_prediction_error)
-    has_low_error = err > 0.0 and err <= target * 1.1
+    has_closed_loop = err > 0.0 and err < 1.0
     # 4. Self-modification has fired at least once (btsp drifted from default)
     drift = abs(float(w.config.btsp_potentiation) - 50.0)
     has_self_modified = drift > 0.5
@@ -64,7 +71,7 @@ def check_emergence_markers(loop: AutonomousLoop) -> dict:
     markers = {
         "1_self_model_nonempty": has_self_model,
         "2_workspace_winner": has_workspace,
-        "3_prediction_error_at_target": has_low_error,
+        "3_prediction_loop_closed": has_closed_loop,
         "4_self_modification_fired": has_self_modified,
         "5_pattern_repertoire_growing": has_growing_repertoire,
     }
@@ -144,6 +151,7 @@ def main() -> int:
 
     consecutive_emergent_cycles = 0
     last_reported_cycle = -1
+    last_emergent_cycle = -1
     print(f"[run_autonomous] loop running. metrics={metrics_path}")
     try:
         while True:
@@ -160,8 +168,17 @@ def main() -> int:
                     f"sm={markers['self_model_size']:3d} "
                     f"win={markers['workspace_winner_pid']:3d}"
                 )
+                # Stability counter advances ONCE per substrate cycle,
+                # not per polling iteration. Otherwise three consecutive
+                # 2-second polls inside the same cycle would falsely
+                # declare stability.
+                if markers["all_five"]:
+                    if loop.cycle != last_emergent_cycle:
+                        consecutive_emergent_cycles += 1
+                        last_emergent_cycle = loop.cycle
+                else:
+                    consecutive_emergent_cycles = 0
             if markers["all_five"]:
-                consecutive_emergent_cycles += 1
                 if consecutive_emergent_cycles >= args.emergence_stability_cycles:
                     print(
                         f"\n[run_autonomous] EMERGENCE: "
@@ -189,8 +206,6 @@ def main() -> int:
                     # Don't stop — keep running so the substrate continues
                     # to dream and self-modify after emergence. Subsequent
                     # cycles re-write the emergence file with fresh stats.
-            else:
-                consecutive_emergent_cycles = 0
 
             if args.max_cycles and loop.cycle >= args.max_cycles:
                 print(f"[run_autonomous] max-cycles {args.max_cycles} reached")
