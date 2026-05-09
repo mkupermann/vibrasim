@@ -1942,6 +1942,11 @@ def tick(world, dt: float) -> None:
     decay_unstable_nodes(world, dt)
     decay_high_level_nodes(world, dt)   # NEW (R2)
     ambient_regeneration(world, dt)
+    # G15: dream-state replay seeding. Must run BEFORE neuron_dynamics so
+    # injected charge triggers firings within the same tick. No-op when
+    # cfg.dream_mode_enabled is False.
+    from world.dream import apply_dream
+    apply_dream(world, dt)
     neuron_dynamics(world, dt)
     apply_bridge_atom_propagation(world, dt)  # NEW (G6) — direct atom→atom charge through strong bridges
     apply_stdp(world)              # NEW (Plan B)

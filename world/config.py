@@ -155,6 +155,24 @@ class WorldConfig:
                                                     #     effective theta_fire lowered by this factor times
                                                     #     their eligibility — Josselyn 2024 'allocation by
                                                     #     excitability bias' in continuous-physics form.
+
+    # G15 — The Dreaming Substrate. Offline replay + concept blending +
+    # cross-modal hallucination. When dream_mode is active, external
+    # inputs are gated off and the substrate self-replays previously-
+    # active engrams. BTSP runs during replay → memory consolidation
+    # (Wilson & McNaughton 1994 hippocampal replay; Buzsáki 2015 SWR
+    # consolidation). When two engrams co-activate during the same
+    # replay window, a 'blended' atom may be allocated at their
+    # intersection — concept formation by superposition.
+    dream_mode_enabled: bool = False                # master switch — substrate is in dream/sleep state.
+    dream_replay_burst_size: int = 8                # vibrations injected per replay seed firing
+    dream_replay_seeds_per_tick: int = 2            # number of high-eligibility seed atoms re-fired per tick
+    dream_replay_seed_charge: float = 6.0           # charge directly deposited into seed atoms (above theta_fire)
+    dream_blend_enabled: bool = True                # when True, co-active distinct pattern_ids may form blended atoms
+    dream_blend_co_activation_window: float = 0.5   # seconds — two pattern_ids active within this window count as co-active
+    dream_blend_min_overlap_atoms: int = 3          # min number of atoms from each pattern that must co-fire to trigger blending
+    dream_hallucination_strength: float = 1.0       # multiplier on cross-modal vibration emission during dream
+                                                    #     (drives audio_out / video_out from dreamed bridges).
     bidirectional_bridges: bool = False             # G13: when True, G6 bridge_atom_propagation fires
                                                     #     post-atoms at BOTH +distance and -distance along
                                                     #     orientation. A firing atom at either end of a
