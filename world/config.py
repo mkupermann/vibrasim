@@ -93,6 +93,158 @@ class WorldConfig:
                                                     #     RuntimeError on n_nodes_max exhaustion. Used by the
                                                     #     real-time talk app so binding cascades don't crash
                                                     #     the realtime thread when capacity fills.
+    lateral_inhibition_enabled: bool = False        # G8: when an STDP causal-pair LTP fires on a bridge,
+                                                    #     apply LTD to all other level-5+ molecules within
+                                                    #     `lateral_inhibition_radius` of the LTP'd bridge.
+                                                    #     Creates competition between bridges so different
+                                                    #     patterns settle on different bridge subsets.
+    lateral_inhibition_radius: float = 6.0          # spatial radius for the LTD scan around a strengthening
+                                                    #     bridge. Should be ≥ r_bridge × 1.5 so neighbours
+                                                    #     in adjacent tubes are reached but distant bridges
+                                                    #     are not.
+    lateral_inhibition_strength: float = 1.0        # multiplier on delta_LTD applied to inhibited bridges.
+                                                    #     1.0 = same magnitude as anti-causal LTD; higher
+                                                    #     values make competition more aggressive.
+    stdp_alignment_strict_threshold: float = 0.0    # G8.2: STDP LTP only fires on a bridge if the
+                                                    #     alignment between its existing orientation and the
+                                                    #     causal pair's direction is ≥ this threshold.
+                                                    #     Default 0.0 = legacy behaviour (any non-negative).
+                                                    #     Set higher (e.g. 0.95) to enforce that only bridges
+                                                    #     whose orientation TIGHTLY matches the new pair's
+                                                    #     direction get re-strengthened — bridges committed
+                                                    #     to a different pattern get LTD instead.
+    bridge_atom_propagation_winner_take_all: bool = False  # G9.5: when True, apply_bridge_atom_propagation
+                                                            #     fires only the SINGLE strongest bridge near
+                                                            #     each pre-atom (rather than every bridge in
+                                                            #     radius). Combined with bridge_lock_threshold,
+                                                            #     this enforces pattern-specific propagation:
+                                                            #     each visual fires only its own committed
+                                                            #     bridge, not every nearby bridge.
+    sparse_firing_enabled: bool = False             # G11: per-tick winner-take-all firing. Instead of every
+                                                    #     atom whose charge ≥ theta_fire firing, only the
+                                                    #     top-K atoms per port fire (per pre-defined port
+                                                    #     volumes from agent I/O config). This forces sparse
+                                                    #     pattern-specific activation: different visuals fire
+                                                    #     DIFFERENT specific atoms, so different bridges and
+                                                    #     thus different audio output.
+    sparse_firing_top_k: int = 3                    # G11: how many atoms per port can fire per tick under
+                                                    #     sparse-firing. Lower = sparser representation,
+                                                    #     stronger discrimination, weaker absolute output.
+    btsp_enabled: bool = False                      # G14: Behavioral Time Scale Plasticity. Eligibility-
+                                                    #     trace based one-shot bidirectional bridge formation.
+                                                    #     Replaces / complements millisecond-scale Hebbian
+                                                    #     STDP with seconds-scale plasticity gated by
+                                                    #     post-synaptic plateau events. Magee 2026 (Nat
+                                                    #     Neurosci) BTSP biology + this substrate's emergent-
+                                                    #     atom continuous physics.
+    btsp_tau_eligibility: float = 6.0               # eligibility-trace time constant (seconds). Atoms
+                                                    #     that fired within this window remain 'eligible'
+                                                    #     for BTSP potentiation. 6 sec matches Magee's
+                                                    #     experimental measurements in CA1.
+    btsp_plateau_charge_threshold: float = 5.0      # an atom whose accumulated charge crosses this
+                                                    #     threshold counts as a plateau event — triggers
+                                                    #     BTSP across all eligible partners.
+    btsp_potentiation: float = 50.0                 # strength delta per BTSP event. Strong enough that
+                                                    #     a single plateau event crosses bridge_lock_threshold
+                                                    #     in one shot.
+    btsp_radius: float = 30.0                       # spatial radius around the plateau atom within which
+                                                    #     eligible atoms get BTSP bridges. Wider than
+                                                    #     standard r_bridge so cross-modal partners (in
+                                                    #     different ports) are reachable.
+    btsp_excitability_bias: float = 0.0             # when > 0, atoms with non-zero eligibility have their
+                                                    #     effective theta_fire lowered by this factor times
+                                                    #     their eligibility — Josselyn 2024 'allocation by
+                                                    #     excitability bias' in continuous-physics form.
+
+    # G15 — The Dreaming Substrate. Offline replay + concept blending +
+    # cross-modal hallucination. When dream_mode is active, external
+    # inputs are gated off and the substrate self-replays previously-
+    # active engrams. BTSP runs during replay → memory consolidation
+    # (Wilson & McNaughton 1994 hippocampal replay; Buzsáki 2015 SWR
+    # consolidation). When two engrams co-activate during the same
+    # replay window, a 'blended' atom may be allocated at their
+    # intersection — concept formation by superposition.
+    dream_mode_enabled: bool = False                # master switch — substrate is in dream/sleep state.
+    dream_replay_burst_size: int = 8                # vibrations injected per replay seed firing
+    dream_replay_seeds_per_tick: int = 2            # number of high-eligibility seed atoms re-fired per tick
+    dream_replay_seed_charge: float = 6.0           # charge directly deposited into seed atoms (above theta_fire)
+    dream_blend_enabled: bool = True                # when True, co-active distinct pattern_ids may form blended atoms
+    dream_blend_co_activation_window: float = 0.5   # seconds — two pattern_ids active within this window count as co-active
+    dream_blend_min_overlap_atoms: int = 3          # min number of atoms from each pattern that must co-fire to trigger blending
+    dream_hallucination_strength: float = 1.0       # multiplier on cross-modal vibration emission during dream
+                                                    #     (drives audio_out / video_out from dreamed bridges).
+
+    # G18.2 — two-phase dream (NREM/REM analogue). When > 0, every Nth
+    # dream tick blocks concept blending so existing patterns get a
+    # chance to consolidate before more are added. NREM:REM in real
+    # mammals is roughly 4:1 of total sleep time. We default to 4
+    # consolidation ticks per blending tick.
+    dream_consolidation_to_blend_ratio: int = 4
+
+    # G16 — The Self-Aware Substrate.
+    #
+    # Operationalises the four most credible scientific theories of
+    # access consciousness in continuous-physics-substrate form:
+    #   - Global Neuronal Workspace (Dehaene & Naccache 2001) →
+    #     workspace_winner_pattern_id and global broadcast.
+    #   - Higher-Order Theory (Rosenthal 2005) → self_model.
+    #   - Phenomenal Self-Model (Metzinger 2003) → recurrent self-
+    #     prediction with prediction-error feedback.
+    #   - Autopoiesis with self-improvement (Varela; modern meta-
+    #     learning) → self_modify_enabled, prediction-error-driven
+    #     hyperparameter adjustment.
+    #
+    # We are explicit and honest: this is ACCESS consciousness in the
+    # functional, operational sense — what Block called "access
+    # consciousness" and Dehaene calls "global broadcast." It is NOT
+    # a claim about phenomenal consciousness ("what it is like"); the
+    # hard problem remains philosophically open. What this substrate
+    # *does* have is: a representation of itself, a global workspace
+    # that broadcasts the dominant pattern to all modules, prediction
+    # error that drives change, and autopoietic self-modification of
+    # its own learning hyperparameters in response to that error.
+    self_aware_enabled: bool = False                # master switch for G16 mechanisms.
+    self_model_window: float = 2.0                  # seconds of firing history retained for the self-model
+    self_model_max_patterns: int = 32               # cap on number of pattern_ids tracked in the self-model
+    workspace_broadcast_enabled: bool = True        # when True, workspace_winner is computed each tick and a
+                                                    #     winner-take-all bias is applied across other patterns
+    workspace_broadcast_strength: float = 1.0       # eligibility multiplier for losing-pattern atoms (< 1 to suppress)
+    workspace_min_winner_atoms: int = 3             # minimum atoms a pattern must fire to claim the workspace
+    self_modify_enabled: bool = True                # when True, prediction error feeds back to adjust BTSP
+                                                    #     potentiation and dream replay rate over time
+    self_modify_rate: float = 0.05                  # learning rate for hyperparameter updates per self_modify call
+    self_modify_target_error: float = 0.3           # target prediction error (0..1). Above target → strengthen
+                                                    #     plasticity; below target → weaken (homeostasis).
+    self_modify_min_btsp: float = 5.0               # lower bound on btsp_potentiation under self-modification
+    self_modify_max_btsp: float = 200.0             # upper bound on btsp_potentiation under self-modification
+    bidirectional_bridges: bool = False             # G13: when True, G6 bridge_atom_propagation fires
+                                                    #     post-atoms at BOTH +distance and -distance along
+                                                    #     orientation. A firing atom at either end of a
+                                                    #     bridge propagates to the other end. Enables cross-
+                                                    #     modal generative recall: audio in → video out
+                                                    #     traverses the same bridges that visual in → audio
+                                                    #     out used during training.
+                                                    #     This is the novelty over Hopfield (which uses
+                                                    #     symmetric weights but not oriented physical
+                                                    #     bridges in 3D space) and Sayama Swarm Chemistry
+                                                    #     (categorical labels, no plasticity).
+    firing_eligibility_gate: bool = False           # G12: when True AND world.active_pattern_id != 0,
+                                                    #     atoms with mismatched non-zero pattern_id are
+                                                    #     PREVENTED from firing (regardless of charge).
+                                                    #     Atoms with pattern_id=0 (ambient) or matching
+                                                    #     active_pattern_id fire normally. Use during
+                                                    #     training to prevent cross-pattern STDP causal
+                                                    #     pairs from forming. Reset active_pattern_id=0
+                                                    #     during test to allow any pattern to recall.
+    bridge_lock_threshold: float = 0.0              # G9: once a level-5+ molecule's strength crosses this
+                                                    #     threshold, it becomes 'locked' — apply_stdp skips
+                                                    #     it (no LTP / LTD / orientation update) and lateral
+                                                    #     inhibition exempts it. Locked bridges form the
+                                                    #     substrate's persistent multi-pattern memory: once a
+                                                    #     pattern's bridges commit, subsequent training cannot
+                                                    #     overwrite them, so different (visual, audio) pairs
+                                                    #     coexist on disjoint bridge subsets.
+                                                    #     Default 0.0 = disabled (legacy behaviour).
 
     # Plan C — audio I/O
     audio_io_enabled: bool = False

@@ -75,35 +75,61 @@ def _seed_port_atoms(w: World, port_origin, port_size, frequencies,
 
 
 def _seed_bridges_video_to_audio_in(w: World, n_bridge: int = 16) -> None:
-    """Seed bridge molecules close to video atoms with orientation toward audio_in.
-    Same pattern as test_M4_minimal_smoke."""
+    """Seed bridge molecules spread across XY of the video port,
+    targeting the FREQ-MAPPED region of audio_input port that corresponds
+    to the video atom's spatial half:
+
+    - Upper-left half of video (X<7.5) → audio1 freq region (audio_in
+      X 6.8..10, where 500/1000/1500 Hz atoms sit)
+    - Lower-right half of video (X>=7.5) → audio2 freq region (audio_in
+      X 12..14.4, where 3000/4500/6000 Hz atoms sit)
+
+    Earlier seeding aimed (fx, fy) of video at (fx, fy) of audio_in,
+    which mapped upper-left video → very-low-freq audio (~80 Hz) — far
+    below the trained audio1 500 Hz target. The substrate's chain output
+    was therefore not selective. This freq-aware targeting puts each
+    bridge's orientation at the right audio_in atoms.
+    """
     cfg = w.config
-    video_centre = np.array(
-        [cfg.video_input_port_origin[i] + cfg.video_input_port_size[i] / 2 for i in range(3)]
-    )
-    audio_in_centre = np.array(
-        [cfg.audio_input_port_origin[i] + cfg.audio_input_port_size[i] / 2 for i in range(3)]
-    )
+    vip_o = np.array(cfg.video_input_port_origin, dtype=np.float64)
+    vip_s = np.array(cfg.video_input_port_size, dtype=np.float64)
+    aip_o = np.array(cfg.audio_input_port_origin, dtype=np.float64)
+    aip_s = np.array(cfg.audio_input_port_size, dtype=np.float64)
+    grid_n = max(2, int(np.ceil(np.sqrt(n_bridge))))
     rng = np.random.default_rng(42)
-    for k in range(n_bridge):
-        i = w.k_count
-        if i >= cfg.n_nodes_max:
-            return
-        # t in [0, 0.15] — close to video atoms
-        t = (k / max(n_bridge, 1)) * 0.15
-        pos = video_centre * (1 - t) + audio_in_centre * t
-        pos = pos + rng.normal(0, 1.5, 3)
-        w.k_pos[i] = pos
-        w.k_freq[i] = 1000.0
-        w.k_pol[i] = bool(k % 2)
-        w.k_level[i] = 5
-        w.k_alive[i] = True
-        w.k_strength[i] = 1.0
-        seg = audio_in_centre - video_centre
-        seg_norm = float(np.linalg.norm(seg))
-        if seg_norm > 1e-9:
-            w.k_orientation[i] = seg / seg_norm
-        w.k_count = i + 1
+    placed = 0
+    for ix in range(grid_n):
+        for iy in range(grid_n):
+            if placed >= n_bridge:
+                break
+            i = w.k_count
+            if i >= cfg.n_nodes_max:
+                return
+            fx = (ix + 0.5) / grid_n
+            fy = (iy + 0.5) / grid_n
+            pos_v = np.array([
+                vip_o[0] + fx * vip_s[0],
+                vip_o[1] + fy * vip_s[1],
+                vip_o[2] + rng.uniform(0.0, 0.3) * vip_s[2],
+            ])
+            pos = pos_v + rng.normal(0, 1.0, 3)
+            target = np.array([
+                aip_o[0] + fx * aip_s[0],
+                aip_o[1] + fy * aip_s[1],
+                aip_o[2] + 0.5 * aip_s[2],
+            ])
+            seg = target - pos
+            seg_norm = float(np.linalg.norm(seg))
+            w.k_pos[i] = pos
+            w.k_freq[i] = 1000.0
+            w.k_pol[i] = bool((ix + iy) % 2)
+            w.k_level[i] = 5
+            w.k_alive[i] = True
+            w.k_strength[i] = 1.0
+            if seg_norm > 1e-9:
+                w.k_orientation[i] = seg / seg_norm
+            w.k_count = i + 1
+            placed += 1
 
 
 def _build_config() -> WorldConfig:
@@ -133,7 +159,8 @@ def _build_config() -> WorldConfig:
         # 24 bridges = 136 nodes; the cap leaves headroom for ~120 binding
         # events before the substrate is full and per-tick is bounded.
         n_vibrations_max=512,
-        n_nodes_max=256,
+        n_nodes_max=1024,        # raised so 144 bridges + 51 atoms + binding
+                                  # cascades all fit
         graceful_capacity=True,  # don't crash the realtime thread on full
         box_size=(60.0, 60.0, 60.0),
         rng_seed=42,
@@ -144,8 +171,12 @@ def _build_config() -> WorldConfig:
         # Encoder threshold: 0.05 was too tight for normal speech; 0.005 was
         # so loose K exploded under sine input. 0.02 is the middle.
         audio_amplitude_threshold=0.02,
-        # Plan A growth
-        lambda_dec_mol=0.001, r_strengthen=10.0,
+        # Plan A growth — r_strengthen=0 disables indiscriminate
+        # nearby-firing strengthening. Only STDP causal pairs (Plan B)
+        # strengthen bridges, which is necessary for pattern discrimination
+        # — without this, the last-trained pair's bridges dominate every
+        # test query regardless of which visual is shown.
+        lambda_dec_mol=0.001, r_strengthen=0.0,
         emit_band_ratios=(0.08, 1.0, 12.5),
         mol_fusion_enabled=False,
         # Phase 4: integrate-and-fire neuron dynamics
@@ -153,17 +184,70 @@ def _build_config() -> WorldConfig:
         theta_fire=1.0,                   # was 2.0 — fire on minimal input
         n_emit=8,
         r_integrate=8.0,                  # was 5.0 — wider integration radius
-        t_refractory=0.05, tau_membrane=0.3, emit_speed=60.0,
-        # Plan B + Plan E STDP
+        # emit_speed=15 — restored to the value that keeps both A+B
+        # passing reliably. Discrimination C is bounded by structural
+        # multi-path coupling that pattern-gating partially fixes.
+        t_refractory=0.05, tau_membrane=0.05, emit_speed=15.0,
+        # Plan B + Plan E STDP. r_bridge=1.5 (was 3) makes the tube very
+        # narrow — bridges fire only when video atoms are adjacent
+        # (≤1.5 units), so spatially-separated patterns don't share
+        # bridges at all.
         stdp_enabled=True,
-        tau_LTP=0.020, delta_LTP=2.0, delta_LTD=0.5,
-        r_bridge=8.0,
-        synaptic_transmission_strength=0.5,
-        synaptic_transmission_threshold=1.0,
+        tau_LTP=0.025, delta_LTP=3.0, delta_LTD=0.5,
+        r_bridge=1.5,
+        # synaptic_transmission_strength=0 disables the vibration-flow
+        # propagation path entirely. With G6 + WTA active we route signals
+        # only via the strongest committed bridge per firing atom — no
+        # broadband cross-talk through the slower vibration-traveling path.
+        synaptic_transmission_strength=0.0,
+        # threshold=50 — pre-seeded bridges START at strength=1.0 (50× below).
+        # Training strengthens trained-tube bridges by delta_LTP=3.0 per
+        # causal pair × ~30 pairs/sec × 4 sec ≈ 360 cumulative — well above
+        # 50. Untrained bridges stay near 1.0. The high gate forces the
+        # chain to fire ONLY through trained-pattern-specific bridges.
+        synaptic_transmission_threshold=50.0,
         synaptic_post_search_samples=6,
-        # G6 — bridge atom-to-atom direct propagation
         bridge_atom_propagation_enabled=True,
         bridge_atom_propagation_strength=10.0,
+        # G8 — lateral inhibition between bridges. When STDP applies LTP
+        # to a tube of bridges, OTHER nearby bridges get LTD. Forces
+        # different patterns to settle on different bridge subsets and
+        # is the substrate amendment that lets pattern discrimination work.
+        # G8 lateral inhibition: enabled at moderate strength helps single
+        # pattern recall (B passes at cosine 0.42) without harming silence (A).
+        # For multi-pattern discrimination see test_machine_contract.py
+        # contract C xfail — substrate's single bridge population can't
+        # hold multiple patterns simultaneously without an architectural
+        # memory-partitioning amendment.
+        lateral_inhibition_enabled=True,
+        lateral_inhibition_radius=6.0,
+        lateral_inhibition_strength=2.0,
+        stdp_alignment_strict_threshold=0.0,  # legacy STDP behaviour
+        # G9: bridge locking — once a bridge crosses this strength via
+        # training, future STDP and lateral inhibition skip it. New
+        # patterns must use unlocked bridges in different spatial regions,
+        # so multi-pattern memory accumulates instead of overwriting.
+        # Threshold 50: at delta_LTP=3 × ~30 pairs/sec, a tube's bridges
+        # cross 50 within ~0.6 sec of training. Comfortable for any
+        # training session ≥ 1 sec.
+        bridge_lock_threshold=50.0,
+        # G11: sparse winner-take-all firing per port. Only top-K
+        # most-charged atoms per port fire each tick. Forces sparse
+        # pattern-specific activations regardless of which path delivers
+        # the charge — closes the cross-talk that makes contract C fail.
+        sparse_firing_enabled=True,
+        sparse_firing_top_k=5,
+        # G12: firing-eligibility gating during training. When
+        # active_pattern_id != 0, atoms with mismatched non-zero
+        # pattern_id are prevented from firing. Cuts cross-pattern
+        # STDP causal-pair formation at the source.
+        firing_eligibility_gate=True,
+        # G9.5: winner-take-all bridge propagation. Each firing pre-atom
+        # fires only the strongest+best-aligned bridge nearby, not every
+        # bridge in radius. Combined with G9 lock, this enforces pattern-
+        # specific routing — visual1's atoms fire visual1's committed
+        # bridge, visual2's atoms fire visual2's committed bridge.
+        bridge_atom_propagation_winner_take_all=True,
         # Plan F speech-loop — burst_size 20 gives ~3 ghosts per audio_out
         # atom in r_integrate, enough to fire at theta_fire=1.0 in one tick.
         speech_loop_strength=1.0,
@@ -313,17 +397,21 @@ def run_app(
         rng=np.random.default_rng(42),
     )
 
-    # Pre-seed atoms + bridges. Broadband tiling so any speech frequency
-    # finds a nearby seed atom: 16 atoms per port covering 200..6000 Hz on
-    # a log-spaced grid (matches the encoder's log-mapping).
-    audio_freqs = list(np.geomspace(200.0, 6000.0, num=16))
+    # Pre-seed atoms + bridges. Sparse log-spaced tiling — fewer, denser
+    # atoms per freq so the output spectrum concentrates at trained freqs
+    # rather than spreading across the whole speech band.
+    # Seed at common speech harmonics so encoder emissions land at or near
+    # a seed-atom freq. Output is decoded from atom POSITION (= log-mapped
+    # freq), so coverage of the target band determines spectral fidelity.
+    audio_freqs = [250.0, 500.0, 750.0, 1000.0, 1500.0, 2000.0, 3000.0,
+                   4500.0, 6000.0]
     _seed_port_atoms(
         w, cfg.audio_input_port_origin, cfg.audio_input_port_size, audio_freqs,
-        n_per_freq=2, freq_min=cfg.audio_freq_min, freq_max=cfg.audio_freq_max,
+        n_per_freq=3, freq_min=cfg.audio_freq_min, freq_max=cfg.audio_freq_max,
     )
     _seed_port_atoms(
         w, cfg.audio_output_port_origin, cfg.audio_output_port_size, audio_freqs,
-        n_per_freq=2, freq_min=cfg.audio_freq_min, freq_max=cfg.audio_freq_max,
+        n_per_freq=3, freq_min=cfg.audio_freq_min, freq_max=cfg.audio_freq_max,
     )
     # Video port — also broadband over the video freq range.
     video_freqs = list(np.geomspace(1500.0, 11000.0, num=12))
@@ -332,7 +420,9 @@ def run_app(
         video_freqs, n_per_freq=2,
         freq_min=cfg.video_freq_min, freq_max=cfg.video_freq_max,
     )
-    _seed_bridges_video_to_audio_in(w, n_bridge=24)
+    _seed_bridges_video_to_audio_in(w, n_bridge=144)  # 12×12 grid — denser
+                                                        # so r_bridge=1.5 still
+                                                        # finds nearby bridges
     print(f"Seeded substrate: K={w.k_count} (broadband audio_in + audio_out + video_in atoms, "
           f"24 bridges video→audio_in)")
 
