@@ -1,4 +1,4 @@
-"""EQMOD — The Machine GUI.
+"""EQMOD — Substrate GUI.
 
 Streamlit-based interactive front-end for the substrate. Real microphone +
 webcam in, speaker out, live state display.
@@ -70,9 +70,8 @@ def _machine_singleton():
         # SubstrateLibrary holds N (label → World) entries built up by
         # successive train sessions. Pattern discrimination at recall
         # time uses the library's classifier to pick the matching
-        # substrate, not a single shared substrate. This is what makes
-        # the system work like 'The Machine': multi-pattern memory with
-        # specialised banks plus a classifier.
+        # substrate, not a single shared substrate — a mixture-of-experts
+        # memory with one specialised bank per learned pattern.
         "library": SubstrateLibrary(),
         "last_recalled_label": None,
     }
@@ -344,8 +343,8 @@ def _latest_video_frame(video_io: VideoIO) -> Optional[np.ndarray]:
 
 # ---------- page -----------------------------------------------------------
 
-st.set_page_config(page_title="EQMOD — The Machine", layout="wide")
-st.title("EQMOD — The Machine")
+st.set_page_config(page_title="EQMOD — Substrate Console", layout="wide")
+st.title("EQMOD — Substrate Console")
 st.caption(
     "Live mic + webcam → substrate → speaker. Single-pattern recall works "
     "(M4 contract A+B). Multi-pattern discrimination is an open research "
@@ -393,7 +392,7 @@ with control_col:
     )
 
     st.divider()
-    st.markdown("**📚 The Machine — multi-pattern memory**")
+    st.markdown("**📚 Substrate library — multi-pattern memory**")
     n_patterns = len(state["library"])
     if n_patterns == 0:
         st.caption("Library is empty. Train a pattern below.")

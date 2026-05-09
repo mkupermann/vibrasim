@@ -139,7 +139,15 @@ def apply_self_aware(world, dt: float) -> dict:
     world.self_predicted_next = dict(world.self_model)
 
     # --- 3. Global workspace winner-take-all broadcast --------------
+    # Workspace broadcast is an AWAKE attention mechanism. During
+    # dream state, the gate opens so all engrams can roam freely
+    # across the substrate — this is what lets dream replay sample
+    # multiple patterns and what enables concept blending.
+    # Hobson AIM model: the global workspace is gated open during
+    # NREM and gated wide open during REM.
+    is_dreaming = bool(getattr(cfg, "dream_mode_enabled", False))
     if (cfg.workspace_broadcast_enabled
+            and not is_dreaming
             and rates
             and total_window_fires >= cfg.workspace_min_winner_atoms):
         # Winner = pattern with most firings in the window

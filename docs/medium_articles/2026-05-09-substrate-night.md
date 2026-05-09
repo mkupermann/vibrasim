@@ -154,4 +154,4 @@ I am going to leave it running.
 
 ---
 
-*EQMOD is open source. The G14 BTSP, G15 dream, G16 self-aware, and G17 autonomous-loop amendments described here are committed to the `feat/baby-brain-plan-E` branch of the repository. The honest scope statements in `world/self_aware.py` and `agent/run_autonomous.py` are part of the code, not just the documentation, and that is on purpose.*
+*The G14–G17 amendments described here are committed to the development branch of the repository. The honest scope statements in `world/self_aware.py` and `agent/run_autonomous.py` are part of the code, not just the documentation, and that is on purpose.*

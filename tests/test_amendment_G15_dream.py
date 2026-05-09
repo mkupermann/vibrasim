@@ -46,6 +46,9 @@ def _make_world(dream: bool = True, btsp: bool = True,
         dream_blend_enabled=True,
         dream_blend_co_activation_window=0.5,
         dream_blend_min_overlap_atoms=2,
+        dream_consolidation_to_blend_ratio=0,  # G18.2 off — every dream tick
+                                                #     blends. The G18 test uses
+                                                #     ratio>0 explicitly.
         btsp_enabled=btsp,
         btsp_tau_eligibility=6.0,
         btsp_plateau_charge_threshold=3.0,
@@ -191,6 +194,76 @@ def test_G15_default_in_world_config():
     assert cfg.dream_blend_enabled is True
     assert cfg.dream_blend_co_activation_window == 0.5
     assert cfg.dream_replay_seed_charge == 6.0
+
+
+def test_G18_integrative_blending_creates_bridges():
+    """G18.1: when concept blending allocates a new blended atom, it
+    also allocates integration bridges connecting the new atom to
+    representative members of both source patterns. The blended atom
+    is integrated into the bridge mesh, not free-floating."""
+    w = _make_world(dream=True)
+    _seed_atom(w, 0, (10.0, 10.0, 10.0), pattern_id=1, eligibility=2.0)
+    _seed_atom(w, 1, (10.0, 12.0, 10.0), pattern_id=1, eligibility=2.0)
+    _seed_atom(w, 2, (10.0, 14.0, 10.0), pattern_id=1, eligibility=2.0)
+    _seed_atom(w, 3, (40.0, 10.0, 10.0), pattern_id=2, eligibility=2.0)
+    _seed_atom(w, 4, (40.0, 12.0, 10.0), pattern_id=2, eligibility=2.0)
+    _seed_atom(w, 5, (40.0, 14.0, 10.0), pattern_id=2, eligibility=2.0)
+
+    w.t = 1.0
+    w.firing_events = [
+        (0.7, 0), (0.7, 1), (0.7, 2),
+        (0.8, 3), (0.8, 4), (0.8, 5),
+    ]
+
+    bridges_before = int((w.k_alive[:w.k_count]
+                          & (w.k_level[:w.k_count] == 5)).sum())
+    out = apply_dream(w, dt=1.0 / 60)
+    bridges_after = int((w.k_alive[:w.k_count]
+                          & (w.k_level[:w.k_count] == 5)).sum())
+
+    assert out["blend_events"] >= 1, "concept blending must fire"
+    assert out.get("integration_bridges", 0) >= 4, (
+        f"integration bridges should connect blended atom to ≥2 anchors "
+        f"per source pattern (4 total); got "
+        f"{out.get('integration_bridges', 0)}"
+    )
+    assert bridges_after - bridges_before >= 4, (
+        f"bridges count should grow by ≥4; got "
+        f"{bridges_after - bridges_before}"
+    )
+
+
+def test_G18_2_nrem_rem_gating_alternates():
+    """G18.2: with dream_consolidation_to_blend_ratio=4, four out of
+    every five dream ticks are NREM (consolidation only, no blending).
+    The fifth tick (the REM analogue) is the only one where blending
+    is permitted."""
+    cfg = WorldConfig(
+        n_initial_vibrations=0, n_vibrations_max=64, n_nodes_max=64,
+        box_size=(60.0, 60.0, 60.0), rng_seed=42,
+        dream_mode_enabled=True,
+        dream_blend_enabled=True,
+        dream_consolidation_to_blend_ratio=4,  # 4 NREM : 1 REM
+    )
+    w = World(cfg)
+    _seed_atom(w, 0, (10.0, 10.0, 10.0), pattern_id=1, eligibility=2.0)
+    _seed_atom(w, 1, (15.0, 10.0, 10.0), pattern_id=1, eligibility=2.0)
+    _seed_atom(w, 2, (40.0, 10.0, 10.0), pattern_id=2, eligibility=2.0)
+    _seed_atom(w, 3, (45.0, 10.0, 10.0), pattern_id=2, eligibility=2.0)
+    w.t = 1.0
+    w.firing_events = [(0.7, 0), (0.7, 1), (0.8, 2), (0.8, 3)]
+
+    nrem_count = 0
+    rem_count = 0
+    for _ in range(10):
+        out = apply_dream(w, dt=1.0 / 60)
+        if out.get("nrem_consolidation_tick"):
+            nrem_count += 1
+        if out.get("rem_creative_tick"):
+            rem_count += 1
+    # 10 ticks at 4:1 → 8 NREM + 2 REM
+    assert nrem_count == 8, f"expected 8 NREM ticks; got {nrem_count}"
+    assert rem_count == 2, f"expected 2 REM ticks; got {rem_count}"
 
 
 def test_G15_begin_end_dream_helpers():

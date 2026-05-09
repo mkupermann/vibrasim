@@ -122,6 +122,20 @@ def apply_dream(world, dt: float) -> dict:
     if not getattr(cfg, "dream_blend_enabled", True):
         return out
 
+    # G18.2 — NREM/REM gating. Most dream ticks are consolidation-only
+    # (NREM analogue): replay strengthens existing bridges, no new
+    # patterns. Every Nth tick is the creative phase (REM analogue):
+    # concept blending allowed. Real mammalian sleep is roughly 4:1
+    # NREM:REM, which is the default ratio.
+    ratio = int(getattr(cfg, "dream_consolidation_to_blend_ratio", 0))
+    if ratio > 0:
+        world.dream_subphase_counter += 1
+        is_creative_tick = (world.dream_subphase_counter % (ratio + 1) == 0)
+        if not is_creative_tick:
+            out["nrem_consolidation_tick"] = True
+            return out
+        out["rem_creative_tick"] = True
+
     # Look at the firing log within the co-activation window.
     window = float(cfg.dream_blend_co_activation_window)
     t_now = world.t
@@ -203,20 +217,105 @@ def apply_dream(world, dt: float) -> dict:
                 blended_pairs.add((pid_a, pid_b))
                 out["blend_events"] += 1
 
+                # G18.1 — Integrative blending. Allocate bridges connecting
+                # the blended atom to representative members of both
+                # source patterns. Without this, the blended atom is a
+                # free-floating concept that cannot be reached by replay.
+                # Lewis & Durrant 2011: schema integration during NREM
+                # forms bidirectional connections to existing
+                # representations, not just creates new ones.
+                bridges_added = _allocate_integration_bridges(
+                    world, new_atom_idx=new_atom_idx,
+                    source_atoms_a=atoms_a, source_atoms_b=atoms_b,
+                    new_pid=new_pid,
+                )
+                out["integration_bridges"] = (
+                    out.get("integration_bridges", 0) + bridges_added
+                )
+
     return out
 
 
-def begin_dream_state(world) -> None:
-    """Convenience helper: enter dream state in-place (mutate cfg via
-    dataclasses.replace to a new frozen WorldConfig if needed).
+def _allocate_integration_bridges(world, new_atom_idx: int,
+                                    source_atoms_a: list,
+                                    source_atoms_b: list,
+                                    new_pid: int,
+                                    n_per_source: int = 2) -> int:
+    """Connect the blended atom to representative atoms from each
+    source pattern via newly-allocated level-5 bridges."""
+    cfg = world.config
+    box = np.asarray(cfg.box_size, dtype=np.float64)
+    new_pos = world.k_pos[new_atom_idx]
+    bridges_added = 0
+    # Pick the first n_per_source atoms from each source as anchors.
+    # Could be smarter (e.g. closest to the centroid), but this gets
+    # us connected and lets BTSP / STDP refine the topology over time.
+    saved_active = world.active_pattern_id
+    world.active_pattern_id = new_pid
+    try:
+        for source_atoms in (source_atoms_a, source_atoms_b):
+            anchors = source_atoms[:n_per_source]
+            for anchor_idx in anchors:
+                if anchor_idx >= world.k_count or not world.k_alive[anchor_idx]:
+                    continue
+                anchor_pos = world.k_pos[anchor_idx]
+                # Bridge sits at the midpoint between blended and anchor
+                seg = new_pos - anchor_pos
+                seg -= box * np.round(seg / box)
+                mid = (anchor_pos + 0.5 * seg) % box
+                bridge_idx = world.allocate_node(
+                    pos=mid,
+                    freq=float(world.k_freq[anchor_idx]),
+                    pol=True,
+                    level=5,
+                    constituents=np.array([anchor_idx, new_atom_idx],
+                                            dtype=np.int32),
+                    comp_kind=1,
+                )
+                if bridge_idx < 0:
+                    continue
+                # Strong enough to lock under bridge_lock_threshold so
+                # subsequent STDP doesn't LTD it away.
+                lock_thr = float(cfg.bridge_lock_threshold)
+                world.k_strength[bridge_idx] = max(lock_thr * 1.2, 60.0)
+                # Orientation points from anchor toward blended atom
+                seg_norm = float(np.linalg.norm(seg))
+                if seg_norm > 1e-9:
+                    world.k_orientation[bridge_idx] = seg / seg_norm
+                bridges_added += 1
+    finally:
+        world.active_pattern_id = saved_active
+    return bridges_added
 
-    Note: WorldConfig is frozen, so callers that need to *toggle* dream
-    mode at runtime should construct two configs ahead of time, OR
-    operate on a non-frozen wrapper. For test purposes, the World's cfg
-    can be swapped wholesale via `world.config = new_cfg`.
+
+def begin_dream_state(world, refresh_eligibility: bool = True,
+                        baseline: float = 1.5) -> None:
+    """Enter dream state. By default, also apply a uniform 'fresh
+    slate' eligibility boost to all trained-engram atoms so dream
+    replay can sample broadly across patterns rather than getting
+    stuck on whichever pattern won the last awake-phase workspace.
+
+    Biological grounding: real hippocampal replay events sample
+    multiple recent experiences within a single sleep session, not
+    just the most recently dominant. Replaying only the awake winner
+    would defeat the schema-integration role of sleep.
+
+    Pass refresh_eligibility=False to skip the boost (used by tests
+    that need precise control over eligibility).
     """
     from dataclasses import replace
+    import numpy as np
     world.config = replace(world.config, dream_mode_enabled=True)
+    if refresh_eligibility:
+        K = world.k_count
+        if K > 0:
+            mask = (world.k_alive[:K]
+                    & (world.k_level[:K] == 4)
+                    & (world.k_pattern_id[:K] != 0))
+            cur = world.k_eligibility[:K]
+            world.k_eligibility[:K] = np.where(
+                mask & (cur < baseline), baseline, cur,
+            )
 
 
 def end_dream_state(world) -> None:
