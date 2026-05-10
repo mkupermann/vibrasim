@@ -13,7 +13,7 @@ F1 will add structure-flux and binding-attempt steps. F0 is motion +
 boundary + temperature only — no plasticity, no binding.
 """
 from __future__ import annotations
-from typing import Callable, Optional
+from typing import Callable
 import numpy as np
 
 from world.flux.quantum import Quanta
@@ -42,7 +42,7 @@ def _compute_density(quanta: Quanta, grid: Grid) -> np.ndarray:
 
 
 def tick(quanta: Quanta, grid: Grid, dt: float,
-         injector: Optional[Injector],
+         injector: Injector | None,
          cold_face_delta: float = 0.5) -> float:
     """Run one tick. Returns E_exported (energy that left through cold
     faces).
