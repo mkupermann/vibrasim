@@ -1,7 +1,6 @@
 """Tests for the single-tick orchestration."""
 from __future__ import annotations
 import numpy as np
-import pytest
 
 from world.flux.quantum import Quanta
 from world.flux.grid import Grid
