@@ -1969,9 +1969,46 @@ def apply_speech_loop(world, dt: float) -> int:
     return n_events
 
 
+def cull_excess_vibrations(world) -> int:
+    """Cap the number of alive vibrations at world.config.vibration_soft_cap.
+
+    Default behaviour (cap = 0) is a no-op so existing simulations are
+    byte-identical. When the cap is positive and alive count exceeds it,
+    the *oldest* alive vibrations (lowest indices — FIFO-allocated by the
+    feeder) are killed until alive count equals the cap.
+
+    Why: under sustained high-entropy audio injection (predictive-babble
+    pipeline), most vibrations don't bind because their frequency ratios
+    miss the golden-ratio binding window and their polarities don't
+    pair up. Without a cap, alive count climbs to n_vibrations_max and
+    every physics tick processes all of them — cycle wall-time grows
+    super-linearly. The cull bounds tick cost.
+
+    Returns the number of vibrations killed this tick.
+    """
+    cap = int(world.config.vibration_soft_cap)
+    if cap <= 0:
+        return 0
+    alive_idx = np.where(world.s_alive)[0]
+    n_alive = int(alive_idx.size)
+    if n_alive <= cap:
+        return 0
+    n_to_kill = n_alive - cap
+    to_kill = alive_idx[:n_to_kill]
+    world.s_alive[to_kill] = False
+    world.n_alive = int(max(0, world.n_alive - n_to_kill))
+    return int(n_to_kill)
+
+
 def tick(world, dt: float) -> None:
     """One simulation step. See CONCEPT.md v2 §4 + §7.1 for the canonical order."""
     box = np.asarray(world.config.box_size, dtype=np.float64)
+    # G19: cull at the START of tick so move_vibrations + bind work on a
+    # bounded set. Without this, neuron_dynamics's firing emissions
+    # (~n_emit per fire × ~hundreds of fires) flood the buffer at the
+    # END of the previous tick and the NEXT tick's move_vibrations
+    # processes all of them. Default cap = 0 → no-op for legacy worlds.
+    cull_excess_vibrations(world)
     move_vibrations(world.s_pos, world.s_vel, world.s_alive, box, dt)
     apply_scale_repulsion(world, dt)
     move_nodes(world, dt)
