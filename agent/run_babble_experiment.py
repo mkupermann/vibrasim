@@ -331,6 +331,16 @@ def run_full(config_path: Path, out_dir: Path) -> EvaluationResult:
     snapshot_every_seconds = float(
         cfg.get("snapshot_every_seconds", 1800.0)
     )
+    # Cycle durations and convergence-detector tunables — exposed in YAML
+    # so synthetic demos can run in minutes; production runs use defaults.
+    awake_seconds_per_cycle = float(cfg.get("awake_seconds_per_cycle", 30.0))
+    dream_seconds_per_cycle = float(cfg.get("dream_seconds_per_cycle", 10.0))
+    convergence_window_size = int(cfg.get("convergence_window_size", 10))
+    convergence_min_improvement = float(cfg.get("convergence_min_improvement", 0.01))
+    convergence_min_history = int(cfg.get("convergence_min_history", 20))
+    perplexity_eval_duration_seconds = float(
+        cfg.get("perplexity_eval_duration_seconds", 30.0)
+    )
 
     # Lazy imports — keep CLI startup cheap and skip JIT cost for
     # callers who only want the dataclass / verdict.
@@ -369,13 +379,6 @@ def run_full(config_path: Path, out_dir: Path) -> EvaluationResult:
         "reversed_de": "reversed_de",
         "french": "fr",
     }
-    # Optional override for the dev-evaluation duration. Long enough to
-    # see real perplexity convergence in production (default 30 s);
-    # tests can dial this down via YAML.
-    perplexity_eval_duration_seconds = float(
-        cfg.get("perplexity_eval_duration_seconds", 30.0)
-    )
-
     # 3. Train each substrate sequentially.
     state_path = out_dir / "state.json"
     state: dict = {}
@@ -421,7 +424,11 @@ def run_full(config_path: Path, out_dir: Path) -> EvaluationResult:
         ]
 
         if is_trained:
-            convergence = ConvergenceDetector()
+            convergence = ConvergenceDetector(
+                window_size=convergence_window_size,
+                min_relative_improvement=convergence_min_improvement,
+                min_history_for_decision=convergence_min_history,
+            )
             wall_clock_per_stage = [0.0, 0.0, 0.0, 0.0]
         else:
             if len(stage_durations) != len(stages):
@@ -451,6 +458,8 @@ def run_full(config_path: Path, out_dir: Path) -> EvaluationResult:
         eval_metrics_dir.mkdir(parents=True, exist_ok=True)
         loop_cfg = AutonomousLoopConfig(
             audio_io=feeder,  # duck-typed
+            awake_seconds_per_cycle=awake_seconds_per_cycle,
+            dream_seconds_per_cycle=dream_seconds_per_cycle,
             snapshot_dir=str(substrate_snapshot_dir),
             metrics_log_path=str(eval_metrics_dir / f"{substrate_name}.csv"),
         )
@@ -610,6 +619,22 @@ def run_full(config_path: Path, out_dir: Path) -> EvaluationResult:
     return result
 
 
+# Sentinel "I have no signal" perplexity. Returned by
+# _evaluate_perplexity_on_dev when the substrate hasn't fired in the
+# audio_input port during the dev window, or when the predictor has no
+# vocabulary yet. We use a large finite stand-in instead of
+# float('inf') because the convergence detector's relative-improvement
+# math (mean_prev - mean_last) becomes NaN on inf - inf, which breaks
+# plateau detection — the substrate would be stuck on stage 0 forever.
+# 1e6 is large enough to dwarf any real perplexity (vocab sizes < 10⁵)
+# but finite enough that "stable no-signal" reads as plateau, allowing
+# stages to advance even early in training. When the substrate later
+# starts firing, real perplexity drops to <100, which is a huge
+# improvement vs 1e6 → detector correctly says "improving, not
+# plateaued" until the real signal stabilises.
+_NO_SIGNAL_PERPLEXITY = 1_000_000.0
+
+
 def _evaluate_perplexity_on_dev(
     world,
     predictor,
@@ -661,14 +686,14 @@ def _evaluate_perplexity_on_dev(
 
     # Honest-default short circuits.
     if predictor.vocabulary_size() == 0:
-        return float("inf")
+        return _NO_SIGNAL_PERPLEXITY
     K = int(getattr(world, "k_count", 0))
     if K == 0:
-        return float("inf")
+        return _NO_SIGNAL_PERPLEXITY
     if not Path(dev_path).exists():
-        return float("inf")
+        return _NO_SIGNAL_PERPLEXITY
     if eval_duration_seconds <= 0.0:
-        return float("inf")
+        return _NO_SIGNAL_PERPLEXITY
 
     # 1. In-memory snapshot. Cheap (per-array .copy()), avoids disk I/O,
     # and captures fields ``world.snapshot.save_snapshot`` doesn't.
@@ -701,7 +726,7 @@ def _evaluate_perplexity_on_dev(
             dev_feeder.load_stage(Path(dev_path), dev_manifest_path)
         except (FileNotFoundError, ValueError):
             # Empty or unreadable dev split — honest non-convergence.
-            return float("inf")
+            return _NO_SIGNAL_PERPLEXITY
 
         # 3. Inject dev audio.
         dev_feeder.inject_into_substrate(
@@ -712,10 +737,10 @@ def _evaluate_perplexity_on_dev(
         try:
             from world.physics import tick as _tick
         except ImportError:
-            return float("inf")
+            return _NO_SIGNAL_PERPLEXITY
         dt = float(world.config.dt)
         if dt <= 0.0:
-            return float("inf")
+            return _NO_SIGNAL_PERPLEXITY
         n_ticks = max(1, int(round(float(eval_duration_seconds) / dt)))
         for _ in range(n_ticks):
             _tick(world, dt)
@@ -756,10 +781,10 @@ def _evaluate_perplexity_on_dev(
 
         # 6. Compute perplexity (READ ONLY — no observe()).
         if len(sequence) < 2:
-            return float("inf")
+            return _NO_SIGNAL_PERPLEXITY
         perp = predictor.perplexity(sequence)
         if not np.isfinite(perp):
-            return float("inf")
+            return _NO_SIGNAL_PERPLEXITY
         return float(perp)
     finally:
         # 7. Restore world state. We mutate ``world`` in place so the
