@@ -52,3 +52,45 @@ def inject_hot_floor(quanta: Quanta, grid: Grid,
             break  # Buffer full
         injected += 1
     return injected
+
+
+def absorb_cold_faces(quanta: Quanta, grid: Grid,
+                      delta: float = 0.5) -> float:
+    """Remove vibrations within delta of cold faces; return total
+    absorbed energy.
+
+    Cold faces: z = Lz*size (ceiling), x = 0, x = Lx*size,
+    y = 0, y = Ly*size. The z = 0 face is the HOT FLOOR and is
+    NOT absorbing.
+    """
+    Lx, Ly, Lz = grid.dims
+    s = grid.voxel_size
+    x_min, x_max = 0.0 + delta, Lx * s - delta
+    y_min, y_max = 0.0 + delta, Ly * s - delta
+    z_max = Lz * s - delta
+
+    pos = quanta.pos
+    alive = quanta.alive
+
+    # Mask of alive quanta within delta of any cold face
+    at_ceiling = (pos[:, 2] > z_max)
+    at_x_low   = (pos[:, 0] < x_min)
+    at_x_high  = (pos[:, 0] > x_max)
+    at_y_low   = (pos[:, 1] < y_min)
+    at_y_high  = (pos[:, 1] > y_max)
+
+    to_absorb = alive & (at_ceiling | at_x_low | at_x_high |
+                         at_y_low | at_y_high)
+
+    exported = float(quanta.energy[to_absorb].sum())
+
+    if exported > 0.0:
+        # Mark all absorbed slots dead
+        idx = np.where(to_absorb)[0]
+        for i in idx:
+            quanta.alive[i] = False
+            quanta.energy[i] = 0.0
+        # Reset search cursor
+        quanta._next_search = int(idx.min())
+
+    return exported
