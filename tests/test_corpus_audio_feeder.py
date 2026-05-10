@@ -271,3 +271,68 @@ def test_feeder_rejects_mismatched_sample_rate(tmp_path: Path) -> None:
     feeder = CorpusAudioFeeder(sample_rate=16000)
     with pytest.raises(ValueError, match="sample rate"):
         feeder.load_stage(train_path, manifest_path)
+
+
+def test_feeder_caps_vibrations_on_high_entropy_audio(tmp_path: Path) -> None:
+    """White noise produces hundreds of emissions per block; cap must hold.
+
+    Without the cap, high-entropy audio floods n_vibrations_max within a
+    few cycles and physics tick scales O(N²) until awake phases take
+    minutes of wall-clock — controls stalled indefinitely in the synthetic
+    full-mode demo before this fix.
+    """
+    sub = tmp_path / "noise"
+    sub.mkdir(parents=True, exist_ok=True)
+    rng = np.random.default_rng(0)
+    audio = rng.normal(0, 0.5, size=16000).astype(np.float32)
+    train_path = sub / "train.f32.raw"
+    audio.tofile(train_path)
+    manifest_path = sub / "manifest.json"
+    manifest_path.write_text(json.dumps({
+        "name": "noise", "sample_rate": 16000,
+        "n_samples": int(audio.size), "duration_seconds": 1.0,
+    }))
+
+    # Default cap = 256.
+    world_default = _world_for_audio()
+    feeder_default = CorpusAudioFeeder(sample_rate=16000)
+    feeder_default.load_stage(train_path, manifest_path)
+    n_default = feeder_default.inject_into_substrate(world_default, dt=0.5)
+
+    # Aggressive cap = 32.
+    world_capped = _world_for_audio()
+    feeder_capped = CorpusAudioFeeder(
+        sample_rate=16000, max_vibrations_per_inject=32,
+    )
+    feeder_capped.load_stage(train_path, manifest_path)
+    n_capped = feeder_capped.inject_into_substrate(world_capped, dt=0.5)
+
+    # Disabled cap (cap=0) — would inject everything (bounded only by
+    # n_vibrations_max in the World fixture, which is 512).
+    world_uncapped = _world_for_audio()
+    feeder_uncapped = CorpusAudioFeeder(
+        sample_rate=16000, max_vibrations_per_inject=0,
+    )
+    feeder_uncapped.load_stage(train_path, manifest_path)
+    n_uncapped = feeder_uncapped.inject_into_substrate(world_uncapped, dt=0.5)
+
+    if n_capped > 32:
+        pytest.fail(
+            f"cap=32 produced {n_capped} injections (expected ≤ 32)"
+        )
+    if n_default > 256:
+        pytest.fail(
+            f"default cap=256 produced {n_default} injections (expected ≤ 256)"
+        )
+    if not (n_uncapped >= n_default >= n_capped):
+        pytest.fail(
+            f"expected uncapped >= default >= capped, got "
+            f"uncapped={n_uncapped} default={n_default} capped={n_capped}"
+        )
+    # Sanity: the cap is biting on white noise (default would otherwise
+    # emit far more than 256 emissions across 31 blocks of 0.5 s audio).
+    if n_uncapped <= n_default:
+        pytest.fail(
+            f"uncapped ({n_uncapped}) should exceed default cap ({n_default}) "
+            "on white noise — otherwise the cap isn't actually biting"
+        )

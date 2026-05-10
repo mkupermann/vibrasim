@@ -62,6 +62,18 @@ class CorpusAudioFeeder:
     input_port_size: tuple[float, float, float] = (15.0, 15.0, 15.0)
     emit_pair_band: float = 0.0
     rng: Optional[np.random.Generator] = None
+    # Saturation guard: cap on vibrations injected PER ``inject_into_substrate``
+    # call. The encoder emits one (freq, amplitude, polarity) per non-trivial
+    # STFT bin per block; for high-entropy audio (white noise, multi-speaker
+    # mix) that's 150–200 emissions × 30+ blocks per dt=0.5s call ≈ thousands
+    # of vibrations. Without a cap, the substrate's audio_input port saturates
+    # toward n_nodes_max=4096 within a few cycles, physics tick scales O(N²),
+    # and a single awake phase takes 30+ minutes of wall-clock — controls
+    # stall indefinitely. We keep only the top-K emissions by amplitude per
+    # call, where K = max_vibrations_per_inject. Default 256 retains rich
+    # spectral information for clean audio (trained_de) while bounding the
+    # worst case for noisy audio. Set to 0 to disable the cap.
+    max_vibrations_per_inject: int = 256
 
     # Internal state (not parameters; populated by load_stage).
     _audio: np.ndarray = field(
@@ -197,6 +209,11 @@ class CorpusAudioFeeder:
 
         n_blocks = audio.size // self.block_size
         n_injected = 0
+        # Collect all emissions across all blocks first, then top-K-cap by
+        # amplitude before injection. Without this cap, high-entropy audio
+        # (white noise) floods n_nodes_max=4096 atoms within a few cycles
+        # and tick-time becomes prohibitive.
+        all_emissions: list[tuple[float, float, bool]] = []
         for b in range(n_blocks):
             block = audio[b * self.block_size : (b + 1) * self.block_size]
             if block.size < self.fft_size:
@@ -209,39 +226,49 @@ class CorpusAudioFeeder:
                 freq_min=self.freq_min,
                 freq_max=self.freq_max,
             )
-            for f, _amplitude, polarity in emissions:
-                pos = freq_to_port_position(
-                    f,
-                    freq_min=self.freq_min,
-                    freq_max=self.freq_max,
-                    port_origin=self.input_port_origin,
-                    port_size=self.input_port_size,
-                    rng=self.rng,
-                )
+            all_emissions.extend(emissions)
+
+        # Top-K cap by amplitude descending. amplitude is the second
+        # element of each emission tuple. cap=0 disables; otherwise keep
+        # the K most energetic emissions and drop the rest.
+        if self.max_vibrations_per_inject > 0 and \
+                len(all_emissions) > self.max_vibrations_per_inject:
+            all_emissions.sort(key=lambda e: e[1], reverse=True)
+            all_emissions = all_emissions[: self.max_vibrations_per_inject]
+
+        for f, _amplitude, polarity in all_emissions:
+            pos = freq_to_port_position(
+                f,
+                freq_min=self.freq_min,
+                freq_max=self.freq_max,
+                port_origin=self.input_port_origin,
+                port_size=self.input_port_size,
+                rng=self.rng,
+            )
+            free_idx = np.where(~world.s_alive)[0]
+            if len(free_idx) == 0:
+                break
+            i = int(free_idx[0])
+            world.s_pos[i] = pos
+            world.s_vel[i] = 0.0
+            world.s_freq[i] = float(f)
+            world.s_pol[i] = polarity
+            world.s_alive[i] = True
+            world.n_alive = max(world.n_alive, i + 1)
+            n_injected += 1
+            # Optional 8 %-band pair injection — same semantics as
+            # AudioIO: helps atoms form quickly at the input port
+            # under deterministic stimuli.
+            if self.emit_pair_band > 0.0:
                 free_idx = np.where(~world.s_alive)[0]
                 if len(free_idx) == 0:
                     break
-                i = int(free_idx[0])
-                world.s_pos[i] = pos
-                world.s_vel[i] = 0.0
-                world.s_freq[i] = float(f)
-                world.s_pol[i] = polarity
-                world.s_alive[i] = True
-                world.n_alive = max(world.n_alive, i + 1)
+                j = int(free_idx[0])
+                world.s_pos[j] = pos
+                world.s_vel[j] = 0.0
+                world.s_freq[j] = float(f) * (1.0 + self.emit_pair_band)
+                world.s_pol[j] = (not polarity)
+                world.s_alive[j] = True
+                world.n_alive = max(world.n_alive, j + 1)
                 n_injected += 1
-                # Optional 8 %-band pair injection — same semantics as
-                # AudioIO: helps atoms form quickly at the input port
-                # under deterministic stimuli.
-                if self.emit_pair_band > 0.0:
-                    free_idx = np.where(~world.s_alive)[0]
-                    if len(free_idx) == 0:
-                        break
-                    j = int(free_idx[0])
-                    world.s_pos[j] = pos
-                    world.s_vel[j] = 0.0
-                    world.s_freq[j] = float(f) * (1.0 + self.emit_pair_band)
-                    world.s_pol[j] = (not polarity)
-                    world.s_alive[j] = True
-                    world.n_alive = max(world.n_alive, j + 1)
-                    n_injected += 1
         return n_injected
