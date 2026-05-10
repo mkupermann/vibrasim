@@ -540,3 +540,99 @@ def build_autonomous_world() -> World:
     # consolidate, blend, and self-model over from cycle 1.
     _preseed_engrams(world, n_patterns=3, atoms_per_pattern=8)
     return world
+
+
+def configure_world_for_babble(world: World) -> None:
+    """Apply the predictive-babble pipeline's substrate setup to an
+    existing autonomous world. Idempotent.
+
+    Three things happen:
+
+    1. ``speech_loop_strength`` is set to 1.0 — Plan F's input→output
+       coupling now fires. When an audio_input port atom fires,
+       ``speech_loop_burst_size`` ghost vibrations get deposited at
+       the freq-mapped position in the audio_output port.
+    2. Audio port atoms are pre-seeded at canonical speech harmonics
+       (250 Hz – 6 kHz, 9 freqs × 3 atoms each, in both ports). Without
+       these, real audio injection has nothing to charge in audio_input
+       (the level-1 → level-4 binding chain takes many cycles to reach
+       level 4 from raw vibrations), and speech-loop ghosts in
+       audio_output have nothing to charge.
+    3. The pre-seeded audio port atoms get ``pattern_id`` 0 and
+       ``eligibility`` 0 (the World's defaults). They are NOT in the
+       dream-replay seed pool yet — that gets activated only inside
+       :class:`agent.babble.BabbleRunner` for the babble window.
+
+    This is split out from :func:`build_autonomous_world` so the G17
+    emergence run + the existing 4 G17 tests + the 7 babble-runner
+    tests (which use ``build_autonomous_world`` and assume no
+    speech-loop / no port atoms) keep their existing behaviour. The
+    predictive-babble pipeline (``run_full``) opts in by calling this.
+    """
+    from dataclasses import replace
+    world.config = replace(
+        world.config,
+        speech_loop_strength=1.0,
+        speech_loop_burst_size=6,
+        speech_loop_jitter_hz=50.0,
+    )
+    _seed_audio_ports(world)
+
+
+def _seed_audio_ports(world: World, n_per_freq: int = 3) -> None:
+    """Pre-seed level-4 atoms in audio_input and audio_output ports
+    at canonical speech harmonics, freq-mapped along each port's X axis.
+
+    Each port atom gets a distinct ``pattern_id`` (4 for audio_input,
+    5 for audio_output — distinct from the 3 trained engrams' pids 1, 2, 3)
+    AND high eligibility (4.0). Both are required for the babble path:
+
+    * pattern_id != 0 makes dream-phase replay eligible to fire the atom
+      (dream's seed-selection mask filters to ``pattern_id != 0``).
+    * eligibility ≥ baseline (1.5) keeps the atom in the high-eligibility
+      pool that dream replay selects from.
+
+    Without pattern_ids and eligibility, the babble phase (input gated
+    off) sees no source of firings in either port — speech-loop has
+    nothing to ghost from in audio_input, and dream replay finds no
+    eligible atoms in audio_output. Output stays silent.
+
+    Mirrors ``agent.talk._seed_port_atoms`` but assigns pattern_ids and
+    eligibility instead of leaving them at the World's defaults (0 and 0).
+    """
+    cfg = world.config
+    audio_freqs = [250.0, 500.0, 750.0, 1000.0, 1500.0, 2000.0,
+                   3000.0, 4500.0, 6000.0]
+    freq_min = cfg.audio_freq_min
+    freq_max = cfg.audio_freq_max
+    log_min = float(np.log(freq_min))
+    log_max = float(np.log(freq_max))
+    for port_origin, port_size in (
+        (cfg.audio_input_port_origin, cfg.audio_input_port_size),
+        (cfg.audio_output_port_origin, cfg.audio_output_port_size),
+    ):
+        for f in audio_freqs:
+            log_norm = (np.log(max(f, freq_min)) - log_min) / (log_max - log_min)
+            log_norm = max(0.0, min(1.0, float(log_norm)))
+            x = port_origin[0] + log_norm * port_size[0]
+            for _ in range(n_per_freq):
+                i = world.k_count
+                if i >= cfg.n_nodes_max:
+                    return
+                world.k_pos[i] = (
+                    x,
+                    port_origin[1] + float(world.rng.random()) * port_size[1],
+                    port_origin[2] + float(world.rng.random()) * port_size[2],
+                )
+                world.k_freq[i] = float(f)
+                world.k_pol[i] = True
+                world.k_level[i] = 4
+                world.k_alive[i] = True
+                world.k_strength[i] = 1.0
+                world.k_count = i + 1
+    # Audio port atoms get pattern_id=0 and eligibility=0 here — that
+    # keeps them OUT of dream-replay's seed pool during normal autonomous
+    # runs. Eligibility accumulates naturally from BTSP co-firing during
+    # training. BabbleRunner injects pattern_id + eligibility on audio_output
+    # atoms only at the start of the babble window, so dream-mode replay
+    # there fires them while no spurious replay drives them during training.

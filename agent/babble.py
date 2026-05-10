@@ -73,6 +73,14 @@ class BabbleRunner:
     duration_seconds: float = 30.0
     output_path: Optional[Path] = None
     sample_rate: int = 16000
+    enable_dream_replay: bool = False
+    """When True, the babble window runs in dream-replay mode and the
+    audio_output port atoms get a temporary high-eligibility + sentinel
+    pattern_id so dream's seed selection picks them. After the window
+    closes both are restored. Default False preserves existing behaviour
+    for tests and the --mini contract; the predictive-babble pipeline
+    (run_full) sets this True so the substrate produces output during
+    babble from internal state alone."""
     # Internal — captured for diagnostics.
     _gated_cfg: Optional[object] = field(default=None, init=False, repr=False)
 
@@ -186,22 +194,54 @@ class BabbleRunner:
     def _run_simulated_seconds(self, target_seconds: float) -> None:
         """Advance world.t by ``target_seconds`` of simulated time.
 
-        Calls :func:`world.physics.tick` repeatedly with the substrate's
-        configured ``dt``. ``audio_io`` is gated off (we do not pull
-        from any source, and the gated copy of the loop config carries
-        ``audio_io=None``). For empty worlds (``k_count == 0``) we still
-        advance ``world.t`` so the babble window is well-defined.
+        When ``enable_dream_replay`` is False (default), this is a plain
+        tick loop — preserves existing behaviour for tests and --mini.
+
+        When True, the run is wrapped in dream mode and audio_output
+        port atoms get a temporary pattern_id=42 + eligibility=4.0 so
+        dream replay actually fires them. Without these the audio
+        output port has no source of firings during babble (input is
+        gated, atoms have eligibility 0). Both are restored after.
         """
-        # Lazy: keeps this module importable when numba is being
-        # configured by other tests at collection time.
         from world.physics import tick
 
         dt = float(self.world.config.dt)
         if dt <= 0.0:
             raise ValueError("world.config.dt must be positive for babble")
         n_ticks = int(round(target_seconds / dt))
-        # Always run at least one tick when target_seconds > 0 so the
-        # decoder sees a well-defined window.
         n_ticks = max(1, n_ticks)
-        for _ in range(n_ticks):
-            tick(self.world, dt)
+
+        if not self.enable_dream_replay:
+            for _ in range(n_ticks):
+                tick(self.world, dt)
+            return
+
+        from world.dream import begin_dream_state, end_dream_state
+        cfg = self.world.config
+        ao_origin = np.asarray(cfg.audio_output_port_origin, dtype=np.float64)
+        ao_size = np.asarray(cfg.audio_output_port_size, dtype=np.float64)
+        K = int(self.world.k_count)
+        output_mask = None
+        saved_pid = saved_elig = None
+        if K > 0:
+            pos = self.world.k_pos[:K]
+            in_x = (pos[:, 0] >= ao_origin[0]) & (pos[:, 0] <= ao_origin[0] + ao_size[0])
+            in_y = (pos[:, 1] >= ao_origin[1]) & (pos[:, 1] <= ao_origin[1] + ao_size[1])
+            in_z = (pos[:, 2] >= ao_origin[2]) & (pos[:, 2] <= ao_origin[2] + ao_size[2])
+            output_mask = self.world.k_alive[:K] & in_x & in_y & in_z
+            if output_mask.any():
+                saved_pid = self.world.k_pattern_id[:K][output_mask].copy()
+                saved_elig = self.world.k_eligibility[:K][output_mask].copy()
+                BABBLE_PID = 42
+                self.world.k_pattern_id[:K][output_mask] = BABBLE_PID
+                self.world.k_eligibility[:K][output_mask] = 4.0
+
+        begin_dream_state(self.world)
+        try:
+            for _ in range(n_ticks):
+                tick(self.world, dt)
+        finally:
+            end_dream_state(self.world)
+            if output_mask is not None and output_mask.any():
+                self.world.k_pattern_id[:K][output_mask] = saved_pid
+                self.world.k_eligibility[:K][output_mask] = saved_elig
