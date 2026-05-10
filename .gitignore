@@ -51,6 +51,7 @@ docs/logbook/*.png
 # Local agent + browser state
 .claude/
 .playwright-mcp/
+.superpowers/
 
 # Debugging screenshots
 vibrasim_*.png
