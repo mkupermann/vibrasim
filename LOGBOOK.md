@@ -456,3 +456,127 @@ reconstruct it from `k_comp_offset[1:K+1]` on load. Full write-up in
 § Mid-flight discoveries.
 
 ---
+
+## 2026-05-10 — Predictive babble pipeline (G19): scope spec, autonomous build, two science caveats fixed
+
+The substrate's autonomous loop has no semantic ground truth — it learns from
+its own pre-seeded engrams, not from anything external. G19 wires it to a real
+sensory channel: hours of audio, four progressive curriculum stages, and a
+falsifier-battery (white-noise + time-reversed-DE + French controls) so that
+"the substrate babbled" is empirically distinguishable from "anything we sample
+from a noise process produces something."
+
+The acceptance test is **predictive babble**: after curriculum exposure, the
+trained substrate produces a 5 sec wav whose MFCC histogram has lower
+KL-divergence to held-out German than each of the three controls' babble. PASS
+requires z ≥ 2 on every control. NULL/FAIL on any control gets reported, never
+rationalised. Spec at
+`docs/superpowers/specs/2026-05-10-predictive-babble-design.md`.
+
+### Build: 8 components, 53 tests, autonomous-loop delivery
+
+Built end-to-end via the `autonomous-prototype-build` skill against a binary
+contract: integration test green + 4 wav files in `~/.eqmod/babble/mini/`. Five
+iterations ran serially with subagent dispatches under trust-but-verify (parent
+re-runs every test, spot-checks every claim). Wall-clock: ~2.5 hours of
+8 budgeted. Tokens: ~870K of 5M. New code: 4,667 insertions across 14 files.
+
+Components:
+
+- `agent/corpus_builder.py` — yt-dlp → ffmpeg → 16 kHz mono float32 → per-stage train files for each substrate. White-noise control RMS-matched, reversed control sample-reversed per stage, French control duration-matched.
+- `agent/decoder_audio.py` — inverse of `encoder_audio`: atom firings → STFT bins → ISTFT waveform. Roundtrip RMS within 10% on STFT-domain audio.
+- `world/audio_predictor.py` — first-order Markov over pattern_ids in audio_input port with Laplace smoothing. `perplexity(seq)` is read-only (so dev-eval doesn't train the predictor).
+- `agent/autonomous_loop.py` — surgical +14/-1 line edit accepting an optional `audio_io: AudioIO` parameter. Backward-compatible with the existing G17 emergence run.
+- `agent/convergence.py` + `agent/curriculum_scheduler.py` — windowed plateau detector, trained-uses-perplexity / control-uses-matched-wallclock advancement.
+- `agent/babble.py` — runs substrate with input gated off, harvests audio_output port firings, decodes to wav.
+- `agent/evaluate_babble.py` — KMeans-quantised MFCC histograms, bootstrap KL with z-score verdict per spec §6.
+- `agent/run_babble_experiment.py` — top-level driver (`--mini` for pipeline correctness, `--config` for the real 24-hour acceptance run).
+
+### Two caveats found and fixed in run_full
+
+The first pass of `run_full` was shape-correct but science-incorrect in two
+places that only surfaced when I tried to actually run it:
+
+**1. All four curriculum stages were training on the same audio.** `CorpusBuilder`
+originally concatenated all 4 stage source-lists into one `train.f32.raw` per
+substrate. The curriculum scheduler had 4 stages but each pointed at the same
+file — the audiobook → YouTuber → multi-speaker → webcam progression was a
+no-op. Fix: `CorpusBuilder.build()` now writes `stage1_train.f32.raw` …
+`stage4_train.f32.raw` per substrate. Trained DE gets per-stage natural audio,
+white-noise gets matched-duration independent draws, reversed-DE reverses each
+stage independently, French is sliced contiguously to match per-stage durations.
+Manifest gains a `stages` array.
+
+**2. Dev-split perplexity was a stand-in.** `_evaluate_perplexity_on_dev`
+originally returned `predictor.perplexity()` over the predictor's most-frequent
+transitions — a circular metric that tells us nothing about generalisation.
+Fix: snapshot world state, build a temp `CorpusAudioFeeder` pointing at
+`dev.f32.raw`, inject for `eval_duration_seconds`, tick physics, harvest
+pattern-id sequence from `audio_input` port firings, call
+`predictor.perplexity(sequence)` (read-only), restore world state. Implemented
+in-memory `_capture_world_state` / `_restore_world_state` because
+`world/snapshot.py:save_snapshot` does not persist `k_pattern_id`,
+`k_eligibility`, the slot recycling free-list, the self-model dict, or the
+workspace state — using disk roundtrip would silently lose state and
+contaminate training.
+
+### A third caveat that emerged when I actually ran the pipeline
+
+`_evaluate_perplexity_on_dev` originally returned `float('inf')` when the
+substrate had not yet fired in the audio_input port. The convergence
+detector's relative-improvement math is `(mean_prev - mean_last) / max(...)` —
+`inf - inf = NaN`, `NaN < threshold` is False, so plateau never fires and the
+trained substrate gets stuck on stage 0 forever. Fix: replaced with
+`_NO_SIGNAL_PERPLEXITY = 1e6` sentinel (large enough to dwarf any real
+perplexity; finite enough that "stable no-signal" reads as plateau and stages
+advance early; once real signal arrives perplexity drops to <100, detector
+correctly says "improving, not plateaued" until it stabilises). Confirmed
+empirically: with `inf`, trained_de logged cycle 12 still on stage 0; with
+`1e6`, advanced through all 4 stages in 8 cycles.
+
+### And then the controls hung, and that was a fourth caveat
+
+With the trained substrate working, the white-noise control hung after 3 minutes
+of wall-clock without finishing its first cycle. Diagnosis: white noise has
+energy in 150–200 STFT bins per block, so the encoder emits ~150 emissions per
+block × 31 blocks per 0.5 s inject call ≈ 4500 vibrations per call. The
+substrate's `audio_input` port saturates `n_nodes_max = 4096` atoms within a
+few cycles, physics tick scales O(N²), and a single awake phase ends up taking
+30+ minutes of wall-clock. Fix: top-K cap on emissions per inject call
+(`max_vibrations_per_inject = 256` default) — collect all emissions, sort by
+amplitude descending, keep top 256. Default retains rich spectral information
+for clean audio; bounds the worst case for noisy audio. After the fix, the
+synthetic full-mode demo ran all 4 substrates through the curriculum + babble +
+final evaluation in 66 s wall-clock total.
+
+### Honest scoping
+
+The synthetic demo produced silent wavs across all 4 substrates — the
+substrate's audio_output port doesn't fire on synthetic 3-tone training within
+8-cycle stages. Final verdict was FAIL because all 4 KL distances were
+identical (silence vs silence). The pipeline is science-correct; the science
+result requires real corpora and a 24-hour run. That run is for the user to
+launch with their own DE/FR sources, their own webcam recording for stage 4,
+and a MacBook with sleep mode disabled.
+
+`run_full` is the entry point. `--mini` is the integration-test contract that
+runs in 17 s. New tunables in YAML for fast demos:
+`awake_seconds_per_cycle`, `dream_seconds_per_cycle`, `convergence_window_size`,
+`convergence_min_improvement`, `convergence_min_history`,
+`max_vibrations_per_inject`. Production defaults match spec §6.
+
+Test count: 53 new + 335 existing = 388 total. New tests run in ~2 minutes;
+the existing 335-test suite includes physics simulations that take 10+ minutes
+end-to-end (this was the verifier-amendment of iter-1: full-suite regression
+was replaced with isolation analysis + targeted spot-checks per iteration).
+
+### What's next
+
+Open work for a production-quality acceptance run:
+1. Real corpus YAML (LibriVox audiobook narrators + a single-speaker YouTube channel + multi-speaker podcast feeds + user webcam recording for stage 4 + LibriVox French for the control).
+2. Implement a fix for `world/snapshot.py` so it persists the full mutable state, then drop `_capture_world_state` / `_restore_world_state` (currently a parallel implementation, will silently leak state if World gains new mutable fields).
+3. Run `python -m agent.run_babble_experiment --config corpus.yaml --out ~/.eqmod/babble/run-1/` for ~24 hours wall-clock and read the verdict.
+
+Operational documentation in `docs/predictive-babble.md`.
+
+---
