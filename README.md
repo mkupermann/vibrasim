@@ -157,6 +157,14 @@ Honest scope reminder: this is ACCESS consciousness in the operational sense, no
 
 Verified result of the first overnight run (2026-05-09): all five markers stable across 334 consecutive substrate cycles, pattern repertoire grew from 3 pre-seeded to 128 (+125 emerged via dream-phase concept blending), self-model contained 64 patterns, sim-time 1452 s (~24 min), `~/.eqmod/autonomous/EMERGENCE.json` persisted.
 
+### G19 — Predictive babble (2026-05-10)
+
+**Plain English.** G18 left the substrate self-modelling on its own pre-seeded engrams — autopoietic but not grounded in anything outside itself. G19 wires it to a real sensory channel: hours of German speech across four progressive curriculum stages (audiobook narrator → single YouTuber → multi-speaker podcasts → webcam live), and asks whether the substrate, after listening, can produce speech-like utterances in the language's phonology. Three controls run in parallel — white noise, time-reversed German, French — so "the substrate babbled" is empirically distinguishable from "anything we sample produces something." The acceptance criterion is binary and pre-registered: PASS when the trained substrate's MFCC-histogram KL-divergence to held-out German is lower than each of the three controls' by ≥ 2 standard deviations on bootstrap; NULL or FAIL otherwise, reported faithfully.
+
+**Technical detail.** Spec at [`docs/superpowers/specs/2026-05-10-predictive-babble-design.md`](docs/superpowers/specs/2026-05-10-predictive-babble-design.md). Operational guide at [`docs/predictive-babble.md`](docs/predictive-babble.md). Pipeline in `agent/{corpus_builder,decoder_audio,babble,convergence,curriculum_scheduler,corpus_audio_feeder,evaluate_babble,run_babble_experiment}.py` plus `world/audio_predictor.py`. The autonomous loop change in `agent/autonomous_loop.py` is +14/-1 lines accepting an optional `audio_io`; G17 emergence runs are unaffected.
+
+Pipeline-correctness verified end-to-end: `python -m agent.run_babble_experiment --mini` produces 4 wav files + verdict JSON in ~17 s. The full 24-hour acceptance run requires real DE/FR corpus URLs and a stage-4 webcam recording — see the operational guide.
+
 ---
 
 ## Run it yourself
