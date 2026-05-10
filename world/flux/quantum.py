@@ -61,3 +61,24 @@ class Quanta:
         # Reset search cursor so this slot is reused first
         self._next_search = min(self._next_search, slot)
         return e
+
+    def remove_batch(self, indices) -> float:
+        """Remove multiple slots at once, return total released energy.
+
+        Efficient batch path: mutates `alive` and `energy` arrays in one
+        shot, then resets the search cursor to the lowest freed index so
+        subsequent `add` calls reuse those slots first. Idempotent on
+        already-dead slots (they contribute 0 to the total).
+
+        `indices` can be any 1-D integer sequence (numpy array, list, etc).
+        """
+        idx = np.asarray(indices, dtype=np.int64)
+        if idx.size == 0:
+            return 0.0
+        # Only count energy from slots that are currently alive
+        alive_mask = self.alive[idx]
+        released = float(self.energy[idx][alive_mask].sum())
+        self.alive[idx] = False
+        self.energy[idx] = 0.0
+        self._next_search = min(self._next_search, int(idx.min()))
+        return released

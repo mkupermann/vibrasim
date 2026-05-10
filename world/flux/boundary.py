@@ -30,7 +30,7 @@ def inject_hot_floor(quanta: Quanta, grid: Grid,
     """
     if rng is None:
         rng = np.random.default_rng()
-    Lx, Ly, Lz = grid.dims
+    Lx, Ly, _ = grid.dims
     s = grid.voxel_size
     injected = 0
     for _ in range(n):
@@ -82,15 +82,5 @@ def absorb_cold_faces(quanta: Quanta, grid: Grid,
     to_absorb = alive & (at_ceiling | at_x_low | at_x_high |
                          at_y_low | at_y_high)
 
-    exported = float(quanta.energy[to_absorb].sum())
-
-    if exported > 0.0:
-        # Mark all absorbed slots dead
-        idx = np.where(to_absorb)[0]
-        for i in idx:
-            quanta.alive[i] = False
-            quanta.energy[i] = 0.0
-        # Reset search cursor
-        quanta._next_search = int(idx.min())
-
-    return exported
+    idx = np.where(to_absorb)[0]
+    return quanta.remove_batch(idx)
