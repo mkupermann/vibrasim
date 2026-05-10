@@ -99,6 +99,17 @@ Total suite: **313 non-slow tests + 22 slow tests passing**. Verified on macOS-a
 
 ---
 
+## Two substrates: legacy engineered + flux (in development)
+
+Since 2026-05-10 the repo carries two substrates side by side.
+
+- **Legacy** (`world/`, `agent/`) — the engineered six-level binding rule set documented throughout this README. Honest scope as of 2026-05-10: single-pattern recall works (M4 contract A+B); G19 predictive-babble falsifier returned FAIL on the first real-corpus run with z-scores statistically indistinguishable from white noise; the README has been corrected (commit `d83b82c`) to remove overclaims and document the FAIL.
+- **Flux** (`world/flux/`, `agent/flux/`) — the project's actual scientific bet. A substrate where the six engineered levels are replaced by one principle: energy quanta flow through an open boundary, structures kondensieren wo sie diesen Fluss effizienter kanalisieren, learning is reconfiguration toward more efficient flux channelling. Spec: [`docs/superpowers/specs/2026-05-10-flux-substrate-design.md`](docs/superpowers/specs/2026-05-10-flux-substrate-design.md). Status as of 2026-05-10: F0 in progress (skeleton + energy-conservation audit); F1–F6 roadmap pre-registered with Tier 2 falsifier as obligation and Tier 3 as stretch.
+
+The two substrates do not share state. The legacy substrate remains runnable as the comparison baseline; the flux substrate carries the unprejudiced learning hypothesis.
+
+---
+
 ## The four research-grounded amendments of May 2026
 
 This is the work of one continuous 12-hour build session. Each amendment closed a specific gap in the literature.
