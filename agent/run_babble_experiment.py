@@ -348,6 +348,7 @@ def run_full(config_path: Path, out_dir: Path) -> EvaluationResult:
         AutonomousLoop,
         AutonomousLoopConfig,
         build_autonomous_world,
+        configure_world_for_babble,
     )
     from agent.babble import BabbleRunner
     from agent.convergence import ConvergenceDetector
@@ -450,6 +451,12 @@ def run_full(config_path: Path, out_dir: Path) -> EvaluationResult:
         # on stage 1's audio; we re-load it on each stage advance below
         # so the substrate hears the right source per curriculum stage.
         world = build_autonomous_world()
+        # G19: enable Plan F speech-loop coupling and pre-seed audio
+        # input/output port atoms at canonical speech harmonics. This
+        # is the babble-pipeline opt-in that build_autonomous_world
+        # leaves out so G17 emergence runs and the existing test suite
+        # behave identically.
+        configure_world_for_babble(world)
         feeder = CorpusAudioFeeder(sample_rate=int(SAMPLE_RATE))
         feeder.load_stage(per_stage_train_paths[0], manifest_path)
         predictor = AudioPredictor()
@@ -578,6 +585,12 @@ def run_full(config_path: Path, out_dir: Path) -> EvaluationResult:
             duration_seconds=babble_duration_seconds,
             output_path=babble_path,
             sample_rate=int(SAMPLE_RATE),
+            # G19: predictive-babble pipeline drives output via dream-replay
+            # of high-eligibility audio_output port atoms. Without this the
+            # output port has no internal source of firings during the
+            # babble window and wavs are silent. --mini and tests use the
+            # default False to preserve their assertions.
+            enable_dream_replay=True,
         )
         _samples, written = babble_runner.run()
         if written is None or not Path(written).exists():
