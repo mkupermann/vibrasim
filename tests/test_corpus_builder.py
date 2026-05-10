@@ -329,3 +329,169 @@ def test_local_path_input_skips_download(tmp_path):
                 f"_download_url was called {mock_dl.call_count} times for "
                 f"local-path inputs"
             )
+
+
+# ---------------------------------------------------------------------------
+# 8. Per-stage train files written for the trained substrate
+# ---------------------------------------------------------------------------
+
+
+def _make_distinct_de_wavs(tmp_path: Path) -> tuple[Path, Path, Path, Path]:
+    """Four distinct stereo wavs so each stage has different audio."""
+    sr = 44100
+    paths: list[Path] = []
+    for i, freq in enumerate([330.0, 440.0, 660.0, 880.0]):
+        n = int(round(0.5 * sr))  # 0.5 s per stage
+        t = np.arange(n) / sr
+        left = (0.4 * np.sin(2 * np.pi * freq * t)).astype(np.float32)
+        right = (0.4 * np.sin(2 * np.pi * (freq * 1.5) * t)).astype(np.float32)
+        stereo = np.stack([left, right], axis=1)
+        int16 = (stereo * 32000).astype(np.int16)
+        path = tmp_path / f"de_stage{i + 1}.wav"
+        _write_wav_int16(path, int16, sr, channels=2)
+        paths.append(path)
+    return tuple(paths)  # type: ignore[return-value]
+
+
+def test_per_stage_files_written_for_trained(tmp_path):
+    """Each of stage1..stage4 train files exists with non-zero size, and
+    their sum approximates 80 % of the trained-DE total within rounding."""
+    de_paths = _make_distinct_de_wavs(tmp_path)
+    fr_path = _make_fr_wav(tmp_path, duration_s=2.0)
+    cache_dir = tmp_path / "cache"
+    out_dir = tmp_path / "out"
+
+    builder = CorpusBuilder(
+        de_stage1=[str(de_paths[0])],
+        de_stage2=[str(de_paths[1])],
+        de_stage3=[str(de_paths[2])],
+        de_stage4=[str(de_paths[3])],
+        fr_sources=[str(fr_path)],
+        cache_dir=cache_dir,
+        seed=42,
+    )
+    manifests = builder.build(out_dir)
+
+    sub_dir = out_dir / "de"
+    total_train_bytes = 0
+    for i in range(1, 5):
+        stage_path = sub_dir / f"stage{i}_train.f32.raw"
+        if not stage_path.is_file():
+            pytest.fail(f"stage{i}_train.f32.raw missing for trained DE")
+        size_bytes = stage_path.stat().st_size
+        if size_bytes == 0:
+            pytest.fail(f"stage{i}_train.f32.raw is empty (size 0)")
+        total_train_bytes += size_bytes
+
+    # Sum of per-stage train n_samples must approximate 80 % of total DE.
+    n_de_total = sum(
+        s["n_samples"] for s in manifests["de"]["splits"].values()
+    )
+    n_per_stage_train_total = total_train_bytes // 4  # bytes -> float32 samples
+    expected_train_total = (n_de_total * 80) // 100
+    # Allow ±4 samples (one per stage) for the rounding inside
+    # ``_split_80_10_10`` summed across four stages.
+    if abs(n_per_stage_train_total - expected_train_total) > 4:
+        pytest.fail(
+            f"per-stage train sample sum {n_per_stage_train_total} differs "
+            f"from expected 80% ({expected_train_total}) by more than ±4"
+        )
+
+
+def test_per_stage_durations_match_in_controls(tmp_path):
+    """Controls' per-stage train files match trained DE per-stage train
+    durations sample-for-sample within ±1 sample."""
+    de_paths = _make_distinct_de_wavs(tmp_path)
+    fr_path = _make_fr_wav(tmp_path, duration_s=2.0)
+    cache_dir = tmp_path / "cache"
+    out_dir = tmp_path / "out"
+
+    builder = CorpusBuilder(
+        de_stage1=[str(de_paths[0])],
+        de_stage2=[str(de_paths[1])],
+        de_stage3=[str(de_paths[2])],
+        de_stage4=[str(de_paths[3])],
+        fr_sources=[str(fr_path)],
+        cache_dir=cache_dir,
+        seed=42,
+    )
+    builder.build(out_dir)
+
+    de_sizes: list[int] = []
+    for i in range(1, 5):
+        path = out_dir / "de" / f"stage{i}_train.f32.raw"
+        de_sizes.append(path.stat().st_size // 4)
+
+    for control_name in ("white_noise", "reversed_de", "fr"):
+        for i in range(1, 5):
+            ctrl_path = out_dir / control_name / f"stage{i}_train.f32.raw"
+            if not ctrl_path.is_file():
+                pytest.fail(
+                    f"{control_name}/stage{i}_train.f32.raw missing"
+                )
+            ctrl_n = ctrl_path.stat().st_size // 4
+            de_n = de_sizes[i - 1]
+            if abs(ctrl_n - de_n) > 1:
+                pytest.fail(
+                    f"{control_name} stage{i} length {ctrl_n} != DE stage{i} "
+                    f"length {de_n} (>1 sample drift)"
+                )
+
+
+def test_manifest_includes_per_stage_metadata(tmp_path):
+    """``manifest.json`` has a ``stages`` array with name + n_samples +
+    duration_seconds per stage, and the entries match the on-disk files."""
+    de_paths = _make_distinct_de_wavs(tmp_path)
+    fr_path = _make_fr_wav(tmp_path, duration_s=2.0)
+    cache_dir = tmp_path / "cache"
+    out_dir = tmp_path / "out"
+
+    builder = CorpusBuilder(
+        de_stage1=[str(de_paths[0])],
+        de_stage2=[str(de_paths[1])],
+        de_stage3=[str(de_paths[2])],
+        de_stage4=[str(de_paths[3])],
+        fr_sources=[str(fr_path)],
+        cache_dir=cache_dir,
+        seed=42,
+    )
+    builder.build(out_dir)
+
+    for name in corpus_builder.CORPUS_NAMES:
+        manifest_path = out_dir / name / "manifest.json"
+        manifest = json.loads(manifest_path.read_text())
+        stages = manifest.get("stages")
+        if not isinstance(stages, list):
+            pytest.fail(
+                f"{name}: manifest 'stages' is {type(stages).__name__}, "
+                "expected list"
+            )
+        if len(stages) != 4:
+            pytest.fail(
+                f"{name}: manifest has {len(stages)} stages, expected 4"
+            )
+        for i, stage_meta in enumerate(stages, start=1):
+            for key in ("name", "path", "n_samples", "duration_seconds"):
+                if key not in stage_meta:
+                    pytest.fail(
+                        f"{name}/stage{i}: manifest entry missing key {key!r}"
+                    )
+            stage_path = out_dir / name / stage_meta["path"]
+            if not stage_path.is_file():
+                pytest.fail(
+                    f"{name}/stage{i}: file {stage_path} missing"
+                )
+            n_from_file = stage_path.stat().st_size // 4
+            if n_from_file != int(stage_meta["n_samples"]):
+                pytest.fail(
+                    f"{name}/stage{i}: file has {n_from_file} samples; "
+                    f"manifest says {stage_meta['n_samples']}"
+                )
+            expected_duration = (
+                int(stage_meta["n_samples"]) / SAMPLE_RATE
+            )
+            if abs(stage_meta["duration_seconds"] - expected_duration) > 1e-6:
+                pytest.fail(
+                    f"{name}/stage{i}: duration_seconds inconsistent with "
+                    "n_samples/sample_rate"
+                )

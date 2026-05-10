@@ -224,6 +224,117 @@ def test_autonomous_loop_default_no_audio_io():
         )
 
 
+def test_evaluate_perplexity_on_dev_does_not_mutate_world(tmp_path):
+    """``_evaluate_perplexity_on_dev`` must round-trip the world state.
+
+    Snapshot the world's invariants before the call; assert they are
+    identical after. This verifies the snapshot/restore step actually
+    works: without it the dev evaluation contaminates the training
+    trajectory by ticking physics on the shared world.
+    """
+    from agent.run_babble_experiment import _evaluate_perplexity_on_dev
+
+    # Build a small substrate identical to the predictor test fixture
+    # above, plus a dev audio file on disk.
+    pids = [1, 2, 3, 1, 2, 3]
+    world = _make_minimal_world_with_audio_firings(pids)
+    p = AudioPredictor(alpha=0.01)
+    # Seed the predictor's vocabulary so it doesn't short-circuit on
+    # vocab=0. Two transitions are enough.
+    p.observe(1, 2)
+    p.observe(2, 3)
+
+    # Write a minimal dev.f32.raw + manifest the feeder can ingest.
+    dev_dir = tmp_path / "dev_corpus"
+    dev_dir.mkdir(parents=True, exist_ok=True)
+    sample_rate = 16000
+    dev_audio = (
+        0.2 * np.sin(2 * np.pi * 440.0 * np.arange(sample_rate, dtype=np.float32) / sample_rate)
+    ).astype(np.float32)
+    dev_path = dev_dir / "dev.f32.raw"
+    dev_audio.tofile(dev_path)
+    manifest_path = dev_dir / "manifest.json"
+    import json as _json
+    manifest_path.write_text(_json.dumps({
+        "name": "dev",
+        "sample_rate": int(sample_rate),
+        "n_samples": int(dev_audio.size),
+    }))
+
+    # Capture invariants before.
+    K_before = int(world.k_count)
+    pre_pos = world.k_pos[:K_before].tobytes()
+    pre_pid = world.k_pattern_id[:K_before].tobytes()
+    pre_n_alive = int(world.n_alive)
+    pre_n_firings = len(world.firing_events)
+    pre_t = float(world.t)
+    pre_k_alive = world.k_alive[:K_before].tobytes()
+
+    # Run the dev eval. Use a tiny eval_duration so the test stays fast;
+    # the snapshot/restore path is exercised regardless of length.
+    perp = _evaluate_perplexity_on_dev(
+        world=world,
+        predictor=p,
+        dev_path=dev_path,
+        eval_duration_seconds=0.2,
+        sample_rate=sample_rate,
+    )
+    # We don't care what the perplexity value is here — only that the
+    # call returns a finite float or inf without raising.
+    if not (math.isfinite(perp) or math.isinf(perp)):
+        pytest.fail(
+            f"_evaluate_perplexity_on_dev returned NaN: {perp}"
+        )
+
+    # State invariants should match exactly.
+    if int(world.k_count) != K_before:
+        pytest.fail(
+            f"k_count changed: {K_before} → {world.k_count}"
+        )
+    if world.k_pos[:K_before].tobytes() != pre_pos:
+        pytest.fail(
+            "k_pos was mutated by the dev evaluation; "
+            "snapshot/restore round-trip is broken"
+        )
+    if world.k_pattern_id[:K_before].tobytes() != pre_pid:
+        pytest.fail(
+            "k_pattern_id was mutated by the dev evaluation"
+        )
+    if world.k_alive[:K_before].tobytes() != pre_k_alive:
+        pytest.fail(
+            "k_alive was mutated by the dev evaluation"
+        )
+    if int(world.n_alive) != pre_n_alive:
+        pytest.fail(
+            f"n_alive changed: {pre_n_alive} → {world.n_alive}"
+        )
+    if len(world.firing_events) != pre_n_firings:
+        pytest.fail(
+            f"firing_events length changed: "
+            f"{pre_n_firings} → {len(world.firing_events)} "
+            "(dev eval must not append to the training firing log)"
+        )
+    if abs(float(world.t) - pre_t) > 1e-9:
+        pytest.fail(
+            f"world.t changed: {pre_t} → {world.t}"
+        )
+
+    # Predictor must NOT have observed dev events (read-only contract).
+    # The internal _counts after the call must be a superset only of
+    # what we explicitly seeded — no new transitions added by the eval.
+    expected_transitions = {(1, 2), (2, 3)}
+    actual_transitions = {
+        (int(prev), int(nxt))
+        for prev, row in p._counts.items()
+        for nxt in row
+    }
+    if actual_transitions != expected_transitions:
+        pytest.fail(
+            f"predictor._counts mutated: expected {expected_transitions} "
+            f"but got {actual_transitions} — dev eval must be read-only"
+        )
+
+
 def test_autonomous_loop_with_audio_io_consumes_block():
     """Stub audio_io is called once per awake phase with target_sec."""
     from agent.autonomous_loop import (
