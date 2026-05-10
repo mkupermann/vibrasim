@@ -359,18 +359,22 @@ def run_full(config_path: Path, out_dir: Path) -> EvaluationResult:
     builder.build(corpus_root)
 
     # The CorpusBuilder writes corpora under {de, white_noise,
-    # reversed_de, fr}; substrate names map onto these.
-    # MVP simplification (acknowledged in the spec §10 — per-stage
-    # outputs are a future CorpusBuilder extension): each stage in the
-    # CurriculumScheduler points at the same per-substrate train
-    # split. The scheduler still drives advancement via convergence;
-    # the feeder loops on the same file across stages until then.
+    # reversed_de, fr}; substrate names map onto these. After the
+    # 2026-05-10 follow-up, the builder also writes per-stage train
+    # files (``stage1_train.f32.raw`` ... ``stage4_train.f32.raw``)
+    # so each curriculum stage can point at its own audio source.
     corpus_subdir_for_substrate: dict[str, str] = {
         "trained_de": "de",
         "white_noise": "white_noise",
         "reversed_de": "reversed_de",
         "french": "fr",
     }
+    # Optional override for the dev-evaluation duration. Long enough to
+    # see real perplexity convergence in production (default 30 s);
+    # tests can dial this down via YAML.
+    perplexity_eval_duration_seconds = float(
+        cfg.get("perplexity_eval_duration_seconds", 30.0)
+    )
 
     # 3. Train each substrate sequentially.
     state_path = out_dir / "state.json"
@@ -394,13 +398,23 @@ def run_full(config_path: Path, out_dir: Path) -> EvaluationResult:
         train_path = corpus_root / corpus_subdir / "train.f32.raw"
         manifest_path = corpus_root / corpus_subdir / "manifest.json"
 
-        # Build per-stage CurriculumStage list. All four stages point
-        # at the same train file for now; advancement is the
-        # scheduler's responsibility.
+        # Build per-stage CurriculumStage list. Each stage points at
+        # its own ``stage{i}_train.f32.raw`` so the substrate is
+        # progressively exposed to a different audio source per stage
+        # (spec §3 row 1: audiobook → YouTuber → multi-speaker → webcam).
+        # Falls back to the full ``train.f32.raw`` when per-stage files
+        # don't exist (e.g. legacy corpora or test fixtures that mock
+        # CorpusBuilder.build with a flat output tree).
+        per_stage_train_paths: list[Path] = []
+        for i in range(4):
+            stage_path = corpus_root / corpus_subdir / f"stage{i + 1}_train.f32.raw"
+            if not stage_path.exists():
+                stage_path = train_path
+            per_stage_train_paths.append(stage_path)
         stages = [
             CurriculumStage(
                 name=f"stage{i + 1}",
-                train_data_path=train_path,
+                train_data_path=per_stage_train_paths[i],
                 expected_min_cycles=expected_min_cycles_per_stage,
             )
             for i in range(4)
@@ -425,10 +439,12 @@ def run_full(config_path: Path, out_dir: Path) -> EvaluationResult:
             convergence=convergence,
         )
 
-        # Build substrate, feeder, predictor, loop.
+        # Build substrate, feeder, predictor, loop. The feeder starts
+        # on stage 1's audio; we re-load it on each stage advance below
+        # so the substrate hears the right source per curriculum stage.
         world = build_autonomous_world()
         feeder = CorpusAudioFeeder(sample_rate=int(SAMPLE_RATE))
-        feeder.load_stage(train_path, manifest_path)
+        feeder.load_stage(per_stage_train_paths[0], manifest_path)
         predictor = AudioPredictor()
         substrate_snapshot_dir = snapshot_root / substrate_name
         substrate_snapshot_dir.mkdir(parents=True, exist_ok=True)
@@ -490,8 +506,11 @@ def run_full(config_path: Path, out_dir: Path) -> EvaluationResult:
             # Every K cycles, evaluate perplexity on the dev split.
             if cycle_index % perplexity_eval_interval_cycles == 0:
                 perplexity = _evaluate_perplexity_on_dev(
+                    world=world,
                     predictor=predictor,
                     dev_path=corpus_root / corpus_subdir / "dev.f32.raw",
+                    eval_duration_seconds=perplexity_eval_duration_seconds,
+                    sample_rate=int(SAMPLE_RATE),
                 )
                 elapsed = (
                     time.time()
@@ -508,9 +527,19 @@ def run_full(config_path: Path, out_dir: Path) -> EvaluationResult:
                     per_stage_start_index = cycle_index
                     stage_start_time = time.time()
                     if not scheduler.is_done():
-                        # Reload the same train file (MVP: per-stage
-                        # files would differ in a future iteration).
-                        feeder.reset()
+                        # Advance the feeder onto the next stage's
+                        # per-stage train file (audiobook → YouTuber →
+                        # multi-speaker → webcam, per spec §3 row 1).
+                        next_stage_idx = int(
+                            scheduler.current_stage_index
+                        )
+                        if 0 <= next_stage_idx < len(per_stage_train_paths):
+                            feeder.load_stage(
+                                per_stage_train_paths[next_stage_idx],
+                                manifest_path,
+                            )
+                        else:
+                            feeder.reset()
 
             # Persist resume state cheaply.
             state[substrate_name] = {
@@ -581,39 +610,291 @@ def run_full(config_path: Path, out_dir: Path) -> EvaluationResult:
     return result
 
 
-def _evaluate_perplexity_on_dev(predictor, dev_path: Path) -> float:
-    """Compute perplexity over the dev-split pattern_id sequence.
+def _evaluate_perplexity_on_dev(
+    world,
+    predictor,
+    dev_path: Path,
+    eval_duration_seconds: float = 30.0,
+    sample_rate: int = SAMPLE_RATE,
+) -> float:
+    """Evaluate the predictor's perplexity on held-out dev audio.
 
-    The audio_predictor's ``perplexity`` method takes a sequence of
-    pattern_ids; in this simplified MVP we approximate by walking the
-    predictor's vocabulary across the existing ``_history`` -- see
-    the predictor's docstring for context. Returns a positive float;
-    if the predictor has no observed transitions yet we return a
-    large sentinel (10x current vocab size) so ``ConvergenceDetector``
-    sees a strictly-decreasing series early on.
+    Procedure (spec §3 row ``agent/run_babble_experiment.py``,
+    2026-05-10 follow-up replacing the earlier circular stand-in):
+
+    1. Snapshot world state in-memory so the dev evaluation cannot
+       contaminate the training trajectory.
+    2. Build a temporary :class:`CorpusAudioFeeder` pointing at
+       ``dev_path``.
+    3. Inject ``eval_duration_seconds`` of dev audio into the world via
+       ``feeder.inject_into_substrate``.
+    4. Tick physics for the same duration at ``world.config.dt``.
+    5. Filter ``world.firing_events`` to events whose atom position
+       lies inside the audio_input port AND whose timestamp falls in
+       the eval window. Map atom_idx → ``world.k_pattern_id[idx]``;
+       drop pid==0 (ambient) firings. Result is the held-out
+       pattern_id sequence.
+    6. Compute ``predictor.perplexity(sequence)`` — READ ONLY. We do
+       not call ``observe`` so the dev data never trains the predictor.
+       If the sequence has fewer than 2 elements (substrate did not
+       fire in the audio_input port during dev), return ``inf`` —
+       honest about non-convergence rather than a soft pass.
+    7. Restore world state from the in-memory snapshot.
+
+    Short-circuit: if the predictor has not yet seen any pattern_ids
+    (vocabulary empty) or the world has no atoms, return ``inf``
+    without ticking. Avoids the expensive snapshot+tick+restore round
+    trip when there is nothing to evaluate yet — and is honest about a
+    substrate that has not even begun building a vocabulary.
+
+    Snapshot mechanism note: spec §10 hinted that
+    ``world.snapshot.save_snapshot`` could be used directly. In
+    practice the on-disk save+load round-trip drops several
+    World fields (``k_pattern_id``, ``k_eligibility``, the slot
+    recycling free-list, the self-model dict, etc.), so we do an
+    in-memory copy of the full World state here instead. Everything
+    that physics or dream may mutate is captured. Disk I/O is also
+    avoided per-eval, which matters because the dev evaluation runs
+    every K cycles across a 24-hour run.
     """
-    # The dev_path is the f32.raw of the dev split. Encoding the dev
-    # split through the predictor is a future hardening step (it
-    # requires a separate substrate forward-pass to elicit its
-    # pattern_id sequence). For MVP, we report the predictor's
-    # internal perplexity over the most recent observed sequence.
-    vocab_size = max(1, predictor.vocabulary_size())
-    # Synthetic 'recent observations' — read the last few pattern_ids
-    # from _last_seen_pid only. If we have at least one transition
-    # recorded we can compute perplexity over a degenerate two-element
-    # sequence; otherwise fall back to vocab_size as a baseline.
-    if not predictor._counts:
-        return float(10 * vocab_size)
-    # Pick a chain through the most-frequent transitions to estimate
-    # the model's confidence on its own data — a stand-in for the
-    # full dev forward-pass.
-    sample = list(predictor._counts.keys())[:max(2, vocab_size)]
-    if len(sample) < 2:
-        sample = sample + sample  # degenerate two-element sequence
-    perp = predictor.perplexity(sample)
-    if not np.isfinite(perp):
-        return float(vocab_size)
-    return float(perp)
+    import tempfile
+
+    # Honest-default short circuits.
+    if predictor.vocabulary_size() == 0:
+        return float("inf")
+    K = int(getattr(world, "k_count", 0))
+    if K == 0:
+        return float("inf")
+    if not Path(dev_path).exists():
+        return float("inf")
+    if eval_duration_seconds <= 0.0:
+        return float("inf")
+
+    # 1. In-memory snapshot. Cheap (per-array .copy()), avoids disk I/O,
+    # and captures fields ``world.snapshot.save_snapshot`` doesn't.
+    snapshot = _capture_world_state(world)
+    eval_window_start_t = float(world.t)
+    try:
+        # 2. Build a dev feeder. We need the dev corpus's manifest;
+        # fall back to a synthetic in-memory manifest when the corpus
+        # builder hasn't written one (older test fixtures).
+        dev_manifest_path = Path(dev_path).parent / "manifest.json"
+        if not dev_manifest_path.exists():
+            # Write a minimal manifest next to the dev file so the
+            # feeder's sample-rate cross-check is satisfied. Use a
+            # tempfile to avoid mutating the corpus tree on disk.
+            with tempfile.NamedTemporaryFile(
+                suffix=".json", delete=False, mode="w",
+            ) as mf_tmp:
+                json.dump(
+                    {
+                        "name": "dev",
+                        "sample_rate": int(sample_rate),
+                    },
+                    mf_tmp,
+                )
+                mf_tmp_path = Path(mf_tmp.name)
+            dev_manifest_path = mf_tmp_path
+        from agent.corpus_audio_feeder import CorpusAudioFeeder
+        dev_feeder = CorpusAudioFeeder(sample_rate=int(sample_rate))
+        try:
+            dev_feeder.load_stage(Path(dev_path), dev_manifest_path)
+        except (FileNotFoundError, ValueError):
+            # Empty or unreadable dev split — honest non-convergence.
+            return float("inf")
+
+        # 3. Inject dev audio.
+        dev_feeder.inject_into_substrate(
+            world, float(eval_duration_seconds),
+        )
+
+        # 4. Tick physics for the eval window.
+        try:
+            from world.physics import tick as _tick
+        except ImportError:
+            return float("inf")
+        dt = float(world.config.dt)
+        if dt <= 0.0:
+            return float("inf")
+        n_ticks = max(1, int(round(float(eval_duration_seconds) / dt)))
+        for _ in range(n_ticks):
+            _tick(world, dt)
+
+        # 5. Harvest pattern_id sequence from firing_events in the
+        # eval window AND inside the audio_input port box. Filter
+        # pid==0 (ambient/unassigned) so we measure only the
+        # phoneme-scale pattern alphabet the predictor actually
+        # models.
+        cfg = world.config
+        origin = getattr(cfg, "audio_input_port_origin", None)
+        size = getattr(cfg, "audio_input_port_size", None)
+        sequence: list[int] = []
+        if origin is not None and size is not None:
+            ox, oy, oz = (
+                float(origin[0]), float(origin[1]), float(origin[2]),
+            )
+            sx, sy, sz = (
+                float(size[0]), float(size[1]), float(size[2]),
+            )
+            K_now = int(getattr(world, "k_count", 0))
+            k_pos = world.k_pos
+            k_pattern_id = world.k_pattern_id
+            for t_fire, atom_idx in world.firing_events:
+                if t_fire < eval_window_start_t:
+                    continue
+                if atom_idx < 0 or atom_idx >= K_now:
+                    continue
+                pos = k_pos[atom_idx]
+                if not (ox <= pos[0] <= ox + sx
+                        and oy <= pos[1] <= oy + sy
+                        and oz <= pos[2] <= oz + sz):
+                    continue
+                pid = int(k_pattern_id[atom_idx])
+                if pid == 0:
+                    continue
+                sequence.append(pid)
+
+        # 6. Compute perplexity (READ ONLY — no observe()).
+        if len(sequence) < 2:
+            return float("inf")
+        perp = predictor.perplexity(sequence)
+        if not np.isfinite(perp):
+            return float("inf")
+        return float(perp)
+    finally:
+        # 7. Restore world state. We mutate ``world`` in place so the
+        # caller's reference (and the autonomous loop's ``self.world``)
+        # stays valid.
+        _restore_world_state(world, snapshot)
+
+
+def _capture_world_state(world) -> dict:
+    """In-memory snapshot of every World field physics or dream may mutate.
+
+    We copy every numpy array (so subsequent in-place mutations don't
+    leak back through aliasing) and the scalar/list fields that get
+    appended to or rebound during a tick. The returned dict is fed
+    back into :func:`_restore_world_state`.
+
+    Why not :func:`world.snapshot.save_snapshot`? That API was built
+    for cycle-end resumability and only persists a subset of fields
+    (notably it drops ``k_pattern_id``, ``k_eligibility``, the slot
+    recycling free-list, the self-model dict, and dream sub-phase
+    state). The dev evaluation needs full transparency, so we capture
+    here what production resumability does not need.
+    """
+    snap: dict = {}
+    # Vibration arrays.
+    snap["s_pos"] = world.s_pos.copy()
+    snap["s_vel"] = world.s_vel.copy()
+    snap["s_freq"] = world.s_freq.copy()
+    snap["s_pol"] = world.s_pol.copy()
+    snap["s_alive"] = world.s_alive.copy()
+    snap["s_locked_this_tick"] = world.s_locked_this_tick.copy()
+    snap["s_reward_polarity"] = world.s_reward_polarity.copy()
+    snap["n_alive"] = int(world.n_alive)
+    # Node arrays.
+    snap["k_pos"] = world.k_pos.copy()
+    snap["k_vel"] = world.k_vel.copy()
+    snap["k_freq"] = world.k_freq.copy()
+    snap["k_pol"] = world.k_pol.copy()
+    snap["k_level"] = world.k_level.copy()
+    snap["k_birth"] = world.k_birth.copy()
+    snap["k_alive"] = world.k_alive.copy()
+    snap["k_locked_this_tick"] = world.k_locked_this_tick.copy()
+    snap["k_charge"] = world.k_charge.copy()
+    snap["k_refractory_until"] = world.k_refractory_until.copy()
+    snap["k_strength"] = world.k_strength.copy()
+    snap["k_orientation"] = world.k_orientation.copy()
+    snap["k_reward_polarity"] = world.k_reward_polarity.copy()
+    snap["k_ref_count"] = world.k_ref_count.copy()
+    snap["k_pattern_id"] = world.k_pattern_id.copy()
+    snap["k_eligibility"] = world.k_eligibility.copy()
+    snap["k_count"] = int(world.k_count)
+    snap["active_pattern_id"] = int(world.active_pattern_id)
+    # Composition arrays.
+    snap["k_comp_offset"] = world.k_comp_offset.copy()
+    snap["k_comp_end"] = world.k_comp_end.copy()
+    snap["k_comp_indices"] = world.k_comp_indices.copy()
+    snap["k_comp_kind"] = world.k_comp_kind.copy()
+    snap["k_comp_used"] = int(world.k_comp_used)
+    # Firing log + sim time.
+    snap["firing_events"] = list(world.firing_events)
+    snap["t"] = float(world.t)
+    # Slot recycling bookkeeping (lists, not arrays).
+    snap["_free_slots"] = list(getattr(world, "_free_slots", []))
+    snap["_free_slots_set"] = set(getattr(world, "_free_slots_set", set()))
+    # G16 self-aware state — dicts that apply_self_aware mutates.
+    snap["self_model"] = dict(getattr(world, "self_model", {}))
+    snap["self_predicted_next"] = dict(
+        getattr(world, "self_predicted_next", {})
+    )
+    snap["self_prediction_error"] = float(
+        getattr(world, "self_prediction_error", 0.0)
+    )
+    snap["workspace_winner_pattern_id"] = int(
+        getattr(world, "workspace_winner_pattern_id", 0)
+    )
+    snap["workspace_history"] = list(
+        getattr(world, "workspace_history", [])
+    )
+    snap["dream_subphase_counter"] = int(
+        getattr(world, "dream_subphase_counter", 0)
+    )
+    return snap
+
+
+def _restore_world_state(world, snap: dict) -> None:
+    """Inverse of :func:`_capture_world_state` — restore in place."""
+    # Vibration arrays.
+    world.s_pos[:] = snap["s_pos"]
+    world.s_vel[:] = snap["s_vel"]
+    world.s_freq[:] = snap["s_freq"]
+    world.s_pol[:] = snap["s_pol"]
+    world.s_alive[:] = snap["s_alive"]
+    world.s_locked_this_tick[:] = snap["s_locked_this_tick"]
+    world.s_reward_polarity[:] = snap["s_reward_polarity"]
+    world.n_alive = int(snap["n_alive"])
+    # Node arrays.
+    world.k_pos[:] = snap["k_pos"]
+    world.k_vel[:] = snap["k_vel"]
+    world.k_freq[:] = snap["k_freq"]
+    world.k_pol[:] = snap["k_pol"]
+    world.k_level[:] = snap["k_level"]
+    world.k_birth[:] = snap["k_birth"]
+    world.k_alive[:] = snap["k_alive"]
+    world.k_locked_this_tick[:] = snap["k_locked_this_tick"]
+    world.k_charge[:] = snap["k_charge"]
+    world.k_refractory_until[:] = snap["k_refractory_until"]
+    world.k_strength[:] = snap["k_strength"]
+    world.k_orientation[:] = snap["k_orientation"]
+    world.k_reward_polarity[:] = snap["k_reward_polarity"]
+    world.k_ref_count[:] = snap["k_ref_count"]
+    world.k_pattern_id[:] = snap["k_pattern_id"]
+    world.k_eligibility[:] = snap["k_eligibility"]
+    world.k_count = int(snap["k_count"])
+    world.active_pattern_id = int(snap["active_pattern_id"])
+    # Composition arrays.
+    world.k_comp_offset[:] = snap["k_comp_offset"]
+    world.k_comp_end[:] = snap["k_comp_end"]
+    world.k_comp_indices[:] = snap["k_comp_indices"]
+    world.k_comp_kind[:] = snap["k_comp_kind"]
+    world.k_comp_used = int(snap["k_comp_used"])
+    # Firing log + sim time.
+    world.firing_events = list(snap["firing_events"])
+    world.t = float(snap["t"])
+    # Slot recycling bookkeeping.
+    world._free_slots = list(snap["_free_slots"])
+    world._free_slots_set = set(snap["_free_slots_set"])
+    # G16 self-aware state.
+    world.self_model = dict(snap["self_model"])
+    world.self_predicted_next = dict(snap["self_predicted_next"])
+    world.self_prediction_error = float(snap["self_prediction_error"])
+    world.workspace_winner_pattern_id = int(
+        snap["workspace_winner_pattern_id"]
+    )
+    world.workspace_history = list(snap["workspace_history"])
+    world.dream_subphase_counter = int(snap["dream_subphase_counter"])
 
 
 # ---------------------------------------------------------------------

@@ -1,6 +1,9 @@
 """Corpus builder for the predictive-babble pipeline.
 
-Pipeline (per spec §3, row `agent/corpus_builder.py`):
+Pipeline (per spec §3, row `agent/corpus_builder.py`, plus the
+2026-05-10 follow-up that added per-stage outputs so the curriculum
+actually exposes the trained substrate to a different audio source per
+stage):
 
 1. Accept four input source lists for the trained-DE substrate (one per
    curriculum stage): audiobooks, single YouTuber, multi-speaker podcasts,
@@ -15,18 +18,25 @@ Pipeline (per spec §3, row `agent/corpus_builder.py`):
    corpus:
 
      * white-noise — RMS-matched
-     * time-reversed-DE — reversed sample-wise
+     * time-reversed-DE — reversed sample-wise (per stage)
      * French — built from a separate French source list, same pipeline.
 
-5. Split each of the four corpora 80 / 10 / 10 train / dev / test.
-   Splits are CONTIGUOUS (no shuffling) — preserves prosodic continuity
-   within each split as the spec demands.
+5. Split each of the four corpora 80 / 10 / 10 train / dev / test. The
+   train split is built CONTIGUOUSLY *within each stage* and the
+   per-stage 80% chunks are concatenated to form the full ``train``
+   file. dev and test follow the same pattern. Per-stage train files
+   are also written so the curriculum scheduler can advance the feeder
+   onto a different audio source per stage.
 6. Write outputs::
 
-     {out_dir}/{name}/train.f32.raw
-     {out_dir}/{name}/dev.f32.raw
-     {out_dir}/{name}/test.f32.raw
-     {out_dir}/{name}/manifest.json   # sample_rate, duration_seconds, n_samples per split
+     {out_dir}/{name}/train.f32.raw          # concatenated 80% chunks
+     {out_dir}/{name}/dev.f32.raw            # concatenated 10% chunks
+     {out_dir}/{name}/test.f32.raw           # concatenated 10% chunks
+     {out_dir}/{name}/stage1_train.f32.raw   # stage 1 80% chunk
+     {out_dir}/{name}/stage2_train.f32.raw   # stage 2 80% chunk
+     {out_dir}/{name}/stage3_train.f32.raw   # stage 3 80% chunk
+     {out_dir}/{name}/stage4_train.f32.raw   # stage 4 80% chunk
+     {out_dir}/{name}/manifest.json          # sample_rate, splits + per-stage metadata
 
 CLI::
 
@@ -200,12 +210,99 @@ def _split_80_10_10(audio: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarr
     return train, dev, test
 
 
-def _write_split(name: str, audio: np.ndarray, out_dir: Path,
-                 sample_rate: int = SAMPLE_RATE) -> dict:
-    """Write train/dev/test + manifest. Return the manifest dict."""
+def _split_per_stage(stage_arrays: list[np.ndarray]) -> tuple[
+    list[np.ndarray], list[np.ndarray], list[np.ndarray]
+]:
+    """Apply ``_split_80_10_10`` to each stage independently.
+
+    Returns three parallel lists ``(stage_trains, stage_devs, stage_tests)``
+    so callers can both write per-stage files and concatenate to form
+    the full splits without re-splitting the catenation.
+    """
+    stage_trains: list[np.ndarray] = []
+    stage_devs: list[np.ndarray] = []
+    stage_tests: list[np.ndarray] = []
+    for stage_audio in stage_arrays:
+        train, dev, test = _split_80_10_10(stage_audio)
+        stage_trains.append(train)
+        stage_devs.append(dev)
+        stage_tests.append(test)
+    return stage_trains, stage_devs, stage_tests
+
+
+def _concat_or_empty(arrays: list[np.ndarray]) -> np.ndarray:
+    """Concatenate non-empty arrays; return zero-length f32 if all empty."""
+    arrays = [a for a in arrays if a.size > 0]
+    if not arrays:
+        return np.zeros(0, dtype=np.float32)
+    return np.concatenate(arrays).astype(np.float32, copy=False)
+
+
+def _split_into_chunks(
+    audio: np.ndarray, lengths: list[int],
+) -> list[np.ndarray]:
+    """Carve ``audio`` into contiguous chunks of the requested lengths.
+
+    The total of ``lengths`` must equal ``audio.size`` exactly. If a
+    rounding mismatch sneaks in we adjust the final chunk by ±1 sample
+    so the invariant ``sum(out_lengths) == audio.size`` always holds.
+    """
+    total = int(audio.size)
+    target = int(sum(lengths))
+    # Round-tripped lengths can drift by ±1 vs the source after
+    # arithmetic in the caller; absorb that drift in the last chunk so
+    # the invariant holds exactly without throwing.
+    if target != total and lengths:
+        lengths = list(lengths)
+        lengths[-1] += (total - target)
+    chunks: list[np.ndarray] = []
+    cursor = 0
+    for L in lengths:
+        L_int = max(0, int(L))
+        end = cursor + L_int
+        chunks.append(audio[cursor:end].astype(np.float32, copy=False))
+        cursor = end
+    return chunks
+
+
+def _write_split(
+    name: str,
+    audio: np.ndarray,
+    out_dir: Path,
+    sample_rate: int = SAMPLE_RATE,
+    *,
+    stage_trains: list[np.ndarray] | None = None,
+    stage_devs: list[np.ndarray] | None = None,
+    stage_tests: list[np.ndarray] | None = None,
+    fr_per_stage_note: str | None = None,
+) -> dict:
+    """Write train/dev/test + per-stage train files + manifest.
+
+    The full ``train.f32.raw`` is the concatenation of per-stage 80%
+    chunks; ``dev.f32.raw`` and ``test.f32.raw`` are the corresponding
+    10% chunk concatenations. When ``stage_trains`` is supplied (the
+    new code path), per-stage files are also written and the manifest
+    grows a ``stages`` array describing each stage's n_samples and
+    duration_seconds.
+
+    ``stage_trains`` is the source of truth for the full train file
+    when supplied — passing it preserves the per-stage structure across
+    the concatenation, which would otherwise be invisible to the
+    caller.
+    """
     target = out_dir / name
     target.mkdir(parents=True, exist_ok=True)
-    train, dev, test = _split_80_10_10(audio)
+
+    # Build the full splits. If per-stage chunks are supplied use them
+    # to preserve the contiguous-within-stage invariant; otherwise fall
+    # back to a global 80/10/10 split for backwards compatibility.
+    if stage_trains is not None and stage_devs is not None and stage_tests is not None:
+        train = _concat_or_empty(stage_trains)
+        dev = _concat_or_empty(stage_devs)
+        test = _concat_or_empty(stage_tests)
+    else:
+        train, dev, test = _split_80_10_10(audio)
+
     splits = {"train": train, "dev": dev, "test": test}
     manifest: dict = {
         "name": name,
@@ -221,6 +318,26 @@ def _write_split(name: str, audio: np.ndarray, out_dir: Path,
             "n_samples": int(arr_f32.shape[0]),
             "duration_seconds": float(arr_f32.shape[0] / sample_rate),
         }
+
+    # Per-stage train files + manifest entries.
+    if stage_trains is not None:
+        stages_meta: list[dict] = []
+        for i, stage_train in enumerate(stage_trains, start=1):
+            stage_name = f"stage{i}"
+            file_name = f"{stage_name}_train.f32.raw"
+            stage_train_f32 = stage_train.astype(np.float32, copy=False)
+            stage_train_f32.tofile(target / file_name)
+            stages_meta.append({
+                "name": stage_name,
+                "path": file_name,
+                "n_samples": int(stage_train_f32.shape[0]),
+                "duration_seconds": float(stage_train_f32.shape[0] / sample_rate),
+            })
+        manifest["stages"] = stages_meta
+
+    if fr_per_stage_note is not None:
+        manifest["per_stage_note"] = fr_per_stage_note
+
     manifest_path = target / "manifest.json"
     manifest_path.write_text(json.dumps(manifest, indent=2))
     return manifest
@@ -266,18 +383,27 @@ class CorpusBuilder:
 
     # ---- ingestion ------------------------------------------------------
 
-    def build_trained_de(self) -> np.ndarray:
-        """Concatenate the four stages of trained-DE audio."""
+    def build_trained_de_per_stage(self) -> list[np.ndarray]:
+        """Ingest each DE stage independently.
+
+        Returns a list of four numpy arrays, one per curriculum stage.
+        Empty stages produce zero-length arrays — callers must filter
+        if they want to enforce non-emptiness.
+        """
         stages = [
             self.de_stage1,
             self.de_stage2,
             self.de_stage3,
             self.de_stage4,
         ]
-        chunks = [
+        return [
             _ingest_sources(stage, self.cache_dir, self.sample_rate)
             for stage in stages
         ]
+
+    def build_trained_de(self) -> np.ndarray:
+        """Concatenate the four stages of trained-DE audio."""
+        chunks = self.build_trained_de_per_stage()
         if all(c.size == 0 for c in chunks):
             return np.zeros(0, dtype=np.float32)
         return np.concatenate(chunks).astype(np.float32, copy=False)
@@ -305,11 +431,32 @@ class CorpusBuilder:
         """Build all four corpora and write splits + manifests under ``out_dir``.
 
         Returns a dict of ``{corpus_name: manifest_dict}``.
+
+        Per-stage outputs (the 2026-05-10 follow-up):
+
+        * Trained DE: each stage is ingested independently, split 80/10/10
+          *within that stage* (contiguously), and the per-stage 80% chunk
+          is written as ``stage{i}_train.f32.raw``. The full ``train``
+          file is the concatenation of those per-stage chunks.
+        * White-noise control: the per-stage train files match the DE
+          per-stage train durations exactly (sample-for-sample), so the
+          curriculum scheduler can advance at matched wall-clock.
+        * Reversed-DE control: each stage is reversed independently
+          (``stage{i}_train`` of reversed_de is ``reverse(stage{i}_train`` of
+          trained DE), so the temporal structure of each stage's reversal
+          maps back onto the same stage in the curriculum.
+        * French control: per-stage FR sourcing is not realistic without a
+          richer YAML (FR is a single flat list in the spec). For v1 we
+          divide the FR audio into four contiguous chunks of durations
+          matching the trained DE per-stage train durations. The manifest
+          records this explicitly via ``per_stage_note``.
         """
         out_dir = Path(out_dir)
         out_dir.mkdir(parents=True, exist_ok=True)
 
-        de = self.build_trained_de()
+        # 1. Ingest DE per-stage.
+        de_stages = self.build_trained_de_per_stage()
+        de = _concat_or_empty(de_stages)
         n = de.shape[0]
         if n == 0:
             raise RuntimeError(
@@ -317,14 +464,94 @@ class CorpusBuilder:
                 "resolved to readable audio."
             )
 
+        # 2. Per-stage 80/10/10 splits for the trained corpus. Each
+        # stage's per-stage train file is the 80% slice of *that*
+        # stage's audio, contiguous within the stage — preserves
+        # prosodic continuity within the stage as the spec demands.
+        de_stage_trains, de_stage_devs, de_stage_tests = (
+            _split_per_stage(de_stages)
+        )
+        per_stage_train_lengths = [int(a.size) for a in de_stage_trains]
+
+        # 3. RMS-matched white noise — generated with the *trained
+        # corpus's* per-stage train durations so per-stage files match
+        # sample-for-sample. The full white-noise stream stays the same
+        # global length as DE for backwards compat with consumers that
+        # only use the full ``train.f32.raw``.
         rng = np.random.default_rng(self.seed)
         target_rms = _rms(de)
         white = _make_white_noise(n, target_rms, rng)
-        reversed_de = _reverse(de)
-        fr = self.build_french(n)
+        # Independent per-stage RNG draws (deterministic on self.seed)
+        # ensure each per-stage white-noise file is itself white noise,
+        # not just a slice of the global stream — slicing would still
+        # be valid noise but the per-stage structure would be invisible.
+        white_stage_trains: list[np.ndarray] = []
+        white_stage_devs: list[np.ndarray] = []
+        white_stage_tests: list[np.ndarray] = []
+        for i, _train in enumerate(de_stage_trains):
+            stage_n = int(de_stages[i].size)
+            stage_rms_target = (
+                _rms(de_stages[i]) if de_stages[i].size > 0 else target_rms
+            )
+            stage_rng = np.random.default_rng(self.seed + 1 + i)
+            stage_noise = _make_white_noise(
+                stage_n, stage_rms_target, stage_rng,
+            )
+            wt, wd, ws = _split_80_10_10(stage_noise)
+            white_stage_trains.append(wt)
+            white_stage_devs.append(wd)
+            white_stage_tests.append(ws)
 
-        # Defensive: every corpus must equal n samples exactly.
-        for label, arr in [("white_noise", white), ("reversed_de", reversed_de), ("fr", fr)]:
+        # 4. Reversed-DE per stage. The spec is explicit:
+        # reversed_de/stage{i}_train.f32.raw == reverse(de/stage{i}_train.f32.raw)
+        # i.e. the stage's *train* slice reversed. We also reverse the
+        # dev and test slices per stage so dev/test of the reversed
+        # control still come from the right stage's audio.
+        rev_stage_trains: list[np.ndarray] = [
+            _reverse(t) for t in de_stage_trains
+        ]
+        rev_stage_devs: list[np.ndarray] = [
+            _reverse(d) for d in de_stage_devs
+        ]
+        rev_stage_tests: list[np.ndarray] = [
+            _reverse(t) for t in de_stage_tests
+        ]
+        # The full reversed_de stream is *not* simply reverse(de) any more
+        # — it is the concatenation of the per-stage reversals (so the
+        # full file's substring structure aligns with the per-stage files).
+        reversed_de = _concat_or_empty(
+            rev_stage_trains + rev_stage_devs + rev_stage_tests
+        )
+        # Defensive: total length must still equal n.
+        if reversed_de.size != n:
+            # Fall back to the global reversal so the equal-duration
+            # invariant holds; per-stage reversals are still written.
+            reversed_de = _reverse(de)
+
+        # 5. French per stage — spec note: per-stage FR sourcing not
+        # realistic without a richer YAML. For v1 we split FR into four
+        # contiguous chunks matching trained DE per-stage durations.
+        fr = self.build_french(n)
+        # Per-stage FR chunks: cut to match trained DE per-stage total
+        # duration (train + dev + test). Within each per-stage FR chunk,
+        # apply 80/10/10 contiguous split.
+        per_stage_fr_total_lengths = [int(a.size) for a in de_stages]
+        fr_stage_chunks = _split_into_chunks(fr, per_stage_fr_total_lengths)
+        fr_stage_trains: list[np.ndarray] = []
+        fr_stage_devs: list[np.ndarray] = []
+        fr_stage_tests: list[np.ndarray] = []
+        for chunk in fr_stage_chunks:
+            ft, fd, fs = _split_80_10_10(chunk)
+            fr_stage_trains.append(ft)
+            fr_stage_devs.append(fd)
+            fr_stage_tests.append(fs)
+
+        # Defensive: every full stream must equal n samples exactly.
+        for label, arr in [
+            ("white_noise", white),
+            ("reversed_de", reversed_de),
+            ("fr", fr),
+        ]:
             if arr.shape[0] != n:
                 raise RuntimeError(
                     f"control '{label}' has length {arr.shape[0]} != "
@@ -332,13 +559,53 @@ class CorpusBuilder:
                 )
 
         manifests: dict[str, dict] = {}
-        for name, arr in [
-            ("de", de),
-            ("white_noise", white),
-            ("reversed_de", reversed_de),
-            ("fr", fr),
+        manifests["de"] = _write_split(
+            "de", de, out_dir, self.sample_rate,
+            stage_trains=de_stage_trains,
+            stage_devs=de_stage_devs,
+            stage_tests=de_stage_tests,
+        )
+        manifests["white_noise"] = _write_split(
+            "white_noise", white, out_dir, self.sample_rate,
+            stage_trains=white_stage_trains,
+            stage_devs=white_stage_devs,
+            stage_tests=white_stage_tests,
+        )
+        manifests["reversed_de"] = _write_split(
+            "reversed_de", reversed_de, out_dir, self.sample_rate,
+            stage_trains=rev_stage_trains,
+            stage_devs=rev_stage_devs,
+            stage_tests=rev_stage_tests,
+        )
+        manifests["fr"] = _write_split(
+            "fr", fr, out_dir, self.sample_rate,
+            stage_trains=fr_stage_trains,
+            stage_devs=fr_stage_devs,
+            stage_tests=fr_stage_tests,
+            fr_per_stage_note=(
+                "FR per-stage chunks are contiguous slices of the flat "
+                "fr.sources list, sized to match trained DE per-stage "
+                "total durations. Per-stage FR sourcing would need a "
+                "richer YAML schema (fr.stage1..stage4)."
+            ),
+        )
+
+        # Cross-substrate per-stage train length invariant: white_noise,
+        # reversed_de and fr per-stage train lengths must match DE's
+        # within ±1 sample (rounding tolerance from arithmetic above).
+        for name, stage_trains in [
+            ("white_noise", white_stage_trains),
+            ("reversed_de", rev_stage_trains),
+            ("fr", fr_stage_trains),
         ]:
-            manifests[name] = _write_split(name, arr, out_dir, self.sample_rate)
+            for i, target_len in enumerate(per_stage_train_lengths):
+                got = int(stage_trains[i].size)
+                if abs(got - target_len) > 1:
+                    raise RuntimeError(
+                        f"control '{name}' stage{i + 1} train length "
+                        f"{got} != trained DE stage{i + 1} train length "
+                        f"{target_len} (>1 sample drift)"
+                    )
         return manifests
 
 
