@@ -6,7 +6,9 @@ Order of operations in one tick (matches spec §6 for F0):
 3. Absorb at cold faces → returns E_exported
 4. Update temperature field from new density
 
-Returns the tuple (E_injected, E_exported) for use by the auditor.
+Returns E_exported (the energy that left through cold faces).
+The injector closure is responsible for recording E_injected
+into the auditor directly — tick does not surface it.
 F1 will add structure-flux and binding-attempt steps. F0 is motion +
 boundary + temperature only — no plasticity, no binding.
 """
