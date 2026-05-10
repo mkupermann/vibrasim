@@ -23,11 +23,19 @@ class Grid:
                  voxel_size: float = 1.0,
                  T_smoothing: float = 0.1):
         self.dims = tuple(int(d) for d in dims)
+        if len(self.dims) != 3 or any(d < 1 for d in self.dims):
+            raise ValueError(
+                f"Grid dims must be a 3-tuple of positive ints, got {self.dims}"
+            )
         self.voxel_size = float(voxel_size)
+        if self.voxel_size <= 0.0:
+            raise ValueError(
+                f"Grid voxel_size must be positive, got {self.voxel_size}"
+            )
         self.T_smoothing = float(T_smoothing)
         self.T = np.zeros(self.dims, dtype=np.float64)
 
-    def pos_to_voxel(self, pos: Sequence[float] | tuple[float, float, float]) -> tuple[int, int, int]:
+    def pos_to_voxel(self, pos: Sequence[float]) -> tuple[int, int, int]:
         """Map a continuous position to a clipped voxel index."""
         x, y, z = pos
         ix = int(np.clip(x / self.voxel_size, 0, self.dims[0] - 1))
