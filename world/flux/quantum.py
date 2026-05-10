@@ -4,6 +4,7 @@ Each vibration carries a discrete energy quantum. Bound vibrations live
 in the Structures graph (added in F1); free vibrations live here.
 """
 from __future__ import annotations
+from typing import Sequence
 import numpy as np
 
 
@@ -32,8 +33,8 @@ class Quanta:
     def total_energy(self) -> float:
         return float(self.energy[self.alive].sum())
 
-    def add(self, pos, vel, freq: float, polarity: int,
-            energy: float) -> int:
+    def add(self, pos: Sequence[float], vel: Sequence[float],
+            freq: float, polarity: int, energy: float) -> int:
         """Add a vibration, returning its slot index or -1 if full."""
         N = self.max_quanta
         # Search from _next_search forward, wrap around once
@@ -46,7 +47,7 @@ class Quanta:
                 self.polarity[j] = polarity
                 self.energy[j] = energy
                 self.alive[j] = True
-                self._next_search = j  # next add can try here first
+                self._next_search = (j + 1) % N  # advance past just-filled slot
                 return j
         return -1
 
