@@ -465,6 +465,13 @@ def build_autonomous_world() -> World:
         # -1 silently and the bridge mesh can't grow.
         n_initial_vibrations=0,
         n_vibrations_max=2048,
+        # G19: cap alive vibrations at 512 so sustained external audio
+        # injection (predictive-babble pipeline) doesn't accumulate
+        # vibrations to n_vibrations_max — the cull keeps physics tick
+        # cost bounded. With audio_io=None (G17 emergence run), the
+        # substrate has well under 512 vibrations alive and the cap
+        # never bites, so existing G17/G18 behaviour is unchanged.
+        vibration_soft_cap=512,
         # G18 calibration: 4096 nodes give plenty of headroom for
         # concept-blending allocations (each blend = 1 atom +
         # 4 integration bridges) plus emitted-vibration cascades

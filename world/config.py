@@ -43,6 +43,17 @@ class WorldConfig:
     n_vibrations_max: int = 4096
     n_nodes_max: int = 1024
 
+    # Vibration soft cap (0 = disabled, default). When > 0, after each
+    # bind_vibrations_to_electrons step the substrate culls the oldest
+    # alive vibrations (lowest slot indices, which are FIFO-allocated by
+    # the feeder) until alive count ≤ this cap. Without this, sustained
+    # injection of high-entropy audio (the predictive-babble pipeline)
+    # accumulates vibrations to n_vibrations_max and every physics tick
+    # processes all of them — cycle wall-time grows from 3 s to 50+ s
+    # within a few cycles. Default 0 preserves all existing behaviour;
+    # set to 256–512 for sustained-injection workloads.
+    vibration_soft_cap: int = 0
+
     # Neuron dynamics — PHASE4-R1/R2/R3 amendments. Off by default so legacy
     # configurations behave exactly as before. When enabled, level-4 atoms
     # accumulate charge from nearby vibrations, fire when charge ≥ theta_fire,
