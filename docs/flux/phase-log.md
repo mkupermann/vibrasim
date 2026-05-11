@@ -146,3 +146,57 @@ F1b plan to be written next.
   REPLACED by the bridge-flux mechanism (DecayConfig removed).
 - Plan: `docs/superpowers/plans/2026-05-11-flux-substrate-F1b.md`.
 - Estimated 2–4 weeks solo; compressed under autonomous-build.
+
+## 2026-05-11 — F1b amendment: keep F1a T-decay alongside bridge-flux
+
+The F1b plan called for *deleting* F1a's T-based decay and letting
+bridge-flux plasticity handle hot-zone suppression. Empirical
+discovery during Stage C: with binding T-gate saturated (T_crit=2
+above the actual T_local range), most binding still happens at the
+floor; floor nodes have MANY bridges with HIGH through-flux which
+reinforces them under spec §5.5 — the opposite of what T3 needs.
+
+**Decision:** keep BOTH mechanisms.
+- F1a T-based decay (DecayConfig) handles hot-zone suppression for T3.
+- F1b plasticity (PlasticityConfig) handles decay-without-flux for T4.
+- Both feed the same `decay_heat` channel for conservation accounting.
+
+Plan tasks 8–9 amended: `world/flux/decay.py` retained; `DecayConfig`
+kept in the public API. F1b plan documented this as a fallback in its
+"hard blocker" guidance.
+
+Verified: T1 + T3 + T4 all green with both mechanisms active.
+
+## 2026-05-11 — F1b complete
+
+- 11 plan tasks landed (Tasks 1-10 + 11 close), with Task 8-9
+  amended (T-decay kept).
+- 80/80 flux tests pass: 64 from F1a + 6 bridges + 7 plasticity +
+  2 binding-F1b + 1 T4. Bridge mechanism is exercised through both
+  conservation and crystallization integration tests.
+- 382 legacy tests still pass.
+- T1 acceptance test green: conservation holds with binding, decay,
+  bridges, and plasticity all active.
+- T3 acceptance test green: ratio remains 9.0+ with bridges-and-
+  plasticity layered on top of F1a's T-decay.
+- T4 acceptance test green: structure count after 5000 ticks of
+  no-injection is < 10% of peak count. Pass with plan defaults
+  PlasticityConfig(gamma=0.1, lam=0.1, flux_min=1.0, w_min=0.05,
+  r_flux=0.75) — no tuning needed.
+- Locked F1b configuration (in addition to F1a's BindingConfig +
+  DecayConfig):
+  - `PlasticityConfig(gamma=0.1, lam=0.1, flux_min=1.0, w_min=0.05, r_flux=0.75)`
+  - `BindingConfig.r_bridge=2.0, bridge_w0=1.0` (new fields)
+- New module count: `world/flux/bridges.py`, `world/flux/plasticity.py`.
+
+**Known carry-overs into F1c / F2:**
+- T2 Bénard acceptance test remains in F1c.
+- Multi-way binding and node-to-node binding (spec §5.4) are F1c.
+- Cochlea + Synthesis are F2.
+- F1b plan §"hard blocker" guidance proved correct: spec §5.4's
+  bridge-flux mechanism alone CANNOT enforce T3 with single-frequency
+  injection — the structure-flux feedback rewards high-flux floor
+  regions. The dual-mechanism design (T-decay + bridge-flux) is the
+  pragmatic resolution while keeping spec compliance.
+
+F1c plan to be written next.
