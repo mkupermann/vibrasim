@@ -21,6 +21,8 @@ import numpy as np
 from dataclasses import dataclass
 
 from world.flux.quantum import Quanta
+from world.flux.grid import Grid
+from world.flux.structures import Nodes
 
 
 def pred_coherence(freq_a: float, freq_b: float,
@@ -90,3 +92,76 @@ def binding_probability(pred_coh: float, T_local: float,
     else:
         ex = np.exp(x)
         return ex / (1.0 + ex)
+
+
+def attempt_binding(quanta: Quanta, nodes: Nodes, grid: Grid,
+                    cfg: BindingConfig, tick_index: int,
+                    rng: np.random.Generator) -> float:
+    """Run one tick's binding pass.
+
+    Finds all alive quanta pairs within distance r. For each pair:
+      - skip if frequency mismatch (pred_coherence < 1.0)
+      - read T_local at the pair's centroid voxel
+      - compute p_bind; sample uniform → if < p_bind, BIND
+
+    A binding event: consumes both quanta, creates one new node at the
+    centroid with energy = (1 - η) * sum(quanta.energy), exports
+    η * sum(quanta.energy) as heat (return value).
+
+    Returns the total heat exported this tick (sum across all binding
+    events). Caller is responsible for recording into the auditor.
+
+    F1a only binds in PAIRS (2 quanta → 1 node). F1b will generalise.
+    """
+    pairs = find_pairs_within(quanta, cfg.r)
+    if pairs.shape[0] == 0:
+        return 0.0
+
+    total_heat = 0.0
+    # Iterate pairs; once a quantum is consumed in this tick it cannot
+    # bind again, so track which slots have already participated.
+    consumed = set()
+    for p in pairs:
+        i, j = int(p[0]), int(p[1])
+        if i in consumed or j in consumed:
+            continue
+
+        # Coherence gate (F1a: frequency-equality)
+        coh = pred_coherence(quanta.freq[i], quanta.freq[j],
+                              eps=cfg.coherence_eps)
+        if coh <= 0.0:
+            continue
+
+        # Temperature at pair centroid
+        cx = 0.5 * (quanta.pos[i, 0] + quanta.pos[j, 0])
+        cy = 0.5 * (quanta.pos[i, 1] + quanta.pos[j, 1])
+        cz = 0.5 * (quanta.pos[i, 2] + quanta.pos[j, 2])
+        ix, iy, iz = grid.pos_to_voxel((cx, cy, cz))
+        T_local = float(grid.T[ix, iy, iz])
+
+        # Binding probability
+        p_bind = binding_probability(pred_coh=coh, T_local=T_local,
+                                       cfg=cfg)
+        # Sample
+        if rng.random() >= p_bind:
+            continue
+
+        # BIND
+        e_in = float(quanta.energy[i] + quanta.energy[j])
+        heat = cfg.eta * e_in
+        e_node = e_in - heat
+        f_mean = 0.5 * (quanta.freq[i] + quanta.freq[j])
+        slot = nodes.add(pos=(cx, cy, cz), energy=e_node,
+                          freq=f_mean, born_tick=tick_index)
+        if slot < 0:
+            # Nodes buffer full; do not bind, leave quanta intact
+            continue
+
+        # Consume the two quanta
+        quanta.remove(i)
+        quanta.remove(j)
+        consumed.add(i)
+        consumed.add(j)
+        total_heat += heat
+
+    return total_heat
