@@ -19,6 +19,8 @@ In F1a this is implemented in its scope-minimal form:
 from __future__ import annotations
 import numpy as np
 
+from world.flux.quantum import Quanta
+
 
 def pred_coherence(freq_a: float, freq_b: float,
                    eps: float = 1.0) -> float:
@@ -31,3 +33,29 @@ def pred_coherence(freq_a: float, freq_b: float,
     arrives in F2 with multi-frequency cochlea input.
     """
     return 1.0 if abs(freq_a - freq_b) < eps else 0.0
+
+
+def find_pairs_within(quanta: Quanta, r: float) -> np.ndarray:
+    """Return shape (M, 2) int array of (i, j) pairs with i<j where the
+    two alive quanta are within Euclidean distance r of each other.
+
+    Naive O(N^2/2) algorithm — fine at F1a scale (≤ 1000 alive quanta).
+    A KD-tree or cell-list optimisation is the F1b/F2 concern.
+    """
+    alive_idx = np.where(quanta.alive)[0]
+    n = alive_idx.size
+    if n < 2:
+        return np.zeros((0, 2), dtype=np.int64)
+
+    pos = quanta.pos[alive_idx]  # (n, 3)
+    # Pairwise squared distances
+    diff = pos[:, None, :] - pos[None, :, :]  # (n, n, 3)
+    d2 = (diff * diff).sum(axis=-1)  # (n, n)
+    r2 = r * r
+
+    # Upper-triangle mask, strictly within r (d2 < r2)
+    i_local, j_local = np.where(np.triu(d2 < r2, k=1))
+    if i_local.size == 0:
+        return np.zeros((0, 2), dtype=np.int64)
+    pairs = np.stack([alive_idx[i_local], alive_idx[j_local]], axis=1)
+    return pairs.astype(np.int64)
