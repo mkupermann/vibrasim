@@ -221,3 +221,62 @@ def test_attempt_binding_sets_node_freq_to_pair_mean():
     assert n.n_alive() == 1
     np.testing.assert_allclose(n.freq[0], 200.0)
     assert n.born_tick[0] == 7
+
+
+# F1b additions: bridge creation at binding
+
+def test_binding_creates_self_bridge_when_no_neighbors():
+    """A fresh node should still get one self-bridge so it isn't
+    orphaned by the plasticity pass on the same tick."""
+    from world.flux.quantum import Quanta
+    from world.flux.grid import Grid
+    from world.flux.structures import Nodes
+    from world.flux.bridges import Bridges
+    from world.flux.binding import attempt_binding, BindingConfig
+
+    q = Quanta(max_quanta=10)
+    n = Nodes(max_nodes=10)
+    b = Bridges(max_bridges=10)
+    g = Grid(dims=(5, 5, 5), voxel_size=1.0)
+    cfg = BindingConfig(alpha=10.0, beta=10.0, T_crit=1.0,
+                         eta=0.1, r=2.0, r_bridge=2.0, bridge_w0=1.0)
+    q.add(pos=(2.0, 2.0, 2.0), vel=(0, 0, 0), freq=200,
+          polarity=1, energy=1.0)
+    q.add(pos=(2.3, 2.0, 2.0), vel=(0, 0, 0), freq=200,
+          polarity=1, energy=1.0)
+    rng = np.random.default_rng(0)
+    attempt_binding(q, n, g, cfg, tick_index=0, rng=rng, bridges=b)
+    assert n.n_alive() == 1
+    assert b.n_alive() == 1  # exactly the self-bridge
+    slot = int(np.where(n.alive)[0][0])
+    self_idx = b.find(src=slot, dst=slot)
+    assert self_idx == 0
+    assert float(b.weight[self_idx]) == 1.0
+
+
+def test_binding_creates_two_directed_bridges_to_nearby_node():
+    """When a new node forms near an existing node, two directed
+    bridges connect them (plus the new node's self-bridge)."""
+    from world.flux.quantum import Quanta
+    from world.flux.grid import Grid
+    from world.flux.structures import Nodes
+    from world.flux.bridges import Bridges
+    from world.flux.binding import attempt_binding, BindingConfig
+
+    q = Quanta(max_quanta=10)
+    n = Nodes(max_nodes=10)
+    b = Bridges(max_bridges=10)
+    g = Grid(dims=(5, 5, 5), voxel_size=1.0)
+    # Pre-place an existing node
+    n.add(pos=(2.0, 2.0, 2.5), energy=2.0, freq=200, born_tick=0)
+    cfg = BindingConfig(alpha=10.0, beta=10.0, T_crit=1.0,
+                         eta=0.1, r=2.0, r_bridge=2.0, bridge_w0=1.0)
+    q.add(pos=(2.0, 2.0, 2.0), vel=(0, 0, 0), freq=200,
+          polarity=1, energy=1.0)
+    q.add(pos=(2.3, 2.0, 2.0), vel=(0, 0, 0), freq=200,
+          polarity=1, energy=1.0)
+    rng = np.random.default_rng(0)
+    attempt_binding(q, n, g, cfg, tick_index=0, rng=rng, bridges=b)
+    assert n.n_alive() == 2
+    # Self-bridge for the new node + 2 directed bridges to/from the pre-existing one
+    assert b.n_alive() == 3

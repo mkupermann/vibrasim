@@ -68,8 +68,12 @@ def find_pairs_within(quanta: Quanta, r: float) -> np.ndarray:
 class BindingConfig:
     """Tunable parameters of the single binding rule (spec §3).
 
-    Defaults are F1a starting values — calibration sweeps live in the
-    F1a task 10 phase-log notes once T3 results are in.
+    F1a fields (alpha..coherence_eps) are the original binding rule.
+    F1b fields (r_bridge, bridge_w0) control bridge creation: at
+    binding time, the new node is wired to every existing alive node
+    within `r_bridge` via two directed bridges of initial weight
+    `bridge_w0 * pred_coherence`. A self-bridge (slot→slot) is also
+    created so the node is never instantly orphaned by plasticity.
     """
     alpha: float = 4.0          # gain on coherence term
     beta: float = 4.0           # gain on temperature gap
@@ -77,6 +81,9 @@ class BindingConfig:
     eta: float = 0.1            # heat-export fraction (η ∈ [0, 1))
     r: float = 1.5              # binding radius (Euclidean)
     coherence_eps: float = 1.0  # frequency-equality tolerance (F1a)
+    # F1b additions:
+    r_bridge: float = 2.0       # radius for bridges to existing nodes
+    bridge_w0: float = 1.0      # initial bridge weight (× coherence)
 
 
 def binding_probability(pred_coh: float, T_local: float,
@@ -96,7 +103,8 @@ def binding_probability(pred_coh: float, T_local: float,
 
 def attempt_binding(quanta: Quanta, nodes: Nodes, grid: Grid,
                     cfg: BindingConfig, tick_index: int,
-                    rng: np.random.Generator) -> float:
+                    rng: np.random.Generator,
+                    bridges=None) -> float:
     """Run one tick's binding pass.
 
     Finds all alive quanta pairs within distance r. For each pair:
@@ -108,10 +116,19 @@ def attempt_binding(quanta: Quanta, nodes: Nodes, grid: Grid,
     centroid with energy = (1 - η) * sum(quanta.energy), exports
     η * sum(quanta.energy) as heat (return value).
 
+    F1b: if `bridges` is provided, also create:
+      - a self-bridge for the new node (slot → slot, weight bridge_w0
+        × coh) so the new node has at least one bridge from birth and
+        is not instantly dissociated by the plasticity pass.
+      - directed bridges in both directions between the new node and
+        every alive node within `r_bridge` (excluding the new slot
+        itself), with weight bridge_w0 × coh.
+
     Returns the total heat exported this tick (sum across all binding
     events). Caller is responsible for recording into the auditor.
 
-    F1a only binds in PAIRS (2 quanta → 1 node). F1b will generalise.
+    F1a/F1b: binds in PAIRS only (2 quanta → 1 node). Multi-way
+    binding is F1c or later.
     """
     pairs = find_pairs_within(quanta, cfg.r)
     if pairs.shape[0] == 0:
@@ -163,5 +180,28 @@ def attempt_binding(quanta: Quanta, nodes: Nodes, grid: Grid,
         consumed.add(i)
         consumed.add(j)
         total_heat += heat
+
+        # F1b: wire bridges from/to the new node
+        if bridges is not None:
+            w0 = cfg.bridge_w0 * coh
+            # Self-bridge: keeps the new node from instant orphan
+            bridges.add(src=slot, dst=slot, weight=w0,
+                        born_tick=tick_index)
+            # Connect to existing alive nodes within r_bridge
+            r2 = cfg.r_bridge * cfg.r_bridge
+            for other in np.where(nodes.alive)[0]:
+                other_i = int(other)
+                if other_i == slot:
+                    continue
+                dx = nodes.pos[other_i, 0] - cx
+                dy = nodes.pos[other_i, 1] - cy
+                dz = nodes.pos[other_i, 2] - cz
+                if (dx * dx + dy * dy + dz * dz) >= r2:
+                    continue
+                # Two directed bridges per spec §5.4
+                bridges.add(src=slot, dst=other_i, weight=w0,
+                            born_tick=tick_index)
+                bridges.add(src=other_i, dst=slot, weight=w0,
+                            born_tick=tick_index)
 
     return total_heat
