@@ -16,6 +16,7 @@ from world.flux.binding import (
     pred_coherence,
 )
 from world.flux.boundary import absorb_cold_faces, inject_hot_floor
+from world.flux.bridges import Bridges
 from world.flux.decay import (
     DecayConfig,
     attempt_decay,
@@ -23,25 +24,36 @@ from world.flux.decay import (
 )
 from world.flux.dynamics import Injector, tick
 from world.flux.grid import Grid
+from world.flux.plasticity import (
+    PlasticityConfig,
+    apply_plasticity,
+    count_flux_through,
+    prune_bridges_and_nodes,
+)
 from world.flux.quantum import Quanta
 from world.flux.structures import Nodes
 
 __all__ = [
     "BindingConfig",
+    "Bridges",
     "ConservationViolation",
     "DecayConfig",
     "EnergyAuditor",
     "Grid",
     "Injector",
     "Nodes",
+    "PlasticityConfig",
     "Quanta",
     "absorb_cold_faces",
+    "apply_plasticity",
     "attempt_binding",
     "attempt_decay",
     "binding_probability",
+    "count_flux_through",
     "decay_probability",
     "find_pairs_within",
     "inject_hot_floor",
     "pred_coherence",
+    "prune_bridges_and_nodes",
     "tick",
 ]

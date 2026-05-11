@@ -15,7 +15,10 @@ from world.flux.audit import EnergyAuditor
 from world.flux.boundary import inject_hot_floor
 from world.flux.dynamics import tick
 from world.flux.structures import Nodes
+from world.flux.bridges import Bridges
 from world.flux.binding import BindingConfig
+from world.flux.decay import DecayConfig
+from world.flux.plasticity import PlasticityConfig
 
 
 def test_T1_conservation_over_1000_ticks():
@@ -89,23 +92,29 @@ def test_T1_conservation_zero_injection_zero_export():
 
 
 def test_T1_conservation_with_binding_active():
-    """1000 ticks with injection AND binding active.
+    """1000 ticks with injection AND binding AND F1b plasticity active.
 
     Conservation:
       E_initial + E_injected
       == E_in_quanta + E_in_nodes + E_exported + E_binding_heat
-    within 1e-9 relative.
+         + E_decay_heat
+    within 1e-9 relative. (Bridges hold no energy per spec §5.4.)
     """
     rng_inject = np.random.default_rng(42)
     rng_bind = np.random.default_rng(123)
     q = Quanta(max_quanta=20_000)
     n = Nodes(max_nodes=20_000)
+    br = Bridges(max_bridges=200_000)
     g = Grid(dims=(10, 10, 10), voxel_size=1.0, T_smoothing=0.1)
-    audit = EnergyAuditor(quanta=q, nodes=n, tol=1e-9)
+    audit = EnergyAuditor(quanta=q, nodes=n, bridges=br, tol=1e-9)
     audit.record_initial()
 
     cfg = BindingConfig(alpha=4.0, beta=4.0, T_crit=2.0,
-                         eta=0.1, r=1.5, coherence_eps=1.0)
+                         eta=0.1, r=1.5, coherence_eps=1.0,
+                         r_bridge=2.0, bridge_w0=1.0)
+    decay_cfg = DecayConfig(gamma=500.0, T_decay_crit=0.035)
+    pcfg = PlasticityConfig(gamma=0.1, lam=0.1, flux_min=1.0,
+                             w_min=0.05, r_flux=0.75)
 
     QUANTA_PER_TICK = 5
     ENERGY_PER = 1.0
@@ -127,7 +136,9 @@ def test_T1_conservation_with_binding_active():
     for t in range(N_TICKS):
         exported, binding_heat, decay_heat = tick(
             q, g, dt=DT, injector=injector,
-            nodes=n, binding_cfg=cfg, rng=rng_bind, tick_index=t,
+            nodes=n, binding_cfg=cfg, decay_cfg=decay_cfg,
+            bridges=br, plasticity_cfg=pcfg,
+            rng=rng_bind, tick_index=t,
         )
         audit.record_export(exported)
         audit.record_binding_heat(binding_heat)

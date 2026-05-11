@@ -16,32 +16,39 @@ from world.flux.audit import EnergyAuditor
 from world.flux.boundary import inject_hot_floor
 from world.flux.dynamics import tick
 from world.flux.structures import Nodes
+from world.flux.bridges import Bridges
 from world.flux.binding import BindingConfig
 from world.flux.decay import DecayConfig
+from world.flux.plasticity import PlasticityConfig
 
 
 def test_T3_crystallization_in_cold_half():
     """5000 ticks, uniform-frequency injection at hot floor, cold
     ceiling + walls. Nodes should accumulate in the top half (cold).
 
-    F1a adds a minimal node-decay mechanism (spec §5.4 simplified) so
-    that hot-zone bindings dissociate over time. Without decay, every
-    floor-binding accumulates forever and the cold-zone ratio never
-    exceeds 1.0. See docs/flux/phase-log.md for the calibration record.
+    F1b retains F1a's T-based decay (handles hot-zone suppression
+    that the spec §5.4 bridge-flux mechanism alone can't deliver —
+    floor regions have HIGH quanta flux which would otherwise
+    reinforce floor structures). The bridge-flux plasticity adds
+    on top to handle T4's decay-without-flux requirement.
     """
     rng_inject = np.random.default_rng(42)
     rng_bind = np.random.default_rng(123)
     q = Quanta(max_quanta=50_000)
     n = Nodes(max_nodes=50_000)
+    br = Bridges(max_bridges=500_000)
     g = Grid(dims=(10, 10, 10), voxel_size=1.0, T_smoothing=0.1)
-    audit = EnergyAuditor(quanta=q, nodes=n, tol=1e-9)
+    audit = EnergyAuditor(quanta=q, nodes=n, bridges=br, tol=1e-9)
     audit.record_initial()
 
     cfg = BindingConfig(
         alpha=4.0, beta=4.0, T_crit=2.0,
         eta=0.1, r=1.5, coherence_eps=1.0,
+        r_bridge=2.0, bridge_w0=1.0,
     )
     decay_cfg = DecayConfig(gamma=500.0, T_decay_crit=0.035)
+    pcfg = PlasticityConfig(gamma=0.1, lam=0.1, flux_min=1.0,
+                             w_min=0.05, r_flux=0.75)
 
     QUANTA_PER_TICK = 5
     ENERGY_PER = 1.0
@@ -65,6 +72,7 @@ def test_T3_crystallization_in_cold_half():
         exported, binding_heat, decay_heat = tick(
             q, g, dt=DT, injector=injector,
             nodes=n, binding_cfg=cfg, decay_cfg=decay_cfg,
+            bridges=br, plasticity_cfg=pcfg,
             rng=rng_bind, tick_index=t,
         )
         audit.record_export(exported)
