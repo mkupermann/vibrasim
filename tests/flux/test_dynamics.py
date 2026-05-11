@@ -81,11 +81,12 @@ def test_tick_with_binding_creates_nodes_in_cold_zones():
           polarity=1, energy=1.0)
     rng = np.random.default_rng(0)
     # dt=0 so positions don't change; one binding pass
-    exported, binding_heat = tick(
+    exported, binding_heat, decay_heat = tick(
         q, g, dt=0.0, injector=None,
         nodes=n, binding_cfg=cfg, rng=rng, tick_index=0,
     )
     assert n.n_alive() == 1
+    assert decay_heat == 0.0  # No decay_cfg → no decay
 
 
 def test_tick_without_binding_args_still_works():

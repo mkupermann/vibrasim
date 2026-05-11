@@ -4,18 +4,19 @@ Order of operations in one tick (spec §6, F1a subset):
 1. Inject at hot floor (if injector provided)
 2. Move free vibrations: pos += vel * dt
 3. Absorb at cold faces → returns E_exported
-4. Attempt binding (if nodes + binding_cfg provided) → returns
-   binding_heat
-5. Update temperature field from new density
+4. Attempt binding (if nodes + binding_cfg provided) → binding_heat
+5. Attempt decay (if nodes + decay_cfg provided) → decay_heat
+6. Update temperature field from new density
 
 Return value:
 - If nodes is None: returns E_exported as a float (F0-compatible).
-- If nodes is provided: returns (E_exported, binding_heat) tuple.
+- If nodes is provided: returns (E_exported, binding_heat, decay_heat).
+  binding_heat / decay_heat are 0.0 when their configs aren't given.
 
 The injector closure is responsible for recording E_injected into
 the auditor directly — tick does not surface it.
 
-F1 plasticity + structure-flux still deferred to F1b.
+F1 plasticity + structure-flux + bridges still deferred to F1b.
 """
 from __future__ import annotations
 from typing import Callable
@@ -52,12 +53,15 @@ def tick(quanta: Quanta, grid: Grid, dt: float,
          *,
          nodes=None,
          binding_cfg=None,
+         decay_cfg=None,
          rng: np.random.Generator | None = None,
          tick_index: int = 0):
     """Run one tick.
 
     F0 mode (nodes is None): returns E_exported as a float.
-    F1a mode (nodes provided): returns (E_exported, binding_heat) tuple.
+    F1a mode (nodes provided): returns (E_exported, binding_heat,
+    decay_heat) tuple. binding_heat / decay_heat are 0.0 if their
+    configs aren't provided.
     """
     # 1. Inject
     if injector is not None:
@@ -74,7 +78,6 @@ def tick(quanta: Quanta, grid: Grid, dt: float,
     # 4. Attempt binding (F1a)
     binding_heat = 0.0
     if nodes is not None and binding_cfg is not None:
-        # Lazy import to avoid circular dependency at module load
         from world.flux.binding import attempt_binding
         rng_use = rng if rng is not None else np.random.default_rng()
         binding_heat = attempt_binding(
@@ -82,10 +85,19 @@ def tick(quanta: Quanta, grid: Grid, dt: float,
             cfg=binding_cfg, tick_index=tick_index, rng=rng_use,
         )
 
-    # 5. Temperature
+    # 5. Attempt decay (F1a minimal — spec §5.4 simplified for F1a)
+    decay_heat = 0.0
+    if nodes is not None and decay_cfg is not None:
+        from world.flux.decay import attempt_decay
+        rng_use = rng if rng is not None else np.random.default_rng()
+        decay_heat = attempt_decay(
+            nodes=nodes, grid=grid, cfg=decay_cfg, rng=rng_use,
+        )
+
+    # 6. Temperature
     density = _compute_density(quanta, grid)
     grid.update_temperature(density)
 
     if nodes is None:
         return exported
-    return exported, binding_heat
+    return exported, binding_heat, decay_heat

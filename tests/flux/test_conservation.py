@@ -125,12 +125,13 @@ def test_T1_conservation_with_binding_active():
         return count * ENERGY_PER
 
     for t in range(N_TICKS):
-        exported, binding_heat = tick(
+        exported, binding_heat, decay_heat = tick(
             q, g, dt=DT, injector=injector,
             nodes=n, binding_cfg=cfg, rng=rng_bind, tick_index=t,
         )
         audit.record_export(exported)
         audit.record_binding_heat(binding_heat)
+        audit.record_decay_heat(decay_heat)
         audit.check()
         audit.step()
 
@@ -147,6 +148,7 @@ def test_T1_conservation_with_binding_active():
     # The full accounting equation
     np.testing.assert_allclose(
         audit.E_initial + audit.E_injected_total,
-        E_q + E_n + audit.E_exported_total + audit.E_binding_heat_total,
+        E_q + E_n + audit.E_exported_total
+        + audit.E_binding_heat_total + audit.E_decay_heat_total,
         rtol=0, atol=1e-9 * max(audit.E_injected_total, 1.0),
     )

@@ -2,7 +2,8 @@
 
 Conservation law (F1a):
     E_initial + E_injected_total
-    == E_in_quanta + E_in_nodes + E_exported_total + E_binding_heat_total
+    == E_in_quanta + E_in_nodes + E_exported_total
+       + E_binding_heat_total + E_decay_heat_total
 
 within tolerance `tol` × max(|E_initial + E_injected_total|, 1.0).
 
@@ -29,6 +30,7 @@ class EnergyAuditor:
         self.E_injected_total: float = 0.0
         self.E_exported_total: float = 0.0
         self.E_binding_heat_total: float = 0.0
+        self.E_decay_heat_total: float = 0.0
         self.tick_count: int = 0
 
     def record_initial(self) -> None:
@@ -46,6 +48,9 @@ class EnergyAuditor:
     def record_binding_heat(self, e: float) -> None:
         self.E_binding_heat_total += float(e)
 
+    def record_decay_heat(self, e: float) -> None:
+        self.E_decay_heat_total += float(e)
+
     def step(self) -> None:
         """Advance the tick counter by one."""
         self.tick_count += 1
@@ -58,7 +63,7 @@ class EnergyAuditor:
                   else 0.0
         lhs = self.E_initial + self.E_injected_total
         rhs = (E_in_q + E_in_n + self.E_exported_total
-               + self.E_binding_heat_total)
+               + self.E_binding_heat_total + self.E_decay_heat_total)
         scale = max(abs(lhs), 1.0)
         err = abs(lhs - rhs)
         if err > self.tol * scale:
@@ -67,6 +72,7 @@ class EnergyAuditor:
                 f"E_initial({self.E_initial}) + E_injected({self.E_injected_total}) "
                 f"= {lhs}; E_in_quanta({E_in_q}) + E_in_nodes({E_in_n}) "
                 f"+ E_exported({self.E_exported_total}) "
-                f"+ E_binding_heat({self.E_binding_heat_total}) = {rhs}; "
+                f"+ E_binding_heat({self.E_binding_heat_total}) "
+                f"+ E_decay_heat({self.E_decay_heat_total}) = {rhs}; "
                 f"diff={err}, tol={self.tol * scale}"
             )
