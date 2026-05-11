@@ -62,3 +62,40 @@ def test_tick_calls_injector_when_provided():
     # At dt=0.1 and vel_z=1.0, neither quantum reaches the ceiling
     # (z=10) — nothing absorbed yet.
     assert exported == 0.0
+
+
+from world.flux.structures import Nodes
+from world.flux.binding import BindingConfig
+
+
+def test_tick_with_binding_creates_nodes_in_cold_zones():
+    q = Quanta(max_quanta=50)
+    n = Nodes(max_nodes=50)
+    g = Grid(dims=(10, 10, 10), voxel_size=1.0, T_smoothing=1.0)
+    cfg = BindingConfig(alpha=10.0, beta=10.0, T_crit=1.0,
+                         eta=0.1, r=2.0)
+    # Place two coherent quanta near each other in a cold (empty) voxel
+    q.add(pos=(5.0, 5.0, 8.0), vel=(0, 0, 0), freq=200,
+          polarity=1, energy=1.0)
+    q.add(pos=(5.5, 5.0, 8.0), vel=(0, 0, 0), freq=200,
+          polarity=1, energy=1.0)
+    rng = np.random.default_rng(0)
+    # dt=0 so positions don't change; one binding pass
+    exported, binding_heat = tick(
+        q, g, dt=0.0, injector=None,
+        nodes=n, binding_cfg=cfg, rng=rng, tick_index=0,
+    )
+    assert n.n_alive() == 1
+
+
+def test_tick_without_binding_args_still_works():
+    """F0-style call (no nodes, no binding) must still pass and return
+    a float, not a tuple."""
+    q = Quanta(max_quanta=10)
+    g = Grid(dims=(10, 10, 10), voxel_size=1.0)
+    q.add(pos=(5.0, 5.0, 5.0), vel=(1.0, 0.0, 0.5),
+          freq=100, polarity=1, energy=1.0)
+    exported = tick(q, g, dt=0.1, injector=None)
+    np.testing.assert_allclose(q.pos[0], [5.1, 5.0, 5.05])
+    assert exported == 0.0
+    assert isinstance(exported, float)

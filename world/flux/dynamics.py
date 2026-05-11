@@ -1,16 +1,21 @@
 """Per-tick orchestration.
 
-Order of operations in one tick (matches spec §6 for F0):
-1. Inject at hot floor (if injector provided) → returns E_injected
+Order of operations in one tick (spec §6, F1a subset):
+1. Inject at hot floor (if injector provided)
 2. Move free vibrations: pos += vel * dt
 3. Absorb at cold faces → returns E_exported
-4. Update temperature field from new density
+4. Attempt binding (if nodes + binding_cfg provided) → returns
+   binding_heat
+5. Update temperature field from new density
 
-Returns E_exported (the energy that left through cold faces).
-The injector closure is responsible for recording E_injected
-into the auditor directly — tick does not surface it.
-F1 will add structure-flux and binding-attempt steps. F0 is motion +
-boundary + temperature only — no plasticity, no binding.
+Return value:
+- If nodes is None: returns E_exported as a float (F0-compatible).
+- If nodes is provided: returns (E_exported, binding_heat) tuple.
+
+The injector closure is responsible for recording E_injected into
+the auditor directly — tick does not surface it.
+
+F1 plasticity + structure-flux still deferred to F1b.
 """
 from __future__ import annotations
 from typing import Callable
@@ -43,18 +48,19 @@ def _compute_density(quanta: Quanta, grid: Grid) -> np.ndarray:
 
 def tick(quanta: Quanta, grid: Grid, dt: float,
          injector: Injector | None,
-         cold_face_delta: float = 0.5) -> float:
-    """Run one tick. Returns E_exported (energy that left through cold
-    faces).
+         cold_face_delta: float = 0.5,
+         *,
+         nodes=None,
+         binding_cfg=None,
+         rng: np.random.Generator | None = None,
+         tick_index: int = 0):
+    """Run one tick.
 
-    The caller is responsible for summing injected vs. exported and
-    checking conservation — see audit.py.
+    F0 mode (nodes is None): returns E_exported as a float.
+    F1a mode (nodes provided): returns (E_exported, binding_heat) tuple.
     """
     # 1. Inject
     if injector is not None:
-        # injector mutates `quanta`; we don't use its return here
-        # since the auditor tracks injected separately via the
-        # boundary helper return value. For F0 this is informational.
         injector(quanta, grid)
 
     # 2. Move
@@ -65,8 +71,21 @@ def tick(quanta: Quanta, grid: Grid, dt: float,
     # 3. Absorb
     exported = absorb_cold_faces(quanta, grid, delta=cold_face_delta)
 
-    # 4. Temperature
+    # 4. Attempt binding (F1a)
+    binding_heat = 0.0
+    if nodes is not None and binding_cfg is not None:
+        # Lazy import to avoid circular dependency at module load
+        from world.flux.binding import attempt_binding
+        rng_use = rng if rng is not None else np.random.default_rng()
+        binding_heat = attempt_binding(
+            quanta=quanta, nodes=nodes, grid=grid,
+            cfg=binding_cfg, tick_index=tick_index, rng=rng_use,
+        )
+
+    # 5. Temperature
     density = _compute_density(quanta, grid)
     grid.update_temperature(density)
 
-    return exported
+    if nodes is None:
+        return exported
+    return exported, binding_heat
