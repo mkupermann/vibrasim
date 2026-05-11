@@ -1,22 +1,26 @@
 """Per-tick orchestration.
 
-Order of operations in one tick (spec §6, F1a subset):
+Order of operations in one tick (spec §6, F1b subset):
 1. Inject at hot floor (if injector provided)
 2. Move free vibrations: pos += vel * dt
 3. Absorb at cold faces → returns E_exported
-4. Attempt binding (if nodes + binding_cfg provided) → binding_heat
-5. Attempt decay (if nodes + decay_cfg provided) → decay_heat
-6. Update temperature field from new density
+4. Attempt binding (creates nodes + bridges via attempt_binding)
+5. Structure-flux: count quanta through each bridge
+6. Plasticity: strengthen bridges with flux, decay bridges without
+7. Prune: remove w<w_min bridges; dissociate orphaned nodes
+   → contributes to decay_heat
+8. Update temperature field from current density
 
 Return value:
 - If nodes is None: returns E_exported as a float (F0-compatible).
 - If nodes is provided: returns (E_exported, binding_heat, decay_heat).
-  binding_heat / decay_heat are 0.0 when their configs aren't given.
+  binding_heat = sum of η-export across binding events.
+  decay_heat   = sum of dissociation energy across pruned nodes.
 
 The injector closure is responsible for recording E_injected into
 the auditor directly — tick does not surface it.
 
-F1 plasticity + structure-flux + bridges still deferred to F1b.
+Cochlea + Synthesis + Attention reallocate remain deferred to F2.
 """
 from __future__ import annotations
 from typing import Callable
@@ -54,13 +58,15 @@ def tick(quanta: Quanta, grid: Grid, dt: float,
          nodes=None,
          binding_cfg=None,
          decay_cfg=None,
+         bridges=None,
+         plasticity_cfg=None,
          rng: np.random.Generator | None = None,
          tick_index: int = 0):
     """Run one tick.
 
     F0 mode (nodes is None): returns E_exported as a float.
-    F1a mode (nodes provided): returns (E_exported, binding_heat,
-    decay_heat) tuple. binding_heat / decay_heat are 0.0 if their
+    F1b mode (nodes provided): returns (E_exported, binding_heat,
+    decay_heat) tuple. binding_heat / decay_heat are 0.0 when their
     configs aren't provided.
     """
     # 1. Inject
@@ -75,7 +81,7 @@ def tick(quanta: Quanta, grid: Grid, dt: float,
     # 3. Absorb
     exported = absorb_cold_faces(quanta, grid, delta=cold_face_delta)
 
-    # 4. Attempt binding (F1a)
+    # 4. Attempt binding
     binding_heat = 0.0
     if nodes is not None and binding_cfg is not None:
         from world.flux.binding import attempt_binding
@@ -83,18 +89,35 @@ def tick(quanta: Quanta, grid: Grid, dt: float,
         binding_heat = attempt_binding(
             quanta=quanta, nodes=nodes, grid=grid,
             cfg=binding_cfg, tick_index=tick_index, rng=rng_use,
+            bridges=bridges,
         )
 
-    # 5. Attempt decay (F1a minimal — spec §5.4 simplified for F1a)
+    # 5. F1a T-based decay (handles hot-zone suppression). Sums into
+    # the same decay_heat channel as the F1b bridge-flux dissociation.
     decay_heat = 0.0
     if nodes is not None and decay_cfg is not None:
         from world.flux.decay import attempt_decay
         rng_use = rng if rng is not None else np.random.default_rng()
-        decay_heat = attempt_decay(
+        decay_heat += attempt_decay(
             nodes=nodes, grid=grid, cfg=decay_cfg, rng=rng_use,
         )
 
-    # 6. Temperature
+    # 6-7. Structure-flux + plasticity + pruning (F1b: handles
+    # decay-without-flux for T4)
+    if (nodes is not None and bridges is not None
+            and plasticity_cfg is not None):
+        from world.flux.plasticity import (
+            count_flux_through, apply_plasticity,
+            prune_bridges_and_nodes,
+        )
+        flux_counts = count_flux_through(bridges, nodes, quanta,
+                                          plasticity_cfg)
+        apply_plasticity(bridges, flux_counts, plasticity_cfg,
+                          tick_index=tick_index)
+        decay_heat += prune_bridges_and_nodes(bridges, nodes,
+                                               plasticity_cfg)
+
+    # 8. Temperature
     density = _compute_density(quanta, grid)
     grid.update_temperature(density)
 
