@@ -22,9 +22,12 @@ class ConservationViolation(AssertionError):
 
 
 class EnergyAuditor:
-    def __init__(self, quanta: Quanta, tol: float = 1e-9, nodes=None):
+    def __init__(self, quanta: Quanta, tol: float = 1e-9, nodes=None,
+                 bridges=None):
         self.quanta = quanta
-        self.nodes = nodes  # Optional Nodes instance (F1a+)
+        self.nodes = nodes      # Optional Nodes (F1a+)
+        self.bridges = bridges  # Optional Bridges (F1b+; carries no
+                                # energy per spec — informational only)
         self.tol = float(tol)
         self.E_initial: float = 0.0
         self.E_injected_total: float = 0.0
