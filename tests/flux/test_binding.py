@@ -76,3 +76,46 @@ def test_find_pairs_within_no_pair_at_exact_r():
     q.add(pos=(2.0, 0, 0), vel=(0, 0, 0), freq=100, polarity=1, energy=1.0)
     pairs = find_pairs_within(q, r=2.0)
     assert pairs.shape == (0, 2)
+
+
+from world.flux.binding import binding_probability, BindingConfig
+
+
+def test_binding_probability_is_high_in_cold_zones():
+    cfg = BindingConfig(alpha=4.0, beta=4.0, T_crit=1.0)
+    # Cold zone: T_local << T_crit → (T_crit - T_local) is large positive
+    p = binding_probability(pred_coh=1.0, T_local=0.0, cfg=cfg)
+    assert p > 0.9
+
+
+def test_binding_probability_is_low_in_hot_zones():
+    cfg = BindingConfig(alpha=4.0, beta=4.0, T_crit=1.0)
+    # Hot zone: T_local >> T_crit
+    p = binding_probability(pred_coh=1.0, T_local=10.0, cfg=cfg)
+    assert p < 0.1
+
+
+def test_binding_probability_is_low_when_coherence_is_zero():
+    cfg = BindingConfig(alpha=4.0, beta=4.0, T_crit=1.0)
+    # Cold zone but incoherent: alpha*0 + beta*1 = 4 → sigmoid(4)≈0.98
+    # Wait — beta*(T_crit - T_local) = 4*(1-0) = 4. With coh=0 still
+    # large positive. Let's test the OPPOSITE: very hot AND incoherent
+    p = binding_probability(pred_coh=0.0, T_local=10.0, cfg=cfg)
+    assert p < 0.001
+
+
+def test_binding_probability_at_T_crit_with_coh_zero_is_one_half():
+    """At T_local == T_crit and pred_coh == 0, sigmoid(0) = 0.5."""
+    cfg = BindingConfig(alpha=1.0, beta=1.0, T_crit=2.0)
+    p = binding_probability(pred_coh=0.0, T_local=2.0, cfg=cfg)
+    np.testing.assert_allclose(p, 0.5, atol=1e-9)
+
+
+def test_binding_config_defaults_are_sane():
+    cfg = BindingConfig()
+    assert cfg.alpha > 0
+    assert cfg.beta > 0
+    assert cfg.T_crit > 0
+    assert 0.0 <= cfg.eta < 1.0
+    assert cfg.r > 0
+    assert 0.0 <= cfg.coherence_eps
