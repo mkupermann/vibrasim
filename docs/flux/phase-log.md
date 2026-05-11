@@ -136,3 +136,13 @@ below so ceiling nodes survive indefinitely.
 - T2 (Bénard) acceptance test remains deferred to F1c.
 
 F1b plan to be written next.
+
+## 2026-05-11 — F1b start
+
+- F1a closed: 64/64 flux + 382 legacy + T3 ratio 9.0; commits `f68705a..a6e5c78`.
+- F1b target: T4 (decay-without-flux) passes; T1 + T3 still green.
+- F1b implements spec §5.4 (bridges + structure-flux) + §5.5 (plasticity) +
+  proper bridge-flux-coupled dissociation. The F1a T-based decay stub is
+  REPLACED by the bridge-flux mechanism (DecayConfig removed).
+- Plan: `docs/superpowers/plans/2026-05-11-flux-substrate-F1b.md`.
+- Estimated 2–4 weeks solo; compressed under autonomous-build.
