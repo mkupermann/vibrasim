@@ -103,3 +103,36 @@ below so ceiling nodes survive indefinitely.
 - `tests/flux/test_crystallization.py` uses both BindingConfig and DecayConfig
 
 **Result:** 64/64 flux tests pass; 382/382 legacy tests pass; T3 ratio 9.0 > 5.0.
+
+## 2026-05-11 — F1a complete
+
+- 11 plan tasks landed (Tasks 1–9 from the original plan, plus the
+  Task-10 scope expansion that added minimal node decay, plus Task 11
+  re-exports + README + this entry).
+- 64/64 flux tests pass: 33 from F0 + 18 binding + 5 structures +
+  4 audit + 3 conservation + 1 T3 crystallization. (The plan originally
+  estimated 57; the count is higher because Task 9 conservation tests
+  expanded slightly and decay added no new dedicated test file —
+  decay is exercised by T3 + the F1a conservation test.)
+- 382 legacy tests still pass.
+- T3 acceptance test green: nodes form preferentially in the cold
+  (upper) half of the cube. Achieved ratio 9.0 (top=9, bot=1) with
+  10 surviving nodes after 5000 ticks.
+- Locked F1a configuration:
+  - `BindingConfig(alpha=4.0, beta=4.0, T_crit=2.0, eta=0.1, r=1.5, coherence_eps=1.0)` (plan defaults)
+  - `DecayConfig(gamma=500.0, T_decay_crit=0.035)` (sweep D27)
+
+**Known carry-overs into F1b:**
+- `pred_coherence` is the F1a stub (frequency-equality within ε). Full
+  windowed cross-correlation is F2's job (cochlea brings multi-frequency).
+- Binding consumes pairs only (2 quanta → 1 node). F1b will add
+  multi-way binding and node-to-node binding via bridges.
+- Decay uses the F1a layer-mean T proxy. The spec §5.4 decay couples
+  to bridge-flux; once bridges land in F1b, the bridge-flux-based decay
+  replaces this proxy. The F1a DecayConfig may need re-tuning (or full
+  removal) when F1b's flux mechanism arrives.
+- No bridges, no plasticity in F1a. F1b implements both, plus the
+  proper bridge-coupled decay.
+- T2 (Bénard) acceptance test remains deferred to F1c.
+
+F1b plan to be written next.
