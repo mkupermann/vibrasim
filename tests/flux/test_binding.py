@@ -119,3 +119,105 @@ def test_binding_config_defaults_are_sane():
     assert 0.0 <= cfg.eta < 1.0
     assert cfg.r > 0
     assert 0.0 <= cfg.coherence_eps
+
+
+from world.flux.structures import Nodes
+from world.flux.grid import Grid
+from world.flux.binding import attempt_binding
+
+
+def test_attempt_binding_creates_node_at_centroid_when_temperature_low():
+    q = Quanta(max_quanta=10)
+    n = Nodes(max_nodes=10)
+    g = Grid(dims=(10, 10, 10), voxel_size=1.0, T_smoothing=1.0)
+    cfg = BindingConfig(alpha=10.0, beta=10.0, T_crit=1.0,
+                         eta=0.1, r=2.0)
+    # Two coherent quanta in a cold voxel
+    q.add(pos=(5.0, 5.0, 5.0), vel=(0, 0, 0), freq=200,
+          polarity=1, energy=1.0)
+    q.add(pos=(5.5, 5.0, 5.0), vel=(0, 0, 0), freq=200,
+          polarity=1, energy=1.0)
+    # T_local around (5,5,5) is 0 (no smoothing of any density)
+    rng = np.random.default_rng(0)
+    heat = attempt_binding(quanta=q, nodes=n, grid=g,
+                            cfg=cfg, tick_index=0, rng=rng)
+    # Both quanta should have bound (high p) into one node
+    assert n.n_alive() == 1
+    # Centroid at (5.25, 5, 5)
+    np.testing.assert_allclose(n.pos[0], [5.25, 5.0, 5.0])
+    # Energy: total in = 2.0; heat = 0.1 * 2.0 = 0.2; node holds 1.8
+    np.testing.assert_allclose(n.energy[0], 1.8, atol=1e-12)
+    np.testing.assert_allclose(heat, 0.2, atol=1e-12)
+    # Quanta slots freed
+    assert q.n_alive() == 0
+
+
+def test_attempt_binding_does_not_bind_in_hot_zones():
+    q = Quanta(max_quanta=10)
+    n = Nodes(max_nodes=10)
+    g = Grid(dims=(10, 10, 10), voxel_size=1.0)
+    cfg = BindingConfig(alpha=4.0, beta=10.0, T_crit=1.0,
+                         eta=0.1, r=2.0)
+    q.add(pos=(5.0, 5.0, 5.0), vel=(0, 0, 0), freq=200,
+          polarity=1, energy=1.0)
+    q.add(pos=(5.5, 5.0, 5.0), vel=(0, 0, 0), freq=200,
+          polarity=1, energy=1.0)
+    # Force a hot temperature at that voxel
+    g.T[5, 5, 5] = 100.0
+    rng = np.random.default_rng(0)
+    heat = attempt_binding(quanta=q, nodes=n, grid=g,
+                            cfg=cfg, tick_index=0, rng=rng)
+    # Hot zone → p_bind ≈ 0 → no binding
+    assert n.n_alive() == 0
+    assert heat == 0.0
+    assert q.n_alive() == 2
+
+
+def test_attempt_binding_skips_frequency_mismatched_pairs():
+    q = Quanta(max_quanta=10)
+    n = Nodes(max_nodes=10)
+    g = Grid(dims=(10, 10, 10), voxel_size=1.0)
+    cfg = BindingConfig(alpha=10.0, beta=10.0, T_crit=1.0,
+                         eta=0.1, r=2.0, coherence_eps=1.0)
+    q.add(pos=(5.0, 5.0, 5.0), vel=(0, 0, 0), freq=100,
+          polarity=1, energy=1.0)
+    q.add(pos=(5.5, 5.0, 5.0), vel=(0, 0, 0), freq=500,
+          polarity=1, energy=1.0)
+    rng = np.random.default_rng(0)
+    heat = attempt_binding(quanta=q, nodes=n, grid=g,
+                            cfg=cfg, tick_index=0, rng=rng)
+    # Frequencies differ by 400 >> eps=1 → coh=0; the coherence-zero
+    # path should skip the pair entirely before computing p_bind.
+    assert n.n_alive() == 0
+    assert heat == 0.0
+    assert q.n_alive() == 2
+
+
+def test_attempt_binding_with_no_pairs_is_noop():
+    q = Quanta(max_quanta=10)
+    n = Nodes(max_nodes=10)
+    g = Grid(dims=(10, 10, 10), voxel_size=1.0)
+    cfg = BindingConfig()
+    rng = np.random.default_rng(0)
+    heat = attempt_binding(quanta=q, nodes=n, grid=g,
+                            cfg=cfg, tick_index=0, rng=rng)
+    assert heat == 0.0
+    assert n.n_alive() == 0
+
+
+def test_attempt_binding_sets_node_freq_to_pair_mean():
+    q = Quanta(max_quanta=10)
+    n = Nodes(max_nodes=10)
+    g = Grid(dims=(10, 10, 10), voxel_size=1.0)
+    cfg = BindingConfig(alpha=10.0, beta=10.0, T_crit=1.0,
+                         eta=0.0, r=2.0, coherence_eps=3.0)
+    q.add(pos=(5.0, 5.0, 5.0), vel=(0, 0, 0), freq=199,
+          polarity=1, energy=1.0)
+    q.add(pos=(5.5, 5.0, 5.0), vel=(0, 0, 0), freq=201,
+          polarity=1, energy=1.0)
+    rng = np.random.default_rng(0)
+    attempt_binding(quanta=q, nodes=n, grid=g,
+                    cfg=cfg, tick_index=7, rng=rng)
+    assert n.n_alive() == 1
+    np.testing.assert_allclose(n.freq[0], 200.0)
+    assert n.born_tick[0] == 7
