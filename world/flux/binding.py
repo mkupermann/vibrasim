@@ -18,6 +18,7 @@ In F1a this is implemented in its scope-minimal form:
 """
 from __future__ import annotations
 import numpy as np
+from dataclasses import dataclass
 
 from world.flux.quantum import Quanta
 
@@ -59,3 +60,33 @@ def find_pairs_within(quanta: Quanta, r: float) -> np.ndarray:
         return np.zeros((0, 2), dtype=np.int64)
     pairs = np.stack([alive_idx[i_local], alive_idx[j_local]], axis=1)
     return pairs.astype(np.int64)
+
+
+@dataclass
+class BindingConfig:
+    """Tunable parameters of the single binding rule (spec §3).
+
+    Defaults are F1a starting values — calibration sweeps live in the
+    F1a task 10 phase-log notes once T3 results are in.
+    """
+    alpha: float = 4.0          # gain on coherence term
+    beta: float = 4.0           # gain on temperature gap
+    T_crit: float = 5.0         # critical temperature for binding
+    eta: float = 0.1            # heat-export fraction (η ∈ [0, 1))
+    r: float = 1.5              # binding radius (Euclidean)
+    coherence_eps: float = 1.0  # frequency-equality tolerance (F1a)
+
+
+def binding_probability(pred_coh: float, T_local: float,
+                         cfg: BindingConfig) -> float:
+    """Compute p_bind = sigmoid(α * pred_coh + β * (T_crit - T_local)).
+
+    Returns a float in (0, 1).
+    """
+    x = cfg.alpha * pred_coh + cfg.beta * (cfg.T_crit - T_local)
+    # Stable sigmoid
+    if x >= 0:
+        return 1.0 / (1.0 + np.exp(-x))
+    else:
+        ex = np.exp(x)
+        return ex / (1.0 + ex)
