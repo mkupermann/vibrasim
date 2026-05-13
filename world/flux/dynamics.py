@@ -60,6 +60,7 @@ def tick(quanta: Quanta, grid: Grid, dt: float,
          decay_cfg=None,
          bridges=None,
          plasticity_cfg=None,
+         thermal_cfg=None,
          rng: np.random.Generator | None = None,
          tick_index: int = 0):
     """Run one tick.
@@ -68,6 +69,11 @@ def tick(quanta: Quanta, grid: Grid, dt: float,
     F1b mode (nodes provided): returns (E_exported, binding_heat,
     decay_heat) tuple. binding_heat / decay_heat are 0.0 when their
     configs aren't provided.
+
+    F1c thermal: when `thermal_cfg` is provided, buoyancy + damping
+    are applied right after move (step 3 in the amended tick order),
+    and the thermal boundary clamp is applied right after the T-update
+    (final step). Pure-substrate convection — no coupling to binding.
     """
     # 1. Inject
     if injector is not None:
@@ -78,7 +84,13 @@ def tick(quanta: Quanta, grid: Grid, dt: float,
     if alive.any():
         quanta.pos[alive] += quanta.vel[alive] * dt
 
-    # 3. Absorb
+    # 3. Buoyancy + damping (F1c). Uses *this* tick's T_local from the
+    # previous tick's update — consistent with the move-before-T pattern.
+    if thermal_cfg is not None:
+        from world.flux.thermal import apply_buoyancy_and_damping
+        apply_buoyancy_and_damping(quanta, grid, thermal_cfg, dt)
+
+    # 4. Absorb
     exported = absorb_cold_faces(quanta, grid, delta=cold_face_delta)
 
     # 4. Attempt binding
@@ -120,6 +132,13 @@ def tick(quanta: Quanta, grid: Grid, dt: float,
     # 8. Temperature
     density = _compute_density(quanta, grid)
     grid.update_temperature(density)
+
+    # 9. Thermal boundary clamp (F1c). Pinned floor stays >= T_hot,
+    # ceiling stays <= T_cold; interior voxels free to evolve from
+    # density.
+    if thermal_cfg is not None:
+        from world.flux.thermal import enforce_thermal_boundaries
+        enforce_thermal_boundaries(grid, thermal_cfg)
 
     if nodes is None:
         return exported
