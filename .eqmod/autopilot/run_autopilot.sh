@@ -71,14 +71,16 @@ echo "[$(date -Iseconds)] preflight OK, item=$ITEM brief=$BRIEF"
 #
 # --print              : non-interactive, prints final result
 # --append-system-prompt: bolt CHARTER onto the system prompt
-# --model              : hard-locked to sonnet-4-6 (Opus is gated to postmortem path)
+# --model              : Opus 4.7 primary, Sonnet 4.6 fallback if Opus rate-limited at start
 # --max-turns 80       : per-session ceiling (charter line 6)
 # --permission-mode acceptEdits : allow file edits + bash, no interactive approval
 # --allowed-tools      : whitelist; intentionally NOT including WebFetch/WebSearch
 #                       (fully offline session, no surprise network calls)
 #
-# The prompt itself is brief: tell Claude what item, point at CHARTER, point at brief,
-# point at autonomous-prototype-build skill. The skill drives the loop.
+# Fallback policy: if Opus exits non-zero within 5 minutes AND output contains a
+# rate-limit signature, retry with sonnet-4-6. Late failures (Opus ran > 5min
+# then quit) are accepted as-is — postflight evaluates whatever the partial
+# session produced.
 
 PROMPT="You are starting an autopilot session on EQMOD item ${ITEM}.
 
@@ -107,16 +109,38 @@ fi
 # Set autopilot env BEFORE invoking claude so the pre-commit hook arms.
 export EQMOD_AUTOPILOT=1
 
-$TIMEOUT_CMD claude \
-  --print \
-  --model claude-sonnet-4-6 \
-  --max-turns 80 \
-  --permission-mode acceptEdits \
-  --allowed-tools "Read,Edit,Write,Bash,Grep,Glob,Skill,TaskCreate,TaskUpdate,TaskList" \
-  --append-system-prompt "$(cat "$CHARTER")" \
-  "$PROMPT"
+CLAUDE_OUT="$STATE_DIR/last_claude_output.txt"
+RATE_LIMIT_RE="rate.?limit|usage.?limit|5.?hour limit|quota|usage_limit_reached|too many requests|429|Try again at"
 
+run_claude() {
+  local MODEL="$1"
+  echo "[$(date -Iseconds)] invoking claude --model=$MODEL"
+  $TIMEOUT_CMD claude \
+    --print \
+    --model "$MODEL" \
+    --max-turns 80 \
+    --permission-mode acceptEdits \
+    --allowed-tools "Read,Edit,Write,Bash,Grep,Glob,Skill,TaskCreate,TaskUpdate,TaskList" \
+    --append-system-prompt "$(cat "$CHARTER")" \
+    "$PROMPT" 2>&1 | tee "$CLAUDE_OUT"
+  return ${PIPESTATUS[0]}
+}
+
+START_TS=$(date +%s)
+run_claude "claude-opus-4-7"
 CLAUDE_EXIT=$?
+ELAPSED=$(( $(date +%s) - START_TS ))
+echo "[$(date -Iseconds)] opus exited code=$CLAUDE_EXIT elapsed=${ELAPSED}s"
+
+if [[ $CLAUDE_EXIT -ne 0 ]] && [[ $ELAPSED -lt 300 ]] && grep -qiE "$RATE_LIMIT_RE" "$CLAUDE_OUT"; then
+  echo "[$(date -Iseconds)] Opus rate-limit signature detected (elapsed=${ELAPSED}s) — falling back to sonnet-4-6"
+  START_TS=$(date +%s)
+  run_claude "claude-sonnet-4-6"
+  CLAUDE_EXIT=$?
+  ELAPSED=$(( $(date +%s) - START_TS ))
+  echo "[$(date -Iseconds)] sonnet fallback exited code=$CLAUDE_EXIT elapsed=${ELAPSED}s"
+fi
+
 echo "[$(date -Iseconds)] claude exited with code=$CLAUDE_EXIT"
 
 # 3. Postflight runs regardless of how claude exited (success, timeout, 429, crash).

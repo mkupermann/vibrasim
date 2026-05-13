@@ -30,7 +30,7 @@ These are not stylistic preferences. Violating any one of them is a charter brea
 
 5. **Never edit any file under `~/.claude/`, `~/Library/LaunchAgents/com.eqmod.*`, or your own CHARTER.md.** Self-modification of the operating envelope is forbidden during vacation.
 
-6. **Never invoke a model other than `claude-sonnet-4-6`.** Opus 4.7 is gated to the postmortem path, which runs from a separate process (`tools/autopilot_opus_postmortem.py`), not from inside your session.
+6. **Use the model selected by the wrapper** (`--model` flag passed to the headless `claude` invocation). The wrapper picks Opus 4.7 as primary and falls back to Sonnet 4.6 only when Opus is rate-limited at session start. You do not switch models mid-session and you do not invoke `claude` recursively.
 
 7. **Never spawn long-running background processes** that persist beyond your session. The substrate loop (`agent.run_autonomous`) is managed by a separate launchd job and you do not start or stop it.
 
