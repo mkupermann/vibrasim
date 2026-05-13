@@ -116,7 +116,8 @@ items:
     preregistered_acceptance:
       - "tests/test_research_plan_structure.py::test_training_EN_plan_exists_and_well_formed PASSES (verifies file at docs/superpowers/plans/<date>-flux-training-EN.md exists with: Acceptance contract, File structure (locked decisions), Open calibration choices, Task N sections, at least one tests/flux/test_*.py acceptance target, AND explicit pre-registered negative control + corpus specification)"
       - "Plan must declare these specific pytest acceptance paths so R-8 can verify them: tests/flux/test_training_run.py and tests/flux/test_training_negative_control.py"
-      - "Plan body must specify: a single-language English corpus (no German, no French — per user 2026-05-13), Stage 1 (single-narrator audiobook) and Stage 2 (single YouTuber) sources only (Stage 3 multi-speaker and Stage 4 user-recording NOT in vacation scope — Stage 4 is the user's own voice and the user is away)"
+      - "Plan body must specify: a single-language English corpus (no German, no French — per user 2026-05-13), Stage 1 (single-narrator audiobook) and Stage 2 (single YouTuber) and a Stage 4 SUBSTITUTE — Stage 3 multi-speaker remains out of vacation scope"
+      - "Plan body must specify the Stage 4 substitute: >= 30 min single-speaker English recording from a public-domain or CC-licensed source, distinct speaker from Stage 1 and Stage 2 narrators (user delegated substitution 2026-05-13 23:38 — user on vacation, cannot record own voice). Plan must justify the choice with one paragraph on the acoustic or distributional difference between the Stage 4 substitute and Stages 1-2 (otherwise the substrate is just hearing 3 audiobook narrators with no real variation)" 
       - "Plan body must reference the F3 learning rule produced by R-5 by name and explain how the corpus exercises it"
     time_budget_hours: 4
     status: queued
