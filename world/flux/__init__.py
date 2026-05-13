@@ -32,6 +32,11 @@ from world.flux.plasticity import (
 )
 from world.flux.quantum import Quanta
 from world.flux.structures import Nodes
+from world.flux.thermal import (
+    ThermalConfig,
+    apply_buoyancy_and_damping,
+    enforce_thermal_boundaries,
+)
 
 __all__ = [
     "BindingConfig",
@@ -44,13 +49,16 @@ __all__ = [
     "Nodes",
     "PlasticityConfig",
     "Quanta",
+    "ThermalConfig",
     "absorb_cold_faces",
+    "apply_buoyancy_and_damping",
     "apply_plasticity",
     "attempt_binding",
     "attempt_decay",
     "binding_probability",
     "count_flux_through",
     "decay_probability",
+    "enforce_thermal_boundaries",
     "find_pairs_within",
     "inject_hot_floor",
     "pred_coherence",
