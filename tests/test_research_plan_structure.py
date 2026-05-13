@@ -73,6 +73,45 @@ def test_F2_plan_exists_and_well_formed() -> None:
     ), f"F2 plan {plan.name} must reference spec section 5 (cochlea + audio I/O)"
 
 
+def test_training_EN_plan_exists_and_well_formed() -> None:
+    """R-6 acceptance: training plan for the English audio corpus.
+
+    The training plan is a separate concern from F2/F3 because it commits
+    the substrate to ENGLISH (not German, not French) per user instruction
+    2026-05-13. It also pre-registers Stage 1 + Stage 2 only (audiobook +
+    single YouTuber) — Stage 3 multi-speaker and Stage 4 user-recording
+    are out of vacation scope.
+    """
+    matches = sorted(PLANS_DIR.glob("*-flux-training-EN.md"))
+    plan = matches[-1] if matches else None
+    if plan is None:
+        pytest.fail(
+            "No flux-training-EN.md plan found under docs/superpowers/plans/. "
+            "R-6 acceptance: write the training plan committing to a single-language "
+            "English corpus, Stage 1 + Stage 2 only."
+        )
+    _assert_structure(plan)
+    body = plan.read_text().lower()
+    assert "english" in body, (
+        f"training plan {plan.name} must explicitly commit to English as the "
+        "training language (per user instruction 2026-05-13: only English, no German, no French)"
+    )
+    assert re.search(
+        r"negative\s+control|matched.?wallclock", body
+    ), (
+        f"training plan {plan.name} must pre-register a negative control "
+        "(matched-wallclock substrate without input)"
+    )
+    # Stage 4 (user recording) must be explicitly excluded
+    assert (
+        "stage 4" in body
+        and ("not in scope" in body or "excluded" in body or "out of scope" in body or "user is away" in body)
+    ), (
+        f"training plan {plan.name} must explicitly exclude Stage 4 (user recording) "
+        "from vacation scope — the user cannot record while away"
+    )
+
+
 def test_F3_plan_exists_and_well_formed() -> None:
     plan = _find_plan("F3")
     if plan is None:
