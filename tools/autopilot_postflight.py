@@ -189,6 +189,72 @@ def main() -> None:
         # Push failure is not fatal for the session — we have the local commit.
         print(f"postflight: WARN: push failed: {r.stderr}", file=sys.stderr)
 
+    # 9b. Sync the updated QUEUE.yaml status to main so the next launchd slot
+    # picks the NEXT queued item rather than re-picking this one. Preflight
+    # reads the queue from whatever branch HEAD points to at startup (main),
+    # so without this sync the same item gets re-picked forever and burns
+    # through its 3-attempts budget on already-done work.
+    #
+    # Exempt from CHARTER §4 ("Never push to main") because the charter
+    # explicitly delegates push targets to "the postflight script". Only
+    # the QUEUE.yaml file is taken — not code, not LOGBOOK — so the
+    # research output stays isolated on autopilot/<item-id>.
+    main_sync_ok = False
+    try:
+        r = subprocess.run(
+            ["git", "checkout", "main"],
+            cwd=REPO, capture_output=True, text=True, env=env,
+        )
+        if r.returncode == 0:
+            r = subprocess.run(
+                ["git", "checkout", branch_name, "--", ".eqmod/autopilot/QUEUE.yaml"],
+                cwd=REPO, capture_output=True, text=True, env=env,
+            )
+            if r.returncode == 0:
+                r = subprocess.run(
+                    ["git", "status", "--porcelain", ".eqmod/autopilot/QUEUE.yaml"],
+                    cwd=REPO, capture_output=True, text=True, env=env,
+                )
+                if r.stdout.strip():
+                    subprocess.run(
+                        ["git", "add", ".eqmod/autopilot/QUEUE.yaml"],
+                        cwd=REPO, capture_output=True, text=True, env=env,
+                    )
+                    sync_msg = (
+                        f"autopilot: sync {item_id} status to main ({verdict}, "
+                        f"attempt {item['attempts']}/3)\n\n"
+                        f"Queue-only sync. Code and LOGBOOK remain on "
+                        f"{branch_name} for human review. Picked by the next "
+                        f"launchd slot so the queue advances to the next "
+                        f"queued item.\n\n"
+                        f"Co-Authored-By: Claude (autopilot) <noreply@anthropic.com>"
+                    )
+                    r = subprocess.run(
+                        ["git", "commit", "-m", sync_msg],
+                        cwd=REPO, capture_output=True, text=True, env=env,
+                    )
+                    if r.returncode == 0:
+                        r = subprocess.run(
+                            ["git", "push", "origin", "main"],
+                            cwd=REPO, capture_output=True, text=True, env=env,
+                        )
+                        main_sync_ok = r.returncode == 0
+                        if not main_sync_ok:
+                            print(
+                                f"postflight: WARN: main-sync push failed: {r.stderr}",
+                                file=sys.stderr,
+                            )
+                    else:
+                        print(
+                            f"postflight: WARN: main-sync commit failed: {r.stderr}",
+                            file=sys.stderr,
+                        )
+                else:
+                    # Nothing to sync — QUEUE.yaml on autopilot/<item> matches main.
+                    main_sync_ok = True
+    except Exception as exc:
+        print(f"postflight: WARN: main-sync exception: {exc}", file=sys.stderr)
+
     # 10. Per-session email report (every run, per user request 2026-05-13).
     queue_after = load_queue()
     items_after = queue_after.get("items") or []
