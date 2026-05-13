@@ -580,3 +580,11 @@ Open work for a production-quality acceptance run:
 Operational documentation in `docs/predictive-babble.md`.
 
 ---
+
+
+## 2026-05-14 — autopilot session: R-1
+
+- **Verdict**: PASSED
+- **Attempts**: 1/3
+- **Diff**: 13 files changed, 395 insertions(+), 93 deletions(-)
+- **Rationale**: all pass-targets passed; all negative controls failed as required
