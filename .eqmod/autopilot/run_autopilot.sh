@@ -22,12 +22,23 @@ STATE_DIR="$HOME/.eqmod/autopilot"
 LOG="$STATE_DIR/session.log"
 CHARTER="$REPO/.eqmod/autopilot/CHARTER.md"
 VENV_PY="$REPO/.venv/bin/python"
+LOCKDIR="$STATE_DIR/wrapper.lock.d"
 
 mkdir -p "$STATE_DIR"
 exec >> "$LOG" 2>&1
 
 echo ""
 echo "==================== $(date -Iseconds) ===================="
+
+# Single-instance lock. macOS has no `flock` binary, so use mkdir as the
+# atomic primitive (POSIX-portable). If another wrapper is mid-flight,
+# exit clean — the next launchd slot will try again.
+if ! mkdir "$LOCKDIR" 2>/dev/null; then
+  other_pid=$(cat "$LOCKDIR/pid" 2>/dev/null || echo "?")
+  echo "[$(date -Iseconds)] another wrapper is running (pid=$other_pid) — exiting clean"
+  exit 0
+fi
+echo $$ > "$LOCKDIR/pid"
 
 cd "$REPO" || { echo "cannot cd to $REPO"; exit 2; }
 
@@ -42,7 +53,7 @@ if [[ -n "$DIRTY_BEFORE" ]]; then
   git stash push --include-untracked -m "$STASH_MSG" >/dev/null 2>&1 || echo "[$(date -Iseconds)] WARN: stash push failed"
 fi
 
-# Helper: pop the stash back. Called from every exit path.
+# Helper: pop the stash back AND release the lock. Called from every exit path.
 restore_stash() {
   if [[ -n "$STASH_MSG" ]]; then
     local sref
@@ -53,6 +64,8 @@ restore_stash() {
         echo "[$(date -Iseconds)] WARN: stash pop failed; recover manually: git stash list | grep $STASH_MSG"
     fi
   fi
+  rm -f "$LOCKDIR/pid" 2>/dev/null
+  rmdir "$LOCKDIR" 2>/dev/null || true
 }
 trap restore_stash EXIT
 
