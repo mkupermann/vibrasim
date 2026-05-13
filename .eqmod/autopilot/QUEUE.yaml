@@ -104,3 +104,48 @@ items:
     attempts: 0
     blockers: ["R-4 must reach status=passed first"]
     created: 2026-05-13
+
+  # ----- Training phase: only meaningful if R-5 (F3 learning) actually passed.
+  # If F3 NULLed, these items will themselves NULL (their pytest targets depend
+  # on the learning layer being live). That is the intended fail-shut behavior.
+  # User instruction (2026-05-13 23:18): once the substrate works, also train it.
+
+  - id: R-6
+    title: training plan — expose flux substrate to a real English audio corpus
+    brief: docs/superpowers/specs/2026-05-10-flux-substrate-design.md
+    preregistered_acceptance:
+      - "tests/test_research_plan_structure.py::test_training_EN_plan_exists_and_well_formed PASSES (verifies file at docs/superpowers/plans/<date>-flux-training-EN.md exists with: Acceptance contract, File structure (locked decisions), Open calibration choices, Task N sections, at least one tests/flux/test_*.py acceptance target, AND explicit pre-registered negative control + corpus specification)"
+      - "Plan must declare these specific pytest acceptance paths so R-8 can verify them: tests/flux/test_training_run.py and tests/flux/test_training_negative_control.py"
+      - "Plan body must specify: a single-language English corpus (no German, no French — per user 2026-05-13), Stage 1 (single-narrator audiobook) and Stage 2 (single YouTuber) sources only (Stage 3 multi-speaker and Stage 4 user-recording NOT in vacation scope — Stage 4 is the user's own voice and the user is away)"
+      - "Plan body must reference the F3 learning rule produced by R-5 by name and explain how the corpus exercises it"
+    time_budget_hours: 4
+    status: queued
+    attempts: 0
+    blockers: ["R-5 must reach status=passed first"]
+    created: 2026-05-13
+
+  - id: R-7
+    title: training corpus build — fetch English Stage 1+2 sources, validate, manifest
+    brief: docs/superpowers/specs/2026-05-10-flux-substrate-design.md
+    preregistered_acceptance:
+      - "tests/flux/test_training_corpus_valid.py PASSES (corpus YAML at corpus.training-EN.yaml exists, parses, all listed audio assets exist on disk, total Stage 1 duration >= 60 min, total Stage 2 duration >= 120 min, sample-rate normalised to 16 kHz mono)"
+      - "tests/flux/test_training_corpus_manifest.py PASSES (manifest written at ~/.eqmod/training/EN/manifest.json with: per-stage durations, source URLs, sha256 of each file)"
+    time_budget_hours: 4
+    status: queued
+    attempts: 0
+    blockers: ["R-6 must reach status=passed first"]
+    created: 2026-05-13
+
+  - id: R-8
+    title: training run — expose substrate to English corpus, measure emergence vs negative control
+    brief: docs/superpowers/specs/2026-05-10-flux-substrate-design.md
+    preregistered_acceptance:
+      - "tests/flux/test_training_run.py PASSES (pre-registered by R-6 — substrate exposed to the English corpus develops the metric defined in the F3 + training plans above its threshold)"
+      - "tests/flux/test_training_negative_control.py PASSES (pre-registered by R-6 — matched-wallclock substrate WITHOUT the English corpus must NOT develop the metric above threshold; verdict is PASS only when trained > control by the plan-specified margin)"
+      - "docs/flux/phase-log.md has a training-run-close entry with measured numbers (substrate metric, control metric, margin, plan threshold) committed"
+      - "LOGBOOK.md has the verdict + interpretation paragraph appended"
+    time_budget_hours: 24
+    status: queued
+    attempts: 0
+    blockers: ["R-7 must reach status=passed first"]
+    created: 2026-05-13
