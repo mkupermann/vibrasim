@@ -123,3 +123,25 @@ def test_absorb_cold_faces_does_not_absorb_at_hot_floor():
     exported = absorb_cold_faces(q, g, delta=0.5)
     assert exported == 0.0
     assert q.n_alive() == 1
+
+
+def test_inject_hot_floor_bidirectional_vel_z_has_zero_mean():
+    """F1c: when vel_z_sigma is provided, vel_z is gaussian around 0
+    (no upward clamp); empirical mean should be ≈ 0 ± 0.05 over 1000
+    injections."""
+    q = Quanta(max_quanta=2000)
+    g = Grid(dims=(10, 10, 10), voxel_size=1.0)
+    inject_hot_floor(
+        q, g, n=1000, energy_per=1.0,
+        freq_mean=200.0,
+        vel_xy_sigma=0.5, vel_z_sigma=0.5,
+        rng=np.random.default_rng(0),
+    )
+    alive_vz = q.vel[q.alive, 2]
+    # Both upward and downward velocities expected
+    assert (alive_vz > 0).any()
+    assert (alive_vz < 0).any()
+    # Empirical mean ~ 0 (sigma=0.5, n=1000 → SEM ≈ 0.0158)
+    assert abs(alive_vz.mean()) < 0.05
+    # Stddev ~ vel_z_sigma
+    assert abs(alive_vz.std() - 0.5) < 0.1
