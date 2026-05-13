@@ -102,13 +102,24 @@ def test_training_EN_plan_exists_and_well_formed() -> None:
         f"training plan {plan.name} must pre-register a negative control "
         "(matched-wallclock substrate without input)"
     )
-    # Stage 4 (user recording) must be explicitly excluded
+    # Stage 4 substitute is required (user cannot record while away — substitution
+    # delegated 2026-05-13 23:38). The plan must commit to a specific public-domain
+    # or CC-licensed recording as a Stage 4 substitute distinct from Stages 1 + 2.
+    assert "stage 4" in body, (
+        f"training plan {plan.name} must address Stage 4 (the original spec calls "
+        "for a personal-voice recording, which the user delegated to a substitute)"
+    )
+    assert "substitute" in body or "substituted" in body, (
+        f"training plan {plan.name} must use the word 'substitute' to make the "
+        "deviation from the original Stage 4 (user voice) explicit"
+    )
     assert (
-        "stage 4" in body
-        and ("not in scope" in body or "excluded" in body or "out of scope" in body or "user is away" in body)
+        "public-domain" in body or "public domain" in body
+        or "cc-licensed" in body or "creative commons" in body
+        or "librivox" in body
     ), (
-        f"training plan {plan.name} must explicitly exclude Stage 4 (user recording) "
-        "from vacation scope — the user cannot record while away"
+        f"training plan {plan.name} must commit to a public-domain or CC-licensed "
+        "source for the Stage 4 substitute (no copyright surprises)"
     )
 
 
