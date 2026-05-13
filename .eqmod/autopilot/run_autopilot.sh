@@ -1,0 +1,144 @@
+#!/usr/bin/env bash
+# EQMOD vacation autopilot — single-session driver.
+#
+# Called by launchd every 6 hours. One invocation = one Claude Code session
+# working on one queue item. Returns clean on token-cap, crash, or success;
+# the next launchd tick picks up where this left off.
+#
+# Layout:
+#   .eqmod/autopilot/run_autopilot.sh   <- this file (versioned)
+#   .eqmod/autopilot/CHARTER.md         <- system-prompt append (versioned)
+#   .eqmod/autopilot/QUEUE.yaml         <- work queue (versioned)
+#   ~/.eqmod/autopilot/STOP             <- touch this to disable (not versioned)
+#   ~/.eqmod/autopilot/current_item.txt <- preflight writes, postflight reads
+#   ~/.eqmod/autopilot/last_tick.txt    <- preflight timestamp for watchdog
+#   ~/.eqmod/autopilot/HUMAN_NEEDED.md  <- session appends when uncertain
+#   ~/.eqmod/autopilot/session.log      <- this script appends every run
+
+set -uo pipefail
+
+REPO="/Users/mkupermann/Documents/GitHub/EQMOD"
+STATE_DIR="$HOME/.eqmod/autopilot"
+LOG="$STATE_DIR/session.log"
+CHARTER="$REPO/.eqmod/autopilot/CHARTER.md"
+VENV_PY="$REPO/.venv/bin/python"
+
+mkdir -p "$STATE_DIR"
+exec >> "$LOG" 2>&1
+
+echo ""
+echo "==================== $(date -Iseconds) ===================="
+
+cd "$REPO" || { echo "cannot cd to $REPO"; exit 2; }
+
+# 0. Stash any pre-existing uncommitted state (user's in-progress work that
+# is unrelated to the autopilot). preflight requires a clean tree; we restore
+# this stash at the very end so the user's work is preserved across sessions.
+DIRTY_BEFORE=$(git status --porcelain)
+STASH_MSG=""
+if [[ -n "$DIRTY_BEFORE" ]]; then
+  STASH_MSG="autopilot-isolation-$(date +%s)"
+  echo "[$(date -Iseconds)] stashing pre-existing dirty state as '$STASH_MSG'"
+  git stash push --include-untracked -m "$STASH_MSG" >/dev/null 2>&1 || echo "[$(date -Iseconds)] WARN: stash push failed"
+fi
+
+# Helper: pop the stash back. Called from every exit path.
+restore_stash() {
+  if [[ -n "$STASH_MSG" ]]; then
+    local sref
+    sref=$(git stash list | grep -F "$STASH_MSG" | head -1 | sed 's/:.*//')
+    if [[ -n "$sref" ]]; then
+      git checkout main 2>/dev/null || true
+      git stash pop "$sref" >/dev/null 2>&1 || \
+        echo "[$(date -Iseconds)] WARN: stash pop failed; recover manually: git stash list | grep $STASH_MSG"
+    fi
+  fi
+}
+trap restore_stash EXIT
+
+# 1. Preflight
+echo "[$(date -Iseconds)] preflight..."
+if ! "$VENV_PY" tools/autopilot_preflight.py; then
+  echo "[$(date -Iseconds)] preflight rejected — exiting clean"
+  exit 0
+fi
+
+ITEM=$(cat "$STATE_DIR/current_item.txt")
+BRIEF=$(cat "$STATE_DIR/current_brief.txt")
+echo "[$(date -Iseconds)] preflight OK, item=$ITEM brief=$BRIEF"
+
+# 2. Headless Claude session
+#
+# --print              : non-interactive, prints final result
+# --append-system-prompt: bolt CHARTER onto the system prompt
+# --model              : hard-locked to sonnet-4-6 (Opus is gated to postmortem path)
+# --max-turns 80       : per-session ceiling (charter line 6)
+# --permission-mode acceptEdits : allow file edits + bash, no interactive approval
+# --allowed-tools      : whitelist; intentionally NOT including WebFetch/WebSearch
+#                       (fully offline session, no surprise network calls)
+#
+# The prompt itself is brief: tell Claude what item, point at CHARTER, point at brief,
+# point at autonomous-prototype-build skill. The skill drives the loop.
+
+PROMPT="You are starting an autopilot session on EQMOD item ${ITEM}.
+
+The charter at .eqmod/autopilot/CHARTER.md is your constitutional contract. Read it first.
+The amendment brief is at ${BRIEF}. Read it second.
+The pre-registered acceptance is in .eqmod/autopilot/QUEUE.yaml under id: ${ITEM}. It is locked.
+
+You are on branch autopilot/${ITEM}. Commits made here will be pushed by the postflight script — you do NOT push yourself.
+
+Now invoke the 'autonomous-prototype-build' skill and run it against the pre-registered acceptance until one of: pass, hard blocker, time/turn budget exhausted. NULL is a valid outcome. Do not retune thresholds. Do not edit marker_protocol files.
+
+When done, exit cleanly. The postflight script will run the tests, decide the verdict, write LOGBOOK, commit, and push.
+"
+
+echo "[$(date -Iseconds)] launching claude headless for item=$ITEM"
+
+# Wall-clock cap: 4h. Use `timeout` if installed, else `gtimeout` (coreutils via brew),
+# else fall back to per-call --max-turns and trust it.
+TIMEOUT_CMD=""
+if command -v timeout >/dev/null 2>&1; then
+  TIMEOUT_CMD="timeout 4h"
+elif command -v gtimeout >/dev/null 2>&1; then
+  TIMEOUT_CMD="gtimeout 4h"
+fi
+
+# Set autopilot env BEFORE invoking claude so the pre-commit hook arms.
+export EQMOD_AUTOPILOT=1
+
+$TIMEOUT_CMD claude \
+  --print \
+  --model claude-sonnet-4-6 \
+  --max-turns 80 \
+  --permission-mode acceptEdits \
+  --allowed-tools "Read,Edit,Write,Bash,Grep,Glob,Skill,TaskCreate,TaskUpdate,TaskList" \
+  --append-system-prompt "$(cat "$CHARTER")" \
+  "$PROMPT"
+
+CLAUDE_EXIT=$?
+echo "[$(date -Iseconds)] claude exited with code=$CLAUDE_EXIT"
+
+# 3. Postflight runs regardless of how claude exited (success, timeout, 429, crash).
+echo "[$(date -Iseconds)] postflight..."
+"$VENV_PY" tools/autopilot_postflight.py
+POST_EXIT=$?
+echo "[$(date -Iseconds)] postflight exited with code=$POST_EXIT"
+
+# 4. Return to main so the next preflight has a clean starting branch.
+# (Note: trap restore_stash also does checkout main, so this is just for clarity
+# before the postmortem step below.)
+git checkout main 2>/dev/null || true
+
+# 5. If postflight saw a NULL/FAIL verdict, kick off the Opus postmortem in a
+#    short separate process. Gated to that one job — no chance of Opus inside the loop.
+LAST_VERDICT=$(tail -50 "$REPO/LOGBOOK.md" | grep -E "^- \*\*Verdict\*\*:" | tail -1 | awk '{print tolower($3)}')
+if [[ "$LAST_VERDICT" == "null" || "$LAST_VERDICT" == "fail" ]]; then
+  if [[ -x "$REPO/tools/autopilot_opus_postmortem.py" ]]; then
+    echo "[$(date -Iseconds)] launching Opus postmortem (verdict=$LAST_VERDICT)"
+    "$VENV_PY" tools/autopilot_opus_postmortem.py "$ITEM" || true
+  fi
+fi
+
+echo "[$(date -Iseconds)] session done"
+exit 0
