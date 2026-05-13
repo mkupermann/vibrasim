@@ -14,17 +14,25 @@ def inject_hot_floor(quanta: Quanta, grid: Grid,
                      n: int,
                      energy_per: float,
                      freq_mean: float,
-                     vel_z_mean: float,
+                     vel_z_mean: float = 0.0,
                      freq_sigma: float = 0.0,
                      vel_xy_sigma: float = 0.1,
+                     vel_z_sigma: float | None = None,
                      rng: np.random.Generator | None = None) -> int:
     """Inject up to `n` vibrations at the hot floor.
 
     Positions are uniform random in the z=0 voxel layer
     (x, y ∈ [0, Lx*size), z ∈ [0, voxel_size)).
-    Velocities: upward (z>0) with sampled magnitude vel_z_mean,
-    small random xy component (sigma=vel_xy_sigma).
-    Frequencies: Gaussian around freq_mean.
+
+    Velocity-z mode:
+    - Default (vel_z_sigma=None): F0/F1a/F1b behavior — vel_z is gaussian
+      around vel_z_mean with 20% scatter and clamped to vel_z_mean if it
+      came out non-positive. Initialization is upward-biased.
+    - F1c bidirectional (vel_z_sigma>0): vel_z is gaussian around 0.0 with
+      sigma=vel_z_sigma. No upward clamp — buoyancy supplies the upward
+      drift. `vel_z_mean` is ignored in this mode.
+
+    Frequencies: Gaussian around freq_mean (sigma=freq_sigma).
 
     Returns: number actually injected (= n unless buffer fills first).
     """
@@ -39,9 +47,12 @@ def inject_hot_floor(quanta: Quanta, grid: Grid,
         z = rng.uniform(0.0, s)  # Z within first voxel layer
         vx = rng.normal(0.0, vel_xy_sigma)
         vy = rng.normal(0.0, vel_xy_sigma)
-        vz = rng.normal(vel_z_mean, vel_z_mean * 0.2)  # 20% scatter
-        if vz <= 0.0:
-            vz = vel_z_mean  # Floor at mean — keep upward
+        if vel_z_sigma is not None:
+            vz = rng.normal(0.0, vel_z_sigma)
+        else:
+            vz = rng.normal(vel_z_mean, vel_z_mean * 0.2)  # 20% scatter
+            if vz <= 0.0:
+                vz = vel_z_mean  # Floor at mean — keep upward
         freq = rng.normal(freq_mean, freq_sigma) if freq_sigma > 0 \
             else freq_mean
         slot = quanta.add(
