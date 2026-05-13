@@ -4,7 +4,7 @@
 
 set -uo pipefail
 
-REPO="/Users/mkupermann/Documents/GitHub/EQMOD"
+REPO="/Users/mkupermann/GitHub/EQMOD"
 STATE_DIR="$HOME/.eqmod/autopilot"
 
 cd "$REPO" || exit 1
@@ -18,7 +18,7 @@ echo "--- QUEUE STATE ---"
 "$REPO/.venv/bin/python" - <<'PY'
 import yaml
 from pathlib import Path
-q = yaml.safe_load(Path("/Users/mkupermann/Documents/GitHub/EQMOD/.eqmod/autopilot/QUEUE.yaml").read_text())
+q = yaml.safe_load(Path("/Users/mkupermann/GitHub/EQMOD/.eqmod/autopilot/QUEUE.yaml").read_text())
 for i in q.get("items") or []:
     print(f"  {i.get('id', '?'):6s}  {i.get('status', '?'):12s}  attempts={i.get('attempts', 0)}/3  {i.get('title', '')[:60]}")
 PY

@@ -18,8 +18,8 @@ Install:
 
     <key>ProgramArguments</key>
     <array>
-        <string>/Users/mkupermann/Documents/GitHub/EQMOD/.venv/bin/python</string>
-        <string>/Users/mkupermann/Documents/GitHub/EQMOD/tools/autopilot_watchdog.py</string>
+        <string>/bin/bash</string>
+        <string>/Users/mkupermann/GitHub/EQMOD/.eqmod/autopilot/run_watchdog.sh</string>
     </array>
 
     <key>StartInterval</key>
@@ -39,7 +39,7 @@ Install:
     </dict>
 
     <key>WorkingDirectory</key>
-    <string>/Users/mkupermann/Documents/GitHub/EQMOD</string>
+    <string>/Users/mkupermann/GitHub/EQMOD</string>
 
     <key>StandardOutPath</key>
     <string>/Users/mkupermann/.eqmod/autopilot/watchdog.out</string>

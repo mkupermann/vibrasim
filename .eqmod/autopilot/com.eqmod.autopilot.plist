@@ -24,7 +24,7 @@ Status:
 
     <key>ProgramArguments</key>
     <array>
-        <string>/Users/mkupermann/Documents/GitHub/EQMOD/.eqmod/autopilot/run_autopilot.sh</string>
+        <string>/Users/mkupermann/GitHub/EQMOD/.eqmod/autopilot/run_autopilot.sh</string>
     </array>
 
     <!--
@@ -69,7 +69,7 @@ Status:
     </dict>
 
     <key>WorkingDirectory</key>
-    <string>/Users/mkupermann/Documents/GitHub/EQMOD</string>
+    <string>/Users/mkupermann/GitHub/EQMOD</string>
 
     <key>StandardOutPath</key>
     <string>/Users/mkupermann/.eqmod/autopilot/launchd.out</string>
