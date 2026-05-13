@@ -200,3 +200,27 @@ Verified: T1 + T3 + T4 all green with both mechanisms active.
   pragmatic resolution while keeping spec compliance.
 
 F1c plan to be written next.
+
+## 2026-05-13 — F1c start
+
+- F1b closed: 80/80 flux tests + 382 legacy tests + T1/T3/T4 green.
+- F1c target: T2 (Bénard convection at hot floor / cold ceiling) passes.
+- Plan: `docs/superpowers/plans/2026-05-11-flux-substrate-F1c.md`.
+- Driven autonomously by autopilot R-1 against pre-registered acceptance.
+- New mechanisms in scope:
+  - Bidirectional injection at hot floor (vel_z gaussian around 0, not pinned up).
+  - Buoyancy: `vel_z += g * (T_local - T_ref) * dt` per tick on alive quanta.
+  - Velocity damping: `vel *= (1 - μ * dt)` per tick on alive quanta.
+  - Thermal boundary clamps: floor stays ≥ T_hot, ceiling stays ≤ T_cold.
+- Defaults from plan §"Open calibration choices":
+  - `cube_dims=(30, 30, 60)`, `buoyancy_g=2.0`, `damping_mu=0.5`, `T_ref=0.0`,
+    `T_hot_floor=5.0`, `T_cold_ceiling=0.0`,
+    `inject_vel_xy_sigma=0.5`, `inject_vel_z_sigma=0.5`, `n_inject=20`.
+- Deferred to F2: multi-way binding, node-to-node binding, cochlea, synthesis,
+  attention reallocate, `pred_coherence` as windowed cross-correlation.
+- Binding/decay/bridges/plasticity all disabled during T2 — pure thermal
+  substrate validation. Auditor formula unchanged (buoyancy + damping touch
+  velocity, not `energy_quantum`).
+- Tick-order amendment: buoyancy + damping inserted right after move; thermal
+  boundary enforcement inserted right after T-update.
+
