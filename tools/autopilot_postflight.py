@@ -27,6 +27,9 @@ from pathlib import Path
 import yaml
 
 REPO = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(REPO / "tools"))
+from autopilot_mail import send_mail  # noqa: E402
+
 QUEUE_PATH = REPO / ".eqmod/autopilot/QUEUE.yaml"
 STATE_DIR = Path.home() / ".eqmod/autopilot"
 CURRENT_ITEM_PATH = STATE_DIR / "current_item.txt"
@@ -181,9 +184,68 @@ def main() -> None:
         ["git", "push", "-u", "origin", branch_name],
         cwd=REPO, capture_output=True, text=True, env=env,
     )
-    if r.returncode != 0:
+    push_ok = r.returncode == 0
+    if not push_ok:
         # Push failure is not fatal for the session — we have the local commit.
         print(f"postflight: WARN: push failed: {r.stderr}", file=sys.stderr)
+
+    # 10. Per-session email report (every run, per user request 2026-05-13).
+    queue_after = load_queue()
+    items_after = queue_after.get("items") or []
+    queue_summary_lines = []
+    for it in items_after:
+        st = it.get("status", "?")
+        atts = it.get("attempts", 0)
+        queue_summary_lines.append(
+            f"  - {it.get('id', '?'):5s}  status={st:11s}  attempts={atts}  {it.get('title', '')}"
+        )
+    queue_summary = "\n".join(queue_summary_lines)
+
+    pass_log_excerpt = pass_log.strip()[-1200:] if pass_log else "(no pass-targets run)"
+    ctrl_log_excerpt = ctrl_log.strip()[-800:] if ctrl_log else "(no negative-control targets)"
+
+    last_commit_r = run(["git", "log", "-1", "--format=%h %s"])
+    last_commit = last_commit_r.stdout.strip() or "(no commits)"
+
+    body = (
+        f"EQMOD autopilot — session report\n"
+        f"================================\n"
+        f"\n"
+        f"Time:           {_dt.datetime.now().isoformat()}\n"
+        f"Item:           {item_id}\n"
+        f"Title:          {item.get('title', '?')}\n"
+        f"Brief:          {item.get('brief', '?')}\n"
+        f"Branch:         {branch_name}\n"
+        f"Verdict:        {verdict.upper()}\n"
+        f"Attempts:       {item['attempts']}/3\n"
+        f"Diff:           {shortstat or 'no changes'}\n"
+        f"Last commit:    {last_commit}\n"
+        f"Push to origin: {'OK' if push_ok else 'FAILED (commit is local only)'}\n"
+        f"\n"
+        f"Rationale\n"
+        f"---------\n"
+        f"{rationale}\n"
+        f"\n"
+        f"Queue state after this session\n"
+        f"------------------------------\n"
+        f"{queue_summary}\n"
+        f"\n"
+        f"Pass-targets pytest tail\n"
+        f"------------------------\n"
+        f"{pass_log_excerpt}\n"
+        f"\n"
+        f"Negative-control pytest tail\n"
+        f"----------------------------\n"
+        f"{ctrl_log_excerpt}\n"
+        f"\n"
+        f"--\n"
+        f"This mail is sent automatically by tools/autopilot_postflight.py at the end\n"
+        f"of every autopilot session. To stop: touch ~/.eqmod/autopilot/STOP\n"
+    )
+    subject = f"[EQMOD autopilot] {item_id} {verdict.upper()} (attempt {item['attempts']}/3)"
+    mailed = send_mail(subject, body)
+    if not mailed:
+        print(f"postflight: WARN: per-session mail failed (persisted to disk)", file=sys.stderr)
 
     print(f"postflight OK — item={item_id} verdict={verdict} attempts={item['attempts']}/3")
 

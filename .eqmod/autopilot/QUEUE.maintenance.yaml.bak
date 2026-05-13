@@ -1,0 +1,75 @@
+# EQMOD Autopilot Queue
+#
+# 3 sauber pre-registrierte Maintenance-Items für die Vacation-Phase
+# 2026-05-14 .. 2026-05-28. Items werden in Reihenfolge bearbeitet.
+#
+# Naming-Konvention: AUTO-N (Maintenance), NICHT G-N (Research-Reihe).
+# G24..G26 sind in docs/amendments/G20-G23.md §7 für die deutsche Text-Chain
+# pre-registriert und stehen dem Autopilot nicht zur Verfügung.
+#
+# Briefs liegen unter docs/maintenance/AUTO-N.md, mit pre-registrierter
+# Acceptance-Section (eingefroren während in_progress per pre-commit hook).
+#
+# Status-Übergänge sind Postflight-Maschinenvorgang — Claude darf Status
+# nicht direkt editieren (pre-commit hook blockt).
+#
+# Status-Werte:
+#   queued       - noch nicht angerührt
+#   in_progress  - aktuelle Session arbeitet daran (1 Item gleichzeitig)
+#   passed       - acceptance erfüllt
+#   null         - acceptance nicht erfüllt nach fair attempt, postmortem in LOGBOOK
+#   failed       - 3 attempts ohne pass, written-off
+#   blocked      - HUMAN_NEEDED, wartet auf Michael
+
+window:
+  start: 2026-05-14
+  end:   2026-05-28
+  default_model: claude-sonnet-4-6
+  per_session_max_turns: 80
+  per_session_wallclock_hours: 4
+
+items:
+  - id: AUTO-1
+    title: Silent-pass test-pattern auditor
+    brief: docs/maintenance/AUTO-1.md
+    preregistered_acceptance:
+      - "tests/test_audit_silent_pass.py::test_auditor_finds_silent_pass_in_fixture PASSES"
+      - "tests/test_audit_silent_pass.py::test_auditor_clears_clean_fixture PASSES"
+      - "tests/test_audit_silent_pass.py::test_auditor_scans_real_test_suite PASSES"
+    time_budget_hours: 12
+    status: queued
+    attempts: 0
+    blockers: []
+    created: 2026-05-13
+
+  - id: AUTO-2
+    title: WorldConfig __post_init__ field validation
+    brief: docs/maintenance/AUTO-2.md
+    preregistered_acceptance:
+      - "tests/test_config_validation.py::test_default_config_validates_clean PASSES"
+      - "tests/test_config_validation.py::test_growth_config_validates_clean PASSES"
+      - "tests/test_config_validation.py::test_post_init_rejects_negative_box_size PASSES"
+      - "tests/test_config_validation.py::test_post_init_rejects_zero_dt PASSES"
+      - "tests/test_config_validation.py::test_post_init_rejects_r1_geq_r2 PASSES"
+      - "tests/test_config_validation.py::test_post_init_rejects_freq_tolerance_out_of_range PASSES"
+      - "tests/test_config_validation.py::test_existing_test_configs_all_validate PASSES"
+    time_budget_hours: 12
+    status: queued
+    attempts: 0
+    blockers: []
+    created: 2026-05-13
+
+  - id: AUTO-3
+    title: Deterministic regression snapshot for default growth config
+    brief: docs/maintenance/AUTO-3.md
+    preregistered_acceptance:
+      - "tests/test_regression_snapshot.py::test_snapshot_file_exists PASSES"
+      - "tests/test_regression_snapshot.py::test_config_hash_matches_snapshot PASSES"
+      - "tests/test_regression_snapshot.py::test_growth_default_seed42_30s_matches_snapshot PASSES"
+      - "tests/test_regression_snapshot.py::test_growth_default_seed43_differs_from_snapshot PASSES"
+      - "tests/test_regression_snapshot.py::test_snapshot_captures_within_30_seconds PASSES"
+    time_budget_hours: 16
+    status: queued
+    attempts: 0
+    blockers: []
+    created: 2026-05-13
