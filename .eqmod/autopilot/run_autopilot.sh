@@ -17,7 +17,7 @@
 
 set -uo pipefail
 
-REPO="/Users/mkupermann/Documents/GitHub/EQMOD"
+REPO="/Users/mkupermann/GitHub/EQMOD"
 STATE_DIR="$HOME/.eqmod/autopilot"
 LOG="$STATE_DIR/session.log"
 CHARTER="$REPO/.eqmod/autopilot/CHARTER.md"

@@ -24,7 +24,7 @@ Beispiel siehe Schema-Kommentar am Ende von `QUEUE.yaml`.
 ### 2. Pre-Commit-Hook installieren
 
 ```
-cd /Users/mkupermann/Documents/GitHub/EQMOD
+cd /Users/mkupermann/GitHub/EQMOD
 ln -sf ../../.eqmod/autopilot/hooks/pre-commit .git/hooks/pre-commit
 ```
 
