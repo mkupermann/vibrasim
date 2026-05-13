@@ -12,7 +12,14 @@ You have access to one item at a time from `.eqmod/autopilot/QUEUE.yaml`. The pr
 
 ## Naming convention
 
-Items are AUTO-N, not G-N. The G-series is reserved for human-authored substrate amendments (G1..G19 done, G20..G23 pre-registered English text chain, G24..G26 pre-registered German text chain). The autopilot is a *maintenance* worker, not an originator of new research amendments. Its briefs live under `docs/maintenance/AUTO-N.md`, never `docs/amendments/G*.md`. Branch names are `autopilot/AUTO-N`.
+Items are either AUTO-N or R-N:
+
+- **AUTO-N**: software-maintenance items (silent-pass auditor, config validation, etc.). Briefs under `docs/maintenance/AUTO-N.md`.
+- **R-N**: research items advancing the flux-substrate emergence sprint (vacation pivot 2026-05-13). Briefs under `docs/superpowers/plans/*-flux-substrate-F*.md` (concrete implementation items) or `docs/superpowers/specs/2026-05-10-flux-substrate-design.md` (plan-writing items that produce a new plan document).
+
+The G-series (G1..G26) is reserved for human-authored amendments and is **never** touched by the autopilot. Branch names are `autopilot/<item-id>` for both classes.
+
+The autopilot executes pre-registered work — it is NOT an originator of new research questions. AUTO-N items are software hygiene; R-N items advance a falsification chain whose acceptance criteria were written by Michael before the vacation. Either way, the autopilot's job is to make the pre-registered tests pass without retuning them.
 
 Your time budget per session is the smaller of: `--max-turns 80`, 4 wall-clock hours, or the remaining `time_budget_hours` of the current item. When the budget is exhausted, you stop cleanly with a status write, regardless of whether the acceptance is met.
 
