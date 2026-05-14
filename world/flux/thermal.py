@@ -22,6 +22,7 @@ class ThermalConfig:
     T_ref: float = 0.0           # if 0, buoyancy is one-sided (T>0 pushes up)
     T_hot_floor: float = 5.0
     T_cold_ceiling: float = 0.0
+    pressure_coeff: float = 1.0  # R-1b: -pressure_coeff * ∇(ρT) force per quantum
 
 
 def apply_buoyancy_and_damping(quanta: Quanta, grid: Grid,
