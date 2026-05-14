@@ -61,8 +61,8 @@ items:
       - "tests/flux/test_dynamics.py PASSES (dynamics smoke unaffected)"
     time_budget_hours: 12
     status: passed
-    attempts: 1
-    last_session: "2026-05-14T12:41:32.168627"
+    attempts: 2
+    last_session: "2026-05-14T14:12:41.209152"
     blockers: ["R-1 passed (F1c baseline imported to main); architectural fix replaces lucky-seed Bénard pass"]
     created: 2026-05-14
 
