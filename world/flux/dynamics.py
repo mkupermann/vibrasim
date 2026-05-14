@@ -86,9 +86,16 @@ def tick(quanta: Quanta, grid: Grid, dt: float,
 
     # 3. Buoyancy + damping (F1c). Uses *this* tick's T_local from the
     # previous tick's update — consistent with the move-before-T pattern.
+    # R-1b: pressure-gradient force (horizontal coupling) applied right
+    # after buoyancy on the same T snapshot.
     if thermal_cfg is not None:
         from world.flux.thermal import apply_buoyancy_and_damping
+        from world.flux.pressure import apply_pressure_gradient_force
         apply_buoyancy_and_damping(quanta, grid, thermal_cfg, dt)
+        apply_pressure_gradient_force(
+            quanta, grid,
+            pressure_coeff=thermal_cfg.pressure_coeff, dt=dt,
+        )
 
     # 4. Absorb
     exported = absorb_cold_faces(quanta, grid, delta=cold_face_delta)

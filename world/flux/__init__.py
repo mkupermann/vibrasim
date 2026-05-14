@@ -30,6 +30,7 @@ from world.flux.plasticity import (
     count_flux_through,
     prune_bridges_and_nodes,
 )
+from world.flux.pressure import apply_pressure_gradient_force
 from world.flux.quantum import Quanta
 from world.flux.structures import Nodes
 from world.flux.thermal import (
@@ -53,6 +54,7 @@ __all__ = [
     "absorb_cold_faces",
     "apply_buoyancy_and_damping",
     "apply_plasticity",
+    "apply_pressure_gradient_force",
     "attempt_binding",
     "attempt_decay",
     "binding_probability",

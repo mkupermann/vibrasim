@@ -60,8 +60,9 @@ items:
       - "tests/flux/test_thermal.py PASSES (existing thermal unit tests unaffected)"
       - "tests/flux/test_dynamics.py PASSES (dynamics smoke unaffected)"
     time_budget_hours: 12
-    status: queued
-    attempts: 0
+    status: passed
+    attempts: 2
+    last_session: "2026-05-14T14:13:13"
     blockers: ["R-1 passed (F1c baseline imported to main); architectural fix replaces lucky-seed Bénard pass"]
     created: 2026-05-14
 
