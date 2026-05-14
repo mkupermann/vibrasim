@@ -267,3 +267,91 @@ The seed-42 pass is real in the literal sense (the pre-registered seed produces 
 - The buoyancy / damping / thermal-boundary primitives are now public API and stable for downstream phases that need a thermal field for reasons other than convection (e.g., F3 decay coupling).
 - The bidirectional `inject_hot_floor(..., vel_z_sigma=...)` mode is opt-in; F0/F1a/F1b tests still use the upward-biased mode.
 
+## 2026-05-14 — R-1b start (autopilot)
+
+- Brief: `docs/superpowers/plans/2026-05-14-flux-F1-robustness.md`.
+- Pre-registered acceptance (locked at `in_progress`): two new unit tests under
+  `tests/flux/test_horizontal_dynamics.py` plus the existing T1/T3/T4/thermal/
+  dynamics suites must still pass.
+- F1c phase-log diagnosis (above) traced the lucky-seed Bénard pass to a missing
+  horizontal force: buoyancy only acts on `vel_z`, damping is isotropic, no
+  mechanism produces lateral mass redistribution in response to a vertical T
+  gradient. R-1b adds that mechanism.
+- **Approach picked: pressure-gradient surrogate (option 1 in the brief).**
+  - P_voxel = density_voxel * T_voxel (density = histogram of alive quanta).
+  - Force per quantum at its voxel = `-pressure_coeff * ∇P * dt`, applied to all
+    three velocity components via `np.gradient(P, voxel_size)` and bilinear
+    voxel lookup (clipped at edges, same pattern as buoyancy).
+  - Choice rationale: cheapest of the three brief candidates (one `np.gradient`
+    call per tick, O(N_voxel) + O(N_quanta)); reuses the same density field
+    `_compute_density` already builds for the T-update; honours the spec's
+    "no continuum equations baked in" stance because both P and ∇P are
+    derived bottom-up from the same quanta the substrate already tracks
+    (no external pressure field, no fluid-continuity assumption).
+  - Option 2 (return-flow injector at cold ceiling) rejected: doubles injection
+    bookkeeping, only addresses recirculation at the walls, leaves the bulk
+    without horizontal coupling.
+  - Option 3 (quanta-quanta horizontal repulsion) rejected: O(N²) without
+    spatial hashing; the substrate already runs ~50k+ quanta in T3/T4.
+- New module: `world/flux/pressure.py`. New `ThermalConfig.pressure_coeff` field
+  with a default that passes both new unit tests; same value used for R-1c and
+  R-1d. Wired into `tick()` immediately after `apply_buoyancy_and_damping` so
+  the new force sees the T field that buoyancy just used (consistent placement,
+  no ordering surprises). Force gated on `thermal_cfg is not None` so the
+  existing T1/T3/T4 paths — which do not pass `thermal_cfg` — see exactly the
+  same code path as before R-1b.
+
+## 2026-05-14 — R-1b close (autopilot)
+
+**Locked default: `pressure_coeff = 1.0`** in `ThermalConfig`. Same value will
+be used by R-1c and R-1d (no per-seed tweaks; charter rule).
+
+**Pre-registered acceptance (R-1b contract): 22/22 PASS.**
+
+| Test target | Result |
+|---|---|
+| `tests/flux/test_horizontal_dynamics.py::test_horizontal_force_responds_to_T_gradient` | PASS (100% of 2000 alive quanta acquired vel_x>0 under a warm-left/cold-right T gradient; vel_y and vel_z stayed < 1e-12) |
+| `tests/flux/test_horizontal_dynamics.py::test_horizontal_force_zero_when_no_gradient` | PASS (mean horizontal velocity magnitude < 1e-12 under uniform T=2.5) |
+| `tests/flux/test_conservation.py` | 3/3 PASS (T1 unaffected — `thermal_cfg` not passed; conservation equation reads off `energy[alive].sum()`, independent of velocity) |
+| `tests/flux/test_crystallization.py` | 1/1 PASS (T3 ratio still 9.0+ — unaffected) |
+| `tests/flux/test_decay.py` | 1/1 PASS (T4 unaffected) |
+| `tests/flux/test_thermal.py` | 6/6 PASS (existing buoyancy + damping unit tests unaffected; new field has a default so no test setup changes needed) |
+| `tests/flux/test_dynamics.py` | 9/9 PASS (smoke tests with `thermal_cfg` use T=0 or dt=0; pressure force evaluates to 0 in both cases) |
+
+**Carry-over into R-1c (out of R-1b's contract but flagged for the next session):**
+
+`tests/flux/test_benard.py::test_T2_benard_horizontal_wavelength` FAILS under
+the new architecture: `wavelength=3.48` (k_peak=23, profile.std=0.0929) instead
+of the locked seed=42 target of 20.00. **This is expected.** R-1 phase-log
+(2026-05-14, F1c close) recorded that the seed=42 pass was a state-detector
+landing the argmax on the expected FFT bin by chance, not a mechanistic
+finding — pass rate across 10 seeds was 30%, FFT SNR ~1.5. Adding the
+pressure-gradient force redistributes quanta laterally, which shifts the
+spatial spectrum. The old seed=42 lucky configuration no longer hits its bin;
+that does NOT mean the substrate became worse, it means the lucky-seed signal
+is gone.
+
+R-1c is the session that re-evaluates T2 across the 10-seed grid
+`[7, 13, 21, 42, 100, 137, 256, 314, 500, 1000]` with the new force active,
+against pre-registered thresholds (≥8/10 pass-rate, FFT SNR ≥ 3.0,
+buoyancy_g=0 negative control fails on all 10). The R-1c session may need
+to adjust `pressure_coeff` or `buoyancy_g` within the locked R-1b architecture
+to land a robust pass — that's calibration, not architecture change. If the
+substrate can't reach 8/10 even at the best calibration, R-1c verdict is NULL
+and the broader flux hypothesis needs revisiting (per charter "NULL is a
+valid verdict").
+
+**Files touched:**
+- new `world/flux/pressure.py` (~70 lines)
+- `world/flux/thermal.py` (+1 line: `pressure_coeff: float = 1.0`)
+- `world/flux/dynamics.py` (+5 lines: wire `apply_pressure_gradient_force` into tick)
+- `world/flux/__init__.py` (+2 lines: re-export)
+- new `tests/flux/test_horizontal_dynamics.py` (~120 lines, 2 tests)
+- `docs/flux/phase-log.md` (this entry)
+
+**Negative control discipline:** R-1b's two unit tests are themselves a
+positive/negative pair — Test 1 fires the force on a gradient, Test 2 confirms
+the force doesn't fire without one. A buggy implementation that always pushes
+(zero-gate broken) would fail Test 2; a no-op implementation would fail Test 1.
+The contract is internally falsifiable.
+
