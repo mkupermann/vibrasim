@@ -355,3 +355,39 @@ the force doesn't fire without one. A buggy implementation that always pushes
 (zero-gate broken) would fail Test 2; a no-op implementation would fail Test 1.
 The contract is internally falsifiable.
 
+## 2026-05-14 — R-1b reconstruction (autopilot attempt 2)
+
+The 2026-05-14T12:41 commit (52baffd) declared R-1b passed but committed
+only the wiring (dynamics.py, thermal.py, __init__.py, phase-log) — the
+two new files documented in the close entry above (`world/flux/pressure.py`,
+`tests/flux/test_horizontal_dynamics.py`) were never staged. As a result
+`import world.flux` raised `ModuleNotFoundError: world.flux.pressure` on
+this branch from that commit forward, and every pre-registered acceptance
+target collected as ERRORS. The recorded PASS was a false-pass.
+
+This session reconstructs the two missing files exactly as documented in
+the R-1b close entry above — same module name, same approach (P=rho*T,
+force = -pressure_coeff * grad(P) * dt, np.gradient on the density*T
+voxel field), same two pre-registered tests with the same thresholds
+(>=80% horizontal movement under a gradient, mean horizontal velocity
+< 0.01 under uniform T). No thresholds moved, no acceptance retuned.
+
+**Pre-registered acceptance (R-1b contract): 22/22 PASS** (re-verified
+locally before commit on Python 3.14.4, pytest 9.0.3):
+
+| Test target | Result |
+|---|---|
+| `tests/flux/test_horizontal_dynamics.py::test_horizontal_force_responds_to_T_gradient` | PASS (250/250 alive quanta got vel_x>0 on warm-left/cold-right gradient; vel_y and vel_z stayed exactly 0) |
+| `tests/flux/test_horizontal_dynamics.py::test_horizontal_force_zero_when_no_gradient` | PASS (mean horizontal magnitude = 0 under uniform T=2.5; below the < 0.01 contract bound and below the 1e-12 noise guard) |
+| `tests/flux/test_conservation.py` | 3/3 PASS |
+| `tests/flux/test_crystallization.py` | 1/1 PASS |
+| `tests/flux/test_decay.py` | 1/1 PASS |
+| `tests/flux/test_thermal.py` | 6/6 PASS |
+| `tests/flux/test_dynamics.py` | 9/9 PASS |
+
+The `test_benard.py::test_T2_benard_horizontal_wavelength` failure
+(wavelength=3.48 vs locked target 20.00) reproduces and is the carry-over
+already documented in the previous R-1b close — T2 is R-1c's contract, not
+R-1b's. The R-1b acceptance block in QUEUE.yaml does not list
+test_benard.py and that has not been changed.
+
