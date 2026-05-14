@@ -64,7 +64,7 @@ items:
 
   - id: R-3
     title: flux F2 — cochlea + synthesis implementation
-    brief: docs/superpowers/specs/2026-05-10-flux-substrate-design.md
+    brief: docs/superpowers/plans/2026-05-14-flux-substrate-F2.md
     preregistered_acceptance:
       - "tests/flux/test_cochlea.py PASSES (pre-registered by R-2 as F2's cochlea acceptance test)"
       - "tests/flux/test_synthesis.py PASSES (pre-registered by R-2 as F2's synthesis acceptance test)"
