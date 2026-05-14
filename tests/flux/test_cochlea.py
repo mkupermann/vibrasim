@@ -70,6 +70,23 @@ def test_cochlea_bank_log_spaced_frequencies():
     assert np.std(ratios) / np.mean(ratios) < 1e-6
 
 
+def test_inject_hot_floor_freq_hz_override_pins_log_freq():
+    """freq_hz_override puts log(freq_hz) on every injected vibration."""
+    from world.flux.quantum import Quanta
+    from world.flux.grid import Grid
+    from world.flux.boundary import inject_hot_floor
+    rng = np.random.default_rng(0)
+    q = Quanta(max_quanta=100)
+    g = Grid(dims=(10, 10, 10), voxel_size=1.0)
+    n = inject_hot_floor(
+        q, g, n=10, energy_per=1.0, freq_mean=999.0,
+        vel_z_mean=1.0, freq_hz_override=440.0, rng=rng,
+    )
+    assert n == 10
+    freqs = q.freq[q.alive]
+    assert np.allclose(freqs, np.log(440.0), atol=1e-12)
+
+
 def test_cochlea_bank_peaks_at_input_frequency():
     """A 1 kHz tone through the full bank → the resonator nearest
     1 kHz has the largest peak amplitude over the window."""
@@ -90,3 +107,59 @@ def test_cochlea_bank_peaks_at_input_frequency():
         f"bank peak at idx={idx_actual} (freq={bank.freqs_hz[idx_actual]:.1f}), "
         f"expected near idx={idx_target} (freq={bank.freqs_hz[idx_target]:.1f})"
     )
+
+
+def test_cochlea_inject_routes_1khz_tone_to_correct_floor_slot():
+    """200 ms of 1 kHz sine → cochlea bank → cochlea_inject deposits
+    vibrations on the substrate whose freq median is near log(1000 Hz)."""
+    from world.flux.quantum import Quanta
+    from world.flux.grid import Grid
+    from agent.flux.cochlea import (
+        Cochlea, CochleaConfig, step_resonators, cochlea_inject,
+    )
+    rng = np.random.default_rng(0)
+    cfg = CochleaConfig(
+        n_resonators=64, freq_min_hz=50.0, freq_max_hz=8000.0,
+        Q=10.0, sample_rate_hz=16000, inject_gain=2.0, inject_max_per_tick=8,
+    )
+    bank = Cochlea(cfg)
+    q = Quanta(max_quanta=10_000)
+    g = Grid(dims=(30, 30, 60), voxel_size=1.0)
+    sr = cfg.sample_rate_hz
+    n_samples = 3200  # 200 ms
+    t = np.arange(n_samples) / sr
+    waveform = np.sin(2 * np.pi * 1000.0 * t)
+    for tick_idx in range(200):
+        chunk = waveform[tick_idx * 16:(tick_idx + 1) * 16]
+        step_resonators(bank, samples=chunk)
+        cochlea_inject(q, g, bank, cfg, rng=rng)
+    alive_freqs_log = q.freq[q.alive]
+    assert alive_freqs_log.size > 0, "no vibrations were injected"
+    alive_freqs_hz = np.exp(alive_freqs_log)
+    target = 1000.0
+    median_hz = float(np.median(alive_freqs_hz))
+    assert 0.8 * target < median_hz < 1.2 * target, (
+        f"injected freq median {median_hz:.1f} Hz not near 1 kHz target"
+    )
+
+
+def test_read_wav_mono_16k_roundtrip(tmp_path):
+    """Write a known sine to wav, read it back, check shape + amplitude."""
+    import wave
+    from agent.flux.audio_in import read_wav_mono_16k, iter_sample_chunks
+    sr = 16000
+    n = sr // 2  # 500 ms
+    t = np.arange(n) / sr
+    x = (0.5 * np.sin(2 * np.pi * 440.0 * t) * 32767.0).astype(np.int16)
+    p = tmp_path / "tone.wav"
+    with wave.open(str(p), "wb") as w:
+        w.setnchannels(1)
+        w.setsampwidth(2)
+        w.setframerate(sr)
+        w.writeframes(x.tobytes())
+    y = read_wav_mono_16k(p)
+    assert y.shape == (n,)
+    assert 0.45 < np.max(np.abs(y)) < 0.55
+    chunks = list(iter_sample_chunks(y, 16))
+    assert len(chunks) == n // 16
+    assert all(len(c) == 16 for c in chunks)

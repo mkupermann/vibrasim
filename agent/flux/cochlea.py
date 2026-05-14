@@ -95,6 +95,8 @@ class Cochlea:
         self.amp = np.zeros(N, dtype=np.float64)
         self.vel = np.zeros(N, dtype=np.float64)
         self.last_peaks = np.zeros(N, dtype=np.float64)
+        # Floor-slot xy is grid-dependent; cochlea_inject resolves lazily.
+        self._floor_xy: np.ndarray | None = None
         sr = cfg.sample_rate_hz
         omega = 2.0 * np.pi * self.freqs_hz
         gamma = omega / cfg.Q
@@ -144,3 +146,88 @@ def step_resonators(bank: Cochlea, samples: np.ndarray) -> np.ndarray:
     bank.vel = vel
     bank.last_peaks = peaks
     return peaks
+
+
+def _resonator_floor_xy(bank: Cochlea, grid) -> np.ndarray:
+    """Map each resonator slot to an (x, y) point on the hot floor.
+
+    Slots are tonotopically arranged: resonator 0 sits at the low-frequency
+    end of x, resonator N-1 at the high-frequency end. y is centred. Lazily
+    computed and cached on the bank.
+    """
+    if getattr(bank, "_floor_xy", None) is not None \
+            and bank._floor_xy.shape[0] == bank.cfg.n_resonators:
+        return bank._floor_xy
+    Lx, Ly, _ = grid.dims
+    s = grid.voxel_size
+    N = bank.cfg.n_resonators
+    xs = (np.arange(N, dtype=np.float64) + 0.5) / N * (Lx * s)
+    ys = np.full(N, 0.5 * Ly * s, dtype=np.float64)
+    bank._floor_xy = np.stack([xs, ys], axis=1)
+    return bank._floor_xy
+
+
+def cochlea_inject(
+    quanta,
+    grid,
+    bank: Cochlea,
+    cfg: CochleaConfig,
+    rng: np.random.Generator | None = None,
+    *,
+    energy_per: float = 1.0,
+    vel_z_init: float = 1.0,
+    vel_xy_sigma: float = 0.1,
+) -> float:
+    """Inject vibrations at hot floor driven by bank.last_peaks.
+
+    For each resonator i:
+      count_i = min(round(last_peaks[i] * cfg.inject_gain),
+                    cfg.inject_max_per_tick)
+    Vibrations are placed at a randomised position within
+    cfg.floor_disc_radius of the resonator's tonotopic floor slot, with
+    z ∈ [0, voxel_size), upward vel_z bias, and freq = log(resonator.freq_hz).
+
+    Returns the total energy injected — caller is responsible for
+    forwarding this to the auditor via audit.record_injection() if
+    accounting is on.
+    """
+    if rng is None:
+        rng = np.random.default_rng()
+    floor_xy = _resonator_floor_xy(bank, grid)
+    Lx, Ly, _ = grid.dims
+    s = grid.voxel_size
+    x_max = Lx * s
+    y_max = Ly * s
+    r_disc = cfg.floor_disc_radius
+    inj_gain = cfg.inject_gain
+    cap = cfg.inject_max_per_tick
+
+    peaks = bank.last_peaks
+    total_energy = 0.0
+    for i in range(bank.cfg.n_resonators):
+        count = int(round(float(peaks[i]) * inj_gain))
+        if count <= 0:
+            continue
+        if count > cap:
+            count = cap
+        freq_log = float(np.log(bank.freqs_hz[i]))
+        cx = floor_xy[i, 0]
+        cy = floor_xy[i, 1]
+        for _ in range(count):
+            # Uniform-area sample in disc of radius r_disc.
+            r = r_disc * float(np.sqrt(rng.random()))
+            theta = 2.0 * np.pi * float(rng.random())
+            x = float(np.clip(cx + r * np.cos(theta), 0.0, x_max - 1e-9))
+            y = float(np.clip(cy + r * np.sin(theta), 0.0, y_max - 1e-9))
+            z = float(rng.uniform(0.0, s))
+            vx = float(rng.normal(0.0, vel_xy_sigma))
+            vy = float(rng.normal(0.0, vel_xy_sigma))
+            vz = vel_z_init
+            slot = quanta.add(
+                pos=(x, y, z), vel=(vx, vy, vz),
+                freq=freq_log, polarity=1, energy=energy_per,
+            )
+            if slot < 0:
+                return total_energy   # buffer full — stop early
+            total_energy += energy_per
+    return total_energy
