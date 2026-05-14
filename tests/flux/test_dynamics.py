@@ -100,3 +100,45 @@ def test_tick_without_binding_args_still_works():
     np.testing.assert_allclose(q.pos[0], [5.1, 5.0, 5.05])
     assert exported == 0.0
     assert isinstance(exported, float)
+
+
+from world.flux.thermal import ThermalConfig
+
+
+def test_tick_with_thermal_cfg_applies_damping():
+    """F1c smoke test: passing thermal_cfg with damping_mu=0.5 must
+    actually shrink velocity over one tick."""
+    q = Quanta(max_quanta=10)
+    g = Grid(dims=(10, 10, 10), voxel_size=1.0)
+    q.add(pos=(5.0, 5.0, 5.0), vel=(2.0, -1.0, 3.0),
+          freq=100, polarity=1, energy=1.0)
+    tcfg = ThermalConfig(buoyancy_g=0.0, damping_mu=0.5,
+                          T_ref=0.0, T_hot_floor=0.0, T_cold_ceiling=0.0)
+    exported = tick(q, g, dt=0.1, injector=None, thermal_cfg=tcfg)
+    # vel *= (1 - 0.5*0.1) = 0.95; buoyancy = 0 because T everywhere 0.
+    np.testing.assert_allclose(q.vel[0], [1.9, -0.95, 2.85])
+    assert exported == 0.0
+
+
+def test_tick_with_thermal_cfg_enforces_boundary_after_t_update():
+    """Floor T must be >= T_hot, ceiling T must be <= T_cold after a
+    tick when thermal_cfg is supplied."""
+    q = Quanta(max_quanta=10)
+    g = Grid(dims=(5, 5, 5), voxel_size=1.0, T_smoothing=1.0)
+    tcfg = ThermalConfig(buoyancy_g=0.0, damping_mu=0.0,
+                          T_ref=0.0, T_hot_floor=5.0, T_cold_ceiling=0.0)
+    tick(q, g, dt=0.0, injector=None, thermal_cfg=tcfg)
+    assert (g.T[:, :, 0] >= 5.0).all()
+    assert (g.T[:, :, -1] <= 0.0).all()
+
+
+def test_tick_without_thermal_cfg_leaves_velocity_alone():
+    """Backwards compatibility: omitting thermal_cfg preserves
+    F0/F1a/F1b behavior (no buoyancy, no damping)."""
+    q = Quanta(max_quanta=10)
+    g = Grid(dims=(10, 10, 10), voxel_size=1.0)
+    q.add(pos=(5.0, 5.0, 5.0), vel=(2.0, -1.0, 3.0),
+          freq=100, polarity=1, energy=1.0)
+    tick(q, g, dt=0.1, injector=None)
+    # No damping applied; vel unchanged.
+    np.testing.assert_allclose(q.vel[0], [2.0, -1.0, 3.0])
