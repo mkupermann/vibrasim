@@ -267,3 +267,32 @@ The seed-42 pass is real in the literal sense (the pre-registered seed produces 
 - The buoyancy / damping / thermal-boundary primitives are now public API and stable for downstream phases that need a thermal field for reasons other than convection (e.g., F3 decay coupling).
 - The bidirectional `inject_hot_floor(..., vel_z_sigma=...)` mode is opt-in; F0/F1a/F1b tests still use the upward-biased mode.
 
+## 2026-05-14 — F2 start (autopilot R-3)
+
+- Plan: `docs/superpowers/plans/2026-05-14-flux-substrate-F2.md`.
+- Scope: bolt audio I/O onto the validated F0–F1c substrate. Cochlea (§5.6)
+  converts a 1-D waveform into per-resonator instantaneous amplitudes that
+  drive hot-floor injection; synthesis (§5.7) reads bound-node firings back
+  through the same resonator bank to produce an output waveform. No new
+  physics, no learning rule — F2 is the I/O adapter, not the science.
+- Pre-registered pytest acceptance:
+  - `tests/flux/test_cochlea.py` PASSES (single-resonator dynamics, log-spaced
+    bank construction, 1 kHz tone-burst → injected-frequency-distribution
+    end-to-end).
+  - `tests/flux/test_synthesis.py` PASSES (impulse response, forced-firing
+    pattern → output spectrum, 1 kHz round-trip).
+  - T1 conservation, T2 Bénard, T3 crystallization, T4 decay all still pass.
+- Baseline state: cherry-picked F1c implementation commits from
+  `autopilot/R-1` onto this branch (F1c work had never been merged to main —
+  the postflight main-sync only synchronised QUEUE status, not the code).
+  91/91 flux tests green at baseline before any F2 work.
+- Open calibration choices (defaults from plan, may sweep on 1 kHz round-trip):
+  `N_cochlea=64`, `freq_min_hz=50`, `freq_max_hz=8000`, `Q=5..10`,
+  `sample_rate_hz=16000`, `n_audio_samples_per_tick=16`, `inject_gain=1..2`,
+  `inject_max_per_tick=8`, `synth_firing_threshold=0.1`, `synth_impulse_gain=1`,
+  `cochlea_floor_disc_radius=1.0`.
+- Deferred (explicitly out of F2): real audio corpus (R-7/R-8),
+  cochlea-loop learning rule (R-5), attention reallocate (F4+),
+  cochlea adaptation (forbidden by spec §5.6), phoneme probe (F4),
+  multi-channel audio (beyond Phase-1).
+
