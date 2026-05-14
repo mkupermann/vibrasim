@@ -42,8 +42,9 @@ items:
       - "tests/flux/test_decay.py PASSES (T4 unaffected by thermal layer)"
       - "pytest -m 'not slow' PASSES (legacy regression baseline holds)"
     time_budget_hours: 12
-    status: queued
-    attempts: 0
+    status: passed
+    attempts: 1
+    last_session: "2026-05-14T00:11:39"
     blockers: []
     created: 2026-05-13
 
