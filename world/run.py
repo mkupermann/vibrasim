@@ -25,7 +25,21 @@ def main(argv: list[str] | None = None) -> int:
     run.add_argument("--seed", type=int, default=None)
     run.add_argument("--preview", action="store_true",
                      help="open PyVista live preview alongside the simulation")
+
+    gui = sub.add_parser("gui", help="open the interactive PyVista viewer (play/pause, sliders, picker)")
+    gui.add_argument("--config", type=Path, default=None)
+    gui.add_argument("--seed", type=int, default=None)
+    gui.add_argument("--snapshot-dir", type=Path, default=None)
+
     args = parser.parse_args(argv)
+
+    if args.cmd == "gui":
+        from world.interactive import run_interactive
+        return run_interactive(
+            config_path=args.config,
+            seed=args.seed,
+            snapshot_dir=args.snapshot_dir,
+        )
 
     cfg = load_config(args.config)
     if args.seed is not None:
