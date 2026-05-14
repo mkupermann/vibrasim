@@ -56,8 +56,80 @@ def load_queue() -> dict:
     return yaml.safe_load(QUEUE_PATH.read_text())
 
 
+def _update_item_status_in_text(
+    text: str, item_id: str, status: str, attempts: int, last_session: str | None
+) -> str:
+    """Update only the runtime fields of one item in QUEUE.yaml text, in-place.
+
+    Preserves comments, formatting, and every other item's content untouched.
+    This avoids triggering the pre-commit hook's preregistered_acceptance:
+    diff check, which would fire false-positive on a yaml.safe_dump reformat.
+    """
+    pattern = re.compile(
+        r"(?P<header>^[ \t]*- id: " + re.escape(item_id) + r"\b.*?\n)"
+        r"(?P<body>.*?)"
+        r"(?=^[ \t]*- id: |\Z)",
+        re.MULTILINE | re.DOTALL,
+    )
+    m = pattern.search(text)
+    if not m:
+        raise ValueError(f"item {item_id} not found in QUEUE.yaml text")
+    body = m.group("body")
+    indent_match = re.search(r"^([ \t]+)status:", body, re.MULTILINE)
+    indent = indent_match.group(1) if indent_match else "    "
+    body = re.sub(
+        r"^(" + re.escape(indent) + r"status: ).*$",
+        rf"\g<1>{status}",
+        body, count=1, flags=re.MULTILINE,
+    )
+    body = re.sub(
+        r"^(" + re.escape(indent) + r"attempts: ).*$",
+        rf"\g<1>{attempts}",
+        body, count=1, flags=re.MULTILINE,
+    )
+    if last_session is not None:
+        ls_value = f'"{last_session}"'
+        if re.search(r"^" + re.escape(indent) + r"last_session:", body, re.MULTILINE):
+            body = re.sub(
+                r"^(" + re.escape(indent) + r"last_session: ).*$",
+                rf"\g<1>{ls_value}",
+                body, count=1, flags=re.MULTILINE,
+            )
+        else:
+            body = re.sub(
+                r"^(" + re.escape(indent) + r"attempts: \d+)$",
+                rf"\1\n{indent}last_session: {ls_value}",
+                body, count=1, flags=re.MULTILINE,
+            )
+    return text[: m.start("body")] + body + text[m.end("body") :]
+
+
 def save_queue(q: dict) -> None:
-    QUEUE_PATH.write_text(yaml.safe_dump(q, sort_keys=False, allow_unicode=True))
+    """In-place runtime-field update for the current item.
+
+    Reads the existing on-disk file (preserving comments + format), updates
+    only the current item's status/attempts/last_session fields, writes back.
+    The dict argument is only used to find which item changed and what its
+    new runtime field values are.
+    """
+    text = QUEUE_PATH.read_text()
+    items = q.get("items") or []
+    for item in items:
+        item_id = item.get("id")
+        if not item_id:
+            continue
+        try:
+            text = _update_item_status_in_text(
+                text,
+                item_id,
+                status=str(item.get("status", "queued")),
+                attempts=int(item.get("attempts", 0)),
+                last_session=item.get("last_session"),
+            )
+        except ValueError:
+            # New item only in dict, not in file — skip.
+            continue
+    QUEUE_PATH.write_text(text)
 
 
 def main() -> None:
@@ -216,25 +288,28 @@ def main() -> None:
                 file=sys.stderr,
             )
         else:
-            # Read main's current QUEUE.yaml, update only the current item's
-            # runtime fields, write back. yaml roundtrip is lossy on comments
-            # — accept that as the cost of per-item precision.
-            main_queue = yaml.safe_load(QUEUE_PATH.read_text())
-            main_items = main_queue.get("items") or []
-            target = next((i for i in main_items if i.get("id") == item_id), None)
-            if target is None:
+            # Read main's QUEUE.yaml text (preserves comments + format),
+            # update only this item's runtime fields in-place. Avoids the
+            # yaml.safe_dump reformat that triggers the pre-commit hook's
+            # preregistered_acceptance: false-positive.
+            main_text = QUEUE_PATH.read_text()
+            try:
+                new_text = _update_item_status_in_text(
+                    main_text,
+                    item_id,
+                    status=str(item["status"]),
+                    attempts=int(item["attempts"]),
+                    last_session=item.get("last_session"),
+                )
+            except ValueError:
                 print(
                     f"postflight: WARN: main's QUEUE.yaml has no item {item_id} — "
                     f"divergent state, skipping sync",
                     file=sys.stderr,
                 )
-            else:
-                target["status"] = item["status"]
-                target["attempts"] = item["attempts"]
-                target["last_session"] = item.get("last_session")
-                QUEUE_PATH.write_text(
-                    yaml.safe_dump(main_queue, sort_keys=False, allow_unicode=True)
-                )
+                new_text = main_text
+            if new_text != main_text:
+                QUEUE_PATH.write_text(new_text)
                 rs = subprocess.run(
                     ["git", "status", "--porcelain", ".eqmod/autopilot/QUEUE.yaml"],
                     cwd=REPO, capture_output=True, text=True, env=env,
