@@ -48,6 +48,49 @@ items:
     blockers: []
     created: 2026-05-13
 
+  - id: R-1b
+    title: flux F1 — architectural extension (horizontal force / pressure surrogate)
+    brief: docs/superpowers/plans/2026-05-14-flux-F1-robustness.md
+    preregistered_acceptance:
+      - "tests/flux/test_horizontal_dynamics.py::test_horizontal_force_responds_to_T_gradient PASSES (NEW test the session writes; >=80% of alive quanta acquire non-zero horizontal velocity under a horizontal T gradient)"
+      - "tests/flux/test_horizontal_dynamics.py::test_horizontal_force_zero_when_no_gradient PASSES (NEW; mean horizontal velocity < 0.01 under uniform T — confirms force fires only on real gradients)"
+      - "tests/flux/test_conservation.py PASSES (T1 still holds with new force active)"
+      - "tests/flux/test_crystallization.py PASSES (T3 unaffected)"
+      - "tests/flux/test_decay.py PASSES (T4 unaffected)"
+      - "tests/flux/test_thermal.py PASSES (existing thermal unit tests unaffected)"
+      - "tests/flux/test_dynamics.py PASSES (dynamics smoke unaffected)"
+    time_budget_hours: 12
+    status: queued
+    attempts: 0
+    blockers: ["R-1 passed (F1c baseline imported to main); architectural fix replaces lucky-seed Bénard pass"]
+    created: 2026-05-14
+
+  - id: R-1c
+    title: flux F1 — Bénard multi-seed robustness audit
+    brief: docs/superpowers/plans/2026-05-14-flux-F1-robustness.md
+    preregistered_acceptance:
+      - "tests/flux/test_benard_robustness.py::test_T2_passes_on_at_least_8_of_10_seeds PASSES (NEW; parametrise across seeds 7,13,21,42,100,137,256,314,500,1000; at least 8/10 must satisfy the wavelength check)"
+      - "tests/flux/test_benard_robustness.py::test_T2_FFT_SNR_above_3 PASSES (NEW; mean FFT signal-to-noise ratio across passing seeds must be >=3.0 — was 1.5 in original F1c)"
+      - "tests/flux/test_benard_robustness.py::test_T2_negative_control_fails_all_10_seeds PASSES (NEW; with buoyancy_g=0, ALL 10 seeds must FAIL the wavelength check — substrate must not produce horizontal structure from RNG alone)"
+      - "tests/flux/test_benard.py PASSES (original seed=42 acceptance unchanged)"
+    time_budget_hours: 12
+    status: queued
+    attempts: 0
+    blockers: ["R-1b must reach status=passed first"]
+    created: 2026-05-14
+
+  - id: R-1d
+    title: flux F1 — Phase-1 joint robustness gate
+    brief: docs/superpowers/plans/2026-05-14-flux-F1-robustness.md
+    preregistered_acceptance:
+      - "tests/flux/test_phase1_robustness.py::test_all_T_tests_pass_jointly_on_8_of_10_seeds PASSES (NEW; T1+T2+T3+T4 all pass on the same seed for >=8 of the 10 seeds; identical parameter envelope across seeds, no per-seed tweaks)"
+      - "tests/flux/test_phase1_robustness.py::test_no_T_test_regresses_under_extension PASSES (NEW; with R-1b extension active, each T-test passes on at least as many seeds as it did without R-1b — no regression)"
+    time_budget_hours: 8
+    status: queued
+    attempts: 0
+    blockers: ["R-1c must reach status=passed first — final gate before F2 work resumes"]
+    created: 2026-05-14
+
   - id: R-2
     title: flux F2 plan — cochlea + synthesis + first audio input
     brief: docs/superpowers/specs/2026-05-10-flux-substrate-design.md
