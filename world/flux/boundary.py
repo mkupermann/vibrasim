@@ -18,6 +18,7 @@ def inject_hot_floor(quanta: Quanta, grid: Grid,
                      freq_sigma: float = 0.0,
                      vel_xy_sigma: float = 0.1,
                      vel_z_sigma: float | None = None,
+                     freq_hz_override: float | None = None,
                      rng: np.random.Generator | None = None) -> int:
     """Inject up to `n` vibrations at the hot floor.
 
@@ -32,7 +33,12 @@ def inject_hot_floor(quanta: Quanta, grid: Grid,
       sigma=vel_z_sigma. No upward clamp — buoyancy supplies the upward
       drift. `vel_z_mean` is ignored in this mode.
 
-    Frequencies: Gaussian around freq_mean (sigma=freq_sigma).
+    Frequencies:
+    - Default: Gaussian around freq_mean (sigma=freq_sigma).
+    - When `freq_hz_override` is given: ALL injected vibrations get
+      freq = log(freq_hz_override) (no scatter). Used by cochlea injection
+      (F2 §5.6) to pin a resonator's frequency on the substrate's log-Hz
+      axis (spec §5.2). `freq_mean` / `freq_sigma` are ignored in this mode.
 
     Returns: number actually injected (= n unless buffer fills first).
     """
@@ -40,6 +46,11 @@ def inject_hot_floor(quanta: Quanta, grid: Grid,
         rng = np.random.default_rng()
     Lx, Ly, _ = grid.dims
     s = grid.voxel_size
+    fixed_freq = (
+        float(np.log(freq_hz_override))
+        if freq_hz_override is not None
+        else None
+    )
     injected = 0
     for _ in range(n):
         x = rng.uniform(0.0, Lx * s)
@@ -53,8 +64,12 @@ def inject_hot_floor(quanta: Quanta, grid: Grid,
             vz = rng.normal(vel_z_mean, vel_z_mean * 0.2)  # 20% scatter
             if vz <= 0.0:
                 vz = vel_z_mean  # Floor at mean — keep upward
-        freq = rng.normal(freq_mean, freq_sigma) if freq_sigma > 0 \
-            else freq_mean
+        if fixed_freq is not None:
+            freq = fixed_freq
+        elif freq_sigma > 0:
+            freq = rng.normal(freq_mean, freq_sigma)
+        else:
+            freq = freq_mean
         slot = quanta.add(
             pos=(x, y, z), vel=(vx, vy, vz),
             freq=freq, polarity=1, energy=energy_per,
