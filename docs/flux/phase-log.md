@@ -391,3 +391,169 @@ already documented in the previous R-1b close — T2 is R-1c's contract, not
 R-1b's. The R-1b acceptance block in QUEUE.yaml does not list
 test_benard.py and that has not been changed.
 
+## 2026-05-15 — R-1c start (autopilot)
+
+- Brief: `docs/superpowers/plans/2026-05-14-flux-F1-robustness.md`.
+- Pre-registered acceptance (locked at `in_progress`): three new tests in
+  `tests/flux/test_benard_robustness.py` across the locked seed grid
+  `[7, 13, 21, 42, 100, 137, 256, 314, 500, 1000]`, plus the original
+  seed=42 `test_benard.py` regression.
+- Locked configuration carried forward: `cube_dims=(80,40,10)`,
+  `ThermalConfig(buoyancy_g=2.0, damping_mu=0.5, T_ref=0.0,
+  T_hot_floor=5.0, T_cold_ceiling=0.0, pressure_coeff=1.0)`,
+  `vel_z_sigma=0.5, vel_xy_sigma=0.5, n_inject=20, dt=0.1, N_TICKS=10000`.
+- No retuning. The R-1b close entry locked `pressure_coeff=1.0` as
+  "same value used in R-1c and R-1d (no per-seed tweaks; charter rule)".
+  R-1c uses 1.0 as-is and reports honestly whatever the multi-seed sweep
+  produces.
+
+## 2026-05-15 — R-1c close (autopilot) — verdict NULL
+
+**All four pre-registered acceptance targets failed under the locked
+configuration. Verdict: NULL.** Per-seed measurements below; the
+implementation produced no half-fix, no parameter sensitivity — the gap
+is architectural, not parametric. Wall-clock for the 20-seed sweep:
+1769 s (29 m 29 s), ~88 s per seed including buoyancy-on (10) and
+buoyancy-off (10) trajectories.
+
+**T2 with buoyancy ON (`buoyancy_g=2.0`, `pressure_coeff=1.0`):**
+
+| seed | k_peak | λ | FFT SNR | profile.std | wavelength pass? |
+|------|--------|---|---------|-------------|------------------|
+|    7 |    9   |   8.89 | 2.00 | 0.0879 | FAIL |
+|   13 |   22   |   3.64 | 2.23 | 0.0678 | FAIL |
+|   21 |   39   |   2.05 | 2.44 | 0.0546 | FAIL |
+|   42 |   23   |   3.48 | 2.50 | 0.0929 | FAIL |
+|  100 |   10   |   8.00 | 2.12 | 0.0752 | FAIL |
+|  137 |   26   |   3.08 | 2.08 | 0.1178 | FAIL |
+|  256 |   23   |   3.48 | 2.19 | 0.0543 | FAIL |
+|  314 |   27   |   2.96 | 2.12 | 0.0593 | FAIL |
+|  500 |   19   |   4.21 | 2.13 | 0.0983 | FAIL |
+| 1000 |   12   |   6.67 | 2.02 | 0.0449 | FAIL |
+
+- **0/10 seeds pass** the +/-30% wavelength check around λ=20 (threshold
+  ≥8/10). Every seed's FFT peak lands well above k=4 (the expected
+  convection-scale bin) — range k=9..39, mostly k=22..27. The substrate
+  is producing small-scale (high-k) horizontal structure, not Bénard
+  cells.
+- Mean FFT SNR across the (zero) passing seeds is undefined — second
+  test fails by construction. For comparison: the *failing* SNRs cluster
+  at 2.0–2.5, marginally above the R-1 baseline of ~1.5 but at the
+  wrong wavenumbers. Adding the pressure-gradient force did increase
+  spectral contrast — just not at the wavelength the falsifier
+  requires.
+
+**Negative control (`buoyancy_g=0`, `pressure_coeff=1.0`):**
+
+| seed | k_peak | λ | FFT SNR | profile.std | wavelength pass? |
+|------|--------|---|---------|-------------|------------------|
+|    7 |    5   |  16.00 | 2.24 | 0.4411 | **PASS (spurious)** |
+|   13 |   34   |   2.35 | 2.43 | 0.4315 | FAIL |
+|   21 |   40   |   2.00 | 2.38 | 0.4359 | FAIL |
+|   42 |   33   |   2.42 | 2.82 | 0.4681 | FAIL |
+|  100 |    4   |  20.00 | 2.66 | 0.4559 | **PASS (spurious)** |
+|  137 |   33   |   2.42 | 2.32 | 0.3948 | FAIL |
+|  256 |   10   |   8.00 | 2.40 | 0.4640 | FAIL |
+|  314 |   25   |   3.20 | 2.06 | 0.5275 | FAIL |
+|  500 |   35   |   2.29 | 2.28 | 0.4116 | FAIL |
+| 1000 |    8   |  10.00 | 2.60 | 0.4498 | FAIL |
+
+- **2/10 seeds spuriously pass** the wavelength check WITHOUT any thermal
+  driver (threshold: 0/10). Seed 100 even lands exactly at k=4 (λ=20.00).
+  This invalidates the buoyancy-on signal as a state-detector — the
+  pressure-gradient force can produce occasional λ=2·Lz horizontal
+  structure from random injection noise alone.
+- Profile std in the negative control (0.39–0.53) is roughly **5x
+  higher** than the buoyancy-on case (0.045–0.118). Without buoyancy the
+  cold-ceiling absorption is the only momentum sink and the pressure
+  force has free run on the density field; quanta accumulate into
+  thicker horizontal density bands than buoyancy ever allows.
+
+**Existing `test_benard.py::test_T2_benard_horizontal_wavelength`
+(seed=42, single):** FAIL — wavelength=3.48 (k_peak=23) vs locked
+target 20.00, exactly the carry-over R-1b's close entry predicted.
+
+**Mechanism for the gap (architectural, not parametric).**
+
+Three observations land together:
+
+1. The buoyancy-on case has *lower* horizontal profile variance than the
+   buoyancy-off case. Buoyancy is suppressing horizontal structure, not
+   driving it. Vertical buoyancy + cold-ceiling absorption removes
+   quanta before they can persist long enough to organise laterally;
+   transit time z=0→z=Lz at terminal velocity is ~5 ticks at this
+   damping.
+2. The pressure-gradient force is active in both arms. With buoyancy on,
+   it sees a near-empty interior (most quanta are in the floor layer);
+   with buoyancy off, quanta linger and the force has more density to
+   work with — producing the higher std and the occasional λ=20 alignment.
+3. Across all 10 buoyancy-on seeds, the FFT peak is at high k (small
+   spatial scale). The force is producing structure, but at the
+   density-fluctuation scale, not the imposed thermal scale. That is
+   what one expects from `F = -∇(ρT)` when ρ has small-scale fluctuations
+   that dominate the smooth T gradient: the small-scale ∇ρ term swamps
+   the smooth ∇T term.
+
+The R-1b pressure-gradient surrogate, as specified (`P = ρ·T`,
+`Δvel = -pressure_coeff·∇P·dt`), is therefore *not* a sufficient
+mechanism to produce Bénard cells in this substrate. Real Rayleigh–Bénard
+convection requires (a) momentum-conserving advection so velocity
+correlations propagate over more than one tick, (b) an effective
+incompressibility (∇·v = 0) so vertical plumes *must* be balanced by
+horizontal return flow, and (c) a damping ratio that yields a Rayleigh
+number above the critical Ra_c ≈ 1707. The substrate has only point
+buoyancy, isotropic linear damping, and a one-shot pressure response —
+none of which create the closed circulation a Bénard cell needs.
+
+**Gap location.** The hypothesis ("flux substrate with vertical
+buoyancy + pressure-gradient surrogate can sustain Bénard convection")
+is the wrong shape, not the implementation. The pressure-gradient
+surrogate behaves exactly as written; the R-1b unit tests (positive
+and negative on a controlled gradient) pass cleanly. What fails is the
+emergence step: applying that local force to the actual substrate
+state does not produce the macroscopic cell pattern.
+
+**Recommendation for the post-vacation review (human, not autopilot).**
+
+Three possible directions, in increasing scope:
+
+1. *Tighten R-1c's calibration envelope.* Try `pressure_coeff` ∈ {0.1,
+   0.3, 3.0, 10.0} and `damping_mu` ∈ {0.1, 1.0, 2.0} on the same seed
+   grid. If any (pressure_coeff, damping_mu) combination lands ≥8/10
+   with SNR ≥3.0 *and* the negative control still fails 10/10, the
+   verdict re-opens. This is a parametric sweep, not an architecture
+   change — appropriate as an R-1c retry under the 3-attempt cap. The
+   present session DELIBERATELY did not perform this sweep because the
+   brief's "Open calibration choices" table locks `pressure_coeff` at
+   the R-1b-chosen value (1.0).
+2. *Architectural addition — momentum-conserving operator splitting.*
+   Add a projection step that enforces ∇·v ≈ 0 after the
+   buoyancy+pressure update, e.g. by solving a discrete Poisson equation
+   on the density-divergence field once per tick. This is the standard
+   incompressible-fluids trick and is the smallest jump from the
+   current substrate to one that can host real cells.
+3. *Step back to the falsifier.* T2 (Bénard) was chosen as a Phase-1
+   falsifier on the assumption that minimal interaction rules + an
+   energy-flux principle would yield convection-like emergence. The
+   data say otherwise. The honest move is to ask whether T2 is the
+   right Phase-1 falsifier at all — perhaps a simpler emergent test
+   (one-dimensional density wave, or just measurable upward heat
+   transport > pure-conduction baseline) is a fairer first
+   discriminator before reaching for cells.
+
+R-1c verdict stands as NULL. R-1d remains blocked (cannot run joint
+Phase-1 robustness when T2 is failing all 10 seeds). The Phase-1 gate
+is closed and F2 / R-2 / R-3 stay paused per user instruction
+2026-05-14: "Sorge dafür dass die Physik und Biologie funktioniert
+bevor der nächste Schritt angefangen wird."
+
+**Files touched this session:**
+- new `tests/flux/test_benard_robustness.py` (~270 lines, 3 pre-registered
+  tests + shared simulation helper + fixtures)
+- `docs/flux/phase-log.md` (this entry)
+
+No source code in `world/flux/` modified. No thresholds in the brief or
+QUEUE.yaml moved. The slow marker on `test_benard.py` was NOT removed
+because the test does not reliably pass on the new force — comment line
+already stipulates the marker stays until reliability is established.
+
