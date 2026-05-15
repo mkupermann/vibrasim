@@ -15,20 +15,17 @@ import pytest
 from world.flux.quantum import Quanta
 from world.flux.grid import Grid
 from world.flux.audit import EnergyAuditor
-from world.flux.boundary import inject_hot_floor
+from world.flux.boundary import inject_cold_ceiling, inject_hot_floor
 from world.flux.dynamics import tick
 from world.flux.thermal import ThermalConfig
 
 
-# Marked slow on 2026-05-15 because R-1b's pressure-gradient force breaks the
-# lucky-seed seed=42 Bénard configuration that R-1 had calibrated. R-1c's
-# pre-registered acceptance includes restoring this test to green; the slow
-# marker keeps it out of the preflight baseline (-m "not slow") so the autopilot
-# can fire without self-blocking. Postflight runs this file by explicit path
-# so the marker does NOT affect R-1c's verdict. The slow marker MUST be removed
-# by R-1c (or a successor item) once the test reliably passes on the new force.
-@pytest.mark.slow
 def test_T2_benard_horizontal_wavelength():
+    """T2 acceptance — R-1c-bis architecture: return-flow injector at the
+    cold ceiling, pressure-gradient force disabled (pressure_coeff=0).
+    The @pytest.mark.slow marker added on 2026-05-15 (R-1c pre-flight)
+    is removed per R-1c-bis acceptance contract.
+    """
     rng_inject = np.random.default_rng(42)
     LX, LY, LZ = 80, 40, 10
     q = Quanta(max_quanta=200_000)
@@ -39,6 +36,7 @@ def test_T2_benard_horizontal_wavelength():
     tcfg = ThermalConfig(
         buoyancy_g=2.0, damping_mu=0.5, T_ref=0.0,
         T_hot_floor=5.0, T_cold_ceiling=0.0,
+        pressure_coeff=0.0,        # R-1c-bis: pressure-gradient force OFF
     )
 
     N_PER_TICK = 20
@@ -46,13 +44,19 @@ def test_T2_benard_horizontal_wavelength():
     N_TICKS = 10000
 
     def injector(quanta, grid):
-        count = inject_hot_floor(
+        count_floor = inject_hot_floor(
             quanta, grid, n=N_PER_TICK, energy_per=1.0,
             freq_mean=200.0, vel_z_sigma=0.5, vel_xy_sigma=0.5,
             rng=rng_inject,
         )
-        audit.record_injection(count * 1.0)
-        return count * 1.0
+        count_ceiling = inject_cold_ceiling(
+            quanta, grid, n=N_PER_TICK, energy_per=1.0,
+            freq_mean=200.0, vel_z_sigma=0.5, vel_xy_sigma=0.5,
+            rng=rng_inject,
+        )
+        total = (count_floor + count_ceiling) * 1.0
+        audit.record_injection(total)
+        return total
 
     for t in range(N_TICKS):
         exported = tick(

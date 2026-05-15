@@ -75,7 +75,7 @@ items:
       - "tests/flux/test_benard_robustness.py::test_T2_negative_control_fails_all_10_seeds PASSES (NEW; with buoyancy_g=0, ALL 10 seeds must FAIL the wavelength check — substrate must not produce horizontal structure from RNG alone)"
       - "tests/flux/test_benard.py PASSES (original seed=42 acceptance unchanged)"
     time_budget_hours: 12
-    status: null
+    status: None
     attempts: 1
     last_session: "2026-05-15T08:32:49.373331"
     blockers: ["R-1b must reach status=passed first"]
@@ -94,8 +94,9 @@ items:
       - "tests/flux/test_crystallization.py PASSES (T3 unaffected)"
       - "tests/flux/test_decay.py PASSES (T4 unaffected)"
     time_budget_hours: 16
-    status: queued
-    attempts: 0
+    status: null
+    attempts: 1
+    last_session: "2026-05-15T12:01:59.081816"
     blockers: ["R-1c NULL — adaptive iteration per user mandate 2026-05-15 10:25"]
     created: 2026-05-15
 

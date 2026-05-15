@@ -114,6 +114,57 @@ def test_absorb_cold_faces_removes_quanta_at_side_walls():
     assert q.n_alive() == 1
 
 
+from world.flux.boundary import inject_cold_ceiling
+
+
+def test_inject_cold_ceiling_places_at_z_near_ceiling():
+    q = Quanta(max_quanta=100)
+    Lz = 10
+    g = Grid(dims=(10, 10, Lz), voxel_size=1.0)
+    inject_cold_ceiling(q, g, n=20, energy_per=1.0,
+                        freq_mean=200.0, vel_z_sigma=0.5,
+                        rng=np.random.default_rng(0))
+    alive_z = q.pos[q.alive, 2]
+    assert alive_z.min() >= (Lz - 1) * 1.0
+    assert alive_z.max() < Lz * 1.0
+
+
+def test_inject_cold_ceiling_gives_downward_velocity():
+    q = Quanta(max_quanta=100)
+    g = Grid(dims=(10, 10, 10))
+    inject_cold_ceiling(q, g, n=50, energy_per=1.0,
+                        freq_mean=200.0, vel_z_sigma=0.5,
+                        rng=np.random.default_rng(0))
+    alive_vz = q.vel[q.alive, 2]
+    # Strictly non-positive — `vel_z = -|N(0, sigma)|` is downward by
+    # construction; any positive value indicates a sign-bug.
+    assert (alive_vz <= 0.0).all()
+    # Mean is statistically downward (below zero), magnitude ~sigma/sqrt(pi/2)
+    # for a half-normal distribution.
+    assert alive_vz.mean() < 0.0
+
+
+def test_inject_cold_ceiling_returns_actual_count_when_buffer_full():
+    q = Quanta(max_quanta=3)
+    g = Grid(dims=(10, 10, 10))
+    injected = inject_cold_ceiling(q, g, n=10, energy_per=1.0,
+                                    freq_mean=200.0, vel_z_sigma=0.5,
+                                    rng=np.random.default_rng(0))
+    assert injected == 3
+    assert q.n_alive() == 3
+
+
+def test_inject_cold_ceiling_records_polarity_minus_one():
+    """Cosmetic distinction: ceiling-injected quanta carry polarity=-1."""
+    q = Quanta(max_quanta=10)
+    g = Grid(dims=(10, 10, 10))
+    inject_cold_ceiling(q, g, n=5, energy_per=1.0,
+                        freq_mean=200.0, vel_z_sigma=0.5,
+                        rng=np.random.default_rng(0))
+    alive_pol = q.polarity[q.alive]
+    assert (alive_pol == -1).all()
+
+
 def test_absorb_cold_faces_does_not_absorb_at_hot_floor():
     """Hot floor (z near 0) must NOT be a cold face."""
     q = Quanta(max_quanta=10)

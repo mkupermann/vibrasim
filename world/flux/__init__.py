@@ -15,7 +15,11 @@ from world.flux.binding import (
     find_pairs_within,
     pred_coherence,
 )
-from world.flux.boundary import absorb_cold_faces, inject_hot_floor
+from world.flux.boundary import (
+    absorb_cold_faces,
+    inject_cold_ceiling,
+    inject_hot_floor,
+)
 from world.flux.bridges import Bridges
 from world.flux.decay import (
     DecayConfig,
@@ -62,6 +66,7 @@ __all__ = [
     "decay_probability",
     "enforce_thermal_boundaries",
     "find_pairs_within",
+    "inject_cold_ceiling",
     "inject_hot_floor",
     "pred_coherence",
     "prune_bridges_and_nodes",
