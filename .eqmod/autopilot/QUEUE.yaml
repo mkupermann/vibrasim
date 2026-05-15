@@ -113,6 +113,39 @@ items:
     blockers: ["R-1c must reach status=passed first — final gate before F2 work resumes"]
     created: 2026-05-14
 
+  - id: R-1c-tris
+    title: flux F1 — Bénard architecture iter-2 (smoothing + density-boost against Poisson noise)
+    brief: docs/superpowers/plans/2026-05-15-flux-F1-robustness-iter2.md
+    preregistered_acceptance:
+      - "tests/flux/test_benard_robustness.py::test_T2_passes_on_at_least_8_of_10_seeds PASSES (same 10-seed grid as R-1c, threshold ≥8/10, no retuning)"
+      - "tests/flux/test_benard_robustness.py::test_T2_FFT_SNR_above_3 PASSES (mean SNR ≥3.0 across passing seeds — R-1c saw NULL on 0/10)"
+      - "tests/flux/test_benard_robustness.py::test_T2_negative_control_fails_all_10_seeds PASSES (buoyancy_g=0 must FAIL ALL 10 — R-1c had 2/10 spurious passes)"
+      - "tests/flux/test_benard.py PASSES (seed=42 original test; session must remove @pytest.mark.slow marker added 2026-05-15)"
+      - "tests/flux/test_horizontal_dynamics.py PASSES (R-1b pressure-grad tests or successors)"
+      - "tests/flux/test_conservation.py PASSES (T1 holds)"
+      - "tests/flux/test_crystallization.py PASSES (T3 unchanged by this item)"
+      - "tests/flux/test_decay.py PASSES (T4 unaffected)"
+    time_budget_hours: 12
+    status: queued
+    attempts: 0
+    blockers: ["R-1c-bis NULL — third Bénard architecture variant (smoothing + density-boost against Poisson noise), per user mandate 2026-05-15 15:50"]
+    created: 2026-05-15
+
+  - id: R-1d-T3
+    title: flux F1 — Crystallisation (T3) robustness audit + fix
+    brief: docs/superpowers/plans/2026-05-15-flux-F1-robustness-iter2.md
+    preregistered_acceptance:
+      - "tests/flux/test_crystallization_robustness.py::test_T3_passes_on_at_least_8_of_10_seeds PASSES (NEW: parametrise across 10 seeds, threshold ≥8/10)"
+      - "tests/flux/test_crystallization_robustness.py::test_T3_negative_control_fails_all_10_seeds PASSES (NEW: matched-wallclock no-binding control must FAIL ALL 10)"
+      - "tests/flux/test_crystallization.py PASSES (seed=42 original test still passes)"
+      - "tests/flux/test_conservation.py PASSES (T1 unaffected)"
+      - "tests/flux/test_decay.py PASSES (T4 unaffected)"
+    time_budget_hours: 12
+    status: queued
+    attempts: 0
+    blockers: ["R-1d found T3 is 2/10 lucky — independent of T2 Bénard work; addresses the second fragility class"]
+    created: 2026-05-15
+
   - id: R-2
     title: flux F2 plan — cochlea + synthesis + first audio input
     brief: docs/superpowers/specs/2026-05-10-flux-substrate-design.md
