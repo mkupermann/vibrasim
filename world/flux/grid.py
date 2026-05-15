@@ -43,11 +43,24 @@ class Grid:
         iz = int(np.clip(z / self.voxel_size, 0, self.dims[2] - 1))
         return ix, iy, iz
 
-    def update_temperature(self, density: np.ndarray) -> None:
-        """Exponential smoothing: T(t+1) = α * density + (1-α) * T(t)."""
+    def update_temperature(self, density: np.ndarray,
+                            spatial_sigma: float = 0.0) -> None:
+        """Exponential smoothing: T(t+1) = α * density + (1-α) * T(t).
+
+        When `spatial_sigma > 0`, apply a gaussian spatial filter to T
+        after the EMA update. This is a physically reasonable thermal
+        diffusion model and damps Poisson density-shot-noise that would
+        otherwise dominate the FFT of the horizontal T profile (R-1c-tris
+        diagnosis: short-range Poisson noise drowns the smooth thermal
+        gradient that drives Bénard convection).
+        """
         if density.shape != self.dims:
             raise ValueError(
                 f"density shape {density.shape} != grid dims {self.dims}"
             )
         a = self.T_smoothing
         self.T = a * density + (1.0 - a) * self.T
+        if spatial_sigma > 0.0:
+            from scipy.ndimage import gaussian_filter
+            self.T = gaussian_filter(self.T, sigma=spatial_sigma,
+                                       mode="nearest")

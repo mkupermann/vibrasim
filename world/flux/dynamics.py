@@ -138,7 +138,12 @@ def tick(quanta: Quanta, grid: Grid, dt: float,
 
     # 8. Temperature
     density = _compute_density(quanta, grid)
-    grid.update_temperature(density)
+    if thermal_cfg is not None:
+        grid.update_temperature(
+            density, spatial_sigma=thermal_cfg.T_spatial_sigma,
+        )
+    else:
+        grid.update_temperature(density)
 
     # 9. Thermal boundary clamp (F1c). Pinned floor stays >= T_hot,
     # ceiling stays <= T_cold; interior voxels free to evolve from
