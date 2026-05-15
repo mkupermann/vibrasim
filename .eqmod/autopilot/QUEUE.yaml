@@ -142,8 +142,9 @@ items:
       - "tests/flux/test_conservation.py PASSES (T1 unaffected)"
       - "tests/flux/test_decay.py PASSES (T4 unaffected)"
     time_budget_hours: 12
-    status: queued
-    attempts: 0
+    status: null
+    attempts: 1
+    last_session: "2026-05-15T20:57:08.197594"
     blockers: ["R-1d found T3 is 2/10 lucky — independent of T2 Bénard work; addresses the second fragility class"]
     created: 2026-05-15
 
