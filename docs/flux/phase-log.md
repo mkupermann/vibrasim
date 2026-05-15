@@ -391,3 +391,137 @@ already documented in the previous R-1b close — T2 is R-1c's contract, not
 R-1b's. The R-1b acceptance block in QUEUE.yaml does not list
 test_benard.py and that has not been changed.
 
+## 2026-05-15 — R-1d Phase-1 joint robustness gate (autopilot)
+
+Brief: `docs/superpowers/plans/2026-05-14-flux-F1-robustness.md` R-1d.
+Pre-registered acceptance (locked in QUEUE.yaml):
+
+- `tests/flux/test_phase1_robustness.py::test_all_T_tests_pass_jointly_on_8_of_10_seeds`
+- `tests/flux/test_phase1_robustness.py::test_no_T_test_regresses_under_extension`
+
+The session's substrate is the `autopilot/R-1d` branch from main = 0f0c066:
+R-1b pressure-gradient horizontal force active by default
+(`ThermalConfig.pressure_coeff = 1.0`). The R-1c return-flow injector and
+R-1c-bis variants never landed on main; the R-1d audit therefore measures
+the architecture as it stands at the close of R-1b, the only Phase-1
+extension shipped to main during the vacation sprint.
+
+The new test file is a direct port of the four canonical falsifier tests
+(`test_conservation`, `test_benard`, `test_crystallization`, `test_decay`)
+with the seed parameterised through `np.random.default_rng` over the
+pre-registered 10-seed grid `[7, 13, 21, 42, 100, 137, 256, 314, 500, 1000]`.
+No thresholds were moved, no parameter envelope per-seed-tweaked.
+
+**Measured pass-rates (one full sweep, 26 min wall-clock,
+Python 3.13.12, pytest 9.0.3):**
+
+| Test | With R-1b (`pressure_coeff=1.0`) | Without R-1b (`pressure_coeff=0.0`) |
+|---|---|---|
+| T1 — conservation (1000 ticks, 10x10x10) | 10/10 | 10/10 |
+| T2 — Bénard wavelength (10000 ticks, 80x40x10) | **0/10** | **1/10** |
+| T3 — crystallization in cold half (5000 ticks) | 2/10 | 2/10 |
+| T4 — structure decay (10000 ticks) | 10/10 | 10/10 |
+
+T2 per-seed (with R-1b): wavelength values were 8.89, 3.64, 2.05, 3.48, 8.00,
+3.08, 3.48, 2.96, 4.21, 6.67 — all outside the [14, 26] acceptance band
+around the expected λ = 2·Lz = 20. Distribution skewed toward small
+wavelengths (high-k bins).
+
+T3 per-seed (with R-1b, equal to without by construction — T3 path does not
+take a ThermalConfig): only seeds 100 and 137 cleared the >5×
+top-half/bottom-half ratio. The crystallization test was never robustness-
+audited under the original F1c regime either; the seed=42 pass that R-1
+relied on is itself a lucky-seed result, not a broad pattern.
+
+**Joint gate:** 0/10 seeds had all four T-tests pass simultaneously. Required
+threshold ≥ 8/10. **FAIL.**
+
+**No-regression gate:** T2 passed on 1 seed without the R-1b extension and on
+0 seeds with it active — a regression of 1 → 0. The R-1d acceptance forbids
+*any* T-test passing on fewer seeds with R-1b active than without. **FAIL.**
+
+Verdict: **NULL** (both pre-registered targets fail).
+
+**Mechanism — why the substrate sits where it sits.**
+
+T2 with R-1b active reproduces R-1c's diagnosis. The pressure-gradient force
+`-pressure_coeff * ∇(ρ·T) · dt` is driven by the density field `ρ`, which
+the substrate builds bottom-up from the alive-quanta histogram. Under the
+T2 boundary conditions, quanta are injected uniformly in (x, y) at the hot
+floor and are absorbed at the cold ceiling and side walls; the resulting
+density field is dominated by short-range Poisson fluctuations around a
+slow vertical gradient, not by a coherent thermally-driven horizontal
+pattern. `∇(ρ·T)` therefore amplifies small-scale `ρ` noise, pushing the FFT
+peak to high-k bins (wavelengths 2-9 against the target 20). The force
+correctly fires on a clean static T gradient (R-1b's two unit tests pass)
+but does not couple to a thermal driver under a dynamic, dissipative,
+quanta-sparse substrate.
+
+T2 without R-1b reproduces R-1's lucky-seed finding at a lower amplitude
+(1/10 here, vs R-1's reported 3/10). The discrepancy is bookkeeping:
+R-1 measured on the original F1c branch with the old default RNG calling
+pattern; the current substrate has the R-1b pressure-grad force compiled in
+even though `pressure_coeff=0.0` makes it a no-op, and the canonical T2
+test in `test_benard.py` happens to assert on seed=42 which clears at
+wavelength 20.00 in that calibration. Either way, the structural fact is
+the same as R-1's phase-log entry: pure vertical buoyancy + isotropic
+damping gives a state-detector-grade signal that lands at the expected FFT
+bin for a small minority of seeds. The Bénard cell is not being
+constructed by the substrate; it is being randomly sampled into existence.
+
+T3's 2/10 is the genuinely new finding of this session. The crystallization
+falsifier has been treated as architecturally solved since F1b
+(spec §5.4 dual-mechanism, T-decay + bridge-flux). On the 10-seed grid
+under R-1d's `rng_inject = default_rng(seed)`,
+`rng_bind = default_rng(seed + 1_000_000)` decomposition, only seeds 100
+and 137 produce the >5× top/bottom node ratio. The remaining seeds form
+nodes (T3 explicitly fails-fast on zero nodes), but the spatial
+distribution is too uniform — bottom-half nodes exceed top-half nodes
+divided by 5. T3 was never robustness-audited under any seed grid prior
+to R-1d; the original F1b close measured a single seed.
+
+**Where the gap is.**
+
+Per CHARTER §"NULL is a valid verdict" — is the gap in implementation, in
+the hypothesis, or in the acceptance specification?
+
+- **Not in the acceptance.** The 8/10 threshold and the seed grid were
+  pre-registered before the architecture was shipped. The no-regression
+  test is a structural fairness check, not a threshold to tune.
+- **Not in the unit-level implementation.** R-1b's pressure-gradient force
+  fires correctly on a clean static T gradient (`test_horizontal_dynamics`
+  still PASSES); the conservation, decay, and binding subsystems all pass
+  their own unit tests. The substrate is internally consistent.
+- **In the macro-architecture.** Three of the four candidate Phase-1
+  falsifiers (T2 across all attempts; T3 on the 10-seed grid; the joint
+  gate) are not produced robustly by the current quanta-only substrate
+  under the spec's "energy flux + minimal interaction rules" envelope.
+  R-1c rejected pressure-gradient surrogate; R-1c-bis (return-flow
+  injector) NULLed on its own branch without merging to main. The third
+  candidate from R-1b's brief (quanta-quanta horizontal repulsion, O(N²))
+  is unexplored. Beyond that, the user's "revise the substrate energy
+  budget" option (smaller cube, lower density) is open, as is dropping
+  T2 from Phase-1 acceptance entirely.
+
+**Carry-over for Michael's return:** the cumulative postmortem across
+R-1, R-1b, R-1c, R-1c-bis, R-1d agrees on one structural claim: Bénard
+convection on a (80, 40, 10) cube, with 20 quanta/tick injection and a
+voxel-resolved density-temperature field, does not produce wavelength-20
+horizontal cells through any of the three local-rule horizontal-coupling
+mechanisms tried so far. R-2 and R-3 (cochlea + synthesis) remain blocked
+per the brief; the next launchd slot will continue picking R-1d up to
+the 3-attempt cap, but a second autopilot attempt without an architectural
+change beyond what is shipped to main will reproduce this same NULL.
+
+R-1c-bis's return-flow injector implementation
+(`world/flux/boundary.py::inject_cold_ceiling`) is preserved on the
+`autopilot/R-1c-bis` branch and is available for Michael to merge and
+re-run if the next decision is "try the unmeasured candidate before
+revising Phase-1 acceptance."
+
+**Files touched:**
+- new `tests/flux/test_phase1_robustness.py` (~530 lines, 2 tests; uses
+  pre-registered seed grid + module-level memoisation across the two
+  pytest nodes so a single invocation pays each substrate run once)
+- `docs/flux/phase-log.md` (this entry)
+
