@@ -391,3 +391,175 @@ already documented in the previous R-1b close — T2 is R-1c's contract, not
 R-1b's. The R-1b acceptance block in QUEUE.yaml does not list
 test_benard.py and that has not been changed.
 
+
+## 2026-05-16 — R-1c-quad (autopilot, vacation iter-3) — verdict: NULL
+
+Sixth Bénard-falsification attempt of the vacation sprint (after R-1c,
+R-1c-bis, R-1c-tris on the FFT-of-T metric, plus R-1d / R-1d-T3 / R-1d-T3
+on adjacent T-tests). Brief:
+`docs/superpowers/plans/2026-05-15-flux-F1-robustness-iter3.md`.
+
+### Hypothesis under test
+
+The brief swapped the falsifier from FFT(grid.T(x)) to vorticity-field
+FFT(ω_y(x)). Rationale per brief: vorticity directly measures *motion*,
+not *temperature*, so it should not be aliased by per-voxel density
+Poisson noise (the failure mode R-1c-tris diagnosed for the T-metric).
+The Bénard cell's hallmark in classical fluid mechanics is precisely the
+alternating-curl signature, so it ought to be the more sensitive
+instrument.
+
+### Metric (exactly as locked in `tests/flux/test_benard_vorticity.py`)
+
+After 10000 ticks of the F1c + R-1b substrate:
+1. `v_field[i, j, k]` = mass-weighted mean velocity of alive quanta per
+   voxel; empty voxels → 0.
+2. `ω_y = ∂v_z/∂x - ∂v_x/∂z` via `np.gradient` (matches the pattern in
+   `world.flux.pressure`).
+3. ω_y(x) profile at mid-height z = LZ // 2, averaged across all 40
+   y-rows, centred, real FFT along x.
+4. PASS iff `k_peak ∈ {4, 5}` (wavelength 16 ≤ λ ≤ 24 i.e. ±20% on the
+   Bénard prediction λ = 2·LZ = 20). ≥8/10 of the 10-seed grid must
+   pass; negative control (`buoyancy_g = 0`) must FAIL on all 10.
+
+Substrate envelope unchanged from R-1b/R-1c lineage: 80×40×10 voxels,
+`ThermalConfig(buoyancy_g=2.0, damping_mu=0.5, T_hot_floor=5.0,
+T_cold_ceiling=0.0, pressure_coeff=1.0)`, `inject_hot_floor(n=20,
+freq_mean=200, vel_z_sigma=0.5, vel_xy_sigma=0.5)`, dt=0.1, 10000 ticks.
+Seed grid `[7, 13, 21, 42, 100, 137, 256, 314, 500, 1000]` (the same one
+every prior robustness item used).
+
+### Result — positive (`buoyancy_g = 2.0`)
+
+| seed | n_alive_final | k_peak | wavelength | SNR | ω_y std | passed |
+|---|---|---|---|---|---|---|
+| 7    | 926 |  9 | 8.89 | 3.04 | 0.0424 | fail |
+| 13   | 926 | 23 | 3.48 | 4.31 | 0.0296 | fail |
+| 21   | 915 | 21 | 3.81 | 2.73 | 0.0497 | fail |
+| 42   | 938 | 11 | 7.27 | 3.37 | 0.0288 | fail |
+| 100  | 942 | 24 | 3.33 | 2.98 | 0.0432 | fail |
+| 137  | 913 | 18 | 4.44 | 3.04 | 0.0374 | fail |
+| 256  | 926 | 24 | 3.33 | 3.56 | 0.0403 | fail |
+| 314  | 936 | 17 | 4.71 | 3.21 | 0.0444 | fail |
+| 500  | 926 | 19 | 4.21 | 3.79 | 0.0431 | fail |
+| 1000 | 934 | 16 | 5.00 | 3.26 | 0.0432 | fail |
+
+**0 / 10 seeds pass.** No seed lands at k_peak ∈ {4, 5}; the realised
+distribution sits in [9, 24], all well above the Bénard mode.
+
+### Result — negative control (`buoyancy_g = 0.0`)
+
+`test_T2_vorticity_negative_control_fails_all_10_seeds` PASSED — none
+of the 10 control seeds produced a vorticity peak in {4, 5}. So the
+metric does at least not fire on RNG noise alone; the negative-control
+gate is satisfied. (Detailed table omitted; the dispositive number is
+0/10 spurious passes.)
+
+### Auxiliary acceptance — unaffected (no substrate change)
+
+| Test target | Result |
+|---|---|
+| `tests/flux/test_conservation.py` | 3/3 PASS |
+| `tests/flux/test_crystallization.py` | 1/1 PASS |
+| `tests/flux/test_decay.py` | 1/1 PASS |
+| `tests/flux/test_horizontal_dynamics.py` | 2/2 PASS |
+
+This iteration added ZERO lines of substrate code. Only the new test
+file `tests/flux/test_benard_vorticity.py` and this phase-log entry
+were added. The T1/T3/T4 invariants and the R-1b pressure-gradient
+unit tests reproduce identically, confirming the NULL is a falsifier
+result, not a substrate regression.
+
+### Mechanism — why vorticity also fails
+
+The substrate's final-state density is **0.029 quanta per voxel on
+average** (n_alive ≈ 925 across 32 000 voxels for the 80×40×10 cube;
+the run is dominated by quanta that exit the cold ceiling within a
+few hundred ticks). With ~97 % of voxels empty:
+
+- The voxel-mean velocity field `v_field` is itself a sparse,
+  bursty signal — non-zero in a thin scatter of populated voxels,
+  zero elsewhere.
+- `∂v_z/∂x` via `np.gradient` reads adjacent-voxel differences;
+  with most neighbours zero, the gradient is dominated by isolated
+  spikes at populated-voxel boundaries, not by the cell-scale flow.
+- The resulting `ω_y(x, mid_z)` is a high-frequency noise field
+  with the Poisson sampling scale of order one voxel.
+- Y-averaging over 40 rows gives √40 ≈ 6× noise reduction, which is
+  visible (ω_y std drops to ~0.04 vs the |ω_y| max ≈ 1.8 from the
+  pre-flight probe) but not nearly enough to surface a coherent
+  k = 4 mode if one were present.
+
+The realised k_peak distribution (9, 23, 21, 11, 24, 18, 24, 17, 19,
+16) clusters in the high-k Poisson-noise band — almost identical to the
+distribution R-1c-tris saw on FFT-of-T after smoothing (3..24 range with
+no clear peak). The substrate produces *some* horizontal organisation at
+λ ≈ 4–9 (k = 9..24, narrower than the cube height) but not the
+predicted λ ≈ 2 · LZ Bénard mode.
+
+The mechanism is the same as R-1c-tris diagnosed for the T-metric:
+**at this substrate density, no FFT-based instrument — temperature OR
+velocity — can lift a coherent λ ≈ 20 Bénard mode out of voxel-level
+Poisson sampling noise**. The brief's hypothesis (that vorticity is a
+density-noise-resistant instrument) is falsified.
+
+### Where the gap sits
+
+Three places it could be:
+
+1. **The implementation:** the F1c + R-1b substrate has all the
+   ingredients (buoyancy, damping, P=ρT pressure gradient) and the T1
+   conservation / R-1b horizontal-force unit tests confirm those
+   ingredients individually work. The ingredients do not combine to
+   produce a sustained Bénard cell at this density.
+2. **The hypothesis:** the Bénard prediction λ = 2 · LZ comes from
+   continuous-fluid linear-stability analysis. A discrete
+   point-quantum substrate with ~0.03 quanta / voxel may simply
+   not be in the continuous-fluid regime — there is no fluid, only
+   a sparse vapour. R-1c-tris's pre-flight already noted the natural
+   mode is closer to ~2.7 · LZ (stress-free upper boundary) than
+   to 2.0 · LZ (no-slip).
+3. **The acceptance specification:** ±20 % on λ = 20 (i.e. k ∈ {4, 5})
+   excludes the substrate's natural mode (k = 9..24). Loosening would
+   be a retune and is out of scope for the autopilot.
+
+Most-likely mechanism: (1) and (2) compound. The substrate is too
+sparse to behave like a fluid in the continuous limit, and the Bénard
+wavelength is a continuous-fluid prediction. The metric — whether T or
+ω_y — is downstream of that and cannot rescue the result.
+
+### Verdict and recommendation
+
+NULL on R-1c-quad. The brief's iteration plan anticipated this exact
+case: *"If both NULL [R-1c-quad and R-1d-T3-bis], Bénard- and
+crystallization-style falsifiers may be unattainable in the current
+substrate model, and the spec needs amendment, not the implementation."*
+
+Concrete amendment proposals for the user on return (do NOT implement
+autonomously):
+
+- **Increase substrate density** so the continuous-fluid limit is
+  approached (n=20 → n=500 quanta/tick, with proportional cold-ceiling
+  cap raise, dt re-derived for stability). This is a substrate change
+  outside the locked F1c envelope.
+- **Replace the Bénard falsifier with a discrete-particle equivalent.**
+  E.g., a structure-counting metric (number of persistent up-columns
+  > h voxels tall) rather than a continuous-wavelength FFT. Requires
+  a new marker-protocol clause.
+- **Widen the acceptance window** to admit the substrate's natural
+  mode (k = 9..24, λ ≈ 3..9). This is a retune of the threshold; only
+  legitimate if accompanied by a documented re-derivation of the
+  expected mode from the substrate's actual Rayleigh number.
+
+R-1d-T3-bis is the parallel item queued for this iteration; if it also
+NULLs the comprehensive Phase-1 postmortem (per brief) is owed.
+
+### Files touched
+
+| Path | Change |
+|---|---|
+| `tests/flux/test_benard_vorticity.py` | NEW (~230 lines, 2 tests + 2 fixtures + 4 helpers) |
+| `docs/flux/phase-log.md` | this entry (+ ~130 lines) |
+
+No substrate code modified. Wall-clock for the 20-seed evaluation:
+1754 s (29 min). Test framework: pytest 9.0.3 on Python 3.14.4.
