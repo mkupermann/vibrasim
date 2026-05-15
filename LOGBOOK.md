@@ -580,3 +580,52 @@ Open work for a production-quality acceptance run:
 Operational documentation in `docs/predictive-babble.md`.
 
 ---
+
+## 2026-05-15 — R-1c-tris (autopilot, vacation iter-2)
+
+- **Item**: R-1c-tris — flux F1 — Bénard architecture iter-2
+  (smoothing + density-boost against Poisson noise)
+- **Verdict**: **NULL** (attempt 1/3)
+- **Wallclock used**: ~2.7 hours of the 12-hour item budget
+  (~80 min on diagnostics, 30 min on the 20-seed final run, 2 min on
+  auxiliary regression, remainder on writeup + commit)
+- **Lines changed**: +22 substrate (`thermal.py`/`grid.py`/`dynamics.py`),
+  +263 new test (`test_benard_robustness.py`), +5/-5 in `test_benard.py`,
+  +178 phase-log
+- **Tests added/changed**:
+  - NEW `tests/flux/test_benard_robustness.py` — three pre-registered tests
+    (10-seed wavelength pass-rate ≥8/10, mean FFT SNR ≥3.0,
+    buoyancy_g=0 negative control must FAIL all 10).
+  - EDITED `tests/flux/test_benard.py` — y-averaged profile, sigma=1.0
+    in `ThermalConfig`, `@pytest.mark.slow` marker removed per R-1c-tris
+    contract. Seed=42 now PASSES (k=5, λ=16).
+- **Results against the locked acceptance**:
+  - test_T2_passes_on_at_least_8_of_10_seeds: **1/10 pass** → FAIL.
+  - test_T2_negative_control_fails_all_10_seeds: 1/10 spurious pass
+    (seed=137 at g=0 landed k=4, λ=20) → FAIL.
+  - test_T2_FFT_SNR_above_3: SNR=9.70 from the single passing seed →
+    technically PASS but statistically meaningless.
+  - test_benard.py seed=42: PASS, marker removed.
+  - All 22 auxiliary tests (horizontal_dynamics, thermal, conservation,
+    crystallization, decay, dynamics) PASS — no regression.
+- **One-paragraph rationale**: Three Bénard architecture variants
+  (R-1c parametric audit, R-1c-bis return-flow injector, R-1c-tris
+  anti-noise smoothing + density-boost) have now converged on the same
+  finding: the substrate's natural Bénard wavelength is ~2.7–8.0×Lz under
+  different noise regimes, NOT the spec's λ ≈ 2.0×Lz. This is consistent
+  with classical Rayleigh-Bénard physics at stress-free side walls
+  (λ_c ≈ 2.83·Lz) vs the spec's no-slip-calibrated value (λ_c ≈ 2.02·Lz).
+  Every successful noise-reduction lever (sigma↑, n_inject↑, y-averaging)
+  drove the pass rate DOWN, not up — the state-detector signature in its
+  inverted form. The negative-control failure (1/10 spurious at g=0)
+  independently confirms the wavelength check cannot discriminate
+  substrate-with-engram from substrate-without. **The metric itself, not
+  any of the three architectures, is the source of the failure**;
+  continuing to retry on this metric is no longer informative. Honest
+  recommendation: redesign T2's acceptance to match a stress-free Bénard
+  regime (expected λ ≈ 2.83·Lz, wider tolerance) or substitute a
+  vorticity-based convection signature (per the brief's R-1c-quad
+  fallback). Full mechanism diagnosis in `docs/flux/phase-log.md`
+  under "2026-05-15 — R-1c-tris (autopilot, vacation iter-2)".
+
+---

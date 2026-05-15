@@ -391,3 +391,173 @@ already documented in the previous R-1b close — T2 is R-1c's contract, not
 R-1b's. The R-1b acceptance block in QUEUE.yaml does not list
 test_benard.py and that has not been changed.
 
+
+## 2026-05-15 — R-1c-tris (autopilot, vacation iter-2) — verdict: NULL
+
+Third Bénard architecture variant after R-1c (multi-seed audit) and
+R-1c-bis (return-flow injector) both NULLed in iter-1. Brief:
+`docs/superpowers/plans/2026-05-15-flux-F1-robustness-iter2.md`.
+
+### Diagnosis carried from iter-1
+
+R-1c phase-log diagnosis: the FFT-of-T-profile metric in R-1c was
+dominated by per-voxel Poisson density-shot-noise; the smooth thermal
+gradient that should drive Bénard convection was drowned out.
+
+### Two pre-registered levers applied
+
+1. **Gaussian spatial smoothing of `grid.T` each tick** (sigma=1.0 voxels)
+   inside `update_temperature`. New `ThermalConfig.T_spatial_sigma` field;
+   `dynamics.tick` plumbs it. High-spatial-frequency Poisson noise is
+   suppressed; the slow thermal gradient is preserved. Substrate-level
+   change.
+2. **Profile aggregation** — FFT of `g.T[:, :, mid_z].mean(axis=1)` (mean
+   across all 40 y-rows) instead of a single y-row. sqrt(40) ≈ 6× noise
+   reduction. Measurement instrument, not a substrate change; spec
+   §7 T2's "horizontal wavelength" property unchanged.
+
+### Pre-flight diagnostic — seed=42 sigma sweep (n_inject=20, single-row)
+
+| sigma | k_peak | lambda | SNR | pass? |
+|---|---|---|---|---|
+| 0.0  | 23 | 3.48  |  2.50 | FAIL (Poisson noise) |
+| 0.5  |  7 | 11.43 |  3.38 | FAIL (below tol) |
+| 1.0  |  3 | 26.67 | 10.13 | FAIL (just above upper tol 26.0) |
+| 2.0  |  3 | 26.67 | 18.77 | FAIL |
+
+Smoothing collapses the spectrum from high-k noise (k=23) to low-k
+structure (k=3, λ=26.67). The substrate's natural mode lands ~2.7% above
+the upper bound of the ±30% tolerance window [14.0, 26.0]. Consistent
+with classical Rayleigh-Bénard at stress-free side walls (λ_c ≈ 2.83·Lz
+= 28.3 for Lz=10) — not the no-slip case (λ_c ≈ 2.02·Lz) that the spec's
+λ ≈ 2·Lz target was calibrated against.
+
+### Pre-flight diagnostic — seed=42 n_inject sweep (sigma=1.0)
+
+| n_inject | single-row k | yavg k | n_alive | cost/seed |
+|---|---|---|---|---|
+| 20  | 3 (λ=26.67) | 5 (λ=16.00) |  467 | ~80 s |
+| 100 | 2 (λ=40.00) | 1 (λ=80.00) | 2301 | ~760 s |
+
+**Density boost reveals the substrate's true low-k mode.** At n=20 the
+y-averaged peak landed at k=5 (λ=16, lucky-bin pass) because Poisson
+shot noise scattered energy across many modes. At n=100 the Poisson
+noise drops by sqrt(5) ≈ 2.24× and the substrate's actual preferred
+mode emerges at k=1-2 (λ=40-80) — far above the tolerance window.
+
+This is the state-detector signature the charter warns against: the
+"passes" at n=20 are artifacts of Poisson scatter, NOT a real
+convection-cell finding. The brief's density-boost lever works as a
+noise-reduction device — but it works AGAINST the pre-registered
+acceptance by revealing the substrate's real, out-of-tolerance
+natural mode. Density was kept at n=20 for the test run; pushing it
+higher would have made the verdict more strongly NULL, not less.
+
+### Robustness run — 10-seed grid, locked config
+
+Substrate: cube=(80, 40, 10), `ThermalConfig(buoyancy_g=2.0,
+damping_mu=0.5, T_ref=0.0, T_hot_floor=5.0, T_cold_ceiling=0.0,
+pressure_coeff=1.0, T_spatial_sigma=1.0)`, n_inject=20, dt=0.1,
+N_TICKS=10000.
+
+| seed | thermal_on k | λ | SNR | pass | thermal_off k | λ | spurious |
+|---|---|---|---|---|---|---|---|
+|    7 | 1 | 80.00 | 8.19 | FAIL | 1 | 80.00 | FAIL |
+|   13 | 2 | 40.00 | 8.27 | FAIL | 2 | 40.00 | FAIL |
+|   21 | 2 | 40.00 | 9.54 | FAIL | 1 | 80.00 | FAIL |
+|   42 | 5 | 16.00 | 9.70 | **PASS** | 2 | 40.00 | FAIL |
+|  100 | 1 | 80.00 | 7.50 | FAIL | 1 | 80.00 | FAIL |
+|  137 | 2 | 40.00 | 6.07 | FAIL | 4 | 20.00 | **SPURIOUS PASS** |
+|  256 | 1 | 80.00 | 9.75 | FAIL | 1 | 80.00 | FAIL |
+|  314 | 1 | 80.00 | 7.08 | FAIL | 1 | 80.00 | FAIL |
+|  500 | 1 | 80.00 | 8.51 | FAIL | 1 | 80.00 | FAIL |
+| 1000 | 3 | 26.67 | 6.24 | FAIL | 1 | 80.00 | FAIL |
+
+- **test_T2_passes_on_at_least_8_of_10_seeds: 1/10 PASS** → FAIL.
+- **test_T2_negative_control_fails_all_10_seeds: 1/10 SPURIOUS PASS** →
+  FAIL. Seed 137 at buoyancy_g=0 landed k=4 (λ=20.00) — wavelength
+  check cannot discriminate substrate-with-engram from substrate-without.
+- test_T2_FFT_SNR_above_3: 9.70 (computed over the single passing seed)
+  → PASS in pytest, but statistically meaningless on n=1.
+
+Two of three pre-registered tests fail. Verdict: NULL.
+
+### Auxiliary tests (no regression)
+
+- `tests/flux/test_benard.py::test_T2_benard_horizontal_wavelength`
+  (seed=42) **PASS** with the new substrate (y-avg profile, sigma=1.0).
+  `@pytest.mark.slow` marker removed as required by the R-1c-tris
+  contract.
+- `tests/flux/test_horizontal_dynamics.py`: 2/2 PASS.
+- `tests/flux/test_thermal.py`: 6/6 PASS.
+- `tests/flux/test_conservation.py`: 3/3 PASS.
+- `tests/flux/test_crystallization.py`: 1/1 PASS.
+- `tests/flux/test_decay.py`: 1/1 PASS.
+- `tests/flux/test_dynamics.py`: 9/9 PASS.
+
+Total: 23/23 auxiliary tests PASS. The substrate is not broken; it
+just does not produce the spec's λ ≈ 2·Lz mode.
+
+### Mechanism diagnosis (one paragraph)
+
+The R-1b pressure-gradient force does close the horizontal-coupling
+gap the original F1c phase-log identified. But it closes it toward the
+substrate's natural mode at λ ≈ 2.7·Lz (k=3 in our 80×40×10 box) and,
+once Poisson noise is suppressed by R-1c-tris's smoothing, toward k=1
+(a single warm-cold asymmetry across the box). Stress-free side walls
+on our cube physically produce that low-k regime; classical Rayleigh-
+Bénard at the same Rayleigh number with stress-free top/bottom has
+λ_c ≈ 2.83·Lz. The spec's λ_c ≈ 2·Lz is the no-slip case. **The
+substrate's natural convective wavelength is fundamentally incompatible
+with the pre-registered acceptance window.** Reducing measurement noise
+(higher sigma, more particles, y-averaging) drives the pass rate DOWN,
+not up — every successful noise-reduction lever made fewer seeds land
+in [14, 26]. This is the state-detector signature in its inverted form.
+Confirmed by the negative-control failure: at buoyancy_g=0 the substrate
+can still produce a k=4 peak from RNG scatter alone (seed=137), so even
+a thermal_on pass is not an engram-specific finding under this metric.
+
+### Gap location
+
+- Implementation: sound. R-1b's pressure-grad + R-1c-tris's smoothing
+  are physically reasonable and don't regress any other test.
+- Hypothesis (substrate produces Bénard cells under hot-floor/cold-ceiling
+  driving): partially holds. Cells DO form, but at a larger wavelength
+  than the spec predicts.
+- **Acceptance specification: calibrated for the wrong boundary
+  condition.** ±30% of 2·Lz = [1.4, 2.6]·Lz; the substrate produces
+  2.7-8.0·Lz under different noise regimes. Either spec needs the
+  stress-free upper bound (~2.83·Lz, suggesting a wider tolerance or
+  a re-stated expected) or the substrate needs no-slip side walls
+  (substrate-level change beyond R-1c-tris's scope; would touch
+  `world/flux/boundary.py`, affect every other test, and warrants a
+  human-authored amendment, not an autopilot decision).
+
+### Files touched
+
+- `world/flux/thermal.py` (+5 lines: `T_spatial_sigma` field on
+  `ThermalConfig`)
+- `world/flux/grid.py` (+12 lines: `spatial_sigma` kwarg in
+  `update_temperature`, scipy gaussian_filter when >0)
+- `world/flux/dynamics.py` (+5 lines: plumb sigma when `thermal_cfg`
+  is present)
+- `tests/flux/test_benard_robustness.py` (NEW, ~263 lines: 3
+  pre-registered tests with module-scoped 10-seed fixtures)
+- `tests/flux/test_benard.py` (small edit: y-averaged profile,
+  `T_spatial_sigma=1.0`, drop `@pytest.mark.slow`)
+- `docs/flux/phase-log.md` (this entry)
+
+Per charter, the autopilot is NOT authorised to widen the acceptance
+tolerance, change the spec's λ ≈ 2·Lz target, or restructure the
+substrate's boundary conditions without a human-authored amendment.
+Three architectural variants (R-1c parametric audit, R-1c-bis return-flow
+injector, R-1c-tris anti-noise smoothing + density-boost) have now NULLed
+on the same metric. The convergent finding is that the metric itself,
+not any of the three architectures, is the source of the failure.
+
+Recommendation for Michael on return: either redesign T2's acceptance
+to match a stress-free Bénard regime (expected λ ≈ 2.83·Lz, or wider
+tolerance), or substitute a different convection signature (e.g.
+vorticity-based, per the brief's R-1c-quad fallback) that is robust
+to the substrate's actual physics. Continuing to retry on the current
+metric is no longer informative.

@@ -23,6 +23,11 @@ class ThermalConfig:
     T_hot_floor: float = 5.0
     T_cold_ceiling: float = 0.0
     pressure_coeff: float = 1.0  # R-1b: -pressure_coeff * ∇(ρT) force per quantum
+    # R-1c-tris: gaussian spatial smoothing applied to grid.T each tick
+    # (sigma in voxel units; 0 = off). High-spatial-frequency Poisson
+    # noise from per-voxel quanta histograms gets suppressed; the smooth
+    # thermal gradient that drives Bénard convection is preserved.
+    T_spatial_sigma: float = 0.0
 
 
 def apply_buoyancy_and_damping(quanta: Quanta, grid: Grid,
