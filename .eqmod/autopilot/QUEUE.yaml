@@ -107,8 +107,9 @@ items:
       - "tests/flux/test_phase1_robustness.py::test_all_T_tests_pass_jointly_on_8_of_10_seeds PASSES (NEW; T1+T2+T3+T4 all pass on the same seed for >=8 of the 10 seeds; identical parameter envelope across seeds, no per-seed tweaks)"
       - "tests/flux/test_phase1_robustness.py::test_no_T_test_regresses_under_extension PASSES (NEW; with R-1b extension active, each T-test passes on at least as many seeds as it did without R-1b — no regression)"
     time_budget_hours: 8
-    status: queued
-    attempts: 0
+    status: null
+    attempts: 1
+    last_session: "2026-05-15T15:07:55.519505"
     blockers: ["R-1c must reach status=passed first — final gate before F2 work resumes"]
     created: 2026-05-14
 
