@@ -391,3 +391,72 @@ already documented in the previous R-1b close — T2 is R-1c's contract, not
 R-1b's. The R-1b acceptance block in QUEUE.yaml does not list
 test_benard.py and that has not been changed.
 
+## 2026-05-15 — R-1c-bis start (autopilot): architectural decision
+
+R-1c verdict was NULL: 0/10 buoyancy-on seeds passed the wavelength check
+under R-1b's pressure-gradient force, and the negative control had 2/10
+spurious passes — the force amplifies small-scale density fluctuations
+rather than the smooth thermal gradient, and is independent of buoyancy,
+so it can produce occasional λ=20 alignment from RNG alone.
+
+R-1c-bis tries the second candidate from R-1b's original brief: a
+return-flow injector at the cold ceiling, symmetric to `inject_hot_floor`.
+The Bénard cell closes by *physical recirculation*, not by a continuum
+pressure force.
+
+**Architectural choices documented BEFORE measuring (per brief):**
+
+1. **New module function: `inject_cold_ceiling`** in `world/flux/boundary.py`.
+   Mirror of `inject_hot_floor` (bidirectional mode): uniform random
+   `(x, y)` in the ceiling voxel layer `z ∈ [(Lz-1)·s, Lz·s)`, velocity
+   `vel_z = -|N(0, vel_z_sigma)|` (strictly non-positive, downward), same
+   `vel_xy_sigma` and `energy_per`. Polarity = -1 (cosmetic distinction
+   from hot-floor +1; T2 does not gate on polarity). The injector is
+   wired through the test's user-supplied `injector` callable so it
+   composes with the existing tick — `tick()` itself is unchanged.
+
+2. **R-1b pressure-gradient force REMOVED from the T2 test path**
+   (`pressure_coeff = 0.0` in the `ThermalConfig` used by `test_benard.py`
+   and `test_benard_robustness.py`). R-1c's mechanism analysis (above)
+   showed the term moved the FFT peak to high k (k=22..39, not k=4) and
+   created the 2/10 spurious passes on the negative control — keeping it
+   active in R-1c-bis would re-introduce both pathologies.
+
+   The module `world/flux/pressure.py` and its tests
+   (`test_horizontal_dynamics.py`) remain unchanged at the API level —
+   R-1b's "horizontal force on a gradient" contract is preserved as a
+   library primitive. The default `ThermalConfig.pressure_coeff = 1.0`
+   is also unchanged (so test_dynamics.py and test_thermal.py see no
+   behavioral change). Only the T2 test configs override it to 0.0.
+
+3. **Conservation discipline.** The cold-ceiling injection adds energy
+   per the same accounting path as hot-floor injection
+   (`audit.record_injection`). Quanta that drift back above the cold-face
+   absorption threshold are absorbed by the existing `absorb_cold_faces`
+   step and recorded as exports — symmetric to the hot-floor pattern.
+
+4. **Negative control discriminating-power.** The cold-ceiling injector
+   fires regardless of `buoyancy_g`. The question is whether it produces
+   horizontal structure without a thermal driver. The argument that it
+   should NOT is: with `buoyancy_g=0`, both injectors fire bidirectionally
+   in velocity; the system has no preferred vertical direction so any
+   horizontal modulation must come from random injection coincidences,
+   which by hypothesis are not coherent across the 10-seed grid. We
+   measure this empirically — if the negative control still gets ≥1
+   spurious pass, the verdict is NULL.
+
+5. **N per tick.** Cold-ceiling injection count `N_ceiling = 20`
+   (same as `N_floor` for symmetry per the brief). Doubling total
+   injection from 20 to 40 quanta/tick: with the existing absorption
+   rate at the cold ceiling + four side walls and the 200 000-slot
+   buffer, the steady-state alive count stays well below capacity
+   (verified by a 1 000-tick smoke run before the full 10-seed sweep).
+
+6. **`@pytest.mark.slow` on `test_benard.py`** REMOVED in this session
+   per the brief's R-1c-bis acceptance contract.
+
+The test configuration is otherwise identical to R-1c (cube_dims=(80,40,10),
+buoyancy_g=2.0, damping_mu=0.5, T_ref=0.0, T_hot_floor=5.0, T_cold_ceiling=0.0,
+vel_z_sigma=0.5, vel_xy_sigma=0.5, n_inject=20, dt=0.1, N_TICKS=10000,
+seed grid [7,13,21,42,100,137,256,314,500,1000]).
+
