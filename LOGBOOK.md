@@ -629,3 +629,11 @@ Operational documentation in `docs/predictive-babble.md`.
   under "2026-05-15 — R-1c-tris (autopilot, vacation iter-2)".
 
 ---
+
+
+## 2026-05-15 — autopilot session: R-1c-tris
+
+- **Verdict**: NULL
+- **Attempts**: 1/3
+- **Diff**: 7 files changed, 526 insertions(+), 13 deletions(-)
+- **Rationale**: pass-targets did not pass

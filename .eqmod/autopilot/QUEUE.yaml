@@ -75,7 +75,7 @@ items:
       - "tests/flux/test_benard_robustness.py::test_T2_negative_control_fails_all_10_seeds PASSES (NEW; with buoyancy_g=0, ALL 10 seeds must FAIL the wavelength check — substrate must not produce horizontal structure from RNG alone)"
       - "tests/flux/test_benard.py PASSES (original seed=42 acceptance unchanged)"
     time_budget_hours: 12
-    status: null
+    status: None
     attempts: 1
     last_session: "2026-05-15T08:32:49.373331"
     blockers: ["R-1b must reach status=passed first"]
@@ -94,7 +94,7 @@ items:
       - "tests/flux/test_crystallization.py PASSES (T3 unaffected)"
       - "tests/flux/test_decay.py PASSES (T4 unaffected)"
     time_budget_hours: 16
-    status: null
+    status: None
     attempts: 1
     last_session: "2026-05-15T12:01:59.081816"
     blockers: ["R-1c NULL — adaptive iteration per user mandate 2026-05-15 10:25"]
@@ -107,7 +107,7 @@ items:
       - "tests/flux/test_phase1_robustness.py::test_all_T_tests_pass_jointly_on_8_of_10_seeds PASSES (NEW; T1+T2+T3+T4 all pass on the same seed for >=8 of the 10 seeds; identical parameter envelope across seeds, no per-seed tweaks)"
       - "tests/flux/test_phase1_robustness.py::test_no_T_test_regresses_under_extension PASSES (NEW; with R-1b extension active, each T-test passes on at least as many seeds as it did without R-1b — no regression)"
     time_budget_hours: 8
-    status: null
+    status: None
     attempts: 1
     last_session: "2026-05-15T15:07:55.519505"
     blockers: ["R-1c must reach status=passed first — final gate before F2 work resumes"]
@@ -126,8 +126,9 @@ items:
       - "tests/flux/test_crystallization.py PASSES (T3 unchanged by this item)"
       - "tests/flux/test_decay.py PASSES (T4 unaffected)"
     time_budget_hours: 12
-    status: queued
-    attempts: 0
+    status: null
+    attempts: 1
+    last_session: "2026-05-15T18:13:54.745994"
     blockers: ["R-1c-bis NULL — third Bénard architecture variant (smoothing + density-boost against Poisson noise), per user mandate 2026-05-15 15:50"]
     created: 2026-05-15
 
