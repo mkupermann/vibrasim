@@ -126,8 +126,9 @@ items:
       - "tests/flux/test_crystallization.py PASSES (T3 unchanged by this item)"
       - "tests/flux/test_decay.py PASSES (T4 unaffected)"
     time_budget_hours: 12
-    status: queued
-    attempts: 0
+    status: null
+    attempts: 1
+    last_session: "2026-05-15T18:13:54.745994"
     blockers: ["R-1c-bis NULL — third Bénard architecture variant (smoothing + density-boost against Poisson noise), per user mandate 2026-05-15 15:50"]
     created: 2026-05-15
 
