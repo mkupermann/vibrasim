@@ -373,7 +373,10 @@ def main() -> None:
     items_after = queue_after.get("items") or []
     queue_summary_lines = []
     for it in items_after:
-        st = it.get("status", "?")
+        # YAML "null" parses to Python None — coerce to string so the format
+        # spec :11s doesn't TypeError on a NULL-verdict item.
+        st = it.get("status")
+        st = str(st) if st is not None else "null"
         atts = it.get("attempts", 0)
         queue_summary_lines.append(
             f"  - {it.get('id', '?'):5s}  status={st:11s}  attempts={atts}  {it.get('title', '')}"

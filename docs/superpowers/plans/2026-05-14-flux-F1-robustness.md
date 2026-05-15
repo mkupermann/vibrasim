@@ -49,6 +49,36 @@ Discipline: if the 8/10 pass-rate or 3.0 SNR threshold isn't met, the verdict is
 
 Time budget: 12 hours.
 
+### R-1c-bis — Bénard Architecture Variant: Return-Flow Injector
+
+> **Added 2026-05-15** after R-1c verdict NULL (attempt 1/3, autopilot/R-1c commit fd77daf). Per the user's adaptive iteration mandate ("solange durch korrigieren bis die Basis funktioniert"), one more architectural variant is pre-registered before declaring Phase 1 unattainable.
+
+Goal: try the second candidate from the original R-1b brief — a *return-flow injector at the cold ceiling*, symmetric to the existing `inject_hot_floor` injector but with downward initial velocity. The Bénard cell closes by physical recirculation rather than by a continuum force.
+
+R-1c's mechanism analysis (`docs/flux/phase-log.md` R-1c entry) diagnosed two issues with the pressure-gradient approach:
+
+1. Buoyancy *suppresses* horizontal variance — the cold-ceiling absorbs quanta before lateral organisation can build.
+2. The pressure-gradient force amplifies *small-scale* density fluctuations, not the smooth thermal gradient.
+
+A return-flow injector addresses (1) directly by re-introducing quanta at the cold ceiling, so the lateral organisation has time to develop on the next loop iteration. Whether it also addresses (2) is empirical.
+
+**Architectural decision** for the implementing session: keep, modify, or remove the pressure-gradient term from R-1b based on whichever combination yields the better acceptance numbers. Both `world/flux/pressure.py` and the new `inject_cold_ceiling` may coexist if compound. Document the choice in `docs/flux/phase-log.md` before measuring.
+
+**Pre-registered acceptance for R-1c-bis** (identical thresholds to R-1c — no retuning):
+
+- `tests/flux/test_benard_robustness.py::test_T2_passes_on_at_least_8_of_10_seeds PASSES` — same 10-seed grid (7, 13, 21, 42, 100, 137, 256, 314, 500, 1000), still requires ≥8/10.
+- `tests/flux/test_benard_robustness.py::test_T2_FFT_SNR_above_3 PASSES` — mean SNR across passing seeds must be ≥3.0 (was 1.5 in R-1, NULL in R-1c).
+- `tests/flux/test_benard_robustness.py::test_T2_negative_control_fails_all_10_seeds PASSES` — buoyancy_g=0 must FAIL on ALL 10 seeds. R-1c had 2/10 spurious passes — this gate is the test for "is the metric itself discriminating enough".
+- `tests/flux/test_benard.py PASSES` — original seed=42 test must pass. (The `@pytest.mark.slow` marker added on 2026-05-15 must be removed by this session.)
+- `tests/flux/test_horizontal_dynamics.py PASSES` — R-1b's tests must still pass (or the architecture is in a worse state than R-1b).
+- `tests/flux/test_conservation.py PASSES` — T1 holds.
+- `tests/flux/test_crystallization.py PASSES` — T3 unaffected.
+- `tests/flux/test_decay.py PASSES` — T4 unaffected.
+
+If R-1c-bis also returns NULL, that is a meaningful finding: two of the three candidate architectures from R-1b's brief have failed the robustness gate. Michael will read the cumulative postmortem on return and decide whether to (a) try the third candidate (quanta-quanta horizontal repulsion, O(N²) cost), (b) revise the substrate energy budget (smaller cube, lower density), or (c) accept that Bénard convection is not a falsifier the flux substrate can carry and remove it from Phase-1 acceptance.
+
+Time budget: 16 hours (4 sessions × 4h cap — return-flow tuning may need more iterations than pressure-gradient).
+
 ### R-1d — Phase-1 Joint Robustness
 
 Goal: confirm all four Phase-1 falsifiers (T1, T2, T3, T4) hold *jointly* on the same 10 seeds, not separately. Single-test-pass-rate is necessary but not sufficient — the substrate must be in a state where conservation, Bénard, crystallization, and decay all work *at once*, in the same configuration.

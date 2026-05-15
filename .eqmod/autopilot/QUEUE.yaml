@@ -81,6 +81,24 @@ items:
     blockers: ["R-1b must reach status=passed first"]
     created: 2026-05-14
 
+  - id: R-1c-bis
+    title: flux F1 — Bénard architecture variant 2 (return-flow injector at cold ceiling)
+    brief: docs/superpowers/plans/2026-05-14-flux-F1-robustness.md
+    preregistered_acceptance:
+      - "tests/flux/test_benard_robustness.py::test_T2_passes_on_at_least_8_of_10_seeds PASSES (same 10-seed grid as R-1c; threshold ≥8/10; no retuning)"
+      - "tests/flux/test_benard_robustness.py::test_T2_FFT_SNR_above_3 PASSES (mean SNR ≥3.0 across passing seeds — R-1c saw NULL on 0/10 passes)"
+      - "tests/flux/test_benard_robustness.py::test_T2_negative_control_fails_all_10_seeds PASSES (buoyancy_g=0 must FAIL on ALL 10 seeds — R-1c had 2/10 spurious passes here, this gate is the discriminating-metric check)"
+      - "tests/flux/test_benard.py PASSES (original seed=42 acceptance; session must remove the @pytest.mark.slow marker that was added 2026-05-15)"
+      - "tests/flux/test_horizontal_dynamics.py PASSES (R-1b's pressure-gradient tests; may stay or be modified per the session's architectural decision, but cannot regress)"
+      - "tests/flux/test_conservation.py PASSES (T1 holds)"
+      - "tests/flux/test_crystallization.py PASSES (T3 unaffected)"
+      - "tests/flux/test_decay.py PASSES (T4 unaffected)"
+    time_budget_hours: 16
+    status: queued
+    attempts: 0
+    blockers: ["R-1c NULL — adaptive iteration per user mandate 2026-05-15 10:25"]
+    created: 2026-05-15
+
   - id: R-1d
     title: flux F1 — Phase-1 joint robustness gate
     brief: docs/superpowers/plans/2026-05-14-flux-F1-robustness.md
