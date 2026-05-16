@@ -1,5 +1,57 @@
-"""Flux Substrate — agent layer (cochlea, synthesis, attention, loop).
+"""Flux Substrate — agent layer (cochlea, synthesis, audio I/O).
 
-Empty in F0. Filled in F2+. See spec §5.6-§5.8.
+Filled in F2 with the cochlea + synthesis adapters around the F0-F1c
+substrate. Attention reallocate (§5.8) remains deferred to F4+.
+
+See spec §5.6 (cochlea), §5.7 (synthesis), §6 (tick integration).
 """
 from __future__ import annotations
+
+from agent.flux.cochlea import (
+    Cochlea,
+    CochleaConfig,
+    Resonator,
+    cochlea_inject,
+    step_resonator,
+    step_resonators,
+)
+from agent.flux.synthesis import (
+    Synthesizer,
+    SynthesisConfig,
+    drive_resonator_impulse,
+    read_output_samples,
+    route_node_firings,
+    route_node_firings_explicit,
+)
+from agent.flux.audio_in import (
+    DEFAULT_SR_HZ,
+    iter_sample_chunks,
+    read_wav_mono_16k,
+)
+from agent.flux.audio_out import (
+    WavWriter,
+    write_wav_mono_16k,
+)
+
+__all__ = [
+    # cochlea
+    "Cochlea",
+    "CochleaConfig",
+    "Resonator",
+    "cochlea_inject",
+    "step_resonator",
+    "step_resonators",
+    # synthesis
+    "Synthesizer",
+    "SynthesisConfig",
+    "drive_resonator_impulse",
+    "read_output_samples",
+    "route_node_firings",
+    "route_node_firings_explicit",
+    # audio io
+    "DEFAULT_SR_HZ",
+    "iter_sample_chunks",
+    "read_wav_mono_16k",
+    "WavWriter",
+    "write_wav_mono_16k",
+]
