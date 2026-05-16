@@ -1,0 +1,50 @@
+# Synthetic-corpus sanity check for the --config code path.
+# Files generated with ffmpeg into /tmp/eqmod_synth_audio/ — see
+# the comment at the bottom for the generation commands.
+#
+# Sub-90s wall-clock per docs/predictive-babble.md.
+# Run with:
+#   python -m agent.run_babble_experiment --config corpus.synthetic.yaml \
+#     --out /tmp/eqmod_g19_synth_sanity/
+#
+# Verdict is expected to be FAIL or NULL (synthetic tones can't pass the
+# 2σ bar). The point is to exercise the real --config pipeline, not the
+# scientific test.
+
+de:
+  stage1:
+    - "/tmp/eqmod_synth_audio/de_stage1.wav"
+  stage2:
+    - "/tmp/eqmod_synth_audio/de_stage2.wav"
+  stage3:
+    - "/tmp/eqmod_synth_audio/de_stage3.wav"
+  stage4:
+    - "/tmp/eqmod_synth_audio/de_stage4.wav"
+
+fr:
+  sources:
+    - "/tmp/eqmod_synth_audio/fr.wav"
+
+seed: 0
+
+# Sub-90s wall-clock parameters (per docs/predictive-babble.md)
+n_clusters: 16
+n_bootstrap: 20
+babble_duration_seconds: 0.5
+awake_seconds_per_cycle: 0.5
+dream_seconds_per_cycle: 0.2
+expected_min_cycles_per_stage: 2
+perplexity_eval_interval_cycles: 1
+perplexity_eval_duration_seconds: 0.3
+snapshot_every_seconds: 60.0
+convergence_window_size: 1
+convergence_min_improvement: 0.01
+convergence_min_history: 2
+
+# Generation commands (already executed at file creation):
+#   mkdir -p /tmp/eqmod_synth_audio && cd /tmp/eqmod_synth_audio
+#   ffmpeg -f lavfi -i sine=frequency=440:duration=60 -ac 1 -ar 16000 de_stage1.wav
+#   ffmpeg -f lavfi -i sine=frequency=660:duration=60 -ac 1 -ar 16000 de_stage2.wav
+#   ffmpeg -f lavfi -i sine=frequency=880:duration=60 -ac 1 -ar 16000 de_stage3.wav
+#   ffmpeg -f lavfi -i sine=frequency=550:duration=30 -ac 1 -ar 16000 de_stage4.wav
+#   ffmpeg -f lavfi -i anoisesrc=duration=180:color=pink -ac 1 -ar 16000 fr.wav

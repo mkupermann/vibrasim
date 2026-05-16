@@ -424,7 +424,10 @@ def main() -> None:
         f"This mail is sent automatically by tools/autopilot_postflight.py at the end\n"
         f"of every autopilot session. To stop: touch ~/.eqmod/autopilot/STOP\n"
     )
-    subject = f"[EQMOD autopilot] {item_id} {verdict.upper()} (attempt {item['attempts']}/3)"
+    # Defensive coercion: any of these can be None on YAML-null or early-exit paths.
+    safe_verdict = str(verdict).upper() if verdict is not None else "NULL"
+    safe_attempts = item.get("attempts", "?")
+    subject = f"[EQMOD autopilot] {item_id} {safe_verdict} (attempt {safe_attempts}/3)"
     mailed = send_mail(subject, body)
     if not mailed:
         print(f"postflight: WARN: per-session mail failed (persisted to disk)", file=sys.stderr)
