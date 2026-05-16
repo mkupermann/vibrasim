@@ -44,8 +44,14 @@ def find_pairs_within(quanta: Quanta, r: float) -> np.ndarray:
 
     Naive O(N^2/2) algorithm — fine at F1a scale (≤ 1000 alive quanta).
     A KD-tree or cell-list optimisation is the F1b/F2 concern.
+
+    R-1d-T3-bis: ceiling-scaffold quanta (``polarity == -1``) are
+    excluded from pair finding. ``attempt_binding`` would skip any
+    pair containing a scaffold anyway; filtering here keeps the O(N²)
+    inner loop bounded by the floor-source population when the
+    scaffold density is high.
     """
-    alive_idx = np.where(quanta.alive)[0]
+    alive_idx = np.where(quanta.alive & (quanta.polarity != -1))[0]
     n = alive_idx.size
     if n < 2:
         return np.zeros((0, 2), dtype=np.int64)
@@ -141,6 +147,15 @@ def attempt_binding(quanta: Quanta, nodes: Nodes, grid: Grid,
     for p in pairs:
         i, j = int(p[0]), int(p[1])
         if i in consumed or j in consumed:
+            continue
+
+        # R-1d-T3-bis: skip pairs containing a ceiling-scaffold quantum
+        # (polarity == -1). Scaffolds exist to provide bridge-flux for
+        # ceiling self-bridges, not to participate in binding; without
+        # this skip the substrate would form ceiling nodes purely from
+        # scaffold geometry and the T3 metric would no longer
+        # discriminate the binding mechanism.
+        if int(quanta.polarity[i]) == -1 or int(quanta.polarity[j]) == -1:
             continue
 
         # Coherence gate (F1a: frequency-equality)
