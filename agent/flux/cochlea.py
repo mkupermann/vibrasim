@@ -70,6 +70,14 @@ class CochleaConfig:
     inject_gain: float = 1.0
     inject_max_per_tick: int = 8
     floor_disc_radius: float = 1.0
+    # Noise-floor subtraction on peak |amp| before inject_gain. A damped driven
+    # oscillator has transfer |H(ω)| -> 1 for ω_drive << ω_res (quasi-static
+    # response), so every above-band resonator picks up amplitude ~1 even from
+    # a far-off-band tone. Without subtraction, the 26 above-1kHz slots wash
+    # out the Q-boosted on-band slot in the routing test. peak_floor=2.0 keeps
+    # a small margin above the unit baseline; lower it if you need to capture
+    # low-Q peaks too.
+    peak_floor: float = 2.0
 
 
 class Cochlea:
@@ -203,9 +211,13 @@ def cochlea_inject(
     cap = cfg.inject_max_per_tick
 
     peaks = bank.last_peaks
+    peak_floor = cfg.peak_floor
     total_energy = 0.0
     for i in range(bank.cfg.n_resonators):
-        count = int(round(float(peaks[i]) * inj_gain))
+        excess = float(peaks[i]) - peak_floor
+        if excess <= 0.0:
+            continue
+        count = int(round(excess * inj_gain))
         if count <= 0:
             continue
         if count > cap:
