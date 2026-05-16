@@ -289,3 +289,46 @@ items:
     attempts: 0
     blockers: ["R-7 must reach status=passed first"]
     created: 2026-05-13
+  - id: R-9
+    title: encoder-free audio — detailed plan (novel-path branch parallel to R-5..R-8 baseline)
+    brief: docs/superpowers/plans/2026-05-16-flux-encoder-free-audio.md
+    preregistered_acceptance:
+      - "tests/test_research_plan_structure.py::test_encoder_free_plan_exists_and_well_formed PASSES (NEW meta-test the session must add: verifies detailed plan exists with required headings, declares R-10 and R-11 pytest paths, commits to specific energy-mapping rule + no-frequency-information constraint)"
+      - "Plan body explicitly commits to: SR=16000, freq=constant=log(SR/2), 1 quantum per sample, energy=abs(sample) OR sample² (one choice, locked)"
+      - "Plan declares pytest acceptance paths: tests/flux/test_audio_raw_injection.py for R-10; tests/flux/test_encoder_free_training_run.py + tests/flux/test_encoder_free_negative_control.py for R-11"
+    time_budget_hours: 4
+    status: queued
+    attempts: 0
+    blockers: ["Novel-path: only meaningful if R-5 (F3 learning rule) actually works on the cochlea-baseline first. Sequenced after R-8 for that reason."]
+    created: 2026-05-16
+
+  - id: R-10
+    title: encoder-free audio — implementation (raw-sample injection, no cochlea)
+    brief: docs/superpowers/plans/2026-05-16-flux-encoder-free-audio.md
+    preregistered_acceptance:
+      - "tests/flux/test_audio_raw_injection.py::test_raw_injection_one_quantum_per_sample PASSES (NEW: 0.1 s 1 kHz sine at 16 kHz SR → exactly 1600 quanta, all freq=log(SR/2), energies track rectified waveform)"
+      - "tests/flux/test_audio_raw_injection.py::test_raw_injection_silence_injects_zero_energy PASSES (NEW: 0.1 s silence → injected quanta have energy ≈ 0 within float epsilon)"
+      - "tests/flux/test_audio_raw_injection.py::test_raw_injection_amplitude_modulation_visible_in_substrate PASSES (NEW: AM tone → Pearson r ≥ 0.7 between input envelope and substrate floor-energy time-series)"
+      - "tests/flux/test_conservation.py PASSES (T1 unaffected)"
+      - "tests/flux/test_cochlea.py PASSES (F2 baseline cochlea must NOT be modified — separate code path)"
+      - "tests/flux/test_synthesis.py PASSES (F2 baseline synthesis unchanged)"
+    time_budget_hours: 8
+    status: queued
+    attempts: 0
+    blockers: ["R-9 must reach status=passed first"]
+    created: 2026-05-16
+
+  - id: R-11
+    title: encoder-free audio — training run + falsification + R-8 baseline comparison
+    brief: docs/superpowers/plans/2026-05-16-flux-encoder-free-audio.md
+    preregistered_acceptance:
+      - "tests/flux/test_encoder_free_training_run.py::test_encoder_free_substrate_distinguishable_from_no_input_control PASSES (NEW: KL divergence of encoder-free babble-MFCC-histogram vs no-input control histogram > 2σ on 100-bootstrap — substrate must have learned SOMETHING from raw audio)"
+      - "tests/flux/test_encoder_free_negative_control.py::test_no_input_control_produces_no_substrate_specific_signal PASSES (NEW: no-input substrate babble statistically indistinguishable from white-noise MFCC distribution — sanity check)"
+      - "docs/flux/phase-log.md has R-11 entry with both runs bootstrap means + stds + verdict comparison"
+      - "LOGBOOK.md has cross-comparison observation: tabulate KL divergences for R-8 cochlea-baseline vs R-11 encoder-free; measure the gap and report it (PASS verdict does NOT require beating R-8 — only measuring the gap)"
+    time_budget_hours: 24
+    status: queued
+    attempts: 0
+    blockers: ["R-10 must reach status=passed first; also R-8 baseline ideally completed for comparison data"]
+    created: 2026-05-16
+
