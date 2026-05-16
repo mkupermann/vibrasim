@@ -179,7 +179,7 @@ items:
     time_budget_hours: 12
     status: passed
     attempts: 1
-    last_session: "2026-05-16T12:11:12.262090"
+    last_session: "2026-05-16T09:56:42"
     blockers: ["R-1d-T3 phase-log specifically suggests this fix (lift bridge-flux starvation) as the next targeted iteration"]
     created: 2026-05-15
 
@@ -208,8 +208,9 @@ items:
       - "tests/flux/test_crystallization.py PASSES (T3 still holds)"
       - "tests/flux/test_decay.py PASSES (T4 still holds)"
     time_budget_hours: 16
-    status: queued
-    attempts: 0
+    status: passed
+    attempts: 2
+    last_session: "2026-05-16T20:04:00"
     blockers: ["R-2 must reach status=passed first"]
     created: 2026-05-13
 

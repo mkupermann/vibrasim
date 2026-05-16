@@ -1,0 +1,86 @@
+# EQMOD G19 predictive-babble corpus, candidate v0.
+#
+# Generated 2026-05-11 as a draft for the first real-corpus G19 run.
+# DO NOT launch a 24-hour run against this file as-is. Every URL marked
+# TODO_VERIFY must be:
+#   1. Checked that it still resolves (LibriVox occasionally re-IDs)
+#   2. Confirmed by ear for content shape (single narrator for stage1,
+#      monologue YouTube for stage2, multi-speaker for stage3)
+#   3. Optionally swapped for a personal preference
+#
+# The G19 acceptance bar (docs/predictive-babble.md §"What you need to
+# launch a real run") demands:
+#   - stage1: audiobook narrator(s), 60+ min
+#   - stage2: single YouTuber, 120+ min
+#   - stage3: multi-speaker podcasts, 180+ min
+#   - stage4: your own webcam recording, 30+ min
+# Total ≈ 6.5 hours German + matching French (≈ 6.5 h French sources).
+#
+# IMPORTANT: Stage 4 is the one you must record yourself. There is no
+# substitute for it. The personal-voice exposure is load-bearing for the
+# acceptance claim (see docs/predictive-babble.md, "Stage 4 closed-loop
+# hazard"). Plan ~30 min of you reading a German text into the laptop mic.
+
+# ---------------------------------------------------------------------
+# GERMAN — the trained corpus
+# ---------------------------------------------------------------------
+de:
+  # Stage 1 — single-narrator audiobook. 60+ min.
+  # Goethe's Faust I, narrator Hans Eberhardt (public domain via LibriVox).
+  stage1:
+    - "https://librivox.org/faust-by-johann-wolfgang-von-goethe-2/"  # TODO_VERIFY
+
+  # Stage 2 — single YouTuber, 120+ min monologue style.
+  # Candidate: a German-language educational/explainer channel with
+  # mostly single-speaker long-form. Pick one you have personal taste for.
+  stage2:
+    - "https://www.youtube.com/watch?v=TODO_PICK_VIDEO_ID"  # TODO_VERIFY
+
+  # Stage 3 — multi-speaker, 180+ min, mixed registers.
+  # LibriVox dramatic readings or multi-narrator works fit this slot.
+  # Or several podcast episodes concatenated.
+  stage3:
+    - "https://librivox.org/das-schloss-by-franz-kafka/"   # TODO_VERIFY
+    - "https://librivox.org/der-process-by-franz-kafka/"   # TODO_VERIFY
+
+  # Stage 4 — YOU. Recorded with your laptop mic.
+  # ~30 min of you reading a German text aloud. Save as 16 kHz mono wav
+  # or any format ffmpeg can decode.
+  stage4:
+    - "TODO_PATH/recording-stage4-de.wav"
+
+# ---------------------------------------------------------------------
+# FRENCH — matched-duration control corpus.
+# Total French duration should be within 10% of total German.
+# ---------------------------------------------------------------------
+fr:
+  sources:
+    - "https://librivox.org/les-miserables-tome-1-by-victor-hugo/"   # TODO_VERIFY
+    - "https://librivox.org/madame-bovary-by-gustave-flaubert/"      # TODO_VERIFY
+    - "https://librivox.org/lecume-des-jours-by-boris-vian/"         # TODO_VERIFY
+
+# ---------------------------------------------------------------------
+# Reproducibility
+# ---------------------------------------------------------------------
+seed: 0
+
+# ---------------------------------------------------------------------
+# Production defaults — DO NOT TUNE BETWEEN RUNS.
+# (Per docs/marker_protocol.md: tuning thresholds in response to a
+# failed run, then claiming the new run fires the markers, is overfitting
+# evidence and is excluded by protocol.)
+# ---------------------------------------------------------------------
+n_clusters: 256
+n_bootstrap: 100
+babble_duration_seconds: 300.0          # 5 min wav per substrate
+
+awake_seconds_per_cycle: 30.0
+dream_seconds_per_cycle: 10.0
+expected_min_cycles_per_stage: 50
+perplexity_eval_interval_cycles: 10
+perplexity_eval_duration_seconds: 30.0
+snapshot_every_seconds: 1800.0          # 30 min sim time
+
+convergence_window_size: 10
+convergence_min_improvement: 0.01
+convergence_min_history: 20
