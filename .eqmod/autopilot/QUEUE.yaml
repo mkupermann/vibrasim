@@ -159,8 +159,9 @@ items:
       - "tests/flux/test_decay.py PASSES (T4 unaffected)"
       - "tests/flux/test_horizontal_dynamics.py PASSES (R-1b horizontal-dynamics tests still pass)"
     time_budget_hours: 12
-    status: queued
-    attempts: 0
+    status: null
+    attempts: 1
+    last_session: "2026-05-16T03:40:11.342039"
     blockers: ["Five NULLs in iter-1/iter-2; vorticity is the classical mechanical signature of convection, not a retune"]
     created: 2026-05-15
 
