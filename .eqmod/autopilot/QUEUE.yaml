@@ -177,8 +177,9 @@ items:
       - "tests/flux/test_bridges.py PASSES (F1b bridge layer must not regress)"
       - "tests/flux/test_plasticity.py PASSES (F1b plasticity must not regress)"
     time_budget_hours: 12
-    status: queued
-    attempts: 0
+    status: passed
+    attempts: 1
+    last_session: "2026-05-16T12:11:12.262090"
     blockers: ["R-1d-T3 phase-log specifically suggests this fix (lift bridge-flux starvation) as the next targeted iteration"]
     created: 2026-05-15
 
