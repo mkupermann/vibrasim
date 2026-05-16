@@ -222,8 +222,9 @@ items:
       - "Plan must declare these specific pytest acceptance paths so R-5 can verify them: tests/flux/test_learning.py and tests/flux/test_learning_negative_control.py (R-4 picks the learning rule, R-5 implements + runs falsification)"
       - "Plan defines a learning rule derived from the flux principle (NOT an STDP/BTSP/Hebbian re-implementation by another name)"
     time_budget_hours: 4
-    status: queued
-    attempts: 0
+    status: passed
+    attempts: 1
+    last_session: "2026-05-16T22:46:25.567773"
     blockers: ["R-3 must reach status=passed first"]
     created: 2026-05-13
 
