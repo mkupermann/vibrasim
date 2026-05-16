@@ -36,14 +36,23 @@ Injector = Callable[[Quanta, Grid], float]
 
 
 def _compute_density(quanta: Quanta, grid: Grid) -> np.ndarray:
-    """Histogram alive quanta into voxel bins → counts per voxel."""
+    """Histogram alive quanta into voxel bins → counts per voxel.
+
+    R-1d-T3-bis: ceiling-scaffold quanta (``polarity == -1``) are
+    excluded from the density count. They exist to provide bridge-flux
+    for ceiling self-bridges; counting them as thermal mass would
+    heat the ceiling layer above ``T_decay_crit`` and the T-decay rule
+    would kill the very nodes the scaffold is meant to preserve.
+    """
     Lx, Ly, Lz = grid.dims
     s = grid.voxel_size
     density = np.zeros(grid.dims, dtype=np.float64)
     if quanta.n_alive() == 0:
         return density
-    alive = quanta.alive
-    pos = quanta.pos[alive]
+    thermal = quanta.alive & (quanta.polarity != -1)
+    if not thermal.any():
+        return density
+    pos = quanta.pos[thermal]
     ix = np.clip((pos[:, 0] / s).astype(int), 0, Lx - 1)
     iy = np.clip((pos[:, 1] / s).astype(int), 0, Ly - 1)
     iz = np.clip((pos[:, 2] / s).astype(int), 0, Lz - 1)
