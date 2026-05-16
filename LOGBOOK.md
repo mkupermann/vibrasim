@@ -588,3 +588,11 @@ Operational documentation in `docs/predictive-babble.md`.
 - **Attempts**: 1/3
 - **Diff**: 22 files changed, 1038 insertions(+), 756 deletions(-)
 - **Rationale**: all pass-targets passed; all negative controls failed as required
+
+
+## 2026-05-16 — autopilot session: R-3
+
+- **Verdict**: PASSED
+- **Attempts**: 2/3
+- **Diff**: 23 files changed, 1049 insertions(+), 758 deletions(-)
+- **Rationale**: all pass-targets passed; all negative controls failed as required

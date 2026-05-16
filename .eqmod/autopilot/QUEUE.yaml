@@ -74,8 +74,8 @@ items:
       - "tests/flux/test_decay.py PASSES (T4 still holds)"
     time_budget_hours: 16
     status: passed
-    attempts: 1
-    last_session: "2026-05-16T14:23:00.597470"
+    attempts: 2
+    last_session: "2026-05-16T20:04:39.327394"
     blockers: ["R-2 must reach status=passed first"]
     created: 2026-05-13
 
