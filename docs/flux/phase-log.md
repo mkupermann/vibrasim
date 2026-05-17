@@ -796,3 +796,104 @@ uv run --extra dev python tools/audit_T3_seeds.py --qpt 10 \
   --alpha 0 --beta 200 --Tcrit 0.025 --t_dc 0.035 \
   --ceil_qpt 20 --ceil_vz 0.3
 ```
+
+## 2026-05-16 — F3 start (autopilot R-5)
+
+### Scope
+
+Test-phase only. No `world/flux/*` changes. F3 falsifies the spec
+§5.5 monotone-flux bridge plasticity (already live since F1b) under
+sustained patterned input. Trained substrate (1 kHz tone-burst
+through the fixed F2 cochlea) must develop bridge topology
+concentrated around `log(1000)`; matched-wallclock white-noise
+control must NOT. Pre-registered F3 plan:
+`docs/superpowers/plans/2026-05-16-flux-substrate-F3.md`.
+
+### Locked numeric thresholds (R-4 / F3 plan)
+
+| Symbol | Value | Notes |
+|---|---|---|
+| `f_train_hz` | `1000.0` | training tone-burst centre |
+| `band_log_hz` | `0.25` | ±-window around `log(f_train)` |
+| `n_ticks_train` | `10000` | substrate ticks per run (max `30000`) |
+| `f_loc_thresh_train` | `0.30` | trained substrate must reach `f_loc >= 0.30` |
+| `f_loc_thresh_control` | `0.20` | control must stay `f_loc < 0.20` |
+| `margin_min` | `0.10` | trained − control gate |
+| `n_bridges_min_alive` | `30` | trained-run silent-pass guard |
+| `n_bridges_min_alive_control` | `10` | control-run silent-pass guard |
+| `seed_train` / `seed_control` | `4242` | same RNG seed; only waveform differs |
+
+No post-hoc retuning permitted (charter §NULL).
+
+### Locked acceptance pytest paths
+
+- `tests/flux/test_learning.py` — trained-run acceptance
+- `tests/flux/test_learning_negative_control.py` — negative-control acceptance
+- Existing T1/T2/T3/T4 (`test_conservation.py`, `test_benard.py`,
+  `test_crystallization.py`, `test_decay.py`) must still pass.
+
+### Deferred (NOT in F3)
+
+Tier-1 LLR audio test (R-6/R-7/R-8 once F3 closes), multi-tone /
+phonemic input, synthesis-side metric, phoneme probe (F4),
+attention reallocate (F4+), learning-rule reformulation
+(out of scope — F3 falsifies the EXISTING rule).
+
+## 2026-05-16 — F3 sweep #1: feasibility-driven defaults (autopilot R-5)
+
+### Why this sweep
+
+Plan defaults (`burst_amplitude=1.0`, `burst_duration_ms=200`,
+`silence_duration_ms=200`, `n_ticks_train=10000`) produce a
+bridge-population explosion. Diagnostic at default config:
+
+| tick | n_alive_q | n_nodes | n_bridges | wallclock/tick |
+|---:|---:|---:|---:|---|
+| 5   | 24  | 30  |    831 |    14 ms |
+| 20  | 17  | 159 | 23 218 |   245 ms |
+| 30  | 17  | 244 | 54 252 |   546 ms |
+| 45  | 14  | 372 |126 412 |  1266 ms |
+
+Bridge count grows ~linearly through the first burst (a burst lasts
+3200 audio samples = 200 ticks); per-tick wallclock is dominated by
+the alive-bridge loop in `count_flux_through`. Linear-extrapolated
+cost at the plan defaults for one trained run alone exceeds the
+4 h autopilot session budget (rough estimate 8 h). The bridge cap
+(`max_bridges=200000`) also overflows around tick 80, which would
+suppress new bindings and break substrate semantics.
+
+This is the substrate behaviour the plan's "Open calibration choices"
+section anticipated (`R-5 may sweep…`); the protocol-correct response
+is to move inside the pre-registered ranges, not to retune the
+plasticity / pruning constants.
+
+### Move
+
+| Param | Plan default | Sweep #1 | Plan range |
+|---|---:|---:|---|
+| `burst_amplitude` | 1.0 | **0.5** | [0.5, 2.0] |
+| `burst_duration_ms` | 200 | **100** | [100, 400] |
+| `silence_duration_ms` | 200 | **200** | [100, 400] |
+| `n_ticks_train` | 10000 | **5000** | [5000, 30000] |
+
+`burst_amplitude` and `n_ticks_train` move to the LOWER edge of their
+pre-registered range. `burst_duration_ms` halves so each burst
+deposits less integrated flux into the substrate before the silence
+gives bridges time to decay; the duty cycle becomes `1 / (1 + 2) = 1/3`
+instead of `1/2`.
+
+The sweep is justified by feasibility, not by trying to pull a
+failing metric across a threshold. The empirical cochlea audit at
+each tested `burst_amplitude` (50 / 100 / 150 / 200 %) showed the
+in-band slot count grows monotonically and the train/control slot
+overlap stays out-of-band for the control (control top-5 slots all
+above 5 kHz; band centre is 1 kHz) — see `tools/`-side diagnostic
+`/tmp/diag_noise_cochlea.py` archived in the session transcript.
+
+### Measurement (pending — to be filled by F3-close)
+
+- `f_loc_train` = TBD (target `>= 0.30`)
+- `f_loc_control` = TBD (target `< 0.20`)
+- `margin = f_loc_train − f_loc_control` = TBD (target `>= 0.10`)
+- `n_bridges_alive_train` = TBD (target `>= 30`)
+- `n_bridges_alive_control` = TBD (target `>= 10`)
