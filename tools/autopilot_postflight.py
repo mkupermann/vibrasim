@@ -174,17 +174,46 @@ def main() -> None:
     pass_ok = True
     pass_log = ""
     if pass_targets:
-        r = run([str(REPO / ".venv/bin/python"), "-m", "pytest", *pass_targets, "--tb=short", "-q"])
-        pass_log = (r.stdout + r.stderr)[-2000:]
-        pass_ok = r.returncode == 0
+        # 30-minute hard timeout on the pytest invocation. Without this,
+        # acceptance tests that include a long substrate run (e.g. R-5's
+        # @pytest.mark.slow integration test) hang postflight for hours.
+        # 30 min is generous for any test that's actually supposed to be
+        # a unit / smoke check; if a test needs longer, it should be a
+        # separate item with its own runtime budget, not folded into
+        # postflight's verifier.
+        try:
+            r = run(
+                [str(REPO / ".venv/bin/python"), "-m", "pytest", *pass_targets, "--tb=short", "-q"],
+                timeout=1800,
+            )
+            pass_log = (r.stdout + r.stderr)[-2000:]
+            pass_ok = r.returncode == 0
+        except subprocess.TimeoutExpired as exc:
+            pass_log = (
+                (exc.stdout or b"").decode("utf-8", "replace")[-1500:]
+                + "\n[postflight: pytest 30-min timeout; verdict NULL]"
+            )
+            pass_ok = False
 
     # 4. Run FAIL-targets (negative controls) — expect rc!=0
     ctrl_ok = True
     ctrl_log = ""
     if fail_targets:
-        r = run([str(REPO / ".venv/bin/python"), "-m", "pytest", *fail_targets, "--tb=no", "-q"])
-        ctrl_log = (r.stdout + r.stderr)[-2000:]
-        ctrl_ok = r.returncode != 0  # MUST fail
+        try:
+            r = run(
+                [str(REPO / ".venv/bin/python"), "-m", "pytest", *fail_targets, "--tb=no", "-q"],
+                timeout=1800,
+            )
+            ctrl_log = (r.stdout + r.stderr)[-2000:]
+            ctrl_ok = r.returncode != 0  # MUST fail
+        except subprocess.TimeoutExpired as exc:
+            ctrl_log = (
+                (exc.stdout or b"").decode("utf-8", "replace")[-1500:]
+                + "\n[postflight: pytest 30-min timeout]"
+            )
+            # Negative control timing out doesn't tell us "it should have failed but didn't",
+            # so treat as failed to be conservative (verdict will be null if pass_targets also failed).
+            ctrl_ok = True
 
     # 5. Determine objective verdict
     if not pass_targets and not fail_targets:
