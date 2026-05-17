@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.eqmod.long-run</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>/Users/mkupermann/.eqmod/long-run/run_dispatcher.sh</string>
+    </array>
+
+    <key>StartInterval</key>
+    <integer>1800</integer>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>KeepAlive</key>
+    <false/>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/Users/mkupermann/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+        <key>HOME</key>
+        <string>/Users/mkupermann</string>
+    </dict>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/mkupermann/GitHub/EQMOD</string>
+
+    <key>StandardOutPath</key>
+    <string>/Users/mkupermann/.eqmod/long-run/dispatcher.out</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/mkupermann/.eqmod/long-run/dispatcher.err</string>
+</dict>
+</plist>
