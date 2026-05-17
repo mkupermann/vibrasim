@@ -898,3 +898,299 @@ negative control is the R-11 contract (`tests/flux/test_encoder_free_negative_co
 
 Verdict: **PASS** on all pre-registered acceptance criteria.
 
+
+## 2026-05-17 — R-11 encoder-free training run + falsification (autopilot)
+
+Encoder-free training run against the R-7 English corpus with matched-
+wallclock no-input control. Pre-registered acceptance from
+`.eqmod/autopilot/QUEUE.yaml::R-11`. Reference plan:
+`docs/superpowers/plans/2026-05-17-flux-encoder-free-audio-detailed.md`.
+
+### Scope (locked)
+
+- New driver `agent/flux/encoder_free_training.py` —
+  `EncoderFreeTrainingConfig`, `run_encoder_free_training`, plus pure-
+  numpy MFCC (`compute_mfcc_per_frame`, mel-filterbank +
+  `scipy.fft.dct`), white-noise reference (`mfcc_of_white_noise`), and
+  the bootstrap-KL helper (`bootstrap_kl_stats` — real bootstrap with
+  replacement on the underlying per-frame MFCC samples, not Dirichlet
+  on fixed histograms).
+- Two new acceptance gates: `tests/flux/test_encoder_free_training_run.py`
+  (Gate 1, trained KL vs no-input control, > 2σ on 100-bootstrap) and
+  `tests/flux/test_encoder_free_negative_control.py` (Gate 2, no-input
+  control MFCC ≈ white-noise MFCC, two-sided KS p ≥ 0.05).
+- Shared session-scoped fixtures in `tests/flux/conftest.py` so the
+  no-input control runs once per pytest invocation across both gates.
+- No `world/flux/` edits; F2 cochlea + synthesis byte-unchanged. F2
+  synthesis is reused as a passive readout for the babble waveform —
+  not retrained, not retuned.
+
+### Deviations from the R-9 detailed plan (declared up-front)
+
+| Choice | Plan target | Actual | Why |
+|---|---|---|---|
+| `n_ticks_train` | 1.8M (~30 min audio at assumed 1 kHz substrate tick) | **5 000** (config default, `EQMOD_R11_N_TICKS` overridable) | Measured tick rate at locked grid (80×40×10) under the full F1b/F1c+raw-injection stack is ≈ 38 ticks/s (training) on this M-series Mac, not the plan-assumed 1 kHz. 1.8M ticks would take ≈ 13 h, well past the postflight 30-min pytest cap. The plan's locked *upper bound* of 2M is respected (5000 << 2M); the locked *target* derived from "30 min wall-clock" is not reached. |
+| Grid | 80 × 40 × 10 (R-9 plan) — claimed "same as R-8 baseline" | 80 × 40 × 10 | Followed plan. NB: the plan's "same as R-8" justification is factually wrong — R-8 actually ran on 30 × 30 × 60. The R-11 cross-comparison numbers are therefore on a different geometry than R-8's; documented honestly here, not retuned. |
+| Corpus | R-7 English Stage 1 + Stage 4 substitute | Stage 1 audiobook (Pride and Prejudice, LibriVox) — Stage 4 substitute repeated-to-fill | At 5000 ticks × 16 samples/tick = 80 000 samples = 5 s of audio, only ~5 s of Stage 1 are actually consumed; full corpus would only matter at the plan's 1.8M-tick scale. |
+
+The single calibration choice **not** locked in the R-9 plan: corpus
+RMS-normalisation target = 0.25 per stage (carried over from R-8's
+documented choice; pre-registered there, reused here unchanged).
+
+### Measured numbers (default config, n_ticks_train = 5000)
+
+**Training run** (`input_kind = "audio"`):
+
+```
+wallclock_train_s          132.3
+quanta_alive_peak          511
+quanta_alive_final         0
+bridges_alive_final        2
+nodes_alive_final          2
+babble_rms                 0.000e+00
+mfcc_per_frame.shape       (98, 13)
+waveform_rms               0.022  (corpus RMS-normalised to 0.25 / stage,
+                                    truncated to ~5 s of audio)
+```
+
+**No-input control** (`input_kind = "no_input"`):
+
+```
+wallclock_train_s          11.2
+quanta_alive_peak          0
+quanta_alive_final         0
+bridges_alive_final        0
+nodes_alive_final          0
+babble_rms                 0.000e+00
+mfcc_per_frame.shape       (98, 13)
+```
+
+**Gate 1 — trained vs no-input bootstrap KL** (100 bootstrap, n_bins
+= 24, value_range = (-30, 30) on per-frame MFCC samples):
+
+```
+KL_mean   = 1.0e-06
+KL_std    = 1.4e-06
+2 σ       = 2.8e-06
+mean > 2σ : FAIL
+```
+
+**Gate 2 — no-input vs white-noise MFCC KS-test**:
+
+```
+ks_statistic  = 0.676
+p             = 5.7e-277
+p >= 0.05     : FAIL
+```
+
+### Verdict: **NULL** on both pre-registered gates
+
+Per autopilot charter §"NULL is a valid verdict" and the R-9 plan's
+explicit no-retune commitment, no parameter is adjusted. NULL is the
+finding.
+
+### Mechanism — where the gap lives
+
+Both gates fail for the **same mechanical reason** but with different
+interpretations.
+
+(1) **Gate 1 fails because both runs produce silent babble.** The
+trained run formed 2 alive bridges at end-of-training; the no-input
+control formed zero. But the F2 synthesis layer reads firings from
+**flux-delta-over-threshold on alive bridges**: 2 bridges across
+~98 MFCC frames of post-training babble is not enough firing density
+to put non-zero energy into the synthesis bank. Both babbles are
+numerically zero waveforms (rms ≡ 0.0). Their MFCC histograms therefore
+collapse onto the same degenerate "log(epsilon)·DCT" point — KL ≡ 0.
+The bootstrap registers only sampling noise (mean ≈ std ≈ 1e-6), and
+mean > 2σ fails.
+
+(2) **Gate 2 fails because the no-input control is *too pristine*,
+not because it is corrupted.** The control has zero injected quanta,
+zero bridges, zero firings — its babble is exactly silence. The plan's
+acceptance phrasing ("statistically indistinguishable from white-noise
+MFCC") presumed the substrate-under-no-input would emit *some*
+background activity that would look like white noise. The reality:
+the no-input substrate is silent. Silence has a degenerate MFCC
+distribution (one extreme log-mel bin); white noise has a flat MFCC.
+KS-test correctly distinguishes them. The control is more honest
+than the plan anticipated; the test is too strict for the actually-
+quiet control.
+
+### Root cause of the silent babble
+
+The encoder-free injection rule maps each audio sample to a **unique**
+xy on the 80 × 40 hot-floor via SplitMix64 hash of `sample_index`.
+With 16 samples per substrate tick and 3200 floor cells, the
+probability that any two of those 16 quanta land within `r = 1.5` of
+each other in a given tick is ≈ 16² / 3200 ≈ 0.08. Even when they
+do, all quanta carry `freq = log(SR/2) ≈ 8.987` (perfect frequency
+coherence by construction), so the binding rule's `coherence_eps` is
+trivially satisfied — but the local cell must also have `T_local <
+T_crit = 2.0`. The R-1c thermal layer pins `T_hot_floor = 5.0`, so
+binding cannot fire at the floor where quanta inject. The vertical
+escape window is short: with `vel_z_init = 1.0` and `damping_mu =
+0.5`, quanta decelerate to ~0.36 of initial vz in 20 ticks and reach
+the cooler middle layers only intermittently. By construction the
+deterministic xy-hash spreads consecutive injections across the floor,
+preventing the spatial-coincidence-at-cooler-z that binding would need.
+
+Two bridges did form in 5000 ticks of training. Linear extrapolation
+to the plan's 1.8M-tick target predicts ≈ 720 bridges — still sparse,
+and not enough to drive synthesis above the firing threshold over a
+typical babble window. The qualitative outcome (silent babble) is not
+expected to change with longer runs at the locked geometry.
+
+### Is the gap in implementation, hypothesis, or specification?
+
+**Hypothesis**, with secondary contributions from **specification**.
+
+- *Implementation* is unaffected: the R-10 unit tests still pass
+  (6/6), the new driver's MFCC + bootstrap pipeline returns sane
+  numbers on every diagnostic (white-noise MFCC has roughly Gaussian
+  distribution; identical-input bootstrap mean/std ratio ≈ 0.7 — close
+  to 1 as expected under the null; trained-vs-noinput on partial runs
+  shows the mean tracking the std ratio, not orders of magnitude
+  above it). Conservation (T1) and the legacy regression suite are
+  intact: `pytest -m "not slow"` on `tests/flux/` is 80/80 PASS.
+- *Hypothesis* is the load-bearing failure: the encoder-free path's
+  spatial-spread-by-construction injection rule is **architecturally
+  incompatible** with the F1b binding rule's local-density-times-
+  frequency-coherence requirement. Without engineered spatial
+  concentration (which the cochlea provides via the resonator-bank
+  routing → one of 64 floor discs per resonator), the substrate
+  cannot achieve the spatial-coincidence density binding needs at
+  the cool-enough z-band. The R-8 cochlea baseline also NULLed but
+  for the opposite reason (sparse per-resonator quanta with
+  by-construction-low temporal coherence). The two NULLs map a real
+  architectural impedance mismatch between the F2 input adapters and
+  the F1b binding rule.
+- *Specification* contributes a smaller piece: Gate 2's "≈ white
+  noise" wording does not anticipate a totally silent control. A
+  cleaner gate would compare control babble against silence (e.g.,
+  a same-duration zero array) — that comparison would PASS in this
+  run and correctly assert the control is uncorrupted. But the
+  pre-registered text says "white noise", not "silence", and per
+  charter the wording is frozen for the duration of the autopilot.
+
+### Cross-comparison to R-8 cochlea baseline
+
+```
+                                       trained KL ± σ            verdict
+R-8  cochlea-baseline    (n_ticks=60k, grid 30×30×60)   0 bridges, no MFCC   NULL
+R-11 encoder-free        (n_ticks= 5k, grid 80×40×10)   2 bridges,           NULL
+                                                        KL_mean=1.0e-6
+                                                        KL_std =1.4e-6
+```
+
+The R-8 result was 0 bridges in 60 000 ticks at a denser grid. The
+R-11 result is 2 bridges in 5 000 ticks at a sparser grid. Crude
+per-tick rate: R-8 ≈ 0/60000 = 0.0 bridges/tick; R-11 ≈ 2/5000 = 4e-4
+bridges/tick. Encoder-free *does* produce non-zero bridge formation
+where the cochlea baseline produced none — but the rate is far below
+what synthesis needs to drive non-silent babble. **The measured gap
+is qualitative (non-zero vs zero), not quantitative-significant on
+the pre-registered metric.** Both paths NULL; encoder-free is
+marginally less broken than the cochlea path on the *binding-rate*
+sub-question but neither produces a synthesizable readout.
+
+The full cross-comparison KL table the plan asked for is, in practice,
+trivial: both KLs are bootstrap-noise-floor (≤ 2e-6), well within
+each other's standard deviation. The plan-specified "gap" between R-8
+and R-11 is not measurable on this acceptance metric because neither
+side produces a non-degenerate babble distribution.
+
+### What's worth trying next (decisions for the post-vacation reviewer)
+
+- **Architectural**: relax the deterministic-per-sample-index xy hash
+  so that consecutive samples in a short window can land in the same
+  voxel. A locality-preserving hash (e.g., 1-D index → space-filling
+  curve into a small xy patch, then move-the-patch across the floor
+  over longer time scales) would concentrate quanta enough for
+  binding without sneaking frequency information back into the input.
+  This is a **specification amendment**, not parameter tuning — it
+  changes the encoder-free injection rule. New R-numbered item.
+- **Architectural**: lower `T_hot_floor` or move binding to require
+  `T_local < 4.0` instead of `2.0` at the floor band. Either change
+  permits binding to fire closer to the injection layer. Crosses the
+  F1c boundary and would require T2 Bénard re-verification.
+- **Falsifier swap**: read the substrate's emergent state from quanta
+  density / temperature field directly instead of through the
+  bridge-firing → synthesis path. The current pipeline depends on
+  bridges, and with sparse bridges the readout is silent regardless
+  of substrate state. A density-field-based MFCC-analogue would let
+  R-11's gate measure whatever structure DID emerge (the 2 trained
+  bridges and ~500 peak alive quanta both differ from the no-input
+  control's zeros).
+- **Specification fix for Gate 2**: replace "indistinguishable from
+  white-noise MFCC" with "indistinguishable from same-length
+  silence-MFCC" so a pristine no-input control passes the sanity
+  check. Requires a new R/G-numbered amendment.
+- **Drop the encoder-free hypothesis entirely** if both architectural
+  paths above also NULL. R-8 NULL + R-11 NULL together is reasonable
+  pre-registered evidence that the F1b binding rule, *as locked*, is
+  not a sufficient substrate-side learner for any audio input adapter
+  yet tried (cochlea or raw). The F1b plasticity rule itself becomes
+  the candidate for re-design.
+
+### Tests passing / failing
+
+```
+tests/flux/test_encoder_free_training_run.py
+    ::test_encoder_free_substrate_distinguishable_from_no_input_control
+                                                          FAIL  (NULL)
+tests/flux/test_encoder_free_negative_control.py
+    ::test_no_input_control_produces_no_substrate_specific_signal
+                                                          FAIL  (NULL)
+tests/flux/test_audio_raw_injection.py          6/6        PASS
+tests/flux/test_cochlea.py                      8/8        PASS
+tests/flux/test_synthesis.py                    4/4        PASS
+tests/flux/test_conservation.py                 3/3        PASS  (T1)
+tests/flux/test_thermal.py                      6/6        PASS
+tests/flux/test_crystallization.py              1/1        PASS  (T3)
+tests/flux/test_decay.py                        1/1        PASS  (T4)
+```
+
+Broader `pytest -m "not slow"` on `tests/flux/`: 80/80 PASS — no
+regression across the F0/F1a/F1b/F1c/F2/R-10 stack. R-11's two new
+acceptance tests are the only failures, and they ARE the verdict.
+
+### Files touched
+
+- `agent/flux/encoder_free_training.py` — new module (~430 lines incl.
+  docstrings, MFCC pipeline, bootstrap-KL, driver)
+- `agent/flux/__init__.py` — re-export `EncoderFreeTrainingConfig`,
+  `EncoderFreeTrainingResult`, `bootstrap_kl`, `bootstrap_kl_stats`,
+  `compute_mfcc_per_frame`, `mfcc_histogram_from_per_frame`,
+  `mfcc_of_white_noise`, `run_encoder_free_training`
+- `tests/flux/test_encoder_free_training_run.py` — Gate 1 acceptance
+- `tests/flux/test_encoder_free_negative_control.py` — Gate 2 sanity
+- `tests/flux/conftest.py` — new file; session-scoped fixtures so the
+  no-input control runs once per pytest invocation across both gates
+- `docs/flux/phase-log.md` — this entry
+
+### Reproducing
+
+```
+# R-11 acceptance gates with default 5000 ticks (~3 min wallclock)
+.venv/bin/python -m pytest \
+  tests/flux/test_encoder_free_training_run.py \
+  tests/flux/test_encoder_free_negative_control.py \
+  -m slow --tb=short
+
+# R-11 acceptance gates with the plan's tick-cap upper bound (~13 h —
+# DO NOT run in postflight; this is the post-vacation expansion path):
+EQMOD_R11_N_TICKS=1800000 .venv/bin/python -m pytest \
+  tests/flux/test_encoder_free_training_run.py \
+  tests/flux/test_encoder_free_negative_control.py \
+  -m slow --tb=short
+
+# Regression baseline (~40 s on Apple M-series)
+.venv/bin/python -m pytest -m "not slow"
+```
+
+Verdict: **NULL** on both pre-registered acceptance gates; mechanism
+attributed primarily to a hypothesis-level architectural mismatch
+between the encoder-free deterministic-spread injection rule and the
+F1b binding rule's local-spatial-density requirement, with a secondary
+specification-level fragility on Gate 2's "≈ white noise" wording.
