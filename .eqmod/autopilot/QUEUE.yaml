@@ -239,7 +239,7 @@ items:
       - "tests/flux/test_crystallization.py PASSES (T3 still holds)"
       - "tests/flux/test_decay.py PASSES (T4 still holds)"
     time_budget_hours: 24
-    status: null
+    status: None
     attempts: 1
     last_session: "2026-05-17T02:58:29"
     blockers: ["R-4 must reach status=passed first"]
@@ -288,7 +288,7 @@ items:
       - "docs/flux/phase-log.md has a training-run-close entry with measured numbers (substrate metric, control metric, margin, plan threshold) committed"
       - "LOGBOOK.md has the verdict + interpretation paragraph appended"
     time_budget_hours: 24
-    status: null
+    status: None
     attempts: 1
     last_session: "2026-05-17T15:20:06.537245"
     blockers: ["R-7 must reach status=passed first"]
@@ -318,8 +318,9 @@ items:
       - "tests/flux/test_cochlea.py PASSES (F2 baseline cochlea must NOT be modified — separate code path)"
       - "tests/flux/test_synthesis.py PASSES (F2 baseline synthesis unchanged)"
     time_budget_hours: 8
-    status: queued
-    attempts: 0
+    status: passed
+    attempts: 1
+    last_session: "2026-05-17T16:43:48.920099"
     blockers: ["R-9 must reach status=passed first"]
     created: 2026-05-16
 
