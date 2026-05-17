@@ -1,0 +1,102 @@
+language: en
+sample_rate_hz: 16000
+channels: 1
+stages:
+  stage1:
+    source_class: librivox_single_narrator_public_domain
+    duration_seconds_min: 3600
+    licence: public domain (LibriVox dedication, CC0-equivalent)
+    narrator: Annie Coleman Rothenberg (LibriVox 2005 solo)
+    work: "Pride and Prejudice \u2014 Jane Austen"
+    primary_urls:
+    - https://archive.org/download/pride_and_prejudice_librivox/prideandprejudice_01-03_austen_64kb.mp3
+    - https://archive.org/download/pride_and_prejudice_librivox/prideandprejudice_04-05_austen_64kb.mp3
+    - https://archive.org/download/pride_and_prejudice_librivox/prideandprejudice_06_austen_64kb.mp3
+    - https://archive.org/download/pride_and_prejudice_librivox/prideandprejudice_07_austen_64kb.mp3
+    - https://archive.org/download/pride_and_prejudice_librivox/prideandprejudice_08_austen_64kb.mp3
+    - https://archive.org/download/pride_and_prejudice_librivox/prideandprejudice_09_austen_64kb.mp3
+    fallback_urls: []
+    files:
+    - path: /Users/mkupermann/.eqmod/training/EN/stage1/prideandprejudice_01-03_austen_64kb.wav
+      source_url: https://archive.org/download/pride_and_prejudice_librivox/prideandprejudice_01-03_austen_64kb.mp3
+      duration_seconds: 1132.8865625
+      sha256: 5baa63b6dabb028e00589b2f79c7dcc68c2177f85a26a8bb33350ba8735258e0
+    - path: /Users/mkupermann/.eqmod/training/EN/stage1/prideandprejudice_04-05_austen_64kb.wav
+      source_url: https://archive.org/download/pride_and_prejudice_librivox/prideandprejudice_04-05_austen_64kb.mp3
+      duration_seconds: 865.3665625
+      sha256: a4741713fb2c1042640c388659f7bbd74a8dd9238ac4eef86f2e143d2cec3ae2
+    - path: /Users/mkupermann/.eqmod/training/EN/stage1/prideandprejudice_06_austen_64kb.wav
+      source_url: https://archive.org/download/pride_and_prejudice_librivox/prideandprejudice_06_austen_64kb.mp3
+      duration_seconds: 777.087875
+      sha256: 5f4bcdeea5b93a1812de3e1f74445606daf9408e92d36a25260e2b1e01deb922
+    - path: /Users/mkupermann/.eqmod/training/EN/stage1/prideandprejudice_07_austen_64kb.wav
+      source_url: https://archive.org/download/pride_and_prejudice_librivox/prideandprejudice_07_austen_64kb.mp3
+      duration_seconds: 638.10125
+      sha256: dd21efcc8a15319c18812ee20bd8514ef30dda1ed2a5c8f0688ebacf0fc1fa2f
+    - path: /Users/mkupermann/.eqmod/training/EN/stage1/prideandprejudice_08_austen_64kb.wav
+      source_url: https://archive.org/download/pride_and_prejudice_librivox/prideandprejudice_08_austen_64kb.mp3
+      duration_seconds: 819.469375
+      sha256: ec3296cee5476c037c2f45173e81c6ec21b6548843c759645f2f4bcfa3851549
+    - path: /Users/mkupermann/.eqmod/training/EN/stage1/prideandprejudice_09_austen_64kb.wav
+      source_url: https://archive.org/download/pride_and_prejudice_librivox/prideandprejudice_09_austen_64kb.mp3
+      duration_seconds: 701.108625
+      sha256: 343a0b2b420287187e6d0ff2ffcc12e2ca9354dc7c047877ef518191180931ab
+  stage2:
+    source_class: librivox_single_narrator_non_fiction_fallback
+    deviation_note: "R-6 plan calls for a single CC-YouTuber here; fallback to LibriVox\
+      \ by a distinct narrator applied \u2014 see file header."
+    duration_seconds_min: 7200
+    licence: public domain (LibriVox dedication, CC0-equivalent)
+    narrator: Gord Mackenzie (LibriVox 2007 solo)
+    work: "Walden \u2014 Henry David Thoreau"
+    primary_urls:
+    - https://archive.org/download/walden_librivox/walden_c01_p01_64kb.mp3
+    - https://archive.org/download/walden_librivox/walden_c01_p02_64kb.mp3
+    - https://archive.org/download/walden_librivox/walden_c01_p03_64kb.mp3
+    - https://archive.org/download/walden_librivox/walden_c01_p04_64kb.mp3
+    fallback_urls: []
+    files:
+    - path: /Users/mkupermann/.eqmod/training/EN/stage2/walden_c01_p01_64kb.wav
+      source_url: https://archive.org/download/walden_librivox/walden_c01_p01_64kb.mp3
+      duration_seconds: 1816.2674375
+      sha256: 3899336c50ce2451f7cebbbf1eb47c9e8065cd7fcabf596968ef095fa76de1b7
+    - path: /Users/mkupermann/.eqmod/training/EN/stage2/walden_c01_p02_64kb.wav
+      source_url: https://archive.org/download/walden_librivox/walden_c01_p02_64kb.mp3
+      duration_seconds: 2315.7025
+      sha256: ccd72426515daac6becbec89094bdc8cbdce7016446e3a623ff7e4ece0adf7d4
+    - path: /Users/mkupermann/.eqmod/training/EN/stage2/walden_c01_p03_64kb.wav
+      source_url: https://archive.org/download/walden_librivox/walden_c01_p03_64kb.mp3
+      duration_seconds: 3538.651125
+      sha256: b9758a58221ceff26664e8416e5fe98e37a7939cb3166eaf49b29ed4e9058e76
+    - path: /Users/mkupermann/.eqmod/training/EN/stage2/walden_c01_p04_64kb.wav
+      source_url: https://archive.org/download/walden_librivox/walden_c01_p04_64kb.mp3
+      duration_seconds: 2785.776
+      sha256: f3b23e6fe55396df4dfa856a484575e64f34d9f364106459cbd71d2d4347961f
+  stage3:
+    source_class: deferred_multi_speaker_out_of_vacation_scope
+    duration_seconds_min: 0
+    licence: "n/a \u2014 deferred"
+    primary_urls: []
+    fallback_urls: []
+    files: []
+  stage4_substitute:
+    source_class: mit_ocw_single_lecture
+    duration_seconds_min: 1800
+    licence: CC-BY-NC-SA 4.0 (MIT OpenCourseWare)
+    speaker: Gilbert Strang
+    work: "MIT 18.06 Linear Algebra, Spring 2005 \u2014 Lecture 01: The Geometry of\
+      \ Linear Equations"
+    distinct_from_stages:
+    - stage1
+    - stage2
+    acoustic_class: didactic / classroom-recorded / instructional prosody / technical
+      vocabulary
+    note: Audio extracted via ffmpeg from MP4 video (no audio-only OCW mirror).
+    primary_urls:
+    - https://archive.org/download/MIT18.06S05_MP4/01.mp4
+    fallback_urls: []
+    files:
+    - path: /Users/mkupermann/.eqmod/training/EN/stage4_substitute/01.wav
+      source_url: https://archive.org/download/MIT18.06S05_MP4/01.mp4
+      duration_seconds: 2388.8413125
+      sha256: 969744c010af5322fc0690a11aec841a81fbce8a9b07ebc3b3f793c889c21799
