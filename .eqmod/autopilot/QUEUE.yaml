@@ -239,7 +239,7 @@ items:
       - "tests/flux/test_crystallization.py PASSES (T3 still holds)"
       - "tests/flux/test_decay.py PASSES (T4 still holds)"
     time_budget_hours: 24
-    status: null
+    status: None
     attempts: 1
     last_session: "2026-05-17T02:58:29"
     blockers: ["R-4 must reach status=passed first"]
@@ -288,7 +288,7 @@ items:
       - "docs/flux/phase-log.md has a training-run-close entry with measured numbers (substrate metric, control metric, margin, plan threshold) committed"
       - "LOGBOOK.md has the verdict + interpretation paragraph appended"
     time_budget_hours: 24
-    status: null
+    status: None
     attempts: 1
     last_session: "2026-05-17T15:20:06.537245"
     blockers: ["R-7 must reach status=passed first"]
@@ -333,8 +333,9 @@ items:
       - "docs/flux/phase-log.md has R-11 entry with both runs bootstrap means + stds + verdict comparison"
       - "LOGBOOK.md has cross-comparison observation: tabulate KL divergences for R-8 cochlea-baseline vs R-11 encoder-free; measure the gap and report it (PASS verdict does NOT require beating R-8 — only measuring the gap)"
     time_budget_hours: 24
-    status: queued
-    attempts: 0
+    status: null
+    attempts: 1
+    last_session: "2026-05-17T17:54:07.241520"
     blockers: ["R-10 must reach status=passed first; also R-8 baseline ideally completed for comparison data"]
     created: 2026-05-16
 
