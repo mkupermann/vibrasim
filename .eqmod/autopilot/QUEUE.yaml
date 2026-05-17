@@ -333,8 +333,9 @@ items:
       - "docs/flux/phase-log.md has R-11 entry with both runs bootstrap means + stds + verdict comparison"
       - "LOGBOOK.md has cross-comparison observation: tabulate KL divergences for R-8 cochlea-baseline vs R-11 encoder-free; measure the gap and report it (PASS verdict does NOT require beating R-8 — only measuring the gap)"
     time_budget_hours: 24
-    status: queued
-    attempts: 0
+    status: null
+    attempts: 1
+    last_session: "2026-05-17T17:54:07.241520"
     blockers: ["R-10 must reach status=passed first; also R-8 baseline ideally completed for comparison data"]
     created: 2026-05-16
 
