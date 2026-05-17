@@ -239,8 +239,9 @@ items:
       - "tests/flux/test_crystallization.py PASSES (T3 still holds)"
       - "tests/flux/test_decay.py PASSES (T4 still holds)"
     time_budget_hours: 24
-    status: queued
-    attempts: 0
+    status: null
+    attempts: 1
+    last_session: "2026-05-17T09:25:37.661958"
     blockers: ["R-4 must reach status=passed first"]
     created: 2026-05-13
 

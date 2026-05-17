@@ -58,6 +58,31 @@ class EnergyAuditor:
         """Advance the tick counter by one."""
         self.tick_count += 1
 
+    def residual(self) -> float:
+        """Absolute conservation residual |lhs - rhs| at current state."""
+        E_in_q = self.quanta.total_energy()
+        E_in_n = self.nodes.total_energy() if self.nodes is not None \
+                  else 0.0
+        lhs = self.E_initial + self.E_injected_total
+        rhs = (E_in_q + E_in_n + self.E_exported_total
+               + self.E_binding_heat_total + self.E_decay_heat_total)
+        return abs(lhs - rhs)
+
+    def is_balanced(self, tol: float | None = None) -> bool:
+        """True iff |residual| <= effective_tol * max(|lhs|, 1.0).
+
+        Uses self.tol when no override is passed.
+        """
+        E_in_q = self.quanta.total_energy()
+        E_in_n = self.nodes.total_energy() if self.nodes is not None \
+                  else 0.0
+        lhs = self.E_initial + self.E_injected_total
+        rhs = (E_in_q + E_in_n + self.E_exported_total
+               + self.E_binding_heat_total + self.E_decay_heat_total)
+        scale = max(abs(lhs), 1.0)
+        eff_tol = self.tol if tol is None else float(tol)
+        return abs(lhs - rhs) <= eff_tol * scale
+
     def check(self) -> None:
         """Assert conservation. Raises ConservationViolation on
         imbalance."""

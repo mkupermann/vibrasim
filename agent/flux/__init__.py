@@ -32,6 +32,14 @@ from agent.flux.audio_out import (
     WavWriter,
     write_wav_mono_16k,
 )
+from agent.flux.learning_run import (
+    LearningRunConfig,
+    LearningRunResult,
+    make_control_waveform,
+    make_training_waveform,
+    run_learning_session,
+)
+from agent.flux.learning_metric import frequency_localisation_index
 
 __all__ = [
     # cochlea
@@ -54,4 +62,11 @@ __all__ = [
     "read_wav_mono_16k",
     "WavWriter",
     "write_wav_mono_16k",
+    # learning (F3)
+    "LearningRunConfig",
+    "LearningRunResult",
+    "make_control_waveform",
+    "make_training_waveform",
+    "run_learning_session",
+    "frequency_localisation_index",
 ]
