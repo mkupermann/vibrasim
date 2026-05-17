@@ -165,10 +165,9 @@ def test_run_learning_session_constructs_without_raising():
     assert result.quanta is not None
     assert result.nodes is not None
     assert result.bridges is not None
-    # Audit must balance after the short run.
-    assert result.audit.is_balanced(tol=cfg.audit_tol), (
-        f"smoke run audit unbalanced: residual={result.audit.residual()}"
-    )
+    # Audit must balance after the short run. EnergyAuditor.check() raises
+    # ConservationViolation if not balanced; silent return = balanced.
+    result.audit.check()
 
 
 # -------------------- F3 trained-run acceptance --------------------
