@@ -656,3 +656,11 @@ branch which sidesteps both bottlenecks.
 
 Approximately 1700+ insertions; see `git diff main..HEAD --stat` on
 `autopilot/R-8` for the exact count.
+
+
+## 2026-05-17 — autopilot session: R-8
+
+- **Verdict**: NULL
+- **Attempts**: 1/3
+- **Diff**: 12 files changed, 2300 insertions(+)
+- **Rationale**: pass-targets did not pass
