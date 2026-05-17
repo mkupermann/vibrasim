@@ -239,7 +239,7 @@ items:
       - "tests/flux/test_crystallization.py PASSES (T3 still holds)"
       - "tests/flux/test_decay.py PASSES (T4 still holds)"
     time_budget_hours: 24
-    status: null
+    status: None
     attempts: 1
     last_session: "2026-05-17T02:58:29"
     blockers: ["R-4 must reach status=passed first"]
@@ -260,8 +260,9 @@ items:
       - "Plan body must specify the Stage 4 substitute: >= 30 min single-speaker English recording from a public-domain or CC-licensed source, distinct speaker from Stage 1 and Stage 2 narrators (user delegated substitution 2026-05-13 23:38 — user on vacation, cannot record own voice). Plan must justify the choice with one paragraph on the acoustic or distributional difference between the Stage 4 substitute and Stages 1-2 (otherwise the substrate is just hearing 3 audiobook narrators with no real variation)" 
       - "Plan body must reference the F3 learning rule produced by R-5 by name and explain how the corpus exercises it"
     time_budget_hours: 4
-    status: queued
-    attempts: 0
+    status: passed
+    attempts: 1
+    last_session: "2026-05-17T12:24:37.164875"
     blockers: ["R-5 must reach status=passed first"]
     created: 2026-05-13
 
