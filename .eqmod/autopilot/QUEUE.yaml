@@ -338,4 +338,21 @@ items:
     last_session: "2026-05-17T17:54:07.241520"
     blockers: ["R-10 must reach status=passed first; also R-8 baseline ideally completed for comparison data"]
     created: 2026-05-16
+  - id: R-12
+    title: spec amendment §5.8 — activation field overlay implementation
+    brief: docs/superpowers/specs/2026-05-17-flux-spec-amendment-activation-field.md
+    preregistered_acceptance:
+      - "tests/flux/test_activation_field.py::test_field_decays_exponentially PASSES (NEW: 0.69 s half-life within 1% tolerance)"
+      - "tests/flux/test_activation_field.py::test_field_responds_to_firings PASSES (NEW: steady-state magnitude tracks N*beta/alpha)"
+      - "tests/flux/test_activation_field.py::test_coincidence_zero_when_both_endpoints_silent PASSES (NEW: A=0 → coincidence=0)"
+      - "tests/flux/test_activation_field.py::test_coincidence_increases_with_paired_activity PASSES (NEW: monotone in paired A)"
+      - "tests/flux/test_conservation.py PASSES (T1 holds — field is bookkeeping, no energy reservoir)"
+      - "tests/flux/test_crystallization_robustness.py PASSES (T3 9/10 from R-1d-T3-bis stays robust)"
+      - "tests/flux/test_decay.py PASSES (T4 unaffected)"
+      - "tests/flux/test_learning.py PASSES (R-5 fast tests stay green; slow excluded)"
+    time_budget_hours: 4
+    status: queued
+    attempts: 0
+    blockers: ["Spec amendment §5.8 by Claude under user authorization 2026-05-17 23:00 — adds continuous activation field A(x,y,z,t) as plasticity-signal smoother. Discrete substrate primary; field is bookkeeping."]
+    created: 2026-05-17
 
