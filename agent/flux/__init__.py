@@ -37,6 +37,16 @@ from agent.flux.audio_raw import (
     inject_raw_audio_sample,
     position_hash,
 )
+from agent.flux.encoder_free_training import (
+    EncoderFreeTrainingConfig,
+    EncoderFreeTrainingResult,
+    bootstrap_kl,
+    bootstrap_kl_stats,
+    compute_mfcc_per_frame,
+    mfcc_histogram_from_per_frame,
+    mfcc_of_white_noise,
+    run_encoder_free_training,
+)
 
 __all__ = [
     # cochlea
@@ -63,4 +73,13 @@ __all__ = [
     "inject_raw_audio_chunk",
     "inject_raw_audio_sample",
     "position_hash",
+    # encoder-free training + readout (R-11)
+    "EncoderFreeTrainingConfig",
+    "EncoderFreeTrainingResult",
+    "bootstrap_kl",
+    "bootstrap_kl_stats",
+    "compute_mfcc_per_frame",
+    "mfcc_histogram_from_per_frame",
+    "mfcc_of_white_noise",
+    "run_encoder_free_training",
 ]
