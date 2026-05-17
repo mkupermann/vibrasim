@@ -239,7 +239,7 @@ items:
       - "tests/flux/test_crystallization.py PASSES (T3 still holds)"
       - "tests/flux/test_decay.py PASSES (T4 still holds)"
     time_budget_hours: 24
-    status: null
+    status: None
     attempts: 1
     last_session: "2026-05-17T02:58:29"
     blockers: ["R-4 must reach status=passed first"]
@@ -288,7 +288,7 @@ items:
       - "docs/flux/phase-log.md has a training-run-close entry with measured numbers (substrate metric, control metric, margin, plan threshold) committed"
       - "LOGBOOK.md has the verdict + interpretation paragraph appended"
     time_budget_hours: 24
-    status: null
+    status: None
     attempts: 1
     last_session: "2026-05-17T15:20:06.537245"
     blockers: ["R-7 must reach status=passed first"]
@@ -301,8 +301,9 @@ items:
       - "Plan body explicitly commits to: SR=16000, freq=constant=log(SR/2), 1 quantum per sample, energy=abs(sample) OR sample² (one choice, locked)"
       - "Plan declares pytest acceptance paths: tests/flux/test_audio_raw_injection.py for R-10; tests/flux/test_encoder_free_training_run.py + tests/flux/test_encoder_free_negative_control.py for R-11"
     time_budget_hours: 4
-    status: queued
-    attempts: 0
+    status: passed
+    attempts: 1
+    last_session: "2026-05-17T16:02:22.492248"
     blockers: ["Novel-path: only meaningful if R-5 (F3 learning rule) actually works on the cochlea-baseline first. Sequenced after R-8 for that reason."]
     created: 2026-05-16
 
