@@ -288,8 +288,9 @@ items:
       - "docs/flux/phase-log.md has a training-run-close entry with measured numbers (substrate metric, control metric, margin, plan threshold) committed"
       - "LOGBOOK.md has the verdict + interpretation paragraph appended"
     time_budget_hours: 24
-    status: queued
-    attempts: 0
+    status: null
+    attempts: 1
+    last_session: "2026-05-17T15:20:06.537245"
     blockers: ["R-7 must reach status=passed first"]
     created: 2026-05-13
   - id: R-9
