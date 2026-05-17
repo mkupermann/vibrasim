@@ -32,6 +32,18 @@ from agent.flux.audio_out import (
     WavWriter,
     write_wav_mono_16k,
 )
+from agent.flux.corpus_spectrum import compute_corpus_log_power_spectrum
+from agent.flux.training_metric import corpus_alignment_index
+from agent.flux.training_run import (
+    DEFAULT_MANIFEST_PATH,
+    DEFAULT_STAGE_ORDER,
+    TrainingRunConfig,
+    TrainingRunResult,
+    load_corpus_waveform_from_manifest,
+    make_control_waveform,
+    make_corpus_waveform,
+    run_training_session,
+)
 
 __all__ = [
     # cochlea
@@ -54,4 +66,15 @@ __all__ = [
     "read_wav_mono_16k",
     "WavWriter",
     "write_wav_mono_16k",
+    # training (R-8)
+    "DEFAULT_MANIFEST_PATH",
+    "DEFAULT_STAGE_ORDER",
+    "TrainingRunConfig",
+    "TrainingRunResult",
+    "compute_corpus_log_power_spectrum",
+    "corpus_alignment_index",
+    "load_corpus_waveform_from_manifest",
+    "make_control_waveform",
+    "make_corpus_waveform",
+    "run_training_session",
 ]
