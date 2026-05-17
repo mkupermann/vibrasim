@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+EQMOD autopilot supervisor launchd job.
+
+Runs every 30 minutes. If wrapper not running and queue has queued items,
+fires a fresh wrapper. If wrapper stuck (lock age > 5h), kills the tree
+and refires. Ensures the queue keeps moving forward without human
+intervention.
+
+Install:
+    cp .eqmod/autopilot/com.eqmod.supervisor.plist ~/Library/LaunchAgents/
+    launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.eqmod.supervisor.plist
+-->
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.eqmod.supervisor</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/bash</string>
+        <string>/Users/mkupermann/.eqmod/autopilot/run_supervisor.sh</string>
+    </array>
+
+    <key>StartInterval</key>
+    <integer>1800</integer>
+
+    <key>RunAtLoad</key>
+    <true/>
+
+    <key>KeepAlive</key>
+    <false/>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/Users/mkupermann/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+        <key>HOME</key>
+        <string>/Users/mkupermann</string>
+    </dict>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/mkupermann/GitHub/EQMOD</string>
+
+    <key>StandardOutPath</key>
+    <string>/Users/mkupermann/.eqmod/autopilot/supervisor.out</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/mkupermann/.eqmod/autopilot/supervisor.err</string>
+</dict>
+</plist>
