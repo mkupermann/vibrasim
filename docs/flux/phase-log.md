@@ -796,3 +796,105 @@ uv run --extra dev python tools/audit_T3_seeds.py --qpt 10 \
   --alpha 0 --beta 200 --Tcrit 0.025 --t_dc 0.035 \
   --ceil_qpt 20 --ceil_vz 0.3
 ```
+
+## 2026-05-17 — R-10 encoder-free injector (autopilot)
+
+Encoder-free audio input adapter. Pre-registered acceptance from
+`.eqmod/autopilot/QUEUE.yaml::R-10`. Reference plan:
+`docs/superpowers/plans/2026-05-17-flux-encoder-free-audio-detailed.md`.
+
+### Scope (locked)
+
+- New module `agent/flux/audio_raw.py` — `inject_raw_audio_sample`,
+  `inject_raw_audio_chunk`, `position_hash`. One quantum per audio
+  sample, `energy = abs(sample)`, `freq = log(SR/2) = log(8000) ≈ 8.987`
+  constant across every quantum (no per-sample frequency jitter — the
+  substrate gets zero frequency information), `polarity = +1`,
+  `vel_z = +1.0` (cochlea-style upward drift), small Brownian
+  xy-velocity (`sigma = 0.1`).
+- Per-sample (x, y) is deterministic in `sample_index` via 64-bit
+  SplitMix64 hash (Vigna 2014, pure-Python, dependency-free). Same
+  sample-index, same seed → same xy. This is the mechanism that lets
+  R-11's matched no-input control inject at byte-identical floor
+  positions modulo the no-input branch injecting nothing.
+- F2 cochlea (`agent/flux/cochlea.py`) and synthesis
+  (`agent/flux/synthesis.py`) byte-unchanged — R-8 baseline path
+  preserved as required by the R-9 detailed plan.
+- No `world/flux/` changes — encoder-free is an input adapter only,
+  no new substrate physics.
+
+### Acceptance — 6/6 PASS
+
+| Test | Result |
+|---|---|
+| `tests/flux/test_audio_raw_injection.py::test_raw_injection_one_quantum_per_sample` | PASS (exactly 1600 quanta for 1600 samples; all freq = log(SR/2); energies ≡ `abs(waveform)` in injection order) |
+| `tests/flux/test_audio_raw_injection.py::test_raw_injection_silence_injects_zero_energy` | PASS (1600 quanta with `max(|energy|) < 1e-12`) |
+| `tests/flux/test_audio_raw_injection.py::test_raw_injection_amplitude_modulation_visible_in_substrate` | PASS (`r = 0.9925`, threshold ≥ 0.70 — AM envelope at 10 Hz fully visible in substrate hot-floor energy density over 1 s with `dt = 0.5`) |
+| `tests/flux/test_conservation.py` | PASS (3/3 — T1 unaffected by new injector module) |
+| `tests/flux/test_cochlea.py` | PASS (8/8 — F2 baseline byte-unchanged) |
+| `tests/flux/test_synthesis.py` | PASS (4/4 — F2 baseline byte-unchanged) |
+| `pytest -m "not slow"` | PASS (523 passed, 28 deselected, 0 failures; 679.1 s wallclock) |
+
+Two extra `position_hash` unit tests (determinism + floor-plane coverage)
+plus one `inject_raw_audio_sample` buffer-full sanity test landed alongside
+the three pre-registered cases; total file: 6 tests, all PASS.
+
+### Calibration notes
+
+- The AM acceptance gate (`r ≥ 0.70`) is structural, not tuneable; per
+  the R-9 detailed plan §"Open calibration choices" no sweeps were
+  authorised. The chosen `(dt = 0.5, vel_z = 1.0)` is the *first* point
+  evaluated — it gave `r = 0.9925`. Adjacent points checked for
+  robustness only (not for tuning): `dt = 0.1 → r = 0.90`,
+  `dt = 1.0 → r = 0.9955`; `r` is essentially flat across
+  `seed ∈ {0, 7, 42}` at `dt = 0.5` (0.9925, 0.9925, 0.9924). The
+  injection geometry produces the modulation; substrate dt only
+  controls the floor-band drain timescale.
+- Peak alive quanta during the 1 s AM run: ≈ 270 (steady state at
+  16 quanta/tick × ~17-tick floor residency at `dt = 0.5`). Buffer
+  `max_quanta = 500_000` is heavily over-sized for the unit tests;
+  R-11's 30-min training stage (~28.8 M injections) is what that
+  ceiling was sized for.
+- No `thermal_cfg`, `binding_cfg`, `decay_cfg`, `plasticity_cfg` passed
+  to `tick()` in the AM test — pure injection + free motion + cold-face
+  absorption. The R-11 training run will re-introduce binding +
+  plasticity; this R-10 test isolates the *injection* property the
+  encoder-free path is supposed to satisfy.
+
+### Files touched
+
+- `agent/flux/audio_raw.py` — new module (~135 lines incl. docstrings)
+- `agent/flux/__init__.py` — re-export `inject_raw_audio_sample`,
+  `inject_raw_audio_chunk`, `position_hash`
+- `tests/flux/test_audio_raw_injection.py` — new test file (~140 lines,
+  6 tests)
+- `docs/flux/phase-log.md` — this entry
+
+### Negative-control note
+
+R-10's acceptance is unit-level (injection-rule properties), not
+substrate-emergent-state, so the charter's matched-wallclock
+no-engram negative control does NOT apply at this layer. The internal
+falsification is structural: the silence test asserts zero energy
+(would fail under any nonlinear-floor mapping such as `(sample + ε)²`),
+and the one-quantum-per-sample test asserts an exact count (would
+fail under any rate-modulating scheme). The substrate-vs-no-input
+negative control is the R-11 contract (`tests/flux/test_encoder_free_negative_control.py`).
+
+### Reproducing
+
+```
+# R-10 acceptance gates (~7 s)
+.venv/bin/python -m pytest \
+  tests/flux/test_audio_raw_injection.py \
+  tests/flux/test_cochlea.py \
+  tests/flux/test_synthesis.py \
+  tests/flux/test_conservation.py \
+  -v --tb=short
+
+# Full regression (~11 min)
+.venv/bin/python -m pytest -m "not slow"
+```
+
+Verdict: **PASS** on all pre-registered acceptance criteria.
+
