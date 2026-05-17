@@ -1,0 +1,14 @@
+R-8 diagnostic: n_ticks=30000 (HALF of locked min 60000). RMS=0.25 per-stage corpus normalisation.
+loading corpus + computing reference spectrum ...
+  corpus: 17779s, RMS=0.2500, top-bin=29, wallclock=10.9s
+running train session (30000 ticks) ...
+  tick 2000/30000: q=0 n=0 b=0 elapsed=3.7s window=3.7s
+  tick 4000/30000: q=0 n=0 b=0 elapsed=12.5s window=8.8s
+  tick 6000/30000: q=0 n=0 b=0 elapsed=15.2s window=2.8s
+  tick 8000/30000: q=2 n=0 b=0 elapsed=34.1s window=18.9s
+  tick 10000/30000: q=0 n=0 b=0 elapsed=37.1s window=3.0s
+  tick 12000/30000: q=0 n=0 b=0 elapsed=147.2s window=110.1s
+  tick 14000/30000: q=5 n=0 b=0 elapsed=153.5s window=6.2s
+  tick 16000/30000: q=0 n=0 b=0 elapsed=154.7s window=1.2s
+  tick 18000/30000: q=0 n=0 b=0 elapsed=156.7s window=2.0s
+  tick 20000/30000: q=0 n=0 b=0 elapsed=158.6s window=2.0s
