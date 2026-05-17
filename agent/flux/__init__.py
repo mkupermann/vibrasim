@@ -32,6 +32,11 @@ from agent.flux.audio_out import (
     WavWriter,
     write_wav_mono_16k,
 )
+from agent.flux.audio_raw import (
+    inject_raw_audio_chunk,
+    inject_raw_audio_sample,
+    position_hash,
+)
 
 __all__ = [
     # cochlea
@@ -54,4 +59,8 @@ __all__ = [
     "read_wav_mono_16k",
     "WavWriter",
     "write_wav_mono_16k",
+    # encoder-free audio injection (R-10)
+    "inject_raw_audio_chunk",
+    "inject_raw_audio_sample",
+    "position_hash",
 ]
