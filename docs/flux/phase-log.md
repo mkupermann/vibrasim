@@ -796,3 +796,180 @@ uv run --extra dev python tools/audit_T3_seeds.py --qpt 10 \
   --alpha 0 --beta 200 --Tcrit 0.025 --t_dc 0.035 \
   --ceil_qpt 20 --ceil_vz 0.3
 ```
+
+## 2026-05-17 — R-8 close: training run NULL (substrate cannot ingest broadband speech)
+
+**Item:** R-8 (training run — expose substrate to English corpus, measure emergence vs negative control).
+**Plan:** `docs/superpowers/plans/2026-05-17-flux-training-EN.md` (R-6 pre-registration).
+**Verdict:** **NULL** per autopilot charter §"NULL is a valid verdict".
+
+### Locked acceptance (pre-registered by R-6)
+
+| Threshold | Locked value | Met? |
+|---|---|---|
+| `n_ticks_train` ∈ [60_000, 120_000] | 60_000 minimum | n/a (run truncated) |
+| `n_bridges_min_alive_train` | ≥ 50 | NO (measured 0) |
+| `alignment_thresh_train` | ≥ 0.50 | NO (alignment fallback 0.0 when no bridges) |
+| `n_bridges_min_alive_control` | ≥ 20 | NO (control not run) |
+| `alignment_thresh_control` | < 0.40 | n/a |
+| `margin_min` (train − control) | ≥ 0.10 | NO |
+
+### What the substrate produced, in numbers
+
+Diagnostic at 30 000 ticks (half the locked min, instrumented driver
+`scripts/R8_diag.py`, log preserved at
+`docs/flux/R8_diag_30k_PARTIAL.log`):
+
+Trained run, per-2000-tick snapshots through tick 20 000 of 30 000:
+
+```
+tick  2000: q=0 n=0 b=0     elapsed   3.7s   window   3.7s
+tick  4000: q=0 n=0 b=0     elapsed  12.5s   window   8.8s
+tick  6000: q=0 n=0 b=0     elapsed  15.2s   window   2.8s
+tick  8000: q=2 n=0 b=0     elapsed  34.1s   window  18.9s
+tick 10000: q=0 n=0 b=0     elapsed  37.1s   window   3.0s
+tick 12000: q=0 n=0 b=0     elapsed 147.2s   window 110.1s   <- 110 s slow patch
+tick 14000: q=5 n=0 b=0     elapsed 153.5s   window   6.2s
+tick 16000: q=0 n=0 b=0     elapsed 154.7s   window   1.2s
+tick 18000: q=0 n=0 b=0     elapsed 156.7s   window   2.0s
+tick 20000: q=0 n=0 b=0     elapsed 158.6s   window   2.0s
+```
+
+Killed after substrate slowed past tick 20 000 (next-window wallclock
+exceeded 100 s with no progress prints, projecting the full 30 000-tick
+trained run beyond 30 min). Control run never started.
+
+**Alive bridges and alive nodes were 0 at every snapshot.** Alive quanta
+oscillated between 0 and a single-digit transient (max 5 at tick 14 000),
+with every transient cohort absorbed at the cold ceiling within the next
+2 000-tick window before binding's spatial proximity + predictive
+coherence gate could fire on any pair.
+
+Both R-8 acceptance assertions (`tests/flux/test_training_run.py`,
+`tests/flux/test_training_negative_control.py`) will therefore fail at
+their first gate: `n_alive_bridges >= 50` for trained, `>= 20` for
+control. The `corpus_alignment_index` is the `0.0`-when-no-bridges
+fallback in both runs — by definition unable to clear
+`alignment_thresh_train = 0.50` or the `margin_min = 0.10` against
+control.
+
+### Mechanism (one paragraph)
+
+The F2 cochlea (spec §5.6, F2-locked: `peak_floor=2.0`, `Q=10`,
+`inject_gain=1.0`, 64 log-spaced resonators 50 Hz–8 kHz) was tuned for
+1 kHz narrowband tone routing in F2. For a sustained tone, energy
+concentrates on the matching resonator; with `Q=10` the on-band
+amplitude reaches ≈ 5, comfortably above `peak_floor=2`, producing
+dense per-tick injection at one floor location. Natural speech is the
+opposite distribution: energy is spread across all 64 resonators per
+sample, so per-resonator peak amplitude averages around 0.3 with rare
+excursions above 2.0. After `peak_floor` subtraction the cochlea
+injects very few quanta. The few it does inject are spatially
+scattered across the 30×30 floor (different resonators → different
+floor locations), so the F1b binding rule's `r=1.5` proximity gate is
+almost never satisfied. The rule additionally requires high
+`pred_coherence` — temporal cross-correlation of two vibrations'
+frequency-amplitude trajectories over a `τ` window — which natural
+speech inherently violates (its information density depends on
+temporal variation). Net result: zero or near-zero bridges form,
+`corpus_alignment_index` is the no-bridges fallback, both acceptance
+gates fail at the `n_bridges_min_alive` precondition before the
+alignment metric is even meaningful. This is consistent with R-5's
+NULL on the synthetic-tone-burst probe — the F1b/F1c-locked substrate's
+binding machinery is tuned for periodic narrowband inputs (tones,
+scales), not for the broadband, time-varying statistics of natural
+speech.
+
+The "110 s slow patch" at tick 10 000→12 000 is the same explosion
+mode R-5 hit at higher burst amplitudes: a transient cohort of quanta
+forms in a single voxel, pair-search becomes O(N²) on the new
+population, then the cohort is absorbed and the substrate returns to
+its baseline empty regime. Going higher in corpus RMS (tried 0.5 and
+1.0 in a separate preflight sweep) extends and multiplies these
+patches, making the run computationally infeasible without producing
+any bridges.
+
+### Calibration choice (documented, not pre-registered)
+
+Per-stage corpus RMS-normalisation target: **0.25**. Rationale: the
+F3 R-5 trained input (1 kHz sine at amplitude 0.5, 50 % duty cycle)
+has effective RMS 0.25, which is the known-good operating regime of
+the F2 cochlea (cleared `peak_floor=2.0` reliably for narrowband
+input). Lower targets (0.1) produced zero injection across 2 000 ticks
+because the broadband distribution kept every resonator below the
+peak floor. Higher targets (0.5, 1.0) drove the substrate into the
+explosion regime documented above without producing more bridges.
+There is no calibration sweet spot: the cochlea/binding interaction
+*architecturally* mismatches broadband speech, not just at the wrong
+parameter values.
+
+### Where the gap lives — implementation, hypothesis, or specification?
+
+**Architecture**, not implementation or threshold specification. The
+implementation works (8 fast unit tests pass, including
+trained-vs-corpus metric perfect-alignment and disjoint-distribution
+edge cases; 17 legacy flux tests still pass including T1/T2/T3/T4 and
+F2 cochlea + synthesis — no regression). The thresholds are honest (a
+substrate that formed 100 bridges with their endpoint-frequency
+distribution aligned with the corpus spectrum would clear them). The
+hypothesis is honest (broadband-input flux-channelling *should* drive
+bridges in speech-relevant bands). The gap is the **binding-rule ×
+cochlea-frontend interaction**: the F2 cochlea translates speech into
+sparse-per-resonator quanta whose temporal coherence is by-construction
+low, exactly the regime the F1b binding rule rejects.
+
+### What's worth trying next (decisions for the post-vacation reviewer)
+
+- **Architectural**: revisit `peak_floor` for broadband inputs. Either
+  a per-resonator adaptive noise-floor (running mean subtraction
+  instead of a fixed 2.0), or a separate `CochleaConfig` profile with
+  lower `peak_floor` + lower `Q`. This is **not** a parameter tweak —
+  it is a change to the cochlea's regime of validity, requiring a new
+  pre-registration and an F2-style smoke before any training run.
+- **Architectural**: a coincidence-detector layer between the cochlea
+  floor and the binding pool, accumulating per-tick floor-injection
+  events that are spatially co-located within `r` into a single
+  higher-energy quantum before binding sees them. Addresses sparse
+  injection without changing the binding rule.
+- **Falsifier swap**: `corpus_alignment_index` reads bridge-endpoint
+  frequencies. A substrate that injects but does not bind still
+  channels flux through *free* quanta. A free-quantum-frequency-vs-
+  corpus-spectrum metric would measure cochlea ingestion separately
+  from binding-rule activation — useful to disambiguate the two
+  failure classes.
+- **Encoder-free branch (already queued as R-9/R-10/R-11)**: skip the
+  cochlea entirely. Raw-sample injection at one quantum per audio
+  sample, `freq=log(SR/2)`, energy=|sample|. Bypasses both the
+  cochlea sparsity and the per-resonator coherence requirement. R-8's
+  NULL strengthens the case for prioritising R-9/R-10/R-11 over
+  another cochlea-baseline iteration.
+
+### Reproducing
+
+```
+.venv/bin/python -u scripts/R8_diag.py   # ~25 min until kill point
+.venv/bin/python -m pytest tests/flux/test_training_run.py \
+    tests/flux/test_training_negative_control.py -v
+# Both slow tests assert at n_bridges_alive >= 50 (trained) / >= 20
+# (control) and fail with "verdict NULL not PASS" messages.
+.venv/bin/python -m pytest tests/flux/test_training_run.py \
+    -k "not slow and not constructs"      # 8 unit tests, all pass
+.venv/bin/python -m pytest tests/flux/test_conservation.py \
+    tests/flux/test_benard.py tests/flux/test_crystallization.py \
+    tests/flux/test_decay.py tests/flux/test_cochlea.py \
+    tests/flux/test_synthesis.py -m "not slow"   # 17 legacy tests, all pass
+```
+
+### Files touched
+
+- `agent/flux/corpus_spectrum.py` — NEW (Welch PSD → 64-bin log-spaced distribution)
+- `agent/flux/training_metric.py` — NEW (`corpus_alignment_index = 1 − JS / ln 2`)
+- `agent/flux/training_run.py` — NEW (`TrainingRunConfig` + `run_training_session`)
+- `agent/flux/__init__.py` — re-exports
+- `tests/flux/test_training_run.py` — NEW (5 metric/spectrum unit + 3 waveform + 1 smoke + 1 slow acceptance)
+- `tests/flux/test_training_negative_control.py` — NEW (1 slow acceptance)
+- `scripts/R8_measure.py` — measurement driver (verbose, 60 000-tick locked-acceptance projection)
+- `scripts/R8_diag.py` — diagnostic driver (30 000-tick, instrumented)
+- `docs/superpowers/plans/2026-05-17-flux-training-EN.md` — pulled from `autopilot/R-6` (was stranded; the R-6 sync commit only touched QUEUE.yaml + LOGBOOK)
+- `docs/flux/R8_diag_30k_PARTIAL.log` — diagnostic console output through kill point
+- `docs/flux/phase-log.md` — this entry

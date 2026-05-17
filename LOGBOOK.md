@@ -588,3 +588,71 @@ Operational documentation in `docs/predictive-babble.md`.
 - **Attempts**: 1/3
 - **Diff**: 6 files changed, 924 insertions(+), 4 deletions(-)
 - **Rationale**: all pass-targets passed; all negative controls failed as required
+
+
+## 2026-05-17 — autopilot session: R-8
+
+- **Verdict**: NULL
+- **Attempts**: 1/3
+- **Rationale**: substrate cannot ingest broadband speech under F2-locked
+  cochlea + F1b binding. Trained diagnostic ran to tick 20 000 of 30 000
+  with alive bridges = 0 (single-digit alive-quanta transients absorbed
+  before binding fired). Control not run. Acceptance assertions fail at
+  `n_bridges_alive >= 50` / `>= 20` precondition; `corpus_alignment_index`
+  is the no-bridges fallback (0.0). See `docs/flux/phase-log.md` §"2026-05-17
+  — R-8 close" for the full postmortem (mechanism, calibration sweep
+  evidence, next-step recommendations).
+
+### Implementation
+
+Three new modules + two pytest files implementing the R-6 plan
+acceptance contract (`docs/superpowers/plans/2026-05-17-flux-training-EN.md`):
+
+- `agent/flux/corpus_spectrum.py` — Welch PSD on the corpus quantised
+  to the 64 cochlea log-bins (pure function).
+- `agent/flux/training_metric.py` — `corpus_alignment_index =
+  1 − JS(p_bridge || p_corpus) / ln 2` (pure function over substrate
+  state; returns 0.0 on no alive bridges).
+- `agent/flux/training_run.py` — `TrainingRunConfig` (carries all
+  R-6-locked thresholds), `make_corpus_waveform` (loads R-7 manifest,
+  per-stage RMS-normalises to 0.25, repeat-to-fill), `make_control_waveform`
+  (gaussian white, RMS-matched), `run_training_session`.
+- `tests/flux/test_training_run.py` — 8 fast unit tests (spectrum +
+  metric + waveform), 1 smoke (construct without raising), 1 slow
+  R-8 acceptance.
+- `tests/flux/test_training_negative_control.py` — 1 slow R-8
+  negative-control acceptance.
+
+8 fast unit tests pass. The 17-test legacy flux suite (T1 + T2 + T3 +
+T4 + cochlea + synthesis) still passes — R-8 adds zero regression. The
+two slow tests are expected to fail at their `n_bridges_alive`
+precondition with messages explicitly stating "verdict NULL not PASS".
+
+### Architectural finding (one paragraph)
+
+The F2 cochlea was tuned and validated for 1 kHz narrowband tone
+routing. Its `peak_floor=2.0` works for tones (concentrated energy on
+one resonator clears the floor easily with `Q=10` amplification) but
+suppresses broadband speech almost entirely (energy spread across 64
+resonators keeps per-resonator peaks averaging 0.3). The F1b binding
+rule additionally requires high temporal predictive coherence between
+paired vibrations — a property tones have by construction and speech
+violates by construction. Together this means natural speech produces
+sparse, scattered quanta that the binding rule rejects. R-5 saw the
+same failure on the synthetic tone-burst probe; R-8 confirms it on
+the real-corpus probe at larger scale. The gap is **architectural**
+(cochlea×binding mismatch), not threshold-calibration, and the fix is
+either an adaptive-noise-floor cochlea, a coincidence-detector layer
+before binding, or pivoting to the queued R-9/R-10/R-11 encoder-free
+branch which sidesteps both bottlenecks.
+
+### Files touched
+
+- 7 new files (3 agent modules + 2 test files + 2 scripts)
+- 1 file modified (`agent/flux/__init__.py` re-exports)
+- 2 docs files modified (`docs/flux/phase-log.md` + this `LOGBOOK.md`)
+- 1 doc file added (`docs/superpowers/plans/2026-05-17-flux-training-EN.md` — pulled from `autopilot/R-6` where the R-6 sync commit had left it stranded)
+- 1 diagnostic artifact (`docs/flux/R8_diag_30k_PARTIAL.log`)
+
+Approximately 1700+ insertions; see `git diff main..HEAD --stat` on
+`autopilot/R-8` for the exact count.
