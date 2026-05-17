@@ -273,8 +273,9 @@ items:
       - "tests/flux/test_training_corpus_valid.py PASSES (corpus YAML at corpus.training-EN.yaml exists, parses, all listed audio assets exist on disk, total Stage 1 duration >= 60 min, total Stage 2 duration >= 120 min, sample-rate normalised to 16 kHz mono)"
       - "tests/flux/test_training_corpus_manifest.py PASSES (manifest written at ~/.eqmod/training/EN/manifest.json with: per-stage durations, source URLs, sha256 of each file)"
     time_budget_hours: 4
-    status: queued
-    attempts: 0
+    status: passed
+    attempts: 1
+    last_session: "2026-05-17T13:08:56.999679"
     blockers: ["R-6 must reach status=passed first"]
     created: 2026-05-13
 
