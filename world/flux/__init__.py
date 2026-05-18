@@ -7,6 +7,12 @@ This module is under active development. Public API stabilises after F1.
 """
 from __future__ import annotations
 
+from world.flux.activation_field import (
+    ActivationField,
+    ActivationFieldConfig,
+    read_coincidence,
+    update_field,
+)
 from world.flux.audit import ConservationViolation, EnergyAuditor
 from world.flux.binding import (
     BindingConfig,
@@ -40,6 +46,8 @@ from world.flux.thermal import (
 )
 
 __all__ = [
+    "ActivationField",
+    "ActivationFieldConfig",
     "BindingConfig",
     "Bridges",
     "ConservationViolation",
@@ -65,5 +73,7 @@ __all__ = [
     "inject_hot_floor",
     "pred_coherence",
     "prune_bridges_and_nodes",
+    "read_coincidence",
     "tick",
+    "update_field",
 ]
