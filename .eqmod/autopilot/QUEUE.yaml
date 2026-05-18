@@ -351,8 +351,9 @@ items:
       - "tests/flux/test_decay.py PASSES (T4 unaffected)"
       - "tests/flux/test_learning.py PASSES (R-5 fast tests stay green; slow excluded)"
     time_budget_hours: 4
-    status: queued
-    attempts: 0
+    status: null
+    attempts: 1
+    last_session: "2026-05-18T04:44:56.880665"
     blockers: ["Spec amendment §5.8 by Claude under user authorization 2026-05-17 23:00 — adds continuous activation field A(x,y,z,t) as plasticity-signal smoother. Discrete substrate primary; field is bookkeeping."]
     created: 2026-05-17
 
