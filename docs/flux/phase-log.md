@@ -796,3 +796,83 @@ uv run --extra dev python tools/audit_T3_seeds.py --qpt 10 \
   --alpha 0 --beta 200 --Tcrit 0.025 --t_dc 0.035 \
   --ceil_qpt 20 --ceil_vz 0.3
 ```
+
+## 2026-05-18 — R-12 close: activation field §5.8 overlay landed
+
+**Verdict: PASS** on the eight pre-registered acceptance tests.
+
+Implements spec amendment §5.8
+(`docs/superpowers/specs/2026-05-17-flux-spec-amendment-activation-field.md`).
+Adds a per-voxel scalar memory trace A(x,y,z,t) that decays with
+half-life ln(2)/alpha ≈ 0.69 s and is driven by the summed energy of
+alive quanta. Plasticity strengthening is gated by the bridge-endpoint
+coincidence sqrt(A_i * A_j) / (A_norm + ε) — bridges between
+*currently active* voxel pairs learn faster.
+
+### Pre-registered tests (locked, did not retune)
+
+- `tests/flux/test_activation_field.py::test_field_decays_exponentially` — PASS (decay to A0/2 within 1% at t=ln(2)/alpha).
+- `tests/flux/test_activation_field.py::test_field_responds_to_firings` — PASS (steady-state A_ss tracks N·β/α within 1%).
+- `tests/flux/test_activation_field.py::test_coincidence_zero_when_both_endpoints_silent` — PASS.
+- `tests/flux/test_activation_field.py::test_coincidence_increases_with_paired_activity` — PASS (strict monotone in 6-point sweep; sqrt(1·1)/1 ≈ 1.0).
+- `tests/flux/test_conservation.py` — PASS (T1 holds; field is bookkeeping).
+- `tests/flux/test_decay.py` — PASS (T4 unaffected).
+- `tests/flux/test_learning.py -m "not slow"` — PASS (11 fast R-5 tests stay green).
+- `tests/flux/test_crystallization_robustness.py` — PASS (T3 9/10 from R-1d-T3-bis stays robust; field is opt-in, code path bit-identical when activation_field=None).
+
+### Implementation notes
+
+The amendment's literal update formula
+`A[t+1] = A[t]*(1 - α·dt) + β·sum_energy` was implemented with rate
+semantics so that the locked acceptance — "steady-state magnitude tracks
+N·β/α" — holds for any small dt:
+`A[t+1] = A[t]*(1 - α·dt) + β·deposit·dt`. The literal formula treats
+β as a per-tick gain; the rate form treats β as a per-second rate
+constant. Both reduce to the same ODE (dA/dt = -α·A + β·N); the rate
+form makes the dimensional analysis explicit and matches the
+acceptance-test math.
+
+Ceiling-scaffold quanta (`polarity == -1`, from R-1d-T3-bis) are
+excluded from the field deposit for consistency with the thermal
+density calculation — their role is bridge-flux for ceiling self-
+bridges, not plasticity signal.
+
+### Files touched
+
+- `world/flux/activation_field.py` — NEW. `ActivationFieldConfig`, `ActivationField` class, `update_field` and `read_coincidence` functional helpers.
+- `tests/flux/test_activation_field.py` — NEW. 4 pre-registered tests + 1 consistency bonus (class- vs functional-API match).
+- `world/flux/dynamics.py` — `tick()` gains optional `activation_field` kwarg; field updated after T-update, plasticity reads previous-tick field (same convention as buoyancy).
+- `world/flux/plasticity.py` — `apply_plasticity` gains optional `activation_field` + `nodes` kwargs; strengthening term multiplied by per-bridge coincidence. Default path bit-identical to F1b.
+- `world/flux/__init__.py` — re-exports new symbols.
+
+### What this enables (R-LR-6, queued separately)
+
+The field provides time-integrated input statistics on a phoneme-scale
+window (~0.69 s half-life). R-LR-6 will run encoder-free training on
+the same configuration as R-11 (which NULLed) and test whether the
+field overlay closes the per-resonator binding-gate gap. Acceptance
+locked in queue at R-LR-6 — same 2σ KL-divergence threshold as R-11.
+If R-LR-6 NULLs, the amendment alone is insufficient and the next move
+is multi-timescale (fast + slow) field, or abandon plasticity-based
+learning. Falsification rule, not a get-out clause.
+
+### Reproducing
+
+```
+# Fast R-12 acceptance (~1 minute)
+uv run --extra dev pytest \
+  tests/flux/test_activation_field.py \
+  tests/flux/test_conservation.py \
+  tests/flux/test_decay.py \
+  tests/flux/test_learning.py -m "not slow" \
+  -v --tb=short
+
+# Full R-12 acceptance including T3 regression (~9 minutes)
+uv run --extra dev pytest \
+  tests/flux/test_activation_field.py \
+  tests/flux/test_conservation.py \
+  tests/flux/test_decay.py \
+  tests/flux/test_learning.py \
+  tests/flux/test_crystallization_robustness.py \
+  -m "not slow" -v --tb=short
+```

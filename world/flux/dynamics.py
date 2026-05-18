@@ -70,6 +70,7 @@ def tick(quanta: Quanta, grid: Grid, dt: float,
          bridges=None,
          plasticity_cfg=None,
          thermal_cfg=None,
+         activation_field=None,
          rng: np.random.Generator | None = None,
          tick_index: int = 0):
     """Run one tick.
@@ -83,6 +84,11 @@ def tick(quanta: Quanta, grid: Grid, dt: float,
     are applied right after move (step 3 in the amended tick order),
     and the thermal boundary clamp is applied right after the T-update
     (final step). Pure-substrate convection — no coupling to binding.
+
+    R-12 spec §5.8: when `activation_field` is provided (an
+    `ActivationField` instance), it is updated after the T-update and
+    its coincidence read-out gates the plasticity strengthening term.
+    Opt-in — defaults preserve F1b semantics exactly.
     """
     # 1. Inject
     if injector is not None:
@@ -131,7 +137,12 @@ def tick(quanta: Quanta, grid: Grid, dt: float,
         )
 
     # 6-7. Structure-flux + plasticity + pruning (F1b: handles
-    # decay-without-flux for T4)
+    # decay-without-flux for T4). R-12 spec §5.8: if an
+    # `activation_field` is provided, its coincidence read-out gates
+    # the strengthening term; the field itself is updated after the
+    # T-update below so the plasticity rule sees the *previous* tick's
+    # field state (same convention as buoyancy reading T from the
+    # previous tick).
     if (nodes is not None and bridges is not None
             and plasticity_cfg is not None):
         from world.flux.plasticity import (
@@ -140,8 +151,12 @@ def tick(quanta: Quanta, grid: Grid, dt: float,
         )
         flux_counts = count_flux_through(bridges, nodes, quanta,
                                           plasticity_cfg)
-        apply_plasticity(bridges, flux_counts, plasticity_cfg,
-                          tick_index=tick_index)
+        apply_plasticity(
+            bridges, flux_counts, plasticity_cfg,
+            tick_index=tick_index,
+            activation_field=activation_field,
+            nodes=nodes,
+        )
         decay_heat += prune_bridges_and_nodes(bridges, nodes,
                                                plasticity_cfg)
 
@@ -155,6 +170,12 @@ def tick(quanta: Quanta, grid: Grid, dt: float,
     if thermal_cfg is not None:
         from world.flux.thermal import enforce_thermal_boundaries
         enforce_thermal_boundaries(grid, thermal_cfg)
+
+    # 10. R-12 spec §5.8 activation-field update. Lives after T because
+    # it's a per-voxel scalar memory analogous to T; bookkeeping only,
+    # no energy ledger impact (T1 unaffected).
+    if activation_field is not None:
+        activation_field.update(quanta, dt)
 
     if nodes is None:
         return exported

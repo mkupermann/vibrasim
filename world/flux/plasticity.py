@@ -90,16 +90,43 @@ def count_flux_through(bridges: Bridges, nodes: Nodes,
 
 
 def apply_plasticity(bridges: Bridges, flux_counts: np.ndarray,
-                      cfg: PlasticityConfig, tick_index: int) -> None:
+                      cfg: PlasticityConfig, tick_index: int,
+                      *, activation_field=None, nodes=None) -> None:
     """In-place update of bridge weights per spec §5.5.
 
-    w_new = w_old + gamma * flux - lam * max(0, flux_min - flux)
+    Default (F1b) rule:
+        w_new = w_old + gamma * flux - lam * max(0, flux_min - flux)
+
+    R-12 spec §5.8 extension (opt-in via `activation_field`): the
+    strengthening term is multiplied by the bridge-endpoint coincidence
+    read-out:
+
+        w_new = w_old + gamma * flux * coincidence(i, j)
+                       - lam * max(0, flux_min - flux)
+
+    where coincidence is in [0, ~1] in practice. Bridges between voxels
+    that are both active learn faster; bridges between silent voxels
+    near-not at all. The decay term is unchanged — the field smooths
+    the *signal*, not the silence.
+
+    If `activation_field` is None (the F1b path), behaviour is bit-for-
+    bit identical to the pre-R-12 rule. `nodes` is only required when
+    `activation_field` is given (to look up bridge-endpoint positions).
     """
     alive = bridges.alive
     if not alive.any():
         return
     f = flux_counts.astype(np.float64)
     strengthen = cfg.gamma * f
+    if activation_field is not None:
+        if nodes is None:
+            raise ValueError(
+                "apply_plasticity: nodes required when activation_field "
+                "is provided (need bridge-endpoint positions for the "
+                "coincidence read-out)"
+            )
+        coincidence = _bridge_coincidence(bridges, nodes, activation_field)
+        strengthen = strengthen * coincidence
     deficit = np.maximum(0.0, cfg.flux_min - f)
     decay = cfg.lam * deficit
     delta = strengthen - decay
@@ -107,6 +134,33 @@ def apply_plasticity(bridges: Bridges, flux_counts: np.ndarray,
     # last_flux_tick: mark where flux was nonzero this tick
     had_flux = alive & (f > 0)
     bridges.last_flux_tick[had_flux] = int(tick_index)
+
+
+def _bridge_coincidence(bridges: Bridges, nodes: Nodes,
+                         activation_field) -> np.ndarray:
+    """Per-bridge coincidence array (shape: max_bridges).
+
+    Dead bridges and bridges with dead endpoints get coincidence 0
+    (they don't enter the update anyway).
+    """
+    out = np.zeros(bridges.max_bridges, dtype=np.float64)
+    alive_idx = np.where(bridges.alive)[0]
+    if alive_idx.size == 0:
+        return out
+    src_slots = bridges.src[alive_idx]
+    dst_slots = bridges.dst[alive_idx]
+    src_alive = nodes.alive[src_slots]
+    dst_alive = nodes.alive[dst_slots]
+    valid = src_alive & dst_alive
+    if not valid.any():
+        return out
+    valid_idx = alive_idx[valid]
+    src_pos = nodes.pos[bridges.src[valid_idx]]
+    dst_pos = nodes.pos[bridges.dst[valid_idx]]
+    out[valid_idx] = activation_field.coincidence_for_bridges(
+        src_pos, dst_pos
+    )
+    return out
 
 
 def prune_bridges_and_nodes(bridges: Bridges, nodes: Nodes,
