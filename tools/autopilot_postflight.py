@@ -149,11 +149,17 @@ def main() -> None:
         die(f"not on {branch_name} (HEAD is {r.stdout.strip()})")
 
     # 1. Forbidden-path diff sanity (defense in depth — hook should have caught earlier).
-    r = run(["git", "diff", "main..HEAD", "--name-only"])
+    # Use three-dot form (main...HEAD) so the check looks only at what THIS branch
+    # added since branching off main. The two-dot form (main..HEAD) is a plain
+    # two-commit diff and flips false-positive whenever main advances independently
+    # — every file changed on main since the branch point appears as "touched on
+    # HEAD side" even though the autopilot branch never touched it. That regression
+    # froze the queue on R-13 once 2026-05-19's docs/reframe commit landed on main.
+    r = run(["git", "diff", "main...HEAD", "--name-only"])
     touched = set(r.stdout.strip().splitlines()) if r.stdout.strip() else set()
     blocked = touched & FORBIDDEN_PATHS
     if blocked:
-        die(f"forbidden files touched between main..HEAD: {sorted(blocked)}")
+        die(f"forbidden files touched between main...HEAD: {sorted(blocked)}")
 
     # 2. Determine acceptance test command. Convention: each acceptance entry of the form
     #    "tests/foo.py::bar PASSES ..." gets the prefix before " PASSES" / " FAILS" run as
@@ -243,7 +249,7 @@ def main() -> None:
     save_queue(queue)
 
     # 7. Append LOGBOOK entry (5 lines as charter requires)
-    r = run(["git", "diff", "main..HEAD", "--shortstat"])
+    r = run(["git", "diff", "main...HEAD", "--shortstat"])
     shortstat = r.stdout.strip()
     logbook_entry = (
         f"\n\n## {_dt.date.today().isoformat()} — autopilot session: {item_id}\n\n"
