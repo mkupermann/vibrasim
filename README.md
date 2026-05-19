@@ -4,9 +4,7 @@ I have decided to challenge myself with a topic I have no background knowledge o
 
 ---
 
-## Honest reframe — what this is and is not (2026-05-19)
-
-A hostile reader said the framing was doing more work than the substance, and they were right. This section sits before everything else operational on purpose: README is linear, and a casual reader who meets "vibration → electron → atom" before they meet the disclaimers takes the implication with them.
+## Update — what this is and what not
 
 **The substrate-as-science half:** an *instrumented sandbox to think against*, not "verified emergence". The hierarchy `vibration → electron → pair → triad → atom → molecule → bridge` is suggestive nomenclature for abstract nodes that obey explicit engineered binding rules. The five operational markers (`len(self_model) ≥ 2`, `workspace_winner > 0`, `prediction error in (0,1)`, `btsp_potentiation drifted by 0.5`, `n_patterns_now > n_patterns_at_start`) are low bars that the substrate was built to clear. The matched negative-control run partially rescues this — markers don't fire in the no-engram condition — but a low bar plus a fair control is still a low bar. None of this is verified emergence. It is a sandbox for noticing what the binding rules actually do under pre-registered measurement. (Marker 5 was corrected from a trivial `≥ 2` threshold to a growth condition pre-data; see `docs/marker_protocol.md` "Pre-data correction record".)
 
