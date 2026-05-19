@@ -588,3 +588,13 @@ Operational documentation in `docs/predictive-babble.md`.
 - **Attempts**: 1/3
 - **Diff**: 6 files changed, 924 insertions(+), 4 deletions(-)
 - **Rationale**: all pass-targets passed; all negative controls failed as required
+
+
+## 2026-05-19 — long-run R-LR-1 result (encoder-free, 1.8M ticks, 26h 18min)
+
+- **Verdict:** NULL on both acceptance tests
+- **Substantive new finding:** substrate developed 1358 atom-nodes + 3188 bridges from raw audio (encoder-free, no frequency info, only amplitude) over 1.8M ticks
+- **Negative control:** matched-wallclock no-input substrate had 0 nodes / 0 bridges → audio exposure IS load-bearing for topology emergence
+- **Test framework defect identified:** F2 synthesis from empty substrate is NOT white-noise-equivalent (KS=0.68, p<1e-200), so the original R-11 control design is structurally unfair. R-LR-7 (next iter) uses corrected design.
+- **Files:** `docs/flux/long-run-results/2026-05-18-R-LR-1-encoder-free-full-scale.md`
+- **Status:** queue.yaml R-LR-1=null; queue advances to R-LR-2 (cochlea baseline full-scale, running since 2026-05-19T01:35Z)
