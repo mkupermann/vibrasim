@@ -381,8 +381,9 @@ items:
       - "Session picks smallest (Q, gain) from sweep [Q=3,5,10,30] x [gain=1,5,25,100] that passes both. Documents choice in phase-log"
       - "tests/flux/test_synthesis.py PASSES (F2 baseline synthesis unit tests still pass at original Q=10 gain=1 defaults; new combo is additional config)"
     time_budget_hours: 4
-    status: queued
-    attempts: 0
+    status: passed
+    attempts: 1
+    last_session: "2026-05-19T15:45:08.594028"
     blockers: ["R-LR-1 diagnosed synthesis-baseline as the dominant signal in babble; this item tunes Q/gain so firings can break through"]
     created: 2026-05-19
 
