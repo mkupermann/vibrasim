@@ -598,3 +598,11 @@ Operational documentation in `docs/predictive-babble.md`.
 - **Test framework defect identified:** F2 synthesis from empty substrate is NOT white-noise-equivalent (KS=0.68, p<1e-200), so the original R-11 control design is structurally unfair. R-LR-7 (next iter) uses corrected design.
 - **Files:** `docs/flux/long-run-results/2026-05-18-R-LR-1-encoder-free-full-scale.md`
 - **Status:** queue.yaml R-LR-1=null; queue advances to R-LR-2 (cochlea baseline full-scale, running since 2026-05-19T01:35Z)
+
+
+## 2026-05-19 — autopilot session: R-13
+
+- **Verdict**: NULL
+- **Attempts**: 1/3
+- **Diff**: 20 files changed, 513 insertions(+), 420 deletions(-)
+- **Rationale**: pass-targets did not pass
