@@ -606,3 +606,41 @@ Operational documentation in `docs/predictive-babble.md`.
 - **Attempts**: 1/3
 - **Diff**: 20 files changed, 513 insertions(+), 420 deletions(-)
 - **Rationale**: pass-targets did not pass
+
+
+## 2026-05-19 — autopilot session: R-13 (attempt 2)
+
+- **Verdict**: NULL (architectural — confirmed)
+- **Attempts**: 2/3
+- **Acceptance**: `tests/flux/test_bridge_spectrum.py::test_bridge_spectrum_differs_under_different_audio` requires KL > 0.1 between bridge-weight spectra of 50k-tick encoder-free substrates trained on English audio vs matched-RMS white noise. Conservation (T1) and crystallisation (T3) gates also required.
+- **Observed**: T1 + T3 PASS (5/5, 484 s). The KL gate FAILS with KL=0.000 because bridges are bit-identical across the two runs.
+
+### Why attempt 2 is still NULL — architectural, not stochastic
+
+Confirmed with an independent 4k-tick diagnostic on two waveforms with the same RMS (low-freq sines vs Gaussian white noise) at matched seed 4242: 108 alive bridges in each run, `bridges.alive`, `bridges.src`, `bridges.dst`, and `bridges.weight` bit-identical (max-abs weight delta = 0.000000e+00). Node energies DO differ between runs (max |Δ|=1.60), proving audio amplitude reaches node state — but the difference is firewalled inside `nodes.energy` and never propagates to topology.
+
+The forensic chain through `world/flux/*`:
+
+- `agent/flux/audio_raw.py::inject_raw_audio_sample` consumes RNG (z, vx, vy) BEFORE reading `sample_value`, so identical RNG state is preserved per sample. Audio amplitude only sets `quanta.energy`.
+- `world/flux/dynamics.py::_compute_density` counts alive quanta per voxel (`np.add.at(density, ..., 1.0)`). Energy is not consulted. So `grid.T` evolves identically regardless of audio amplitude under matched RNG.
+- `world/flux/binding.py::binding_probability = sigmoid(α·coh + β·(T_crit − T_local))`. No energy term. With identical T-fields and identical RNG, `rng.random() >= p_bind` decisions are bit-identical.
+- `world/flux/plasticity.py::count_flux_through` counts quanta within `r_flux` of each bridge (`int((d2 < r2).sum())`). Energy is not weighted. So flux counts are identical, plasticity updates are identical, weights are identical.
+
+Audio amplitude enters the substrate via one channel (`quanta.energy → nodes.energy` via the `e_in = q.energy[i]+q.energy[j]` line in `attempt_binding`) and is consumed there. No feedback loop returns it to binding, density/temperature, or flux counts. The (freq, weight) joint observable as pre-registered therefore *cannot* differentiate audio under encoder-free injection — `freq` is locked to `log(SR/2)` by R-10, and `weight` evolution is audio-independent by the chain above.
+
+### Why this is a finding, not a failed implementation
+
+The pre-registration in `docs/superpowers/plans/2026-05-19-flux-encoder-free-iter2.md` hypothesised that "if [bridges] encode audio statistics, their distribution should differ from a substrate exposed to a different ... input stream." The 50k-tick run falsifies that hypothesis under encoder-free F1b/F1c rules: bridges encode injection geometry (sample-index-deterministic positions + RNG path), not audio amplitude. The R-LR-1 bridge count (3188 bridges from English) was a function of *that* RNG path with *that* injection schedule — not of the audio content.
+
+The gap is in the hypothesis, not the implementation. Two amendment-class fixes would be needed to make a bridge-topology observable carry audio:
+
+1. **Energy-weight temperature.** Change `_compute_density` to accumulate `quanta.energy` rather than counts, so T_local depends on amplitude. This would propagate audio through `binding_probability` and create audio-driven bridge differences. Touches T1/T2/T3 — needs its own amendment + multi-test re-acceptance.
+
+2. **Audio-seeded position hash.** Make `position_hash_seed` a function of `sample_value` so identical RNG no longer produces identical injection positions. Less natural (it bakes amplitude into geometry by fiat) but cheaper to verify; would invalidate R-10's "energies track waveform" expectation indirectly.
+
+Neither is in R-13's scope. R-14 (synthesis sensitivity sweep) addresses a different bottleneck. R-LR-8 (long-run with both observables) would inherit this NULL as the bridge-spectrum half of its OR condition; the synthesis-MFCC half remains live.
+
+### Lines changed this session
+
+Diagnostic script (not committed) at `/tmp/r13_diagnose.py`; this LOGBOOK entry; no production code touched. The architectural finding is documented in LOGBOOK rather than as a new test because adding a "bridge topology is audio-independent" assertion would lock in the failure mode — Michael may want to reverse it via amendment, and a frozen test would obstruct that.
+
