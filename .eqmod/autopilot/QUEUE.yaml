@@ -400,8 +400,9 @@ items:
       - "tests/flux/test_conservation.py PASSES (T1 robust under new snapshot code)"
       - "pytest -m 'not slow' PASSES (no regressions in the legacy or flux fast-test slice)"
     time_budget_hours: 4
-    status: queued
-    attempts: 0
+    status: passed
+    attempts: 1
+    last_session: "2026-05-20T00:20:27.688452"
     blockers: ["R-14 passed (locked Q=3 gain=1 in commit e9c9275); session may reference R-14 phase-log for synthesis env conventions"]
     created: 2026-05-19
 
