@@ -5,7 +5,7 @@ self-modify its own learning rules, and grow its pattern repertoire
 over many cycles — the operational form of "an engine that wants to
 improve itself".
 
-Honest scope statement: this is autopoietic agency in the operational
+Honest scope statement: this is operational-marker agency in the operational
 sense. It does NOT solve the hard problem of phenomenal consciousness.
 
 What this test proves:

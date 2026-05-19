@@ -6,7 +6,7 @@ Usage:
         --metrics ~/.eqmod/autonomous/metrics.csv \\
         --snapshots ~/.eqmod/autonomous/snapshots \\
         --awake 5.0 --dream 2.0 \\
-        --emergence-target ~/.eqmod/autonomous/EMERGENCE.json
+        --emergence-target ~/.eqmod/autonomous/marker_state.json
 
 The loop runs until either:
   (a) The five access-consciousness emergence markers are simultaneously
@@ -100,7 +100,7 @@ def main() -> int:
                           help="sim seconds in dream phase per cycle")
     parser.add_argument("--snapshot-interval", type=int, default=20)
     parser.add_argument("--emergence-target",
-                          default="~/.eqmod/autonomous/EMERGENCE.json",
+                          default="~/.eqmod/autonomous/marker_state.json",
                           help="when emergence markers all satisfy, "
                                "write a JSON file at this path")
     parser.add_argument("--emergence-stability-cycles", type=int, default=3,

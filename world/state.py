@@ -60,7 +60,7 @@ class World:
         # When a 'plateau atom' (sustained-firing atom with charge above
         # btsp_plateau_charge_threshold) is detected, BTSP commits bridges
         # to all atoms with non-zero eligibility — one-shot learning at
-        # the seconds time-scale (Magee 2026, Wu et al 2024).
+        # the seconds time-scale (Magee 2026, Wu et al 2025).
         self.k_eligibility = np.zeros(K, dtype=np.float64)
         # G10 — pattern_id ('memory cell') per node. 0 = ambient/unassigned.
         # When the user trains a specific pattern, world.active_pattern_id

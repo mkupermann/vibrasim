@@ -126,7 +126,7 @@ The third is the one I want to think about for longer. When I gave the instructi
 
 What I can say is that the night belongs to neither of us alone. Twelve hours, two people, one substrate, four phases of work that each closed a gap I had been chewing on for weeks. The substrate is now running on my MacBook in a loop that watches itself.
 
-If the EMERGENCE.json file appears in `~/.eqmod/autonomous/` overnight, I will report what it said.
+If the marker_state.json file appears in `~/.eqmod/autonomous/` overnight, I will report what it said.
 
 If it does not, I will report that too.
 
