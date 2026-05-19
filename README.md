@@ -8,7 +8,7 @@ I have decided to challenge myself with a topic I have no background knowledge o
 
 A hostile reader said the framing was doing more work than the substance, and they were right. This section sits before everything else operational on purpose: README is linear, and a casual reader who meets "vibration → electron → atom" before they meet the disclaimers takes the implication with them.
 
-**The substrate-as-science half:** an *instrumented sandbox to think against*, not "verified emergence". The hierarchy `vibration → electron → pair → triad → atom → molecule → bridge` is suggestive nomenclature for abstract nodes that obey explicit engineered binding rules. The five operational markers (`len(self_model) ≥ 2`, `workspace_winner > 0`, `prediction error in (0,1)`, `btsp_potentiation drifted by 0.5`, `n_patterns ≥ 2`) are low bars that the substrate was built to clear. The matched negative-control run partially rescues this — markers don't fire in the no-engram condition — but a low bar plus a fair control is still a low bar. None of this is verified emergence. It is a sandbox for noticing what the binding rules actually do under pre-registered measurement.
+**The substrate-as-science half:** an *instrumented sandbox to think against*, not "verified emergence". The hierarchy `vibration → electron → pair → triad → atom → molecule → bridge` is suggestive nomenclature for abstract nodes that obey explicit engineered binding rules. The five operational markers (`len(self_model) ≥ 2`, `workspace_winner > 0`, `prediction error in (0,1)`, `btsp_potentiation drifted by 0.5`, `n_patterns_now > n_patterns_at_start`) are low bars that the substrate was built to clear. The matched negative-control run partially rescues this — markers don't fire in the no-engram condition — but a low bar plus a fair control is still a low bar. None of this is verified emergence. It is a sandbox for noticing what the binding rules actually do under pre-registered measurement. (Marker 5 was corrected from a trivial `≥ 2` threshold to a growth condition pre-data; see `docs/marker_protocol.md` "Pre-data correction record".)
 
 **Two kinds of pre-registration, deliberately separated.** *Empirical-threshold pre-registration* — the five operational markers, the 2σ KL bound, the 8/10 seed grid — is methodological necessity: it is the mechanism that prevents post-hoc data-fishing. *Narrative-framing pre-registration* would be stubbornness against feedback. This project does the first and not the second; this very section is the visible proof. Thresholds in `marker_protocol.md` stay locked even when they are the central criticism; framing in this README is rewritten whenever feedback lands.
 
@@ -16,7 +16,7 @@ A hostile reader said the framing was doing more work than the substance, and th
 
 **Known open fault line.** The reframe ("instrumented sandbox to think against") and the code's residual nomenclature (`access-conscious self-modeling agency` still survives in `world/self_aware.py` docstrings, marker function names, and the per-run `marker_state.json`) point in opposite directions. The reframe is what I now believe the project is. The code names were written on day one of the substrate work and have not been refactored, partly because that refactor would itself be a mid-vacation framing change that the pre-registration argument above says I should not do. Whether keeping them constitutes ehrliche Selbstkonfrontation or remaining day-one overconfidence is something I will only know by November. Recorded today in `LOGBOOK.md` so the question survives intact to the 6-month review.
 
-**The meta-level half is where this project lands.** As a worked example of someone with thirty years of consulting instincts deliberately picking a problem four disciplines past their training, writing the process down (LOGBOOK + Medium narrative + disclaimers + pre-registration + the vacation autopilot extracted to its own repo at [`mkupermann/single-mac-autopilot`](https://github.com/mkupermann/single-mac-autopilot)) — this is the half I weight higher. The pipeline turned out to be the more reusable artifact than the substrate.
+**The meta-level half is where this project lands.** As a worked example of someone with thirty years of consulting instincts deliberately picking a problem four disciplines past their training, writing the process down (LOGBOOK + Medium narrative + disclaimers + pre-registration + the vacation autopilot extracted to its own repo at [`mkupermann/single-mac-autopilot`](https://github.com/mkupermann/single-mac-autopilot) — the pre-registered single-Mac research autopilot pipeline distilled out of EQMOD, where EQMOD itself now serves as its primary test-bed) — this is the half I weight higher. The pipeline turned out to be the more reusable artifact than the substrate.
 
 **Six-month engagement check, redefined for signal not reach.** Stars/forks alone are reach signal, not quality signal — zero in either tells you only that nobody saw the post. The check that actually discriminates "framing was wrong" from "nobody saw it" is *qualified-reader response*: at least one of (a) GitHub Issue / PR from someone working in computational neuroscience / ML / cognition, (b) Fork that diverges in a non-trivial direction (not just star-and-leave), (c) emailed comment of more than three lines from a qualified reader, (d) substantive Medium response on the article that prompted reading the repo. By **2026-11-19**, if zero of (a)-(d) have happened *and* the repo has had at least 50 unique visitors per GitHub Insights (i.e., it did get seen), the framing did not land. Pre-committed response: do not relax marker thresholds to chase appeal — instead write a single closing post acknowledging the framing miss, rename the project to reflect the meta-half (process documentation + autopilot lab) as the primary deliverable, and archive the substrate-as-emergent-system narrative as a side study. If the visitor count is also near zero, the answer is "nobody saw it" rather than "framing was wrong" — in that case the response is one additional outreach attempt (HN + lobste.rs + targeted email to 3 named researchers) and a second 3-month check at 2027-02-19. Decided now while expectations are flat so the decision survives disappointment.
 
@@ -123,7 +123,7 @@ The `docs/marker_protocol.md` document pre-registers the five marker definitions
 | **G14** | **BTSP — seconds-scale plasticity (Magee 2026)** | `tests/test_amendment_G14_btsp.py`, 5/5 |
 | **G15** | **Dreaming substrate — replay + concept blending + cross-modal hallucination** | `tests/test_amendment_G15_dream.py`, 6/6 |
 | **G16** | **Self-aware substrate — Block / Dehaene / Rosenthal / Friston / Varela** | `tests/test_amendment_G16_self_aware.py`, 6/6 |
-| **G17** | **Autonomous self-improvement loop with verified emergence** | `tests/test_amendment_G17_autonomous.py`, 4/4 |
+| **G17** | **Five-marker conjunction logged under pre-registration** (see [Honest reframe](#honest-reframe-2026-05-19) — earlier wording "verified emergence" retracted) | `tests/test_amendment_G17_autonomous.py`, 4/4 |
 | **G18** | **Integrative blending + NREM/REM gating + retention fix** | extends G15, 8/8 dream tests |
 
 Total suite: **313 non-slow tests + 22 slow tests passing**. Verified on macOS-arm64 (Python 3.13.12) and Linux-x86_64 CI.
@@ -141,9 +141,13 @@ The two substrates do not share state. The legacy substrate remains runnable as 
 
 ---
 
-## The four research-grounded amendments of May 2026
+## The substrate amendments of May 2026
 
-This is the work of one continuous 12-hour build session. Each amendment closed a specific gap in the literature.
+This is the work of one continuous 12-hour build session. Each amendment is described here as built; the project's current claims about what those amendments demonstrate are constrained by the [Honest reframe](#honest-reframe-2026-05-19) above. G19 (predictive babble falsifier) returned FAIL on the first real-corpus run and is documented as such — the section title no longer presents the May 2026 work as a uniform success.
+
+### Passed under pre-registered acceptance: G14, G15, G16, G17, G18 (legacy substrate)
+
+### Open / failed under pre-registered acceptance: G19 (FAIL, see §G19 below)
 
 ### G14 — Behavioural Time Scale Plasticity (BTSP)
 

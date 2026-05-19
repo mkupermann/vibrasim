@@ -60,13 +60,20 @@ def check_emergence_markers(loop: AutonomousLoop) -> dict:
     # 4. Self-modification has fired at least once (btsp drifted from default)
     drift = abs(float(w.config.btsp_potentiation) - 50.0)
     has_self_modified = drift > 0.5
-    # 5. Pattern repertoire has grown beyond initial seeded engrams
+    # 5. Pattern repertoire has grown beyond pre-seeded engrams.
+    # Corrected 2026-05-19 (see docs/marker_protocol.md "Pre-data correction
+    # record"). Earlier threshold `n_patterns >= 2` was trivially met by the
+    # 3 pre-seeded patterns and signalled nothing. New threshold compares
+    # current count against the substrate's count at the start of this run.
+    # The initial count is cached on first call.
     K = w.k_count
     if K == 0:
         n_patterns = 0
     else:
         n_patterns = len({int(p) for p in w.k_pattern_id[:K] if int(p) > 0})
-    has_growing_repertoire = n_patterns >= 2
+    if not hasattr(loop, "_n_patterns_at_start"):
+        loop._n_patterns_at_start = n_patterns
+    has_growing_repertoire = n_patterns > loop._n_patterns_at_start
 
     markers = {
         "1_self_model_nonempty": has_self_model,
