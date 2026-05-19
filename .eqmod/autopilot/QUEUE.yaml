@@ -356,4 +356,32 @@ items:
     last_session: "2026-05-18T04:44:56.880665"
     blockers: ["Spec amendment §5.8 by Claude under user authorization 2026-05-17 23:00 — adds continuous activation field A(x,y,z,t) as plasticity-signal smoother. Discrete substrate primary; field is bookkeeping."]
     created: 2026-05-17
+  - id: R-13
+    title: bridge-weight spectrum — substrate-internal observable bypassing synthesis
+    brief: docs/superpowers/plans/2026-05-19-flux-encoder-free-iter2.md
+    preregistered_acceptance:
+      - "tests/flux/test_bridge_spectrum.py::test_bridge_spectrum_observable_constructs PASSES (NEW: extract (freq, weight) pairs across all alive bridges, normalised histogram >= 32 bins populated)"
+      - "tests/flux/test_bridge_spectrum.py::test_bridge_spectrum_zero_on_empty_substrate PASSES (NEW: 0-node substrate returns empty distribution, not NaN/error)"
+      - "tests/flux/test_bridge_spectrum.py::test_bridge_spectrum_differs_under_different_audio PASSES (NEW: 50k-tick runs on English vs matched-RMS white noise must give KL > 0.1 between spectra)"
+      - "tests/flux/test_conservation.py PASSES (T1 robust)"
+      - "tests/flux/test_crystallization_robustness.py PASSES (T3 robust)"
+    time_budget_hours: 4
+    status: queued
+    attempts: 0
+    blockers: ["R-LR-1 diagnosed synthesis as the bottleneck; this item bypasses synthesis entirely with a substrate-internal observable"]
+    created: 2026-05-19
+
+  - id: R-14
+    title: synthesis sensitivity sweep — find Q/gain where firings dominate baseline
+    brief: docs/superpowers/plans/2026-05-19-flux-encoder-free-iter2.md
+    preregistered_acceptance:
+      - "tests/flux/test_synthesis_sensitivity.py::test_synthesis_baseline_with_empty_substrate_has_low_energy PASSES (NEW: empty-substrate synthesis RMS < 0.1 * trained-substrate synthesis RMS)"
+      - "tests/flux/test_synthesis_sensitivity.py::test_synthesis_with_firings_dominates_baseline PASSES (NEW: 100 firings/sec drive produces FFT peak at firing-pattern freq, not resonator natural freq)"
+      - "Session picks smallest (Q, gain) from sweep [Q=3,5,10,30] x [gain=1,5,25,100] that passes both. Documents choice in phase-log"
+      - "tests/flux/test_synthesis.py PASSES (F2 baseline synthesis unit tests still pass at original Q=10 gain=1 defaults; new combo is additional config)"
+    time_budget_hours: 4
+    status: queued
+    attempts: 0
+    blockers: ["R-LR-1 diagnosed synthesis-baseline as the dominant signal in babble; this item tunes Q/gain so firings can break through"]
+    created: 2026-05-19
 
