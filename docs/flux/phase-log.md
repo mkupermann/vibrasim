@@ -796,3 +796,97 @@ uv run --extra dev python tools/audit_T3_seeds.py --qpt 10 \
   --alpha 0 --beta 200 --Tcrit 0.025 --t_dc 0.035 \
   --ceil_qpt 20 --ceil_vz 0.3
 ```
+
+## 2026-05-19 — R-15 R-LR-8 infrastructure (autopilot)
+
+### Scope
+
+R-15 is plumbing for the R-LR-8 long-run gate. No new research claim;
+no substrate-level emergence test. Five workstreams, all pre-registered
+in `.eqmod/autopilot/QUEUE.yaml::R-15`:
+
+1. Salvage `agent/flux/bridge_spectrum.py` + `tests/flux/test_bridge_spectrum.py`
+   from `autopilot/R-13` commit `eca9545`. R-13 itself NULLed on the
+   architectural-firewall finding (audio amplitude reaches `nodes.energy`
+   and goes no further under the current F1b/F1c rules), but the
+   spectrum function and its constructs / empty-substrate tests are
+   independent of that and pass at 50k-tick scope. R-16 will exercise
+   the architectural-firewall hypothesis directly; R-15 just brings the
+   function to main so R-16 can import it.
+2. New `agent/flux/snapshot.py` — `save_substrate_snapshot` /
+   `load_substrate_snapshot` round-trip the full SoA state (Quanta +
+   Nodes + Bridges + Grid + tick + `_next_search` cursors) to a single
+   `.npz`. The round-trip test re-runs one `dynamics.tick` against
+   both copies and asserts bit-identical post-state, proving the
+   snapshot captures simulation state and not just the obvious arrays.
+3. Wire snapshot emission into `agent/flux/encoder_free_training.py`
+   gated on `EQMOD_SNAPSHOT_EVERY_TICKS` + `EQMOD_SNAPSHOT_OUT_DIR`
+   env vars. Default off — existing tests untouched. The interval-emit
+   test drives the runner for 500 ticks with cadence 100 on a tiny
+   `(8, 8, 4)` grid and asserts exactly 5 snapshots at ticks
+   `{100, 200, 300, 400, 500}`. `input_kind="no_input"` so the test
+   does not depend on the R-7 corpus manifest.
+4. `get_synthesis_config()` factory in `agent/flux/synthesis.py` honours
+   `EQMOD_USE_TUNED_SYNTHESIS=1` → returns the R-14-locked pair
+   (`Q=3.0`, `impulse_gain=1.0`, commit `e9c9275`); otherwise returns
+   the F2 baseline (`Q=5.0`). Caller overrides win over both. The
+   `TUNED_SYNTHESIS_Q` / `TUNED_SYNTHESIS_IMPULSE_GAIN` module
+   constants are the single source of truth for the locked values.
+5. `tests/flux/test_R_LR_8_acceptance.py` scaffold — defines
+   `test_bridge_spectrum_audio_vs_white_noise` (KL > 0.5) and
+   `test_synthesis_audio_vs_no_input` (KL > 0.001) with thresholds
+   locked per the R-LR-8 plan. Both tests skip cleanly when
+   `EQMOD_R_LR_8_OUT_DIR` is unset; they do not pass without the
+   long-run output. Pytest collects them so the postflight contract
+   has a single target for R-LR-8 completion.
+
+### Acceptance gate measurements
+
+- `tests/flux/test_flux_snapshot.py` — 2/2 PASS (0.29s)
+- `tests/flux/test_bridge_spectrum.py::test_bridge_spectrum_observable_constructs` PASS
+- `tests/flux/test_bridge_spectrum.py::test_bridge_spectrum_zero_on_empty_substrate` PASS
+- `tests/flux/test_tuned_synthesis_env.py::test_env_loads_Q3_gain1` PASS
+- `tests/flux/test_R_LR_8_acceptance.py` — 2/2 collected, both skip
+  with "EQMOD_R_LR_8_OUT_DIR unset" (the scaffold contract)
+- `tests/flux/test_conservation.py` — 3/3 PASS (T1 robust under
+  the new snapshot code in the encoder-free tick loop)
+- Full fast flux slice (`pytest tests/flux/ -m "not slow"`):
+  151 passed, 2 skipped, 8 deselected, 558.94 s
+
+### Reproducing
+
+```
+# R-15 acceptance gates (~12 s)
+uv run --extra dev pytest \
+  tests/flux/test_flux_snapshot.py \
+  tests/flux/test_bridge_spectrum.py \
+  tests/flux/test_tuned_synthesis_env.py \
+  tests/flux/test_R_LR_8_acceptance.py \
+  tests/flux/test_conservation.py \
+  -m "not slow" -v
+
+# Full fast flux slice regression (~10 min)
+uv run --extra dev pytest tests/flux/ -m "not slow"
+```
+
+### Why the snapshot test does not gate via _next_search resume
+
+The `_next_search` cursor preserves `add()` ordering across the
+round-trip but the round-trip test also exercises a downstream tick
+on each side. Any divergence — cursor, alive mask, or scalar field —
+shows up in the post-tick array comparison. The cursor itself is
+asserted equal separately for clarity.
+
+### Notes for R-LR-8
+
+- The long-run dispatcher should set `EQMOD_SNAPSHOT_EVERY_TICKS=100000`
+  + `EQMOD_SNAPSHOT_OUT_DIR=~/.eqmod/long-runs/R-LR-8/snapshots/eng`
+  (and a matched control dir) so the bridge spectrum can be computed
+  offline from the snapshot stream rather than re-running the substrate.
+- Bridge-spectrum analysis should write `bridge_spectrum_english.npy`,
+  `bridge_spectrum_whitenoise.npy`, `mfcc_histogram_english.npy`,
+  `mfcc_histogram_no_input.npy` into `EQMOD_R_LR_8_OUT_DIR`. The
+  scaffold tests read those exact filenames.
+- `EQMOD_USE_TUNED_SYNTHESIS=1` switches the synth bank to R-14's
+  locked (Q=3, gain=1) for the babble side of R-LR-8.
+
