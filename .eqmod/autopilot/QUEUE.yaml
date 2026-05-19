@@ -367,9 +367,9 @@ items:
       - "tests/flux/test_crystallization_robustness.py PASSES (T3 robust)"
     time_budget_hours: 4
     status: null
-    attempts: 1
+    attempts: 3
     last_session: "2026-05-19T05:35:07.097399"
-    blockers: ["R-LR-1 diagnosed synthesis as the bottleneck; this item bypasses synthesis entirely with a substrate-internal observable"]
+    blockers: ["R-LR-1 diagnosed synthesis as the bottleneck; this item bypasses synthesis entirely with a substrate-internal observable", "attempts reconciled 2026-05-19 session-4: postflight had not counted Claude-authored attempts 2 (eca9545) and 3 (c4edbb2); architectural NULL firm per eca9545 forensic chain; HUMAN_NEEDED #1 filed; postflight will bump attempts→4 and set status=failed per 3-strike rule"]
     created: 2026-05-19
 
   - id: R-14
