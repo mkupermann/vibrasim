@@ -645,3 +645,11 @@ Both substrates produced *exactly* 201 alive bridges with bit-identical `(freq, 
 
 **Next item.** Queue should advance to a G24 plan-writing item that picks one of the two re-coupling strategies and pre-registers a follow-on diagnostic at the same 50k scope. Without G24, R-LR-8's bridge-spectrum gate (KL > 0.5 at 1.8M ticks) will null by the same mechanism, just slower.
 
+
+
+## 2026-05-20 — autopilot session: R-16
+
+- **Verdict**: NULL
+- **Attempts**: 1/3
+- **Diff**: 3 files changed, 510 insertions(+)
+- **Rationale**: pass-targets did not pass
