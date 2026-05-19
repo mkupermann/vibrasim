@@ -366,9 +366,10 @@ items:
       - "tests/flux/test_conservation.py PASSES (T1 robust)"
       - "tests/flux/test_crystallization_robustness.py PASSES (T3 robust)"
     time_budget_hours: 4
-    status: queued
-    attempts: 0
-    blockers: ["R-LR-1 diagnosed synthesis as the bottleneck; this item bypasses synthesis entirely with a substrate-internal observable"]
+    status: failed
+    attempts: 3
+    last_session: "2026-05-19T10:16:51"
+    blockers: ["R-LR-1 diagnosed synthesis as the bottleneck; this item bypasses synthesis entirely with a substrate-internal observable", "main-sync force-set 2026-05-19: autopilot/R-13 branch reached 3-strike NULL terminal at attempt 3 (commit c4edbb2), then 6 charter-refused follow-on sessions (04c332f..831b548) failed to sync verdict to main. Manual force-set per branch state."]
     created: 2026-05-19
 
   - id: R-14
