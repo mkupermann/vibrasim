@@ -33,6 +33,11 @@ import scipy.fft
 
 from agent.flux.audio_in import read_wav_mono_16k
 from agent.flux.audio_raw import inject_raw_audio_chunk
+from agent.flux.snapshot import (
+    get_snapshot_settings,
+    save_substrate_snapshot,
+    snapshot_filename,
+)
 from agent.flux.synthesis import (
     SynthesisConfig,
     Synthesizer,
@@ -482,6 +487,14 @@ def run_encoder_free_training(
     )
     audit.record_initial()
 
+    # R-15: optional snapshot emission for offline analysis. Env-driven so
+    # the standard test path stays unaffected; emission requires both a
+    # positive cadence AND an output directory.
+    snap_every, snap_out_dir = get_snapshot_settings()
+    snap_enabled = snap_every > 0 and snap_out_dir is not None
+    if snap_enabled:
+        snap_out_dir.mkdir(parents=True, exist_ok=True)
+
     n_quanta_alive_peak = 0
     t0 = time.perf_counter()
     for tick_idx in range(cfg.n_ticks_train):
@@ -510,6 +523,13 @@ def run_encoder_free_training(
         n_alive = int(quanta.alive.sum())
         if n_alive > n_quanta_alive_peak:
             n_quanta_alive_peak = n_alive
+        if snap_enabled:
+            completed_tick = tick_idx + 1
+            if completed_tick % snap_every == 0:
+                save_substrate_snapshot(
+                    snapshot_filename(snap_out_dir, completed_tick),
+                    quanta, nodes, bridges, grid, completed_tick,
+                )
     wallclock_train_s = time.perf_counter() - t0
 
     # ---- Babble generation (synthesis as passive probe) ----
