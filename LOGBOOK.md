@@ -598,3 +598,18 @@ Operational documentation in `docs/predictive-babble.md`.
 - **Test framework defect identified:** F2 synthesis from empty substrate is NOT white-noise-equivalent (KS=0.68, p<1e-200), so the original R-11 control design is structurally unfair. R-LR-7 (next iter) uses corrected design.
 - **Files:** `docs/flux/long-run-results/2026-05-18-R-LR-1-encoder-free-full-scale.md`
 - **Status:** queue.yaml R-LR-1=null; queue advances to R-LR-2 (cochlea baseline full-scale, running since 2026-05-19T01:35Z)
+
+
+## 2026-05-19 — known fault line recorded for the 6-month review
+
+A reviewer flagged that the README reframe ("instrumented sandbox to think against") and the code's residual nomenclature (`access-conscious self-modeling agency` in `world/self_aware.py` docstrings, marker function names, and the per-run `marker_state.json`) point in opposite directions.
+
+The reframe is what I now believe the project is. The code names were written on day one of the substrate work and have not been refactored. Two reasons I am leaving them in place:
+
+1. Refactoring code names mid-vacation IS a framing change, and the pre-registration argument explicitly says I should not retune framing under feedback if the system's empirical state has not changed. Code-name refactor + reframe section are both framing changes; doing only the second is the cheaper consistency move.
+
+2. The tension itself is informative as research data. Whether keeping the day-one names constitutes "ehrliche Selbstkonfrontation" (the question is visibly open in the README, no one has to read between lines) or "remaining day-one overconfidence" (I should have refactored when I rewrote the README) is something I will only know retrospectively.
+
+Pre-committed: by 2026-11-19, return to this entry. If the reframe + 6-month engagement check together produced qualified-reader engagement, the open tension was load-bearing as honest self-display. If they did not and the project is being renamed to reflect the meta-half as primary, then the right move at that point is to refactor code names too — at that point it is no longer mid-vacation framing pressure but a deliberate scope change.
+
+This entry exists so the question survives intact to the review date.
