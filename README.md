@@ -16,6 +16,16 @@ So the deadlocks I hit here are clean — they are the actual material I came fo
 
 The other reason to write all of this down in public is that the moves themselves turn out to be reusable. The Skills, the dev and AI pipelines, the prompting and orchestration patterns it takes to push open-weight and cloud models against problems they cannot pattern-match — those translate directly to business and technical work in the moments when the usual playbook has run out. EQMOD does not need to succeed for that half to be useful. The patterns I am building to attack it are already shippable, and that is the half I want other people to be able to use.
 
+**This second half has now been extracted into its own repository:
+[`mkupermann/single-mac-autopilot`](https://github.com/mkupermann/single-mac-autopilot).**
+It is the pre-registered, falsifier-based research autopilot that runs the
+vibrasim work autonomously over multi-day vacation windows — preflight, postflight,
+supervisor, long-run dispatcher, watchdog, pre-commit discipline, mail handoff —
+all extracted so other research projects can use it. vibrasim's continuing role
+is as the *test-bed* where each pipeline change is validated against real
+research work before being merged upstream. The two repos co-evolve: vibrasim
+finds the failure modes; single-mac-autopilot embeds the fixes.
+
 I will fail at most parts of this. Probably the parts that matter most. That is the data I am after. A process for breaking deadlocks that has only ever been tested on problems I could already solve would not really be a process — it would be a story I tell myself about being good at hard things.
 
 ---
