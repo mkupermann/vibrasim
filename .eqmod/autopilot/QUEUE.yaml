@@ -387,3 +387,36 @@ items:
     blockers: ["R-LR-1 diagnosed synthesis-baseline as the dominant signal in babble; this item tunes Q/gain so firings can break through"]
     created: 2026-05-19
 
+  - id: R-15
+    title: R-LR-8 infrastructure — salvage R-13 spectrum + add flux snapshot + wire tuned synthesis env
+    brief: docs/superpowers/plans/2026-05-19-flux-encoder-free-iter2.md
+    preregistered_acceptance:
+      - "tests/flux/test_flux_snapshot.py::test_roundtrip_preserves_substrate_state PASSES (NEW: save flux Quanta+Nodes+Bridges+Grid+tick state to .npz, load back, verify all arrays bit-identical and substrate dynamics reproduce from loaded state)"
+      - "tests/flux/test_flux_snapshot.py::test_snapshot_emits_at_configured_interval PASSES (NEW: with EQMOD_SNAPSHOT_EVERY_TICKS=100, encoder_free_training runner writes exactly 5 snapshot files after 500 ticks at the expected tick counts {100, 200, 300, 400, 500})"
+      - "tests/flux/test_bridge_spectrum.py::test_bridge_spectrum_observable_constructs PASSES (salvaged from autopilot/R-13 commit eca9545 — R-13 NULLed on architectural firewall not function; the function itself passed at 50k-tick scope; session brings agent/flux/bridge_spectrum.py + corpus_spectrum.py + test file to main via git checkout autopilot/R-13 -- <paths>)"
+      - "tests/flux/test_bridge_spectrum.py::test_bridge_spectrum_zero_on_empty_substrate PASSES (same salvage)"
+      - "tests/flux/test_tuned_synthesis_env.py::test_env_loads_Q3_gain1 PASSES (NEW: with EQMOD_USE_TUNED_SYNTHESIS=1, agent.flux.synthesis.get_synthesis_config returns SynthesisConfig with Q=3.0 and impulse_gain=1.0, per R-14's locked sweep choice in commit e9c9275)"
+      - "tests/flux/test_R_LR_8_acceptance.py is collected by pytest (NEW: file imports cleanly, defines test_bridge_spectrum_audio_vs_white_noise and test_synthesis_audio_vs_no_input with the pre-registered thresholds KL>0.5 and KL>0.001 from docs/superpowers/plans/2026-05-19-flux-encoder-free-iter2.md; tests skip gracefully when EQMOD_R_LR_8_OUT_DIR is unset, so the file collects cleanly under pytest before R-LR-8 has run; the file does NOT pass without R-LR-8's output — it scaffolds the long-run gate)"
+      - "tests/flux/test_conservation.py PASSES (T1 robust under new snapshot code)"
+      - "pytest -m 'not slow' PASSES (no regressions in the legacy or flux fast-test slice)"
+    time_budget_hours: 4
+    status: queued
+    attempts: 0
+    blockers: ["R-14 passed (locked Q=3 gain=1 in commit e9c9275); session may reference R-14 phase-log for synthesis env conventions"]
+    created: 2026-05-19
+
+  - id: R-16
+    title: architectural firewall diagnostic — 50k smoke for content-coupling in nodes.energy
+    brief: docs/superpowers/plans/2026-05-19-flux-encoder-free-iter2.md
+    preregistered_acceptance:
+      - "tests/flux/test_firewall_diagnostic.py::test_50k_matched_rms_english_vs_white_noise_bridge_spectrum_KL_above_0p01 PASSES (NEW: run two encoder-free 50k-tick substrates with identical seed and identical RMS amplitude — one fed English audio segment from agent/flux/audio fixtures, one fed white noise of matched RMS — compute bridge spectra on the alive bridges of each, assert symmetric KL > 0.01. Threshold 0.01 chosen pre-data as the smallest non-trivial value above floating-point noise floor at 50k-tick scope.)"
+      - "tests/flux/test_firewall_diagnostic.py::test_50k_matched_rms_english_vs_silence_bridge_spectrum_KL_above_0p1 PASSES (NEW: control test — English audio vs silence with same RMS-energy budget injected as noise floor; KL must exceed 0.1, because silence is the maximally different input. If THIS test also nulls, the firewall is total, not partial.)"
+      - "LOGBOOK entry records both KL numbers and the audio fixtures used. If KL_english_vs_whitenoise < 0.01, the entry must explicitly name this as confirming R-13's architectural-firewall forensic finding (eca9545) and motivate the G24 amendment as the next item."
+      - "tests/flux/test_conservation.py PASSES (T1 robust under whatever fixtures the session uses)"
+      - "tests/flux/test_crystallization_robustness.py PASSES (T3 robust)"
+    time_budget_hours: 4
+    status: queued
+    attempts: 0
+    blockers: ["R-15 must reach status=passed first (provides agent/flux/bridge_spectrum.py + corpus_spectrum.py)"]
+    created: 2026-05-19
+
