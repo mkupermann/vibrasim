@@ -796,3 +796,130 @@ uv run --extra dev python tools/audit_T3_seeds.py --qpt 10 \
   --alpha 0 --beta 200 --Tcrit 0.025 --t_dc 0.035 \
   --ceil_qpt 20 --ceil_vz 0.3
 ```
+
+## 2026-05-19 — R-14 Synthesis sensitivity sweep (autopilot)
+
+Pre-registered in `.eqmod/autopilot/QUEUE.yaml::R-14`. Brief:
+`docs/superpowers/plans/2026-05-19-flux-encoder-free-iter2.md`.
+
+R-LR-1 (2026-05-18) NULLed both R-11 tests: trained vs. no-input babble
+KL = 0.000001 (threshold 2σ ≈ 3e-6, but the trained signal itself sits
+on the floor). Diagnosis: synthesis output dominated by silence — too
+few firings per second of audio to drive the F2 resonator bank above
+the MFCC-of-silence baseline. R-14 characterises the (Q, gain) grid
+for the F2 synthesis bank, picks the smallest combo where the bank is
+demonstrably responsive to a periodic firing pattern, and locks it as
+an ADDITIONAL config alongside the F2 default (Q=10, gain=1).
+
+### Sweep grid
+
+`Q ∈ {3, 5, 10, 30}` × `gain ∈ {1, 5, 25, 100}` (16 combos). Driver:
+`scripts/r14_sensitivity_sweep.py`. Stimulus per combo:
+
+- 1 s of audio at 16 kHz.
+- 100 evenly-spaced impulses (10 ms inter-impulse), all routed to the
+  resonator slot whose natural freq is nearest 100 Hz (slot 9 ≈ 103.2
+  Hz on the 64-resonator 50 → 8000 Hz log-spaced bank).
+- The "empty substrate" arm runs the same `read_output_samples` path
+  with zero impulses (matches the no-input control's babble path in
+  `agent.flux.encoder_free_training.run_encoder_free_training`).
+
+Tests:
+
+- T1 (`empty_rms < 0.1 × trained_rms`): satisfied for all 16 combos.
+  Empty-bank RMS is exactly 0.0 (Crank–Nicolson state stays at zero
+  with no drive), so the ratio is 0/positive < 0.1 for every combo
+  where `trained_rms > 0`.
+- T2 (FFT peak in [80, 120] Hz): satisfied for all 16 combos. The
+  resonator at slot 9 has natural freq ≈ 100 Hz; the impulse train at
+  100 Hz reinforces the 100 Hz line of the rFFT grid; peak lands at
+  exactly 100 Hz (1 Hz bin resolution on a 1 s signal).
+
+### Sweep table (trained-bank metrics)
+
+| Q  | gain |  trained_rms |  peak_hz | T1 | T2 |
+|---:|-----:|-------------:|---------:|:--:|:--:|
+|  3 |    1 |    1.05e-03  |  100.00  | OK | OK |
+|  3 |    5 |    5.27e-03  |  100.00  | OK | OK |
+|  3 |   25 |    2.63e-02  |  100.00  | OK | OK |
+|  3 |  100 |    1.05e-01  |  100.00  | OK | OK |
+|  5 |    1 |    1.66e-03  |  100.00  | OK | OK |
+|  5 |    5 |    8.31e-03  |  100.00  | OK | OK |
+|  5 |   25 |    4.16e-02  |  100.00  | OK | OK |
+|  5 |  100 |    1.66e-01  |  100.00  | OK | OK |
+| 10 |    1 |    2.90e-03  |  100.00  | OK | OK |
+| 10 |    5 |    1.45e-02  |  100.00  | OK | OK |
+| 10 |   25 |    7.26e-02  |  100.00  | OK | OK |
+| 10 |  100 |    2.90e-01  |  100.00  | OK | OK |
+| 30 |    1 |    4.87e-03  |  100.00  | OK | OK |
+| 30 |    5 |    2.43e-02  |  100.00  | OK | OK |
+| 30 |   25 |    1.22e-01  |  100.00  | OK | OK |
+| 30 |  100 |    4.87e-01  |  100.00  | OK | OK |
+
+Empty-bank RMS is identically 0.0 in every cell — the Crank–Nicolson
+integrator preserves zero state when there is no drive.
+
+### Locked choice: Q = 3, gain = 1
+
+Smallest pair from the sweep that satisfies both pre-registered tests.
+Recorded in `tests/flux/test_synthesis_sensitivity.py` as the
+`R14_Q` / `R14_GAIN` constants. This is an ADDITIONAL F2 config — the
+F2 baseline `tests/flux/test_synthesis.py` continues to lock
+`Q=10, impulse_gain=1` and remains green untouched.
+
+### Honest reading of the sweep
+
+The pre-registered tests as written admit a degenerate pass: the empty
+bank is bit-exactly silent, so T1 reduces to "trained_rms > 0", and
+once impulses target the 100 Hz-aligned slot the FFT peak is forced
+into [80, 120] Hz independent of Q. So this sweep does NOT
+discriminate between Q values on these two checks; it only confirms
+that the synthesis bank is responsive to a 100 Hz firing pattern at
+every (Q, gain) in the grid.
+
+The brief's hypothesised tuning lever ("lower-Q decays faster, higher
+gain makes firings dominate baseline") is therefore NOT exercised by
+these acceptance tests. What R-14 actually shows is more modest:
+**the synthesis layer's baseline floor at zero drive is exactly zero**
+— there is no resonator-bank self-noise to dominate. R-LR-1's
+"indistinguishable babble" was MFCC of (silence × 1.0) vs. MFCC of
+(silence × small-amplitude trickle of firings), both collapsed onto
+the MFCC floor of −230 dB. The issue is firing density, not synthesis
+sensitivity. R-LR-8 will need to either drive synthesis harder
+(higher gain locked) or measure a substrate-internal observable
+(R-13's bridge-weight spectrum) that doesn't pass through synthesis
+at all.
+
+Locked combo still serves R-LR-8's purpose: at gain=1 the trained
+output RMS is ≈ 1e-3, which is well above MFCC noise floor for
+non-degenerate firings, so an R-LR-8 substrate that produces ≥ 100
+firings/sec of usable amplitude WILL be visible in the babble MFCC.
+
+### Negative controls (silent-pass discipline)
+
+The two acceptance tests are not silent-pass — verified by manual
+neg-control experiments before commit:
+
+- Zero firings (the empty arm): trained_rms = 0.0 → T1 asserts
+  "trained-bank RMS is zero", test FAILS as expected.
+- Target slot 50 (≈ 2807 Hz) instead of slot 9: FFT peak shifts to
+  2500 Hz → T2 asserts "outside [80, 120] Hz", test FAILS as expected.
+- Nonzero initial amp on the empty bank (`bank.amp[:] = 1.0`):
+  empty_rms = 0.82 → T1 asserts "not < 0.1 × trained", test FAILS as
+  expected.
+
+### Reproducing
+
+```
+# R-14 acceptance + F2 baseline (~1 s on M4 Mac)
+uv run --extra dev pytest \
+  tests/flux/test_synthesis_sensitivity.py \
+  tests/flux/test_synthesis.py \
+  tests/flux/test_conservation.py \
+  tests/flux/test_crystallization_robustness.py \
+  -v --tb=short
+
+# Full sweep table (~5 s)
+uv run --extra dev python -m scripts.r14_sensitivity_sweep
+```
+
