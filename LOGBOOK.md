@@ -644,3 +644,17 @@ Neither is in R-13's scope. R-14 (synthesis sensitivity sweep) addresses a diffe
 
 Diagnostic script (not committed) at `/tmp/r13_diagnose.py`; this LOGBOOK entry; no production code touched. The architectural finding is documented in LOGBOOK rather than as a new test because adding a "bridge topology is audio-independent" assertion would lock in the failure mode — Michael may want to reverse it via amendment, and a frozen test would obstruct that.
 
+
+## 2026-05-19 — autopilot session: R-13 (attempt 3 — terminal)
+
+- **Verdict**: NULL (terminal) — recommend `status: failed` per charter §Retry discipline
+- **Attempts**: 3/3
+- **Wallclock used**: ~9 minutes (verification-only session)
+- **Diff this session**: 0 production files, LOGBOOK only. HEAD remains `eca9545` (attempt 2).
+- **Tests re-run this session**: 7/7 PASS — `test_bridge_spectrum_observable_constructs`, `test_bridge_spectrum_zero_on_empty_substrate`, `test_conservation` (3), `test_crystallization_robustness` (2). Total 476 s. Matches attempt 2 exactly.
+- **Slow KL gate**: not re-run. Attempt 2 proved with a 4 k-tick diagnostic at matched RNG seed 4242 that `bridges.weight` is bit-identical between low-freq-sine and white-noise inputs (max-abs delta 0.0). The 50 k-tick KL would reproduce KL ≈ 0.000 for the same architectural reason — wasted compute.
+
+### Why three sessions were not enough
+
+The locked KL > 0.1 gate is unmeetable under the substrate's current encoder-free F1b/F1c primitives, not because the implementation is wrong but because audio amplitude is firewalled inside `nodes.energy` and never reaches the binding/density/flux path that determines bridge topology (full forensic chain in the attempt-2 entry above). Attempt 1 tried to make the gate pass by parameter changes; attempt 2 proved the gate cannot pass without amending one of `_compute_density` (energy-weighted), `binding_probability` (energy term), or `position_hash_seed` (amplitude-mixed) — all of which are out of R-13 scope and touch T1/T2/T3 acceptance. Attempt 3 has nothing new to try without redefining the contract; per charter "If you find yourself wanting a fourth attempt, that is a signal that the item is mis-specified" — accepted. The bridge-spectrum hypothesis as pre-registered is falsified for the encoder-free path; the gap is in the hypothesis, not the implementation. Michael decides on return whether to amend the substrate primitives (re-queue under a new G-amendment), redesign the observable (different internal channel), or close R-13 and rely on R-LR-8's synthesis-MFCC half of its OR-acceptance.
+
