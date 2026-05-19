@@ -14,7 +14,7 @@ Each is a binary check on the substrate's current state.
 | 2 | `workspace_winner` | `world.workspace_winner_pattern_id > 0` — a pattern is currently selected for global broadcast |
 | 3 | `prediction_loop_closed` | `0 < self_prediction_error < 1` — the substrate is computing prediction error in a closed loop, with bounded magnitude |
 | 4 | `self_modification_fired` | `abs(cfg.btsp_potentiation - 50.0) > 0.5` — the substrate has modified at least one of its own learning parameters away from its default |
-| 5 | `pattern_repertoire_growing` | `n_patterns ≥ 2` — the substrate carries at least two distinct trained pattern_ids |
+| 5 | `pattern_repertoire_growing` | `n_patterns_now > n_patterns_at_start` — the substrate's distinct trained pattern_id count must increase during the run. Earlier threshold `n_patterns ≥ 2` was trivially satisfied by the 3 pre-seeded engrams and is logged as a pre-data correction at the end of this document. |
 
 All five are checked in `agent/run_autonomous.py::check_emergence_markers`. Source of truth is the code.
 
@@ -69,3 +69,30 @@ If at any point a threshold is changed, the change must be recorded here with da
 A **GNW-flavored conjunction trigger** that fires when a substrate carries multiple trained engrams that interact via dream-phase replay and self-monitoring. The conjunction is meant to be a binary test of "the substrate has the architectural pre-conditions for access-consciousness-style global broadcast as Dehaene operationalises it." It is one slice of the GNW programme, not the whole. It is also useful precisely because it is binary and falsifiable.
 
 That is what this is. We will not call it more.
+
+
+## Pre-data correction record
+
+Pre-registration discipline prevents post-hoc threshold tuning *to results*. It does not prevent correcting a threshold that was specified incorrectly **before any data was collected against it**. Such corrections must be logged explicitly here so a future reader can distinguish the two.
+
+### 2026-05-19 — Marker 5 threshold correction
+
+**Original specification:** `marker 5 = (n_patterns ≥ 2)`.
+
+**Problem identified:** the substrate is pre-seeded with 3 trained engrams (G15 spec, `world/library.py`). The condition `n_patterns ≥ 2` is therefore satisfied at simulation tick 0, before the substrate has done any cognitive work. Marker 5 carried no information about the run.
+
+**Reviewer feedback (2026-05-19) made this explicit:** "Marker 5 ist trivial erfüllt durch die 3 vorgespeisten Patterns."
+
+**Correction:** `marker 5 = (n_patterns_now > n_patterns_at_start)`. The substrate's distinct-pattern count must *grow* during the run for marker 5 to fire. `n_patterns_at_start` is cached on the first call to `check_emergence_markers` and compared against subsequent counts. Implementation: `agent/run_autonomous.py::check_emergence_markers`.
+
+**Why this is a correction and not a tuning:**
+- The construct under test (pattern repertoire growth) is unchanged.
+- The threshold direction is unchanged (still: "more patterns is good").
+- The change is from `triviallySatisfied` to `nonTriviallySatisfied`, not from one acceptance-rate to another.
+- It is made **before** the next data-collection run that uses it.
+
+**Why this is logged here and not silently fixed:**
+- Without explicit pre-data logging, a future review cannot distinguish "Michael corrected a trivial threshold before running" from "Michael relaxed a failing threshold after running and pretended it was the original".
+- The git diff on this file is the cryptographic proof: this correction landed before any run that ever produced a marker-5 result under the new definition.
+
+Future corrections of this kind — pre-data, same-construct, mis-specification cleanup — will be logged here following the same template. Post-data threshold tuning *to a result* will not happen; it would void the pre-registration and is excluded by `CHARTER.md` §"NULL is a valid verdict".
