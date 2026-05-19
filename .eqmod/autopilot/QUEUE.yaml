@@ -239,7 +239,7 @@ items:
       - "tests/flux/test_crystallization.py PASSES (T3 still holds)"
       - "tests/flux/test_decay.py PASSES (T4 still holds)"
     time_budget_hours: 24
-    status: null
+    status: None
     attempts: 1
     last_session: "2026-05-17T02:58:29"
     blockers: ["R-4 must reach status=passed first"]
@@ -288,7 +288,7 @@ items:
       - "docs/flux/phase-log.md has a training-run-close entry with measured numbers (substrate metric, control metric, margin, plan threshold) committed"
       - "LOGBOOK.md has the verdict + interpretation paragraph appended"
     time_budget_hours: 24
-    status: null
+    status: None
     attempts: 1
     last_session: "2026-05-17T15:20:06.537245"
     blockers: ["R-7 must reach status=passed first"]
@@ -333,7 +333,7 @@ items:
       - "docs/flux/phase-log.md has R-11 entry with both runs bootstrap means + stds + verdict comparison"
       - "LOGBOOK.md has cross-comparison observation: tabulate KL divergences for R-8 cochlea-baseline vs R-11 encoder-free; measure the gap and report it (PASS verdict does NOT require beating R-8 — only measuring the gap)"
     time_budget_hours: 24
-    status: null
+    status: None
     attempts: 1
     last_session: "2026-05-17T17:54:07.241520"
     blockers: ["R-10 must reach status=passed first; also R-8 baseline ideally completed for comparison data"]
@@ -351,7 +351,7 @@ items:
       - "tests/flux/test_decay.py PASSES (T4 unaffected)"
       - "tests/flux/test_learning.py PASSES (R-5 fast tests stay green; slow excluded)"
     time_budget_hours: 4
-    status: null
+    status: None
     attempts: 1
     last_session: "2026-05-18T04:44:56.880665"
     blockers: ["Spec amendment §5.8 by Claude under user authorization 2026-05-17 23:00 — adds continuous activation field A(x,y,z,t) as plasticity-signal smoother. Discrete substrate primary; field is bookkeeping."]
@@ -381,8 +381,9 @@ items:
       - "Session picks smallest (Q, gain) from sweep [Q=3,5,10,30] x [gain=1,5,25,100] that passes both. Documents choice in phase-log"
       - "tests/flux/test_synthesis.py PASSES (F2 baseline synthesis unit tests still pass at original Q=10 gain=1 defaults; new combo is additional config)"
     time_budget_hours: 4
-    status: queued
-    attempts: 0
+    status: passed
+    attempts: 1
+    last_session: "2026-05-19T15:45:08.594028"
     blockers: ["R-LR-1 diagnosed synthesis-baseline as the dominant signal in babble; this item tunes Q/gain so firings can break through"]
     created: 2026-05-19
 
