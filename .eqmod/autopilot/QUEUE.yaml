@@ -416,8 +416,9 @@ items:
       - "tests/flux/test_conservation.py PASSES (T1 robust under whatever fixtures the session uses)"
       - "tests/flux/test_crystallization_robustness.py PASSES (T3 robust)"
     time_budget_hours: 4
-    status: queued
-    attempts: 0
+    status: null
+    attempts: 1
+    last_session: "2026-05-20T01:33:17.764176"
     blockers: ["R-15 must reach status=passed first (provides agent/flux/bridge_spectrum.py + corpus_spectrum.py)"]
     created: 2026-05-19
 
