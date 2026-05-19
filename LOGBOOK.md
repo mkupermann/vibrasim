@@ -613,3 +613,35 @@ The reframe is what I now believe the project is. The code names were written on
 Pre-committed: by 2026-11-19, return to this entry. If the reframe + 6-month engagement check together produced qualified-reader engagement, the open tension was load-bearing as honest self-display. If they did not and the project is being renamed to reflect the meta-half as primary, then the right move at that point is to refactor code names too — at that point it is no longer mid-vacation framing pressure but a deliberate scope change.
 
 This entry exists so the question survives intact to the review date.
+
+
+## 2026-05-20 — autopilot session: R-16 (architectural-firewall diagnostic, 50k smoke)
+
+- **Verdict:** NULL on both pre-registered acceptance gates
+- **Attempts:** 1/3
+- **Wallclock:** ~17 min for the two 50k substrate pairs (16:46 pytest wallclock; the third substrate ran inside a module-scoped fixture so cost-pay-once); +8 min T1/T3 regression
+- **Lines changed:** +508 (agent/flux/bridge_spectrum.py salvaged from autopilot/R-15; tests/flux/test_firewall_diagnostic.py NEW); 0 deletions
+
+**Audio fixtures used.** R-7 Stage 1 English corpus — `prideandprejudice_01-03_austen_64kb.wav` (1132 s, LibriVox CC0) read through `read_wav_mono_16k`, first 800 000 samples (50 000 ticks × 16 SPT) RMS-normalised to 0.25. White-noise control: Gaussian, seed 9999, same RMS 0.25 (RMS diff < 1 %). Silence control: literal zeros, length 800 000.
+
+**Measurements (both pre-registered gates).**
+
+| comparison | KL(a‖b) | KL(b‖a) | symmetric KL | threshold | verdict | bridges (a) | bridges (b) |
+|---|---|---|---|---|---|---|---|
+| English vs matched-RMS white noise | 0.000000 | 0.000000 | 0.000000 | > 0.01 | FAIL | 201 | 201 |
+| English vs silence | 0.000000 | 0.000000 | 0.000000 | > 0.1 | FAIL | 201 | 201 |
+
+Both substrates produced *exactly* 201 alive bridges with bit-identical `(freq, weight)` histograms across every input variant. The substrate's bridge layer is fully independent of the audio waveform — only the encoder-free injector RNG state and the substrate seed (4242 throughout) determine the outcome.
+
+**This explicitly confirms R-13's eca9545 forensic finding.** R-13 saw the firewall partially at 50k via a stricter 0.1-nat threshold; R-16 was specifically built to also probe the much weaker 0.01-nat floor (KL above the float-noise level) and the silence control (which represents the maximally different input). Both nulled. The firewall is not selective on spectral content — it is total. Bridge weights at 50k-tick scope carry zero mutual information with the audio.
+
+**The acceptance prescribed which G24 to draft.** Per QUEUE.yaml R-16 third gate: a TOTAL firewall (silence test also fails) means G24 must target the `audio_raw` injection path itself, not the F1b plasticity rule. The architectural problem is upstream of plasticity: `inject_raw_audio_chunk` writes raw amplitude into `nodes.energy`, but under the current F1b/F1c rules `nodes.energy` is not coupled into the density/binding/flux pathway that determines bridge formation. The plasticity layer never sees the audio; it sees only background dynamics that are deterministic given the seed.
+
+**Mechanism, one paragraph.** `inject_raw_audio_chunk` deposits one quantum per audio sample at energy `|x|` (or `x²`) and frequency `log(SR/2)`. These quanta diffuse, accumulate at nodes, and increment `nodes.energy`. F1b plasticity reads `bridge_flux`, which is computed from quanta crossings between bridge endpoints — and that flux is dominated by the geometric/thermal substrate, not by per-node energy. The substrate's flux pattern is therefore decoupled from the audio amplitude at the population level. R-13's autopsy named this as "nodes.energy is firewalled"; R-16 confirms it as a quantitative dead-zero across two control axes (matched RMS, and matched zero RMS).
+
+**Implementation, hypothesis, or acceptance?** The gap is in the implementation, specifically in the F1b/F1c coupling rules — not in the hypothesis (encoder-free injection is the right architectural commitment if amplitude is to drive emergence), and not in the acceptance spec (the 0.01 floor is generous and the silence control is fair). A G24 amendment must either (a) make `nodes.energy` an input to the bridge_flux computation, or (b) re-route audio amplitude through a quantum property that *is* in the flux pathway (e.g. velocity or birth-energy of the injected quanta scaling with `|x|`).
+
+**Regression.** T1 conservation 3/3 PASS; T3 crystallisation robustness 2/2 PASS (`test_T3_passes_on_at_least_8_of_10_seeds` and `test_T3_negative_control_fails_all_10_seeds`). The diagnostic added no regression.
+
+**Next item.** Queue should advance to a G24 plan-writing item that picks one of the two re-coupling strategies and pre-registers a follow-on diagnostic at the same 50k scope. Without G24, R-LR-8's bridge-spectrum gate (KL > 0.5 at 1.8M ticks) will null by the same mechanism, just slower.
+
