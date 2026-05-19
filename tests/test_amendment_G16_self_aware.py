@@ -2,7 +2,7 @@
 
 Operationalises ACCESS consciousness (Block 1995) / global broadcast
 (Dehaene & Naccache 2001) / higher-order representation (Rosenthal
-2005) / autopoietic self-improvement (Varela; meta-learning) on top
+2005) / homeostatic parameter feedback (Varela; meta-learning) on top
 of the EQMOD substrate.
 
 This test file proves:
@@ -25,7 +25,7 @@ Honest scope statement (also in world/self_aware.py docstring):
 This file does NOT prove phenomenal consciousness. It proves that the
 substrate has a representation of itself, broadcasts dominant content
 globally, computes its own surprise, and modifies its own learning
-rules. That is access-conscious self-modeling autopoietic agency in
+rules. That is access-conscious self-modeling operational-marker agency in
 the operational sense — not the hard problem.
 """
 import numpy as np

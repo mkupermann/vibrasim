@@ -20,7 +20,7 @@ import streamlit as st
 
 
 METRICS_PATH = Path.home() / ".eqmod" / "autonomous" / "metrics.csv"
-EMERGENCE_PATH = Path.home() / ".eqmod" / "autonomous" / "EMERGENCE.json"
+MARKER_STATE_PATH = Path.home() / ".eqmod" / "autonomous" / "marker_state.json"
 CONTROL_PATH = Path.home() / ".eqmod" / "autonomous" / "NEGATIVE_CONTROL.json"
 SNAPSHOTS_DIR = Path.home() / ".eqmod" / "autonomous" / "snapshots"
 
@@ -55,7 +55,7 @@ def _load_json(path: Path) -> dict | None:
 
 # ----- Top status bar -----------------------------------------------------
 
-emergence = _load_json(EMERGENCE_PATH)
+emergence = _load_json(MARKER_STATE_PATH)
 control = _load_json(CONTROL_PATH)
 
 col_status, col_em, col_ctl = st.columns([2, 2, 2])
@@ -147,7 +147,7 @@ else:
 
 if emergence:
     st.divider()
-    st.subheader("🎯 EMERGENCE.json")
+    st.subheader("🎯 marker_state.json")
     markers = emergence.get("markers", {})
     cols = st.columns(5)
     for i, key in enumerate([

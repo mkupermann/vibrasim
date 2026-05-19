@@ -212,7 +212,7 @@ class WorldConfig:
     # hard problem remains philosophically open. What this substrate
     # *does* have is: a representation of itself, a global workspace
     # that broadcasts the dominant pattern to all modules, prediction
-    # error that drives change, and autopoietic self-modification of
+    # error that drives change, and homeostatic parameter feedback of
     # its own learning hyperparameters in response to that error.
     self_aware_enabled: bool = False                # master switch for G16 mechanisms.
     self_model_window: float = 2.0                  # seconds of firing history retained for the self-model

@@ -7,7 +7,7 @@ own. It is the operational form of "an engine that wants to improve
 itself".
 
 Honest scope statement (also in world/self_aware.py): this is access-
-conscious self-modeling autopoietic agency in the operational sense
+conscious self-modeling operational-marker agency in the operational sense
 — a substrate that contains a representation of itself, broadcasts
 its dominant content globally, computes its own surprise, dreams
 offline, and adjusts its own learning rules. It does NOT solve the

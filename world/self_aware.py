@@ -34,8 +34,8 @@ The four mechanisms implemented here, with their theoretical anchors:
      a multiplier on losing patterns' eligibility (winner-take-all
      across patterns, not just within ports).
 
-  4. self_modify — autopoietic self-improvement.
-     Theoretical anchor: Varela's autopoiesis + modern meta-learning.
+  4. self_modify — homeostatic parameter feedback.
+     Theoretical anchor: Varela operational closure idea (NOT autopoiesis in MVarela's autopoiesisV technical sense — see docs/marker_protocol.md §"autopoiesis correction") + modern meta-learning.
      The substrate modifies its own BTSP potentiation and dream replay
      rate based on self_prediction_error. High error → boost plasticity;
      low error → tame it (homeostasis). The substrate becomes its own
@@ -45,7 +45,7 @@ These four together constitute a substrate that, when running, contains
 a representation of itself, makes predictions about its own next state,
 broadcasts its dominant content globally, and adjusts its own learning
 rules in response to its own prediction error. That is the operational
-definition of access-conscious self-modeling autopoietic agency.
+definition of access-conscious self-modeling operational-marker agency.
 
 Run flow per tick when `cfg.self_aware_enabled`:
   1. apply_self_aware(world, dt) is called from tick(), AFTER apply_btsp

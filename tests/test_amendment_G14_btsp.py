@@ -7,7 +7,7 @@ binding driver for episodic-style memories.
 Literature gap closed:
   - Magee 2026 (Nature Neuroscience) reviews BTSP biology — eligibility
     traces of 6-8 sec, plateau-gated bidirectional weight updates.
-  - Wu et al 2024 (Nature Communications) shows BTSP enables one-shot
+  - Wu et al 2025 (Nature Communications) shows BTSP enables one-shot
     content-addressable memory with binary synapses.
   - No prior work combines BTSP with continuous-physics emergent-atom
     substrates (Sayama Swarm Chemistry, neural CA, FEP attractor nets,

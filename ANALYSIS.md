@@ -188,7 +188,7 @@ sensor frame  ─►  encoder  ─►  vibrations in port region
                                        ▼
                        snapshot ─► tools/ + app/
                        firing log ─► decoder ─► speaker
-                       EMERGENCE.json (on 5-marker conjunction)
+                       marker_state.json (on 5-marker conjunction)
 ```
 
 ---
