@@ -59,31 +59,17 @@ def load_config() -> tuple[str | None, str | None]:
     return token, chat_id
 
 
-def send_telegram(subject: str, body: str) -> tuple[bool, str]:
-    """Send a Telegram message. Returns (success, failure_reason).
-
-    failure_reason is empty string on success. On failure it contains a
-    short diagnostic the caller can persist or surface.
-    """
-    token, chat_id = load_config()
-    if not token:
-        return False, "no telegram_bot_token configured"
-    if not chat_id:
-        return False, "no telegram_chat_id configured"
-
-    # Telegram has a 4096-character message limit. Truncate cautiously.
-    text = f"*{subject}*\n\n{body}"
-    if len(text) > 4000:
-        text = text[:3950] + "\n\n... (truncated)"
-
-    url = f"https://api.telegram.org/bot{token}/sendMessage"
-    data = urllib.parse.urlencode({
+def _post_telegram(token: str, chat_id: str, text: str, parse_mode: str | None) -> tuple[bool, str]:
+    """Single attempt to POST to Telegram. Returns (ok, reason)."""
+    fields = {
         "chat_id": chat_id,
         "text": text,
-        "parse_mode": "Markdown",
         "disable_web_page_preview": "true",
-    }).encode()
-
+    }
+    if parse_mode is not None:
+        fields["parse_mode"] = parse_mode
+    url = f"https://api.telegram.org/bot{token}/sendMessage"
+    data = urllib.parse.urlencode(fields).encode()
     try:
         req = urllib.request.Request(url, data=data, method="POST")
         with urllib.request.urlopen(req, timeout=15) as resp:
@@ -101,6 +87,33 @@ def send_telegram(subject: str, body: str) -> tuple[bool, str]:
         return False, f"network error: {exc!r}"
     except Exception as exc:
         return False, f"unexpected: {exc!r}"
+
+
+def send_telegram(subject: str, body: str) -> tuple[bool, str]:
+    """Send a Telegram message. Returns (success, failure_reason).
+
+    Two-step delivery:
+      1. Try plain text (no parse_mode) — most reliable for any content.
+         The 2026-05-20T23:43 /results incident was caused by Markdown
+         parse failing on underscores in identifiers like
+         `count_energy_flux_through` (unbalanced italic marker → 400).
+         Plain text bypasses every parse class.
+      2. (Removed Markdown attempt — was the source of the silent fail.)
+
+    Subject is prepended as `[SUBJECT] ` rather than as Markdown bold,
+    since bold formatting is not load-bearing.
+    """
+    token, chat_id = load_config()
+    if not token:
+        return False, "no telegram_bot_token configured"
+    if not chat_id:
+        return False, "no telegram_chat_id configured"
+
+    text = f"[{subject}]\n\n{body}" if subject else body
+    if len(text) > 4000:
+        text = text[:3950] + "\n\n... (truncated)"
+
+    return _post_telegram(token, chat_id, text, parse_mode=None)
 
 
 def main() -> int:
