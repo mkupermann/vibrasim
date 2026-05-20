@@ -11,13 +11,33 @@
 
 set -euo pipefail
 
-# Only enforce on autopilot commits. Human commits bypass.
+repo_root="$(git rev-parse --show-toplevel)"
+staged="$(git diff --cached --name-only --diff-filter=ACMRT)"
+
+# QUEUE.yaml validation — runs on ALL commits (human + autopilot), because the
+# bug class it catches (self-blocking blocker strings that silently freeze the
+# entire short queue) burns 30-min launchd ticks invisibly until someone runs
+# a manual status check. Cost the 2026-05-20 R-17 incident 14 hours of vacation.
+# Pre-commit catch is the cheapest defence; preflight rejection message and
+# manual `python tools/validate_queue.py` are the other two layers.
+if echo "$staged" | grep -qE "\.eqmod/autopilot/QUEUE\.yaml$"; then
+  if [[ -x "$repo_root/.venv/bin/python" ]]; then
+    if ! "$repo_root/.venv/bin/python" "$repo_root/tools/validate_queue.py"; then
+      echo ""
+      echo "pre-commit: QUEUE.yaml validation failed. Commit rejected."
+      echo "Fix the blocker strings above, re-stage, and retry."
+      exit 1
+    fi
+  else
+    echo "pre-commit: WARN: no .venv/bin/python — skipping QUEUE.yaml validation."
+  fi
+fi
+
+# Only enforce the autopilot-specific frozen-file rules below on autopilot commits.
+# Human commits bypass the rest of the hook.
 if [[ "${EQMOD_AUTOPILOT:-0}" != "1" ]]; then
   exit 0
 fi
-
-repo_root="$(git rev-parse --show-toplevel)"
-staged="$(git diff --cached --name-only --diff-filter=ACMRT)"
 
 # 1. Frozen-protocol files: marker_protocol and its addendum.
 forbidden_protocol=(

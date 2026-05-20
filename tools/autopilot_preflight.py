@@ -101,7 +101,33 @@ def main() -> None:
                 pick = it
                 break
     if pick is None:
-        die("no items with status in {queued, in_progress} satisfying blockers — queue exhausted or all queued items are blocked")
+        # Enumerate WHY each queued item was rejected. Silent "queue exhausted"
+        # cost the 2026-05-20 R-17 incident 14 hours of vacation budget.
+        idx_for_diag = status_by_id()
+        reasons: list[str] = []
+        for it in items:
+            if it.get("status") != "queued":
+                continue
+            iid = it.get("id") or "<no-id>"
+            blocked_by: list[str] = []
+            for line in (it.get("blockers") or []):
+                if not isinstance(line, str):
+                    continue
+                for other_id, other_status in idx_for_diag.items():
+                    if not other_id or other_id == iid:
+                        continue
+                    if re.search(rf"\b{re.escape(other_id)}\b", line):
+                        if other_status != "passed":
+                            blocked_by.append(f"{other_id}(status={other_status!r})")
+            if blocked_by:
+                reasons.append(f"  {iid} blocked by: {', '.join(blocked_by)}")
+            else:
+                reasons.append(f"  {iid} blockers satisfied but not picked — investigate")
+        detail = "\n".join(reasons) if reasons else "  (no queued items at all)"
+        die(
+            "no items with status in {queued, in_progress} satisfying blockers — "
+            "queue exhausted or all queued items are blocked\n" + detail
+        )
 
     # 4. Item-level sanity
     item_id = pick.get("id")
