@@ -91,6 +91,7 @@ def whitelist() -> set[int]:
 def cmd_help(_args: str) -> str:
     return (
         "Available commands:\n"
+        "/results — natural-language: achieved + running + recommendation\n"
         "/status — short + long-run queue summary, current item, STOP state\n"
         "/queue — last 10 items in short queue with status\n"
         "/stop — set STOP marker (autopilot pauses next tick)\n"
@@ -100,6 +101,227 @@ def cmd_help(_args: str) -> str:
         "/logs [n] — recent session.log lines (default 20, max 100)\n"
         "/help — this message"
     )
+
+
+# Rule-based item summaries — kept in this file rather than a separate
+# config so the receiver has no extra import / load step. Descriptions
+# are deliberately specific and don't claim more than the item achieved.
+ITEM_SUMMARIES = {
+    "R-13": "Bridge-spectrum observable scaffolded; nullte architektonisch (Inhalt-Coupling-Test)",
+    "R-14": "Synthesis-Sweep: Q=3 gain=1 lockt firings über baseline",
+    "R-15": "R-LR-8 Infrastructure: flux-snapshot + salvaged bridge_spectrum + R-LR-8 scaffold",
+    "R-16": "Architektur-Firewall quantitativ: KL=0.0 EN vs Weißrauschen — Inhalt-Blockade total",
+    "R-17": "G24 implementiert; administratively failed wegen Acceptance-Scope-Bug (in R-18 verschoben)",
+    "R-17b": "G24 (energy-weighted flux) mechanisch verifiziert — 12/12 tests grün",
+    "R-18": "G24-Verifikation: bricht die energie-gewichtete Plastizität die Firewall bei 50k Ticks?",
+    "R-19": "Pipeline-Smoke-Suite — Defence-Layer-Regression-Tests",
+    "R-LR-1": "Encoder-free 1.8M Ticks: Substrat formt 1358 Atome + 3188 Brücken aus Roh-Audio; Synthese dominiert babble",
+    "R-LR-2": "Cochlea-baseline 1.8M: NULL, gleicher Synthese-Bottleneck",
+    "R-LR-3": "Encoder-free 30x20x10 voxels: gekillt nach 39h Hard-cap-Verstoß",
+    "R-LR-4": "Encoder-free + extended dream phase",
+    "R-LR-8": "Encoder-free + tuned synthesis + bridge-spectrum (full-scale G24-unabhängig)",
+}
+
+
+def _terminal_status(item: dict) -> str | None:
+    """Return one of {'passed', 'failed', 'null'} or None if not terminal."""
+    st = item.get("status")
+    if st == "passed":
+        return "passed"
+    if st == "failed":
+        return "failed"
+    # YAML null → Python None; literal "None" → str
+    if st is None or str(st) in ("null", "None"):
+        if item.get("attempts", 0) > 0 or item.get("finished_at"):
+            return "null"
+    return None
+
+
+def _describe_item(item: dict) -> str:
+    iid = item.get("id") or "?"
+    return ITEM_SUMMARIES.get(iid, item.get("title", "?")[:80])
+
+
+def _summarise_achievements(short_items: list, long_items: list) -> list[str]:
+    """One bullet per recently-terminal item, newest first."""
+    combined = []
+    for src in (short_items, long_items):
+        for it in src:
+            term = _terminal_status(it)
+            if not term:
+                continue
+            ts = it.get("last_session") or it.get("finished_at") or ""
+            combined.append((ts, term, it))
+    combined.sort(key=lambda t: t[0], reverse=True)
+
+    bullets = []
+    for _, term, it in combined[:10]:
+        iid = it.get("id") or "?"
+        desc = _describe_item(it)
+        verb = {"passed": "passed", "failed": "failed", "null": "null"}[term]
+        bullets.append(f"{iid} {verb}: {desc}")
+    return bullets
+
+
+def _summarise_running(short_items: list, long_items: list) -> list[str]:
+    bullets = []
+    # Current short-queue item (if a wrapper is active)
+    cur_path = STATE_DIR / "current_item.txt"
+    if cur_path.exists():
+        try:
+            cid = cur_path.read_text().strip()
+            it = next((i for i in short_items if i.get("id") == cid), None)
+            if it:
+                bullets.append(f"Short: {cid} — {_describe_item(it)}")
+        except Exception:
+            pass
+    # Long-run
+    lr_pid = Path.home() / ".eqmod/long-run/current.pid"
+    lr_item = Path.home() / ".eqmod/long-run/current_item.txt"
+    if lr_pid.exists() and lr_item.exists():
+        try:
+            cid = lr_item.read_text().strip()
+            it = next((i for i in long_items if i.get("id") == cid), None)
+            if it:
+                import time as _t
+                elapsed_h = (_t.time() - lr_pid.stat().st_mtime) / 3600
+                bullets.append(
+                    f"Long-run: {cid} elapsed {elapsed_h:.1f}h — {_describe_item(it)}"
+                )
+        except Exception:
+            pass
+    if not bullets:
+        bullets.append("(keine aktive Session, alle Queues warten auf nächsten Launchd-Tick)")
+    return bullets
+
+
+def _summarise_architecture(short_items: list) -> list[str]:
+    by_id = {i.get("id"): i for i in short_items}
+    bullets = []
+
+    # G24 mechanics state
+    r17b = by_id.get("R-17b") or by_id.get("R-17")
+    if r17b and r17b.get("status") == "passed":
+        bullets.append("G24 Mechanik (energy-weighted flux): implementiert + verifiziert")
+    else:
+        bullets.append("G24 Mechanik: noch nicht verifiziert")
+
+    # G24 content-coupling state
+    r18 = by_id.get("R-18")
+    if r18:
+        st = _terminal_status(r18)
+        if st == "passed":
+            bullets.append("G24 Inhalt-Coupling: Firewall gebrochen (KL > 0.01 bei 50k Ticks)")
+        elif st == "null":
+            bullets.append("G24 Inhalt-Coupling: Firewall hält — energie-gewichtung reicht nicht")
+        elif st == "failed":
+            bullets.append("G24 Inhalt-Coupling: implementation-bug, retry")
+        else:
+            bullets.append("G24 Inhalt-Coupling: Verdict ausstehend (R-18 läuft oder queued)")
+    else:
+        bullets.append("G24 Inhalt-Coupling: nicht geplant")
+
+    # Iteration cap usage
+    g24_used = 1 if (r17b and r17b.get("status") in ("passed", "failed")) else 0
+    bullets.append(f"Iteration-Cap: G24={g24_used} von 3 Slots verbraucht")
+
+    # Success criterion progress
+    bullets.append("Erfolgskriterium 'selbstbestimmt lernend kommunizierend':")
+    bullets.append("  selbstbestimmt: schwach (G17-Autopilot-Loop, Legacy-Substrat)")
+    bullets.append("  lernend: Inhalt-Coupling-Verdict für G24 hängt ausstehend")
+    bullets.append("  kommunizierend: nicht implementiert — G20-G23 im Pivot-Pfad gegated")
+
+    return bullets
+
+
+def _next_recommendation(short_items: list, long_items: list) -> list[str]:
+    by_id = {i.get("id"): i for i in short_items}
+    by_lr = {i.get("id"): i for i in long_items}
+    bullets = []
+
+    r18 = by_id.get("R-18")
+    r18_term = _terminal_status(r18) if r18 else None
+
+    if r18 is None:
+        bullets.append("R-18 fehlt im Queue — füge G24-Verifikation hinzu bevor Pivot geprüft wird")
+    elif r18.get("status") == "queued":
+        bullets.append("R-18 fires demnächst (≤30min). Verdict in ~4h — entscheidend für G24")
+    elif r18_term == "passed":
+        # R-LR-9 status
+        rlr9 = by_lr.get("R-LR-9")
+        if rlr9 is None:
+            bullets.append("R-18 PASS → queue R-LR-9 für 1.8M-Tick-Vollskala-Verifikation von G24")
+        elif rlr9.get("status") == "passed":
+            bullets.append("R-LR-9 PASS — erste defensible content-learning-Result. G20-G23 (kommunikation-Pfad) als nächstes")
+        elif _terminal_status(rlr9) == "null":
+            bullets.append("R-LR-9 NULL bei voller Skala — G25 designen (Energie-DICHTE statt energie-Gewichtung)")
+        else:
+            bullets.append("R-LR-9 läuft / queued — Verdict abwarten")
+    elif r18_term == "null":
+        bullets.append("R-18 NULL — Iteration-Cap G24 verbraucht (1 von 3)")
+        bullets.append("Nächster Schritt: G25 Amendment designen — Energie-DICHTE als alternative Architektur-Hypothese")
+        bullets.append("(Statt energie-gewichtete Plastizität: mehr Quanten injizieren bei hoher Amplitude)")
+    elif r18_term == "failed":
+        bullets.append("R-18 failed — implementation-bug? Logs prüfen, neu queuen")
+
+    # Long-run pipeline state
+    rlr_running = any(
+        (Path.home() / ".eqmod/long-run/current.pid").exists()
+        for _ in [None]
+    )
+    rlr_queued = sum(1 for i in long_items if i.get("status") == "queued")
+    if rlr_running:
+        bullets.append("Long-run dispatcher arbeitet — keine Eingabe nötig")
+    elif rlr_queued > 0:
+        bullets.append(f"Long-run dispatcher hat {rlr_queued} queued items — fires nächsten Tick")
+    else:
+        bullets.append("Long-run dispatcher ist leer — neue Hypothesen queue")
+
+    # If queue is empty
+    short_queued = sum(1 for i in short_items if i.get("status") == "queued")
+    if short_queued == 0 and r18_term is not None:
+        bullets.append("Short-queue leer — nächste Amendment-Iteration oder Pivot-Trigger queue")
+
+    return bullets
+
+
+def cmd_results(_args: str) -> str:
+    """Natural-language summary: achievements + running + recommendation."""
+    try:
+        short_q = yaml.safe_load(QUEUE_SHORT.read_text()) if QUEUE_SHORT.exists() else {}
+    except Exception as exc:
+        return f"short-queue parse error: {exc!r}"
+    try:
+        long_q = yaml.safe_load(QUEUE_LONG.read_text()) if QUEUE_LONG.exists() else {}
+    except Exception:
+        long_q = {}
+
+    short_items = short_q.get("items") or []
+    long_items = long_q.get("items") or []
+
+    sections = []
+
+    sections.append("ERREICHT (zuletzt abgeschlossen):")
+    for b in _summarise_achievements(short_items, long_items):
+        sections.append(f"- {b}")
+
+    sections.append("\nLÄUFT JETZT:")
+    for b in _summarise_running(short_items, long_items):
+        sections.append(f"- {b}")
+
+    sections.append("\nARCHITEKTUR-STAND:")
+    for b in _summarise_architecture(short_items):
+        sections.append(f"- {b}")
+
+    sections.append("\nEMPFEHLUNG:")
+    for b in _next_recommendation(short_items, long_items):
+        sections.append(f"- {b}")
+
+    text = "\n".join(sections)
+    # Telegram caps at 4096; leave margin for the subject prefix.
+    if len(text) > 3500:
+        text = text[:3450] + "\n...(truncated; siehe /status /queue)"
+    return text
 
 
 def _queue_counter(path: Path) -> str:
@@ -219,6 +441,7 @@ def cmd_logs(args: str) -> str:
 
 COMMANDS = {
     "/help": cmd_help,
+    "/results": cmd_results,
     "/status": cmd_status,
     "/queue": cmd_queue,
     "/stop": cmd_stop,
