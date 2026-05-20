@@ -670,3 +670,11 @@ The legacy path probabilities are higher because G14-G18 already satisfy *lernen
 ### Re-registration
 
 If the user changes the success criterion or the cap before the cap fires, that change must be recorded here with date, justification, and the data state at the time of change, before the new run is executed. Changing the criterion in response to a failed run, then claiming the new criterion is satisfied, is the same anti-pattern as marker-threshold tuning and is excluded by protocol.
+
+
+## 2026-05-20 — autopilot session: R-17b
+
+- **Verdict**: PASSED
+- **Attempts**: 1/3
+- **Diff**: 7 files changed, 1012 insertions(+), 7 deletions(-)
+- **Rationale**: all pass-targets passed; all negative controls failed as required
