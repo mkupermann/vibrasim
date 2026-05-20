@@ -499,8 +499,9 @@ items:
       - "tests/test_pipeline_smoke.py is added to pytest -m 'not slow' default run so it executes on every CI invocation and every postflight regression check"
       - "pytest -m 'not slow' PASSES (no regressions in the rest of the fast slice)"
     time_budget_hours: 4
-    status: queued
-    attempts: 0
+    status: passed
+    attempts: 1
+    last_session: "2026-05-21T01:42:27.926354"
     blockers: ["R-15 must reach status=passed first (the pipeline test must be able to import the bridge_spectrum and snapshot machinery R-15 salvaged in case those modules are loaded by the same pytest run)"]
     created: 2026-05-20
 
