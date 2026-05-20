@@ -60,3 +60,8 @@ vibrasim_*.png
 snapshots/
 
 # uv lockfile - tracked but verify
+
+# Notification channel credentials — must never reach git
+notify_config.json
+# Autopilot state directory artifacts that leak into the repo accidentally
+unsent_mail_*.txt

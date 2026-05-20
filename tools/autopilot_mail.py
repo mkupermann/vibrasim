@@ -20,52 +20,47 @@ RECIPIENT = "michael@kupermann.com"
 
 
 def send_mail(subject: str, body: str) -> bool:
-    """Send via Apple Mail osascript. Persists to disk on any failure.
+    """Send notification. Telegram primary; persists to disk on failure.
 
-    Discovered 2026-05-20: the previous `/usr/bin/mail` fallback returned
-    rc=0 because macOS Postfix is unconfigured for outbound delivery on
-    this Mac; the mail was silently dropped while `mail` reported success.
-    send_mail() therefore returned True for weeks even though nothing
-    reached the user, who reports never receiving any mail.
+    Channel choice 2026-05-20 by user: Telegram bot.
+    The autopilot_mail name is retained for back-compat with existing
+    call sites (postflight, watchdog, supervisor, health_check); under
+    the hood this routes to Telegram via tools/notify_telegram.py.
 
-    New behaviour: osascript is the only delivery path. /usr/bin/mail
-    fallback removed entirely. If osascript fails (Mail.app not running,
-    AppleEvent -1712 timeout, automation permission missing in System
-    Settings → Privacy & Security → Automation), persist the mail with
-    the precise failure reason to ~/.eqmod/autopilot/unsent_mail_*.txt
-    and return False. The health-check tool surfaces the unsent backlog.
+    On any delivery failure (no Telegram credentials configured,
+    network error, Telegram API error) the message is persisted to
+    ~/.eqmod/autopilot/unsent_mail_*.txt with the failure reason so
+    the health-check surfaces the backlog.
+
+    Returns True on confirmed delivery, False on persist-to-disk.
     """
-    body_escaped = body.replace("\\", "\\\\").replace("\n", "\\n")
-    failure_reason = "unknown"
-
+    import sys as _sys
+    _sys.path.insert(0, str(REPO / "tools"))
     try:
-        r = subprocess.run(
-            ["/usr/bin/osascript", str(SCPT_PATH), RECIPIENT, subject, body_escaped],
-            capture_output=True, text=True, timeout=30,
-        )
-        if r.returncode == 0 and "OK" in r.stdout:
-            return True
-        failure_reason = (r.stderr or r.stdout or "no output").strip()[:500]
-    except (FileNotFoundError, subprocess.TimeoutExpired) as exc:
-        failure_reason = f"subprocess error: {exc!r}"
+        from notify_telegram import send_telegram  # type: ignore
     except Exception as exc:
-        failure_reason = f"unexpected: {exc!r}"
+        _persist_unsent(subject, body, f"notify_telegram import failed: {exc!r}")
+        return False
 
+    ok, reason = send_telegram(subject, body)
+    if ok:
+        return True
+    _persist_unsent(subject, body, f"telegram: {reason}")
+    return False
+
+
+def _persist_unsent(subject: str, body: str, failure_reason: str) -> None:
     STATE_DIR.mkdir(parents=True, exist_ok=True)
     stamp = _dt.datetime.now().strftime("%Y%m%d_%H%M%S")
     fallback = STATE_DIR / f"unsent_mail_{stamp}.txt"
     fallback.write_text(
         f"SUBJECT: {subject}\n"
         f"TIMESTAMP: {_dt.datetime.now().isoformat()}\n"
-        f"OSASCRIPT_FAILURE: {failure_reason}\n\n"
+        f"FAILURE: {failure_reason}\n\n"
         f"{body}\n\n"
         "----\n"
-        "/usr/bin/mail fallback intentionally removed 2026-05-20 because\n"
-        "macOS Postfix on this Mac drops outbound silently while reporting\n"
-        "rc=0, which made the autopilot 'send' mails for weeks without any\n"
-        "ever reaching the user. If you see this file, mail delivery via\n"
-        "Apple Mail is not working — check System Settings → Privacy &\n"
-        "Security → Automation (osascript must be allowed to control Mail)\n"
-        "or wire up a non-Mail.app notification channel.\n"
+        "If you see this file, the Telegram notification channel is\n"
+        "not delivering. Check ~/.eqmod/autopilot/notify_config.json\n"
+        "(or env EQMOD_TELEGRAM_BOT_TOKEN + EQMOD_TELEGRAM_CHAT_ID) and\n"
+        "test with: python tools/notify_telegram.py --test\n"
     )
-    return False

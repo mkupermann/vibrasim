@@ -109,6 +109,80 @@ def apply_plasticity(bridges: Bridges, flux_counts: np.ndarray,
     bridges.last_flux_tick[had_flux] = int(tick_index)
 
 
+def count_energy_flux_through(bridges: Bridges, nodes: Nodes,
+                                quanta: Quanta,
+                                cfg: PlasticityConfig) -> np.ndarray:
+    """Energy-weighted flux. Same geometry as count_flux_through, but
+    sums quanta.energy[hits] instead of len(hits). Float64 return.
+
+    Introduced by G24 (docs/amendments/G24-energy-weighted-flux.md):
+    the spec's first principle is energy flux, but count_flux_through
+    is presence-based. This is the read-side fix that lets bridge
+    plasticity respond to the energy field that inject_raw_audio_*
+    already writes into quanta.energy.
+    """
+    flux = np.zeros(bridges.max_bridges, dtype=np.float64)
+    if bridges.n_alive() == 0 or quanta.n_alive() == 0:
+        return flux
+    qp = quanta.pos[quanta.alive]  # (Nq, 3)
+    qe = quanta.energy[quanta.alive]  # (Nq,)
+    r2 = cfg.r_flux * cfg.r_flux
+    alive_brs = np.where(bridges.alive)[0]
+    for slot in alive_brs:
+        src = int(bridges.src[slot])
+        dst = int(bridges.dst[slot])
+        if not (nodes.alive[src] and nodes.alive[dst]):
+            continue
+        a = nodes.pos[src]
+        b = nodes.pos[dst]
+        if src == dst:
+            diff = qp - a
+            d2 = (diff * diff).sum(axis=-1)
+            flux[slot] = float(qe[d2 < r2].sum())
+            continue
+        ab = b - a
+        ab_len2 = float((ab * ab).sum())
+        if ab_len2 == 0.0:
+            diff = qp - a
+            d2 = (diff * diff).sum(axis=-1)
+            flux[slot] = float(qe[d2 < r2].sum())
+            continue
+        ap = qp - a
+        t = (ap @ ab) / ab_len2
+        t = np.clip(t, 0.0, 1.0)
+        cp = a + t[:, None] * ab
+        diff = qp - cp
+        d2 = (diff * diff).sum(axis=-1)
+        flux[slot] = float(qe[d2 < r2].sum())
+    return flux
+
+
+def apply_plasticity_energy_weighted(bridges: Bridges,
+                                       energy_flux: np.ndarray,
+                                       cfg: PlasticityConfig,
+                                       tick_index: int) -> None:
+    """In-place bridge-weight update with float energy flux input.
+
+    Same arithmetic as apply_plasticity:
+        w_new = w_old + gamma * energy_flux
+                       - lam * max(0, flux_min - energy_flux)
+    but energy_flux is float64 (sum of crossing quanta energies),
+    not int64 count. flux_min is interpreted in energy-per-tick units
+    under this path.
+    """
+    alive = bridges.alive
+    if not alive.any():
+        return
+    f = np.asarray(energy_flux, dtype=np.float64)
+    strengthen = cfg.gamma * f
+    deficit = np.maximum(0.0, cfg.flux_min - f)
+    decay = cfg.lam * deficit
+    delta = strengthen - decay
+    bridges.weight[alive] += delta[alive]
+    had_flux = alive & (f > 0.0)
+    bridges.last_flux_tick[had_flux] = int(tick_index)
+
+
 def prune_bridges_and_nodes(bridges: Bridges, nodes: Nodes,
                              cfg: PlasticityConfig) -> float:
     """Remove low-weight bridges and orphaned nodes.

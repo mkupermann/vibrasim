@@ -23,6 +23,7 @@ are the R-9 detailed plan at
 from __future__ import annotations
 
 import json
+import os
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -45,10 +46,56 @@ from world.flux.binding import BindingConfig
 from world.flux.bridges import Bridges
 from world.flux.decay import DecayConfig
 from world.flux.grid import Grid
-from world.flux.plasticity import PlasticityConfig
+from world.flux.plasticity import (
+    PlasticityConfig,
+    apply_plasticity,
+    apply_plasticity_energy_weighted,
+    count_energy_flux_through,
+    count_flux_through,
+)
 from world.flux.quantum import Quanta
 from world.flux.structures import Nodes
 from world.flux.thermal import ThermalConfig
+
+
+ENV_USE_ENERGY_WEIGHTED_FLUX = "EQMOD_USE_ENERGY_WEIGHTED_FLUX"
+
+
+def _use_energy_weighted_flux() -> bool:
+    """Read EQMOD_USE_ENERGY_WEIGHTED_FLUX each call (no boot-time cache).
+
+    Per-call read lets tests toggle the env var without reloading the
+    module, and prevents one process picking up a stale boot-time value
+    from a prior pytest session.
+    """
+    return os.environ.get(ENV_USE_ENERGY_WEIGHTED_FLUX, "0") == "1"
+
+
+def training_step(bridges: Bridges, nodes: Nodes, quanta: Quanta,
+                   plasticity_cfg: PlasticityConfig,
+                   tick_index: int) -> None:
+    """Plasticity step for encoder-free training. Env-gated per G24.
+
+    With ``EQMOD_USE_ENERGY_WEIGHTED_FLUX=1``: routes through the
+    energy-weighted pathway introduced by G24
+    (``count_energy_flux_through`` + ``apply_plasticity_energy_weighted``).
+    Otherwise: legacy count-based pathway (``count_flux_through`` +
+    ``apply_plasticity``), preserving R-13/R-16 behaviour by default.
+
+    Pruning is handled by ``dynamics.tick``; this function only covers
+    the flux read + weight update steps so monkey-patch tests can
+    interpose at the module level.
+    """
+    if _use_energy_weighted_flux():
+        energy_flux = count_energy_flux_through(
+            bridges, nodes, quanta, plasticity_cfg,
+        )
+        apply_plasticity_energy_weighted(
+            bridges, energy_flux, plasticity_cfg, tick_index,
+        )
+    else:
+        flux = count_flux_through(bridges, nodes, quanta, plasticity_cfg)
+        apply_plasticity(bridges, flux, plasticity_cfg, tick_index)
 
 
 DEFAULT_MANIFEST_PATH = Path.home() / ".eqmod/training/EN/manifest.json"
@@ -506,6 +553,7 @@ def run_encoder_free_training(
             thermal_cfg=cfg.thermal_cfg,
             rng=rng,
             tick_index=tick_idx,
+            plasticity_step_fn=training_step,
         )
         n_alive = int(quanta.alive.sum())
         if n_alive > n_quanta_alive_peak:
@@ -533,6 +581,7 @@ def run_encoder_free_training(
             thermal_cfg=cfg.thermal_cfg,
             rng=rng,
             tick_index=cfg.n_ticks_train,
+            plasticity_step_fn=training_step,
         )
         current_flux = (
             bridges.flux.astype(np.float64)
