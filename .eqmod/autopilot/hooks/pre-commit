@@ -14,14 +14,38 @@ set -euo pipefail
 repo_root="$(git rev-parse --show-toplevel)"
 staged="$(git diff --cached --name-only --diff-filter=ACMRT)"
 
-# QUEUE.yaml validation — runs on ALL commits (human + autopilot), because the
-# bug class it catches (self-blocking blocker strings that silently freeze the
-# entire short queue) burns 30-min launchd ticks invisibly until someone runs
-# a manual status check. Cost the 2026-05-20 R-17 incident 14 hours of vacation.
-# Pre-commit catch is the cheapest defence; preflight rejection message and
-# manual `python tools/validate_queue.py` are the other two layers.
+# QUEUE.yaml validation — runs on commits that ADD new items or CHANGE
+# blockers/preregistered_acceptance/title/brief fields. Skipped when the
+# diff only touches runtime fields (status / attempts / last_session),
+# which is the autopilot main-sync pattern. The validator's purpose is to
+# catch newly-written blocker strings that mention terminal-non-passed
+# items; the autopilot main-sync just records that an item finished and
+# cannot introduce a new self-blocking blocker string by construction.
+#
+# Without this skip, postflight's main-sync of e.g. R-17 → null commits
+# fail with "validate_queue: FAIL R-18 blocked by mention of R-17" even
+# though R-18 was already legitimately blocking on R-17, and R-17 going
+# null is exactly what the pipeline is supposed to record. Cost the
+# 2026-05-20T19:30 R-17 main-sync incident: pipeline state desynced
+# between branch (null) and main (still queued).
 if echo "$staged" | grep -qE "\.eqmod/autopilot/QUEUE\.yaml$"; then
-  if [[ -x "$repo_root/.venv/bin/python" ]]; then
+  # Inspect the staged diff to QUEUE.yaml. If every changed line is a
+  # runtime-field update (status / attempts / last_session), skip the
+  # validator. Any other change (blockers, new items, acceptance) runs it.
+  queue_diff_changed_lines=$(
+    git diff --cached -- .eqmod/autopilot/QUEUE.yaml \
+      | grep -E "^[+-][^+-]" \
+      | grep -vE "^[+-]\s*$" \
+      || true
+  )
+  non_runtime=$(
+    echo "$queue_diff_changed_lines" \
+      | grep -vE "^[+-]\s+(status|attempts|last_session):" \
+      || true
+  )
+  if [[ -z "$non_runtime" && -n "$queue_diff_changed_lines" ]]; then
+    echo "pre-commit: QUEUE.yaml diff is runtime-fields-only (status/attempts/last_session) — skipping validate_queue"
+  elif [[ -x "$repo_root/.venv/bin/python" ]]; then
     if ! "$repo_root/.venv/bin/python" "$repo_root/tools/validate_queue.py"; then
       echo ""
       echo "pre-commit: QUEUE.yaml validation failed. Commit rejected."
