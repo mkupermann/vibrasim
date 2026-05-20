@@ -486,7 +486,18 @@ def process_update(update: dict, allowed: set[int]) -> None:
         reply = f"Command {cmd} crashed: {exc!r}"
         log(f"  handler error: {exc!r}")
     subject = cmd[1:].upper() if cmd.startswith("/") else cmd.upper()
-    send_telegram(subject, reply)
+    # Surface send failures in the log so future "silent /results" incidents
+    # are visible at the receiver layer instead of just at Telegram's edge.
+    # The 2026-05-20T23:43 incident was diagnosed only because the user
+    # reported the missing reply; the receiver had logged a clean handler
+    # exit and the Markdown 400 from Telegram had nowhere to surface.
+    res = send_telegram(subject, reply)
+    if isinstance(res, tuple):
+        ok, reason = res
+    else:
+        ok, reason = bool(res), ""
+    if not ok:
+        log(f"  send_telegram failed for cmd {cmd!r}: {reason!r}")
 
 
 def acquire_lock() -> bool:
