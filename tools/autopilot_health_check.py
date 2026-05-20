@@ -286,6 +286,63 @@ def check_queue_validity() -> list[tuple[str, str]]:
     return issues
 
 
+def check_telegram_receiver() -> list[tuple[str, str]]:
+    """Surface a crashed/throttled Telegram receiver.
+
+    The 2026-05-21T01:44 incident was the receiver crash-looping under
+    KeepAlive because the Python file was missing on the local working
+    tree (untracked file lost during a branch switch). launchctl exit
+    code was 2 (file-not-found), but the symptom was just "Telegram
+    geht nicht mehr" — the user had to report it.
+
+    Two signals:
+      - launchctl exit code != 0 → receiver is failing
+      - receiver_log mtime > 1h old → not actively polling
+    """
+    issues: list[tuple[str, str]] = []
+
+    try:
+        r = subprocess.run(
+            ["launchctl", "list"], capture_output=True, text=True, timeout=5,
+        )
+        line = next(
+            (ln for ln in r.stdout.splitlines() if "com.eqmod.notify-receiver" in ln),
+            None,
+        )
+        if line is None:
+            issues.append((
+                "crit",
+                "com.eqmod.notify-receiver not registered with launchctl — "
+                "Telegram bidirectional commands are unavailable.",
+            ))
+            return issues
+        # Line format: "<pid>\t<lastExit>\tcom.eqmod.notify-receiver"
+        parts = line.split()
+        if len(parts) >= 2:
+            last_exit = parts[1]
+            if last_exit not in ("0", "-"):
+                issues.append((
+                    "crit",
+                    f"com.eqmod.notify-receiver last exit code = {last_exit} "
+                    f"(non-zero). Check ~/.eqmod/autopilot/notify-receiver.err.",
+                ))
+    except Exception as exc:
+        issues.append(("warn", f"launchctl probe failed: {exc!r}"))
+
+    rlog = STATE_AUTOPILOT / "telegram_receiver.log"
+    if rlog.exists():
+        age_h = (time.time() - rlog.stat().st_mtime) / 3600
+        if age_h > 2.0:
+            issues.append((
+                "warn",
+                f"telegram_receiver.log is {age_h:.1f}h old; receiver may not "
+                f"be polling. (Telegram long-poll has 25s timeout so the log "
+                f"should churn at least every ~minute.)",
+            ))
+
+    return issues
+
+
 def check_unsent_mail_backlog() -> list[tuple[str, str]]:
     """Surface mail-delivery failures.
 
@@ -351,6 +408,7 @@ def main() -> int:
         ("queue validity", check_queue_validity),
         ("state dirs", check_state_dirs),
         ("unsent mail backlog", check_unsent_mail_backlog),
+        ("telegram receiver", check_telegram_receiver),
     ]
 
     all_issues: list[tuple[str, str, str]] = []
