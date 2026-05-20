@@ -20,13 +20,24 @@ RECIPIENT = "michael@kupermann.com"
 
 
 def send_mail(subject: str, body: str) -> bool:
-    """Send via Apple Mail osascript (primary) or /usr/bin/mail (fallback).
+    """Send via Apple Mail osascript. Persists to disk on any failure.
 
-    Returns True on success, False on total failure (unsent persisted to disk).
+    Discovered 2026-05-20: the previous `/usr/bin/mail` fallback returned
+    rc=0 because macOS Postfix is unconfigured for outbound delivery on
+    this Mac; the mail was silently dropped while `mail` reported success.
+    send_mail() therefore returned True for weeks even though nothing
+    reached the user, who reports never receiving any mail.
+
+    New behaviour: osascript is the only delivery path. /usr/bin/mail
+    fallback removed entirely. If osascript fails (Mail.app not running,
+    AppleEvent -1712 timeout, automation permission missing in System
+    Settings → Privacy & Security → Automation), persist the mail with
+    the precise failure reason to ~/.eqmod/autopilot/unsent_mail_*.txt
+    and return False. The health-check tool surfaces the unsent backlog.
     """
     body_escaped = body.replace("\\", "\\\\").replace("\n", "\\n")
+    failure_reason = "unknown"
 
-    # Primary: Apple Mail via osascript.
     try:
         r = subprocess.run(
             ["/usr/bin/osascript", str(SCPT_PATH), RECIPIENT, subject, body_escaped],
@@ -34,25 +45,27 @@ def send_mail(subject: str, body: str) -> bool:
         )
         if r.returncode == 0 and "OK" in r.stdout:
             return True
-    except (FileNotFoundError, subprocess.TimeoutExpired):
-        pass
+        failure_reason = (r.stderr or r.stdout or "no output").strip()[:500]
+    except (FileNotFoundError, subprocess.TimeoutExpired) as exc:
+        failure_reason = f"subprocess error: {exc!r}"
+    except Exception as exc:
+        failure_reason = f"unexpected: {exc!r}"
 
-    # Fallback: /usr/bin/mail
-    try:
-        subprocess.run(
-            ["/usr/bin/mail", "-s", subject, RECIPIENT],
-            input=body, text=True, check=True, timeout=30,
-        )
-        return True
-    except (FileNotFoundError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
-        pass
-
-    # Both failed: persist to disk
     STATE_DIR.mkdir(parents=True, exist_ok=True)
     stamp = _dt.datetime.now().strftime("%Y%m%d_%H%M%S")
     fallback = STATE_DIR / f"unsent_mail_{stamp}.txt"
     fallback.write_text(
-        f"SUBJECT: {subject}\n\n{body}\n\n"
-        "(Both osascript Mail.app and /usr/bin/mail failed.)\n"
+        f"SUBJECT: {subject}\n"
+        f"TIMESTAMP: {_dt.datetime.now().isoformat()}\n"
+        f"OSASCRIPT_FAILURE: {failure_reason}\n\n"
+        f"{body}\n\n"
+        "----\n"
+        "/usr/bin/mail fallback intentionally removed 2026-05-20 because\n"
+        "macOS Postfix on this Mac drops outbound silently while reporting\n"
+        "rc=0, which made the autopilot 'send' mails for weeks without any\n"
+        "ever reaching the user. If you see this file, mail delivery via\n"
+        "Apple Mail is not working — check System Settings → Privacy &\n"
+        "Security → Automation (osascript must be allowed to control Mail)\n"
+        "or wire up a non-Mail.app notification channel.\n"
     )
     return False
