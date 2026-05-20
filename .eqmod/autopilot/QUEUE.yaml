@@ -479,8 +479,9 @@ items:
       - "tests/flux/test_crystallization_robustness.py PASSES (T3 robust)"
       - "LOGBOOK entry records all four KL numbers + the random seeds used. If KL_english_vs_whitenoise > 0.01 AND KL_english_vs_silence > 0.1, the session must also append a note recommending R-LR-9 as the next long-run item (1.8M-tick verification of G24)."
     time_budget_hours: 4
-    status: queued
-    attempts: 0
+    status: null
+    attempts: 1
+    last_session: "2026-05-21T00:36:01.215133"
     blockers: ["R-17b must reach status=passed first (provides count_energy_flux_through + apply_plasticity_energy_weighted; the prior G24-implementation item was closed administratively at failed after acceptance-row-9 mis-scoping, recorded in docs/amendments/G24-energy-weighted-flux.md 'Pre-data correction record' 2026-05-20)"]
     created: 2026-05-20
 
