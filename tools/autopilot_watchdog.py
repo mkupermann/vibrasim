@@ -158,6 +158,27 @@ def main() -> None:
     for alert in alerts:
         send_mail("[EQMOD autopilot] ALERT", alert + "\n\n" + build_daily_body())
 
+    # Comprehensive hourly health check — audits long-run hard-cap,
+    # dispatcher tick recency, lock sanity, working-tree branch, queue
+    # validity, STOP markers, state-dir disk. Mails its own alerts on
+    # critical issues. The R-LR-3 39h hang on 2026-05-20 went 27h past
+    # the cap because nothing was monitoring this surface area. The
+    # health-check tool below catches every class of pipeline anomaly
+    # I have identified so far. See tools/autopilot_health_check.py.
+    try:
+        import subprocess as _sp
+        _sp.run(
+            [str(REPO / ".venv/bin/python"),
+             str(REPO / "tools/autopilot_health_check.py")],
+            check=False, timeout=60,
+        )
+    except Exception as exc:
+        # Health check failure must not block daily summary path below.
+        send_mail(
+            "[EQMOD watchdog] health-check itself failed",
+            f"autopilot_health_check.py raised {exc!r}; investigate.",
+        )
+
     # Daily summary at first run after 08:00
     today = now().date().isoformat()
     last_daily = DAILY_SENT.read_text().strip() if DAILY_SENT.exists() else ""

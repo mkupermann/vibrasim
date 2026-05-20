@@ -250,7 +250,77 @@ def main() -> int:
         except ValueError:
             pid = None
         if pid and pid_alive(pid):
-            log(f"  run in progress pid={pid} item={CURRENT_ITEM_PATH.read_text().strip() if CURRENT_ITEM_PATH.exists() else '?'} — exit clean")
+            # Enforce hard runtime cap. The R-LR-3 incident on 2026-05-20
+            # had a pytest hanging for 39h on a single test invocation
+            # with no output progress — the dispatcher had only a comment-
+            # level "max_runtime_hours_per_item: 24" in queue.yaml, no
+            # actual enforcement code. Audit caught it; fix is below.
+            elapsed_seconds = time.time() - PID_PATH.stat().st_mtime
+            q_for_cap = load_queue()
+            window_cap_hours = (q_for_cap.get("window") or {}).get(
+                "max_runtime_hours_per_item", 24
+            )
+            # Per-item override (if the item declared a wider budget like
+            # R-LR-8's 24h vs the default 24h). Item-level overrides may not
+            # exceed an absolute ceiling of 30h.
+            current_item_id = (
+                CURRENT_ITEM_PATH.read_text().strip()
+                if CURRENT_ITEM_PATH.exists() else None
+            )
+            item_cap_hours = window_cap_hours
+            if current_item_id:
+                it = next(
+                    (i for i in q_for_cap.get("items") or []
+                     if i.get("id") == current_item_id),
+                    None,
+                )
+                if it and "max_runtime_hours" in it:
+                    item_cap_hours = min(float(it["max_runtime_hours"]), 30.0)
+            cap_seconds = float(item_cap_hours) * 3600.0
+
+            if elapsed_seconds > cap_seconds:
+                log(
+                    f"  HARD-CAP VIOLATION: pid={pid} item={current_item_id} "
+                    f"elapsed={elapsed_seconds/3600:.1f}h "
+                    f"(cap={item_cap_hours}h) — killing"
+                )
+                try:
+                    os.kill(pid, signal.SIGTERM)
+                    time.sleep(3)
+                    if pid_alive(pid):
+                        os.kill(pid, signal.SIGKILL)
+                except (ProcessLookupError, PermissionError) as exc:
+                    log(f"  kill failed: {exc!r}")
+                # Mark item failed with hard-cap reason; fall through to
+                # the dead-process evaluation branch which will pick next.
+                if current_item_id:
+                    save_queue_item_status(
+                        current_item_id, "failed",
+                        attempts=1,
+                        finished_at=_dt.datetime.now().isoformat(),
+                    )
+                    try:
+                        from autopilot_mail import send_mail
+                        send_mail(
+                            f"[EQMOD long-run] HARD-CAP KILL {current_item_id}",
+                            f"Item {current_item_id} ran for "
+                            f"{elapsed_seconds/3600:.1f}h, exceeding the "
+                            f"{item_cap_hours}h cap. SIGTERM-then-SIGKILL "
+                            f"applied. Item marked failed with this reason. "
+                            f"Investigate the test target before retrying.",
+                        )
+                    except Exception as exc:
+                        log(f"  mail failed: {exc!r}")
+                PID_PATH.unlink(missing_ok=True)
+                CURRENT_ITEM_PATH.unlink(missing_ok=True)
+                # Don't fall through to fire next item this tick — give
+                # the system a 30-min beat to settle before launching more.
+                return 0
+
+            log(
+                f"  run in progress pid={pid} item={current_item_id} "
+                f"elapsed={elapsed_seconds/3600:.1f}h/{item_cap_hours}h — exit clean"
+            )
             return 0
         # Process dead → evaluate
         item_id = CURRENT_ITEM_PATH.read_text().strip() if CURRENT_ITEM_PATH.exists() else None
