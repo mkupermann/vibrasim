@@ -460,3 +460,22 @@ items:
     blockers: ["R-17 must reach status=passed first (provides count_energy_flux_through + apply_plasticity_energy_weighted)"]
     created: 2026-05-20
 
+  - id: R-19
+    title: pipeline smoke test — third defence layer against silent autopilot failures
+    brief: LOGBOOK 2026-05-20 architectural-change entry (Liveness over correctness + Push not Pull + Pipeline smoke).
+    preregistered_acceptance:
+      - "tests/test_pipeline_smoke.py::test_preflight_picks_only_unblocked_items PASSES (NEW: build a minimal mock-queue with one item whose blocker mentions a passed item, one whose blocker mentions a null item, one whose blocker mentions a queued item; assert preflight picks the third — chain-prerequisite — and that the first two are flagged correctly by validate_queue.py)"
+      - "tests/test_pipeline_smoke.py::test_preflight_rejection_message_enumerates_blocked_items PASSES (NEW: build a mock-queue where every queued item is blocked by something terminal-non-passed; capture preflight stderr; assert it contains the specific blocked-by-X-status-Y enumeration the 0e2c0f6 commit added)"
+      - "tests/test_pipeline_smoke.py::test_validate_queue_blocks_terminal_blocker_mention PASSES (NEW: synthetic QUEUE.yaml with a queued item whose blocker mentions a null/failed item; assert validate_queue.py exits 1 with the offender's id in stderr)"
+      - "tests/test_pipeline_smoke.py::test_validate_queue_allows_queued_chain PASSES (NEW: synthetic QUEUE.yaml with R-A queued and R-B blocking on 'R-A must pass'; assert validate_queue.py exits 0 — legitimate forward chain)"
+      - "tests/test_pipeline_smoke.py::test_stagnation_detector_sets_stop_after_threshold PASSES (NEW: monkey-patch measure_progress_signal to return constant value across 4 invocations; assert STOP file is set after invocation 4, LOGBOOK appended, alerted flag in stagnation_state.json is True)"
+      - "tests/test_pipeline_smoke.py::test_stagnation_detector_resets_on_progress PASSES (NEW: invoke twice with stagnant signal, then once with changed signal; assert consecutive_stagnant_ticks resets to 0, STOP NOT set, alerted False)"
+      - "tests/test_pipeline_smoke.py::test_pre_commit_hook_rejects_self_blocking_queue_edit PASSES (NEW: write a synthetic QUEUE.yaml with R-X-blocked-by-mention-of-null-item to a tempdir, stage it, run the hook script via subprocess, assert exit 1)"
+      - "tests/test_pipeline_smoke.py is added to pytest -m 'not slow' default run so it executes on every CI invocation and every postflight regression check"
+      - "pytest -m 'not slow' PASSES (no regressions in the rest of the fast slice)"
+    time_budget_hours: 4
+    status: queued
+    attempts: 0
+    blockers: ["R-15 must reach status=passed first (the pipeline test must be able to import the bridge_spectrum and snapshot machinery R-15 salvaged in case those modules are loaded by the same pytest run)"]
+    created: 2026-05-20
+
