@@ -77,38 +77,24 @@ def main() -> None:
     def status_by_id() -> dict:
         return {(it.get("id") or ""): (it.get("status") or "") for it in items}
 
-    # Dependency extraction regex — matches ONLY explicit dependency syntax
-    # like "R-X must reach status=passed first" / "R-X must reach status passed".
-    # Word-boundary-matching every item ID in blocker text (the pre-2026-05-20
-    # behaviour) cost two ~14h-incidents in one day: the regex matched item IDs
-    # mentioned narratively in explanation sentences ("R-16 confirmed the
-    # firewall", "the test that lives in R-18") and silently froze the queue
-    # because those narrative mentions referenced non-passed items.
-    # Convention now: only mentions in the explicit "X must reach status..."
-    # pattern at the start of (or anywhere in) a blocker line count as real
-    # dependencies. All other ID mentions are documentation.
-    DEPENDENCY_RE = re.compile(
-        r"\b(R-[A-Z0-9][A-Za-z0-9-]*)\s+must\s+reach\s+status",
-        re.IGNORECASE,
-    )
+    # Dependency semantics live in tools/queue_semantics.py — shared with
+    # tools/validate_queue.py so the two layers cannot drift apart again
+    # (as they did on 2026-05-20T20:33+21:03 causing the cascading-failure
+    # incident). Only items mentioned in the explicit "R-X must reach
+    # status..." pattern are treated as real dependencies; narrative ID
+    # mentions in other text are documentation.
+    from queue_semantics import extract_explicit_dependencies  # noqa: E402
 
     def blockers_satisfied(item: dict, idx: dict) -> bool:
         item_id = item.get("id")
-        for line in (item.get("blockers") or []):
-            if not isinstance(line, str):
+        for dep_id in extract_explicit_dependencies(item.get("blockers") or []):
+            if dep_id == item_id:
                 continue
-            for m in DEPENDENCY_RE.finditer(line):
-                other_id = m.group(1)
-                if other_id == item_id:
-                    continue
-                other_status = idx.get(other_id)
-                if other_status is None:
-                    # Mention of a non-existent item — ignore (could be a typo
-                    # in narrative text; the explicit "must reach status" form
-                    # is unambiguous enough that misspellings here are rare).
-                    continue
-                if other_status != "passed":
-                    return False
+            dep_status = idx.get(dep_id)
+            if dep_status is None:
+                continue  # mention of a non-existent item — ignore
+            if dep_status != "passed":
+                return False
         return True
 
     pick = None

@@ -29,6 +29,15 @@ import yaml
 REPO = Path(__file__).resolve().parent.parent
 QUEUE = REPO / ".eqmod/autopilot/QUEUE.yaml"
 
+# Shared semantics with autopilot_preflight.py — see tools/queue_semantics.py
+sys.path.insert(0, str(REPO / "tools"))
+from queue_semantics import (  # noqa: E402
+    DEPENDENCY_RE,
+    TERMINAL_NON_PASSED,
+    extract_explicit_dependencies,
+    narrative_id_mentions,
+)
+
 
 def main() -> int:
     if not QUEUE.exists():
@@ -42,60 +51,52 @@ def main() -> int:
     items = q.get("items") or []
     idx = {(i.get("id") or ""): (i.get("status") or "") for i in items}
 
-    # YAML `null` → Python None → coerced to "" by idx construction.
-    # YAML literal "None" (unquoted, capitalised) → Python str "None".
-    # YAML "null" as quoted string → "null". All three are terminal-not-passed.
-    TERMINAL_NON_PASSED = {"", "null", "None", "failed"}
-
-    # Dependency-extraction regex — MUST stay in sync with autopilot_preflight.py.
-    # Both layers extract only items mentioned in the explicit "R-X must reach
-    # status..." pattern. Narrative ID mentions in other sentences are
-    # documentation and do not gate. Without this alignment the two
-    # 2026-05-20T21:00 cascading-failure incidents recur.
-    DEPENDENCY_RE = re.compile(
-        r"\b(R-[A-Z0-9][A-Za-z0-9-]*)\s+must\s+reach\s+status",
-        re.IGNORECASE,
-    )
-
     errors: list[str] = []
     warnings: list[str] = []
     for item in items:
         if item.get("status") != "queued":
             continue
         item_id = item.get("id") or "<no-id>"
-        for line in item.get("blockers") or []:
-            if not isinstance(line, str):
+        blockers = item.get("blockers") or []
+
+        # FAIL: explicit "X must reach status..." dependency on terminal item.
+        # Uses the shared extractor so this can never drift from preflight.
+        for dep_id in extract_explicit_dependencies(blockers):
+            if dep_id == item_id:
                 continue
+            st = idx.get(dep_id, "<not-in-queue>")
+            if st in TERMINAL_NON_PASSED:
+                errors.append(
+                    f"  {item_id} has explicit dependency on {dep_id} "
+                    f"(status={st!r}, TERMINAL — will never reach passed)."
+                )
 
-            # FAIL: explicit "X must reach status..." dependency on terminal item
-            for m in DEPENDENCY_RE.finditer(line):
-                other_id = m.group(1)
-                if other_id == item_id:
-                    continue
-                st = idx.get(other_id, "<not-in-queue>")
-                if st in TERMINAL_NON_PASSED:
-                    errors.append(
-                        f"  {item_id} has explicit dependency on {other_id} "
-                        f"(status={st!r}, TERMINAL — will never reach passed)."
-                    )
-                    errors.append(
-                        f"    offending blocker text: {line[:140]}..."
-                    )
+        # FAIL: brief field must point at an existing file. The preflight
+        # rejects missing-brief items with a 30-min tick burn; catch it here
+        # at commit time. Class-C bug from 2026-05-20T21:03 (R-19 brief was
+        # the description sentence instead of a path).
+        brief = item.get("brief")
+        if brief:
+            brief_path = REPO / brief
+            if not brief_path.exists():
+                errors.append(
+                    f"  {item_id} brief points at non-existent path: {brief!r}"
+                )
+                errors.append(
+                    f"    (resolved to {brief_path}); preflight would reject at "
+                    f"the brief-file-exists check"
+                )
 
-            # WARN: narrative mention of a non-passed item (the old preflight
-            # treated these as silent dependencies; the new preflight ignores
-            # them but the author should know about them).
-            explicit = {m.group(1) for m in DEPENDENCY_RE.finditer(line)}
-            for other_id, st in idx.items():
-                if not other_id or other_id == item_id or other_id in explicit:
-                    continue
-                if re.search(rf"\b{re.escape(other_id)}\b", line) and st != "passed":
-                    warnings.append(
-                        f"  {item_id} narratively mentions {other_id} "
-                        f"(status={st!r}); narrative mentions no longer gate the "
-                        f"candidate under the 2026-05-20T21:00 preflight regex "
-                        f"change. Allowed but worth a re-read."
-                    )
+        # WARN: narrative mentions of non-passed items. Allowed under the new
+        # preflight semantics but worth flagging so the author can confirm.
+        for other_id in narrative_id_mentions(blockers, item_id, idx.keys()):
+            st = idx.get(other_id)
+            if st != "passed":
+                warnings.append(
+                    f"  {item_id} narratively mentions {other_id} "
+                    f"(status={st!r}); narrative mentions are documentation "
+                    f"only under the new preflight regex. Re-read to confirm intent."
+                )
 
     if errors:
         print(
