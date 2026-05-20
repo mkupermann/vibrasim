@@ -461,8 +461,9 @@ items:
       - "tests/flux/test_R_LR_8_acceptance.py is collected by pytest (R-15 scaffold still imports cleanly — amendment §3 row 10)"
       - "tests/flux/test_g24_amendment.py PASSES (full file — 6 tests, sanity check the file has no NEW tests added that drift from the 6 mechanic items above)"
     time_budget_hours: 4
-    status: queued
-    attempts: 0
+    status: passed
+    attempts: 1
+    last_session: "2026-05-20T22:35:40.776347"
     blockers: ["R-15 must reach status=passed first. See docs/amendments/G24-energy-weighted-flux.md 'Pre-data correction record' 2026-05-20 for why the prior G24-implementation item was administratively closed and this item replaces it. Reference G24 implementation lives at commit aad8c53; this session may import that code via git checkout rather than re-implement, then run the corrected 12-test acceptance suite."]
     created: 2026-05-20
 
