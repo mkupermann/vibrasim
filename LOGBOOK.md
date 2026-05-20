@@ -670,3 +670,44 @@ The legacy path probabilities are higher because G14-G18 already satisfy *lernen
 ### Re-registration
 
 If the user changes the success criterion or the cap before the cap fires, that change must be recorded here with date, justification, and the data state at the time of change, before the new run is executed. Changing the criterion in response to a failed run, then claiming the new criterion is satisfied, is the same anti-pattern as marker-threshold tuning and is excluded by protocol.
+
+
+## 2026-05-21 — autopilot session: R-18
+
+- **Verdict:** NULL — locked acceptance requires gates 1+2+3 PASS; gates 1 and 2 failed.
+- **Attempts:** 1/3
+- **Wallclock:** ~38 min (29:08 for the four 50k-tick gates, 8:08 for T1+T3, ~1 min misc).
+- **Branch:** `autopilot/R-18`. Code imported from `autopilot/R-17b` (G24 implementation) via `git checkout autopilot/R-17b -- <paths>`. New: `tests/flux/test_g24_verification.py` (4 gates), and `agent/flux/bridge_spectrum.py` gained a `use_energy_weighted: bool = False` parameter on `run_short_encoder_free_substrate` so the same runner serves both the legacy count-based and the G24 energy-weighted paths under one fixture surface. Diff: 2 files / 296 insertions / 1 deletion attributable to R-18 work itself; the seven R-17b import files were swept into a parallel infrastructure commit (`0432b1b`, see note below).
+
+### Measured KLs (locked thresholds, NO retuning)
+
+```
+Gate 1  KL(English || white-noise, weighted)   = 0.000085   threshold > 0.01   FAIL
+Gate 2  KL(English || silence,     weighted)   = 0.000068   threshold > 0.1    FAIL
+Gate 3  KL(white-A  || white-B,    weighted)   = 0.000120   threshold < 0.005  PASS
+Gate 4  KL(English || white-noise, count)      = 0.000000   threshold < 1e-6   PASS
+```
+
+Seeds: gates 1/2 substrate=4242; gate 1 white-noise=9999; gate 3 run-A (substrate=4242, noise=9999), run-B (substrate=7777, noise=11111); gate 4 substrate=4242, white-noise=9999. Bridges-alive after 50k ticks: weighted English 78, weighted white 73, weighted silence 64, weighted white-B 66; count English 201, count white 201.
+
+T1 conservation + T3 crystallization robustness: 5/5 PASS in 8:08 (no regression to legacy path).
+
+### One-paragraph rationale (the gap)
+
+G24's plumbing is firing — the weighted path's gate-1 KL (8.5e-5) is non-zero and strictly above the legacy gate-4 KL (0.0). The mechanism for the NULL is signal-to-noise, not silence. The substrate's own seed-variance noise floor on the bridge-weight spectrum at 50k-tick scope, measured by gate 3, is 1.2e-4 — that is, two same-distribution noise inputs with independent substrate seeds produce KLs in the 1e-4 range. The English-vs-noise weighted signal (8.5e-5) and the English-vs-silence weighted signal (6.8e-5) are both *below* that noise floor. R-16's pre-data 0.01 threshold assumed the energy-weighted signal would be at least two orders of magnitude above the floor; the actual ratio is less than one. Most-likely cause: the F1b plasticity rule (gamma=0.1, lam=0.1, flux_min=1.0 in energy-units now) integrates per-bridge energy over 50k ticks toward a mean that depends primarily on aggregate RMS — and bridge geometry stays position-deterministic via `position_hash_seed`, so two inputs with matched RMS produce nearly identical weight trajectories regardless of waveform shape. G24 is the correct read-side fix; it is not by itself sufficient.
+
+### Implementation, hypothesis, or specification?
+
+- **Not implementation.** Gate 4 reproduces R-16 exactly (KL=0.000000). Gate 1 weighted is strictly greater than legacy. The mechanical test_g24_amendment.py (6/6) passes. R-17b's import is intact on this branch.
+- **Most likely hypothesis.** The amendment design (energy-summing into the same per-bridge weight accumulator that count-based plasticity uses) inherits the same noise-floor regime as the count-based path. Replacing the readout integer with a float is necessary but not sufficient for content-coupling at 50k scope. Content-coupling would require either (a) a position-coupling pathway so different waveforms touch different bridges, or (b) a much longer integration window so per-bridge energy variance gathers spectral structure.
+- **Partly specification.** The 0.01 / 0.1 thresholds were locked pre-data and assumed a noise floor well below 1e-4. Gate 3 shows the actual floor is at 1.2e-4. The thresholds are not WRONG (they correctly reject a sub-noise-floor result as not content-coupling), but the amendment's §2.3 prediction was over-confident — it predicted "above 0.01" rather than "above the noise floor by 2σ."
+
+NULL with diagnostic is the protocol-correct outcome. Do not retune; queue G25.
+
+### Per the 2026-05-20 pre-registration
+
+The cap is G24, G25, G26. R-18 NULL is one of the three allowed nulls; flux path is not yet at cap. The 2026-05-20 entry said: "If R-18 NULLS: queue R-19 as a single diagnostic on energy variance at the bridge crossing point." Queue routing collision: `.eqmod/autopilot/QUEUE.yaml::R-19` was already queued (created 2026-05-20) as the pipeline smoke-test item, not the energy-variance diagnostic. Both items are real; the naming overlap is the conflict. Resolution belongs to Michael on return — the autopilot does not get to re-number queued items. The energy-variance diagnostic the pre-registration calls for is now de-facto R-20 (or higher); R-19 stays as pipeline-smoke.
+
+### Note on commit attribution
+
+My staged R-17b imports (the seven files: `agent/flux/bridge_spectrum.py`, `agent/flux/encoder_free_training.py`, `world/flux/dynamics.py`, `world/flux/plasticity.py`, `tests/flux/test_g24_amendment.py`, `tests/flux/test_bridge_spectrum.py`, `tests/flux/test_R_LR_8_acceptance.py`) were swept into a parallel autopilot-infrastructure commit `0432b1b "notify: route autopilot send_mail to Telegram"` at 2026-05-20T23:22Z while I was running the 50k-tick gates. The code is byte-identical to `autopilot/R-17b` HEAD. The misleading commit message is not a charter violation (no forbidden file edited, no hook bypassed), but the attribution mix-up should be cleaned up by hand on return — preferably by amending the commit's subject or by adding a `Co-authored-by` note. This LOGBOOK entry is the record.

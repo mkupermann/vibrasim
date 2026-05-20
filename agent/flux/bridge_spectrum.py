@@ -149,6 +149,7 @@ def run_short_encoder_free_substrate(
     samples_per_tick: int = 16,
     grid_dims: tuple[int, int, int] = (30, 15, 8),
     seed: int = 4242,
+    use_energy_weighted: bool = False,
 ) -> tuple[Nodes, Bridges]:
     """Drive an encoder-free substrate for ``n_ticks`` and return (nodes, bridges).
 
@@ -167,6 +168,11 @@ def run_short_encoder_free_substrate(
         samples_per_tick: audio samples per substrate tick.
         grid_dims: grid shape.
         seed: RNG seed for substrate + injector.
+        use_energy_weighted: when True, route the per-tick plasticity step
+            through the G24 energy-weighted pair
+            (``count_energy_flux_through`` + ``apply_plasticity_energy_weighted``)
+            instead of the legacy count-based pair. Default False preserves
+            the R-13/R-15 salvaged behaviour byte-identically.
 
     Returns:
         (Nodes, Bridges) — both containers at their final state.
@@ -177,7 +183,11 @@ def run_short_encoder_free_substrate(
     from world.flux.binding import BindingConfig
     from world.flux.decay import DecayConfig
     from world.flux.grid import Grid
-    from world.flux.plasticity import PlasticityConfig
+    from world.flux.plasticity import (
+        PlasticityConfig,
+        apply_plasticity_energy_weighted,
+        count_energy_flux_through,
+    )
     from world.flux.quantum import Quanta
     from world.flux.thermal import ThermalConfig
 
@@ -212,6 +222,18 @@ def run_short_encoder_free_substrate(
     else:
         wave = wave[:n_audio_total]
 
+    if use_energy_weighted:
+        def _weighted_step(bridges_, nodes_, quanta_, plasticity_cfg_, tick_index_):
+            energy_flux = count_energy_flux_through(
+                bridges_, nodes_, quanta_, plasticity_cfg_,
+            )
+            apply_plasticity_energy_weighted(
+                bridges_, energy_flux, plasticity_cfg_, tick_index_,
+            )
+        plasticity_step_fn = _weighted_step
+    else:
+        plasticity_step_fn = None
+
     for k in range(n_ticks):
         chunk = wave[k * samples_per_tick : (k + 1) * samples_per_tick]
         inject_raw_audio_chunk(
@@ -233,6 +255,7 @@ def run_short_encoder_free_substrate(
             thermal_cfg=thermal_cfg,
             rng=rng,
             tick_index=k,
+            plasticity_step_fn=plasticity_step_fn,
         )
     return nodes, bridges
 
