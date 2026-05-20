@@ -463,7 +463,7 @@ items:
     time_budget_hours: 4
     status: queued
     attempts: 0
-    blockers: ["R-15 must reach status=passed first (provides salvaged bridge_spectrum + R-LR-8 scaffold). The prior G24-implementation item was attempted first with overbroad acceptance row 9 that included a content-coupling test which can only pass under R-18-conditions; that mis-scoping was recorded as Pre-data correction in docs/amendments/G24-energy-weighted-flux.md 2026-05-20. R-17b retains the same G24 implementation goal with row 9 narrowed to the two mechanically-salvaged R-15 tests. Code on the prior implementation branch (commit aad8c53) is the reference G24 implementation; R-17b session may import that code via git checkout rather than re-implement, then run the corrected 12-test acceptance suite."]
+    blockers: ["R-15 must reach status=passed first. See docs/amendments/G24-energy-weighted-flux.md 'Pre-data correction record' 2026-05-20 for why the prior G24-implementation item was administratively closed and this item replaces it. Reference G24 implementation lives at commit aad8c53; this session may import that code via git checkout rather than re-implement, then run the corrected 12-test acceptance suite."]
     created: 2026-05-20
 
   - id: R-18
@@ -485,7 +485,7 @@ items:
 
   - id: R-19
     title: pipeline smoke test — third defence layer against silent autopilot failures
-    brief: LOGBOOK 2026-05-20 architectural-change entry (Liveness over correctness + Push not Pull + Pipeline smoke).
+    brief: LOGBOOK.md
     preregistered_acceptance:
       - "tests/test_pipeline_smoke.py::test_preflight_picks_only_unblocked_items PASSES (NEW: build a minimal mock-queue with one item whose blocker mentions a passed item, one whose blocker mentions a null item, one whose blocker mentions a queued item; assert preflight picks the third — chain-prerequisite — and that the first two are flagged correctly by validate_queue.py)"
       - "tests/test_pipeline_smoke.py::test_preflight_rejection_message_enumerates_blocked_items PASSES (NEW: build a mock-queue where every queued item is blocked by something terminal-non-passed; capture preflight stderr; assert it contains the specific blocked-by-X-status-Y enumeration the 0e2c0f6 commit added)"

@@ -42,19 +42,23 @@ def main() -> int:
     items = q.get("items") or []
     idx = {(i.get("id") or ""): (i.get("status") or "") for i in items}
 
-    # A blocker mention is BAD only if the mentioned item is in a TERMINAL
-    # non-passed state. Items in {queued, in_progress, blocked} may yet
-    # reach 'passed' through the normal pipeline — those are legitimate
-    # forward-looking prerequisites (e.g. R-18 blocking on R-17 while
-    # R-17 is queued). Items in {null, failed} will never become passed
-    # without manual intervention; mentioning them in a blocker silently
-    # freezes the candidate. That is the bug class we are catching.
     # YAML `null` → Python None → coerced to "" by idx construction.
     # YAML literal "None" (unquoted, capitalised) → Python str "None".
     # YAML "null" as quoted string → "null". All three are terminal-not-passed.
     TERMINAL_NON_PASSED = {"", "null", "None", "failed"}
 
+    # Dependency-extraction regex — MUST stay in sync with autopilot_preflight.py.
+    # Both layers extract only items mentioned in the explicit "R-X must reach
+    # status..." pattern. Narrative ID mentions in other sentences are
+    # documentation and do not gate. Without this alignment the two
+    # 2026-05-20T21:00 cascading-failure incidents recur.
+    DEPENDENCY_RE = re.compile(
+        r"\b(R-[A-Z0-9][A-Za-z0-9-]*)\s+must\s+reach\s+status",
+        re.IGNORECASE,
+    )
+
     errors: list[str] = []
+    warnings: list[str] = []
     for item in items:
         if item.get("status") != "queued":
             continue
@@ -62,33 +66,61 @@ def main() -> int:
         for line in item.get("blockers") or []:
             if not isinstance(line, str):
                 continue
-            for other_id, st in idx.items():
-                if not other_id or other_id == item_id:
+
+            # FAIL: explicit "X must reach status..." dependency on terminal item
+            for m in DEPENDENCY_RE.finditer(line):
+                other_id = m.group(1)
+                if other_id == item_id:
                     continue
-                if re.search(rf"\b{re.escape(other_id)}\b", line) and st in TERMINAL_NON_PASSED:
+                st = idx.get(other_id, "<not-in-queue>")
+                if st in TERMINAL_NON_PASSED:
                     errors.append(
-                        f"  {item_id} blocked by mention of {other_id} "
-                        f"(status={st!r}, TERMINAL — will never reach passed without manual action)."
+                        f"  {item_id} has explicit dependency on {other_id} "
+                        f"(status={st!r}, TERMINAL — will never reach passed)."
                     )
                     errors.append(
                         f"    offending blocker text: {line[:140]}..."
                     )
 
+            # WARN: narrative mention of a non-passed item (the old preflight
+            # treated these as silent dependencies; the new preflight ignores
+            # them but the author should know about them).
+            explicit = {m.group(1) for m in DEPENDENCY_RE.finditer(line)}
+            for other_id, st in idx.items():
+                if not other_id or other_id == item_id or other_id in explicit:
+                    continue
+                if re.search(rf"\b{re.escape(other_id)}\b", line) and st != "passed":
+                    warnings.append(
+                        f"  {item_id} narratively mentions {other_id} "
+                        f"(status={st!r}); narrative mentions no longer gate the "
+                        f"candidate under the 2026-05-20T21:00 preflight regex "
+                        f"change. Allowed but worth a re-read."
+                    )
+
     if errors:
         print(
-            "validate_queue: FAIL — queued items have self-blocking blocker references:",
+            "validate_queue: FAIL — queued items have unsatisfiable explicit dependencies:",
             file=sys.stderr,
         )
         for e in errors:
             print(e, file=sys.stderr)
         print(
-            "\nFix: rephrase the blocker so it mentions ONLY item IDs whose"
-            " passing is a real prerequisite. For narrative context to non-passed"
-            " items, drop the bare ID and use a phrase + LOGBOOK pointer instead"
-            " (e.g. 'the prior diagnostic item, see LOGBOOK 2026-05-20').",
+            "\nFix: an item declared 'X must reach status=passed first' where X is "
+            "already in a terminal non-passed state will never be picked. Either "
+            "drop the dependency (it is not real) or retarget at an item that can "
+            "still pass.",
             file=sys.stderr,
         )
+        if warnings:
+            print("\n(also warnings, not blocking):", file=sys.stderr)
+            for w in warnings:
+                print(w, file=sys.stderr)
         return 1
+
+    if warnings:
+        print("validate_queue: WARN — narrative item mentions in blockers:", file=sys.stderr)
+        for w in warnings:
+            print(w, file=sys.stderr)
 
     queued = sum(1 for i in items if i.get("status") == "queued")
     # "ready to fire" = queued and every mentioned other-item is currently passed.
