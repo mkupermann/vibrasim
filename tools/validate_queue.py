@@ -49,7 +49,10 @@ def main() -> int:
     # R-17 is queued). Items in {null, failed} will never become passed
     # without manual intervention; mentioning them in a blocker silently
     # freezes the candidate. That is the bug class we are catching.
-    TERMINAL_NON_PASSED = {"null", "failed", "None"}
+    # YAML `null` → Python None → coerced to "" by idx construction.
+    # YAML literal "None" (unquoted, capitalised) → Python str "None".
+    # YAML "null" as quoted string → "null". All three are terminal-not-passed.
+    TERMINAL_NON_PASSED = {"", "null", "None", "failed"}
 
     errors: list[str] = []
     for item in items:
