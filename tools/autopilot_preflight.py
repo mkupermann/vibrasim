@@ -46,6 +46,78 @@ def run(cmd: list[str], **kw) -> subprocess.CompletedProcess:
     return subprocess.run(cmd, cwd=REPO, capture_output=True, text=True, **kw)
 
 
+def status_by_id(items: list[dict]) -> dict:
+    """Map item id -> status string for every item in the queue."""
+    return {(it.get("id") or ""): (it.get("status") or "") for it in items}
+
+
+def blockers_satisfied(item: dict, idx: dict) -> bool:
+    """True iff every explicit dependency of `item` is `passed`.
+
+    Uses the shared dependency extractor from queue_semantics so this can
+    never drift from validate_queue. Non-existent dependency targets are
+    treated as satisfied (mention of a non-existent item is ignored).
+    """
+    from queue_semantics import extract_explicit_dependencies  # noqa: E402
+
+    item_id = item.get("id")
+    for dep_id in extract_explicit_dependencies(item.get("blockers") or []):
+        if dep_id == item_id:
+            continue
+        dep_status = idx.get(dep_id)
+        if dep_status is None:
+            continue
+        if dep_status != "passed":
+            return False
+    return True
+
+
+def select_next_item(items: list[dict]) -> dict | None:
+    """Replicates preflight's picking rule: in_progress wins, else first
+    queued item whose explicit dependencies are all satisfied. Returns the
+    picked item dict, or None if nothing is eligible.
+    """
+    for it in items:
+        if it.get("status") == "in_progress":
+            return it
+    idx = status_by_id(items)
+    for it in items:
+        if it.get("status") == "queued" and blockers_satisfied(it, idx):
+            return it
+    return None
+
+
+def enumerate_rejection_reasons(items: list[dict]) -> list[str]:
+    """For every queued item, return a one-line explanation of why it
+    cannot fire right now. Narrative ID mentions of non-passed items are
+    surfaced too — this is diagnostic output, broader than the gating
+    semantics. Used by main() when no item is pickable; the 0e2c0f6
+    commit added this enumeration after the 2026-05-20 R-17 incident
+    burned 14 h of silent rejection.
+    """
+    idx = status_by_id(items)
+    reasons: list[str] = []
+    for it in items:
+        if it.get("status") != "queued":
+            continue
+        iid = it.get("id") or "<no-id>"
+        blocked_by: list[str] = []
+        for line in (it.get("blockers") or []):
+            if not isinstance(line, str):
+                continue
+            for other_id, other_status in idx.items():
+                if not other_id or other_id == iid:
+                    continue
+                if re.search(rf"\b{re.escape(other_id)}\b", line):
+                    if other_status != "passed":
+                        blocked_by.append(f"{other_id}(status={other_status!r})")
+        if blocked_by:
+            reasons.append(f"  {iid} blocked by: {', '.join(blocked_by)}")
+        else:
+            reasons.append(f"  {iid} blockers satisfied but not picked — investigate")
+    return reasons
+
+
 def main() -> None:
     STATE_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -70,67 +142,16 @@ def main() -> None:
     if not items:
         die("queue is empty — nothing to work on")
 
-    # Pick the next item: in_progress takes priority (resume), else first queued
-    # whose blockers are satisfied. Blockers are strings that may reference other
-    # item IDs by exact match like "R-3 must reach status=passed first"; we scan
-    # the string for any item id and require those to be `passed`.
-    def status_by_id() -> dict:
-        return {(it.get("id") or ""): (it.get("status") or "") for it in items}
-
-    # Dependency semantics live in tools/queue_semantics.py — shared with
-    # tools/validate_queue.py so the two layers cannot drift apart again
-    # (as they did on 2026-05-20T20:33+21:03 causing the cascading-failure
-    # incident). Only items mentioned in the explicit "R-X must reach
-    # status..." pattern are treated as real dependencies; narrative ID
-    # mentions in other text are documentation.
-    from queue_semantics import extract_explicit_dependencies  # noqa: E402
-
-    def blockers_satisfied(item: dict, idx: dict) -> bool:
-        item_id = item.get("id")
-        for dep_id in extract_explicit_dependencies(item.get("blockers") or []):
-            if dep_id == item_id:
-                continue
-            dep_status = idx.get(dep_id)
-            if dep_status is None:
-                continue  # mention of a non-existent item — ignore
-            if dep_status != "passed":
-                return False
-        return True
-
-    pick = None
-    for it in items:
-        if it.get("status") == "in_progress":
-            pick = it
-            break
-    if pick is None:
-        idx = status_by_id()
-        for it in items:
-            if it.get("status") == "queued" and blockers_satisfied(it, idx):
-                pick = it
-                break
+    # Pick the next item: in_progress takes priority (resume), else first
+    # queued item whose explicit blockers are satisfied. The picking and
+    # enumeration logic lives at module level (select_next_item /
+    # enumerate_rejection_reasons) so it can be unit-tested without a
+    # full git+pytest fixture.
+    pick = select_next_item(items)
     if pick is None:
         # Enumerate WHY each queued item was rejected. Silent "queue exhausted"
         # cost the 2026-05-20 R-17 incident 14 hours of vacation budget.
-        idx_for_diag = status_by_id()
-        reasons: list[str] = []
-        for it in items:
-            if it.get("status") != "queued":
-                continue
-            iid = it.get("id") or "<no-id>"
-            blocked_by: list[str] = []
-            for line in (it.get("blockers") or []):
-                if not isinstance(line, str):
-                    continue
-                for other_id, other_status in idx_for_diag.items():
-                    if not other_id or other_id == iid:
-                        continue
-                    if re.search(rf"\b{re.escape(other_id)}\b", line):
-                        if other_status != "passed":
-                            blocked_by.append(f"{other_id}(status={other_status!r})")
-            if blocked_by:
-                reasons.append(f"  {iid} blocked by: {', '.join(blocked_by)}")
-            else:
-                reasons.append(f"  {iid} blockers satisfied but not picked — investigate")
+        reasons = enumerate_rejection_reasons(items)
         detail = "\n".join(reasons) if reasons else "  (no queued items at all)"
         die(
             "no items with status in {queued, in_progress} satisfying blockers — "
