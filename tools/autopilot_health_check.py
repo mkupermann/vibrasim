@@ -316,16 +316,39 @@ def check_telegram_receiver() -> list[tuple[str, str]]:
                 "Telegram bidirectional commands are unavailable.",
             ))
             return issues
-        # Line format: "<pid>\t<lastExit>\tcom.eqmod.notify-receiver"
+        # Line format: "<pid>\t<lastExit>\tcom.eqmod.notify-receiver".
+        # A non-zero last exit is only a crit if the job is NOT currently
+        # running (pid == "-"). After a normal kickstart -k the last exit
+        # is -15 (SIGTERM) but the new process is alive with a real pid —
+        # that is fine and must not flag.
         parts = line.split()
         if len(parts) >= 2:
-            last_exit = parts[1]
-            if last_exit not in ("0", "-"):
+            pid_str, last_exit = parts[0], parts[1]
+            if pid_str == "-" and last_exit not in ("0", "-"):
                 issues.append((
                     "crit",
-                    f"com.eqmod.notify-receiver last exit code = {last_exit} "
-                    f"(non-zero). Check ~/.eqmod/autopilot/notify-receiver.err.",
+                    f"com.eqmod.notify-receiver is NOT running "
+                    f"(pid='-', last exit={last_exit}). Crash-loop or "
+                    f"hard-disabled. Check ~/.eqmod/autopilot/notify-receiver.err.",
                 ))
+            elif pid_str != "-" and last_exit not in ("0", "-"):
+                # Running, but last invocation crashed — possibly a flapping
+                # KeepAlive job (crashes fast, restarts under ThrottleInterval).
+                # Detect by checking how fresh the log is.
+                rlog = STATE_AUTOPILOT / "telegram_receiver.log"
+                if rlog.exists():
+                    age_h = (time.time() - rlog.stat().st_mtime) / 3600
+                    if age_h < 0.05:  # < 3 min
+                        pass  # just kickstarted, OK
+                    else:
+                        # Running but last exit != 0 and log not fresh:
+                        # might be a flap. Warn rather than crit.
+                        issues.append((
+                            "warn",
+                            f"com.eqmod.notify-receiver running pid={pid_str} "
+                            f"but last exit={last_exit} and log {age_h:.1f}h "
+                            f"old — possible flap.",
+                        ))
     except Exception as exc:
         issues.append(("warn", f"launchctl probe failed: {exc!r}"))
 
