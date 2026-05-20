@@ -42,6 +42,15 @@ def main() -> int:
     items = q.get("items") or []
     idx = {(i.get("id") or ""): (i.get("status") or "") for i in items}
 
+    # A blocker mention is BAD only if the mentioned item is in a TERMINAL
+    # non-passed state. Items in {queued, in_progress, blocked} may yet
+    # reach 'passed' through the normal pipeline — those are legitimate
+    # forward-looking prerequisites (e.g. R-18 blocking on R-17 while
+    # R-17 is queued). Items in {null, failed} will never become passed
+    # without manual intervention; mentioning them in a blocker silently
+    # freezes the candidate. That is the bug class we are catching.
+    TERMINAL_NON_PASSED = {"null", "failed", "None"}
+
     errors: list[str] = []
     for item in items:
         if item.get("status") != "queued":
@@ -53,10 +62,10 @@ def main() -> int:
             for other_id, st in idx.items():
                 if not other_id or other_id == item_id:
                     continue
-                if re.search(rf"\b{re.escape(other_id)}\b", line) and st != "passed":
+                if re.search(rf"\b{re.escape(other_id)}\b", line) and st in TERMINAL_NON_PASSED:
                     errors.append(
                         f"  {item_id} blocked by mention of {other_id} "
-                        f"(status={st!r}); would never fire until {other_id} reaches passed."
+                        f"(status={st!r}, TERMINAL — will never reach passed without manual action)."
                     )
                     errors.append(
                         f"    offending blocker text: {line[:140]}..."
@@ -79,26 +88,27 @@ def main() -> int:
         return 1
 
     queued = sum(1 for i in items if i.get("status") == "queued")
-    unblocked = sum(
+    # "ready to fire" = queued and every mentioned other-item is currently passed.
+    ready = sum(
         1
         for i in items
         if i.get("status") == "queued"
         and all(
-            not (
-                isinstance(line, str)
-                and any(
+            not isinstance(line, str)
+            or all(
+                not (
                     other_id != i.get("id")
                     and re.search(rf"\b{re.escape(other_id)}\b", line)
                     and st != "passed"
-                    for other_id, st in idx.items()
                 )
+                for other_id, st in idx.items()
             )
             for line in (i.get("blockers") or [])
         )
     )
     print(
         f"validate_queue: OK — {len(items)} items total, "
-        f"{queued} queued, {unblocked} unblocked-and-ready"
+        f"{queued} queued, {ready} ready-to-fire-now"
     )
     return 0
 
