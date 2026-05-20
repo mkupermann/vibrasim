@@ -183,15 +183,35 @@ def save_stagnation_state(state: dict) -> None:
 def check_stagnation_and_alert() -> bool:
     """Liveness contract enforcement. Returns True if we set STOP this tick.
 
-    Algorithm:
-      - Measure current progress signal.
-      - Compare to last recorded.
-      - If unchanged: increment consecutive_stagnant_ticks. If threshold
-        crossed and we haven't already alerted in this stagnation event:
-        set STOP marker, mail, append to LOGBOOK, set alerted=True.
-      - If changed: reset consecutive_stagnant_ticks, alerted=False, update
-        last_progress_signal.
+    Critical guard added 2026-05-20T20:xx after the first false-positive:
+    if the wrapper is currently alive (LOCKDIR holds a live PID), the
+    pipeline is by definition actively working — no observable main-side
+    progress will occur until that session's postflight finishes. Resetting
+    the stagnation counter in this case prevents the detector from firing
+    during legitimate 4-hour sessions. Stagnation can only legitimately
+    accrue *between* sessions, not during them.
     """
+    # Guard: wrapper alive → reset stagnation counter, return False.
+    if LOCKDIR.exists():
+        try:
+            pid = int(LOCK_PID.read_text().strip())
+            if pid_alive(pid):
+                state = load_stagnation_state()
+                was_counting = state.get("consecutive_stagnant_ticks", 0) > 0
+                was_alerted = state.get("alerted", False)
+                state["consecutive_stagnant_ticks"] = 0
+                state["alerted"] = False
+                state["last_progress_signal"] = measure_progress_signal()
+                state["last_progress_at"] = _dt.datetime.now().isoformat()
+                save_stagnation_state(state)
+                if was_counting or was_alerted:
+                    log(f"  liveness: wrapper alive pid={pid} — reset stagnation counter")
+                else:
+                    log(f"  liveness: wrapper alive pid={pid} — no stagnation possible during session")
+                return False
+        except (FileNotFoundError, ValueError):
+            pass
+
     current = measure_progress_signal()
     state = load_stagnation_state()
     last = state.get("last_progress_signal")
