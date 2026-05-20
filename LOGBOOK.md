@@ -711,3 +711,11 @@ The cap is G24, G25, G26. R-18 NULL is one of the three allowed nulls; flux path
 ### Note on commit attribution
 
 My staged R-17b imports (the seven files: `agent/flux/bridge_spectrum.py`, `agent/flux/encoder_free_training.py`, `world/flux/dynamics.py`, `world/flux/plasticity.py`, `tests/flux/test_g24_amendment.py`, `tests/flux/test_bridge_spectrum.py`, `tests/flux/test_R_LR_8_acceptance.py`) were swept into a parallel autopilot-infrastructure commit `0432b1b "notify: route autopilot send_mail to Telegram"` at 2026-05-20T23:22Z while I was running the 50k-tick gates. The code is byte-identical to `autopilot/R-17b` HEAD. The misleading commit message is not a charter violation (no forbidden file edited, no hook bypassed), but the attribution mix-up should be cleaned up by hand on return — preferably by amending the commit's subject or by adding a `Co-authored-by` note. This LOGBOOK entry is the record.
+
+
+## 2026-05-21 — autopilot session: R-18
+
+- **Verdict**: NULL
+- **Attempts**: 1/3
+- **Diff**: 13 files changed, 1632 insertions(+), 39 deletions(-)
+- **Rationale**: pass-targets did not pass
