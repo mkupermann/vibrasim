@@ -94,6 +94,8 @@ def cmd_help(_args: str) -> str:
         "/results — natural-language: achieved + running + recommendation\n"
         "/status — short + long-run queue summary, current item, STOP state\n"
         "/queue — last 10 items in short queue with status\n"
+        "/requeue <id> — set item back to queued (explicit retry, attempts unchanged)\n"
+        "/fail <id> <reason> — operator-administrative closure with reason in blockers\n"
         "/stop — set STOP marker (autopilot pauses next tick)\n"
         "/resume — remove STOP marker\n"
         "/health — run health-check, return summary\n"
@@ -101,6 +103,91 @@ def cmd_help(_args: str) -> str:
         "/logs [n] — recent session.log lines (default 20, max 100)\n"
         "/help — this message"
     )
+
+
+def _update_status_in_text(
+    text: str,
+    item_id: str,
+    new_status: str,
+    extra_blocker: str | None = None,
+) -> str:
+    """In-place YAML text mutation — preserves comments + format.
+
+    Same pattern as autopilot_postflight._update_item_status_in_text;
+    duplicated here intentionally so the receiver does not import the
+    postflight module (which imports autopilot_mail and yaml-dumps).
+    """
+    pattern = re.compile(
+        r"(?P<header>^[ \t]*- id: " + re.escape(item_id) + r"\b.*?\n)"
+        r"(?P<body>.*?)"
+        r"(?=^[ \t]*- id: |\Z)",
+        re.MULTILINE | re.DOTALL,
+    )
+    m = pattern.search(text)
+    if not m:
+        raise ValueError(f"item {item_id} not found in QUEUE.yaml text")
+    body = m.group("body")
+    indent_match = re.search(r"^([ \t]+)status:", body, re.MULTILINE)
+    indent = indent_match.group(1) if indent_match else "    "
+    body = re.sub(
+        r"^(" + re.escape(indent) + r"status: ).*$",
+        rf"\g<1>{new_status}",
+        body, count=1, flags=re.MULTILINE,
+    )
+    if extra_blocker:
+        # Append to the blockers list if present; otherwise insert one.
+        if re.search(r"^" + re.escape(indent) + r"blockers:\s*\[", body, re.MULTILINE):
+            # blockers: [...] inline list — append before the closing ]
+            esc = extra_blocker.replace("\\", "\\\\").replace('"', '\\"')
+            body = re.sub(
+                r"^(" + re.escape(indent) + r"blockers:\s*\[)(.*)\](\s*)$",
+                lambda mm: f'{mm.group(1)}{mm.group(2).rstrip()}, "{esc}"]{mm.group(3)}',
+                body, count=1, flags=re.MULTILINE,
+            )
+        else:
+            # Insert a blockers line right after status
+            esc = extra_blocker.replace("\\", "\\\\").replace('"', '\\"')
+            body = re.sub(
+                r"^(" + re.escape(indent) + r"status: \w+)$",
+                rf'\1\n{indent}blockers: ["{esc}"]',
+                body, count=1, flags=re.MULTILINE,
+            )
+    return text[: m.start("body")] + body + text[m.end("body") :]
+
+
+def cmd_requeue(args: str) -> str:
+    iid = args.strip().split()[0] if args.strip() else ""
+    if not iid:
+        return "Usage: /requeue <item-id>"
+    try:
+        text = QUEUE_SHORT.read_text()
+        new = _update_status_in_text(text, iid, "queued")
+        QUEUE_SHORT.write_text(new)
+        return f"{iid}: status set to queued. Will fire on next launchd tick if blockers satisfied."
+    except ValueError:
+        return f"{iid}: not found in QUEUE.yaml"
+    except Exception as exc:
+        return f"requeue {iid} failed: {exc!r}"
+
+
+def cmd_fail(args: str) -> str:
+    parts = args.strip().split(maxsplit=1)
+    if not parts:
+        return "Usage: /fail <item-id> <reason>"
+    iid = parts[0]
+    reason = parts[1] if len(parts) > 1 else "Operator-administrative closure via Telegram"
+    blocker_note = (
+        f"Operator closure {_dt.datetime.now().isoformat()} via Telegram /fail: {reason}"
+    )
+    try:
+        text = QUEUE_SHORT.read_text()
+        new = _update_status_in_text(text, iid, "failed", extra_blocker=blocker_note)
+        QUEUE_SHORT.write_text(new)
+        return f"{iid}: status=failed. Reason appended to blockers."
+    except ValueError:
+        return f"{iid}: not found in QUEUE.yaml"
+    except Exception as exc:
+        return f"fail {iid} failed: {exc!r}"
 
 
 # Rule-based item summaries — kept in this file rather than a separate
@@ -444,6 +531,8 @@ COMMANDS = {
     "/results": cmd_results,
     "/status": cmd_status,
     "/queue": cmd_queue,
+    "/requeue": cmd_requeue,
+    "/fail": cmd_fail,
     "/stop": cmd_stop,
     "/resume": cmd_resume,
     "/health": cmd_health,

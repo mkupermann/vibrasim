@@ -236,14 +236,20 @@ def main() -> None:
         verdict = "null"
         rationale = "pass-targets did not pass"
 
-    # 6. Update queue: status, attempts, last_session
+    # 6. Update queue: status, attempts, last_session.
+    # Postflight never sets status=failed automatically. The `attempts >= 3`
+    # branch removed 2026-05-21 after diagnosis: it was dead code that never
+    # fired in the empirical record. Preflight only picks status=queued, so
+    # items go from queued→null on first NULL verdict and stay there until
+    # an operator decides (re-queue, fail, or replace with new item). Items
+    # that NULLed because of an architectural finding (R-13, R-16) should
+    # not retry automatically; items that NULLed transiently can be
+    # explicitly re-queued via the Telegram /requeue command. status=failed
+    # is now an operator-only outcome via /fail or administrative closure.
     item["attempts"] = int(item.get("attempts", 0)) + 1
     item["last_session"] = _dt.datetime.now().isoformat()
     if verdict == "passed":
         item["status"] = "passed"
-    elif item["attempts"] >= 3:
-        item["status"] = "failed"
-        rationale += f" (attempts={item['attempts']}, written off per 3-strike rule)"
     else:
         item["status"] = "null"
     save_queue(queue)
