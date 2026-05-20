@@ -670,3 +670,20 @@ The legacy path probabilities are higher because G14-G18 already satisfy *lernen
 ### Re-registration
 
 If the user changes the success criterion or the cap before the cap fires, that change must be recorded here with date, justification, and the data state at the time of change, before the new run is executed. Changing the criterion in response to a failed run, then claiming the new criterion is satisfied, is the same anti-pattern as marker-threshold tuning and is excluded by protocol.
+
+
+## 2026-05-20 — Pipeline stagnation auto-STOP (supervisor liveness check)
+
+- **Trigger**: 3 consecutive supervisor ticks (1.5 h) without observable progress.
+- **Last signal**: origin/main HEAD fecf08708b28, terminal items 24.
+- **STOP marker set**: ~/.eqmod/autopilot/STOP — autopilot will not
+  fire until this file is removed.
+- **Mail sent**: EQMOD PIPELINE STAGNATION — autopilot paused
+
+
+## 2026-05-20 — autopilot session: R-17
+
+- **Verdict**: NULL
+- **Attempts**: 1/3
+- **Diff**: 10 files changed, 1276 insertions(+), 15 deletions(-)
+- **Rationale**: pass-targets did not pass
