@@ -438,9 +438,32 @@ items:
       - "tests/flux/test_R_LR_8_acceptance.py is collected by pytest (R-15 scaffold still imports cleanly — amendment §3 row 10)"
       - "pytest -m 'not slow' PASSES (no regressions in fast-test slice — amendment §3 row 11)"
     time_budget_hours: 4
+    status: failed
+    attempts: 1
+    last_session: "2026-05-20T19:15:19"
+    blockers: ["R-15 must reach status=passed first (provides salvaged bridge_spectrum + R-LR-8 scaffold the G24 tests use as baseline). Architectural firewall was quantitatively confirmed by the prior diagnostic item (KL=0.000000 on both gates 2026-05-20T00:33Z, see LOGBOOK 2026-05-20 and amendment doc docs/amendments/G24-energy-weighted-flux.md frozen 2026-05-20 with locked pre-registration). Operator-administrative closure 2026-05-20T20:30+ at status=failed after attempt 1 NULLed on acceptance row 9 (test_bridge_spectrum_differs_under_different_audio: KL=0.0000, threshold 0.1) — that test is an architectural firewall-reproduction test that can only pass under EQMOD_USE_ENERGY_WEIGHTED_FLUX=1, which R-17 implements but does not activate. The mis-scoping is documented in docs/amendments/G24-energy-weighted-flux.md 'Pre-data correction record' section. R-17b queued with corrected acceptance scope; R-18 retargeted to R-17b."]
+    created: 2026-05-20
+
+  - id: R-17b
+    title: G24 amendment — implement energy-weighted flux pathway (acceptance corrected after R-17 mis-scoping)
+    brief: docs/amendments/G24-energy-weighted-flux.md
+    preregistered_acceptance:
+      - "tests/flux/test_g24_amendment.py::test_count_energy_flux_through_sums_quanta_energy PASSES (amendment §3 row 1)"
+      - "tests/flux/test_g24_amendment.py::test_count_energy_flux_through_zero_quanta_returns_zeros PASSES (amendment §3 row 2)"
+      - "tests/flux/test_g24_amendment.py::test_apply_plasticity_energy_weighted_strengthens_proportionally PASSES (amendment §3 row 3)"
+      - "tests/flux/test_g24_amendment.py::test_apply_plasticity_energy_weighted_decay_below_flux_min PASSES (amendment §3 row 4)"
+      - "tests/flux/test_g24_amendment.py::test_env_var_routes_to_weighted_path_in_encoder_free_training PASSES (amendment §3 row 5)"
+      - "tests/flux/test_g24_amendment.py::test_env_var_default_keeps_count_based_path PASSES (amendment §3 row 6)"
+      - "tests/flux/test_conservation.py PASSES (T1 robust under legacy count-based path — amendment §3 row 7)"
+      - "tests/flux/test_crystallization_robustness.py PASSES (T3 robust under legacy count-based path — amendment §3 row 8)"
+      - "tests/flux/test_bridge_spectrum.py::test_bridge_spectrum_observable_constructs PASSES (R-15 salvaged mechanical test — corrected scope per G24 amendment 'Pre-data correction record' 2026-05-20; the third test in the file, test_bridge_spectrum_differs_under_different_audio, is the content-coupling verification that lives in R-18 §4 row 1)"
+      - "tests/flux/test_bridge_spectrum.py::test_bridge_spectrum_zero_on_empty_substrate PASSES (R-15 salvaged mechanical test — corrected scope per G24 amendment 'Pre-data correction record' 2026-05-20)"
+      - "tests/flux/test_R_LR_8_acceptance.py is collected by pytest (R-15 scaffold still imports cleanly — amendment §3 row 10)"
+      - "tests/flux/test_g24_amendment.py PASSES (full file — 6 tests, sanity check the file has no NEW tests added that drift from the 6 mechanic items above)"
+    time_budget_hours: 4
     status: queued
     attempts: 0
-    blockers: ["R-15 must reach status=passed first (provides salvaged bridge_spectrum + R-LR-8 scaffold the G24 tests use as baseline). Architectural firewall was quantitatively confirmed by the prior diagnostic item (KL=0.000000 on both gates 2026-05-20T00:33Z, see LOGBOOK 2026-05-20 and amendment doc docs/amendments/G24-energy-weighted-flux.md frozen 2026-05-20 with locked pre-registration)."]
+    blockers: ["R-15 must reach status=passed first (provides salvaged bridge_spectrum + R-LR-8 scaffold). The prior G24-implementation item was attempted first with overbroad acceptance row 9 that included a content-coupling test which can only pass under R-18-conditions; that mis-scoping was recorded as Pre-data correction in docs/amendments/G24-energy-weighted-flux.md 2026-05-20. R-17b retains the same G24 implementation goal with row 9 narrowed to the two mechanically-salvaged R-15 tests. Code on the prior implementation branch (commit aad8c53) is the reference G24 implementation; R-17b session may import that code via git checkout rather than re-implement, then run the corrected 12-test acceptance suite."]
     created: 2026-05-20
 
   - id: R-18
@@ -457,7 +480,7 @@ items:
     time_budget_hours: 4
     status: queued
     attempts: 0
-    blockers: ["R-17 must reach status=passed first (provides count_energy_flux_through + apply_plasticity_energy_weighted)"]
+    blockers: ["R-17b must reach status=passed first (provides count_energy_flux_through + apply_plasticity_energy_weighted; the prior G24-implementation item was closed administratively at failed after acceptance-row-9 mis-scoping, recorded in docs/amendments/G24-energy-weighted-flux.md 'Pre-data correction record' 2026-05-20)"]
     created: 2026-05-20
 
   - id: R-19
