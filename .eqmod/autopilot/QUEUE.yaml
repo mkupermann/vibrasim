@@ -422,3 +422,41 @@ items:
     blockers: ["R-15 must reach status=passed first (provides agent/flux/bridge_spectrum.py + corpus_spectrum.py)"]
     created: 2026-05-19
 
+  - id: R-17
+    title: G24 amendment — implement energy-weighted flux pathway per docs/amendments/G24-energy-weighted-flux.md
+    brief: docs/amendments/G24-energy-weighted-flux.md
+    preregistered_acceptance:
+      - "tests/flux/test_g24_amendment.py::test_count_energy_flux_through_sums_quanta_energy PASSES (NEW: synthetic substrate with 3 alive quanta of energies {1.0, 2.0, 4.0} all within r_flux of one alive bridge; count_energy_flux_through returns 7.0 for that slot, count_flux_through returns 3 for that slot; both arrays have shape (max_bridges,) — per amendment §3 row 1)"
+      - "tests/flux/test_g24_amendment.py::test_count_energy_flux_through_zero_quanta_returns_zeros PASSES (NEW: 0 alive quanta returns a float array of all zeros, no NaN — amendment §3 row 2)"
+      - "tests/flux/test_g24_amendment.py::test_apply_plasticity_energy_weighted_strengthens_proportionally PASSES (NEW: two bridges, energy_flux=10.0 and 2.0 both above flux_min; first bridge's weight gain is exactly 5x the second's after one apply — amendment §3 row 3)"
+      - "tests/flux/test_g24_amendment.py::test_apply_plasticity_energy_weighted_decay_below_flux_min PASSES (NEW: bridge with energy_flux=0.0 and flux_min=1.0 decreases by lam*1.0; energy_flux=0.5 decreases by lam*0.5; energy_flux=1.5 increases linearly in gamma*1.5 — amendment §3 row 4)"
+      - "tests/flux/test_g24_amendment.py::test_env_var_routes_to_weighted_path_in_encoder_free_training PASSES (NEW: with EQMOD_USE_ENERGY_WEIGHTED_FLUX=1, training_step calls count_energy_flux_through and apply_plasticity_energy_weighted, NOT the count-based versions; monkey-patch fixture asserts this — amendment §3 row 5)"
+      - "tests/flux/test_g24_amendment.py::test_env_var_default_keeps_count_based_path PASSES (NEW: without the env var or set to '0', training_step calls the count-based functions; same monkey-patch fixture — amendment §3 row 6)"
+      - "tests/flux/test_conservation.py PASSES (T1 robust under legacy count-based path — amendment §3 row 7)"
+      - "tests/flux/test_crystallization_robustness.py PASSES (T3 robust under legacy count-based path — amendment §3 row 8)"
+      - "tests/flux/test_bridge_spectrum.py PASSES (R-15 salvaged tests still green — amendment §3 row 9)"
+      - "tests/flux/test_R_LR_8_acceptance.py is collected by pytest (R-15 scaffold still imports cleanly — amendment §3 row 10)"
+      - "pytest -m 'not slow' PASSES (no regressions in fast-test slice — amendment §3 row 11)"
+    time_budget_hours: 4
+    status: queued
+    attempts: 0
+    blockers: ["R-15 must reach status=passed first (provides salvaged bridge_spectrum + R-LR-8 scaffold the G24 tests use as baseline). R-16 confirmed the architectural firewall (KL=0.000000 on both gates 2026-05-20T00:33Z, branch autopilot/R-16); amendment doc docs/amendments/G24-energy-weighted-flux.md frozen 2026-05-20 with locked pre-registration."]
+    created: 2026-05-20
+
+  - id: R-18
+    title: G24 verification — 50k smoke that energy-weighted path breaks the firewall
+    brief: docs/amendments/G24-energy-weighted-flux.md
+    preregistered_acceptance:
+      - "tests/flux/test_g24_verification.py::test_50k_english_vs_white_noise_KL_above_0p01_under_weighted_path PASSES (NEW: two encoder-free 50k-tick substrates, identical seed, matched RMS budget, English vs white noise, both with EQMOD_USE_ENERGY_WEIGHTED_FLUX=1; symmetric KL of bridge-weight spectra > 0.01 — threshold identical to R-16's failed gate, amendment §4 row 1)"
+      - "tests/flux/test_g24_verification.py::test_50k_english_vs_silence_KL_above_0p1_under_weighted_path PASSES (NEW: same config but English vs silence-with-matched-RMS-noise-floor; KL > 0.1 — threshold identical to R-16's failed gate, amendment §4 row 2)"
+      - "tests/flux/test_g24_verification.py::test_50k_white_noise_vs_white_noise_independent_seeds_KL_below_0p005_under_weighted_path PASSES (NEW: negative control — two white-noise substrates with INDEPENDENT seeds but same audio statistics; KL between their bridge spectra < 0.005; amendment §4 row 3)"
+      - "tests/flux/test_g24_verification.py::test_legacy_count_based_path_still_returns_KL_zero PASSES (NEW: same 50k English-vs-white-noise pair WITHOUT the env var; KL < 1e-6, reproduces R-16. Amendment §5 control: confirms R-17 did not regress the legacy path.)"
+      - "tests/flux/test_conservation.py PASSES (T1 robust)"
+      - "tests/flux/test_crystallization_robustness.py PASSES (T3 robust)"
+      - "LOGBOOK entry records all four KL numbers + the random seeds used. If KL_english_vs_whitenoise > 0.01 AND KL_english_vs_silence > 0.1, the session must also append a note recommending R-LR-9 as the next long-run item (1.8M-tick verification of G24)."
+    time_budget_hours: 4
+    status: queued
+    attempts: 0
+    blockers: ["R-17 must reach status=passed first (provides count_energy_flux_through + apply_plasticity_energy_weighted)"]
+    created: 2026-05-20
+
