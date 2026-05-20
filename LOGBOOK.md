@@ -613,3 +613,60 @@ The reframe is what I now believe the project is. The code names were written on
 Pre-committed: by 2026-11-19, return to this entry. If the reframe + 6-month engagement check together produced qualified-reader engagement, the open tension was load-bearing as honest self-display. If they did not and the project is being renamed to reflect the meta-half as primary, then the right move at that point is to refactor code names too — at that point it is no longer mid-vacation framing pressure but a deliberate scope change.
 
 This entry exists so the question survives intact to the review date.
+
+
+## 2026-05-20 — Success criterion pre-registered + iteration cap + pivot path
+
+Author: Claude under user delegation 2026-05-20 14:xx ("du entscheidest auf basis der besten wahrscheinlichkeit was am ende erfolgreich sein wird. erfolg ist ein selbstbestimmtes lernendes und kommunizierendes system").
+
+This entry pre-commits a programme-level pre-registration so the decision survives whatever the next 8 days of vacation data look like.
+
+### Success criterion (verbatim from Michael 2026-05-20)
+
+A self-determined, learning, communicating system. The three components must all hold simultaneously; partial satisfaction is partial credit, not success.
+
+- *Selbstbestimmt* — the substrate has agency over its own learning trajectory, not just over its parameter values. The G17 autopilot loop's parameter self-modification (Marker 4) is the weakest defensible instance of this. Stronger instances (substrate choosing its own training inputs, deciding when to consolidate, refusing to learn material it judges insufficient) are not yet implemented.
+- *Lernend* — the substrate forms internal structure that ENCODES THE CONTENT of its input, not just structure that distinguishes input-present from input-absent. R-16 (2026-05-20T00:33Z, KL = 0.000000) ruled out content learning under the encoder-free flux path. G14-G18 on the LEGACY substrate (engrams + dreams + cross-modal recall) is the working instance.
+- *Kommunizierend* — the substrate produces output that another agent can read, with semantic content tied to its internal state. The G16 workspace-winner broadcast is the weakest defensible instance (one pattern_id → one global signal per cycle). Symbolic output (text, language) does not exist yet; G20-G23 (pre-registered 2026-05-11, not implemented) is designed to add it.
+
+### Best-probability assessment
+
+| Path | Probability of meeting criterion within vacation | Probability within 3 months | Probability within 12 months |
+|---|---|---|---|
+| Flux substrate amendments (G24 forward) | <1 % | ~5 % | ~10 % |
+| Legacy substrate + G20-G23 implementation | 20-40 % | ~50 % | ~70 % |
+| Meta-half only (autopilot pipeline + lab as deliverable) | n/a — different criterion | n/a | n/a |
+
+The flux path probabilities are low because R-13 + R-16 identified an architectural firewall whose fix (G24) addresses only amplitude coupling, not temporal/phonetic/symbolic structure. The gap from R-18 PASS (if it occurs) to the three-part criterion is ~50+ additional amendments at current architectural pace. Vacation has 8 days. The math does not work.
+
+The legacy path probabilities are higher because G14-G18 already satisfy *lernend* in the operational sense (engrams form, dreams consolidate, cross-modal recall works, all PASSED under pre-registered acceptance), and G16 partially satisfies *kommunizierend*. Only G20-G23 (the symbolic-output layer) is missing, and it is already pre-registered with locked acceptance from 2026-05-11.
+
+### Decision (binding, pre-registered)
+
+1. **R-17 and R-18 (G24 amendment) run as queued.** R-17 verifies the implementation mechanics; R-18 verifies content-coupling at 50k-tick scope. Verdict expected within ~8 hours.
+
+2. **If R-18 PASSES**: continue the flux path. Queue R-LR-9 for 1.8M-tick verification. Re-evaluate after R-LR-9.
+
+3. **If R-18 NULLS**: queue R-19 as a single diagnostic on energy variance at the bridge crossing point. If R-19 surfaces a single-line fix (e.g., `flux_min` threshold filtering out the variance), queue R-20 as G25 amendment. If R-19 does not surface a quick fix, the flux path is declared NULL at the programme level.
+
+4. **Iteration cap on the flux path = G24, G25, G26.** Three amendments. If all three nullen on the same content-coupling failure, the flux-substrate-as-bottom-up-emergence path is below threshold probability for vacation timeframe AND for the 3-month horizon.
+
+5. **Pivot path (pre-registered now, not post-hoc):** if cap fires, implement G20-G23 on the legacy substrate per `docs/amendments/G20-G23.md`. The legacy substrate already satisfies criterion components 1 and 2 (in their weakest defensible forms); G20-G23 adds the symbolic-output layer for component 3. This is not a retreat — it is the path with the highest probability of producing a system that satisfies the full criterion within vacation.
+
+6. **Meta-half stays prioritised throughout.** The README reframe already commits to this: if neither path produces a system that meets the criterion, the deliverable is the lab + autopilot pipeline + LOGBOOK, framed honestly as the meta-output the project actually produced. That outcome is not failure; it is the project succeeding at its own published goal ("develop a deadlock-breaking process") with the substrate as the test instrument.
+
+### What this pre-registration locks
+
+- The G24-G26 cap. If after G26 nulls I find myself wanting to queue G27, that is a protocol violation and the LOGBOOK must record the violation explicitly. Threshold-tuning at the programme level is the same anti-pattern as threshold-tuning at the marker level.
+- The pivot to G20-G23 as the post-cap response. If after the cap fires I propose a different path (e.g., yet another flux amendment, or a partial-credit declaration), that is also a violation.
+- The criterion verbatim. "Selbstbestimmt lernend kommunizierend" is the bar. Not "selbstbestimmt + lernend" or "lernend + kommunizierend" — all three.
+
+### What this pre-registration does NOT lock
+
+- The exact contents of G20-G23 implementation order, or whether the chain is implemented as four discrete items vs one bundled item.
+- Whether R-LR-3 / R-LR-4 / R-LR-8 (already in long-run queue) are allowed to complete or are killed when the cap fires. Default: let them complete; the data is still informative for the eventual writeup.
+- The order of meta-half investments interleaved with substrate work.
+
+### Re-registration
+
+If the user changes the success criterion or the cap before the cap fires, that change must be recorded here with date, justification, and the data state at the time of change, before the new run is executed. Changing the criterion in response to a failed run, then claiming the new criterion is satisfied, is the same anti-pattern as marker-threshold tuning and is excluded by protocol.
