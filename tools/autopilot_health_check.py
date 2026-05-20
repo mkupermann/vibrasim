@@ -286,6 +286,37 @@ def check_queue_validity() -> list[tuple[str, str]]:
     return issues
 
 
+def check_unsent_mail_backlog() -> list[tuple[str, str]]:
+    """Surface mail-delivery failures.
+
+    autopilot_mail.send_mail() persists every send that osascript+Mail.app
+    refused to a file ~/.eqmod/autopilot/unsent_mail_*.txt. The presence
+    of any such file means a recent alert never reached the user. This
+    check is critical because the health-check itself uses send_mail for
+    its CRIT alerts — if mail delivery is broken, the user must learn of
+    that some other way, e.g. by the autopilot effectively going dark
+    until they manually run health_check.
+    """
+    issues: list[tuple[str, str]] = []
+    try:
+        unsent = list((Path.home() / ".eqmod/autopilot").glob("unsent_mail_*.txt"))
+    except Exception:
+        return issues
+    if not unsent:
+        return issues
+    issues.append((
+        "crit",
+        f"{len(unsent)} unsent_mail_*.txt file(s) in ~/.eqmod/autopilot/ — "
+        f"mail delivery via osascript Mail.app has been failing. "
+        f"Most recent: {sorted(unsent)[-1].name}. Check System Settings "
+        f"→ Privacy & Security → Automation, or switch notification "
+        f"channel. The health-check's own CRIT mail (this one) will "
+        f"itself be unsent if you are seeing this only by manual "
+        f"inspection of the log.",
+    ))
+    return issues
+
+
 def check_state_dirs() -> list[tuple[str, str]]:
     issues: list[tuple[str, str]] = []
     for state in (STATE_AUTOPILOT, STATE_LONGRUN):
@@ -319,6 +350,7 @@ def main() -> int:
         ("working tree", check_working_tree),
         ("queue validity", check_queue_validity),
         ("state dirs", check_state_dirs),
+        ("unsent mail backlog", check_unsent_mail_backlog),
     ]
 
     all_issues: list[tuple[str, str, str]] = []
@@ -333,26 +365,53 @@ def main() -> int:
         log("  all clear")
         return 0
 
-    # Group by severity
+    # Group by severity AND separate mail-channel crits from others.
+    # If we try to send_mail() about a broken mail channel, we recurse —
+    # the send_mail attempt itself creates another unsent_mail file, the
+    # next health_check tick sees N+1 unsent files, ad infinitum.
     crits = [(a, m) for a, s, m in all_issues if s == "crit"]
     warns = [(a, m) for a, s, m in all_issues if s == "warn"]
+    mail_crits = [(a, m) for a, m in crits if a == "unsent mail backlog"]
+    other_crits = [(a, m) for a, m in crits if a != "unsent mail backlog"]
 
-    log(f"  {len(crits)} crit + {len(warns)} warn")
+    log(f"  {len(crits)} crit ({len(mail_crits)} mail, {len(other_crits)} other) + {len(warns)} warn")
     for area, msg in crits:
         log(f"  CRIT [{area}]: {msg}")
     for area, msg in warns:
         log(f"  WARN [{area}]: {msg}")
 
-    # Mail on any crit. Don't mail on warns alone (would be noisy).
-    if crits:
-        subject = f"[EQMOD health] {len(crits)} CRIT, {len(warns)} warn"
+    # Mail-broken sentinel — record once, don't recurse.
+    if mail_crits:
+        sentinel = Path.home() / ".eqmod/autopilot/mail_broken_since.txt"
+        if not sentinel.exists():
+            sentinel.write_text(
+                f"Mail delivery via osascript Mail.app first detected as "
+                f"broken at {now().isoformat()}. Subsequent health-check "
+                f"ticks will NOT attempt to mail this fact (would recurse). "
+                f"Inspect ~/.eqmod/autopilot/unsent_mail_*.txt for the "
+                f"backlog, and System Settings → Privacy & Security → "
+                f"Automation for the likely cause, or wire up a different "
+                f"notification channel.\n"
+            )
+            log(f"  mail_broken_since.txt sentinel created")
+
+    # Mail only on non-mail crits.
+    if other_crits:
+        subject = f"[EQMOD health] {len(other_crits)} CRIT, {len(warns)} warn"
         body = "Critical issues:\n\n"
-        for area, msg in crits:
+        for area, msg in other_crits:
             body += f"  [{area}] {msg}\n\n"
         if warns:
             body += "\nWarnings:\n\n"
             for area, msg in warns:
                 body += f"  [{area}] {msg}\n\n"
+        if mail_crits:
+            body += (
+                "\nAlso: mail delivery itself is broken (see "
+                "~/.eqmod/autopilot/unsent_mail_*.txt). If you are reading "
+                "this, mail is working again; if not, this entire mail will "
+                "have been persisted as the next unsent_mail file.\n"
+            )
         body += f"\nTick: {now().isoformat()}\n"
         body += f"Full log: ~/.eqmod/autopilot/health_check.log\n"
         send_mail(subject, body)
