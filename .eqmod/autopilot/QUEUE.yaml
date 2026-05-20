@@ -440,7 +440,7 @@ items:
     time_budget_hours: 4
     status: queued
     attempts: 0
-    blockers: ["R-15 must reach status=passed first (provides salvaged bridge_spectrum + R-LR-8 scaffold the G24 tests use as baseline). R-16 confirmed the architectural firewall (KL=0.000000 on both gates 2026-05-20T00:33Z, branch autopilot/R-16); amendment doc docs/amendments/G24-energy-weighted-flux.md frozen 2026-05-20 with locked pre-registration."]
+    blockers: ["R-15 must reach status=passed first (provides salvaged bridge_spectrum + R-LR-8 scaffold the G24 tests use as baseline). Architectural firewall was quantitatively confirmed by the prior diagnostic item (KL=0.000000 on both gates 2026-05-20T00:33Z, see LOGBOOK 2026-05-20 and amendment doc docs/amendments/G24-energy-weighted-flux.md frozen 2026-05-20 with locked pre-registration)."]
     created: 2026-05-20
 
   - id: R-18
