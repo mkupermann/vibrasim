@@ -26,6 +26,8 @@ for the locked design decisions. R-10 unit-level acceptance lives in
 """
 from __future__ import annotations
 
+import os
+
 import numpy as np
 
 from world.flux.quantum import Quanta
@@ -72,8 +74,61 @@ def position_hash(sample_index: int, Lx: int, Ly: int,
     return float(x), float(y)
 
 
+def position_hash_content_driven(
+    sample_index: int, sample_value: float,
+    Lx: int, Ly: int, voxel_size: float, *, seed: int = 0,
+) -> tuple[float, float]:
+    """Audio-content-dependent xy hash (G25).
+
+    Same total range as :func:`position_hash`, same determinism:
+    identical ``(sample_index, sample_value, seed)`` reproduce identical
+    ``(x, y)``. Differs from :func:`position_hash` only in that
+    ``sample_value`` enters the hash function, so two audio waveforms
+    with matched RMS but different per-sample values produce different
+    spatial distributions.
+
+    Implementation: 64-bit SplitMix64 on a bit-mixed combination of
+    ``sample_index`` and a quantised ``sample_value``. The quantisation
+    is ``int16`` rounding of ``sample_value * 32767`` clipped to the
+    int16 range, which keeps the hash stable under float-precision
+    drift across seeds and OS replays.
+
+    See docs/amendments/G25-content-driven-injection.md §1.1.
+    """
+    # Quantise sample_value to int16 to avoid float-precision instability.
+    v = float(sample_value)
+    if v > 1.0:
+        v = 1.0
+    elif v < -1.0:
+        v = -1.0
+    vq = int(round(v * 32767.0))  # in [-32767, 32767]
+    # Map to unsigned 16-bit ([0, 65535]) for clean bit-mixing.
+    vq_u16 = (vq + 32768) & 0xFFFF
+    # Bit-mix sample_index (low 48 bits) with vq_u16 (16 bits) into a
+    # single 64-bit input to splitmix. The index goes in the high bits
+    # so consecutive sample_indices already differ before sample_value
+    # is even considered; sample_value contributes to the low 16.
+    si = int(sample_index) & 0xFFFFFFFFFFFF  # 48 low bits
+    mixed = (si << 16) | vq_u16
+    h = _splitmix64(mixed, seed=int(seed))
+    hi = (h >> 32) & 0xFFFFFFFF
+    lo = h & 0xFFFFFFFF
+    x = (hi * _INV_UINT32_RANGE) * (Lx * voxel_size)
+    y = (lo * _INV_UINT32_RANGE) * (Ly * voxel_size)
+    return float(x), float(y)
+
+
 DEFAULT_VEL_Z_INIT = 1.0
 DEFAULT_VEL_XY_SIGMA = 0.1
+
+
+def _use_content_driven_position() -> bool:
+    """Read the EQMOD_USE_CONTENT_DRIVEN_POSITION env var at call time.
+
+    Read at call time (not module load) so tests can toggle via
+    monkeypatch.setenv within a single process.
+    """
+    return os.environ.get("EQMOD_USE_CONTENT_DRIVEN_POSITION", "0") == "1"
 
 
 def inject_raw_audio_sample(
@@ -100,7 +155,13 @@ def inject_raw_audio_sample(
         rng = np.random.default_rng()
     Lx, Ly, _ = grid.dims
     s = grid.voxel_size
-    x, y = position_hash(sample_index, Lx, Ly, s, seed=position_hash_seed)
+    if _use_content_driven_position():
+        x, y = position_hash_content_driven(
+            sample_index, sample_value, Lx, Ly, s,
+            seed=position_hash_seed,
+        )
+    else:
+        x, y = position_hash(sample_index, Lx, Ly, s, seed=position_hash_seed)
     z = float(rng.uniform(0.0, s))
     vx = float(rng.normal(0.0, vel_xy_sigma))
     vy = float(rng.normal(0.0, vel_xy_sigma))

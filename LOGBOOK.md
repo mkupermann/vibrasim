@@ -764,3 +764,85 @@ The diagnostic was specified with NULL as a possible (and per CLAUDE.md, valid) 
 - **STOP marker set**: ~/.eqmod/autopilot/STOP — autopilot will not
   fire until this file is removed.
 - **Mail sent**: EQMOD PIPELINE STAGNATION — autopilot paused
+
+---
+
+## 2026-05-21 — autopilot R-21: G25 content-driven xy-position injection (NULL on tests 5+7, PASS on neg-control)
+
+### Pre-registered question
+
+R-20 (NULL on energy-variance diagnostic, 2026-05-21T02:47Z) confirmed branch (c) of the G24 pre-data correction record: at tick 10_000 the substrate's energy field is matched-RMS-determined and content-flat. G25 moves the content channel from energy to position: the xy hash becomes a function of `sample_value` as well as `sample_index`. The R-21 verification asks whether this position-channel content (a) survives in the alive-quanta spatial distribution at tick 10_000 (KL>0.1 EN-vs-WN), (b) does not collapse to seed-dispersion (KL<0.005 same-audio-different-seed), and (c) propagates to the bridge layer (KL>0.01 EN-vs-WN). Thresholds locked pre-data in `.eqmod/autopilot/QUEUE.yaml::R-21` and `docs/amendments/G25-content-driven-injection.md`.
+
+### Measurement (locked parameters, no retune)
+
+- SR=16_000, samples_per_tick=16, N_TICKS=10_000, target_rms=0.25.
+- `EQMOD_USE_CONTENT_DRIVEN_POSITION=1` (G25 path).
+- SUBSTRATE_SEED_A=4242, SUBSTRATE_SEED_B=7777, WHITE_NOISE_SEED=9999.
+- 2D position histogram: 8 × 4 bins on `[0, 30] × [0, 15]` (grid_dims=(30,15,8), voxel_size=1.0); flattened to 32-cell 1D before KL.
+- Bridge spectrum: R-13 (8 freq-bins × 16 weight-bins), `endpoint="mean"`.
+- Symmetric KL with Laplace-α=1.0 via `bridge_spectrum_kl`.
+- Audio source: R-7 Stage-1 manifest, RMS-normalised to 0.25.
+
+### Results
+
+| # | Test | Threshold | Measured | Verdict |
+|---|---|---:|---:|:---|
+| 5 | alive-quanta position histogram, English vs white noise (seed_A) | KL > 0.1 | **0.000215** | **FAIL** |
+| 6 | alive-quanta position histogram, English seed_A vs seed_B | KL < 0.005 | **0.000132** | **PASS** |
+| 7 | bridge-weight spectrum, English vs white noise (seed_A) | KL > 0.01 | **0.000066** | **FAIL** |
+
+Implementation tests (R-21 rows 1-4): PASSED — `position_hash_content_driven` returns Euclidean-distance 26.5 voxel-units between `(12345, 0.1)` and `(12345, 0.8)`; deterministic across replays; legacy `position_hash` numerical output preserved bit-for-bit against four R-13/R-14-era fixtures; env var routes `inject_raw_audio_sample` to the content-driven helper iff `EQMOD_USE_CONTENT_DRIVEN_POSITION=1`.
+
+Regression: `test_conservation.py` (3 passed, T1 holds), `test_crystallization_robustness.py` (2 passed, T3 holds), `test_audio_raw_injection.py` (6 passed — the pinned `position_hash` determinism and floor-plane coverage tests still green, confirming the legacy path is untouched). Total regression wallclock: 499s.
+
+Substrate population at tick 10_000 (n_alive_quanta / n_alive_bridges) under the G25 path: English seed_A ≈ 100 / few-hundred, white-noise seed_A similar, English seed_B similar.
+
+### Interpretation — verdict mapping (pre-registered)
+
+Per `docs/amendments/G25-content-driven-injection.md` §3 verdict-mapping table:
+
+**Test 5 fails (KL=0.000215 < 0.1)** → "position-channel alone is not enough; G26 needs density or polarity in addition."
+
+**Test 7 also fails (KL=0.000066 < 0.01)**, which under the brief reads "content reaches the position field but bridge layer averages it away → G26 = bridge-geometry redesign." However the test-5 failure is more severe (470× under threshold vs test-7's 150× under threshold) and the proportions are consistent: bridge KL is smaller than position KL because the bridge tube integrates over multiple quanta and further smooths variance away. The dominant diagnostic is test 5: position-channel content is too weak at the alive-quanta level itself, so the test-7 failure is a downstream symptom, not a separate firewall.
+
+Test 6 PASSED at KL=0.000132, two orders of magnitude under the locked 0.005 threshold. This is the discriminator: same-audio + different-seed produces a near-bit-identical position histogram, so the position-channel mapping is genuinely content-driven (not seed-artifacted) — but the content signal it generates is only 1.6× the seed-noise floor (0.000215 / 0.000132 ≈ 1.6×), nowhere near the locked 0.1 threshold.
+
+**Most likely mechanism for the gap (one paragraph):** the substrate dynamics homogenise the alive-quanta xy distribution faster than the per-sample content variation can imprint on it. At tick 10_000 the alive-quanta population is the buoyancy-cleansed remainder of ~160k injections (16 samples/tick × 10k ticks); each quantum has accumulated XY Brownian-drift noise from `vel_xy_sigma=0.1` over its lifetime, has been bound into a node if it collided with another, and has been decayed-out otherwise. The content-driven xy assignment at injection time is real (test 6 confirms determinism beats seed-dispersion by 2 orders of magnitude), but the steady-state spatial distribution at tick 10_000 is the *integral over the quanta lifetime distribution of the injection function*, and that integral is much closer to uniform than the per-tick injection pattern is. The position-channel content variation is, in effect, low-pass-filtered by the substrate's mixing time before any observable can read it.
+
+**Where the gap is:** in the *hypothesis* that a single high-bandwidth content channel (position) injected at the floor would survive the substrate's mixing dynamics intact. The implementation is correct (helper produces 26-voxel-unit distance between sample-value extremes; env var routes correctly; legacy path preserved). The acceptance specification is also defensible (KL>0.1 was chosen as 10× R-20's energy threshold, and position is genuinely higher-bandwidth than amplitude — the gap is not that 0.1 was unreasonable, the gap is that *no* injection-channel intervention that gets washed out at the binding/plasticity step will pass it).
+
+### Verdict for G26 design (per locked iteration-cap accounting)
+
+G25 is slot 2 of 3 in the post-G24 amendment cap (docs/goals/ and 2026-05-20 LOGBOOK pre-registration). G26 is the final slot before the pivot to G20-G23 (text I/O chain) on the legacy substrate.
+
+Three candidate G26 designs, all pre-data:
+
+1. **Density-by-amplitude.** Injection of *N quanta* per sample, with N proportional to `abs(sample_value)`. Content then drives quanta *count* (a substrate-natural quantity) rather than position, energy, or polarity. The quanta-budget overflow concern G25 §2.1 raised is real but can be capped (e.g., N=clip(round(abs(s)*K), 0, 4)) without losing the content signal.
+
+2. **Polarity-by-sign.** `polarity = +1 if sample_value > 0 else -1` (currently locked at +1). One bit per sample — much lower bandwidth than position or density — but polarity directly drives thermal mass and binding dynamics, so even a 1-bit channel might reach the bridge layer where the high-bandwidth position channel did not.
+
+3. **Bridge-geometry redesign.** Per the brief's test-7 mapping, replace the bridge tube's r_flux=0.75 integration with a finer spatial readout (e.g., per-voxel bridge-incident-flux histogram). This addresses the symptom rather than the cause, so listed last.
+
+**Recommendation: G26 = density-by-amplitude (candidate 1).** Reasoning: it puts content into a quantity (count) the substrate already uses as its primary observable, it avoids the high-bandwidth-channel-gets-low-pass-filtered failure mode G25 exhibits, and it is the only candidate whose effect cannot be averaged away by the binding/plasticity step (count is conserved by injection itself, before any dynamics). Polarity is secondary; bridge-geometry is a last resort.
+
+R-LR-10 is NOT recommended as next long-run item; the 10k-tick verification failed and a 1.8M-tick run would not change the architectural conclusion.
+
+### What this NULL does *not* mean
+
+- It does NOT mean `position_hash_content_driven` is broken. Tests 1-4 confirm the helper produces large per-sample xy displacement (26.5 voxel-units for the (0.1, 0.8) pair), is bit-deterministic, and the env-var routing works.
+- It does NOT mean R-20's branch-(c) verdict was wrong. R-20 confirmed energy is content-flat at the substrate level; G25 confirmed that even a much-higher-bandwidth content channel (position) is washed out by the same dynamics. Both NULLs point at the substrate mixing-time problem, not at the energy field.
+- It does NOT regress upstream items. T1/T3/audio_raw all green; legacy `position_hash` is bit-preserved against four pinned fixtures.
+
+### Wall-clock + files
+
+- G25 verification pytest: 184.9s for three 10k-tick substrate runs (~165 ticks/s) sharing module-scoped fixtures.
+- G25 unit tests: 0.29s for four tests.
+- Regression (T1 + T3 + R-10): 499.1s total.
+- Files added: `tests/flux/test_g25_amendment.py` (4 unit tests, ~150 lines); `tests/flux/test_g25_verification.py` (3 10k-tick tests, ~270 lines).
+- Files modified: `agent/flux/audio_raw.py` (added `position_hash_content_driven` helper + env-var-gated branch in `inject_raw_audio_sample`; legacy `position_hash` unchanged); `agent/flux/bridge_spectrum.py::run_short_encoder_free_substrate` extended with `return_full_state` flag and the existing helper file gained a `make_white_noise(n_samples, target_rms, seed)` function so the R-21 verification could run without re-importing from R-20.
+- Imported from `autopilot/R-17b`: `agent/flux/bridge_spectrum.py` (R-15 salvage; R-17b's version, not R-20's, to avoid pulling unused G24 plasticity dependencies into this branch).
+
+### Pre-registration discipline note
+
+R-21's acceptance specification was locked in `.eqmod/autopilot/QUEUE.yaml` and `docs/amendments/G25-content-driven-injection.md` before this session opened. The session did NOT retune the 0.1 / 0.005 / 0.01 thresholds, did NOT change `N_TICKS=10_000`, did NOT relax the histogram binning to manufacture a PASS, and did NOT modify the implementation to lift the position-channel content past the threshold (which would have meant adding a second content channel inside the G25 amendment slot, i.e. silently consuming the G26 slot). Test 5 missed by 470×; test 7 by 150×. The gap is not a binning-resolution problem.
+
