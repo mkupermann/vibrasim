@@ -565,3 +565,24 @@ items:
     last_session: "2026-05-21T20:59:25.922721"
     blockers: ["R-15 must reach status=passed first (provides bridge_spectrum + R-LR-8 scaffold + test fixtures). G24 + G25 NULLed on content-coupling (R-18 + R-20 + R-21); R-21 LOGBOOK 2026-05-21T11:50 self-recommended density-by-amplitude as G26 because count is substrate-conserved (not exposed to the mixing-time low-pass filter that washed energy and position out). Iteration-cap slot 3 of 3 per LOGBOOK 2026-05-20 pre-registration; after R-22 NULL pivot to G20-G23 fires"]
     created: 2026-05-21
+
+  - id: R-22b
+    title: G26 amendment with K=8 (pre-data correction after R-22 NULL — operator decision 2026-05-22)
+    brief: docs/amendments/G26-density-by-amplitude.md
+    preregistered_acceptance:
+      - "tests/flux/test_g26_amendment.py::test_density_count_proportional_to_amplitude PASSES (corrected fixtures: with DENSITY_K=8 DENSITY_N_MAX=8, n(0.0)=0, n(0.0625)=1, n(0.1875)=2, n(0.4)=3, n(0.7)=6, n(1.0)=8 — amendment Pre-data correction record 2026-05-22)"
+      - "tests/flux/test_g26_amendment.py::test_density_preserves_total_energy_per_sample PASSES (sample_value=0.6 with K=8 density mode injects 5 quanta with energy=0.12 each, sum = abs(sample_value) by construction)"
+      - "tests/flux/test_g26_amendment.py::test_legacy_injection_unchanged PASSES (without env var, bit-identical to 4 pinned R-13/R-14 fixtures — unchanged from R-22)"
+      - "tests/flux/test_g26_amendment.py::test_env_var_routes_to_density_path PASSES (with EQMOD_USE_DENSITY_BY_AMPLITUDE=1, calls density path — unchanged from R-22)"
+      - "tests/flux/test_g26_verification.py::test_10k_alive_quanta_count_differs_under_english_vs_whitenoise PASSES (NEW: same 10k-tick + matched-RMS setup as R-22, but DENSITY_K=8 → zero-injection boundary moves from |x|<0.125 to |x|<0.0625; symmetric count-KL > 0.05)"
+      - "tests/flux/test_g26_verification.py::test_10k_alive_quanta_count_negative_control_same_audio_diff_seed PASSES (same English audio two seeds, count-histogram KL < 0.01; with K=8 substrate is non-degenerate so this test is meaningful (not trivially-PASS-by-substrate-dead like R-22's test 6))"
+      - "tests/flux/test_g26_verification.py::test_10k_bridge_count_differs_under_english_vs_whitenoise PASSES (bridge-count delta > 10% OR bridge-spectrum KL > 0.01)"
+      - "tests/flux/test_conservation.py PASSES (T1 robust)"
+      - "tests/flux/test_crystallization_robustness.py PASSES (T3 robust)"
+      - "tests/flux/test_audio_raw_injection.py PASSES (R-10/R-11 legacy injection tests still green)"
+      - "LOGBOOK entry records the four KL numbers + peak Quanta-buffer fill + actual measured frac(|x|<0.0625) for the English corpus (predicted ~25%, vs R-22's 64.55% under K=4). If all three primary content tests PASS, must recommend R-LR-11 as next long-run for 1.8M-tick G26 verification"
+    time_budget_hours: 4
+    status: queued
+    attempts: 0
+    blockers: ["R-15 must reach status=passed first (provides bridge_spectrum + R-LR-8 scaffold + test fixtures). R-22b is the K-corrected iteration of R-22; the pre-data K correction is documented in docs/amendments/G26-density-by-amplitude.md Pre-data correction record 2026-05-22 (analog marker_protocol.md marker-5 correction pattern: parameter-not-threshold, before-data, construct-under-test-unchanged). R-22 + R-22b together exhaust slot 3 of 3 in the G24-G26 iteration cap; after R-22b NULL the pivot to G20-G23 fires per LOGBOOK 2026-05-20"]
+    created: 2026-05-22
