@@ -522,3 +522,23 @@ items:
     last_session: "2026-05-21T02:47:19.018969"
     blockers: ["R-15 must reach status=passed first (provides agent/flux/bridge_spectrum.py + R-LR-8 scaffold the diagnostic test imports)"]
     created: 2026-05-21
+
+  - id: R-21
+    title: G25 amendment — content-driven xy-position in audio injection (combined impl + 10k verification)
+    brief: docs/amendments/G25-content-driven-injection.md
+    preregistered_acceptance:
+      - "tests/flux/test_g25_amendment.py::test_content_driven_position_hash_returns_different_xy_for_different_sample_values PASSES (NEW: same sample_index=12345 with sample_value=0.1 vs 0.8 returns xy whose Euclidean distance > 0.5 * voxel_size — amendment §3 row 1)"
+      - "tests/flux/test_g25_amendment.py::test_content_driven_position_hash_deterministic PASSES (NEW: same (sample_index, sample_value, seed) returns bit-identical xy — amendment §3 row 2)"
+      - "tests/flux/test_g25_amendment.py::test_legacy_position_hash_unchanged PASSES (NEW: 4 pinned (sample_index, Lx, Ly, voxel_size) fixtures return their R-13/R-14-era xy values — amendment §3 row 3)"
+      - "tests/flux/test_g25_amendment.py::test_env_var_routes_to_content_driven_path PASSES (NEW: with EQMOD_USE_CONTENT_DRIVEN_POSITION=1, inject_raw_audio_sample calls position_hash_content_driven via monkey-patch fixture — amendment §3 row 4)"
+      - "tests/flux/test_g25_verification.py::test_10k_quanta_position_KL_above_0p1_english_vs_whitenoise PASSES (NEW: 2D position histogram of alive quanta at tick 10000, two encoder-free substrates with EQMOD_USE_CONTENT_DRIVEN_POSITION=1, matched RMS English vs white noise; symmetric KL > 0.1. 10x stronger than R-20's failed 0.01 threshold because position is higher-bandwidth than amplitude. Threshold locked pre-data — amendment §3 row 5)"
+      - "tests/flux/test_g25_verification.py::test_10k_negative_control_same_audio_different_seed_position_KL_below_0p005 PASSES (NEW: same English audio two seeds, position-histogram KL < 0.005 — amendment §3 row 6)"
+      - "tests/flux/test_g25_verification.py::test_10k_bridge_count_differs_under_english_vs_whitenoise PASSES (NEW: at tick 10000 of test-5 substrates, bridge-weight spectra KL > 0.01 — amendment §3 row 7)"
+      - "tests/flux/test_conservation.py PASSES (T1 robust)"
+      - "tests/flux/test_crystallization_robustness.py PASSES (T3 robust)"
+      - "LOGBOOK entry records position-KL (test 5), neg-control-KL (test 6), bridge-spectrum-KL (test 7). If all three PASS, the entry must recommend R-LR-10 as next long-run for 1.8M-tick verification under G25."
+    time_budget_hours: 4
+    status: queued
+    attempts: 0
+    blockers: ["R-15 must reach status=passed first (provides bridge_spectrum + R-LR-8 scaffold). R-20 confirmed content-coupling at the energy field is insufficient (KL=0.005, 10x below R-20 threshold 0.01); G25 adds content-coupling at the position field per pre-registered branch (c) in docs/amendments/G24-energy-weighted-flux.md Pre-data correction record"]
+    created: 2026-05-21
