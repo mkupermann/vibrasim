@@ -846,3 +846,87 @@ R-23 (queue infrastructure spec, ≤4h budget, will be queued only after R-22b v
 
 This entry exists so the bet is binding regardless of future memory loss, context truncation, or user/Claude personnel change.
 
+
+---
+
+## 2026-05-22 — autopilot R-22b: G26 K=8 (post-correction) — NULL on test 5 (count-KL = 5e-6 < 0.05)
+
+### Verdict
+
+NULL on locked acceptance row 5 (count-histogram KL English vs white noise = 0.000005 below threshold 0.05). Tests 6 and 7 PASS. Tests 1-4 mechanical PASS. Tests 8-10 regression PASS. Per `docs/amendments/G26-density-by-amplitude.md` §3 verdict-mapping (test-5 fail) and `LOGBOOK.md` 2026-05-20 pre-registration: **G24-G26 iteration cap exhausted (slot 3 of 3); pivot to G20-G23 fires.**
+
+R-22 + R-22b together exhaust slot 3. R-LR-11 is NOT recommended (gated on all three primary content tests passing).
+
+### Pre-registered acceptance — measured numbers
+
+| Acceptance row | Measurement | Threshold | Verdict |
+|---|---|---|---|
+| 1 — density count formula at K=8 | `density_count(0.0)=0, (0.0625)=1, (0.1875)=2, (0.4)=3, (0.7)=6, (1.0)=8` | locked fixtures | PASS |
+| 2 — energy conservation per sample | sample=0.6 → 5 quanta × 0.12 = 0.6 across K=8 sweep | locked formula | PASS |
+| 3 — legacy injection unchanged | all 4 R-13/R-14 `position_hash` fixtures bit-identical | locked fixtures | PASS |
+| 4 — env var routes to density path | monkey-patch spy fired exactly when `EQMOD_USE_DENSITY_BY_AMPLITUDE=1` | locked | PASS |
+| 5 — count-hist KL EN vs WN | **0.000005** (`n_alive_eng=33`, `n_alive_wht=101`, `mean_count_ratio=0.3267`, `max_count_obs=4`) | > 0.05 | **FAIL** |
+| 6 — count-hist KL same-audio diff-seed | 0.000000 (`n_alive_a=33`, `n_alive_b=26`, `max_count_obs=1`) | < 0.01 | PASS (but degenerate, see postmortem) |
+| 7 — bridge response (count delta OR spectrum KL) | bridge-count delta = **0.9645** (`eng_bridges=396`, `wht_bridges=11145`); bridge-spectrum KL = 0.000457 | delta > 0.10 OR KL > 0.01 | PASS (via count-delta arm) |
+| 8 — `test_conservation.py` | 3/3 PASSED | full pass | PASS |
+| 9 — `test_crystallization_robustness.py` | 2/2 PASSED | full pass | PASS |
+| 10 — `test_audio_raw_injection.py` | 6/6 PASSED | full pass | PASS |
+| 11 — peak Quanta-buffer fill | English seed=4242: **peak_alive=201** (0.201% of 100k); final_alive=33 | report only | RECORDED |
+
+### Audio-amplitude distribution (R-22b pre-data correction verification)
+
+R-22's correction record predicted that raising K from 4 to 8 would drop the English zero-injection fraction from 64.55% (K=4 boundary `|x|<0.125`) to ~25% (K=8 boundary `|x|<0.0625`). Measured on the same R-7 Stage-1 English fixture used by the verification run:
+
+| Measurement | English | White noise (matched-RMS, seed=9999) |
+|---|---|---|
+| `mean(|x|)` | 0.1530 | 0.1993 |
+| `frac(|x| < 0.0625)` (K=8 zero boundary) | **44.26 %** | 19.74 % |
+| `frac(|x| < 0.125)` (K=4 zero boundary, R-22 reference) | 64.55 % | 38.46 % |
+
+K=8 dropped the English zero-injection rate from 64.55 % to 44.26 % — improvement, but **higher than the predicted ~25 %**. The Gaussian-ish English-amplitude estimate the correction record used was optimistic; the English-corpus amplitude distribution has more probability mass near zero (silence + low-energy phonemes) than a clean Gaussian at the same RMS. The substrate is no longer fully starved (R-22: dead, n_alive_eng=0 at tick 10k; R-22b: alive, n_alive_eng=33 at tick 10k) but injection is still much sparser for English than for white noise.
+
+### Mechanism diagnosis — why test 5 failed even though content reached the bridge layer
+
+K=8 succeeded at the intended goal: substrate is no longer starved (R-22 verdict was "dead substrate"; R-22b's English substrate at tick 10k has 33 alive quanta vs white-noise's 101). Content variance DOES propagate from the injector to the substrate state:
+
+- **Population-level**: `n_alive_eng / n_alive_wht = 33 / 101 = 0.33` — English substrate has 3× fewer alive quanta than matched-RMS white noise. This is a real, large content effect from density-by-amplitude.
+- **Bridge-level**: bridge-count delta = 96.5 % between English (396) and white noise (11145) — test 7 PASS by a margin of ~10× the threshold. Density propagated all the way through to the bridge layer's primary observable.
+
+But the locked test-5 metric is *per-voxel alive-quanta count histogram, normalised to unit probability mass on each side*. With 3600 voxels (30×15×8) and ~100 alive quanta, both substrates have ≥97 % of voxels in the 0-count bin, ~3 % in the 1-count bin, and a few cells higher. The unit-normalisation strips the only signal that survives mixing (total population scaling). The histogram *shape* is statistically identical even though the populations differ 3×.
+
+This is a metric-sensitivity issue (the test 5 instrument is not the right reader for the density channel at this substrate scale), not a content-coupling architectural failure. Test 7's bridge-count delta is the same finding test 5 would have detected if it measured total population scaling — but the pre-registered metric does not, and the threshold is locked.
+
+### Gap classification (per charter §"NULL is a valid verdict")
+
+The gap is **in the acceptance specification, not the implementation and not the hypothesis**:
+
+- Implementation: density-by-amplitude works at the injector level (tests 1-4 PASS, bit-deterministic, energy-conserving).
+- Hypothesis: density-by-amplitude DOES survive substrate mixing (tests 6+7 PASS; population and bridge layer both see content variance at large effect sizes).
+- Specification: the pre-registered test-5 metric (unit-normalised per-voxel count histogram, KL > 0.05) is insensitive to the dominant signal the density channel actually produces (total-population scaling). The metric was inherited from R-21's position-histogram template; position-by-amplitude's signal lives in the *distribution* over voxels (where unit-normalisation is appropriate), but density-by-amplitude's signal lives in the *total mass* (where it isn't).
+
+Pre-registration discipline forbids changing the acceptance to retrofit this finding. The protocol-correct outcome is NULL.
+
+### What this means for the iteration cap
+
+R-22 (K=4, dead substrate) and R-22b (K=8, alive but locked-metric-insensitive) together exhaust slot 3 of 3 in the G24-G26 amendment cap. The LOGBOOK 2026-05-20 pre-registered pivot fires:
+
+> If G24-G26 all NULL on content-coupling, pivot to G20-G23.
+
+G20-G23 is the text I/O chain frozen 2026-05-11 in `docs/amendments/G20-G23.md`, designed for the legacy substrate. The 2026-05-20 pre-registration is binding regardless of why the three slots NULLed; in this case the NULL is "the locked acceptance metric did not detect a signal that other parts of the same substrate clearly carry," but the pivot still fires per protocol.
+
+### Negative-control note
+
+The R-22b session run did not separately execute the matched-wallclock no-engram negative control beyond test 6 (same English audio, different RNG seed → KL=0.000000). Test 6's degeneracy (max_count_obs=1, almost everything in 0-bin under both seeds) means it is a weak discriminator at this scale — passing test 6 here mostly says "the metric is degenerate," not "content drives the signal." This is consistent with the metric-sensitivity diagnosis: at this substrate population the count-histogram is a poor instrument.
+
+### Wallclock used + tests added/changed
+
+- Tests 1-4 (mechanical, K=8 fixtures): edited `tests/flux/test_g26_amendment.py` to update the locked fixture set from K=4 to K=8 per the amendment's "Pre-data correction record 2026-05-22". 6/6 PASS.
+- Tests 5-7 (verification): unchanged from R-22; module-scoped substrate fixtures + KL thresholds locked.
+- Implementation: `agent/flux/audio_raw.py` constants `DENSITY_K`, `DENSITY_N_MAX` updated 4 → 8. No code logic changed.
+- Verification wallclock: 37 min for the 3-substrate verification run, plus ~12 min for the buffer-fill measurement.
+- Regression suite: 11/11 PASS in 8 min (`test_conservation.py`, `test_crystallization_robustness.py`, `test_audio_raw_injection.py`).
+
+### Recommendation
+
+Per amendment §4 and LOGBOOK 2026-05-20: queue **G20-G23 implementation** as the next item on the legacy substrate. Do not queue another G-amendment in this iteration cap. R-LR-11 is NOT recommended.
+
