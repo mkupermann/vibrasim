@@ -846,3 +846,11 @@ R-LR-10 is NOT recommended as next long-run item; the 10k-tick verification fail
 
 R-21's acceptance specification was locked in `.eqmod/autopilot/QUEUE.yaml` and `docs/amendments/G25-content-driven-injection.md` before this session opened. The session did NOT retune the 0.1 / 0.005 / 0.01 thresholds, did NOT change `N_TICKS=10_000`, did NOT relax the histogram binning to manufacture a PASS, and did NOT modify the implementation to lift the position-channel content past the threshold (which would have meant adding a second content channel inside the G25 amendment slot, i.e. silently consuming the G26 slot). Test 5 missed by 470×; test 7 by 150×. The gap is not a binning-resolution problem.
 
+
+
+## 2026-05-21 — autopilot session: R-21
+
+- **Verdict**: NULL
+- **Attempts**: 1/3
+- **Diff**: 5 files changed, 885 insertions(+), 1 deletion(-)
+- **Rationale**: pass-targets did not pass
