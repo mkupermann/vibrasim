@@ -191,7 +191,7 @@ def check_stagnation_and_alert() -> bool:
     during legitimate 4-hour sessions. Stagnation can only legitimately
     accrue *between* sessions, not during them.
     """
-    # Guard: wrapper alive → reset stagnation counter, return False.
+    # Guard: short-wrapper alive → reset stagnation counter, return False.
     if LOCKDIR.exists():
         try:
             pid = int(LOCK_PID.read_text().strip())
@@ -208,6 +208,32 @@ def check_stagnation_and_alert() -> bool:
                     log(f"  liveness: wrapper alive pid={pid} — reset stagnation counter")
                 else:
                     log(f"  liveness: wrapper alive pid={pid} — no stagnation possible during session")
+                return False
+        except (FileNotFoundError, ValueError):
+            pass
+
+    # Guard: long-run dispatcher alive → also resets stagnation counter.
+    # Without this guard the detector false-positives during a 13–24h R-LR-N
+    # run if the short queue happens to be empty (R-20 incident 2026-05-21
+    # T03:03+: R-LR-4 was at 7h/24h, no main commits in the short pipeline
+    # because the short queue was exhausted, detector fired STOP).
+    lr_pid_path = Path.home() / ".eqmod/long-run/current.pid"
+    if lr_pid_path.exists():
+        try:
+            lr_pid = int(lr_pid_path.read_text().strip())
+            if pid_alive(lr_pid):
+                state = load_stagnation_state()
+                was_counting = state.get("consecutive_stagnant_ticks", 0) > 0
+                was_alerted = state.get("alerted", False)
+                state["consecutive_stagnant_ticks"] = 0
+                state["alerted"] = False
+                state["last_progress_signal"] = measure_progress_signal()
+                state["last_progress_at"] = _dt.datetime.now().isoformat()
+                save_stagnation_state(state)
+                if was_counting or was_alerted:
+                    log(f"  liveness: long-run pid={lr_pid} alive — reset stagnation counter")
+                else:
+                    log(f"  liveness: long-run pid={lr_pid} alive — research progress ongoing")
                 return False
         except (FileNotFoundError, ValueError):
             pass
