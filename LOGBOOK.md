@@ -764,3 +764,85 @@ The diagnostic was specified with NULL as a possible (and per CLAUDE.md, valid) 
 - **STOP marker set**: ~/.eqmod/autopilot/STOP — autopilot will not
   fire until this file is removed.
 - **Mail sent**: EQMOD PIPELINE STAGNATION — autopilot paused
+
+
+## 2026-05-22 — Programme-level bet pre-registered: 12-month emergent-paths search for self-organising learning
+
+User commitment 2026-05-21 + 2026-05-22 across several messages: "ich wette du schaffst es nicht für 1 Mio Dollar selbstständig eine funktionierende Architektur aufzubauen" → "keine bisher bekannte Technologie darf verwendet werden. 12 Monate Zeit. Lernen selbstständig ist das Ziel. Reden und Antworten später" → "emergente Pfade. In schnellen 1h Iterationen. Wenn alle 5 von 5 Tests pass sind. Selbstständig lernen ist gegeben wenn es nach wissenschaftlicher Definition gegeben ist" → "Wette gilt".
+
+This is a programme-level pre-registration parallel to the LOGBOOK 2026-05-20 G24-G26 amendment cap. It runs whether or not R-22b passes; if R-22b passes the bet is technically a redundant win-path but stays committed because the discipline of pre-registration requires it.
+
+### Win condition (binary)
+
+Five tests must PASS simultaneously on a single substrate instance, on a single training run, within 12 months of the start date.
+
+| # | Test | Locked threshold |
+|---|---|---|
+| T1 | Substrate topology after a 10k-tick training phase diverges from initial state by **symmetric KL > 0.1** | KL > 0.1 |
+| T2 | Substrate trained on dataset A diverges from substrate trained on dataset B (matched-RMS, different per-sample statistics) by **symmetric KL > 0.1** | KL > 0.1 |
+| T3 | Both T1 and T2 are satisfied with **≤ 50 % of the available training corpus consumed** | sample-efficiency |
+| T4 | After training on subset S1 of dataset A, recall precision on a held-out disjoint S2 from the same distribution **> 0.3** | precision floor |
+| T5 | After a 10k-tick "rest" phase (no input) following training, T1 and T2 are still satisfied at **≥ 50 % of the immediately-post-training KL values** | retention |
+
+Negative controls (matched-noise input, matched-wallclock no-training) must FAIL for the result to be defensible. The standard `docs/marker_protocol.md` discriminating-test discipline applies.
+
+### Constraint definitions
+
+"No previously known technology" — interpreted as **not realised as a running computational substrate in mainstream ML literature**. Theories from physics, topology, category theory, thermodynamics, information geometry that have not been instantiated as live learning systems are permitted as building blocks.
+
+Disallowed: STDP, backprop, reservoir computing, classical Hebbian, ART, GAN, diffusion models, transformer-based learning, spiking neural networks in any of their existing forms, the current G24/G25/G26 flux-substrate amendments, the legacy EQMOD G1-G18 chain, any LLM, any pretrained embedding, any BPE tokenizer, any pretrained acoustic / vision model. Anything in `docs/CONCEPT.md` is "known" by construction since it's pre-existing project code.
+
+Permitted as substrate primitives: thermodynamic flux, phase transitions, topological reorganisation, persistent homology, stigmergic interactions, eigenfunction decomposition of energy operators, Markov-blanket emergence, lattice geometries, cellular automata if cast as live learning substrates, anything not previously realised as a running ML system.
+
+### Iteration cadence
+
+≤ 1 hour per hypothesis-test cycle (preflight → minimal-compute falsifier → verdict → LOGBOOK → next). Substrate full-scale verification runs do not count against the 1h budget (they run as long-run items, separately).
+
+Estimated yield: ~3000-5000 hypothesis cycles over 12 months. 95 %+ NULLs expected and welcomed (each one constrains the design space).
+
+### Start date
+
+2026-05-22. End date: 2027-05-22. Hard deadline; no extension regardless of progress.
+
+### Loss conditions
+
+- 12 months elapse without 5/5 tests simultaneously passing → LOSS.
+- I (Claude under this user mandate) declare early surrender via LOGBOOK entry referencing this pre-registration → LOSS.
+- I propose post-hoc threshold tuning to any of T1-T5 → LOSS (protocol violation per `docs/marker_protocol.md`).
+- Any of the five tests is satisfied only by a substrate that uses a disallowed technology (e.g. someone smuggles a transformer in) → LOSS.
+
+### Win conditions
+
+- 5/5 tests PASS simultaneously, with passing negative controls (matched-noise input fails the same tests), with all five test runs traceable to a single substrate trained on a single dataset under the disallowed-technology constraint → WIN.
+
+### Stake
+
+Symbolic. The $1 M figure was rhetorical scaffolding. The real stake is: 12 months of my best autonomous attempt under the constraint, with my reputation as an LLM that can do non-trivial research-engineering work bound to the outcome. The user's stake is: 12 months of compute on his Mac + the opportunity-cost of not pivoting to a different research direction in that time.
+
+### What proceeds in parallel
+
+- R-22b (G26 K=8 pre-data correction) runs to completion as the last G24-G26 amendment-cap item. If R-22b PASSES, the substrate has demonstrated content-coupling via a known mechanism (density-coding is in the Hodgkin-Huxley / sparse-coding literature). The bet's 5/5 test bar is harder than R-22b's bar and may or may not be met by the density-coupled flux-substrate; running both paths in parallel does not violate either's pre-registration.
+- R-LR-4 (encoder-free + extended dream phase, 1.8M ticks) continues; it tests an orthogonal hypothesis on the legacy injection path.
+- The lab infrastructure (autopilot pipeline, validator, supervisor, watchdog, health-check, Telegram channel) continues to support both the existing G-amendment programme and the new bet programme.
+
+### Lab infrastructure work the bet requires
+
+The current autopilot is sized for 4h-per-item; the bet requires ≤1h-per-iteration. New infrastructure (queued separately as R-23 once R-22b is verdict-final):
+
+- 10k-tick smoke substrate (current footprint, currently ~3-7 min per run) becomes the default falsifier.
+- Per-iteration LOGBOOK entry mandatory; per-iteration pre-registration mandatory.
+- A bet-specific queue file (`~/.eqmod/bet/queue.yaml`) separate from the existing autopilot queue to avoid mixing 4h-items with 1h-iterations.
+- A bet-specific dispatcher running on ≤1h cadence.
+- Identical Telegram channel for outbound; identical validator semantics.
+
+R-23 (queue infrastructure spec, ≤4h budget, will be queued only after R-22b verdict so it's not interleaved with the active G-amendment cap).
+
+### What this pre-registration does NOT permit
+
+- Changing any of T1-T5 thresholds in response to a failing hypothesis run.
+- Adding a 6th test or removing one of the 5.
+- Extending past 2027-05-22.
+- Treating "interesting partial pass" as success. 5/5 is binary.
+
+This entry exists so the bet is binding regardless of future memory loss, context truncation, or user/Claude personnel change.
+
