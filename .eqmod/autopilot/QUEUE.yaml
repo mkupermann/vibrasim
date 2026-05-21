@@ -538,7 +538,8 @@ items:
       - "tests/flux/test_crystallization_robustness.py PASSES (T3 robust)"
       - "LOGBOOK entry records position-KL (test 5), neg-control-KL (test 6), bridge-spectrum-KL (test 7). If all three PASS, the entry must recommend R-LR-10 as next long-run for 1.8M-tick verification under G25."
     time_budget_hours: 4
-    status: queued
-    attempts: 0
+    status: null
+    attempts: 1
+    last_session: "2026-05-21T12:01:25.435527"
     blockers: ["R-15 must reach status=passed first (provides bridge_spectrum + R-LR-8 scaffold). R-20 confirmed content-coupling at the energy field is insufficient (KL=0.005, 10x below R-20 threshold 0.01); G25 adds content-coupling at the position field per pre-registered branch (c) in docs/amendments/G24-energy-weighted-flux.md Pre-data correction record"]
     created: 2026-05-21
