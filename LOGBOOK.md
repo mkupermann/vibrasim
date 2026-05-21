@@ -877,3 +877,11 @@ LOGBOOK 2026-05-20: "If G24-G26 all NULL on content-coupling, pivot to G20-G23."
 ### Pre-registration discipline note
 
 The session did NOT touch `marker_protocol.md`, the `preregistered_acceptance:` block, or the `## Acceptance` section of the G26 amendment. The schoolbook-rounding correction in `density_count` is documented in the docstring as a divergence from the brief's pseudocode that was necessary to honour the locked test-1 fixtures (banker's rounding gives `n(0.125)=0`, fixtures require `n(0.125)=1`); the visible behaviour at the five locked fixture points matches what the brief specified. No thresholds were tuned. The verdict is NULL by protocol.
+
+
+## 2026-05-21 — autopilot session: R-22
+
+- **Verdict**: NULL
+- **Attempts**: 1/3
+- **Diff**: 5 files changed, 1124 insertions(+), 2 deletions(-)
+- **Rationale**: pass-targets did not pass
