@@ -764,3 +764,116 @@ The diagnostic was specified with NULL as a possible (and per CLAUDE.md, valid) 
 - **STOP marker set**: ~/.eqmod/autopilot/STOP — autopilot will not
   fire until this file is removed.
 - **Mail sent**: EQMOD PIPELINE STAGNATION — autopilot paused
+
+---
+
+## 2026-05-21 — autopilot R-22: G26 density-by-amplitude (NULL on test 5; G24-G26 iteration cap exhausted, pivot to G20-G23 fires)
+
+### Pre-registered question
+
+R-22 is slot 3 of 3 in the G24-G26 iteration cap (LOGBOOK 2026-05-20 pre-registration). R-21's NULL recommended density-by-amplitude on the grounds that count is a substrate-conserved quantity not exposed to the mixing-time low-pass filter that washed G24's energy and G25's position channels out. The amendment is locked in `docs/amendments/G26-density-by-amplitude.md` 2026-05-21. R-22 acceptance is 11 items combining implementation, conservation/crystallization regression, and three primary content tests (count-hist KL, count-hist neg-control, bridge-count delta OR bridge-spectrum KL) at 10k ticks per `.eqmod/autopilot/QUEUE.yaml::R-22`.
+
+### Measurement (locked parameters, no retune)
+
+- SR=16_000, samples_per_tick=16, N_TICKS=10_000, target_rms=0.25.
+- `EQMOD_USE_DENSITY_BY_AMPLITUDE=1` (G26 path).
+- `DENSITY_K=4`, `DENSITY_N_MAX=4`. Schoolbook rounding (`floor(|x|*K + 0.5)`); the brief's `np.round` pseudocode is banker's and was diverged-from-on-purpose to honour the locked fixture `n(0.125)=1` (banker's gives 0). Departure documented in `agent/flux/audio_raw.py::density_count`.
+- SUBSTRATE_SEED_A=4242, SUBSTRATE_SEED_B=7777, WHITE_NOISE_SEED=9999.
+- Per-voxel alive-quanta count histogram: 32 bins on `[0, max_count_observed]` with `max_count_observed` pooled across the two compared substrates (binning shared so KL is well-defined).
+- Audio source: R-7 Stage-1 English manifest, RMS-normalised to 0.25.
+- Wall-clock: verification suite 345.97 s (3 × 10k-tick substrate runs); unit tests 0.39 s; conservation+crystallization 518.41 s.
+
+### Results
+
+| # | Test | Threshold | Measured | Verdict |
+|---|---|---:|---:|:---|
+| 1 | `density_count` formula vs locked fixtures (0.0, 0.125, 0.4, 0.7, 1.0) | exact match | exact match | **PASS** |
+| 2 | per-sample energy conservation (sum across burst = `abs(sample_value)`) | exact (atol 1e-12) | exact | **PASS** |
+| 3 | legacy injection bit-identical (env var off, 4 pinned position_hash fixtures) | bit-identical | bit-identical | **PASS** |
+| 4 | env var routes `inject_raw_audio_sample` to density path (monkey-patch spy) | 1 call | 1 call | **PASS** |
+| 5 | count-hist KL English vs white noise (32 bins on [0, max], symmetric) | KL > 0.05 | **0.000014** | **FAIL** |
+| 6 | count-hist KL same-audio different-seed (negative control) | KL < 0.01 | 0.000000 (degenerate) | PASS* |
+| 7 | bridge-count delta OR bridge-spectrum KL English vs white noise | delta > 0.10 OR KL > 0.01 | delta = **1.0000** (eng=0, wht=1010) | PASS |
+| 8 | `tests/flux/test_conservation.py` | all pass | all pass | **PASS** |
+| 9 | `tests/flux/test_crystallization_robustness.py` | all pass | all pass | **PASS** |
+| 10 | `tests/flux/test_audio_raw_injection.py` | all pass | all pass | **PASS** |
+| 11 | LOGBOOK records the three KLs, neg-control-KL, bridge-count delta, peak buffer fill | this entry | this entry | **PASS** |
+
+`*` test 6 is a structural PASS but degenerate: both English substrates are dead (n_alive=0) at tick 10000, so KL = 0 trivially. Negative-control discipline is intact in the formal sense (same audio → same outcome) but the test cannot discriminate seed-driven from content-driven variance because there is no test-5 variance to discriminate. Recorded as PASS only because the threshold is satisfied; the substantive read is "indeterminate".
+
+### Peak Quanta-buffer fill (one verification run)
+
+Single 10k-tick replay outside the pytest fixture, same parameters, tracking `max(quanta.n_alive())` per tick across all 10000 ticks:
+
+- White noise (seed A): peak = **122** alive quanta at tick 3130; capacity 100_000 → **0.12% peak fill**.
+- English (seed A): peak = **155** alive quanta at tick 6261; capacity 100_000 → **0.16% peak fill**.
+
+Buffer pressure is trivial in both runs. The 4× headroom margin the brief reserved for K=4 was overkill by ~600×; the bottleneck is not buffer capacity but substrate-side decay.
+
+### Audio-amplitude diagnostic (the actual gap)
+
+The two RMS=0.25-matched inputs have very different |sample| distributions:
+
+| Statistic | English (R-7 stage 1, RMS=0.25) | White noise (Gaussian, RMS=0.25) |
+|---|---:|---:|
+| `mean(|x|)` | **0.1530** | 0.1993 |
+| `max(|x|)` | 3.2667 (clip-allowed) | 1.1010 |
+| `frac(|x| < 0.125)` | **64.55%** | 38.46% |
+
+`density_count(|x|) = 0` exactly when `|x| < 0.125` (the schoolbook-rounding boundary at `|x|*K + 0.5 < 1` → `|x| < 0.125`). So under the G26 formula:
+
+- 64.55% of English samples inject ZERO quanta → silence stretches → substrate starves.
+- 38.46% of white-noise samples inject zero, but those zeros are bernoulli-iid by sample, never clustered → continuous re-injection at every tick.
+
+The English-substrate trajectory (per-1000-tick samples of `n_alive_quanta` / `n_alive_bridges` / `n_alive_nodes`):
+
+```
+tick:        0    1000   2000   3000   4000   5000   6000   7000   8000   9000   9999
+quanta:      0     76      0      0     68     88     55      0     84      2      0
+bridges:     0   1033    162    108    111    220     17    368    204     20      0
+nodes:       0    144     52     48     58     55     15    103     52     14      0
+```
+
+Three full collapses to zero alive quanta (ticks 2000, 3000, 7000), a final collapse at 9999, and a substrate that never establishes a stable population. The white-noise trajectory is the opposite shape (75-120 alive quanta from tick 1000 onward, 540-1010 bridges, 70-140 nodes).
+
+### Interpretation — verdict mapping
+
+Per amendment §3 verdict-mapping, **test 5 FAIL → "density-channel doesn't propagate to alive-quanta steady state, G26 cap exhausted, pivot fires"**. The mechanism the brief anticipated was "same mixing-time problem as G24/G25 in a new guise" — substrate dynamics low-pass-filter the per-tick injection variation away by tick 10_000.
+
+The actual mechanism the data reveals is different and arguably more damning: the schoolbook-rounded density formula with K=4 cuts off at `|x| < 0.125`, and real speech (RMS-normalised to 0.25) has 64.55% of samples in that dead-zone. The substrate doesn't fail to *see* the content variation — it sees it so sharply that the silence gaps in speech are below the substrate's metabolic floor, and it dies. The white-noise substrate survives because uniform-distribution iid samples never cluster into 100-tick silence stretches, even though 38% of them are also in the dead-zone.
+
+This is a **more revealing NULL than R-20 or R-21**. R-20 found energy variance survives the substrate but is washed out by the bridge geometry. R-21 found position variance survives injection but is low-pass-filtered by 10k ticks of mixing. R-22 finds that count variance is too aggressive to survive — the substrate is content-sensitive in the *gross* sense (dies under speech, lives under noise) but cannot be measured at steady-state because the speech-fed substrate has no steady-state to measure.
+
+**Whether the gap is in implementation, hypothesis, or acceptance specification:** the implementation matches the brief (modulo the documented schoolbook-rounding correction). The hypothesis ("count is conserved at injection, therefore survives mixing") was right about count surviving but wrong about the substrate maintaining a population to count. The acceptance specification (test 5 + test 6 + test 7) is conceptually sound but the test-5 precondition `assert n_alive_eng > 0` was the wrong gate for diagnosing "substrate dies under target input"; a smarter R-22 author would have added a "population alive at tick 10_000" precondition before measuring KL, so the failure mode would surface explicitly rather than masquerading as "tiny KL". This is a design-of-test critique, not a retuning request — the verdict remains NULL.
+
+### Pre-registered pivot
+
+LOGBOOK 2026-05-20: "If G24-G26 all NULL on content-coupling, pivot to G20-G23." All three slots have now NULLed:
+
+- G24 (R-17b/R-18/R-20): energy-weighted plasticity; bridge-spectrum KL 0.000000 at 50k, energy KL 0.005 at 10k.
+- G25 (R-21): content-driven xy-position; position KL 0.000215 at 10k (470× under threshold).
+- G26 (R-22, this entry): density-by-amplitude; count-hist KL 0.000014 at 10k AND English substrate dead (n_alive_eng=0) at the readout tick.
+
+**The G24-G26 iteration cap is exhausted. The pivot to G20-G23 fires per pre-registration.** No further amendments in this lineage. G20-G23 is the symbolic-text I/O chain frozen 2026-05-11 in `docs/amendments/G20-G23.md`, designed for the legacy substrate which already satisfies the "lernend" component of the success criterion (G14-G18 engrams, dreams, cross-modal recall). G20-G23 adds the "kommunizierend" component.
+
+**R-LR-11 is NOT recommended** — the brief gates it on all three primary content tests passing. Test 5 failed; long-run commitment would only confirm the alive-quanta collapse at larger N.
+
+### What this NULL does NOT mean
+
+- It does NOT mean density-by-amplitude is "wrong" in absolute terms — it correctly imposes a per-sample count that is content-driven. The failure is at the dynamical-stability interface, not at the channel-bandwidth interface.
+- It does NOT mean the substrate is broken — T1 (3 tests, 518 s) and T3 (2 tests including a multi-seed loop) both PASS on this branch. Legacy injection bit-identical (test 3 + R-10 fixtures all green).
+- It does NOT invalidate G24's or G25's mechanism choices in retrospect — each was the strongest a-priori candidate under its own framing. The three-slot cap is the discipline that makes the architectural shift defensible.
+
+### Wall-clock + files
+
+- Unit tests (`test_g26_amendment.py`, 4 tests): 0.39 s.
+- Verification (`test_g26_verification.py`, 3 tests, 3 × 10k-tick fixtures): 345.97 s.
+- Regression (`test_audio_raw_injection.py`, 6 tests; `test_conservation.py`, 3 tests; `test_crystallization_robustness.py`, 2 tests): 525.90 s combined.
+- Peak-buffer diagnostic run (out-of-pytest): ~120 s.
+
+- Files added: `tests/flux/test_g26_amendment.py` (~260 lines), `tests/flux/test_g26_verification.py` (~270 lines), `agent/flux/bridge_spectrum.py` (~310 lines, R-15/R-21 lineage import — autopilot/R-21 was not merged to main so this branch needed its own copy; identical to the de5e419 version including `return_full_state` flag and `make_white_noise`).
+- Files modified: `agent/flux/audio_raw.py` (+~130 lines): `DENSITY_K`/`DENSITY_N_MAX` constants, `density_count()` helper, `inject_raw_audio_sample_density()` implementation, env-var gate in `inject_raw_audio_sample()`, density-mode buffer-full handling in `inject_raw_audio_chunk()` (silent-sample `n=0` is no longer a buffer-full signal in density mode).
+
+### Pre-registration discipline note
+
+The session did NOT touch `marker_protocol.md`, the `preregistered_acceptance:` block, or the `## Acceptance` section of the G26 amendment. The schoolbook-rounding correction in `density_count` is documented in the docstring as a divergence from the brief's pseudocode that was necessary to honour the locked test-1 fixtures (banker's rounding gives `n(0.125)=0`, fixtures require `n(0.125)=1`); the visible behaviour at the five locked fixture points matches what the brief specified. No thresholds were tuned. The verdict is NULL by protocol.
