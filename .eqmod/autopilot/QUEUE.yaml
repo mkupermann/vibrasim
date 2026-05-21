@@ -543,3 +543,24 @@ items:
     last_session: "2026-05-21T12:01:25.435527"
     blockers: ["R-15 must reach status=passed first (provides bridge_spectrum + R-LR-8 scaffold). R-20 confirmed content-coupling at the energy field is insufficient (KL=0.005, 10x below R-20 threshold 0.01); G25 adds content-coupling at the position field per pre-registered branch (c) in docs/amendments/G24-energy-weighted-flux.md Pre-data correction record"]
     created: 2026-05-21
+
+  - id: R-22
+    title: G26 amendment — density-by-amplitude injection (combined impl + 10k verification, slot 3 of 3 in iteration cap)
+    brief: docs/amendments/G26-density-by-amplitude.md
+    preregistered_acceptance:
+      - "tests/flux/test_g26_amendment.py::test_density_count_proportional_to_amplitude PASSES (NEW: with DENSITY_K=4 DENSITY_N_MAX=4, n(0.0)=0, n(0.125)=1, n(0.4)=2, n(0.7)=3, n(1.0)=4 — amendment §3 row 1)"
+      - "tests/flux/test_g26_amendment.py::test_density_preserves_total_energy_per_sample PASSES (NEW: sample_value=0.6 with density mode injects 2 quanta with energy=0.3 each, sum = abs(sample_value) by construction across all n>=1 — amendment §3 row 2)"
+      - "tests/flux/test_g26_amendment.py::test_legacy_injection_unchanged PASSES (NEW: without env var, inject_raw_audio_sample returns 1 quantum with legacy position_hash xy and energy=abs(sample_value) bit-identical to 4 pinned R-13/R-14 fixtures — amendment §3 row 3)"
+      - "tests/flux/test_g26_amendment.py::test_env_var_routes_to_density_path PASSES (NEW: with EQMOD_USE_DENSITY_BY_AMPLITUDE=1, inject_raw_audio_sample calls density path via monkey-patch — amendment §3 row 4)"
+      - "tests/flux/test_g26_verification.py::test_10k_alive_quanta_count_differs_under_english_vs_whitenoise PASSES (NEW: two 10k-tick encoder-free substrates with EQMOD_USE_DENSITY_BY_AMPLITUDE=1, matched RMS English vs white noise; alive-quanta-count histograms KL > 0.05 at tick 10000. Threshold 0.05 halved from R-20's 0.01-energy threshold because count is lower-bandwidth than energy but preserves much larger fraction of variance through mixing — amendment §3 row 5)"
+      - "tests/flux/test_g26_verification.py::test_10k_alive_quanta_count_negative_control_same_audio_diff_seed PASSES (NEW: same English audio two seeds, count-histogram KL < 0.01. Content-vs-seed discriminator — amendment §3 row 6)"
+      - "tests/flux/test_g26_verification.py::test_10k_bridge_count_differs_under_english_vs_whitenoise PASSES (NEW: at tick 10000 of test-5 substrates, total alive-bridge count differs > 10% between EN and WN OR bridge-spectrum KL > 0.01. OR semantics — density may propagate via count-channel or weight-channel — amendment §3 row 7)"
+      - "tests/flux/test_conservation.py PASSES (T1 robust; energy-per-sample invariant by construction via test 2 — amendment §3 row 8)"
+      - "tests/flux/test_crystallization_robustness.py PASSES (T3 robust — amendment §3 row 9)"
+      - "tests/flux/test_audio_raw_injection.py PASSES (R-10/R-11 legacy injection tests still green — amendment §3 row 10)"
+      - "LOGBOOK entry records count-KL (test 5), neg-control-KL (test 6), bridge-count delta (test 7), peak Quanta-buffer fill from one verification run. If all three primary content tests PASS, must recommend R-LR-11 as next long-run for 1.8M-tick G26 verification — amendment §3 row 11"
+    time_budget_hours: 4
+    status: queued
+    attempts: 0
+    blockers: ["R-15 must reach status=passed first (provides bridge_spectrum + R-LR-8 scaffold + test fixtures). G24 + G25 NULLed on content-coupling (R-18 + R-20 + R-21); R-21 LOGBOOK 2026-05-21T11:50 self-recommended density-by-amplitude as G26 because count is substrate-conserved (not exposed to the mixing-time low-pass filter that washed energy and position out). Iteration-cap slot 3 of 3 per LOGBOOK 2026-05-20 pre-registration; after R-22 NULL pivot to G20-G23 fires"]
+    created: 2026-05-21
