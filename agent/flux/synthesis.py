@@ -21,6 +21,7 @@ high Q. See that file for the derivation.
 """
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass
 
 import numpy as np
@@ -39,6 +40,33 @@ class SynthesisConfig:
     impulse_gain: float = 1.0
     output_gain: float = 1.0
     firing_threshold: float = 0.1
+
+
+# R-14 commit e9c9275 locked (Q=3.0, impulse_gain=1.0) as the smallest
+# (Q, gain) pair in the sweep ``[Q in {3,5,10,30}] x [gain in {1,5,25,100}]``
+# that satisfies the R-14 sensitivity gates. R-LR-8 reads the tuned
+# config via ``get_synthesis_config()``; the F2 baseline (Q=5) remains
+# the default for everything else.
+TUNED_SYNTHESIS_Q = 3.0
+TUNED_SYNTHESIS_IMPULSE_GAIN = 1.0
+
+
+def get_synthesis_config(**overrides) -> "SynthesisConfig":
+    """Return a ``SynthesisConfig`` honouring ``EQMOD_USE_TUNED_SYNTHESIS``.
+
+    When the env var ``EQMOD_USE_TUNED_SYNTHESIS`` is set to ``"1"``, the
+    returned config uses R-14's locked tuned pair (``Q=3.0``,
+    ``impulse_gain=1.0``). Otherwise, the F2 baseline defaults apply
+    (``Q=5.0``, ``impulse_gain=1.0``). Keyword arguments in ``overrides``
+    win over both — callers can still customise other fields freely.
+    """
+    use_tuned = os.environ.get("EQMOD_USE_TUNED_SYNTHESIS", "0").strip() == "1"
+    fields: dict = {}
+    if use_tuned:
+        fields["Q"] = TUNED_SYNTHESIS_Q
+        fields["impulse_gain"] = TUNED_SYNTHESIS_IMPULSE_GAIN
+    fields.update(overrides)
+    return SynthesisConfig(**fields)
 
 
 class Synthesizer:

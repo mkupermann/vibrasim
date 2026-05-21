@@ -23,7 +23,7 @@ the auditor directly — tick does not surface it.
 Cochlea + Synthesis + Attention reallocate remain deferred to F2.
 """
 from __future__ import annotations
-from typing import Callable
+from typing import Callable, Optional
 import numpy as np
 
 from world.flux.quantum import Quanta
@@ -33,6 +33,17 @@ from world.flux.boundary import absorb_cold_faces
 
 Injector = Callable[[Quanta, Grid], float]
 """Function (quanta, grid) -> energy_injected_this_tick."""
+
+
+PlasticityStepFn = Callable[..., None]
+"""Function (bridges, nodes, quanta, plasticity_cfg, tick_index) -> None.
+
+Replaces the default count_flux_through + apply_plasticity pair when
+provided to tick(). Pruning is still handled by tick() itself.
+Introduced by G24 to let encoder-free training swap in an
+energy-weighted plasticity step via env var without touching the
+legacy count-based path used by T1/T3/T4 regression tests.
+"""
 
 
 def _compute_density(quanta: Quanta, grid: Grid) -> np.ndarray:
@@ -71,7 +82,8 @@ def tick(quanta: Quanta, grid: Grid, dt: float,
          plasticity_cfg=None,
          thermal_cfg=None,
          rng: np.random.Generator | None = None,
-         tick_index: int = 0):
+         tick_index: int = 0,
+         plasticity_step_fn: Optional[PlasticityStepFn] = None):
     """Run one tick.
 
     F0 mode (nodes is None): returns E_exported as a float.
@@ -138,10 +150,14 @@ def tick(quanta: Quanta, grid: Grid, dt: float,
             count_flux_through, apply_plasticity,
             prune_bridges_and_nodes,
         )
-        flux_counts = count_flux_through(bridges, nodes, quanta,
-                                          plasticity_cfg)
-        apply_plasticity(bridges, flux_counts, plasticity_cfg,
-                          tick_index=tick_index)
+        if plasticity_step_fn is None:
+            flux_counts = count_flux_through(bridges, nodes, quanta,
+                                              plasticity_cfg)
+            apply_plasticity(bridges, flux_counts, plasticity_cfg,
+                              tick_index=tick_index)
+        else:
+            plasticity_step_fn(bridges, nodes, quanta, plasticity_cfg,
+                                tick_index)
         decay_heat += prune_bridges_and_nodes(bridges, nodes,
                                                plasticity_cfg)
 
