@@ -560,7 +560,8 @@ items:
       - "tests/flux/test_audio_raw_injection.py PASSES (R-10/R-11 legacy injection tests still green — amendment §3 row 10)"
       - "LOGBOOK entry records count-KL (test 5), neg-control-KL (test 6), bridge-count delta (test 7), peak Quanta-buffer fill from one verification run. If all three primary content tests PASS, must recommend R-LR-11 as next long-run for 1.8M-tick G26 verification — amendment §3 row 11"
     time_budget_hours: 4
-    status: queued
-    attempts: 0
+    status: null
+    attempts: 1
+    last_session: "2026-05-21T20:59:25.922721"
     blockers: ["R-15 must reach status=passed first (provides bridge_spectrum + R-LR-8 scaffold + test fixtures). G24 + G25 NULLed on content-coupling (R-18 + R-20 + R-21); R-21 LOGBOOK 2026-05-21T11:50 self-recommended density-by-amplitude as G26 because count is substrate-conserved (not exposed to the mixing-time low-pass filter that washed energy and position out). Iteration-cap slot 3 of 3 per LOGBOOK 2026-05-20 pre-registration; after R-22 NULL pivot to G20-G23 fires"]
     created: 2026-05-21
