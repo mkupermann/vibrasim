@@ -582,7 +582,8 @@ items:
       - "tests/flux/test_audio_raw_injection.py PASSES (R-10/R-11 legacy injection tests still green)"
       - "LOGBOOK entry records the four KL numbers + peak Quanta-buffer fill + actual measured frac(|x|<0.0625) for the English corpus (predicted ~25%, vs R-22's 64.55% under K=4). If all three primary content tests PASS, must recommend R-LR-11 as next long-run for 1.8M-tick G26 verification"
     time_budget_hours: 4
-    status: queued
-    attempts: 0
+    status: null
+    attempts: 1
+    last_session: "2026-05-22T02:18:47.358570"
     blockers: ["R-15 must reach status=passed first (provides bridge_spectrum + R-LR-8 scaffold + test fixtures). R-22b is the K-corrected iteration of R-22; the pre-data K correction is documented in docs/amendments/G26-density-by-amplitude.md Pre-data correction record 2026-05-22 (analog marker_protocol.md marker-5 correction pattern: parameter-not-threshold, before-data, construct-under-test-unchanged). R-22 + R-22b together exhaust slot 3 of 3 in the G24-G26 iteration cap; after R-22b NULL the pivot to G20-G23 fires per LOGBOOK 2026-05-20"]
     created: 2026-05-22
