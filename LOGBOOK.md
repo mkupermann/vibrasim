@@ -889,3 +889,11 @@ This finding does not feed the bet's hypothesis space (G26 is disallowed under t
 
 The README's "Walking back the framing" section retains its current language; this LOGBOOK entry is sufficient annotation. Updating README to soften G26's framing would itself be a framing change post-data, which the README §"Two kinds of pre-registration" 2026-05-19 entry forbids.
 
+
+
+## 2026-05-23 — autopilot session: R-23
+
+- **Verdict**: PASSED
+- **Attempts**: 1/3
+- **Diff**: 5 files changed, 1606 insertions(+)
+- **Rationale**: all pass-targets passed; all negative controls failed as required
