@@ -604,7 +604,8 @@ items:
       - "Hypothesis catalogue ~/.eqmod/bet/hypothesis_catalogue.md exists with at least 10 candidate hypotheses, each one paragraph + a list of references being verknuepft. Catalogue is the operator-readable plan for the first 2 weeks of bet iterations."
       - "Telegram /bet command added to tools/notify_telegram_receiver.py: returns the current bet queue state (X queued / Y running / Z passed / N null / M failed) + last 3 completed iterations + win-condition progress (how many of T1-T5 have ever been passed in a single iteration). Smoke-tested by sending /bet from Telegram."
     time_budget_hours: 4
-    status: queued
-    attempts: 0
+    status: passed
+    attempts: 1
+    last_session: "2026-05-23T00:26:31.700198"
     blockers: ["R-15 must reach status=passed first (provides bridge_spectrum, R-LR-8 scaffold, and the test infrastructure pattern). R-23 sets up the parallel bet pipeline; it does NOT touch the existing G-amendment autopilot pipeline, which continues to manage long-run dispatcher items (R-LR-4, R-LR-5..8). The bet pre-registration is in LOGBOOK.md 2026-05-22 with pre-data constraint correction recorded same day."]
     created: 2026-05-22
