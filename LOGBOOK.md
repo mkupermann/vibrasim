@@ -930,3 +930,11 @@ The R-22b session run did not separately execute the matched-wallclock no-engram
 
 Per amendment §4 and LOGBOOK 2026-05-20: queue **G20-G23 implementation** as the next item on the legacy substrate. Do not queue another G-amendment in this iteration cap. R-LR-11 is NOT recommended.
 
+
+
+## 2026-05-22 — autopilot session: R-22b
+
+- **Verdict**: NULL
+- **Attempts**: 1/3
+- **Diff**: 5 files changed, 1101 insertions(+), 2 deletions(-)
+- **Rationale**: pass-targets did not pass
