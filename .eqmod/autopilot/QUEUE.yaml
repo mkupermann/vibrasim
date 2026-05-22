@@ -587,3 +587,24 @@ items:
     last_session: "2026-05-22T02:18:47.358570"
     blockers: ["R-15 must reach status=passed first (provides bridge_spectrum + R-LR-8 scaffold + test fixtures). R-22b is the K-corrected iteration of R-22; the pre-data K correction is documented in docs/amendments/G26-density-by-amplitude.md Pre-data correction record 2026-05-22 (analog marker_protocol.md marker-5 correction pattern: parameter-not-threshold, before-data, construct-under-test-unchanged). R-22 + R-22b together exhaust slot 3 of 3 in the G24-G26 iteration cap; after R-22b NULL the pivot to G20-G23 fires per LOGBOOK 2026-05-20"]
     created: 2026-05-22
+
+  - id: R-23
+    title: bet-infrastructure — 1h-iteration loop + separate queue + dispatcher per LOGBOOK 2026-05-22 bet pre-registration
+    brief: LOGBOOK.md
+    preregistered_acceptance:
+      - "tools/bet_dispatcher.py exists and runs as a standalone script, polling ~/.eqmod/bet/queue.yaml every 60 seconds (configurable via --interval), launching one bet hypothesis at a time, enforcing a 1h hard cap per hypothesis-iteration via SIGTERM/SIGKILL (mirrors tools/long_run_dispatcher.py hard-cap pattern), evaluating verdict from result.json + per-bet pytest target, writing per-iteration LOGBOOK entry, persisting status into the bet queue."
+      - "~/.eqmod/bet/queue.yaml schema documented in tools/bet_dispatcher.py module docstring with at least these fields per item: id, hypothesis (one paragraph), references (list of papers/textbook chapters being verknuepft), pytest_target, status (queued/running/passed/null/failed), attempts, max_runtime_seconds (default 3600), created_at, finished_at."
+      - "tests/test_bet_dispatcher.py::test_dispatcher_launches_queued_item PASSES (NEW: mock-queue with one queued item, dispatcher launches it via subprocess, writes pidfile)"
+      - "tests/test_bet_dispatcher.py::test_dispatcher_hard_cap_kills_overrun PASSES (NEW: mock item that sleeps 5 seconds with max_runtime_seconds=2; dispatcher SIGKILLs it after 2s, marks status=failed with hard-cap reason)"
+      - "tests/test_bet_dispatcher.py::test_dispatcher_evaluates_passed_item PASSES (NEW: mock item that exits 0 with PASSED result.json; dispatcher reads it, marks status=passed, writes LOGBOOK entry)"
+      - "tests/test_bet_dispatcher.py::test_dispatcher_evaluates_null_item PASSES (NEW: mock item that exits 0 with NULL result.json; dispatcher marks status=null, writes LOGBOOK entry)"
+      - "tools/validate_bet_queue.py exists and applies the same explicit-dependency semantics (queue_semantics.DEPENDENCY_RE) as tools/validate_queue.py; smoke-tested with synthetic queues."
+      - "tests/test_bet_dispatcher.py PASSES in pytest -m 'not slow' (no new slow tests added; full bet pipeline-smoke fits in <30s wallclock)"
+      - "docs/bet/README.md exists with a one-page operator manual: how to add a hypothesis, expected iteration cadence, where the per-iteration LOGBOOK lives, how to read /results in Telegram for bet items, what 'PASS / NULL / FAILED' mean for a 1h iteration vs a 4h amendment item."
+      - "Hypothesis catalogue ~/.eqmod/bet/hypothesis_catalogue.md exists with at least 10 candidate hypotheses, each one paragraph + a list of references being verknuepft. Catalogue is the operator-readable plan for the first 2 weeks of bet iterations."
+      - "Telegram /bet command added to tools/notify_telegram_receiver.py: returns the current bet queue state (X queued / Y running / Z passed / N null / M failed) + last 3 completed iterations + win-condition progress (how many of T1-T5 have ever been passed in a single iteration). Smoke-tested by sending /bet from Telegram."
+    time_budget_hours: 4
+    status: queued
+    attempts: 0
+    blockers: ["R-15 must reach status=passed first (provides bridge_spectrum, R-LR-8 scaffold, and the test infrastructure pattern). R-23 sets up the parallel bet pipeline; it does NOT touch the existing G-amendment autopilot pipeline, which continues to manage long-run dispatcher items (R-LR-4, R-LR-5..8). The bet pre-registration is in LOGBOOK.md 2026-05-22 with pre-data constraint correction recorded same day."]
+    created: 2026-05-22

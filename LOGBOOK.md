@@ -846,3 +846,46 @@ R-23 (queue infrastructure spec, ≤4h budget, will be queued only after R-22b v
 
 This entry exists so the bet is binding regardless of future memory loss, context truncation, or user/Claude personnel change.
 
+
+
+## 2026-05-22 — Pipeline stagnation auto-STOP (supervisor liveness check)
+
+- **Trigger**: 3 consecutive supervisor ticks (1.5 h) without observable progress.
+- **Last signal**: origin/main HEAD 5f66af64e7ef, terminal items 32.
+- **STOP marker set**: ~/.eqmod/autopilot/STOP — autopilot will not
+  fire until this file is removed.
+- **Mail sent**: EQMOD PIPELINE STAGNATION — autopilot paused
+
+
+## 2026-05-22 — Bet pre-data constraint correction + R-22b finding annotation
+
+### Pre-data correction record for the 2026-05-22 12-month bet
+
+Original pre-registration (this same LOGBOOK file, entry of 2026-05-22 earlier today): "no previously known technology may be used; not realised as running computational substrate in mainstream ML literature".
+
+User correction 2026-05-22: "du darfst selber weitermachen und auch bestehende technologien einbauen oder theorien. bedingung ist, es soll kein llm sein sondern bestehende forschungen verknüpfen".
+
+Corrected constraint, effective 2026-05-22, before any bet iteration has been built or run:
+
+> **Allowed**: existing technologies and theories from any field (neuroscience, physics, topology, thermodynamics, control theory, dynamical systems, information geometry, category theory, biology, etc.). The bet's value is in the *connection / synthesis* across existing research, not in inventing primitives from nothing.
+>
+> **Disallowed**: LLMs in any form, transformer architectures, pretrained embedding models, BPE tokenizers. This matches the project's standing hard constraint in `/Users/mkupermann/.claude/CLAUDE.md`. The bet is not an LLM exercise.
+
+The corrected constraint moves the bet from "literature-novel substrate from scratch" (probability estimate 15-25% at the strict reading I logged this morning) to "novel synthesis of existing research as a running learning substrate" (probability estimate now 50-70% depending on luck and execution discipline). The 5/5 test bar and the 12-month deadline are **unchanged**; the construct under test (selbstständig lernend system) is unchanged; only the technology-base is widened.
+
+This is a pre-data correction in the sense `docs/marker_protocol.md` defines: corrected before any bet-iteration has been run, before any data has been collected against the previous constraint, with the construct-under-test unchanged. Both versions of the constraint stay in the LOGBOOK record so any future reader sees the diff.
+
+Memory id=651 in claude_memory.memory_chunks supersedes its own content via an additional row this turn (id to be assigned by the INSERT below). The original id=651 stays as a historical record; the corrected row carries the operative constraint.
+
+### R-22b finding annotation — option (β) chosen 2026-05-22 by user
+
+R-22b NULLed on test 5 (count-histogram KL = 5e-6 below threshold 0.05) but R-22b session LOGBOOK documented that the underlying density-by-amplitude mechanism *did* produce content-coupling — test 7 PASSED with a 96.5 % bridge-count delta between English and matched-RMS white noise. The pre-registered test-5 metric (per-voxel normalised count histogram) strips the population-scaling signal that survived; test 7 reads the same signal via bridge-count delta and accepts it.
+
+Per pre-registration discipline, R-22b's status stays NULL — the test-5 threshold was locked, the measurement missed it, NULL is the verdict. **No post-hoc test-5 re-spec.** That is the discipline-conformant outcome.
+
+But the research finding is recorded here explicitly so future readers (and the bet's hypothesis catalogue) do not mis-read R-22b's NULL as "G26 density-by-amplitude failed mechanistically". It did not. R-22b NULL is a methodology-engineering finding (a locked per-voxel normalised metric is the wrong instrument for a population-scaling content channel at this substrate scale), not a substrate-architecture finding.
+
+This finding does not feed the bet's hypothesis space (G26 is disallowed under the bet's constraint — it is an existing flux-substrate amendment in this project). It does inform the substrate-research-track's future record: future readers should understand the G24/G25/G26 cap exhaustion as "three NULLs on locked metrics, with at least one of them caused by metric over-specification rather than architecture failure".
+
+The README's "Walking back the framing" section retains its current language; this LOGBOOK entry is sufficient annotation. Updating README to soften G26's framing would itself be a framing change post-data, which the README §"Two kinds of pre-registration" 2026-05-19 entry forbids.
+
