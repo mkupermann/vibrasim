@@ -1988,3 +1988,36 @@ learning + catastrophic-forgetting resistance + class-specific routing
   Commits today: ~20, all pushed to origin/main
   Telegram notifications: many
   Hours into 48h window: ~10h, 38h remaining
+
+
+## 2026-05-24 01:00 — BET-030 ESN NULL: two informative findings
+
+ESN result on T18/T19:
+  T18 ESN ratio = 1.013 (forward/reverse states essentially orthogonal)
+  T18 SOM neg control = 0.751 (ALSO substantially order-dependent)
+  T19 MSE ESN=0.0225, persistence=0.0081, ratio 2.78 (ESN 3.5x WORSE)
+
+Finding 1: SOM is also order-dependent (not the assumed near-zero).
+Reason: eta-decay schedule + Gaussian neighbourhood update + replay
+sequence are all non-commutative. Cells visited early get more
+plasticity (large eta) than cells visited late (small eta). Chunk
+order matters for SOM too. My T18 negative control was wrongly
+designed. ESN order-sensitivity is 1.35x higher than SOM but not
+QUALITATIVELY different.
+
+Finding 2: ESN doesn't beat persistence on next-step prediction at
+1ms granularity (samples_per_tick=16). Audio features are so smooth
+at this scale that "predict same as last" outperforms reservoir+linear-
+readout. Not an ESN failure per se — task-granularity mismatch.
+
+### BET-031 — ESN at coarser granularity
+
+samples_per_tick=160 (10ms chunks). Audio features change more between
+chunks at this scale. Persistence baseline weakens. Reservoir's
+temporal dynamics get a chance to demonstrate predictive advantage.
+
+Same T19 bar (locked from BET-030): MSE_ESN / MSE_persistence < 0.9.
+T18 bar similarly carried over.
+
+Pre-data prediction: T19 PASS at 10ms granularity if reservoir
+captures useful temporal context across chunk transitions.
