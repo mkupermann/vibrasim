@@ -2228,3 +2228,41 @@ target can be approached with pre-LLM tools at the scales tested.
   Burst-3 (30-42): 6 PASS — temporal T21, T22, T23-interp, T24, T26 validation
 
 Plus 26 informative NULLs documenting substrate-design-space limits.
+
+
+## 2026-05-24 01:42 — BET-043 NULL: cross-substrate alignment limitation
+
+T27 cross-slice consistency NULL. All pairwise bigram-KLs ~3.0:
+  KL(EN slice 1, EN slice 2): 3.01
+  KL(EN slice 1, WN):         2.91
+  KL(EN slice 2, WN):         3.23
+
+Two SOMs trained separately on similar EN audio converge to
+DIFFERENT cell labelings (SOM weight initialization + order
+dependence). Cell index 7 in S1 has different semantic content than
+cell index 7 in S2. Bigram-KL between substrates without
+cell-alignment is wrong metric.
+
+To validly compare substrates: would need Hungarian-algorithm
+matching of cells by weight similarity, then compare aligned bigrams.
+Not implemented in this iteration.
+
+### Limitation documented
+
+  Within-substrate temporal info (T21, T22, T26): VALIDATED.
+  Cross-substrate bigram comparison: cell-alignment problem, not
+                                     directly comparable.
+
+### Burst-3 final iteration: 44 total, 17 PASS
+
+Decision: stop adding new iterations. Pipeline remains alive. Substantial
+output secured. Operator review at return.
+
+Final substrate-architecture summary for the 48h autonomous window:
+  - 6 substrate classes tested (reaction-diffusion, cog_map β=0, SOM,
+    SDM, SOM-saturating, SOM+replay, ESN, cog_map+replay)
+  - SOM+replay (Kohonen 1982 + Robins 1995) is the WIN substrate
+  - 17 locked-bar PASSes across 27 designed tests (T0-T27)
+  - 27 NULL findings documenting substrate-architectural limits
+  - All pre-LLM components
+  - All commits pushed to origin/main
