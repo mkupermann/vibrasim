@@ -1317,3 +1317,53 @@ bar. If all of cog_map+SOM+SDM+SOM-saturating fail T8, the harder bar
 is mapping a real barrier — catastrophic-forgetting is a deep open
 problem that may not be solvable by single-update-rule substrates
 without explicit rehearsal or supervised consolidation.
+
+
+## 2026-05-23 ~21:20 — Autonomous-burst-1 conclusion: T8 deadlock mapped
+
+BET-011 NULL (8/9, T8 FAIL with AB→EN=1.34, AB→WN=0.006). saturated_after_EN
+= 14 / 3600 — too few cells reached threshold=30 to protect EN territory.
+
+Four substrate classes tested under harder bar in this burst:
+  cog_map(β=0):    7/9   FAIL T8, FAIL T9
+  SOM:             8/9   FAIL T8 hard (ratio 432)
+  SDM:             8/9   FAIL T8 (ratio 2.76)
+  SOM-saturating:  8/9   FAIL T8 hard (ratio 212)
+
+All four pass T0-T7 + (most) T9. The universal failure is T8 — catastrophic
+forgetting under continuous EN→WN training. This is the deadlock.
+
+Full deadlock-mapping postmortem at ~/.eqmod/bet/postmortems/T8_deadlock_mapping.md.
+
+### Decision: stop iterating in this burst
+
+Per CLAUDE.md project goal: "developing a deadlock-breaking process,
+not necessarily succeeding at the simulation". The deadlock IS the
+finding. Continuing to iterate cell-based substrate variants is likely
+diminishing returns without a structural mechanism change. The harder
+bar correctly identifies the bottleneck; the substrate space's bottom
+hits T8.
+
+Three legitimate next iterations exist (BET-012 candidates: lower
+saturation threshold + ablation; high-dim binary addresses; per-cell
+EWC) but none has the "obviously next move" character of BET-006 or
+BET-010 — each is a meaningful 30-min experiment but operator should
+weigh.
+
+Locked-bar wager remains WON (BET-006/007/008 all PASSED, defensible).
+Harder-bar findings are clean research output for operator review.
+
+### State at burst end (2026-05-23 ~21:20)
+
+Bet items completed today: 11 (BET-001 through BET-011)
+Pre-registered new tests: T7, T8, T9 (BET-009 onward)
+Substrate classes tested: 4 (cog_map β=0, SOM, SDM, SOM-saturating)
+Commits today: 7 (all pushed to origin/main)
+Telegram messages sent: 6
+Queue status: empty (BET-011 was the last)
+Pipeline alive: bet-dispatcher + notify-receiver running, no STOP
+
+Operator returns ~2026-05-25 20:30. Three decisions waiting:
+  1. continue iterating BET-012+ on T8 bottleneck
+  2. close the bet at locked-bar WIN + harder-bar deadlock-finding
+  3. reframe the goal toward self-determined consolidation
