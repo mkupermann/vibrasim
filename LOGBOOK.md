@@ -1457,3 +1457,28 @@ research findings are in:
     pseudo-rehearsal mechanism
   - Open question for operator: is the eta-decay timing a confound
     or a legitimate consolidation mechanism?
+
+
+## 2026-05-23 ~21:42 — BET-013 PASS, BET-014 pre-registration
+
+BET-013 (LR validation at 10x scale = 100k ticks per class) PASSED 9/9.
+T8 AB→EN = 0.0 literally (substrate fully frozen by eta-decay before WN
+phase) vs AB→WN = 1.22. Confirms the harder-bar WIN scales but the
+eta-decay-confound is starker.
+
+BET-014 isolates the replay vs eta-decay contributions:
+  - SOM (no replay buffer), eta_decay_tau=2500 (HALF of BET-007's 5000)
+  - Produces SAME eta range during WN-phase as BET-012's
+    replay-doubled-global_tick produced: 0.018 to 3.4e-4
+  - All other parameters identical to BET-007/009
+
+Pre-data prediction:
+  - If BET-014 PASSES T8: eta-decay timing alone is the mechanism;
+    BET-012's pseudo-rehearsal was incidental.
+  - If BET-014 FAILS T8: pseudo-rehearsal was essential to BET-012's WIN;
+    replay-buffer is the mechanism, not eta-decay-acceleration.
+
+Either outcome is informative. The clean ablation tells us which
+mechanism actually drives self-determined consolidation.
+
+BET-014 IS the burst-1 closing iteration regardless of outcome.
