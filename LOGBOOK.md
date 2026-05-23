@@ -1482,3 +1482,76 @@ Either outcome is informative. The clean ablation tells us which
 mechanism actually drives self-determined consolidation.
 
 BET-014 IS the burst-1 closing iteration regardless of outcome.
+
+
+## 2026-05-23 ~21:45 — BET-014 NULL: clean disambiguation — replay IS essential
+
+BET-014 (SOM no-replay + eta_decay_tau=2500) result: T8 FAIL with
+AB→EN=1.71, AB→WN=0.0028. Essentially identical to BET-007's plain-SOM
+result (AB→EN=1.73). Halving eta_decay_tau did NOT change the T8
+outcome — WN training still fully overwrote EN.
+
+This clean ablation disentangles BET-012's T8 PASS:
+
+  | Iteration | Mechanism             | T8 AB→EN  | Verdict |
+  |-----------|-----------------------|-----------|---------|
+  | BET-007   | SOM, no replay        | 1.73      | FAIL    |
+  | BET-014   | SOM, no replay,       | 1.71      | FAIL    |
+  |           | halved eta-decay tau  |           |         |
+  | BET-012   | SOM + replay (tau=5k) | 1.24e-05  | PASS 9/9|
+
+Same eta range during WN-phase in BET-014 and BET-012 (0.018 → 3.4e-4).
+The ONLY difference: replay-buffer in BET-012. Result: BET-014 fails
+T8, BET-012 passes by 5 orders of magnitude.
+
+**Pseudo-rehearsal replay IS the essential mechanism.** The eta-decay
+confound noted earlier in LOGBOOK 2026-05-23 ~21:30 is now refuted.
+BET-012's harder-bar WIN is genuine pseudo-rehearsal, not timing
+artifact.
+
+### Burst-1 conclusion (2026-05-23 ~14:30 → ~21:45, ~7h)
+
+**Iterations completed:** 14 (BET-001 through BET-014)
+**Substrate classes tested:** 5
+  1. Reaction-diffusion (Turing 1952) — trivial-plateau NULL
+  2. cog_map β=0.0 (Active Inference + Cognitive Map) — locked-bar WIN
+  3. SOM (Kohonen 1982) — locked-bar WIN
+  4. SDM (Kanerva 1988) — fails T8
+  5. SOM-saturating — fails T8 (saturation insufficient)
+  6. SOM + pseudo-rehearsal (Robins 1995) — HARDER-BAR WIN 9/9
+
+**Wagers won:**
+  - Locked bar (T0-T5) at 10k ticks (BET-006/007)
+  - Locked bar at 1M ticks LR validation (BET-008)
+  - Harder bar (T0-T9) at 10k ticks (BET-012)
+  - Harder bar at 100k ticks LR validation (BET-013)
+
+**Findings beyond the wager:**
+  - Lateral propagation in active-inference cascade (Friston) is the
+    information-discarding mechanism (BET-005 diagnostic)
+  - Histogram-KL on counter fields is biased by feature-marginal balance
+  - Catastrophic forgetting (T8) is the universal failure mode for
+    naive cell-based substrates
+  - Pseudo-rehearsal (Robins 1995) is sufficient AND essential to
+    break the T8 deadlock — BET-014 clean ablation confirms
+
+**Pre-LLM substrate that passes 9/9 on a single substrate instance:**
+  SOM (Kohonen 1982) + FIFO buffer K=N_TICKS + replay_rate=1.0
+  (Robins 1995). The substrate self-manages a buffer of past sensor
+  vectors and replays one buffered item per wake-tick. Self-determined
+  memory consolidation. No LLM, no transformer, no embedding, no BPE.
+
+**Open questions for operator (next session):**
+  1. Apply the same replay mechanism to cog_map β=0 — does it also
+     pass harder bar?
+  2. R-XX-LR validation at full corpus scale (17.75M ticks)?
+  3. Move from "lernend" to "kommunizierend" — design tests T10+ for
+     the output side?
+
+**Pipeline state at burst close:**
+  - bet-dispatcher alive, queue empty
+  - notify-receiver alive
+  - watchdog scheduled for 08:30 daily
+  - No STOP marker
+  - All commits pushed to origin/main
+  - 46.5 hours remain in autonomous-mode window
