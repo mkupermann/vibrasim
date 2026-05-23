@@ -403,16 +403,24 @@ class BetDispatcher:
                 pytest_ok = False
                 pytest_tail = f"[bet_dispatcher: evaluation exception {exc!r}]"
 
-        # Verdict precedence:
-        #   pytest failure or result.json='failed' → failed (implementation broke)
-        #   else pytest pass + result.json='passed' → passed
-        #   else pytest pass + result.json='null' or missing → null
-        if not pytest_ok or result_verdict == "failed":
-            verdict = "failed"
-        elif result_verdict == "passed":
-            verdict = "passed"
+        # Verdict precedence — bet-aware (revised 2026-05-23 after BET-002
+        # incident). The original logic treated pytest non-zero as failed
+        # unconditionally; that conflicts with the bet's pre-registration
+        # (LOGBOOK 2026-05-22) where NULL with substantive measurements is
+        # the expected mode for >95 % of iterations. Tests that pre-register
+        # a threshold via `assert kl > X` will pytest-fail when the
+        # threshold is missed — and that is exactly what "null with
+        # substantive measurements" looks like, not a content-failure.
+        #
+        # If result.json is present AND well-formed, trust its verdict.
+        # Only fall back to pytest exit code when result.json is missing
+        # (= the substrate did not even run to completion).
+        if result_verdict in ("passed", "null", "failed"):
+            verdict = result_verdict
+        elif not pytest_ok:
+            verdict = "failed"  # substrate didn't run, no result.json
         else:
-            verdict = "null"
+            verdict = "null"  # substrate ran, no result.json — no signal
 
         tail = (
             f"=== result.json ({result_path}) ===\n"
