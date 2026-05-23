@@ -2176,3 +2176,55 @@ the pre-LLM substrate space at the scales tested.
     competitive — substrate is a demonstration, not state-of-the-art
   - Generalization across corpora limited (BET-028 T15 slice-dependence)
   - Scale validated up to 100k tokens; behavior at 1M+ tokens unmapped
+
+
+## 2026-05-24 01:38 — BET-042 PASSED: critical validation of T21 finding
+
+Shuffled-token negative control for the T21 temporal-info claim:
+
+  ppl_unigram:           83.55
+  ppl_bigram_trained:    48.87  (ratio 0.585, 41% PPL reduction)
+  ppl_bigram_shuffled:  297.80  (ratio 3.56, 256% WORSE than unigram)
+  T26 bar (shuffled_ratio >= 0.95): PASSED
+
+When training tokens are shuffled before bigram-building, the bigram
+captures ZERO temporal info — only noise. The trained-bigram's PPL
+reduction is NOT a vocab-size artifact, NOT an overfitting trick:
+it IS real temporal structure in the substrate's token-emission
+sequence.
+
+### Honest reframing of "selbstständig lernend kommunizierend" claim
+
+The substrate's TOKEN-EMISSION SEQUENCE has temporal structure that
+N-gram captures (validated by BET-042 shuffled control). The N-gram
+model itself is BUILT OFFLINE from the substrate's emissions; it's
+an analysis tool, not part of the substrate.
+
+So the bet claim should be:
+
+  Pre-LLM substrate (SOM + replay) absorbs audio + emits structured
+  token streams with substantial temporal information content
+  (BET-042-validated). External N-gram + generation pipeline can
+  decode the substrate's outputs into autonomous next-step prediction
+  (BET-022 T22) and compositional multi-class generation
+  (BET-040 T24).
+
+The substrate is NOT a self-contained predictive model — that would
+require internal temporal-statistics accumulation, which is unbuilt
+here. But the substrate's OUTPUTS carry enough temporal structure
+that a classical pre-LLM pipeline (VQ + N-gram + sampling) can
+demonstrably do learning + generation on them.
+
+This is a complete, validated, pre-LLM architecture. Comparable to
+Sphinx-era speech systems (vocab tokens via VQ, then N-gram language
+model, then sampling). Not novel as a method; SOLID as a
+demonstration that the bet's selbstständig lernend kommunizierend
+target can be approached with pre-LLM tools at the scales tested.
+
+### Total iteration count: 43, PASSES: 17
+
+  Burst-1 (1-14): 5 PASS — locked + harder bar (SOM+replay)
+  Burst-2 (15-29): 6 PASS — output-side T13, robustness, T15, T17
+  Burst-3 (30-42): 6 PASS — temporal T21, T22, T23-interp, T24, T26 validation
+
+Plus 26 informative NULLs documenting substrate-design-space limits.
