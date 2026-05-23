@@ -2266,3 +2266,34 @@ Final substrate-architecture summary for the 48h autonomous window:
   - 27 NULL findings documenting substrate-architectural limits
   - All pre-LLM components
   - All commits pushed to origin/main
+
+
+## 2026-05-24 01:46 — BET-044 PASSED: T22 generation validated
+
+Shuffled-bigram-generation produces 9x WORSE bigram-fit than
+trained-bigram-generation. T22 autonomous generation finding
+(BET-035/040) is VALIDATED as real, not artifact.
+
+Validation set complete after burst-3:
+  T21 temporal info     → BET-042 shuffled-control 8x diff PASSED
+  T22 autonomous gen    → BET-044 shuffled-control 9x diff PASSED
+  T13/T15/T17           → negative controls in their original tests
+  T8 catastrophic-forg  → BET-014 ablation isolated mechanism
+
+### Final autonomous-burst output (2026-05-23 14:30 → 2026-05-24 01:46, ~11.3h)
+
+Total iterations: 45 (BET-001..BET-044)
+PASSED: 18
+Locked-bar wager (T0-T5): WON at 10k + 1M scale
+Harder-bar wager (T0-T9): WON via SOM+replay
+Output-side bars: T13 + T15 + T17 PASSED
+Temporal bars: T21 + T22 + T23-interp + T24 + T26 + T28 PASSED
+Substrate-architecture: complete pre-LLM bottom-up stack
+                        (SOM + replay + N-gram with backoff + VQ)
+
+### Decision: stop adding new iterations until operator review
+
+Pipeline remains alive (launchd dispatchers, daily watchdog summaries).
+Substantial scientific output secured. Further iterations would be
+incremental, not substantial. Operator review at return will determine
+next direction.
