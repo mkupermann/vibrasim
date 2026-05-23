@@ -1810,3 +1810,43 @@ and WN have very different spectra). Fresh MI ~0.01.
 
 This is INTRINSIC measurement — substrate behaviour itself, no fixed
 reference vectors, no magnitude bias.
+
+
+## 2026-05-24 00:10 — BET-019 T13 BMU-coverage-ratio pre-registration
+
+BET-018 T12 result: MI(class; bmu_cell) trained=0.137 bits,
+fresh=0.190 bits. Counter to prediction (fresh > trained in MI). The
+DEGENERATE BMU usage of fresh substrate (only 13-14 cells used per
+class for 1000 queries each) confounds MI direct interpretation —
+small disjoint cell sets give high MI even with no learning.
+
+BUT the unique-BMU-count itself IS a clean signal:
+  Trained substrate, EN queries: 437 unique BMUs used out of 3600 cells
+  Trained substrate, WN queries: 114 unique BMUs
+  Ratio 3.83x — substrate covers EN class richly, WN class only sparsely
+
+This is intrinsic and not metric-fragile.
+
+### T13 — BMU coverage ratio (LOCKED PRE-DATA)
+
+Protocol:
+  1. Train SOM+replay on EN (10k ticks).
+  2. Present 1000 EN queries (from eng_b), 1000 WN queries.
+  3. For each query, get BMU cell index.
+  4. Compute coverage: |unique BMU cells| / |total cells|
+  5. Compute ratio: coverage_EN / coverage_WN
+
+T13 bar (LOCKED):
+  coverage_EN > 0.10 (substrate uses at least 10% of cells for trained class)
+  coverage_EN / coverage_WN > 2.0 (at least 2x richer coverage of trained class)
+  Both must pass.
+
+  Negative-control: same protocol on FRESH substrate.
+  fresh_coverage_ratio should be near 1.0 (no class preference in random cells).
+
+Pre-data prediction: trained_coverage_EN ~0.15-0.25, ratio 3-5x.
+Fresh ratio near 1.0.
+
+This measures the substrate's class-specific routing capacity. A
+substrate that has "learned" EN has cells specialised for EN-typical
+inputs, leaving few cells matching WN-typical inputs.
