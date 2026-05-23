@@ -257,13 +257,43 @@ class BetDispatcher:
     # ---- process lifecycle ---------------------------------------------
     @staticmethod
     def _pid_alive(pid: int) -> bool:
+        """True if pid is alive AND not a zombie.
+
+        The BET-001 incident 2026-05-23T19:07 had pytest finish in seconds
+        but the dispatcher saw the process as "alive" for 23 minutes because
+        os.kill(pid, 0) returns success for zombies. The dispatcher (as
+        parent) had not reaped the child. Fix: try non-blocking waitpid
+        first; if it reports the child exited, treat as dead.
+        """
+        try:
+            reaped_pid, _ = os.waitpid(pid, os.WNOHANG)
+            if reaped_pid == pid:
+                return False  # our child exited and is now reaped
+        except ChildProcessError:
+            pass  # pid is not our child (or already reaped) — fall through
+        except OSError:
+            pass
         try:
             os.kill(pid, 0)
-            return True
         except (ProcessLookupError, PermissionError):
             return False
         except Exception:
             return False
+        # Final check: even if kill(0) succeeds, the process could still
+        # be a zombie that was reaped by something other than us. Check
+        # its state via `ps -o stat=`. A leading "Z" means zombie.
+        try:
+            import subprocess as _sp
+            r = _sp.run(
+                ["/bin/ps", "-o", "stat=", "-p", str(pid)],
+                capture_output=True, text=True, timeout=2,
+            )
+            state = r.stdout.strip()
+            if state.startswith("Z"):
+                return False
+        except Exception:
+            pass
+        return True
 
     def _kill_process_group(self, pid: int) -> None:
         """SIGTERM → wait → SIGKILL the process group of pid."""
