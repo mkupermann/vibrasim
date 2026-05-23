@@ -1555,3 +1555,62 @@ artifact.
   - No STOP marker
   - All commits pushed to origin/main
   - 46.5 hours remain in autonomous-mode window
+
+
+## 2026-05-23 — Pipeline stagnation auto-STOP (supervisor liveness check)
+
+- **Trigger**: 3 consecutive supervisor ticks (1.5 h) without observable progress.
+- **Last signal**: origin/main HEAD a17f1c8bee8c, terminal items 33.
+- **STOP marker set**: ~/.eqmod/autopilot/STOP — autopilot will not
+  fire until this file is removed.
+- **Mail sent**: EQMOD PIPELINE STAGNATION — autopilot paused
+
+
+## 2026-05-23 ~21:50 — Burst-2 start: output-side ("kommunizierend") tests
+
+The bet's full goal is "selbstständig lernend kommunizierend". Burst-1
+won the "lernend" half (T0-T9 PASS at locked + harder bar, BET-012).
+Burst-2 tests the "kommunizierend" half.
+
+Communication-relevant property of a cell-based substrate: pattern
+completion. Given partial input (some features unknown), the substrate
+fills in the missing features from its stored content. Hopfield 1982
+demonstrates this for attractor networks; the same property is
+available in SOM, SDM, and SOM+replay via BMU-with-partial-distance
+or distributed-read-with-partial-address.
+
+### T10 — Pattern Completion (pre-registered, LOCKED)
+
+Protocol:
+  1. Train substrate on EN corpus (10k ticks, locked from burst-1).
+  2. For each held-out EN chunk (in eng_b, 1000 chunks):
+     a. Compute full 10-D feature vector x_full.
+     b. Construct partial query x_partial: zero out 5 of 10 feature
+        dimensions per chunk, indices chosen by a locked seed-based
+        permutation (5 dims known, 5 zeroed).
+     c. Substrate predicts full feature vector x_pred from x_partial
+        via partial-distance BMU search + retrieval of full cell weight.
+     d. Compute cosine(x_pred, x_full) on the FIVE PREVIOUSLY-ZEROED
+        dimensions only — the substrate's task is to fill in what was
+        not given.
+  3. Negative control:
+     a. Train substrate on WN (NOT eng_a).
+     b. Same partial queries from eng_b.
+     c. Mean cosine on the zeroed dims should be near zero — substrate
+        trained on different content shouldn't predict EN well.
+
+T10 bar (LOCKED PRE-DATA):
+  - Mean cosine (trained on eng_a, queried with eng_b partial) > 0.3
+  - Negative control (trained on wn, queried with eng_b partial)
+    mean cosine < 0.15
+  - Both conditions must be met for T10 PASS.
+
+This tests communication-as-completion: substrate uses its learned
+content to fill missing input dimensions.
+
+References:
+  - Hopfield, Neural networks and physical systems with emergent
+    collective computational abilities, PNAS 1982
+  - Plate, Holographic Reduced Representations, IEEE TNN 1995
+
+BET-015 IS the T10 test.
