@@ -1134,3 +1134,103 @@ per the pre-registration protocol.
             Expected to PASS (same arguments hold at scale).
   - Operator return ~2026-05-25 20:30: read this LOGBOOK + the hostile-
     reader postmortem + decide positioning.
+
+
+## 2026-05-23 ~20:55 — DECISION (Option 3): locked-bar WIN + harder bar T7-T9 for follow-up
+
+Operator delegated decision: "Du entscheidest ob 1, 2 oder 3 selber."
+
+**Decision: Option 3.**
+
+  1. Locked-bar wager: **WON per the literal contract.** BET-006 (cog_map
+     beta=0) and BET-007 (SOM) both satisfy T0-T5 on a single substrate
+     instance. Pre-data threshold contract per LOGBOOK 2026-05-22 met.
+     Provisional pending BET-008 LR validation (currently running).
+
+  2. Pre-registered NEW contract for follow-up: harder bar T7-T9
+     (T6 dropped during design as architecturally non-meaningful for
+     cell-based substrates without sequence memory). T7/T8/T9 apply to
+     BET-009+ ONLY. No retroactive change to BET-001..BET-008 verdicts.
+
+  3. Wager outcome: declared WON at locked bar.
+  4. Research continues within original 12-month window (364 days
+     remaining, deadline 2027-05-22) under the harder bar.
+
+### Why option 3 (not 1 or 2)
+
+Option 1 (stop after locked-bar WIN): wastes 364 days of contracted
+research time. The bet had two distinct purposes — settle the wager
+AND demonstrate self-determined learning. Wager settled; research goal
+not. Stopping is acceptable per contract but suboptimal per goal.
+
+Option 2 (only harder bar, retroactively): violates pre-registration
+discipline. The locked T0-T5 thresholds were sacred. Tightening them
+post-hoc is the LOSS condition explicitly named in protocol.
+
+Option 3: ehrt beides. Locked bar Verdict PASSED stays. Harder bar
+T7-T9 is a *new* contract for *new* iterations. No retroactive change.
+
+### Pre-registered T7-T9 (THIS IS THE PRE-REGISTRATION)
+
+These thresholds and protocols are now locked. Future iterations
+(BET-009+) MUST report all three measurements regardless of outcome.
+Post-hoc tuning of T7-T9 after data is the same forbidden move as
+T0-T5 retuning.
+
+**T7 — Content-driven structure (not position-artifacts)**
+  - Train S_a on sub_a (first half of R-7 corpus).
+  - Train S_a_shuffled on the same chunks but with chunk-time order
+    randomly shuffled (preserves marginal distribution, destroys
+    temporal structure and sample_index correlations).
+  - Compute KL(S_a vs S_a_shuffled) and KL(S_a vs fresh_substrate).
+  - **Bar:** KL(S_a vs S_a_shuffled) < 0.10 * KL(S_a vs fresh).
+  - Why this discriminates: a substrate that learns CONTENT should be
+    nearly identical when trained on the same marginal distribution.
+    A substrate whose state depends on sample_index/position-hash
+    artifacts will produce different states under shuffling.
+
+**T8 — Catastrophic-forgetting resistance**
+  - S = train on EN for N ticks. Save state_A.
+  - S_AB = continue training on WN for N more ticks from state_A.
+  - fresh_EN = fresh substrate trained on EN for N ticks (baseline).
+  - fresh_WN = fresh substrate trained on WN for N ticks (baseline).
+  - **Bar:** KL(S_AB vs fresh_EN) < KL(S_AB vs fresh_WN).
+  - I.e., even after WN interference, the substrate retains MORE
+    similarity to its origin-class than to the interfering class.
+  - Pre-data prediction: cog_map at beta=0 likely FAILS (cells
+    overwritten by WN visits). SOM with eta decay likely PASSES
+    (early-trained weights protected by decay).
+
+**T9 — Emergent spatial organisation**
+  - Compute spatial autocorrelation (Pearson r) of the trained
+    mu/w field between immediate spatial neighbours, averaged across
+    all (x,y,z) and feature dims.
+  - Baseline: same on fresh-init substrate.
+  - **Bar:** r_trained > 0.3 AND r_trained > 2 * r_fresh.
+  - Why this discriminates: a substrate with spatial structure
+    (topology preservation) produces locally-correlated mu/w. A
+    substrate where cells are independent (cog_map beta=0) produces
+    near-zero spatial autocorrelation.
+
+### BET-009 protocol (implementation queued)
+
+  - Test cog_map(beta=0.0) AND SOM through ALL ten tests T0-T9.
+  - Verdict: substrate "passes" if it satisfies T0-T9 all (10/10).
+  - Either substrate, both, or neither may pass. All three outcomes
+    are findings.
+  - Pre-data prediction:
+      * cog_map beta=0: PASS T0-T5 (re-confirms BET-006). LIKELY FAIL T7
+        (sample_index-driven hash), LIKELY FAIL T8 (running-mean
+        overwrites), LIKELY FAIL T9 (no lateral = no spatial structure).
+      * SOM: PASS T0-T5 (re-confirms BET-007). UNCERTAIN T7 (depends on
+        eta-decay history), LIKELY PASS T8 (eta-decay protects),
+        DEFINITELY PASS T9 (Gaussian neighbourhood = spatial autocorr
+        by construction).
+      * Expected result: SOM passes 10/10, cog_map fails T7-T9.
+
+If SOM passes 10/10 → strongest evidence yet for substrate-learning
+in the deep sense. Bet WIN at harder bar. Then proceed to actual
+research goal: communication (output side).
+
+If neither passes 10/10 → harder bar discriminates correctly, design
+BET-010 with a third substrate class.
