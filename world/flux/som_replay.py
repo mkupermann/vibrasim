@@ -158,6 +158,21 @@ def run(
     return state
 
 
+def predict_from_partial(state: dict, partial_sensor: np.ndarray, known_mask: np.ndarray) -> np.ndarray:
+    """Pattern completion: given partial sensor (some dims known, others zeroed),
+    find BMU using ONLY known dims, return that cell's FULL weight vector.
+
+    partial_sensor: shape (n_features,) with the values at known positions
+                    and 0 at unknown positions
+    known_mask: boolean shape (n_features,) — True for known dims, False for unknown
+    """
+    w = state["w"]
+    diff = (w - partial_sensor) * known_mask  # mask out unknown dims
+    dist_sq = np.einsum("ijkl,ijkl->ijk", diff, diff)
+    bmu = np.unravel_index(int(np.argmin(dist_sq)), dist_sq.shape)
+    return w[bmu].copy()
+
+
 def evaluate_holdout(
     state: dict,
     holdout_samples: np.ndarray,
