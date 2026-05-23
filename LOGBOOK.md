@@ -1877,3 +1877,34 @@ coverage grows.
 
 T13 bar (LOCKED, same as BET-019):
   coverage_EN > 0.10 AND ratio > 2.0
+
+
+## 2026-05-24 00:18 — BET-021 NULL: replay needs content-driven routing
+
+BET-021 cog_map β=0 + replay result:
+  T0-T7 PASS, T8 FAIL (AB→EN=0.46 > AB→WN=0.34), T9 FAIL (autocorr=0.015),
+  T13 FAIL (coverage_EN=0.242, coverage_WN=0.241, ratio 1.003)
+
+Diagnostic finding: replay generalises across substrate classes only
+when paired with content-driven routing (BMU search). For cog_map's
+hash-driven routing (splitmix64 spreads content uniformly across grid),
+class differences in sample_value don't translate to class-specific
+cells. Replay reinforces stored mu values but running-mean update
+still gets diluted by WN visits to same hashed cells.
+
+Conclusion: SOM + replay is the UNIQUE substrate-architecture
+combination that satisfies T0-T9 + T13. The mechanism that wins:
+  (a) BMU-competitive routing (content → similar cell)
+  (b) Pseudo-rehearsal replay (Robins 1995)
+Both required. Either alone insufficient.
+
+### BET-022 — SOM+replay with different RNG seed (robustness)
+
+Verify BET-012/019/020 result holds under seed perturbation. Same
+substrate, same protocol, rng_seed=42 (vs locked 0). Test T0-T9 + T13.
+
+If passes: result is seed-robust, harder-bar WIN is genuine.
+If fails: BET-012 was a lucky seed; substrate-design is fragile.
+
+Pre-data prediction: PASS (SOM + replay mechanism is general, seed
+just shifts initial weights but should converge to similar end-state).
