@@ -1234,3 +1234,32 @@ research goal: communication (output side).
 
 If neither passes 10/10 → harder bar discriminates correctly, design
 BET-010 with a third substrate class.
+
+
+## 2026-05-23 ~21:05 — BET-010 SDM pre-registration
+
+BET-009 NULL (21:01) showed cog_map(beta=0) at 7/9 and SOM at 8/9 — both
+broke on T8 catastrophic-forgetting. Harder bar discriminates correctly.
+
+BET-010 brings a substrate class designed for the failure mode:
+Sparse Distributed Memory (Kanerva 1988), with spatially-smooth random
+address fields (Gaussian smoothing sigma=1.5) for T9 + Hamming-radius
+distributed write/read for T8.
+
+Locked parameters (no tuning):
+  - grid_dims (30, 15, 8)
+  - n_features 10, address bits 10
+  - address_smooth_sigma 1.5
+  - hamming_radius 3
+  - rng_seed 0
+
+T0-T9 bar same as BET-009 (locked since LOGBOOK 2026-05-23 ~20:55).
+
+Pre-data prediction: ALL 9 PASS. Specifically:
+  T8 PASS because SDM stores EN sums in EN-exclusive locations; WN
+     training adds to overlapping subset but doesn't overwrite EN-territory
+  T9 PASS by construction (smooth address field → smooth counter field)
+
+If BET-010 passes 9/9 → bet WIN at harder bar. SDM is the substrate that
+clears the test where running-mean and competitive-weight could not.
+If BET-010 NULLs → BET-011 with Hopfield-attractor or VSA candidate.
