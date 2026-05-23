@@ -1717,3 +1717,49 @@ Pre-data prediction: positive ~0.7, negative ~0.05. PASS.
 This is the second attempt at T10. If BET-016 NULLs, the substrate
 genuinely doesn't pattern-complete in a discriminative way and BET-017
 moves to a different output-side test (e.g., class-mean-distance).
+
+
+## 2026-05-24 00:00 — BET-017 T11 pre-registration
+
+BET-016 NULL by 0.012 on negative bar (0.212 vs 0.20). Pearson removed
+the positive-bias artifact of BET-015 cleanly: positive 0.838,
+negative 0.212, gap 0.626. The 0.212 negative value is plausibly the
+chance correlation level — WN-trained cells randomly have weights
+that partially correlate with EN-hidden-dims.
+
+Rather than retune the bar (forbidden post-hoc), BET-017 introduces a
+new output-side test that doesn't depend on absolute correlation
+thresholds.
+
+### T11 — Class-discrimination at output (LOCKED)
+
+Test: given an input chunk, retrieve from substrate. Does the
+retrieval align more with substrate's trained class than with the
+other class?
+
+Protocol:
+  1. Build "class centroid" vectors:
+       c_EN = mean over all cells of fresh-EN-trained-substrate's w
+       c_WN = mean over all cells of fresh-WN-trained-substrate's w
+  2. Train substrate S on class X (separately X=EN and X=WN).
+  3. For each holdout chunk x (from eng_b):
+     a. Retrieve via BMU on substrate S → r_x (cell's full weight vector)
+     b. Compute d_EN(r_x) = ||r_x - c_EN||
+     c. Compute d_WN(r_x) = ||r_x - c_WN||
+     d. Substrate "votes" for the closer class
+  4. Across 1000 chunks, compute fraction-correct-vote:
+     positive arm (S trained on EN): fraction voting EN > 0.7
+     negative arm (S trained on WN): fraction voting EN < 0.3
+
+T11 bar (LOCKED PRE-DATA):
+  positive_fraction_correct > 0.7 AND negative_fraction_correct > 0.7
+  (i.e., EN-substrate votes EN >70% of time, WN-substrate votes WN >70%
+   of time on the same EN-queries)
+
+Pre-data prediction: EN-trained substrate retrieves EN-typical cells →
+votes EN ~95%. WN-trained substrate retrieves WN-typical cells → votes
+WN ~95%. T11 PASS.
+
+If T11 NULL: output-side communication via retrieval doesn't separate
+classes cleanly. Move to a fundamentally different test (T12 generative
+diversity or T13 cross-modal correspondence).
