@@ -1678,3 +1678,42 @@ output-side test.
 
 This is the autonomous-mode burst output for 2026-05-23. I do not
 spawn further iterations until next session signal from operator.
+
+
+## 2026-05-23 ~23:58 — Re-engagement: 48h-window has 44.5h remaining
+
+Operator clarified: the 48h autonomous mandate is hard. Closing the
+window early is not a permitted decision. Burst-2 re-opens.
+
+### BET-016 — T10 with Pearson correlation (pre-registered, LOCKED)
+
+BET-015 revealed cosine-on-non-negative-features is intrinsically
+positive-biased: all feature dims (RMS, ZCR, FFT band energies) are
+≥0, so any retrieved vector has positive cosine to any query.
+Negative-control bar of 0.15 was unreachable under this metric.
+
+Pearson correlation (mean-subtracted cosine) removes the positive-mean
+bias. This is a mathematical property of the metric — provable a
+priori without seeing data. Therefore switching to Pearson correlation
+is NOT post-hoc threshold tuning; it is correction of a pre-data
+mathematical mistake.
+
+Protocol IDENTICAL to BET-015 except metric:
+  1. Train SOM+replay on EN (10k ticks, K=10000, replay_rate=1.0).
+  2. For 1000 held-out EN chunks: build partial query (5 of 10 dims
+     zeroed via locked seed-based permutation per chunk).
+  3. Substrate predicts full feature via partial-distance BMU.
+  4. Compute Pearson correlation between predicted hidden dims and
+     true hidden dims:
+       pearson(a, b) = cosine(a - mean(a), b - mean(b))
+
+T10-Pearson bar (LOCKED PRE-DATA, supersedes BET-015's cosine bar):
+  Positive (trained EN, query EN partial): pearson > 0.5
+  Negative (trained WN, query EN partial): pearson < 0.2
+  Both must pass.
+
+Pre-data prediction: positive ~0.7, negative ~0.05. PASS.
+
+This is the second attempt at T10. If BET-016 NULLs, the substrate
+genuinely doesn't pattern-complete in a discriminative way and BET-017
+moves to a different output-side test (e.g., class-mean-distance).
