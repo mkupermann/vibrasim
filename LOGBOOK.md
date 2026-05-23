@@ -1263,3 +1263,57 @@ Pre-data prediction: ALL 9 PASS. Specifically:
 If BET-010 passes 9/9 → bet WIN at harder bar. SDM is the substrate that
 clears the test where running-mean and competitive-weight could not.
 If BET-010 NULLs → BET-011 with Hopfield-attractor or VSA candidate.
+
+
+## 2026-05-23 ~21:15 — BET-011 SOM-saturating pre-registration
+
+BET-010 SDM result: 8/9 PASS. T8 still FAIL (AB→EN=0.38 > AB→WN=0.14).
+SDM reduced the failure (vs SOM's AB→EN=1.73 / AB→WN=0.004 ratio of
+432) to ratio 2.76, but the bar requires strict <. Diagnostic: histogram-
+KL on counter values is sensitive to feature-marginal balance. WN's
+flat spread across 9 features (each ~0.125) dominates the histogram
+over EN's concentrated band-0 spike. Distributed-storage helps but
+the metric is biased.
+
+BET-011 mechanism: SOM with per-cell saturation. After a cell's visit
+count reaches saturation_threshold (locked at 30), the cell becomes
+write-protected. Future BMU search excludes saturated cells. EN
+training fills its territory until saturation; WN training is forced
+to populate cells in OTHER territory. EN-saturated cells = pure EN
+content, permanently protected. Self-determined memory consolidation
+via per-cell visit-history threshold.
+
+Parameters locked pre-data:
+  - grid_dims (30, 15, 8) — same as BET-007/009
+  - n_features 10 — same encoder
+  - eta_0 0.5, eta_decay_tau 5000 — same as BET-007
+  - sigma_0 5.0, sigma_decay_tau 3000 — same as BET-007
+  - saturation_threshold 30 — NEW parameter, locked at this value
+  - rng_seed 0
+
+T0-T9 bar from LOGBOOK 2026-05-23 ~20:55 unchanged.
+
+Pre-data prediction:
+  - T0-T5: PASS (≥ SOM baseline; saturation only affects WRITE not READ)
+  - T7: PASS (BMU is content-driven; saturation is order-driven but
+        in a way that preserves distributional similarity over chunk
+        shuffling)
+  - T8 (THE TEST): EN-saturated cells protected from WN overwrite →
+        KL(AB vs fresh_EN) should be SMALLER than current (BET-009 SOM
+        baseline=1.73). KL(AB vs fresh_WN) should be LARGER than SOM
+        baseline=0.004 because AB has EN-cells WN doesn't have. PASS
+        plausible but uncertain — depends on count of saturated cells
+        after EN training.
+  - T9: PASS (Gaussian neighbourhood update on unsaturated cells still
+        produces spatial structure as in SOM baseline)
+
+If BET-011 PASS 9/9 → bet WIN at harder bar. Saturation mechanism IS the
+self-determined consolidation rule. If saturated_after_EN is very small
+(<50 cells), saturation effect is too weak — would not retune threshold
+post-hoc but BET-012 would explore other consolidation mechanisms.
+
+This is the third candidate substrate class explored under the harder
+bar. If all of cog_map+SOM+SDM+SOM-saturating fail T8, the harder bar
+is mapping a real barrier — catastrophic-forgetting is a deep open
+problem that may not be solvable by single-update-rule substrates
+without explicit rehearsal or supervised consolidation.
