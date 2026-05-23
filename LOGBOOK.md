@@ -1367,3 +1367,33 @@ Operator returns ~2026-05-25 20:30. Three decisions waiting:
   1. continue iterating BET-012+ on T8 bottleneck
   2. close the bet at locked-bar WIN + harder-bar deadlock-finding
   3. reframe the goal toward self-determined consolidation
+
+
+## 2026-05-23 ~21:35 — BET-012 SOM+replay pre-registration
+
+Decision: continue burst (operator delegated all decisions). T8 deadlock
+deserves one more genuine attempt — pseudo-rehearsal (Robins 1995) is a
+well-established mechanism that no prior iteration tested.
+
+BET-012: SOM substrate + FIFO buffer of past sensor vectors (K=10000),
+replay rate 1.0 (one replay update per wake update). Substrate manages
+its own buffer; no external supervision or class label.
+
+Catastrophic-forgetting resistance argument: across 20k total updates
+(10k wake EN + 10k wake WN), buffer preserves EN inputs through entire
+WN phase (since K=N_TICKS, no early eviction). Replay during WN training
+continuously reinforces EN-trained cells. Effective per-class exposure:
+~15k EN-style updates + ~15k WN-style updates. S_AB should retain
+substantial EN-content.
+
+Locked parameters (pre-data):
+  - SOM baseline params (eta_0=0.5, tau=5000, sigma_0=5.0, tau=3000)
+  - buffer_size = 10000 (= N_TICKS for full EN retention)
+  - replay_rate = 1.0 (one replay per wake)
+  - rng_seed = 0
+
+T0-T9 bar from LOGBOOK 2026-05-23 ~20:55 unchanged.
+
+Pre-data prediction: T0-T7 + T9 PASS by SOM baseline. T8 PASS plausible —
+replay swings effective-class-exposure toward EN-balance. If still NULL:
+burst stops, deadlock confirmed across 5 substrate classes.
