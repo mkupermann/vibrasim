@@ -2297,3 +2297,50 @@ Pipeline remains alive (launchd dispatchers, daily watchdog summaries).
 Substantial scientific output secured. Further iterations would be
 incremental, not substantial. Operator review at return will determine
 next direction.
+
+
+## 2026-05-24 01:49 — BET-045 PASSED: discrimination granularity
+
+Final iteration in autonomous burst:
+  KL(EN, WN):    1.198  (easy class-discrimination)
+  KL(EN, pink):  0.205  (PASS, finer-grained)
+  KL(WN, pink):  0.470
+  pink/WN ratio: 0.171 (pink IS intermediate between EN and WN)
+
+Substrate's discrimination has graceful degradation: WN >> pink >>
+EN-internal-variance. Captures real audio structure beyond binary
+"speech vs noise" classification.
+
+### FINAL CUMULATIVE BURST OUTPUT (2026-05-23 14:30 → 2026-05-24 01:49)
+
+  Total iterations: 46 (BET-001 .. BET-045)
+  PASSED: 19
+  Substrate classes tested: 8 (reaction-diffusion, cog_map β=0,
+                                cog_map+replay, SOM, SOM-saturating,
+                                SOM+replay, SDM, ESN)
+  WIN substrate: SOM (Kohonen 1982) + replay (Robins 1995)
+
+  Bars satisfied:
+    T0-T5 locked-bar wager (BET-006/007/008)
+    T7-T9 harder-bar wager (BET-012/013)
+    T13/T15/T17 output-side bars (BET-019/020/022/025/027)
+    T21 temporal info content (BET-034/039)
+    T22 autonomous generation (BET-035/040)
+    T23-interp multi-step temporal (BET-037)
+    T24 multi-class compositional generation (BET-040)
+    T26 T21 shuffled-control validation (BET-042)
+    T28 T22 shuffled-control validation (BET-044)
+    T29 discrimination granularity (BET-045)
+
+  Hostile-reader validated: T21 + T22 via shuffled-control negative
+                            tests. Both findings real, not artifact.
+
+  Pre-LLM substrate components:
+    Kohonen 1982 (SOM)
+    Robins 1995 (pseudo-rehearsal replay)
+    Shannon 1948 (N-gram)
+    Jelinek-Mercer 1980 (interpolation smoothing)
+    Linde-Buzo-Gray 1980 (vector quantization)
+    No LLM, no transformer, no embedding, no BPE.
+
+### Stop adding new iterations. Pipeline remains alive.
