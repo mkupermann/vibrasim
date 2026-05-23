@@ -38,6 +38,11 @@ from notify_telegram import load_config, send_telegram  # noqa: E402
 STATE_DIR = Path.home() / ".eqmod/autopilot"
 QUEUE_SHORT = REPO / ".eqmod/autopilot/QUEUE.yaml"
 QUEUE_LONG = Path.home() / ".eqmod/long-run/queue.yaml"
+BET_DIR = Path.home() / ".eqmod/bet"
+QUEUE_BET = BET_DIR / "queue.yaml"
+BET_LOGBOOK = BET_DIR / "LOGBOOK.md"
+BET_PID = BET_DIR / "current.pid"
+BET_CURRENT_ITEM = BET_DIR / "current_item.txt"
 STOP_SHORT = STATE_DIR / "STOP"
 STOP_LONG = Path.home() / ".eqmod/long-run/STOP"
 SESSION_LOG = STATE_DIR / "session.log"
@@ -94,6 +99,7 @@ def cmd_help(_args: str) -> str:
         "/results — natural-language: achieved + running + recommendation\n"
         "/status — short + long-run queue summary, current item, STOP state\n"
         "/queue — last 10 items in short queue with status\n"
+        "/bet — bet queue counter, last 3 iterations, T1-T5 progress\n"
         "/requeue <id> — set item back to queued (explicit retry, attempts unchanged)\n"
         "/fail <id> <reason> — operator-administrative closure with reason in blockers\n"
         "/stop — set STOP marker (autopilot pauses next tick)\n"
@@ -513,6 +519,145 @@ def cmd_note(args: str) -> str:
     return f"Appended {len(args)} chars to LOGBOOK.md."
 
 
+def _bet_status_counter(items: list) -> dict:
+    """Count bet items by normalized status."""
+    counts = Counter()
+    for it in items:
+        st_raw = it.get("status")
+        if st_raw is None or str(st_raw) in ("None", "null"):
+            # YAML null + python-string "None"/"null" all map to the null verdict.
+            # But a never-launched item with attempts=0 is just "queued".
+            if int(it.get("attempts") or 0) == 0 and not it.get("finished_at"):
+                counts["queued"] += 1
+            else:
+                counts["null"] += 1
+        else:
+            counts[str(st_raw)] += 1
+    return counts
+
+
+def _bet_last_completed(items: list, k: int = 3) -> list[tuple[str, str, str]]:
+    """Return [(id, verdict, finished_at)] for the last k completed iterations."""
+    completed = []
+    for it in items:
+        st_raw = it.get("status")
+        verdict = None
+        if st_raw in ("passed", "failed"):
+            verdict = str(st_raw)
+        elif st_raw is None or str(st_raw) in ("None", "null"):
+            # null iff at least one attempt happened
+            if int(it.get("attempts") or 0) > 0 or it.get("finished_at"):
+                verdict = "null"
+        if verdict is None:
+            continue
+        finished = str(it.get("finished_at") or "")
+        completed.append((str(it.get("id") or "?"), verdict, finished))
+    completed.sort(key=lambda t: t[2], reverse=True)
+    return completed[:k]
+
+
+def _bet_win_progress(items: list) -> tuple[int, str | None, int]:
+    """Return (best_test_count, best_item_id, total_completed_iterations).
+
+    The bet's T1-T5 progress depends on per-iteration result.json. Each
+    item's result.json may carry a 'tests_passed' field listing which of
+    T1-T5 it cleared. If no items expose this field yet, return
+    (0, None, total_completed).
+    """
+    best = 0
+    best_id = None
+    total = 0
+    for it in items:
+        st_raw = it.get("status")
+        is_terminal = (
+            st_raw in ("passed", "failed")
+            or st_raw is None
+            or str(st_raw) in ("None", "null")
+        )
+        if not is_terminal:
+            continue
+        if int(it.get("attempts") or 0) == 0 and not it.get("finished_at"):
+            continue
+        total += 1
+        # Try to read tests_passed from result.json
+        iid = str(it.get("id") or "")
+        if not iid:
+            continue
+        rj = BET_DIR / iid / "result.json"
+        if not rj.exists():
+            continue
+        try:
+            payload = json.loads(rj.read_text())
+        except Exception:
+            continue
+        tests_passed = payload.get("tests_passed") or []
+        n = len(tests_passed) if isinstance(tests_passed, list) else 0
+        if n > best:
+            best = n
+            best_id = iid
+    return best, best_id, total
+
+
+def cmd_bet(_args: str) -> str:
+    """Bet queue counter + last 3 iterations + T1-T5 win-condition progress."""
+    if not QUEUE_BET.exists():
+        return (
+            "Bet queue: (no queue at ~/.eqmod/bet/queue.yaml)\n\n"
+            "The bet pipeline is set up but no hypotheses are queued yet. "
+            "See docs/bet/README.md for the operator manual."
+        )
+    try:
+        q = yaml.safe_load(QUEUE_BET.read_text()) or {}
+    except Exception as exc:
+        return f"bet queue parse error: {exc!r}"
+    items = q.get("items") or []
+    counts = _bet_status_counter(items)
+    last3 = _bet_last_completed(items, k=3)
+    best, best_id, total = _bet_win_progress(items)
+
+    # Current running item
+    current = None
+    if BET_PID.exists() and BET_CURRENT_ITEM.exists():
+        try:
+            cid = BET_CURRENT_ITEM.read_text().strip()
+            elapsed_s = time.time() - BET_PID.stat().st_mtime
+            current = f"{cid} (elapsed {elapsed_s/60:.1f} min)"
+        except Exception:
+            pass
+
+    lines: list[str] = []
+    summary_parts = [
+        f"{counts.get('queued', 0)} queued",
+        f"{counts.get('running', 0)} running",
+        f"{counts.get('passed', 0)} passed",
+        f"{counts.get('null', 0)} null",
+        f"{counts.get('failed', 0)} failed",
+    ]
+    lines.append("Bet queue: " + " / ".join(summary_parts))
+    if current:
+        lines.append(f"Now running: {current}")
+    lines.append("")
+
+    lines.append("Last 3 completed iterations:")
+    if last3:
+        for iid, verdict, finished in last3:
+            tail = finished.split("T")[0] if "T" in finished else finished
+            lines.append(f"- {iid} {verdict.upper()} {tail}")
+    else:
+        lines.append("- (no iterations completed yet)")
+    lines.append("")
+
+    lines.append("Win-condition progress (T1-T5 passes in a single iteration):")
+    lines.append(f"- {best} / 5 tests have ever been passed in a single iteration")
+    if best_id:
+        lines.append(f"- Best iteration so far: {best_id} ({best}/5)")
+    else:
+        lines.append("- No iteration has yet exposed a tests_passed field in result.json")
+    lines.append(f"- Total iterations completed: {total}")
+
+    return "\n".join(lines)
+
+
 def cmd_logs(args: str) -> str:
     try:
         n = int(args.strip() or "20")
@@ -531,6 +676,7 @@ COMMANDS = {
     "/results": cmd_results,
     "/status": cmd_status,
     "/queue": cmd_queue,
+    "/bet": cmd_bet,
     "/requeue": cmd_requeue,
     "/fail": cmd_fail,
     "/stop": cmd_stop,
