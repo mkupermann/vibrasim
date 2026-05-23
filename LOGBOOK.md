@@ -1850,3 +1850,30 @@ Fresh ratio near 1.0.
 This measures the substrate's class-specific routing capacity. A
 substrate that has "learned" EN has cells specialised for EN-typical
 inputs, leaving few cells matching WN-typical inputs.
+
+
+## 2026-05-24 00:12 — BET-019 T13 PASSED, BET-020 LR validation
+
+BET-019 T13 BMU-coverage-ratio: PASSED 9/9 conditions met.
+  trained_EN coverage = 0.121 (12.1% of cells used)
+  trained_WN coverage = 0.032
+  ratio = 3.83  (> 2.0 bar)
+  fresh control ratio = 0.93  (~1, no class preference — as predicted)
+
+Output-side class-discrimination via routing IS demonstrated. T13 PASS
+is a legitimate harder-bar WIN at the OUTPUT side (matching BET-012's
+9/9 PASS at the input/learning side).
+
+### BET-020 — LR validation of T13 at 100k ticks
+
+Same protocol, N_TICKS=100_000 (10× BET-019 scale-up). All other
+parameters locked. Tests whether the routing-discrimination holds at
+scale.
+
+Pre-data prediction: trained_EN coverage grows toward saturation
+(could approach 50-70% of cells), trained_WN coverage grows but less.
+Ratio could remain >2 or shrink toward 1 depending on how fast WN
+coverage grows.
+
+T13 bar (LOCKED, same as BET-019):
+  coverage_EN > 0.10 AND ratio > 2.0
