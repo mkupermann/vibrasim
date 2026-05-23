@@ -1763,3 +1763,50 @@ WN ~95%. T11 PASS.
 If T11 NULL: output-side communication via retrieval doesn't separate
 classes cleanly. Move to a fundamentally different test (T12 generative
 diversity or T13 cross-modal correspondence).
+
+
+## 2026-05-24 00:08 — BET-018 T12 pre-registration (mutual information)
+
+T10/T11 BET-015/016/017 all had measurement artifacts:
+  BET-015 cosine: positive-feature bias
+  BET-016 Pearson: chance-correlation floor
+  BET-017 vote-distance: query-magnitude bias
+
+All compare substrate output against fixed reference vectors. Each
+metric has its own bias mode. Need a metric that's intrinsic to the
+substrate's behaviour and doesn't require reference comparison.
+
+### T12 — Mutual Information between query class and BMU cell (LOCKED)
+
+Test: train substrate on EN. Present mix of EN + WN queries. For each
+query, record which cell is BMU. Compute mutual information between
+(query class, BMU cell index).
+
+  I(C; B) = sum over class c, cell b: P(c,b) * log[P(c,b) / (P(c)*P(b))]
+
+where C ∈ {EN, WN}, B ∈ {0, ..., 3599}.
+
+If substrate is class-discriminative at the routing level, EN-queries
+cluster on certain cells and WN-queries on others. MI > 0.
+If not, MI ~ 0.
+
+Protocol:
+  1. Train SOM+replay substrate on EN (10k ticks).
+  2. Build query mix: 1000 EN-chunks (from eng_b) + 1000 WN-chunks
+     (matched-RMS). Labelled by source class.
+  3. For each query, retrieve BMU coords, flatten to cell index 0..3599.
+  4. Estimate MI from the 2000 (class, bmu_index) pairs using
+     plug-in estimator with Laplace smoothing.
+
+T12 bar (LOCKED PRE-DATA):
+  - MI(C; B) > 0.5 bits (substrate routing carries substantial info
+    about query class)
+  - Negative control: same protocol on FRESH-init substrate (no
+    training). MI should be near zero.
+  - Both: trained_MI > 0.5 AND fresh_MI < 0.1
+
+Pre-data prediction: trained MI ~0.8-0.9 (good discrimination since EN
+and WN have very different spectra). Fresh MI ~0.01.
+
+This is INTRINSIC measurement — substrate behaviour itself, no fixed
+reference vectors, no magnitude bias.
