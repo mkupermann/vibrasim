@@ -889,3 +889,82 @@ This finding does not feed the bet's hypothesis space (G26 is disallowed under t
 
 The README's "Walking back the framing" section retains its current language; this LOGBOOK entry is sufficient annotation. Updating README to soften G26's framing would itself be a framing change post-data, which the README §"Two kinds of pre-registration" 2026-05-19 entry forbids.
 
+
+
+## 2026-05-23 — Scientific-rigor-only commitment (user mandate)
+
+After four bet iterations (BET-001 reaction-diffusion + BET-002/003/004
+cognitive-map encoder-variants) all NULLed on T2 with the same magnitude
+(KL ≈ 0.002-0.005), user decision 2026-05-23: "wir arbeiten nur noch
+wissenschaftlich korrekt".
+
+Operational interpretation:
+
+  - **No more single-encoder-variant BET-XXX iterations** that test one
+    config-change and report PASS/NULL on the locked 5-test bar.
+
+  - **Three-step research cadence** for every future bet-related work:
+
+    1. **Diagnostic instrumentation FIRST** — locate where in the
+       substrate's processing chain a measured failure originates.
+       Produce result.json with explicit verdict="null" and
+       category="diagnostic" — these runs do NOT count as bet
+       iterations (no T1-T5 PASS claim is being made), they are
+       research tools.
+
+    2. **Pre-registered ablation study SECOND** — vary multiple
+       factors in a single structured experiment with locked
+       thresholds. Output a sensitivity decomposition (which factor
+       changes the locked-test outcome).
+
+    3. **Targeted BET-XXX THIRD** — based on what 1+2 identified.
+       Full bet pre-registration applies; this is the only step
+       that can WIN the bet.
+
+  - **Postmortem requirement**: every NULL bet iteration must produce
+    a written analysis (one paragraph minimum) of WHY the null
+    happened — not just "metric missed threshold by X" but a causal
+    hypothesis about the substrate's processing chain. Postmortems
+    accumulate in ~/.eqmod/bet/postmortems/ (one file per BET-XXX
+    or diagnostic run).
+
+  - **The 12-month bet deadline + ≤1h iteration cadence + 5/5 binary
+    bar are UNCHANGED.** This commitment narrows the iteration
+    *quality* required, not the bet's locked terms.
+
+BET-005 redesignated from "another encoder variant" to **Diagnostic
+Instrumentation Run** (step 1 above). Its acceptance:
+
+  - Run cognitive_map substrate under R-7 corpus audio (matching
+    BET-004's audio source). Instrument FOUR locations to track
+    where EN/WN content variance disappears:
+
+    Location 1 (Sensor-level):
+      KL between concatenated-sensor-vector distributions of EN vs WN.
+      If small (<0.05): encoder produces statistically indistinguishable
+      vectors → encoder is the bottleneck.
+
+    Location 2 (Position-hash-level):
+      KL between cell-visit-count histograms of EN vs WN.
+      If small: position_hash distributes equally → content does not
+      reach cell selection.
+
+    Location 3 (Per-cell-mu-level):
+      Mean cosine similarity between mu_eng[cell] and mu_wn[cell] over
+      cells hit by both runs. If close to 1: cell-level averaging
+      converges to same values despite per-tick variance.
+
+    Location 4 (Aggregate-vs-per-cell):
+      Compare mean per-cell mu-divergence with the bet's T2 histogram-
+      KL metric. If per-cell divergence is large but T2 KL is small:
+      the measurement metric itself strips the signal (analog R-22b).
+
+  - Result.json verdict explicitly "null" with category "diagnostic".
+    Does not consume a bet iteration slot.
+
+  - Postmortem written to ~/.eqmod/bet/postmortems/BET-005.md naming
+    the dominant failure-location and the targeted-fix design that
+    derives from it.
+
+This commitment is pre-registered before any iteration of the
+rigorous-mode runs.
