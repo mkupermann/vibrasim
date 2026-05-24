@@ -2535,3 +2535,109 @@ architecture validated at multiple levels.
 ### Cumulative status (8:30 morning, 14h work, 55 iter, 27 PASS)
 
 Pipeline alive. Reducing iteration cadence now to avoid noise.
+
+
+## 2026-05-24 10:30 — ELIMINATION-DOCUMENTATION (per operator instruction)
+
+Operator instruction: "Wir forschen solange bis wir was finden was nicht
+LLM ist. Schritt für Schritt eliminieren was nicht funktioniert."
+
+### WHAT WAS ELIMINATED (and WHY) in 57+ iterations
+
+**Substrate-architecture eliminations (substrate-classes that didn't survive):**
+
+1. **Reaction-Diffusion** (Turing 1952, BET-001): trivial plateau —
+   no content discrimination, mean-shift artifact
+
+2. **cog_map with lateral propagation** (Friston β>0, BET-002/003/004):
+   lateral cascade discards content information (BET-005 diagnostic)
+
+3. **SDM** (Kanerva 1988, BET-010): feature-marginal bias dominates
+   over distributional discrimination
+
+4. **SOM-saturating** (BET-011): per-cell saturation insufficient at
+   tested threshold, doesn't prevent catastrophic forgetting
+
+5. **ESN** (Jaeger 2001, BET-030/031): order-sensitive but
+   linear-readout cannot extract usable temporal info on audio at
+   1ms or 10ms granularity
+
+6. **cog_map+replay** (BET-021): pseudo-rehearsal mechanism only
+   generalises to content-driven routing (SOM), not hash-driven
+   routing (cog_map)
+
+7. **ART low vigilance 0.85** (BET-046): cosine-match too lenient on
+   positive features, allocates only 9 cells
+
+8. **ART high vigilance 0.95** (BET-051): allocates 88 cells but
+   accuracy 93% — bar T35 fails on cell-count direction
+
+9. **Hopfield** (1982, BET-047): discriminates strongly (diff 0.69)
+   but pattern completion degraded (positive cos 0.26 vs SOM-BMU 0.84)
+
+10. **Pure trigram** (BET-036): data sparsity overfit, smoothing
+    dominates noise
+
+11. **Simple Predictive Coding** (Rao & Ballard 1999, BET-055): too
+    slow without supervised tuning, decoder D doesn't differentiate
+    EN vs WN at 5000 ticks
+
+12. **Developmental SNN minimal scaffolding** (BET-058 attempt):
+    requires so much parameter tuning (input_scale, hidden_synapse_gain,
+    weight_init, distance_falloff, background_noise, connectivity_density)
+    that "minimal scaffolding" is a fiction. Substrate either doesn't
+    propagate activity beyond input neurons (sparse weak weights) or
+    saturates with all neurons firing (strong weights). Goldilocks
+    parameters require iterative hand-tuning — exactly what the
+    "developmental, self-organizing" approach was supposed to avoid.
+
+### WHAT SURVIVED ELIMINATION
+
+  - SOM (Kohonen 1982): basic vector quantization, deterministic
+    discrimination
+  - SOM+replay (Robins 1995): + catastrophic-forgetting resistance
+  - N-gram with backoff (Jelinek-Mercer 1980): temporal statistics
+    on substrate tokens
+
+### HONEST POSITION on what survived
+
+The surviving substrate (SOM+Replay+N-gram pipeline) is bottom-up,
+pre-LLM, demonstrably handles discrimination + classification +
+generation + multi-class. **But it IS statistical pattern matching.**
+Its mechanism family is the same as LLMs (pattern recognition over
+sequences) just simpler implementation. Per operator's elimination
+criterion this should ALSO be eliminated as "LLM-family", leaving:
+nothing.
+
+### Tentative next-step elimination targets
+
+  - statistical pattern matching itself (would eliminate SOM+N-gram)
+  - hand-designed feature encoders (RMS/FFT/ZCR are pre-LLM but
+    pre-specified)
+  - fixed pre-designed architectures (vs. self-developing)
+  - external supervision (vs. intrinsic-reward-driven)
+
+### What this elimination process is telling us
+
+Pre-LLM substrates I've tested either:
+  (a) work as statistical pattern matchers (LLM-family)
+  (b) need so much parameter tuning that they're not truly
+      self-organizing
+  (c) demonstrate one biological property in isolation but don't
+      compose into a working substrate
+
+The brain finds its own method via developmental scale + evolutionary
+pressure + embodied sensorimotor loops + reward systems — none of
+which are in my substrate space.
+
+### Honest assessment for the operator-mandate
+
+We have NOT yet found a substrate that is "not-LLM" AND works.
+We have eliminated many candidates. Remaining options need:
+  - longer compute budgets (days, not hours)
+  - embodied components (sensorimotor closure)
+  - intrinsic-reward systems (genuine agency)
+
+The 14h until 23:00 will not produce a "brain-style alternative to
+LLM" — that's a multi-year research programme. But it can produce
+more elimination findings to constrain the search.
