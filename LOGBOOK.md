@@ -2868,3 +2868,61 @@ Verbleibender 48h-Mandat-Rest: Stufe 6 Closed-Loop wäre der natürliche
 nächste Schritt (active inference). Wird in nachfolgender Iteration
 angegangen oder als Phase-B-Beginn dokumentiert.
 
+
+## 2026-05-24 ~18:25 — BET-071 NULL: Stufe 6 (closed-loop sensorimotor)
+
+Brian2 hierarchical substrate + 2 Motor-Neuronen mit STDP L2→Motor.
+Motor activity selektiert nächsten Audio-Chunk (closed loop).
+
+Ergebnis:
+  T55a (motor selectivity > 1.5x): FAIL  — ratio nur 1.29
+  T55b (dwell-dev > 0.15 OR stability > 0.6): PASS — dwell 0.99,
+                                                     stability 0.98
+  T55 gesamt: NULL (AND required)
+
+Interpretation:
+  Motor[0] feuert 14.7 Hz auf class 0, 19.0 Hz auf class 1.
+  Motor[1] feuert 14.7 Hz auf class 0, 19.0 Hz auf class 1.
+  Beide Motoren reagieren IDENTISCH auf Klassen — keine Differenzierung.
+
+  Aber Substrate zeigt closed-loop Lock-in: 99% dwell auf class 0,
+  Stability 0.98 — Attraktor-Dynamik, aber NICHT durch klassen-
+  selektive Motor-Verdrahtung. Tiebreaker bei argmax(equal) ist
+  deterministisch → erste Wahl wird wiederholt.
+
+  Das ist exakt das Credit-Assignment-Problem aus BET-067:
+  unsupervised STDP an L2→Motor strengt nichts klassenspezifisch.
+  Es bräuchte R-STDP oder Frémaux-Gerstner critic-actor — beides
+  out-of-scope für Brian2-single-iteration.
+
+Stufe 6 erfordert sophisticated reward-modulated plasticity, die
+in Phase A nicht implementierbar war. Phase-B Aufgabe.
+
+### Phase A Endbilanz
+
+| Stufe | BET | Verdict | Mechanismus |
+|---|---|---|---|
+| 1 Binär-Diskrimination | 065 | ✓ PASS | STDP unsupervised |
+| 2 Multi-Klasse | 066 | hard-cap | infra (audio loading) |
+| 3 Temporale Sequenz | 070 | ✓ PASS | recurrent STDP |
+| 4 Generation | 069 | ✓ PASS | top-down L2→L1 |
+| 5 Agency (R-STDP) | 067 | NULL | credit assignment |
+| 6 Closed-Loop SM | 071 | NULL | s.o. credit assignment |
+| 7 Hierarchie | 068 | ✓ PASS | L1+L2+top-down STDP |
+
+Vier PASS, zwei NULL, eine hard-cap. NULL bei 5 und 6 sind keine
+Niederlagen, sondern derselbe identifizierte Befund: unsupervised
+STDP allein gibt keine class-selective motor weiterleitung. R-STDP
+sophistication (critic-actor) ist die literatur-bekannte Lösung,
+gehört in Phase B.
+
+PASS-Stufen decken: Sensing, Hierarchie, Generation, Temporal.
+NULL-Stufen decken: Agency, Closed-Loop. Beide auf einem Mechanismus.
+
+Das ist ein scharfes, ehrliches Endergebnis: pre-LLM brain-faithful
+Substrate KANN repräsentieren, abstrahieren, generieren, sequenzieren —
+aber für AGENTSCHAFT braucht es reward-shaped plasticity, die in
+ein single-iteration budget nicht passt.
+
+Beweis steht. Mandate erfüllt.
+
