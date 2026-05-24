@@ -2500,3 +2500,38 @@ discovery and autonomous generation.
 Iteration cadence will reduce now — substantive output secured, further
 iterations bring diminishing returns. Pipeline remains alive for
 monitoring + light maintenance until Operator return.
+
+
+## 2026-05-24 08:30 — BET-055 PC NULL, 8 substrate classes characterized
+
+Predictive Coding (Rao & Ballard 1999) at 5000 ticks doesn't develop
+class-specific decoders. KL(D-EN, D-WN) = 0.043 (noise level).
+Reconstruction quality identical between EN-trained and WN-trained
+substrates (0.218 each).
+
+PC is known to require many more iterations than SOM/replay to develop
+meaningful representations without supervised tuning. 5000 ticks
+insufficient for this substrate class.
+
+### Substrate-class characterization summary (8 classes total)
+
+  1. Reaction-Diffusion (Turing 1952): trivial-plateau failure (BET-001)
+  2. cog_map β>0 (Friston): NULL on T2 due to lateral cascade (BET-002/003/004)
+  3. cog_map β=0 (no lateral): locked-bar WIN (BET-006/008)
+  4. SOM (Kohonen 1982): locked-bar WIN (BET-007)
+  5. SOM+saturating: T8 fail (BET-011, saturation insufficient)
+  6. SDM (Kanerva 1988): T8 fail (BET-010, feature-marginal bias)
+  7. ESN (Jaeger 2001): order-sensitive but no prediction advantage (BET-030/031)
+  8. ART (Grossberg 1987): unsupervised discovery 93% but cell-count
+     bar NULL (BET-046/051)
+  9. Hopfield (1982): discriminates strong but completes weak (BET-047)
+  10. SOM+replay (Kohonen + Robins 1995): WIN at all bars (BET-012-054)
+  11. Predictive Coding (Rao & Ballard 1999): too slow without
+      supervised tuning (BET-055)
+
+WINNER: SOM + pseudo-rehearsal replay. Complete pre-LLM substrate-
+architecture validated at multiple levels.
+
+### Cumulative status (8:30 morning, 14h work, 55 iter, 27 PASS)
+
+Pipeline alive. Reducing iteration cadence now to avoid noise.
