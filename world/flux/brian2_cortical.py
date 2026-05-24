@@ -57,6 +57,13 @@ class Brian2CorticalConfig:
     input_rate_max_hz: float = 100.0
     chunk_duration_ms: float = 100.0
     rng_seed: int = 0
+    # Homeostatic plasticity (Turrigiano 2008): each E neuron's v_thresh drifts
+    # toward target firing rate. 0 disables; typical 0.05 mV per spike-excess.
+    homeostasis_enabled: bool = False
+    homeostasis_target_rate_hz: float = 5.0
+    homeostasis_eta_mv: float = 0.05
+    homeostasis_thresh_min_mv: float = -60.0
+    homeostasis_thresh_max_mv: float = -48.0
 
 
 def train_and_collect_layer_patterns(train_dict, test_dict, encoder_cfg,
@@ -69,29 +76,35 @@ def train_and_collect_layer_patterns(train_dict, test_dict, encoder_cfg,
     prefs.codegen.target = 'cython'
     defaultclock.dt = 1.0 * ms
 
-    eqs_lif = '''
-    dv/dt = (-(v - v_rest) + ge*(0*mV - v) + gi*(-80*mV - v)) / tau_m : volt (unless refractory)
-    dge/dt = -ge / tau_e : 1
-    dgi/dt = -gi / tau_i : 1
-    '''
     tau_m = 20 * ms
     tau_e = 5 * ms
     tau_i = 10 * ms
     v_rest = -70 * mV
-    v_thresh = -54 * mV
+    v_thresh_init = -54 * mV
     v_reset = -75 * mV
     tau_ref = 5 * ms
+
+    # v_thresh as per-neuron state variable in both modes — homeostatic mode
+    # updates it between chunks, non-homeostatic mode leaves it constant.
+    eqs_lif = '''
+    dv/dt = (-(v - v_rest) + ge*(0*mV - v) + gi*(-80*mV - v)) / tau_m : volt (unless refractory)
+    dge/dt = -ge / tau_e : 1
+    dgi/dt = -gi / tau_i : 1
+    v_thresh : volt
+    '''
 
     def make_E(n):
         ng = NeuronGroup(n, eqs_lif, threshold='v > v_thresh',
                          reset='v = v_reset', refractory=tau_ref, method='euler')
         ng.v = v_rest
+        ng.v_thresh = v_thresh_init
         return ng
 
     def make_I(n):
         ng = NeuronGroup(n, eqs_lif, threshold='v > v_thresh',
                          reset='v = v_reset', refractory=tau_ref, method='euler')
         ng.v = v_rest
+        ng.v_thresh = v_thresh_init
         return ng
 
     input_group = PoissonGroup(cfg.n_input, rates=0 * Hz)
@@ -117,6 +130,10 @@ def train_and_collect_layer_patterns(train_dict, test_dict, encoder_cfg,
     stdp_ns = {'taupre': 20 * ms, 'taupost': 20 * ms,
                'dApre_val': 0.01, 'dApost_val': -0.012, 'wmax': 2.0}
 
+    # Separate namespace for recurrent E→E — lower wmax to prevent runaway
+    stdp_ns_rec = {'taupre': 20 * ms, 'taupost': 20 * ms,
+                   'dApre_val': 0.005, 'dApost_val': -0.006, 'wmax': 0.3}
+
     def plastic(src, tgt, p, w_lo, w_hi, ns):
         s = Synapses(src, tgt, model=stdp_eqs, on_pre=on_pre, on_post=on_post,
                      namespace=ns)
@@ -139,11 +156,11 @@ def train_and_collect_layer_patterns(train_dict, test_dict, encoder_cfg,
     # Input → L4
     syn_in_L4 = plastic(input_group, L4_E, cfg.p_input, 0.5, 1.5, stdp_ns)
 
-    # Within-layer recurrent E→E (plastic)
-    syn_L4_rec  = plastic(L4_E,  L4_E,  cfg.p_rec_EE, 0.1, 0.5, stdp_ns)
-    syn_L23_rec = plastic(L23_E, L23_E, cfg.p_rec_EE, 0.1, 0.5, stdp_ns)
-    syn_L5_rec  = plastic(L5_E,  L5_E,  cfg.p_rec_EE, 0.1, 0.5, stdp_ns)
-    syn_L6_rec  = plastic(L6_E,  L6_E,  cfg.p_rec_EE, 0.1, 0.5, stdp_ns)
+    # Within-layer recurrent E→E (plastic, lower wmax to prevent runaway)
+    syn_L4_rec  = plastic(L4_E,  L4_E,  cfg.p_rec_EE, 0.02, 0.1, stdp_ns_rec)
+    syn_L23_rec = plastic(L23_E, L23_E, cfg.p_rec_EE, 0.02, 0.1, stdp_ns_rec)
+    syn_L5_rec  = plastic(L5_E,  L5_E,  cfg.p_rec_EE, 0.02, 0.1, stdp_ns_rec)
+    syn_L6_rec  = plastic(L6_E,  L6_E,  cfg.p_rec_EE, 0.02, 0.1, stdp_ns_rec)
 
     # Feedforward (plastic)
     syn_L4_L23  = plastic(L4_E,  L23_E, cfg.p_ff, 0.2, 0.5, stdp_ns)
@@ -181,9 +198,32 @@ def train_and_collect_layer_patterns(train_dict, test_dict, encoder_cfg,
     net = Network(*(all_groups + all_synapses))
 
     chunk_dur = cfg.chunk_duration_ms * ms
+    chunk_seconds = cfg.chunk_duration_ms / 1000.0
+    target_spikes_per_chunk = cfg.homeostasis_target_rate_hz * chunk_seconds
 
-    # Training (unsupervised STDP)
+    excitatory_groups_for_homeo = [L4_E, L23_E, L5_E, L6_E]
+    monitors_for_homeo = [mon_L4, mon_L23, mon_L5, mon_L6]
+
+    def _apply_homeostasis(prev_counts):
+        if not cfg.homeostasis_enabled:
+            return prev_counts
+        new_counts = []
+        for grp, mon, prev in zip(excitatory_groups_for_homeo, monitors_for_homeo, prev_counts):
+            cur = np.array(mon.count)
+            diff = cur - prev
+            new_counts.append(cur)
+            # Excess spikes → raise threshold; deficit → lower
+            adj_mv = cfg.homeostasis_eta_mv * (diff - target_spikes_per_chunk)
+            new_thresh_mv = (np.array(grp.v_thresh) / 1e-3) + adj_mv
+            new_thresh_mv = np.clip(new_thresh_mv,
+                                    cfg.homeostasis_thresh_min_mv,
+                                    cfg.homeostasis_thresh_max_mv)
+            grp.v_thresh = new_thresh_mv * mV
+        return new_counts
+
+    # Training (unsupervised STDP + optional homeostasis)
     train_classes = list(train_dict.keys())
+    prev_counts = [np.array(m.count).copy() for m in monitors_for_homeo]
     for trial in range(n_train_per_class):
         for class_label in train_classes:
             chunks = train_dict[class_label]
@@ -193,6 +233,7 @@ def train_and_collect_layer_patterns(train_dict, test_dict, encoder_cfg,
             input_rates_hz = np.clip(features[:cfg.n_input], 0, 1) * cfg.input_rate_max_hz
             input_group.rates = input_rates_hz * Hz
             net.run(chunk_dur)
+            prev_counts = _apply_homeostasis(prev_counts)
 
     # Test: collect per-layer patterns per class
     test_classes = list(test_dict.keys())
