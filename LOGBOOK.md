@@ -2393,3 +2393,30 @@ intuition because R-7 EN is more diverse than WN).
 
 47 iterations, 19 PASS. ART substrate fully tested at one vigilance
 setting.
+
+
+## 2026-05-24 08:08 — BET-049 PASSED 92.3% on harder EN-vs-pink task
+
+End-to-end classification accuracy on the harder discriminative task:
+  accuracy EN: 90.8%
+  accuracy pink: 93.8%
+  balanced: 92.3% (need > 0.6, PASS by wide margin)
+  cell split: 67 EN-cells / 33 pink-cells (more balanced than EN/WN's 81/19)
+
+Substrate distinguishes speech (EN) from naturalistic 1/f noise (pink)
+at 92% — substantially better than the >60% bar. The substrate's
+class-discrimination has REAL acoustic discrimination depth, not just
+binary speech-vs-flat-noise.
+
+### Round milestone: 50 iterations, 21 PASSED
+
+Substrate is demonstrably:
+  - DISCRIMINATIVE: 99.4% EN-vs-WN, 92.3% EN-vs-pink
+  - GENERATIVE: T22 autonomous + T24 multi-class + T35 conditioned (partial)
+  - COMPOSITIONAL: T24 multi-class memory
+  - TEMPORAL-INFO-CARRYING: T21 (41-67% PPL reduction) + T26 validation
+  - SELF-ORGANIZING: SOM mechanism + replay-protected against forgetting
+  - END-TO-END USABLE: BET-048 + BET-049 working classifier
+
+All pre-LLM components (Kohonen 1982 SOM + Robins 1995 replay + Shannon
+1948 N-gram + Jelinek-Mercer 1980 backoff + LBG 1980 VQ).
