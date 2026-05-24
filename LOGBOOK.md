@@ -2972,3 +2972,34 @@ Phase B Mac-Realität:
   - Aber: VOLLSTÄNDIGES brain-faithful Substrat dokumentiert auf
     Mac-Hardware. Empirische Decke des Solo-Researcher-Setups.
 
+
+## 2026-05-24 ~20:30 — BET-077 NULL mit großem Informationsgewinn
+
+Cortical-density 4-Layer-Substrat (25K Neuronen, 26.8M synapses,
+E:I 4:1) gebaut und auf EN-vs-WN trainiert (80 trials/class, 100ms
+chunks). Lief 28 Minuten Wallzeit.
+
+Pro-Layer prototype acc:
+  L4 (input):  0.60   — marginal (kaum Klassen-Trennung im input layer)
+  L23 (local): 0.94   — STRONG (übertrifft Phase A's 83% deutlich)
+  L5 (output): 0.00   — KOLLABIERT (runaway firing 20.9M spikes)
+  L6 (fb):     0.00   — KOLLABIERT (16.7M spikes)
+
+KL-Amplifikation max(L23,L5,L6)/L4 = 4.05× (bar 5×, knapp NULL)
+
+Diagnose:
+  L5/L6 haben recurrent E→E ohne ausreichende homeostatische Korrektur.
+  Bei hoher Aktivität wird das Netz unstable → alle Neuronen feuern
+  synchron → keine Klassen-Differenzierung möglich.
+  L23 funktioniert perfekt, weil es einen balancierten Sweet-Spot
+  zwischen Connectivity-Dichte und Input-Diversität trifft.
+
+Wichtige Erkenntnis:
+  - Cortical-density 25K-Substrat KANN diskriminieren (L23 94%).
+  - Vollständigkeit FEHLT: ohne homeostatische Plasticität kollabieren
+    deeper Layer.
+  - Architektur-Fix für BET-078: intrinsisches threshold-Drift pro
+    Neuron, target firing rate 5Hz → automatisch hochgeregelt wenn
+    Neuron silent, runtergeregelt wenn übermäßig aktiv (Turrigiano
+    homeostatic plasticity 2008).
+
