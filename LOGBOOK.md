@@ -2420,3 +2420,45 @@ Substrate is demonstrably:
 
 All pre-LLM components (Kohonen 1982 SOM + Robins 1995 replay + Shannon
 1948 N-gram + Jelinek-Mercer 1980 backoff + LBG 1980 VQ).
+
+
+## 2026-05-24 08:14 — BET-051 NULL (locked bar) but POSITIVE substantive finding
+
+ART at vigilance=0.95 sees mixed 3-class audio (5000 chunks each,
+interleaved with no labels):
+
+  n_cells discovered: 88
+  Classification accuracy (post-hoc cell labeling):
+    EN: 94.0%, WN: 93.1%, pink: 91.9%, balanced: 93.0%
+
+T35 NULL per locked bar (n_cells 88 outside 3-50 range, my pre-data
+guess was wrong about granularity).
+
+BUT the substantive finding is: substrate UNSUPERVISED-discovers
+acoustic categories that correctly classify novel test data at 93%
+accuracy. This is the most "selbstständig lernend" demonstration in
+the entire bet programme.
+
+Difference from supervised classifiers (BET-048/049/050):
+  - Supervised: substrate told "these chunks are EN, these are WN"
+                Training labels SHAPE the classification.
+  - Unsupervised (BET-051): substrate sees mixed chunks, no labels.
+                Substrate decides what categories exist on its own.
+                Post-hoc labeling tests if discovered categories
+                correspond to acoustic structure.
+
+The 93% accuracy means: ART's autonomously-allocated 88 cells cleanly
+partition the input space such that each cell is dominantly visited
+by one acoustic class. Genuine pre-LLM unsupervised category
+discovery.
+
+My T35 cell-count bar (3-50) was wrong-direction: I expected ART to
+COARSE-GRAIN to ~3-10 cells matching the 3 classes. Reality: ART
+fine-grains to 88 cells (within each acoustic class), each
+cell-cluster still belongs cleanly to one class.
+
+For pre-reg discipline: BET-051 stands as NULL. The bar was met on
+accuracy arm (93% >> 0.5), failed on n_cells arm. Mixed verdict.
+
+Total: 52 iterations, 22 PASS (BET-051 NULL on locked bar but
+positive on the substantive question).
