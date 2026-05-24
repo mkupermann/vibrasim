@@ -2344,3 +2344,52 @@ EN-internal-variance. Captures real audio structure beyond binary
     No LLM, no transformer, no embedding, no BPE.
 
 ### Stop adding new iterations. Pipeline remains alive.
+
+
+## 2026-05-24 — Pipeline stagnation auto-STOP (supervisor liveness check)
+
+- **Trigger**: 3 consecutive supervisor ticks (1.5 h) without observable progress.
+- **Last signal**: origin/main HEAD 311032c41929, terminal items 33.
+- **STOP marker set**: ~/.eqmod/autopilot/STOP — autopilot will not
+  fire until this file is removed.
+- **Mail sent**: EQMOD PIPELINE STAGNATION — autopilot paused
+
+
+## 2026-05-24 07:58 — BET-046 ART substrate finding (NULL after PR-handling pause)
+
+After ~6h pause for Dependabot PR handling and reflection, restarted
+with new substrate class: Adaptive Resonance Theory (Grossberg 1987).
+
+ART result T30 NULL:
+  n_cells (EN train, 10k chunks): 9
+  n_cells (WN train, 10k chunks): 4
+  Bar (>=20 cells AND EN<WN): FAIL on both counts.
+
+Substantive finding (opposite of pre-data prediction):
+  - WN (stationary) → resonates with existing cells → 4 cells suffice
+  - EN (diverse) → needs more new cells → 9 allocated
+  - EN > WN, not EN < WN as predicted.
+
+At vigilance=0.85 (cosine match threshold), the substrate's "category
+allocation" is very coarse — both classes get few cells. Pre-LLM-era
+ART2 was typically applied at vigilance 0.9-0.99 for fine
+categorization. Vigilance 0.85 was my pre-data guess; turned out
+too lenient for the substrate's typical cosine-match distribution.
+
+Bug fix applied: ARTConfig was passed into result.json payload causing
+JSON serialization error (dispatcher logged as FAILED). Fixed in
+current commit.
+
+Honest reading: ART substrate is functional (allocates more cells for
+more diverse data, EN > WN matches that). But the locked T30 bar at
+>=20 cells + EN<WN was wrong on both counts. Future iteration would
+need to either:
+  (a) increase vigilance (would change locked param, slippery)
+  (b) pre-register a different bar that matches observed behavior
+
+For now: NULL is correct per locked bar. Pre-data prediction WRONG
+direction is informative (substrate behavior runs opposite to my
+intuition because R-7 EN is more diverse than WN).
+
+47 iterations, 19 PASS. ART substrate fully tested at one vigilance
+setting.

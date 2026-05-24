@@ -70,7 +70,6 @@ def substrates():
     state_wn = run(cfg, N_TICKS, wn_train)
 
     return dict(
-        cfg=cfg,
         n_cells_en=state_en["weights"].shape[0],
         n_resonances_en=state_en["n_resonances"],
         n_allocations_en=state_en["n_allocations"],
