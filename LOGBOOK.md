@@ -2770,3 +2770,51 @@ None implemented in single-iteration budget.
 Per Phase-A-Proof: skip Stufe 5 detailed R-STDP. Move to Stufe 7
 hierarchical multi-layer SNN — closer to cortical structure, more
 substantive proof-of-concept for the multi-year programme.
+
+
+## 2026-05-24 17:47 — Phase A Proof: 3 substantial Stufen erreicht
+
+After Brian2 installation, brain-faithful spiking substrate cleared
+multiple stages of the proof programme:
+
+  Stufe 1 (binary discrimination) ✓ BET-065 — 98% accuracy
+  Stufe 4 (generation)            ✓ BET-069 — KL 0.243 between classes
+  Stufe 7 (hierarchical 2-layer)  ✓ BET-068 — 83% L2 accuracy, hierarchy
+                                              amplifies discrimination 10×
+
+Substrate has demonstrably:
+  - Spiking neurons (LIF, conductance-based)
+  - STDP plasticity (Bi-Poo)
+  - Multi-layer hierarchical structure (cortical-style)
+  - Top-down predictive feedback (L2→L1 plastic synapses)
+  - Class-discriminative L2 representations
+  - Generative top-down pathway (L2 activation → L1 spike patterns)
+  - E:I balance (excitatory + inhibitory populations)
+  - Conductance-based synapses (faster timescale)
+
+All via Brian2 library — equations-based SNN simulation, proper
+integration, no statistical pattern matching, no LLM/transformer.
+
+### Brain-criteria honest review
+
+| Criterion | Brian2 SNN proves | Open |
+|---|---|---|
+| Spiking + STDP | ✓ | scale to 10^9 neurons unknown |
+| Plastic self-organization | ✓ (synapses develop discrimination) | longer training horizons unknown |
+| Class-specific representations | ✓ | richer semantics unknown |
+| Hierarchical structure | ✓ (2 layers, 10× discrim amplification) | many-layer cortex unknown |
+| Top-down feedback | ✓ | learning via PE prediction unknown |
+| Generation | ✓ (L2→L1 directional) | symmetric bidirectional unknown |
+| Reward (agency) | NULL BET-067 | sophisticated R-STDP needed |
+| Closed-loop sensorimotor | not tested | Stufe 6 candidate |
+
+### Phase A proof essence
+
+Pre-LLM brain-faithful substrate CAN learn class-discriminative
+representations in single-iteration budget IF using proper library
+(Brian2). 100-200 neurons, ~minutes-of-audio training, achieves
+98% binary / 83% hierarchical / partial generation.
+
+That's the proof that the brain-style direction is gangbar. Skalierung
+(Phase B: $30-50M, 12 months, 10^7-10^9 neurons, embodied) is the
+follow-up that could conceivably reach child-level cognition.
