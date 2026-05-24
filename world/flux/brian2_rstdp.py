@@ -98,23 +98,23 @@ def train_and_test(train_dict, test_dict, encoder_cfg, n_train_per_class, n_test
     w : 1
     dApre/dt = -Apre / taupre : 1 (event-driven)
     dApost/dt = -Apost / taupost : 1 (event-driven)
-    de/dt = -e / tau_e_elig : 1 (clock-driven)
+    delig/dt = -elig / tau_elig : 1 (clock-driven)
     '''
     on_pre_rstdp = '''
     ge_post += w
     Apre += dApre_val
-    e += Apost
+    elig += Apost
     '''
     on_post_rstdp = '''
     Apost += dApost_val
-    e += Apre
+    elig += Apre
     '''
     syn_hid_ro = Synapses(hidden, readout, model=rstdp_eqs,
                           on_pre=on_pre_rstdp, on_post=on_post_rstdp,
                           namespace={'taupre': 20 * ms, 'taupost': 20 * ms,
                                      'dApre_val': 0.01, 'dApost_val': -0.005,
-                                     'tau_e_elig': 1000 * ms},
-                          method='exact')
+                                     'tau_elig': 1000 * ms},
+                          method='euler')
     syn_hid_ro.connect(True)  # all-to-all
     syn_hid_ro.w = rng.uniform(0.3, 0.7, len(syn_hid_ro))
 
@@ -149,7 +149,7 @@ def train_and_test(train_dict, test_dict, encoder_cfg, n_train_per_class, n_test
             # Reward modulates eligibility-based weight update
             reward_value = 1.0 if correct else -0.5
             # Manually apply: w += reward * eligibility (clamped)
-            syn_hid_ro.w = np.clip(np.array(syn_hid_ro.w) + reward_value * 0.005 * np.array(syn_hid_ro.e),
+            syn_hid_ro.w = np.clip(np.array(syn_hid_ro.w) + reward_value * 0.005 * np.array(syn_hid_ro.elig),
                                     0, 2.0)
 
     # Test (no reward)

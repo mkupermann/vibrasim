@@ -2739,3 +2739,34 @@ Multi-day brain-faithful research can build these in. Single-iteration
 budget cleared FIRST level.
 
 ### Iteration 65 of session: 1st brain-faithful PASS (per substance)
+
+
+## 2026-05-24 — Pipeline stagnation auto-STOP (supervisor liveness check)
+
+- **Trigger**: 3 consecutive supervisor ticks (1.5 h) without observable progress.
+- **Last signal**: origin/main HEAD 73db5d6b788d, terminal items 33.
+- **STOP marker set**: ~/.eqmod/autopilot/STOP — autopilot will not
+  fire until this file is removed.
+- **Mail sent**: EQMOD PIPELINE STAGNATION — autopilot paused
+
+
+## 2026-05-24 17:35 — BET-067 R-STDP credit-assignment imbalance
+
+Brian2 R-STDP fixed (`elig` instead of `e`), runs cleanly. Result:
+  acc_en: 77% (above chance, learning happens)
+  acc_wn: 10% (way below — bias toward class 0)
+  balanced: 43%
+
+R-STDP credit assignment with single-reward-pulse imbalanced: positive
+reward strengthens 200 synapses to readout[0] equally, can't selectively
+strengthen "correct" pathway. Known computational-neuroscience challenge.
+
+Sophisticated R-STDP (Frémaux & Gerstner 2016 review) uses:
+  - Trace-based eligibility per synapse pathway
+  - Critic-actor architecture
+  - Continuous reward shaping
+None implemented in single-iteration budget.
+
+Per Phase-A-Proof: skip Stufe 5 detailed R-STDP. Move to Stufe 7
+hierarchical multi-layer SNN — closer to cortical structure, more
+substantive proof-of-concept for the multi-year programme.
