@@ -46,6 +46,21 @@ class DaemonConfig:
     fft_bands: int = 8
 
 
+def _find_latest_checkpoint(ckpt_dir):
+    """Return loaded checkpoint state dict or None if no checkpoint exists."""
+    if not ckpt_dir or not Path(ckpt_dir).exists():
+        return None
+    ckpts = sorted(Path(ckpt_dir).glob("checkpoint_*.pkl"),
+                   key=lambda p: p.stat().st_mtime)
+    if not ckpts:
+        return None
+    from world.flux.brian2_checkpoint import load_checkpoint
+    try:
+        return load_checkpoint(ckpts[-1])
+    except Exception:
+        return None
+
+
 def _send_telegram(notify_path, msg):
     if not notify_path or not Path(notify_path).exists():
         return
@@ -150,10 +165,23 @@ def run_long_training(daemon_cfg: DaemonConfig):
     stdp_ns_rec = {'taupre': 20*ms, 'taupost': 20*ms,
                    'dApre_val': 0.005, 'dApost_val': -0.006, 'wmax': 0.3}
 
-    def plastic(src, tgt, p, w_lo, w_hi, ns):
+    # Resume capability: check for newest checkpoint, load if present.
+    # Loaded indices override random connectivity for exact restoration.
+    resume_state = _find_latest_checkpoint(daemon_cfg.checkpoint_dir)
+    if resume_state is not None:
+        _send_telegram(daemon_cfg.notify_config_path,
+                       f"EQMOD daemon RESUMING from checkpoint at "
+                       f"h{resume_state['elapsed_seconds']/3600:.1f} | "
+                       f"chunks {resume_state['chunks_trained']}")
+
+    def plastic(src, tgt, p, w_lo, w_hi, ns, ckpt_key=None):
         s = Synapses(src, tgt, model=stdp_eqs, on_pre=on_pre, on_post=on_post,
                      namespace=ns)
-        s.connect(p=p)
+        if resume_state and ckpt_key and ckpt_key in resume_state:
+            sst = resume_state[ckpt_key]
+            s.connect(i=sst['i'].astype(int), j=sst['j'].astype(int))
+        else:
+            s.connect(p=p)
         s.w = f'rand() * {w_hi - w_lo} + {w_lo}'
         return s
 
@@ -169,15 +197,15 @@ def run_long_training(daemon_cfg: DaemonConfig):
         s.w = w
         return s
 
-    syn_in_L4 = plastic(input_group, L4_E, cfg.p_input, 0.5, 1.5, stdp_ns)
-    syn_L4_rec  = plastic(L4_E,  L4_E,  cfg.p_rec_EE, 0.02, 0.1, stdp_ns_rec)
-    syn_L23_rec = plastic(L23_E, L23_E, cfg.p_rec_EE, 0.02, 0.1, stdp_ns_rec)
-    syn_L5_rec  = plastic(L5_E,  L5_E,  cfg.p_rec_EE, 0.02, 0.1, stdp_ns_rec)
-    syn_L6_rec  = plastic(L6_E,  L6_E,  cfg.p_rec_EE, 0.02, 0.1, stdp_ns_rec)
-    syn_L4_L23 = plastic(L4_E,  L23_E, cfg.p_ff, 0.2, 0.5, stdp_ns)
-    syn_L23_L5 = plastic(L23_E, L5_E,  cfg.p_ff, 0.2, 0.5, stdp_ns)
-    syn_L5_L6  = plastic(L5_E,  L6_E,  cfg.p_ff, 0.2, 0.5, stdp_ns)
-    syn_L6_L4  = plastic(L6_E,  L4_E,  cfg.p_fb, 0.05, 0.2, stdp_ns)
+    syn_in_L4 = plastic(input_group, L4_E, cfg.p_input, 0.5, 1.5, stdp_ns, 'syn_in_L4')
+    syn_L4_rec  = plastic(L4_E,  L4_E,  cfg.p_rec_EE, 0.02, 0.1, stdp_ns_rec, 'syn_L4_rec')
+    syn_L23_rec = plastic(L23_E, L23_E, cfg.p_rec_EE, 0.02, 0.1, stdp_ns_rec, 'syn_L23_rec')
+    syn_L5_rec  = plastic(L5_E,  L5_E,  cfg.p_rec_EE, 0.02, 0.1, stdp_ns_rec, 'syn_L5_rec')
+    syn_L6_rec  = plastic(L6_E,  L6_E,  cfg.p_rec_EE, 0.02, 0.1, stdp_ns_rec, 'syn_L6_rec')
+    syn_L4_L23 = plastic(L4_E,  L23_E, cfg.p_ff, 0.2, 0.5, stdp_ns, 'syn_L4_L23')
+    syn_L23_L5 = plastic(L23_E, L5_E,  cfg.p_ff, 0.2, 0.5, stdp_ns, 'syn_L23_L5')
+    syn_L5_L6  = plastic(L5_E,  L6_E,  cfg.p_ff, 0.2, 0.5, stdp_ns, 'syn_L5_L6')
+    syn_L6_L4  = plastic(L6_E,  L4_E,  cfg.p_fb, 0.05, 0.2, stdp_ns, 'syn_L6_L4')
 
     syn_L4_EI  = stx(L4_E,  L4_I,  cfg.p_EI, 0.5)
     syn_L23_EI = stx(L23_E, L23_I, cfg.p_EI, 0.5)
@@ -187,6 +215,24 @@ def run_long_training(daemon_cfg: DaemonConfig):
     syn_L23_IE = stinh(L23_I, L23_E, cfg.p_IE, 1.0)
     syn_L5_IE  = stinh(L5_I,  L5_E,  cfg.p_IE, 1.0)
     syn_L6_IE  = stinh(L6_I,  L6_E,  cfg.p_IE, 1.0)
+
+    # Restore plastic-synapse weights + neuron states from checkpoint
+    if resume_state is not None:
+        from world.flux.brian2_checkpoint import (
+            restore_neuron_state, restore_synapse_state)
+        for name, grp in [('L4_E', L4_E), ('L23_E', L23_E),
+                          ('L5_E', L5_E), ('L6_E', L6_E)]:
+            if name in resume_state:
+                restore_neuron_state(grp, resume_state[name])
+        for name, syn in [('syn_in_L4', syn_in_L4),
+                          ('syn_L4_rec', syn_L4_rec),
+                          ('syn_L23_rec', syn_L23_rec),
+                          ('syn_L4_L23', syn_L4_L23),
+                          ('syn_L23_L5', syn_L23_L5),
+                          ('syn_L5_L6', syn_L5_L6),
+                          ('syn_L6_L4', syn_L6_L4)]:
+            if name in resume_state:
+                restore_synapse_state(syn, resume_state[name])
 
     # record=False keeps the spike-event buffer empty; mon.count still works
     mon_L4  = SpikeMonitor(L4_E,  record=False)
@@ -278,17 +324,23 @@ def run_long_training(daemon_cfg: DaemonConfig):
             'L5_kl':  kl(L5_p),  'L6_kl':  kl(L6_p),
         }
 
-    # Training loop
-    start_wall = time.time()
-    last_checkpoint_wall = start_wall
-    last_eval_wall = start_wall
-    last_telegram_wall = start_wall
-    chunks_trained = 0
+    # Training loop. On resume, offset start_wall by prior elapsed so that
+    # checkpoint/eval/telegram intervals fire correctly relative to total run.
+    resumed_elapsed = float(resume_state.get("elapsed_seconds", 0.0)) if resume_state else 0.0
+    resumed_chunks = int(resume_state.get("chunks_trained", 0)) if resume_state else 0
+    start_wall = time.time() - resumed_elapsed
+    last_checkpoint_wall = time.time()
+    last_eval_wall = time.time()
+    last_telegram_wall = time.time()
+    chunks_trained = resumed_chunks
     prev_spike_counts = [np.array(m.count).copy() for m in excit_monitors]
-    rng = np.random.default_rng(42)
+    rng = np.random.default_rng(42 + chunks_trained)
 
     pre_eval = _eval_substrate()
-    metrics_log.append({"t_seconds": 0, "kind": "pre_eval", **pre_eval})
+    metrics_log.append({"t_seconds": resumed_elapsed,
+                        "kind": "resume_eval" if resume_state else "pre_eval",
+                        "resumed_from_chunks": resumed_chunks if resume_state else 0,
+                        **pre_eval})
     if daemon_cfg.metrics_log_path:
         Path(daemon_cfg.metrics_log_path).write_text(json.dumps(metrics_log, indent=2))
 
