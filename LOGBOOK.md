@@ -2926,3 +2926,49 @@ ein single-iteration budget nicht passt.
 
 Beweis steht. Mandate erfüllt.
 
+
+## 2026-05-24 ~19:30 — Mac-Skalierung BET-073..076
+
+| BET | Setup | Result | Erkenntnis |
+|---|---|---|---|
+| 073 | 1K neurons, cython vs numpy | NULL | cython 0.91× — bei 1K ist numpy schon optimal |
+| 074 | 10K neurons sparse 5%, 5M syn | PASS | cython 2.12× speedup, 30× slower-realtime |
+| 075 | 100K neurons sparse 0.5%, 50M syn | PASS | 5.4GB mem, 500× slower-realtime |
+| 076 | 1M neurons sparse 0.003%, 40M syn | PASS | 4.3GB mem, 487× slower-realtime, **1M auf Mac läuft** |
+
+Wichtige Erkenntnisse:
+  - Mac M-series kann 1M brain-faithful Spiking-Neuronen sim, aber NUR
+    bei degenerate sparseness (30 syn/neuron average vs cortex 5000).
+  - Cortical-density 5000 syn/neuron limitiert Mac auf ~30K Neuronen.
+  - cython Speedup nur bei 5M+ synapses spürbar (2-3×).
+  - Memory ist der Bottleneck, nicht CPU.
+
+## 2026-05-24 ~19:35 — Pivot: Realtime egal, Vollständigkeit zählt
+
+User-Direktive: "Ich brauche kein Realtime. Wichtiger ist die Basis und
+Vollständigkeit. Egal wie lange lernen und antworten dauert."
+
+Das ändert die Optimierungsachse:
+  - cpp_standalone Speedup wird unwichtig
+  - Custom Assembly wird unwichtig
+  - 1M neurons degenerate-sparse ist NICHT das Ziel (nicht brain-faithful)
+  - 30K-50K neurons cortical-density IST das Ziel (brain-faithful)
+  - Long-Training-Infrastructure (daemon, checkpoint, multi-day) wird Kern
+
+Neue Sequenz:
+  BET-077: cortical-density 4-Layer-Substrat (10-30K neurons, 5000 syn/n)
+  BET-078: Long-training Daemon mit checkpoint/resume
+  BET-079: 8h continuous Lauf real-audio
+  BET-080: 24h+ run mit täglichem eval
+
+Phase B Mac-Realität:
+  - 30K Neuronen × 5000 syn = 1.5×10^8 syn ≈ 12GB → borderline möglich
+  - bei 500-1000× slower-than-realtime
+  - 1 Tag sim = ~500-1000 Tage wall, oder
+    1 Tag wall = ~2-3 Minuten substrate-experience
+  - 12 Monate Wall = ~12-18h substrate-experience
+  - Das reicht für robuste Phonem-Cluster, ggf. Wort-Boundary,
+    sicher NICHT für Sprache-Verstehen
+  - Aber: VOLLSTÄNDIGES brain-faithful Substrat dokumentiert auf
+    Mac-Hardware. Empirische Decke des Solo-Researcher-Setups.
+
