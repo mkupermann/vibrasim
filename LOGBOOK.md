@@ -2641,3 +2641,44 @@ We have eliminated many candidates. Remaining options need:
 The 14h until 23:00 will not produce a "brain-style alternative to
 LLM" — that's a multi-year research programme. But it can produce
 more elimination findings to constrain the search.
+
+
+## 2026-05-24 10:53 — BET-059 HDC PASSED 97% — first non-LLM-family substrate that works
+
+Hyperdimensional Computing (Kanerva 2009):
+  Substrate: 10000-dim binary vectors, bind/superpose operations
+  Bar: balanced 2-class accuracy > 0.7
+  Result:
+    accuracy EN: 94.6%
+    accuracy WN: 99.6%
+    balanced:    97.1%
+
+Substrate qualifies as "not LLM" per operator criterion:
+  - NO learned embeddings (basis vectors random fixed)
+  - NO gradient descent / backprop
+  - NO attention or transformer architecture
+  - NO spiking-rate dynamics
+
+Yet substantially works on real audio classification. Pre-LLM
+algebraic computing paradigm.
+
+### Honest hostile-reader
+
+HDC is BIO-INSPIRED (distributed representation, fault tolerance,
+compositional via algebra) but not BIO-FAITHFUL (brain doesn't use
+XOR-binding, no fixed bipolar basis, brain has plasticity).
+
+Per "not LLM" criterion: HDC qualifies clearly.
+Per "brain finds its own method" criterion: HDC has FIXED method
+(algebra), not self-developing. But the algebra itself is not
+gradient-based / not statistical-pattern-matching.
+
+### Next exploration
+
+If HDC works at simple discrimination, can it handle:
+  - sequence encoding via permutation (BET-060 candidate)
+  - compositional binding (multi-class as superposed bound concepts)
+  - cross-modal binding (audio + visual concepts)
+
+These would test HDC's strengths that LLM doesn't have:
+algebra-driven compositional reasoning.
