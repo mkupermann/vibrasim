@@ -3106,3 +3106,79 @@ Phase C trigger erfüllt. User-Direktive heute geschärft:
 Hardware-Upgrade-Deal: 3-10 Wörter brain-faithful Audio-Text-Binding
 auf Windows (64GB + GPU) → User stellt bessere Hardware bereit.
 Migration zu Windows abgeschlossen (USB-Transfer 2.4GB).
+
+---
+
+## 2026-05-25 ~19:30 — BET-081 FAIL (T81c): Audio-Cortex learns structure but not selectivity
+
+10K-neuron cortical substrate (8K E + 2K I, 4.27M synapses) trained
+4h wallclock on continuous unsegmented LibriVox audio (Pride & Prejudice
++ Walden, 32 Mel-band input, 100ms chunks). No labels, no pre-trained
+models, no segmentation.
+
+### Training metrics
+
+  h1   2,294 chunks  0.64 ch/s  L5 active 1.0
+  h2   4,914 chunks  0.73 ch/s  L5 active 1.0
+  h3   7,576 chunks  0.74 ch/s  L5 active 1.0
+  h4  10,272 chunks  0.71 ch/s  L5 active 1.0
+
+Total: 10,272 chunks = 17.1 min audio in 4h wallclock.
+
+### Bar verdicts
+
+  T81a Duration >= 4h wallclock:           4.00h    PASS
+  T81b L5 active >= 50%:                   100%     PASS
+  T81c >= 3 distinct clusters:             0/10     FAIL
+  T81d Silhouette > 0.05:                  0.898    PASS
+  T81e Negative control:                   not run  n/a
+
+**Verdict: FAIL by T81c.**
+
+### Post-hoc discriminating analysis (3 tests)
+
+**Test 1 — Trivial Baseline:** L5 k-means silhouette 0.898 vs raw Mel
+k-means 0.449. Substrate finds 2x stronger structure than FFT+Mel alone.
+Not a trivial feature extractor.
+
+**Test 2 — Temporal vs Content:** Mel-PC1 does not correlate with
+temporal position (r=0.015). L5 clusters reflect content, not time.
+
+**Test 3 — Weight Selectivity (Gini coefficient):**
+
+  syn_in   (Input->L4):  Gini 0.18  weakly differentiated
+  syn_4_23 (L4->L23):    Gini 0.26  moderate
+  syn_23_5 (L23->L5):    Gini 0.51  SELECTIVE (77.5% near-zero)
+  syn_5_6  (L5->L6):     Gini 1.00  DEAD (100% near-zero)
+  syn_6_4  (L6->L4):     Gini 1.00  DEAD (99.8% near-zero)
+  syn_4r   (L4 recurrent): Gini 0.06  homogeneous (saturated at wmax)
+  syn_23r  (L23 recurrent): Gini 0.02  homogeneous (saturated at wmax)
+
+### Root cause
+
+STDP differentiates the feedforward path (L23->L5 Gini 0.51) but the
+feedback loop (L5->L6->L4) collapses completely. Without top-down
+feedback, L5 neurons can only distinguish loud-vs-quiet (binary), not
+multiple acoustic motifs. The substrate compresses 500 probe chunks into
+2 groups (326+166) + 8 singletons — a binary energy detector, not a
+multi-class acoustic categorizer.
+
+### What this teaches
+
+1. STDP alone produces assemblies (silhouette 0.90) — confirmed
+2. Feedforward selectivity emerges (Gini 0.51) — confirmed
+3. Feedback pathway dies under standard STDP parameters — new finding
+4. 17 min audio is sufficient for binary discrimination but not
+   multi-class clustering — quantifies exposure requirement
+5. Substrate is NOT a trivial feature extractor (2x Mel baseline) —
+   the spiking dynamics add real structure
+
+### Next: BET-081b — stabilize feedback loop
+
+Hypothesis: feedback collapse is caused by asymmetric STDP depression
+(dApost=-0.012 > dApre=0.01) combined with low L5 firing rate reaching
+L6. Fix candidates:
+  a) Homeostatic plasticity on L5->L6 and L6->L4 synapses
+  b) Higher initial weights for feedback pathways
+  c) Separate STDP parameters for feedback (lower depression)
+  d) Minimum weight floor (w_min > 0) on feedback synapses
