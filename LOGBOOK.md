@@ -3043,3 +3043,21 @@ Weiter zu BET-078 Long-Training-Daemon auf dieser Basis. Saturation kann
 über lange Zeit-Skalen homöostatisch nachjustieren, sehe ich in real-time
 nicht.
 
+
+
+## 2026-05-24 — Pipeline stagnation auto-STOP (supervisor liveness check)
+
+- **Trigger**: 3 consecutive supervisor ticks (1.5 h) without observable progress.
+- **Last signal**: origin/main HEAD 06d1d92574c4, terminal items 33.
+- **STOP marker set**: ~/.eqmod/autopilot/STOP — autopilot will not
+  fire until this file is removed.
+- **Mail sent**: EQMOD PIPELINE STAGNATION — autopilot paused
+
+
+## 2026-05-25 — Pipeline stagnation auto-STOP (supervisor liveness check)
+
+- **Trigger**: 3 consecutive supervisor ticks (1.5 h) without observable progress.
+- **Last signal**: origin/main HEAD 0dc64d1db680, terminal items 33.
+- **STOP marker set**: ~/.eqmod/autopilot/STOP — autopilot will not
+  fire until this file is removed.
+- **Mail sent**: EQMOD PIPELINE STAGNATION — autopilot paused
