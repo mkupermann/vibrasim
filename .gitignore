@@ -65,3 +65,5 @@ snapshots/
 notify_config.json
 # Autopilot state directory artifacts that leak into the repo accidentally
 unsent_mail_*.txt
+eqmod_full.tar.gz
+autopilot_output.txt
