@@ -3182,3 +3182,125 @@ L6. Fix candidates:
   b) Higher initial weights for feedback pathways
   c) Separate STDP parameters for feedback (lower depression)
   d) Minimum weight floor (w_min > 0) on feedback synapses
+
+## 2026-05-25 20:16 — BET-081b START
+
+Hypothesis: Feedback collapse caused by STDP depression killing L5->L6->L4 weights. Fix: w_min=0.05 floor on feedback synapses prevents full collapse.
+
+
+## 2026-05-25 20:20 — BET-081b START
+
+Hypothesis: Feedback collapse caused by STDP depression killing L5->L6->L4 weights. Fix: w_min=0.05 floor on feedback synapses prevents full collapse.
+
+
+## 2026-05-25 20:21 — BET-081b START
+
+Hypothesis: Feedback collapse caused by STDP depression killing L5->L6->L4 weights. Fix: w_min=0.05 floor on feedback synapses prevents full collapse.
+
+
+## 2026-05-25 20:26 — BET-081b START
+
+Hypothesis: Feedback collapse caused by STDP depression killing L5->L6->L4 weights. Fix: w_min=0.05 floor on feedback synapses prevents full collapse.
+
+
+## 2026-05-25 20:27 — BET-081b START
+
+Hypothesis: Feedback collapse caused by STDP depression killing L5->L6->L4 weights. Fix: w_min=0.05 floor on feedback synapses prevents full collapse.
+
+
+## 2026-05-25 20:27 — BET-081b START
+
+Hypothesis: Feedback collapse caused by STDP depression killing L5->L6->L4 weights. Fix: w_min=0.05 floor on feedback synapses prevents full collapse.
+
+
+## 2026-05-25 20:28 — BET-081b START
+
+Hypothesis: Feedback collapse caused by STDP depression killing L5->L6->L4 weights. Fix: w_min=0.05 floor on feedback synapses prevents full collapse.
+
+
+## 2026-05-25 20:28 — BET-081b START
+
+Hypothesis: Feedback collapse caused by STDP depression killing L5->L6->L4 weights. Fix: w_min=0.05 floor on feedback synapses prevents full collapse.
+
+
+## 2026-05-25 20:28 — BET-081b START
+
+Hypothesis: Feedback collapse caused by STDP depression killing L5->L6->L4 weights. Fix: w_min=0.05 floor on feedback synapses prevents full collapse.
+
+
+## 2026-05-25 20:29 — BET-081b START
+
+Hypothesis: Feedback collapse caused by STDP depression killing L5->L6->L4 weights. Fix: w_min=0.05 floor on feedback synapses prevents full collapse.
+
+
+## 2026-05-25 20:30 — BET-081b START
+
+Hypothesis: Feedback collapse caused by STDP depression killing L5->L6->L4 weights. Fix: w_min=0.05 floor on feedback synapses prevents full collapse.
+
+
+## 2026-05-25 20:31 — BET-081b START
+
+Hypothesis: Feedback collapse caused by STDP depression killing L5->L6->L4 weights. Fix: w_min=0.05 floor on feedback synapses prevents full collapse.
+
+
+## 2026-05-25 20:32 — BET-081b START
+
+Hypothesis: Feedback collapse caused by STDP depression killing L5->L6->L4 weights. Fix: w_min=0.05 floor on feedback synapses prevents full collapse.
+
+
+## 2026-05-25 20:33 — BET-081b START
+
+Hypothesis: Feedback collapse caused by STDP depression killing L5->L6->L4 weights. Fix: w_min=0.05 floor on feedback synapses prevents full collapse.
+
+
+## 2026-05-25 20:34 — BET-081b START
+
+Hypothesis: Feedback collapse caused by STDP depression killing L5->L6->L4 weights. Fix: w_min=0.05 floor on feedback synapses prevents full collapse.
+
+
+## 2026-05-25 20:35 — BET-081b START
+
+Hypothesis: Feedback collapse caused by STDP depression killing L5->L6->L4 weights. Fix: w_min=0.05 floor on feedback synapses prevents full collapse.
+
+
+## 2026-05-25 20:35 — BET-081b START
+
+Hypothesis: Feedback collapse caused by STDP depression killing L5->L6->L4 weights. Fix: w_min=0.05 floor on feedback synapses prevents full collapse.
+
+
+## 2026-05-25 20:36 — BET-081b START
+
+Hypothesis: Feedback collapse caused by STDP depression killing L5->L6->L4 weights. Fix: w_min=0.05 floor on feedback synapses prevents full collapse.
+
+
+test entry
+
+## 2026-05-25 20:39 — BET-081b START
+
+Hypothesis: Feedback collapse caused by STDP depression killing L5->L6->L4 weights. Fix: w_min=0.05 floor on feedback synapses prevents full collapse.
+
+
+## 2026-05-25 20:41 — BET-081b START
+
+Hypothesis: Feedback collapse caused by STDP depression killing L5->L6->L4 weights. Fix: w_min=0.05 floor on feedback synapses prevents full collapse.
+
+
+## 2026-05-25 20:43 — BET-081b START
+
+Hypothesis: Feedback collapse caused by STDP depression killing L5->L6->L4 weights. Fix: w_min=0.05 floor on feedback synapses prevents full collapse.
+
+
+## 2026-05-25 20:46 — BET-081b START
+
+Hypothesis: Feedback collapse caused by STDP depression killing L5->L6->L4 weights. Fix: w_min=0.05 floor on feedback synapses prevents full collapse.
+
+
+## 2026-05-25 20:49 — BET-081b START
+
+Hypothesis: Feedback collapse caused by STDP depression killing L5->L6->L4 weights. Fix: w_min=0.05 floor on feedback synapses prevents full collapse.
+
+
+## 2026-05-25 20:52 — BET-081b START
+
+Hypothesis: Feedback collapse caused by STDP depression killing L5->L6->L4 weights. Fix: w_min=0.05 floor on feedback synapses prevents full collapse.
+

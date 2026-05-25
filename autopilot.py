@@ -182,18 +182,24 @@ def run_experiment(exp: Experiment) -> dict:
 
     start = time.time()
 
-    if exp.name == "BET-081b":
-        result = run_081b(exp, bet_dir)
-    elif exp.name == "BET-081c":
-        result = run_081c(exp, bet_dir)
-    elif exp.name == "BET-081d":
-        result = run_081d(exp, bet_dir)
-    elif exp.name == "BET-082":
-        result = run_082(exp, bet_dir)
-    elif exp.name == "BET-083":
-        result = run_083(exp, bet_dir)
+    # Run experiment as subprocess to avoid Brian2 import hang
+    # in long-running Python process
+    result_path = bet_dir / "result.json"
+    runner = REPO / "autopilot_runner.py"
+    env = os.environ.copy()
+    env['BRIAN2_BACKEND'] = env.get('BRIAN2_BACKEND', 'numpy')
+    env['PYTHONUNBUFFERED'] = '1'
+    proc = subprocess.run(
+        [str(REPO / ".venv" / "Scripts" / "python.exe"), "-u", str(runner),
+         exp.name, str(bet_dir)],
+        cwd=str(REPO), env=env,
+        timeout=int(exp.time_ceiling_h * 3600),
+        capture_output=False,
+    )
+    if result_path.exists():
+        result = json.loads(result_path.read_text())
     else:
-        result = {"error": f"unknown experiment {exp.name}"}
+        result = {"verdict": "CRASH", "returncode": proc.returncode}
 
     elapsed_h = (time.time() - start) / 3600
     result["elapsed_h"] = elapsed_h
@@ -266,13 +272,18 @@ def evaluate_081x(result: dict, exp: Experiment) -> str:
 
 def run_081b(exp: Experiment, bet_dir: Path) -> dict:
     """BET-081b: w_min floor on feedback synapses."""
+    print("  run_081b: setting env...", flush=True)
     os.environ['BRIAN2_BACKEND'] = os.environ.get('BRIAN2_BACKEND', 'numpy')
     sys.path.insert(0, str(REPO))
 
+    print("  run_081b: importing brian2_audio_cortex...", flush=True)
     from world.flux.brian2_audio_cortex import (
         AudioCortexConfig, AudioDaemonConfig, build_network, compute_mel_chunks,
-        _load_audio, _send_telegram, run_probe)
+        run_probe)
+    print("  run_081b: importing brian2...", flush=True)
     from brian2 import Hz, ms, mV, defaultclock, prefs
+    print("  run_081b: importing encoder...", flush=True)
+    from agent.flux.encoder_free_training import load_corpus_waveform_from_manifest
     import logging
     logging.getLogger('brian2').setLevel(logging.ERROR)
 
@@ -280,8 +291,9 @@ def run_081b(exp: Experiment, bet_dir: Path) -> dict:
     defaultclock.dt = 1.0 * ms
 
     cc = AudioCortexConfig()
-    print("Loading audio...")
-    audio = _load_audio(MANIFEST, cc.sample_rate_hz)
+    print("  run_081b: loading audio...", flush=True)
+    audio = load_corpus_waveform_from_manifest(
+        MANIFEST, sample_rate_hz=cc.sample_rate_hz, corpus_rms_target=0.25).astype(np.float32)
     mel_chunks = compute_mel_chunks(audio, cc)
     n_mel = len(mel_chunks)
 

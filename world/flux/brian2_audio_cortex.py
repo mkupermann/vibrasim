@@ -22,7 +22,6 @@ from typing import Optional
 import numpy as np
 
 warnings.filterwarnings('ignore')
-logging.getLogger('brian2').setLevel(logging.ERROR)
 
 
 @dataclass
