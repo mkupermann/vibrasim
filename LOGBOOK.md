@@ -3356,3 +3356,8 @@ Verdict: **UNKNOWN**
 
 All experiments done or 3x NULL on feedback.
 
+
+## 2026-05-26 05:30 — BET-081c START
+
+Hypothesis: Feedback needs lower STDP depression to survive. dApost=-0.004 (vs -0.012) on L5->L6 and L6->L4.
+
