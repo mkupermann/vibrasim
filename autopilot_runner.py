@@ -158,8 +158,142 @@ def run_081b(bet_dir: Path, feedback_w_min: float = 0.05) -> dict:
 
 
 def run_081c(bet_dir: Path) -> dict:
-    """081c: separate STDP params. TODO: implement when 081b is done."""
-    return {"verdict": "NOT_IMPLEMENTED"}
+    """081c: separate STDP params for feedback (lower depression)."""
+    from brian2 import (NeuronGroup, PoissonGroup, Synapses, SpikeMonitor,
+                        Network, Hz, ms, mV, defaultclock, prefs)
+    from world.flux.brian2_audio_cortex import (
+        AudioCortexConfig, AudioDaemonConfig, compute_mel_chunks, run_probe)
+    from agent.flux.encoder_free_training import load_corpus_waveform_from_manifest
+
+    prefs.codegen.target = os.environ.get('BRIAN2_BACKEND', 'numpy')
+    defaultclock.dt = 1.0 * ms
+
+    cc = AudioCortexConfig()
+    print("Loading audio...", flush=True)
+    audio = load_corpus_waveform_from_manifest(
+        MANIFEST, sample_rate_hz=cc.sample_rate_hz,
+        corpus_rms_target=0.25).astype(np.float32)
+    mel_chunks = compute_mel_chunks(audio, cc)
+    n_mel = len(mel_chunks)
+
+    # Build network with CUSTOM feedback STDP
+    ns = {'tau_m': 20*ms, 'tau_e': 5*ms, 'tau_i': 10*ms,
+          'v_rest': -70*mV, 'v_reset': -75*mV}
+
+    def make_grp(n):
+        g = NeuronGroup(n, '''
+            dv/dt = (-(v - v_rest) + ge*(0*mV - v) + gi*(-80*mV - v)) / tau_m : volt (unless refractory)
+            dge/dt = -ge / tau_e : 1
+            dgi/dt = -gi / tau_i : 1
+            v_thresh : volt''',
+            threshold='v > v_thresh', reset='v = v_reset',
+            refractory=5*ms, method='euler', namespace=ns)
+        g.v = -70*mV; g.v_thresh = -54*mV
+        return g
+
+    inp = PoissonGroup(cc.n_input, rates=0*Hz)
+    L4_E = make_grp(cc.n_L4_E); L4_I = make_grp(cc.n_L4_I)
+    L23_E = make_grp(cc.n_L23_E); L23_I = make_grp(cc.n_L23_I)
+    L5_E = make_grp(cc.n_L5_E); L5_I = make_grp(cc.n_L5_I)
+    L6_E = make_grp(cc.n_L6_E); L6_I = make_grp(cc.n_L6_I)
+
+    stdp_eqs = 'w : 1\ndApre/dt = -Apre / taupre : 1 (event-driven)\ndApost/dt = -Apost / taupost : 1 (event-driven)'
+    on_pre = 'ge += w\nApre += dApre_val\nw = clip(w + Apost, 0, wmax)'
+    on_post = 'Apost += dApost_val\nw = clip(w + Apre, 0, wmax)'
+
+    sns = {'taupre': 20*ms, 'taupost': 20*ms, 'dApre_val': 0.01, 'dApost_val': -0.012, 'wmax': 2.0}
+    sns_rec = {'taupre': 20*ms, 'taupost': 20*ms, 'dApre_val': 0.005, 'dApost_val': -0.006, 'wmax': 0.3}
+    # KEY: lower depression on feedback
+    sns_fb = {'taupre': 20*ms, 'taupost': 20*ms, 'dApre_val': 0.008, 'dApost_val': -0.004, 'wmax': 2.0}
+
+    def plas(src, tgt, p, wl, wh, ns_):
+        s = Synapses(src, tgt, model=stdp_eqs, on_pre=on_pre, on_post=on_post, namespace=ns_)
+        s.connect(p=p); s.w = f'rand() * {wh-wl} + {wl}'; return s
+    def sexc(src, tgt, p, wt):
+        s = Synapses(src, tgt, 'w_s:1', on_pre='ge_post += w_s'); s.connect(p=p); s.w_s = wt; return s
+    def sinh_(src, tgt, p, wt):
+        s = Synapses(src, tgt, 'w_s:1', on_pre='gi_post += w_s'); s.connect(p=p); s.w_s = wt; return s
+
+    print("Building network...", flush=True)
+    syn_in = plas(inp, L4_E, cc.p_input, 0.5, 1.5, sns)
+    syn_4r = plas(L4_E, L4_E, cc.p_rec_EE, 0.02, 0.1, sns_rec)
+    syn_23r = plas(L23_E, L23_E, cc.p_rec_EE, 0.02, 0.1, sns_rec)
+    syn_5r = plas(L5_E, L5_E, cc.p_rec_EE, 0.02, 0.1, sns_rec)
+    syn_6r = plas(L6_E, L6_E, cc.p_rec_EE, 0.02, 0.1, sns_rec)
+    syn_4_23 = plas(L4_E, L23_E, cc.p_ff, 0.2, 0.5, sns)
+    syn_23_5 = plas(L23_E, L5_E, cc.p_ff, 0.2, 0.5, sns)
+    syn_5_6 = plas(L5_E, L6_E, cc.p_ff, 0.2, 0.5, sns_fb)
+    syn_6_4 = plas(L6_E, L4_E, cc.p_fb, 0.1, 0.3, sns_fb)
+
+    ei_syn = []
+    for src, tgt in [(L4_E,L4_I),(L23_E,L23_I),(L5_E,L5_I),(L6_E,L6_I)]:
+        ei_syn.append(sexc(src, tgt, cc.p_EI, 0.5))
+    for src, tgt in [(L4_I,L4_E),(L23_I,L23_E),(L5_I,L5_E),(L6_I,L6_E)]:
+        ei_syn.append(sinh_(src, tgt, cc.p_IE, 1.0))
+
+    mon_L5 = SpikeMonitor(L5_E, record=False)
+    net = Network(inp, L4_E, L4_I, L23_E, L23_I, L5_E, L5_I, L6_E, L6_I,
+                  syn_in, syn_4r, syn_23r, syn_5r, syn_6r,
+                  syn_4_23, syn_23_5, syn_5_6, syn_6_4,
+                  *ei_syn, mon_L5)
+
+    n_syn = sum(int(len(s)) for s in [syn_in, syn_4r, syn_23r, syn_5r, syn_6r,
+                                       syn_4_23, syn_23_5, syn_5_6, syn_6_4] + ei_syn)
+    print(f"Network: {n_syn:,} synapses", flush=True)
+
+    chunk_dur = cc.chunk_duration_ms * ms
+    run_duration = 4 * 3600
+    start_wall = time.time()
+    last_eval = start_wall
+    chunks_trained = 0
+    audio_pos = 0
+    metrics_log = []
+
+    print("Training 4h...", flush=True)
+    while time.time() - start_wall < run_duration:
+        if audio_pos >= n_mel: audio_pos = 0
+        inp.rates = (mel_chunks[audio_pos] * cc.input_rate_max_hz) * Hz
+        audio_pos += 1
+        net.run(chunk_dur)
+        chunks_trained += 1
+
+        now = time.time()
+        if now - last_eval >= 3600:
+            elapsed = now - start_wall
+            l5_active = float(np.mean(np.array(mon_L5.count) > 0))
+            metrics_log.append({"t": elapsed, "ch": chunks_trained, "l5": l5_active})
+            (bet_dir / "metrics.json").write_text(json.dumps(metrics_log, indent=2))
+            print(f"  h{elapsed/3600:.1f} | {chunks_trained} ch | L5 {l5_active:.3f}", flush=True)
+            last_eval = now
+
+    train_seconds = time.time() - start_wall
+    print(f"Training done: {chunks_trained} chunks in {train_seconds/3600:.2f}h", flush=True)
+
+    print("Probing...", flush=True)
+    cfg = AudioDaemonConfig(cortex=cc, eval_n_probe_chunks=500, audio_manifest_path=MANIFEST)
+    probe = run_probe(net, inp, mon_L5, mel_chunks, cc, cfg)
+
+    weight_analysis = {}
+    for name, syn in [('syn_in',syn_in),('syn_4_23',syn_4_23),('syn_23_5',syn_23_5),
+                       ('syn_5_6',syn_5_6),('syn_6_4',syn_6_4)]:
+        w = np.array(syn.w[:])
+        weight_analysis[name] = {"gini": gini(w), "mean": float(w.mean()), "n": len(w)}
+
+    result = {"train_seconds": train_seconds, "chunks_trained": chunks_trained,
+              "probe": probe, "weight_analysis": weight_analysis, "metrics_log": metrics_log}
+
+    fb_g = weight_analysis.get("syn_5_6", {}).get("gini", 1.0)
+    distinct = probe.get("n_distinct_clusters", 0)
+    sil = probe.get("silhouette_score", 0)
+    l5_act = probe.get("L5_active_fraction", 0)
+    verdicts = {"duration": train_seconds >= 4*3600*0.95, "l5_active": l5_act >= 0.5,
+                "distinct": distinct >= 3, "silhouette": sil > 0.05, "feedback_alive": fb_g < 0.95}
+    result["bar_verdicts"] = verdicts
+    result["verdict"] = "PASS" if all(verdicts.values()) else "FAIL"
+
+    print(f"Verdict: {result['verdict']}", flush=True)
+    print(f"  L5={l5_act:.3f}, sil={sil:.4f}, distinct={distinct}, fb_gini={fb_g:.3f}", flush=True)
+    return result
 
 
 def run_081d(bet_dir: Path) -> dict:
