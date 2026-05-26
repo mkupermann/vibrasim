@@ -28,7 +28,8 @@ def gini(arr):
     return float((2 * np.sum(idx * arr) / (n * np.sum(arr))) - (n + 1) / n)
 
 
-def run_081b(bet_dir: Path, feedback_w_min: float = 0.05) -> dict:
+def run_081b(bet_dir: Path, feedback_w_min: float = 0.05,
+             run_hours: float = 4, probe_chunks: int = 500):
     from brian2 import Hz, ms, mV, defaultclock, prefs
     from world.flux.brian2_audio_cortex import (
         AudioCortexConfig, AudioDaemonConfig, build_network,
@@ -67,7 +68,7 @@ def run_081b(bet_dir: Path, feedback_w_min: float = 0.05) -> dict:
 
     chunk_dur = cc.chunk_duration_ms * ms
     target_spk = cc.homeostasis_target_rate_hz * (cc.chunk_duration_ms / 1000.0)
-    run_duration = 4 * 3600
+    run_duration = run_hours * 3600
     metrics_log = []
     start_wall = time.time()
     last_eval = start_wall
@@ -120,7 +121,7 @@ def run_081b(bet_dir: Path, feedback_w_min: float = 0.05) -> dict:
 
     # Probe
     print("Probing...", flush=True)
-    cfg = AudioDaemonConfig(cortex=cc, eval_n_probe_chunks=500, audio_manifest_path=MANIFEST)
+    cfg = AudioDaemonConfig(cortex=cc, eval_n_probe_chunks=probe_chunks, audio_manifest_path=MANIFEST)
     probe = run_probe(net, inp, mon_L5, mel_chunks, cc, cfg)
 
     # Weight analysis
@@ -142,7 +143,7 @@ def run_081b(bet_dir: Path, feedback_w_min: float = 0.05) -> dict:
     l5_act = probe.get("L5_active_fraction", 0)
 
     verdicts = {
-        "duration": train_seconds >= 4 * 3600 * 0.95,
+        "duration": train_seconds >= run_hours * 3600 * 0.95,
         "l5_active": l5_act >= 0.50,
         "distinct": distinct >= 3,
         "silhouette": sil > 0.05,
@@ -310,21 +311,156 @@ def _save_json(path, data):
     Path(path).write_text(json.dumps(data, indent=2, default=_c))
 
 
+def run_082(bet_dir: Path) -> dict:
+    """BET-082: 12h extended run with 081b feedback fix (w_min=0.05)."""
+    return run_081b(bet_dir, feedback_w_min=0.05, run_hours=12, probe_chunks=1000)
+
+
+def run_083(bet_dir: Path) -> dict:
+    """BET-083: scaling law sweep at 2K/5K/10K/20K neurons, 2h each."""
+    from brian2 import Hz, ms, mV, defaultclock, prefs
+    from world.flux.brian2_audio_cortex import (
+        AudioCortexConfig, AudioDaemonConfig, build_network,
+        compute_mel_chunks, run_probe)
+    from agent.flux.encoder_free_training import load_corpus_waveform_from_manifest
+
+    prefs.codegen.target = os.environ.get('BRIAN2_BACKEND', 'numpy')
+    defaultclock.dt = 1.0 * ms
+
+    cc_base = AudioCortexConfig()
+    print("Loading audio...", flush=True)
+    audio = load_corpus_waveform_from_manifest(
+        MANIFEST, sample_rate_hz=cc_base.sample_rate_hz,
+        corpus_rms_target=0.25).astype(np.float32)
+    mel_chunks = compute_mel_chunks(audio, cc_base)
+    n_mel = len(mel_chunks)
+
+    scales = [
+        {"label": "2K", "factor": 0.25},
+        {"label": "5K", "factor": 0.625},
+        {"label": "10K", "factor": 1.0},
+        {"label": "20K", "factor": 2.0},
+    ]
+    sweep_results = []
+
+    for sc in scales:
+        f = sc["factor"]
+        cc = AudioCortexConfig(
+            n_L4_E=int(2000*f), n_L23_E=int(2500*f), n_L5_E=int(2000*f), n_L6_E=int(1500*f),
+            n_L4_I=int(500*f), n_L23_I=int(625*f), n_L5_I=int(500*f), n_L6_I=int(375*f),
+        )
+        print(f"\n--- {sc['label']} neurons (factor {f}) ---", flush=True)
+
+        from brian2 import clear_cache
+        try: clear_cache('cython')
+        except: pass
+
+        net, comp = build_network(cc)
+        inp = comp['input']
+        mon_L5 = comp['mon_L5']
+
+        # Apply 081b feedback fix
+        for syn_name in ['syn_5_6', 'syn_6_4']:
+            syn = comp['plastic_syn'][syn_name]
+            w = np.array(syn.w[:])
+            w[w < 0.05] = 0.05
+            syn.w = w
+
+        chunk_dur = cc.chunk_duration_ms * ms
+        run_duration = 2 * 3600
+        start_wall = time.time()
+        chunks_trained = 0
+        audio_pos = 0
+
+        print(f"Training 2h...", flush=True)
+        while time.time() - start_wall < run_duration:
+            if audio_pos >= n_mel: audio_pos = 0
+            inp.rates = (mel_chunks[audio_pos] * cc.input_rate_max_hz) * Hz
+            audio_pos += 1
+            net.run(chunk_dur)
+            chunks_trained += 1
+
+            if chunks_trained % 100 == 0:
+                for syn_name in ['syn_5_6', 'syn_6_4']:
+                    syn = comp['plastic_syn'][syn_name]
+                    w = np.array(syn.w[:])
+                    w[w < 0.05] = 0.05
+                    syn.w = w
+
+        train_s = time.time() - start_wall
+        print(f"  {chunks_trained} chunks in {train_s/3600:.2f}h", flush=True)
+
+        cfg = AudioDaemonConfig(cortex=cc, eval_n_probe_chunks=200, audio_manifest_path=MANIFEST)
+        probe = run_probe(net, inp, mon_L5, mel_chunks, cc, cfg)
+
+        n_E = cc.n_L4_E + cc.n_L23_E + cc.n_L5_E + cc.n_L6_E
+        entry = {
+            "label": sc["label"], "n_E": n_E, "chunks": chunks_trained,
+            "silhouette": probe.get("silhouette_score", 0),
+            "distinct": probe.get("n_distinct_clusters", 0),
+            "L5_active": probe.get("L5_active_fraction", 0),
+        }
+        sweep_results.append(entry)
+        print(f"  sil={entry['silhouette']:.4f}, distinct={entry['distinct']}, L5={entry['L5_active']:.3f}", flush=True)
+
+        # Save intermediate
+        _save_json(bet_dir / "sweep_results.json", sweep_results)
+
+        # Free memory
+        del net, comp, inp, mon_L5
+
+    # Fit power law: silhouette vs n_E
+    from scipy.optimize import curve_fit
+    ns = np.array([r["n_E"] for r in sweep_results], dtype=float)
+    sils = np.array([r["silhouette"] for r in sweep_results], dtype=float)
+
+    fit_result = {}
+    try:
+        def power_law(x, a, b): return a * x**b
+        popt, _ = curve_fit(power_law, ns, sils, p0=[0.01, 0.5], maxfev=5000)
+        predictions = power_law(ns, *popt)
+        ss_res = np.sum((sils - predictions)**2)
+        ss_tot = np.sum((sils - sils.mean())**2)
+        r2 = 1 - ss_res / ss_tot if ss_tot > 0 else 0
+        fit_result = {"a": float(popt[0]), "b": float(popt[1]), "R2": float(r2)}
+        print(f"\nPower law: sil = {popt[0]:.4f} * n^{popt[1]:.4f}, R2={r2:.4f}", flush=True)
+    except Exception as e:
+        fit_result = {"error": str(e)}
+        print(f"\nPower law fit failed: {e}", flush=True)
+
+    verdicts = {
+        "all_complete": len(sweep_results) == 4,
+        "monotonic_or_saturate": all(sweep_results[i]["silhouette"] <= sweep_results[i+1]["silhouette"] + 0.05
+                                     for i in range(len(sweep_results)-1)),
+        "power_law_R2": fit_result.get("R2", 0) > 0.8 if "R2" in fit_result else False,
+    }
+
+    result = {
+        "sweep": sweep_results, "fit": fit_result,
+        "bar_verdicts": verdicts,
+        "verdict": "PASS" if all(verdicts.values()) else "FAIL",
+        "train_seconds": sum(r.get("chunks", 0) * 0.1 for r in sweep_results),
+        "chunks_trained": sum(r.get("chunks", 0) for r in sweep_results),
+        "probe": sweep_results[-1] if sweep_results else {},
+        "weight_analysis": {},
+    }
+    return result
+
+
 if __name__ == "__main__":
     name = sys.argv[1]
     bet_dir = Path(sys.argv[2])
     bet_dir.mkdir(parents=True, exist_ok=True)
-
     print(f"Runner: {name} -> {bet_dir}", flush=True)
 
-    if name == "BET-081b":
-        result = run_081b(bet_dir)
-    elif name == "BET-081c":
-        result = run_081c(bet_dir)
-    elif name == "BET-081d":
-        result = run_081d(bet_dir)
-    else:
-        result = {"verdict": "UNKNOWN", "error": f"unknown experiment {name}"}
-
+    runners = {
+        "BET-081b": lambda: run_081b(bet_dir),
+        "BET-081c": lambda: run_081c(bet_dir),
+        "BET-081d": lambda: run_081d(bet_dir),
+        "BET-082": lambda: run_082(bet_dir),
+        "BET-083": lambda: run_083(bet_dir),
+    }
+    result = runners.get(name, lambda: {"verdict": "UNKNOWN", "error": f"unknown {name}"})()
     _save_json(bet_dir / "result.json", result)
     print(f"Result saved to {bet_dir / 'result.json'}", flush=True)
+
