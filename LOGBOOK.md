@@ -3316,3 +3316,8 @@ Feedback Gini: 0.7319660888604826
 
 Verdict: **FAIL**
 
+
+## 2026-05-26 03:23 — BET-082 START
+
+Hypothesis: With feedback alive, 12h continuous training provides enough audio exposure for multi-class acoustic clustering (>= 5 distinct).
+
