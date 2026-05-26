@@ -3378,3 +3378,15 @@ Verdict: **FAIL**
 
 Hypothesis: Homeostatic plasticity on feedback synapses: if mean weight drops below threshold, potentiation is boosted. Biological: synaptic scaling.
 
+
+## 2026-05-26 14:45 — BET-081d FAIL
+
+Elapsed: 4.59h wallclock
+Chunks: 3452
+L5 active: 1.0
+Silhouette: 0.20081283152103424
+Distinct clusters: 0
+Feedback Gini: 0.6052323627085892
+
+Verdict: **FAIL**
+
