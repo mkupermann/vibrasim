@@ -3304,3 +3304,15 @@ Hypothesis: Feedback collapse caused by STDP depression killing L5->L6->L4 weigh
 
 Hypothesis: Feedback collapse caused by STDP depression killing L5->L6->L4 weights. Fix: w_min=0.05 floor on feedback synapses prevents full collapse.
 
+
+## 2026-05-26 03:22 — BET-081b FAIL
+
+Elapsed: 4.59h wallclock
+Chunks: 3326
+L5 active: 1.0
+Silhouette: 0.19761347770690918
+Distinct clusters: 0
+Feedback Gini: 0.7319660888604826
+
+Verdict: **FAIL**
+
