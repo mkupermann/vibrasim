@@ -592,48 +592,22 @@ def _find_best_081_fix() -> Optional[str]:
 
 def decide_next() -> Optional[Experiment]:
     """Decide next experiment based on completed results."""
-    # Rule 1: if no 081b result, run 081b
-    if not (BET_DIR / "BET-081b" / "result.json").exists():
-        return BET_081B
+    # Rule 1: run all 081 variants that haven't been tried yet
+    for exp in [BET_081B, BET_081C, BET_081D]:
+        if not (BET_DIR / exp.name / "result.json").exists():
+            return exp
 
-    r081b = json.loads((BET_DIR / "BET-081b" / "result.json").read_text())
-
-    # Rule 2: if 081b feedback alive → check distinct clusters
-    fb_gini = r081b.get("weight_analysis", {}).get("syn_5_6", {}).get("gini", 1.0)
-    if fb_gini >= 0.95:
-        # Feedback still dead → try 081c
-        if not (BET_DIR / "BET-081c" / "result.json").exists():
-            return BET_081C
-        r081c = json.loads((BET_DIR / "BET-081c" / "result.json").read_text())
-        fb_gini_c = r081c.get("weight_analysis", {}).get("syn_5_6", {}).get("gini", 1.0)
-        if fb_gini_c >= 0.95:
-            # Still dead → try 081d
-            if not (BET_DIR / "BET-081d" / "result.json").exists():
-                return BET_081D
-            # All three failed → finding: STDP alone cannot maintain feedback
-            return None  # stop this line
-        # 081c feedback alive → proceed
-    # Feedback alive in some variant
-
-    # Rule 3: check if any 081x got >= 3 distinct clusters
+    # Rule 2: all 081 variants done — pick best and go to 082
     best = _find_best_081_fix()
-    if best:
-        best_r = json.loads((BET_DIR / best / "result.json").read_text())
-        if best_r.get("probe", {}).get("n_distinct_clusters", 0) >= 3:
-            # PASS → go to 082
-            if not (BET_DIR / "BET-082" / "result.json").exists():
-                return BET_082
-
-    # Rule 4: if feedback alive but <3 clusters in all variants → go to 082 (more time)
     if best and not (BET_DIR / "BET-082" / "result.json").exists():
         return BET_082
 
-    # Rule 5: after 082 → scaling law
+    # Rule 3: after 082 → scaling law
     if (BET_DIR / "BET-082" / "result.json").exists():
         if not (BET_DIR / "BET-083" / "result.json").exists():
             return BET_083
 
-    return None  # all done or stuck
+    return None  # all done
 
 
 # ============================================================
