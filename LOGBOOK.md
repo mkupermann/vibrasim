@@ -3361,3 +3361,15 @@ All experiments done or 3x NULL on feedback.
 
 Hypothesis: Feedback needs lower STDP depression to survive. dApost=-0.004 (vs -0.012) on L5->L6 and L6->L4.
 
+
+## 2026-05-26 10:09 — BET-081c FAIL
+
+Elapsed: 4.65h wallclock
+Chunks: 3145
+L5 active: 1.0
+Silhouette: 0.026296695694327354
+Distinct clusters: 0
+Feedback Gini: 0.0
+
+Verdict: **FAIL**
+
