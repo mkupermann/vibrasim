@@ -3373,3 +3373,8 @@ Feedback Gini: 0.0
 
 Verdict: **FAIL**
 
+
+## 2026-05-26 10:10 — BET-081d START
+
+Hypothesis: Homeostatic plasticity on feedback synapses: if mean weight drops below threshold, potentiation is boosted. Biological: synaptic scaling.
+
