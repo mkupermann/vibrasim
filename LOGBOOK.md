@@ -3402,3 +3402,8 @@ All experiments done or 3x NULL on feedback.
 
 All experiments done or 3x NULL on feedback.
 
+
+## 2026-05-26 22:03 — BET-082 START
+
+Hypothesis: With feedback alive, 12h continuous training provides enough audio exposure for multi-class acoustic clustering (>= 5 distinct).
+
