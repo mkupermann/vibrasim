@@ -1996,6 +1996,59 @@ def cull_excess_vibrations(world) -> int:
     return int(n_to_kill)
 
 
+def apply_node_resonance(world, dt: float) -> None:
+    """Kuramoto-style frequency synchronization between nearby nodes.
+
+    Nodes within r_2 of each other pull their frequencies toward each
+    other proportionally to coupling strength and inversely to frequency
+    difference. This is the physical mechanism that makes the 8% binding
+    rule achievable: nearby nodes that initially differ by >8% slowly
+    synchronize until they enter the binding window.
+
+    df_i/dt = coupling * sum_j(sin(2*pi*(f_j - f_i) / f_i))
+
+    Simplified to linear pull for small differences:
+    df_i/dt = coupling * sum_j((f_j - f_i) / max(f_i, f_j))
+
+    Only active when cfg.resonance_coupling > 0.
+    """
+    cfg = world.config
+    coupling = getattr(cfg, 'resonance_coupling', 0.0)
+    if coupling <= 0:
+        return
+    K = world.k_count
+    if K < 2:
+        return
+    r2 = cfg.r_2
+    box = np.asarray(cfg.box_size, dtype=np.float64)
+    alive = world.k_alive[:K]
+    freq = world.k_freq[:K]
+    pos = world.k_pos[:K]
+
+    # For each alive node, find neighbors and pull frequencies
+    grid = build_grid(pos, alive, box, r2)
+    delta_freq = np.zeros(K, dtype=np.float64)
+    for i in range(K):
+        if not alive[i]:
+            continue
+        nbrs = neighbors_of(grid, pos[i], box, r2,
+                             exclude_self=True, query_index=i)
+        for j in nbrs:
+            if not alive[j]:
+                continue
+            fi, fj = freq[i], freq[j]
+            fmax = max(fi, fj)
+            if fmax < 1e-6:
+                continue
+            # Linear pull toward neighbor's frequency
+            delta_freq[i] += coupling * (fj - fi) / fmax * dt
+
+    # Apply frequency shifts (only to alive nodes)
+    for i in range(K):
+        if alive[i] and abs(delta_freq[i]) > 0:
+            freq[i] = max(1.0, freq[i] + delta_freq[i])
+
+
 def tick(world, dt: float) -> None:
     """One simulation step. See CONCEPT.md v2 §4 + §7.1 for the canonical order."""
     box = np.asarray(world.config.box_size, dtype=np.float64)
@@ -2008,6 +2061,12 @@ def tick(world, dt: float) -> None:
     move_vibrations(world.s_pos, world.s_vel, world.s_alive, box, dt)
     apply_scale_repulsion(world, dt)
     move_nodes(world, dt)
+    # Resonance every 10 ticks (expensive O(n^2) neighbor query)
+    if not hasattr(world, '_resonance_counter'):
+        world._resonance_counter = 0
+    world._resonance_counter += 1
+    if world._resonance_counter % 10 == 0:
+        apply_node_resonance(world, dt * 10)  # accumulated dt
     bind_vibrations_to_electrons(world)
     bind_nodes_upward(world)
     decay_unstable_nodes(world, dt)
