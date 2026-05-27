@@ -223,27 +223,23 @@ _UPGRADE_TARGET = {
     # Cap at level 11 (deca-atomic). Phase 3+ may revisit.
 }
 
-# PHASE3-R1: additional molecule+molecule entries, gated by cfg.mol_fusion_enabled.
-# These are appended to the lookup at runtime so legacy behaviour is preserved
-# when the flag is off.
-_UPGRADE_TARGET_FUSION = {
-    (5, 5): 6,
-    (5, 6): 7, (6, 5): 7,
-    (5, 7): 8, (7, 5): 8,
-    (6, 6): 7,
-    (6, 7): 8, (7, 6): 8,
-    (7, 7): 8,
-    (5, 8): 9, (8, 5): 9,
-    (6, 8): 9, (8, 6): 9,
-    (7, 8): 9, (8, 7): 9,
-    (8, 8): 9,
-}
+# PHASE3-R1: molecule+molecule fusion, gated by cfg.mol_fusion_enabled.
+# Generalized rule: any two nodes both >= level 4 produce max(a,b)+1,
+# capped at _MAX_LEVEL-1. This enables unbounded chain growth.
+_UPGRADE_TARGET_FUSION = {}
+for _a in range(4, 33):
+    for _b in range(_a, 33):
+        _target = max(_a, _b) + 1
+        if _target < 33:
+            _UPGRADE_TARGET_FUSION[(_a, _b)] = _target
+            if _a != _b:
+                _UPGRADE_TARGET_FUSION[(_b, _a)] = _target
 
 # Plan A.5 — numpy-array versions for Numba JIT lookup. Numba can't
 # index Python dicts efficiently; small dense arrays are the canonical
 # pattern. Built once at module import. Cells without an upgrade hold -1.
 # The dict versions above are kept for the Python (non-JIT) path.
-_MAX_LEVEL = 12
+_MAX_LEVEL = 33
 _UPGRADE_TARGET_ARRAY = np.full((_MAX_LEVEL, _MAX_LEVEL), -1, dtype=np.int8)
 for (li, lj), target in _UPGRADE_TARGET.items():
     _UPGRADE_TARGET_ARRAY[li, lj] = target
