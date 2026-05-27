@@ -3412,3 +3412,15 @@ Hypothesis: With feedback alive, 12h continuous training provides enough audio e
 
 Hypothesis: With feedback alive, 12h continuous training provides enough audio exposure for multi-class acoustic clustering (>= 5 distinct).
 
+
+## 2026-05-27 11:26 — BET-082 FAIL
+
+Elapsed: 13.40h wallclock
+Chunks: 8924
+L5 active: 1.0
+Silhouette: 0.0400523915886879
+Distinct clusters: 0
+Feedback Gini: 0.8582922875550765
+
+Verdict: **FAIL**
+
