@@ -2024,13 +2024,18 @@ def apply_node_resonance(world, dt: float) -> None:
     alive = world.k_alive[:K]
     freq = world.k_freq[:K]
     pos = world.k_pos[:K]
+    level = world.k_level[:K]
 
-    # For each alive node, find neighbors and pull frequencies
+    # For each alive node, find neighbors and pull frequencies.
+    # Higher-level nodes have more inertia (mass ~ level), so their
+    # frequencies drift slower. This prevents atoms from destabilizing
+    # while still allowing electrons/pairs to synchronize.
     grid = build_grid(pos, alive, box, r2)
     delta_freq = np.zeros(K, dtype=np.float64)
     for i in range(K):
         if not alive[i]:
             continue
+        inertia_i = float(level[i])  # mass proportional to level
         nbrs = neighbors_of(grid, pos[i], box, r2,
                              exclude_self=True, query_index=i)
         for j in nbrs:
@@ -2040,8 +2045,8 @@ def apply_node_resonance(world, dt: float) -> None:
             fmax = max(fi, fj)
             if fmax < 1e-6:
                 continue
-            # Linear pull toward neighbor's frequency
-            delta_freq[i] += coupling * (fj - fi) / fmax * dt
+            # Pull scaled by 1/level (heavier nodes drift less)
+            delta_freq[i] += coupling / inertia_i * (fj - fi) / fmax * dt
 
     # Apply frequency shifts (only to alive nodes)
     for i in range(K):
