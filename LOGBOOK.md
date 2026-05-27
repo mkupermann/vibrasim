@@ -3109,6 +3109,24 @@ Migration zu Windows abgeschlossen (USB-Transfer 2.4GB).
 
 ---
 
+## 2026-05-27 — Kuramoto-Resonanz treibt Bindungskaskade bis Atome
+
+Frequenz-Synchronisation zwischen benachbarten Knoten (Kuramoto-Modell)
+ist der fehlende Mechanismus fuer hierarchische Strukturbildung.
+
+Kontrollierter Vergleich (150 vibs, 30^3 box, dt=0.1, seed=42):
+
+  CONTROL (resonance=0.0):   30s max=2  {1:75, 2:5}
+  EXPERIMENT (resonance=10): 30s max=4  {1:23, 2:14, 3:11, 4:2}
+
+Mechanismus: df_i/dt = coupling * (f_j - f_i) / max(f_i, f_j)
+Knoten in Reichweite (r_2) gleichen Frequenzen an bis sie ins
+8%-Bindungsfenster fallen. Repliziert mit seed=99.
+
+Kette steht bei: Wellen -> Elektronen -> Paare -> Triaden -> Atome.
+
+---
+
 ## 2026-05-25 ~19:30 — BET-081 FAIL (T81c): Audio-Cortex learns structure but not selectivity
 
 10K-neuron cortical substrate (8K E + 2K I, 4.27M synapses) trained
