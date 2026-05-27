@@ -5,9 +5,12 @@ from world.config import WorldConfig
 LEVEL_TO_VIBRATIONS = {
     # Phase 1
     1: 2, 2: 4, 3: 6, 4: 8,
-    # Phase 2: each atom contributes 8 vibrations; molecule = N atoms.
-    5: 16, 6: 24, 7: 32, 8: 40, 9: 48, 10: 56, 11: 64,
+    # Phase 2+: each atom contributes 8 vibrations; molecule = N atoms.
+    # Levels 5-11 are legacy; levels 12-32 extend the chain.
 }
+# Generate levels 5-32: level N contains (N-3) atoms = (N-3)*8 vibrations
+for _lvl in range(5, 33):
+    LEVEL_TO_VIBRATIONS[_lvl] = (_lvl - 3) * 8
 
 
 class World:
