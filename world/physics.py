@@ -1053,44 +1053,21 @@ def bind_nodes_upward(world) -> int:
     world.k_locked_this_tick[:world.k_count] = False
     formed = 0
     K = world.k_count
-    grid = build_grid(world.k_pos[:K], world.k_alive[:K], box, r2)
 
     if cfg.numba_jit_enabled:
-        # Build the full candidate list in Python (spatial-hash query stays
-        # in Python; it is already JIT'd internally).  Preserve the same
-        # iteration order as the legacy path so break-semantics are respected.
-        cand_i_list: list[int] = []
-        cand_j_list: list[int] = []
-        for i in range(K):
-            if not world.k_alive[i] or world.k_locked_this_tick[i]:
-                continue
-            nbrs = neighbors_of(grid, world.k_pos[i], box, r2,
-                                 exclude_self=True, query_index=i)
-            for j in nbrs:
-                if j <= i:
-                    continue
-                cand_i_list.append(i)
-                cand_j_list.append(j)
-
-        n_candidates = len(cand_i_list)
-        if n_candidates == 0:
-            return 0
-
-        candidate_i = np.array(cand_i_list, dtype=np.int32)
-        candidate_j = np.array(cand_j_list, dtype=np.int32)
-
-        out_i, out_j, out_target, n_out = _bind_check_pairs_njit(
-            candidate_i, candidate_j, n_candidates,
-            world.k_pos[:K], world.k_alive[:K], world.k_locked_this_tick[:K],
+        # Fast path: fully JIT'd grid build + pair search
+        from world.spatial import _build_grid_jit, _find_pairs_jit
+        cell_starts, cell_counts, sorted_idx, nx, ny, nz = _build_grid_jit(
+            world.k_pos[:K], world.k_alive[:K], box, r2, K)
+        out_i, out_j, out_target, n_out = _find_pairs_jit(
+            world.k_pos[:K], world.k_alive[:K],
             world.k_freq[:K], world.k_pol[:K], world.k_level[:K],
-            box, r2_sq, fmin_ratio, fmax_ratio,
+            box, r2, cell_starts, cell_counts, sorted_idx, nx, ny, nz,
+            r2_sq, fmin_ratio, fmax_ratio,
             _UPGRADE_TARGET_ARRAY, _UPGRADE_TARGET_FUSION_ARRAY,
-            bool(cfg.mol_fusion_enabled),
+            bool(cfg.mol_fusion_enabled), K * 2,
         )
 
-        # Process JIT-returned pairs in order, enforcing break-per-i semantics:
-        # after a successful bind, both i and j are locked so subsequent pairs
-        # involving either are skipped — exactly matching the legacy `break`.
         for k in range(n_out):
             i = int(out_i[k])
             j = int(out_j[k])
@@ -2021,37 +1998,14 @@ def apply_node_resonance(world, dt: float) -> None:
         return
     r2 = cfg.r_2
     box = np.asarray(cfg.box_size, dtype=np.float64)
-    alive = world.k_alive[:K]
-    freq = world.k_freq[:K]
-    pos = world.k_pos[:K]
-    level = world.k_level[:K]
-
-    # For each alive node, find neighbors and pull frequencies.
-    # Higher-level nodes have more inertia (mass ~ level), so their
-    # frequencies drift slower. This prevents atoms from destabilizing
-    # while still allowing electrons/pairs to synchronize.
-    grid = build_grid(pos, alive, box, r2)
-    delta_freq = np.zeros(K, dtype=np.float64)
-    for i in range(K):
-        if not alive[i]:
-            continue
-        inertia_i = float(level[i])  # mass proportional to level
-        nbrs = neighbors_of(grid, pos[i], box, r2,
-                             exclude_self=True, query_index=i)
-        for j in nbrs:
-            if not alive[j]:
-                continue
-            fi, fj = freq[i], freq[j]
-            fmax = max(fi, fj)
-            if fmax < 1e-6:
-                continue
-            # Pull scaled by 1/level (heavier nodes drift less)
-            delta_freq[i] += coupling / inertia_i * (fj - fi) / fmax * dt
-
-    # Apply frequency shifts (only to alive nodes)
-    for i in range(K):
-        if alive[i] and abs(delta_freq[i]) > 0:
-            freq[i] = max(1.0, freq[i] + delta_freq[i])
+    # Fast JIT path for resonance
+    from world.spatial import _build_grid_jit, _apply_resonance_jit
+    cell_starts, cell_counts, sorted_idx, nx, ny, nz = _build_grid_jit(
+        world.k_pos[:K], world.k_alive[:K], box, r2, K)
+    _apply_resonance_jit(
+        world.k_pos[:K], world.k_alive[:K], world.k_freq[:K],
+        world.k_level[:K], box, r2, cell_starts, cell_counts,
+        sorted_idx, nx, ny, nz, r2 * r2, coupling, dt, K)
 
 
 def tick(world, dt: float) -> None:
