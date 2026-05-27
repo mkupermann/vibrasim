@@ -3429,3 +3429,15 @@ Verdict: **FAIL**
 
 Hypothesis: Cluster quality scales with neurons x exposure. Run at 2K, 5K, 10K, 20K neurons for 2h each. Fit power law.
 
+
+## 2026-05-27 12:10 — BET-082 FAIL
+
+Elapsed: 13.30h wallclock
+Chunks: 9013
+L5 active: 1.0
+Silhouette: 0.936613917350769
+Distinct clusters: 0
+Feedback Gini: 0.7532105918151761
+
+Verdict: **FAIL**
+
