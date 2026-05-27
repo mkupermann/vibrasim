@@ -3424,3 +3424,8 @@ Feedback Gini: 0.8582922875550765
 
 Verdict: **FAIL**
 
+
+## 2026-05-27 11:28 — BET-083 START
+
+Hypothesis: Cluster quality scales with neurons x exposure. Run at 2K, 5K, 10K, 20K neurons for 2h each. Fit power law.
+
