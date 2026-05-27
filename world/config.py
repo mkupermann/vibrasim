@@ -75,6 +75,7 @@ class WorldConfig:
     r_strengthen: float = 5.0             # radius around firings for level-5+ strengthening
     emit_band_ratios: tuple[float, float, float] = (0.08, 1.0, 12.5)  # PHASE4 emission band multipliers
     mol_fusion_enabled: bool = False      # PHASE3-R1: allow molecule + molecule binding
+    resonance_coupling: float = 0.0       # Kuramoto coupling for node freq synchronization (0=off)
 
     # Plan B — STDP and directional plasticity
     stdp_enabled: bool = False              # master switch — off preserves legacy behaviour
