@@ -1,6 +1,12 @@
 from __future__ import annotations
 import numpy as np
-from numba import njit
+
+try:
+    from numba import njit
+except ImportError:
+    def njit(*args, **kwargs):
+        def wrapper(f): return f
+        return wrapper if not args or not callable(args[0]) else args[0]
 
 
 @njit(cache=True)
