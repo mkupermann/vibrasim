@@ -991,22 +991,23 @@ def _bind_check_pairs_njit(
         d2 = dx*dx + dy*dy + dz*dz
         if d2 >= r2_sq:
             continue
-        # Decade gate — inline log10 floor
+        # Frequency checks only for sub-atom levels (both < 4).
+        # Atoms (level 4+) bind by proximity + polarity alone.
         f1 = k_freq[i]
         f2 = k_freq[j]
-        if f1 <= 0.0 or f2 <= 0.0:
-            continue
-        d1 = int(np.floor(np.log10(f1)))
-        d2_dec = int(np.floor(np.log10(f2)))
-        if d1 != d2_dec:
-            continue
-        # Freq ratio gate
-        if f1 < f2:
-            ratio = (f2 - f1) / f1
-        else:
-            ratio = (f1 - f2) / f2
-        if ratio < fmin_ratio or ratio > fmax_ratio:
-            continue
+        if li < 4 or lj < 4:
+            if f1 <= 0.0 or f2 <= 0.0:
+                continue
+            d1 = int(np.floor(np.log10(f1)))
+            d2_dec = int(np.floor(np.log10(f2)))
+            if d1 != d2_dec:
+                continue
+            if f1 < f2:
+                ratio = (f2 - f1) / f1
+            else:
+                ratio = (f1 - f2) / f2
+            if ratio < fmin_ratio or ratio > fmax_ratio:
+                continue
         # Pair passes all gates
         out_i[n_out] = i
         out_j[n_out] = j
@@ -1147,11 +1148,15 @@ def bind_nodes_upward(world) -> int:
                     continue
                 f1 = world.k_freq[i]
                 f2 = world.k_freq[j]
-                if _decade(f1) != _decade(f2):
-                    continue
-                ratio = abs(f1 - f2) / min(f1, f2)
-                if ratio < fmin_ratio or ratio > fmax_ratio:
-                    continue
+                # Frequency checks only for sub-atom levels.
+                # Atoms (level 4+) bind by proximity + polarity alone —
+                # frequency matching is a vibration-level phenomenon.
+                if li < 4 or lj < 4:
+                    if _decade(f1) != _decade(f2):
+                        continue
+                    ratio = abs(f1 - f2) / min(f1, f2)
+                    if ratio < fmin_ratio or ratio > fmax_ratio:
+                        continue
                 mid = periodic_midpoint(world.k_pos[i], world.k_pos[j], box)
                 new_freq = f1 + f2
                 new_pol = bool(world.rng.random() < 0.5)

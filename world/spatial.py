@@ -155,28 +155,29 @@ def _find_pairs_jit(positions, alive, freq, pol, level, box, cell_size,
                                 d2 += dx * dx
                             if d2 >= r_sq:
                                 continue
-                            # Frequency checks
-                            fi = freq[i]
-                            fj = freq[j]
-                            # Decade check
-                            dec_i = 0
-                            tmp = fi
-                            while tmp >= 10.0:
-                                tmp /= 10.0
-                                dec_i += 1
-                            dec_j = 0
-                            tmp = fj
-                            while tmp >= 10.0:
-                                tmp /= 10.0
-                                dec_j += 1
-                            if dec_i != dec_j:
-                                continue
-                            # Ratio check
-                            fmin = fi if fi < fj else fj
-                            fmax = fi if fi > fj else fj
-                            ratio = (fmax - fmin) / fmin
-                            if ratio < fmin_ratio or ratio > fmax_ratio:
-                                continue
+                            # Frequency checks only for sub-atom (both < 4)
+                            li = level[i]
+                            lj = level[j]
+                            if li < 4 or lj < 4:
+                                fi = freq[i]
+                                fj = freq[j]
+                                dec_i = 0
+                                tmp = fi
+                                while tmp >= 10.0:
+                                    tmp /= 10.0
+                                    dec_i += 1
+                                dec_j = 0
+                                tmp = fj
+                                while tmp >= 10.0:
+                                    tmp /= 10.0
+                                    dec_j += 1
+                                if dec_i != dec_j:
+                                    continue
+                                fmin = fi if fi < fj else fj
+                                fmax = fi if fi > fj else fj
+                                ratio = (fmax - fmin) / fmin
+                                if ratio < fmin_ratio or ratio > fmax_ratio:
+                                    continue
                             # Match!
                             if n_found < max_pairs:
                                 out_i[n_found] = i
