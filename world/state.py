@@ -205,7 +205,19 @@ class World:
 
         # Populate the slot
         self.k_pos[i] = pos
-        self.k_vel[i] = 0.0
+        # Brownian velocity for atoms and above (level >= 4).
+        # Sub-atom structures (electrons, pairs, triads) stay stationary
+        # to allow resonance-driven frequency synchronization.
+        # Speed ~ 1/sqrt(level): heavier = slower (thermal equipartition).
+        thermal_speed = getattr(self.config, 'node_thermal_speed', 0.0)
+        if thermal_speed > 0 and level >= 4:
+            speed = thermal_speed / np.sqrt(float(level))
+            z = self.rng.uniform(-1.0, 1.0)
+            phi = self.rng.uniform(0.0, 2 * np.pi)
+            sq = np.sqrt(1 - z * z)
+            self.k_vel[i] = speed * np.array([sq * np.cos(phi), sq * np.sin(phi), z])
+        else:
+            self.k_vel[i] = 0.0
         self.k_freq[i] = freq
         self.k_pol[i] = pol
         self.k_level[i] = level
