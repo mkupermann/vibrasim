@@ -1056,16 +1056,34 @@ def bind_nodes_upward(world) -> int:
 
     if cfg.numba_jit_enabled:
         # Fast path: fully JIT'd grid build + pair search
-        from world.spatial import _build_grid_jit, _find_pairs_jit
-        cell_starts, cell_counts, sorted_idx, nx, ny, nz = _build_grid_jit(
-            world.k_pos[:K], world.k_alive[:K], box, r2, K)
-        out_i, out_j, out_target, n_out = _find_pairs_jit(
-            world.k_pos[:K], world.k_alive[:K],
+        from world.spatial import _find_pairs_jit
+        grid = build_grid(world.k_pos[:K], world.k_alive[:K], box, r2)
+        # Build candidate list from Python grid (avoids Numba memory leak
+        # from _build_grid_jit allocating new arrays every call)
+        cand_i_list = []
+        cand_j_list = []
+        for i in range(K):
+            if not world.k_alive[i]:
+                continue
+            nbrs = neighbors_of(grid, world.k_pos[i], box, r2,
+                                 exclude_self=True, query_index=i)
+            for j in nbrs:
+                if j <= i:
+                    continue
+                cand_i_list.append(i)
+                cand_j_list.append(j)
+        n_candidates = len(cand_i_list)
+        if n_candidates == 0:
+            return 0
+        candidate_i = np.array(cand_i_list, dtype=np.int32)
+        candidate_j = np.array(cand_j_list, dtype=np.int32)
+        out_i, out_j, out_target, n_out = _bind_check_pairs_njit(
+            candidate_i, candidate_j, n_candidates,
+            world.k_pos[:K], world.k_alive[:K], world.k_locked_this_tick[:K],
             world.k_freq[:K], world.k_pol[:K], world.k_level[:K],
-            box, r2, cell_starts, cell_counts, sorted_idx, nx, ny, nz,
-            r2_sq, fmin_ratio, fmax_ratio,
+            box, r2_sq, fmin_ratio, fmax_ratio,
             _UPGRADE_TARGET_ARRAY, _UPGRADE_TARGET_FUSION_ARRAY,
-            bool(cfg.mol_fusion_enabled), K * 2,
+            bool(cfg.mol_fusion_enabled),
         )
 
         for k in range(n_out):
@@ -1386,14 +1404,17 @@ def ambient_regeneration(world, dt: float) -> tuple[int, int]:
     box = np.asarray(cfg.box_size, dtype=np.float64)
     box_volume = box[0] * box[1] * box[2]
 
-    # Target steady-state count from equilibrium density
-    if cfg.lambda_dec <= 0:
-        target_density = 0.0
+    # How many vibrations to inject this tick?
+    if cfg.lambda_gen <= 0:
+        return (0, 0)
+    if cfg.lambda_dec > 0:
+        # Equilibrium: target_count = lambda_gen/lambda_dec * volume
+        target_count = int((cfg.lambda_gen / cfg.lambda_dec) * box_volume)
+        current_count = int(world.s_alive.sum())
+        deficit = max(0, target_count - current_count)
     else:
-        target_density = cfg.lambda_gen / cfg.lambda_dec
-    target_count = int(target_density * box_volume)
-    current_count = int(world.s_alive.sum())
-    deficit = max(0, target_count - current_count)
+        # No decay: inject lambda_gen * volume * dt new vibrations per tick
+        deficit = max(1, int(cfg.lambda_gen * box_volume * dt))
     if deficit == 0:
         return (0, 0)
 
@@ -1998,14 +2019,32 @@ def apply_node_resonance(world, dt: float) -> None:
         return
     r2 = cfg.r_2
     box = np.asarray(cfg.box_size, dtype=np.float64)
-    # Fast JIT path for resonance
-    from world.spatial import _build_grid_jit, _apply_resonance_jit
-    cell_starts, cell_counts, sorted_idx, nx, ny, nz = _build_grid_jit(
-        world.k_pos[:K], world.k_alive[:K], box, r2, K)
-    _apply_resonance_jit(
-        world.k_pos[:K], world.k_alive[:K], world.k_freq[:K],
-        world.k_level[:K], box, r2, cell_starts, cell_counts,
-        sorted_idx, nx, ny, nz, r2 * r2, coupling, dt, K)
+    # Resonance via Python grid + inline loop (avoids Numba memory leak)
+    alive = world.k_alive[:K]
+    freq = world.k_freq[:K]
+    pos = world.k_pos[:K]
+    level = world.k_level[:K]
+    r2_sq = r2 * r2
+    grid = build_grid(pos, alive, box, r2)
+    delta_freq = np.zeros(K, dtype=np.float64)
+    for i in range(K):
+        if not alive[i]:
+            continue
+        inertia_i = float(level[i])
+        fi = freq[i]
+        nbrs = neighbors_of(grid, pos[i], box, r2,
+                             exclude_self=True, query_index=i)
+        for j in nbrs:
+            if not alive[j]:
+                continue
+            fj = freq[j]
+            fmax = max(fi, fj)
+            if fmax < 1e-6:
+                continue
+            delta_freq[i] += coupling / inertia_i * (fj - fi) / fmax * dt
+    for i in range(K):
+        if alive[i] and delta_freq[i] != 0.0:
+            freq[i] = max(1.0, freq[i] + delta_freq[i])
 
 
 def tick(world, dt: float) -> None:
