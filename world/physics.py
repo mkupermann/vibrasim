@@ -1054,11 +1054,10 @@ def bind_nodes_upward(world) -> int:
     world.k_locked_this_tick[:world.k_count] = False
     formed = 0
     K = world.k_count
+    grid = build_grid(world.k_pos[:K], world.k_alive[:K], box, r2)
 
     if cfg.numba_jit_enabled:
-        # Fast path: fully JIT'd grid build + pair search
         from world.spatial import _find_pairs_jit
-        grid = build_grid(world.k_pos[:K], world.k_alive[:K], box, r2)
         # Build candidate list from Python grid (avoids Numba memory leak
         # from _build_grid_jit allocating new arrays every call)
         cand_i_list = []
@@ -1423,52 +1422,46 @@ def ambient_regeneration(world, dt: float) -> tuple[int, int]:
     if deficit == 0:
         return (0, 0)
 
-    # Active-region positions: alive nodes at level 4+
-    if world.k_count > 0:
-        active_mask = world.k_alive[:world.k_count] & (world.k_level[:world.k_count] >= 4)
-        active_pos = world.k_pos[:world.k_count][active_mask]
-    else:
-        active_pos = np.empty((0, 3), dtype=np.float64)
-    safe_radius_sq = (2.0 * cfg.r_2) ** 2
-
     n_displaced = 0
     n_allocated = 0
 
-    # --- Pass 1: displace far-field alive vibrations ---
-    alive_idx = np.where(world.s_alive)[0]
-    rng.shuffle(alive_idx)
-    for i in alive_idx:
-        if deficit <= 0:
-            break
-        if len(active_pos):
-            d = world.s_pos[i] - active_pos
-            d -= box * np.round(d / box)  # periodic minimum-image
-            d2 = (d * d).sum(axis=1)
-            if (d2 < safe_radius_sq).any():
-                continue  # inside an active region; skip
-        # Displace: re-randomise position, velocity, frequency, polarity
-        world.s_pos[i] = rng.uniform(low=np.zeros(3), high=box)
-        world.s_vel[i] = world._sample_velocities_3d(1)[0]
-        world.s_freq[i] = world._sample_frequencies(1)[0]
-        world.s_pol[i] = bool(rng.random() < cfg.polarity_split)
-        n_displaced += 1
-        deficit -= 1
+    # Fast path: allocate from free slots first (no displacement needed)
+    free_idx = np.where(~world.s_alive[:cfg.n_vibrations_max])[0]
+    n_free = len(free_idx)
+    n_alloc = min(deficit, n_free)
+    if n_alloc > 0:
+        slots = free_idx[:n_alloc]
+        world.s_pos[slots] = rng.uniform(low=np.zeros(3), high=box, size=(n_alloc, 3))
+        world.s_vel[slots] = world._sample_velocities_3d(n_alloc)
+        world.s_freq[slots] = world._sample_frequencies(n_alloc)
+        world.s_pol[slots] = rng.random(n_alloc) < cfg.polarity_split
+        world.s_alive[slots] = True
+        n_allocated = n_alloc
+        deficit -= n_alloc
+        if n_alloc > 0:
+            world.n_alive = max(world.n_alive, int(slots.max()) + 1)
 
-    # --- Pass 2: fallback — allocate from unused buffer slots if any remain ---
+    # Slow path: if no free slots, displace far-field vibrations
     if deficit > 0:
-        free_idx = np.where(~world.s_alive)[0]
-        for i in free_idx[:deficit]:
+        active_mask = world.k_alive[:world.k_count] & (world.k_level[:world.k_count] >= 4) if world.k_count > 0 else np.zeros(0, dtype=bool)
+        active_pos = world.k_pos[:world.k_count][active_mask] if active_mask.any() else np.empty((0, 3))
+        safe_r2 = (2.0 * cfg.r_2) ** 2
+        alive_idx = np.where(world.s_alive[:cfg.n_vibrations_max])[0]
+        rng.shuffle(alive_idx)
+        for i in alive_idx:
+            if deficit <= 0:
+                break
+            if len(active_pos):
+                d = world.s_pos[i] - active_pos
+                d -= box * np.round(d / box)
+                if ((d * d).sum(axis=1) < safe_r2).any():
+                    continue
             world.s_pos[i] = rng.uniform(low=np.zeros(3), high=box)
             world.s_vel[i] = world._sample_velocities_3d(1)[0]
             world.s_freq[i] = world._sample_frequencies(1)[0]
             world.s_pol[i] = bool(rng.random() < cfg.polarity_split)
-            world.s_alive[i] = True
-            n_allocated += 1
+            n_displaced += 1
             deficit -= 1
-        if n_allocated > 0:
-            # Single high-water-mark update; robust to any iteration order
-            # (uses the max actually-allocated index, not the loop's last `i`).
-            world.n_alive = max(world.n_alive, int(free_idx[:n_allocated].max()) + 1)
 
     # Decay: each alive node level 1/2/3 has Bernoulli(lambda_dec * dt) of decaying
     n_decayed = 0
