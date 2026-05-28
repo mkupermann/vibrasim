@@ -5,7 +5,6 @@ from numba import njit
 from world.spatial import build_grid, neighbors_of, periodic_distance_sq, periodic_midpoint
 
 
-@njit(cache=True)
 def move_vibrations(
     s_pos: np.ndarray,
     s_vel: np.ndarray,
@@ -13,13 +12,9 @@ def move_vibrations(
     box: np.ndarray,
     dt: float,
 ) -> None:
-    """3D motion with periodic-wrap on all three axes."""
-    n = s_pos.shape[0]
-    for i in range(n):
-        if not s_alive[i]:
-            continue
-        for d in range(3):
-            s_pos[i, d] = (s_pos[i, d] + s_vel[i, d] * dt) % box[d]
+    """3D motion with periodic-wrap on all three axes. Pure numpy."""
+    mask = s_alive
+    s_pos[mask] = (s_pos[mask] + s_vel[mask] * dt) % box
 
 
 @njit(cache=True)
@@ -29,22 +24,14 @@ def _bind_vibrations_check_pairs_njit(
     s_freq: np.ndarray, s_pol: np.ndarray,
     box: np.ndarray, r1_sq: float,
     fmin_ratio: float, fmax_ratio: float,
-) -> tuple:
+    out_i: np.ndarray, out_j: np.ndarray,
+    out_freq: np.ndarray, out_mid: np.ndarray,
+) -> int:
     """JIT core for bind_vibrations_to_electrons.
 
-    Mirrors `_bind_check_pairs_njit` (which serves bind_nodes_upward) but for
-    vibration-level binding. Filters candidate pairs by alive, locked,
-    polarity-difference, periodic-distance, and the 8 % frequency rule.
-
-    Returns parallel arrays (out_i, out_j, out_freq, out_mid, n_out) preserving
-    input order. The new electron's frequency is f_i + f_j; mid is the periodic
-    midpoint. The Python wrapper enforces break-per-i semantics by re-checking
-    the lock array after each allocation.
+    Pre-allocated output arrays avoid Numba memory leak.
+    Returns n_out (number of valid pairs written to out_* arrays).
     """
-    out_i = np.zeros(n_candidates, dtype=np.int32)
-    out_j = np.zeros(n_candidates, dtype=np.int32)
-    out_freq = np.zeros(n_candidates, dtype=np.float64)
-    out_mid = np.zeros((n_candidates, 3), dtype=np.float64)
     n_out = 0
     for k in range(n_candidates):
         i = candidate_i[k]
@@ -88,7 +75,7 @@ def _bind_vibrations_check_pairs_njit(
         out_j[n_out] = j
         out_freq[n_out] = f1 + f2
         n_out += 1
-    return out_i, out_j, out_freq, out_mid, n_out
+    return n_out
 
 
 def bind_vibrations_to_electrons(world) -> int:
@@ -129,11 +116,16 @@ def bind_vibrations_to_electrons(world) -> int:
         candidate_i = np.array(cand_i_list, dtype=np.int32)
         candidate_j = np.array(cand_j_list, dtype=np.int32)
 
-        out_i, out_j, out_freq, out_mid, n_out = _bind_vibrations_check_pairs_njit(
+        out_i = np.zeros(n_candidates, dtype=np.int32)
+        out_j = np.zeros(n_candidates, dtype=np.int32)
+        out_freq = np.zeros(n_candidates, dtype=np.float64)
+        out_mid = np.zeros((n_candidates, 3), dtype=np.float64)
+        n_out = _bind_vibrations_check_pairs_njit(
             candidate_i, candidate_j, n_candidates,
             world.s_pos, world.s_alive, world.s_locked_this_tick,
             world.s_freq, world.s_pol,
             box, r1_sq, fmin_ratio, fmax_ratio,
+            out_i, out_j, out_freq, out_mid,
         )
 
         formed = 0
@@ -946,11 +938,9 @@ def _bind_check_pairs_njit(
     box: np.ndarray, r2_sq: float,
     fmin_ratio: float, fmax_ratio: float,
     upgrade_table: np.ndarray, fusion_table: np.ndarray, mol_fusion_enabled: bool,
-) -> tuple:
-    """JIT core for bind_nodes_upward.
-
-    For each candidate pair (i, j) in order, check all binding gates:
-    alive, locked, level-table lookup, polarity, distance, decade, freq-ratio.
+    out_i: np.ndarray, out_j: np.ndarray, out_target: np.ndarray,
+) -> int:
+    """JIT core for bind_nodes_upward. Pre-allocated output arrays.
     Returns parallel arrays (out_i, out_j, out_target, n_out) of pairs that
     pass all gates, preserving input order so the Python wrapper can apply
     break-semantics correctly.
@@ -959,9 +949,6 @@ def _bind_check_pairs_njit(
     Python wrapper enforces the break / single-bind-per-i rule by checking
     the lock array after each allocation.
     """
-    out_i = np.zeros(n_candidates, dtype=np.int32)
-    out_j = np.zeros(n_candidates, dtype=np.int32)
-    out_target = np.zeros(n_candidates, dtype=np.int8)
     n_out = 0
     for k in range(n_candidates):
         i = candidate_i[k]
@@ -1013,7 +1000,7 @@ def _bind_check_pairs_njit(
         out_j[n_out] = j
         out_target[n_out] = target
         n_out += 1
-    return out_i, out_j, out_target, n_out
+    return n_out
 
 
 def _gather_leaf_vibration_indices(world, node_idx: int) -> np.ndarray:
@@ -1077,13 +1064,17 @@ def bind_nodes_upward(world) -> int:
             return 0
         candidate_i = np.array(cand_i_list, dtype=np.int32)
         candidate_j = np.array(cand_j_list, dtype=np.int32)
-        out_i, out_j, out_target, n_out = _bind_check_pairs_njit(
+        out_i = np.zeros(n_candidates, dtype=np.int32)
+        out_j = np.zeros(n_candidates, dtype=np.int32)
+        out_target = np.zeros(n_candidates, dtype=np.int8)
+        n_out = _bind_check_pairs_njit(
             candidate_i, candidate_j, n_candidates,
             world.k_pos[:K], world.k_alive[:K], world.k_locked_this_tick[:K],
             world.k_freq[:K], world.k_pol[:K], world.k_level[:K],
             box, r2_sq, fmin_ratio, fmax_ratio,
             _UPGRADE_TARGET_ARRAY, _UPGRADE_TARGET_FUSION_ARRAY,
             bool(cfg.mol_fusion_enabled),
+            out_i, out_j, out_target,
         )
 
         for k in range(n_out):
