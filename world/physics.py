@@ -17,65 +17,47 @@ def move_vibrations(
     s_pos[mask] = (s_pos[mask] + s_vel[mask] * dt) % box
 
 
-@njit(cache=True)
-def _bind_vibrations_check_pairs_njit(
-    candidate_i: np.ndarray, candidate_j: np.ndarray, n_candidates: int,
-    s_pos: np.ndarray, s_alive: np.ndarray, s_locked_this_tick: np.ndarray,
-    s_freq: np.ndarray, s_pol: np.ndarray,
-    box: np.ndarray, r1_sq: float,
-    fmin_ratio: float, fmax_ratio: float,
-    out_i: np.ndarray, out_j: np.ndarray,
-    out_freq: np.ndarray, out_mid: np.ndarray,
-) -> int:
-    """JIT core for bind_vibrations_to_electrons.
-
-    Pre-allocated output arrays avoid Numba memory leak.
-    Returns n_out (number of valid pairs written to out_* arrays).
-    """
-    n_out = 0
-    for k in range(n_candidates):
-        i = candidate_i[k]
-        j = candidate_j[k]
-        if not s_alive[i] or not s_alive[j]:
-            continue
-        if s_locked_this_tick[i] or s_locked_this_tick[j]:
-            continue
-        if s_pol[i] == s_pol[j]:
-            continue
-        # Periodic distance (3D)
-        dx = s_pos[i, 0] - s_pos[j, 0]
-        dy = s_pos[i, 1] - s_pos[j, 1]
-        dz = s_pos[i, 2] - s_pos[j, 2]
-        dx -= box[0] * round(dx / box[0])
-        dy -= box[1] * round(dy / box[1])
-        dz -= box[2] * round(dz / box[2])
-        d2 = dx * dx + dy * dy + dz * dz
-        if d2 >= r1_sq:
-            continue
-        # 8 % frequency rule
-        f1 = s_freq[i]
-        f2 = s_freq[j]
-        if f1 < f2:
-            ratio = (f2 - f1) / f1
-        else:
-            ratio = (f1 - f2) / f2
-        if ratio < fmin_ratio or ratio > fmax_ratio:
-            continue
-        # Periodic midpoint, per-axis (matches periodic_midpoint() semantics)
-        for d in range(3):
-            delta = s_pos[j, d] - s_pos[i, d]
-            if delta > box[d] * 0.5:
-                delta -= box[d]
-            elif delta < -box[d] * 0.5:
-                delta += box[d]
-            m = s_pos[i, d] + delta * 0.5
-            m = m % box[d]
-            out_mid[n_out, d] = m
-        out_i[n_out] = i
-        out_j[n_out] = j
-        out_freq[n_out] = f1 + f2
-        n_out += 1
-    return n_out
+def _bind_vibrations_check_pairs_numpy(
+    candidate_i, candidate_j, s_pos, s_alive, s_locked,
+    s_freq, s_pol, box, r1_sq, fmin_ratio, fmax_ratio,
+):
+    """Vectorized numpy pair filter for vibration binding. No Numba."""
+    ci = candidate_i
+    cj = candidate_j
+    if len(ci) == 0:
+        return np.empty(0, np.int32), np.empty(0, np.int32), np.empty(0), np.empty((0, 3))
+    # Masks
+    alive_ok = s_alive[ci] & s_alive[cj]
+    lock_ok = ~s_locked[ci] & ~s_locked[cj]
+    pol_ok = s_pol[ci] != s_pol[cj]
+    mask = alive_ok & lock_ok & pol_ok
+    ci, cj = ci[mask], cj[mask]
+    if len(ci) == 0:
+        return np.empty(0, np.int32), np.empty(0, np.int32), np.empty(0), np.empty((0, 3))
+    # Periodic distance
+    d = s_pos[ci] - s_pos[cj]
+    d -= box * np.round(d / box)
+    d2 = (d * d).sum(axis=1)
+    dist_ok = d2 < r1_sq
+    ci, cj, d = ci[dist_ok], cj[dist_ok], d[dist_ok]
+    if len(ci) == 0:
+        return np.empty(0, np.int32), np.empty(0, np.int32), np.empty(0), np.empty((0, 3))
+    # Frequency ratio
+    f1, f2 = s_freq[ci], s_freq[cj]
+    fmin = np.minimum(f1, f2)
+    ratio = np.abs(f1 - f2) / np.maximum(fmin, 1e-12)
+    freq_ok = (ratio >= fmin_ratio) & (ratio <= fmax_ratio)
+    ci, cj = ci[freq_ok], cj[freq_ok]
+    if len(ci) == 0:
+        return np.empty(0, np.int32), np.empty(0, np.int32), np.empty(0), np.empty((0, 3))
+    # Midpoint
+    delta = s_pos[cj] - s_pos[ci]
+    over = delta > box * 0.5
+    under = delta < -box * 0.5
+    delta = delta - box * over + box * under
+    mid = (s_pos[ci] + delta * 0.5) % box
+    out_freq = s_freq[ci] + s_freq[cj]
+    return ci.astype(np.int32), cj.astype(np.int32), out_freq, mid
 
 
 def bind_vibrations_to_electrons(world) -> int:
@@ -91,42 +73,24 @@ def bind_vibrations_to_electrons(world) -> int:
     world.reset_tick_locks()
     grid = build_grid(world.s_pos, world.s_alive, box, r1)
 
-    if cfg.numba_jit_enabled:
-        # G1: JIT path. Build candidate pairs in Python (spatial-hash query
-        # is already JITted internally) preserving the legacy iteration order
-        # so break-per-i semantics carry. JIT filters by predicates; Python
-        # applies allocations in order.
-        cand_i_list: list[int] = []
-        cand_j_list: list[int] = []
-        for i in range(world.s_pos.shape[0]):
-            if not world.s_alive[i]:
-                continue
-            nbrs = neighbors_of(grid, world.s_pos[i], box, r1,
-                                 exclude_self=True, query_index=i)
-            for j in nbrs:
-                if j <= i:
-                    continue
-                cand_i_list.append(i)
-                cand_j_list.append(j)
-
-        n_candidates = len(cand_i_list)
-        if n_candidates == 0:
+    if True:  # numpy vectorized path — no Numba, no grid overhead
+        # All-pairs for alive vibrations (fast for <500 vibs)
+        alive_idx = np.where(world.s_alive)[0].astype(np.int32)
+        n_alive = len(alive_idx)
+        if n_alive < 2:
             return 0
+        # Upper-triangle pairs
+        ii, jj = np.triu_indices(n_alive, k=1)
+        candidate_i = alive_idx[ii]
+        candidate_j = alive_idx[jj]
 
-        candidate_i = np.array(cand_i_list, dtype=np.int32)
-        candidate_j = np.array(cand_j_list, dtype=np.int32)
-
-        out_i = np.zeros(n_candidates, dtype=np.int32)
-        out_j = np.zeros(n_candidates, dtype=np.int32)
-        out_freq = np.zeros(n_candidates, dtype=np.float64)
-        out_mid = np.zeros((n_candidates, 3), dtype=np.float64)
-        n_out = _bind_vibrations_check_pairs_njit(
-            candidate_i, candidate_j, n_candidates,
+        out_i, out_j, out_freq, out_mid = _bind_vibrations_check_pairs_numpy(
+            candidate_i, candidate_j,
             world.s_pos, world.s_alive, world.s_locked_this_tick,
             world.s_freq, world.s_pol,
             box, r1_sq, fmin_ratio, fmax_ratio,
-            out_i, out_j, out_freq, out_mid,
         )
+        n_out = len(out_i)
 
         formed = 0
         for k in range(n_out):
@@ -930,7 +894,6 @@ def _kill_node(world, i: int) -> None:
             world._free_slots_set.add(i)
 
 
-@njit(cache=True)
 def _bind_check_pairs_njit(
     candidate_i: np.ndarray, candidate_j: np.ndarray, n_candidates: int,
     k_pos: np.ndarray, k_alive: np.ndarray, k_locked_this_tick: np.ndarray,
@@ -1041,41 +1004,74 @@ def bind_nodes_upward(world) -> int:
     world.k_locked_this_tick[:world.k_count] = False
     formed = 0
     K = world.k_count
-    grid = build_grid(world.k_pos[:K], world.k_alive[:K], box, r2)
-
-    if cfg.numba_jit_enabled:
-        from world.spatial import _find_pairs_jit
-        # Build candidate list from Python grid (avoids Numba memory leak
-        # from _build_grid_jit allocating new arrays every call)
-        cand_i_list = []
-        cand_j_list = []
-        for i in range(K):
-            if not world.k_alive[i]:
-                continue
-            nbrs = neighbors_of(grid, world.k_pos[i], box, r2,
-                                 exclude_self=True, query_index=i)
-            for j in nbrs:
-                if j <= i:
-                    continue
-                cand_i_list.append(i)
-                cand_j_list.append(j)
-        n_candidates = len(cand_i_list)
-        if n_candidates == 0:
+    if True:  # numpy all-pairs path (no grid, no Numba)
+        alive_idx = np.where(world.k_alive[:K])[0].astype(np.int32)
+        n_alive = len(alive_idx)
+        if n_alive < 2:
             return 0
-        candidate_i = np.array(cand_i_list, dtype=np.int32)
-        candidate_j = np.array(cand_j_list, dtype=np.int32)
+        ii, jj = np.triu_indices(n_alive, k=1)
+        candidate_i = alive_idx[ii]
+        candidate_j = alive_idx[jj]
+        n_candidates = len(candidate_i)
         out_i = np.zeros(n_candidates, dtype=np.int32)
         out_j = np.zeros(n_candidates, dtype=np.int32)
         out_target = np.zeros(n_candidates, dtype=np.int8)
-        n_out = _bind_check_pairs_njit(
-            candidate_i, candidate_j, n_candidates,
-            world.k_pos[:K], world.k_alive[:K], world.k_locked_this_tick[:K],
-            world.k_freq[:K], world.k_pol[:K], world.k_level[:K],
-            box, r2_sq, fmin_ratio, fmax_ratio,
-            _UPGRADE_TARGET_ARRAY, _UPGRADE_TARGET_FUSION_ARRAY,
-            bool(cfg.mol_fusion_enabled),
-            out_i, out_j, out_target,
-        )
+        # Numpy vectorized pair check (no Python loops)
+        ci, cj = candidate_i, candidate_j
+        k_alive = world.k_alive[:K]
+        k_locked = world.k_locked_this_tick[:K]
+        k_pos = world.k_pos[:K]
+        k_freq = world.k_freq[:K]
+        k_pol = world.k_pol[:K]
+        k_level = world.k_level[:K]
+
+        # Basic masks
+        alive_ok = k_alive[ci] & k_alive[cj] & ~k_locked[ci] & ~k_locked[cj]
+        pol_ok = k_pol[ci] != k_pol[cj]
+        mask = alive_ok & pol_ok
+        ci, cj = ci[mask], cj[mask]
+
+        if len(ci) > 0:
+            # Level lookup
+            li = k_level[ci]
+            lj = k_level[cj]
+            targets = _UPGRADE_TARGET_ARRAY[li, lj]
+            if cfg.mol_fusion_enabled:
+                need_fusion = targets == -1
+                targets[need_fusion] = _UPGRADE_TARGET_FUSION_ARRAY[li[need_fusion], lj[need_fusion]]
+            valid = targets >= 0
+            ci, cj, targets = ci[valid], cj[valid], targets[valid]
+
+        if len(ci) > 0:
+            # Distance check
+            d = k_pos[ci] - k_pos[cj]
+            d -= box * np.round(d / box)
+            d2 = (d * d).sum(axis=1)
+            close = d2 < r2_sq
+            ci, cj, targets = ci[close], cj[close], targets[close]
+
+        if len(ci) > 0:
+            # Freq check (only sub-atom)
+            li = k_level[ci]
+            lj = k_level[cj]
+            sub_atom = (li < 4) | (lj < 4)
+            if sub_atom.any():
+                f1 = k_freq[ci]
+                f2 = k_freq[cj]
+                fmin = np.minimum(f1, f2)
+                ratio = np.abs(f1 - f2) / np.maximum(fmin, 1e-12)
+                decade_ok = (np.floor(np.log10(np.maximum(f1, 1.0))).astype(int) ==
+                             np.floor(np.log10(np.maximum(f2, 1.0))).astype(int))
+                freq_ok = decade_ok & (ratio >= fmin_ratio) & (ratio <= fmax_ratio)
+                # Atom-level pairs skip freq check
+                pass_freq = ~sub_atom | freq_ok
+                ci, cj, targets = ci[pass_freq], cj[pass_freq], targets[pass_freq]
+
+        n_out = len(ci)
+        if n_out > 0:
+            out_i[:n_out] = ci
+            out_j[:n_out] = cj
+            out_target[:n_out] = targets
 
         for k in range(n_out):
             i = int(out_i[k])
@@ -1173,7 +1169,6 @@ def bind_nodes_upward(world) -> int:
         return formed
 
 
-@njit(cache=True)
 def _decay_unstable_njit(k_alive: np.ndarray, k_level: np.ndarray,
                          k_birth: np.ndarray, rolls: np.ndarray,
                          t: float, pair_decay_time: float,
@@ -1295,7 +1290,6 @@ def decay_unstable_nodes(world, dt: float) -> int:
         return decayed
 
 
-@njit(cache=True)
 def _decay_high_level_njit(k_alive: np.ndarray, k_level: np.ndarray,
                             k_strength: np.ndarray, rolls: np.ndarray,
                             lambda_dec_mol: float, dt: float,
@@ -1503,7 +1497,6 @@ def ambient_regeneration(world, dt: float) -> tuple[int, int]:
     return n_displaced + n_allocated, n_decayed
 
 
-@njit(cache=True)
 def _apply_scale_repulsion_njit(
     k_pos: np.ndarray,
     k_vel: np.ndarray,
@@ -1640,7 +1633,6 @@ def apply_scale_repulsion(world, dt: float) -> None:
                 world.k_vel[i, 2] += az * dt
 
 
-@njit(cache=True)
 def _move_nodes_njit(k_pos: np.ndarray, k_vel: np.ndarray, k_alive: np.ndarray,
                      box: np.ndarray, dt: float, K: int) -> None:
     """JIT core for move_nodes. Modifies k_pos in place with periodic wrap."""
@@ -2008,32 +2000,37 @@ def apply_node_resonance(world, dt: float) -> None:
         return
     r2 = cfg.r_2
     box = np.asarray(cfg.box_size, dtype=np.float64)
-    # Resonance via Python grid + inline loop (avoids Numba memory leak)
-    alive = world.k_alive[:K]
-    freq = world.k_freq[:K]
-    pos = world.k_pos[:K]
-    level = world.k_level[:K]
+    # Numpy vectorized all-pairs resonance (no grid, no Python loops)
+    alive_idx = np.where(world.k_alive[:K])[0]
+    n = len(alive_idx)
+    if n < 2:
+        return
+    pos = world.k_pos[alive_idx]
+    freq = world.k_freq[alive_idx]
+    level = world.k_level[alive_idx].astype(np.float64)
     r2_sq = r2 * r2
-    grid = build_grid(pos, alive, box, r2)
-    delta_freq = np.zeros(K, dtype=np.float64)
-    for i in range(K):
-        if not alive[i]:
-            continue
-        inertia_i = float(level[i])
-        fi = freq[i]
-        nbrs = neighbors_of(grid, pos[i], box, r2,
-                             exclude_self=True, query_index=i)
-        for j in nbrs:
-            if not alive[j]:
-                continue
-            fj = freq[j]
-            fmax = max(fi, fj)
-            if fmax < 1e-6:
-                continue
-            delta_freq[i] += coupling / inertia_i * (fj - fi) / fmax * dt
-    for i in range(K):
-        if alive[i] and delta_freq[i] != 0.0:
-            freq[i] = max(1.0, freq[i] + delta_freq[i])
+
+    # All-pairs distance (periodic)
+    # diff[i,j,d] = pos[i,d] - pos[j,d]
+    diff = pos[:, np.newaxis, :] - pos[np.newaxis, :, :]  # (n, n, 3)
+    diff -= box * np.round(diff / box)
+    d2 = (diff * diff).sum(axis=2)  # (n, n)
+
+    # Mask: within r2, not self
+    mask = (d2 < r2_sq) & (np.eye(n, dtype=bool) == False)
+
+    # Frequency pull: coupling/level_i * (f_j - f_i) / max(f_i, f_j)
+    fi = freq[:, np.newaxis]  # (n, 1)
+    fj = freq[np.newaxis, :]  # (1, n)
+    fmax = np.maximum(fi, fj)
+    fmax = np.maximum(fmax, 1e-6)
+    inertia = level[:, np.newaxis]  # (n, 1)
+
+    pull = coupling / inertia * (fj - fi) / fmax * dt  # (n, n)
+    pull[~mask] = 0.0
+    delta = pull.sum(axis=1)  # (n,)
+
+    world.k_freq[alive_idx] = np.maximum(1.0, freq + delta)
 
 
 def tick(world, dt: float) -> None:
