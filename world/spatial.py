@@ -9,7 +9,7 @@ except ImportError:
         return wrapper if not args or not callable(args[0]) else args[0]
 
 
-@njit(cache=True)
+
 def periodic_distance_sq(a: np.ndarray, b: np.ndarray, box: np.ndarray) -> float:
     d2 = 0.0
     for i in range(3):
@@ -23,7 +23,7 @@ def periodic_distance_sq(a: np.ndarray, b: np.ndarray, box: np.ndarray) -> float
     return d2
 
 
-@njit(cache=True)
+
 def periodic_midpoint(a: np.ndarray, b: np.ndarray, box: np.ndarray) -> np.ndarray:
     out = np.empty(3, dtype=np.float64)
     for d in range(3):
@@ -42,7 +42,7 @@ def periodic_midpoint(a: np.ndarray, b: np.ndarray, box: np.ndarray) -> np.ndarr
 # Fast spatial grid — Numba JIT with flat arrays
 # ============================================================
 
-@njit(cache=True)
+
 def _build_grid_jit(positions, alive, box, cell_size, n):
     """Build cell-list grid as flat arrays.
 
@@ -89,7 +89,7 @@ def _build_grid_jit(positions, alive, box, cell_size, n):
     return cell_starts, cell_counts, sorted_indices, nx, ny, nz
 
 
-@njit(cache=True)
+
 def _find_pairs_jit(positions, alive, freq, pol, level, box, cell_size,
                     cell_starts, cell_counts, sorted_indices, nx, ny, nz,
                     r_sq, fmin_ratio, fmax_ratio,
@@ -199,7 +199,7 @@ def _find_pairs_jit(positions, alive, freq, pol, level, box, cell_size,
     return out_i[:n_found], out_j[:n_found], out_target[:n_found], n_found
 
 
-@njit(cache=True)
+
 def _apply_resonance_jit(positions, alive, freq, level, box, cell_size,
                          cell_starts, cell_counts, sorted_indices, nx, ny, nz,
                          r_sq, coupling, dt, n):
