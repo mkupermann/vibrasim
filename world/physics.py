@@ -1054,6 +1054,18 @@ def bind_nodes_upward(world) -> int:
             close = d2 < r2_sq
             ci, cj, targets = ci[close], cj[close], targets[close]
 
+        if len(ci) > 0 and cfg.atom_valence > 0:
+            # Valence: nodes at level 4+ can only participate in atom_valence
+            # bindings total. This constrains topology — valence=2 forces
+            # linear chains instead of 3D clusters.
+            k_bonds = world.k_bond_count[:K]
+            li = k_level[ci]; lj = k_level[cj]
+            # Only apply valence to atom-level and above
+            vi_ok = (li < 4) | (k_bonds[ci] < cfg.atom_valence)
+            vj_ok = (lj < 4) | (k_bonds[cj] < cfg.atom_valence)
+            valence_ok = vi_ok & vj_ok
+            ci, cj, targets = ci[valence_ok], cj[valence_ok], targets[valence_ok]
+
         if len(ci) > 0:
             # Freq check (only sub-atom)
             li = k_level[ci]
@@ -1106,6 +1118,14 @@ def bind_nodes_upward(world) -> int:
                     if (polarities != 0).all() and (polarities == polarities[0]).all():
                         world.k_reward_polarity[new_node] = int(polarities[0])
                     # else: stays at default 0 (mixed or conflicting)
+            # Valence tracking: each parent uses 1 bond slot for this binding.
+            # New node inherits remaining free slots from both parents.
+            # free_i = valence - bonds_i - 1 (used for this binding)
+            # free_j = valence - bonds_j - 1
+            # new_bonds = valence - (free_i + free_j) = bonds_i + bonds_j + 2
+            if cfg.atom_valence > 0 and new_node >= 0:
+                world.k_bond_count[new_node] = (
+                    world.k_bond_count[i] + world.k_bond_count[j] + 2)
             _kill_node(world, i)
             _kill_node(world, j)
             world.k_locked_this_tick[i] = True

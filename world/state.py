@@ -51,6 +51,10 @@ class World:
         # Plan A — per-node strength field (R2 strength-modulated decay).
         # Default 1.0 so newly-allocated nodes are not immediately decayed away.
         self.k_strength = np.ones(K, dtype=np.float64)
+        # Valence: how many times this node has been consumed as a constituent.
+        # When atom_valence > 0, nodes with k_bond_count >= atom_valence are
+        # excluded from further binding.
+        self.k_bond_count = np.zeros(K, dtype=np.int32)
         # Plan B — per-molecule orientation vector for directional propagation.
         # Zero = no orientation inferred yet. Updated as a strength-weighted
         # running average when STDP detects a directional firing pair.
