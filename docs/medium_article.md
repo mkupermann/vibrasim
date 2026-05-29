@@ -68,18 +68,6 @@ That's a good move in consulting. It's a terrible move when the entire point is 
 
 **Failure records matter more than success records.** For each module in the project, I wrote a document titled "Why This Shell Is Too Thin" — what it deliberately ignores and when the simplification breaks. These turned out to be the most useful documents in the entire repository. Not the test results. Not the logbook. The failure records, because they told me where to look when I got stuck again.
 
-## The Chain
-
-As of today, the simulation produces hierarchical structure from vibrations through eight levels:
-
-```
-Vibrations → Electrons → Pairs → Triads → Atoms → Molecules → Chains
-```
-
-Each level emerged from local rules. No template, no blueprint, no top-down design. Each level stalled the project until a new mechanism — imported from physics I hadn't read yet — unlocked it.
-
-Whether it goes further — whether chains can close into membranes, whether membranes can grow and divide, whether something like a neuron can emerge from the substrate's own material — I don't know. I'll find out the same way I found out everything so far: by getting stuck, staying stuck longer than is comfortable, and eventually reading something I should have read months earlier.
-
 ## Why I'm Writing This
 
 The simulation is open source. The code runs on a laptop. But the simulation isn't the point.
@@ -92,4 +80,79 @@ I'd rather know what actually works.
 
 ---
 
-*Repository: github.com/mkupermann/vibrasim — every experiment, every failure, every pre-registered acceptance bar, every logbook entry.*
+# Appendix: The Technical Results
+
+*For readers who want the data behind the narrative.*
+
+## The Chain
+
+The simulation produces hierarchical structure from vibrations through eight levels, each emerging from local rules alone:
+
+```
+Vibrations  ->  Electrons  ->  Pairs  ->  Triads  ->  Atoms  ->  Molecules  ->  Chains
+(Level 0)      (Level 1)     (Level 2)   (Level 3)   (Level 4)   (Level 5)    (Level 6-8)
+   |              |             |            |           |            |            |
+ 8% rule      8% rule       8% rule      8% rule    proximity    proximity    proximity
+ + polarity   + polarity    + polarity   + polarity  + polarity   + polarity   + polarity
+ + proximity  + resonance   + resonance  + resonance + mobility   + mobility   + mobility
+```
+
+Each level uses the same binding physics, but with different dominant mechanisms:
+
+- **Levels 0-3:** Frequency matching drives binding. Kuramoto resonance is the enabler — without it, the cascade stalls at level 2. Controlled comparison (seed=42): resonance=0 produces max level 2; resonance=10 produces level 4 in 10 seconds.
+- **Levels 4+:** Proximity drives binding. Frequency matching is irrelevant — atoms are not oscillators in the same sense as vibrations. Thermal mobility is the enabler — without it, atoms never meet. Speed scales as 1/sqrt(level) per thermal equipartition.
+
+## The Neural Network Experiments
+
+Twenty pre-registered experiments (BET-065 through BET-083) using Brian2 spiking neural networks:
+
+| Experiment | Neurons | Duration | Finding |
+|---|---|---|---|
+| BET-065-072 | 200 | Phase A | 4/7 stages PASS, 3 sequential NULLs on credit assignment |
+| BET-077c | 25,000 | 4-layer cortical | L5 acc 0.84, all 4 layers active |
+| BET-079 | 25,000 | 4h continuous | L5 0.775 -> 0.875 (+10%) |
+| BET-080 | 25,000 | 12h continuous | L5 0.775 -> 0.925 (+19.4%) |
+| BET-081 | 10,000 | 4h audio cortex | Silhouette 0.90, 0 distinct clusters |
+| BET-081b-d | 10,000 | 3 feedback fixes | Feedback alive (Gini 0.73), still 0 distinct |
+| BET-082 | 10,000 | 12h extended | Silhouette 0.94, 0 distinct clusters |
+| BET-083 | 2K-20K | Scaling sweep | 10K optimal, no monotonic scaling law |
+
+**Key finding:** STDP produces sharp assemblies (silhouette 0.90+) but converges on a binary attractor (speech vs. silence), not multi-class acoustic selectivity. The substrate is not a trivial feature extractor (2x Mel baseline), but it cannot distinguish individual words. Post-hoc analysis confirmed: L23->L5 feedforward differentiates (Gini 0.51), feedback L5->L6->L4 collapses (Gini 0.999).
+
+## The Resonance Mechanism
+
+Kuramoto-style frequency synchronization:
+
+```
+df_i/dt = (coupling / level_i) * (f_j - f_i) / max(f_i, f_j)
+```
+
+Level scaling: electrons (level 1) synchronize at full strength. Atoms (level 4) drift 4x slower. This prevents destabilization of formed structures while allowing lower-level binding.
+
+Verified by controlled experiment (BET-084):
+- Control (resonance=0): max level 2 after 30s
+- Experiment (resonance=10): max level 4 after 30s
+- Replicated with seeds 42 and 99
+
+## The Binding Rule Change
+
+Atoms (level 4+) bind by proximity and polarity alone — no frequency matching, no decade isolation. This is not a relaxation of the rules; it's the recognition that frequency matching is a wave phenomenon. Atoms are not waves. Verified: two manually seeded atoms at distance 3, opposite polarity, fuse into a level-5 molecule regardless of frequency difference.
+
+## Performance
+
+All Numba JIT removed. Pure numpy vectorized operations. 2,200 ticks/second for 80 vibrations + 60 nodes on a Windows laptop. No memory leak. The simulation runs indefinitely.
+
+## What's Not Claimed
+
+- The "electrons" and "atoms" are not physical particles. They're hierarchical levels.
+- The 8% rule is engineered, not derived from quantum mechanics.
+- The simulation does not model real physics, biology, or consciousness.
+- The Kuramoto coupling constant (10.0) is not derived from first principles.
+
+The canonical model rules, all assumptions, and all non-claims are documented in `docs/MODEL_RULES.md`. Deliberate simplifications and their breaking conditions are in `docs/failures/`.
+
+---
+
+*The simulation runs at 2,200 steps per second in pure Python. No GPU. No Numba. No CUDA. Every experiment, every failure, every pre-registered acceptance bar, and every logbook entry is open source.*
+
+*Repository: github.com/mkupermann/vibrasim*
