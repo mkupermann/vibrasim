@@ -53,28 +53,21 @@ COLOR_VIBR_ODD = (0.91, 0.30, 0.24)
 COLOR_ELECTRON = (0.95, 0.61, 0.07)
 COLOR_ATOM = (1.0, 1.0, 1.0)
 
-RADIUS_BY_LEVEL = {
-    1: 1.0, 2: 1.5, 3: 2.0, 4: 3.0,
-    5: 4.0, 6: 4.5, 7: 5.0, 8: 5.5, 9: 6.0, 10: 6.5, 11: 7.0,
-}
+RADIUS_BY_LEVEL = {l: 1.0 + l * 0.5 for l in range(1, 33)}
+RADIUS_BY_LEVEL[4] = 3.0  # atoms are visually distinct
 COLOR_BY_LEVEL = {
     1: COLOR_ELECTRON,
     2: (0.85, 0.85, 0.90),
     3: (0.95, 0.92, 0.85),
     4: COLOR_ATOM,
-    5: (0.85, 0.88, 0.94),
-    6: (0.94, 0.92, 0.85),
-    7: (1.00, 0.96, 0.85),
-    8: (1.00, 0.88, 0.88),
-    9: (1.00, 0.84, 0.92),
-    10: (0.94, 0.80, 1.00),
-    11: (0.84, 0.84, 1.00),
 }
-LEVEL_NAMES = {
-    1: "electron", 2: "pair", 3: "triad", 4: "atom",
-    5: "molecule-2", 6: "molecule-3", 7: "molecule-4", 8: "molecule-5",
-    9: "molecule-6", 10: "molecule-7", 11: "molecule-8",
-}
+# Level 5+: gradient from blue through green to red
+for _l in range(5, 33):
+    _t = (_l - 5) / 27.0
+    COLOR_BY_LEVEL[_l] = (0.3 + 0.7 * _t, 0.9 - 0.5 * _t, 1.0 - 0.8 * _t)
+LEVEL_NAMES = {1: "electron", 2: "pair", 3: "triad", 4: "atom"}
+for _l in range(5, 33):
+    LEVEL_NAMES[_l] = f"chain-{_l - 3}"  # chain-2, chain-3, ... chain-29
 
 
 HELP_TEXT = (
@@ -378,14 +371,15 @@ class InteractiveViewer:
         n_t = count(3)
         n_a = count(4)
         n_m = int(((levels >= 5) & alive).sum())
+        max_lvl = int(levels[alive].max()) if alive.any() else 0
 
         state = "PLAYING" if self.playing else "PAUSED"
         speed = self.speed
         hud = (
-            f"EQMOD — {state}   speed×{speed}   fps {self._fps:5.1f}\n"
+            f"EQMOD -- {state}   speed x{speed}   fps {self._fps:5.1f}\n"
             f"t = {w.t:8.3f} s    dt = {cfg.dt:.4f}    seed = {cfg.rng_seed}\n"
             f"vibr {n_v:5d}   e- {n_e:4d}   pair {n_p:3d}   triad {n_t:3d}   "
-            f"atom {n_a:3d}   mol {n_m:3d}\n"
+            f"atom {n_a:3d}   mol {n_m:3d}   MAX LEVEL {max_lvl}\n"
             f"box {cfg.box_size}   nodes_alive {int(alive.sum())}/{w.k_count}   "
             f"min_level={self.min_level}"
         )
