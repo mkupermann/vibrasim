@@ -4,13 +4,13 @@ I charge €1,300 a day to solve problems. Thirty years of software architecture
 
 So I picked a topic I know nothing about. Not "a little rusty" nothing. Four disciplines past my training nothing. I decided to build matter from vibrations in a 3D box. No atoms pre-installed, no chemistry, no biology. Just oscillating points with frequencies, and a few local rules about when they stick together.
 
-The idea was simple: watch what I actually do when the usual playbook is empty. Write it down. See what survives.
+I wanted to watch what I actually do when the usual playbook is empty. Write it down. See what survives.
 
 What I didn't expect is that the tools I'd build along the way would turn out to be more useful than the simulation itself.
 
 ## The Simulation Stalled for Months
 
-The rules say: two vibrations whose frequencies differ by 8% and sit close enough with opposite polarity, bind into an "electron." Electrons bind into pairs, pairs into triads, triads into atoms. Same rule each level. Clean, local, no magic.
+Two vibrations bind into an "electron" if their frequencies differ by 8% and they're close enough with opposite polarity. Electrons bind into pairs, pairs into triads, triads into atoms. Same rule each level. Clean, local, no magic.
 
 Except it didn't work past level 2. Electrons formed fine. Pairs, sometimes. Triads, almost never. Atoms, never.
 
@@ -22,9 +22,9 @@ I wasted two months before I understood that.
 
 When I finally stopped tweaking and started reading, I found Kuramoto synchronization — coupled oscillators pulling each other's frequencies toward alignment. Pendulum clocks on the same wall. Fireflies. It's textbook physics, decades old.
 
-I added one rule: nearby objects drift their frequencies toward each other. Heavier objects drift slower.
+I added one rule. Nearby objects drift their frequencies toward each other. Heavier objects resist more.
 
-Atoms formed in ten seconds.
+Atoms. Ten seconds.
 
 Level 5 molecules in minutes. Level 8 chains — five atoms bonded through six hierarchical steps — shortly after. From vibrations. No template. No design.
 
@@ -44,7 +44,7 @@ Brian2 IS someone else's science. Every equation in it encodes decades of neuros
 
 ## What Actually Came Out of This
 
-Here's what I didn't plan for: the tools I built to manage this mess turned out to be the real product.
+I didn't plan for what happened next. The tools I built to manage this mess turned out to be more useful than the simulation.
 
 **Pre-registered experiments.** Every run has acceptance criteria written before the data exists. PASS, FAIL, or NULL — the verdict is mechanical. No post-hoc threshold adjustments. Three NULLs on the same mechanism means stop, not retry. This discipline didn't come from a methodology book. It came from catching myself reinterpreting failed runs as "interesting partial results" at 2am.
 
@@ -52,7 +52,7 @@ Here's what I didn't plan for: the tools I built to manage this mess turned out 
 
 **The autopilot.** An autonomous pipeline that pre-registers experiments, runs them, evaluates against bars, logs verdicts, commits to git, and decides what to run next. No human input. It ran twenty experiments over a weekend while I wasn't looking. Most of them failed — that's the point. The autopilot doesn't care about failure. It cares about coverage.
 
-**The process itself.** How to work on something four disciplines past your training without pretending you understand more than you do. How to distinguish productive rigor from comfortable busywork. When to stop tweaking and start reading. When to stop reading and start building. When to throw away a whole approach because it was a detour dressed up as progress.
+**The process itself.** I learned to tell the difference between productive rigor and comfortable busywork. I learned that tweaking parameters feels like work but isn't, and that reading a textbook I'd been avoiding always was. I also learned — late, and expensively — when to throw away an entire approach because it was a detour dressed up as progress.
 
 I extracted the pipeline into its own repo — [single-mac-autopilot](https://github.com/mkupermann/single-mac-autopilot). It runs on a MacBook. It does pre-registered research autonomously. The simulation is its test bed. But the pipeline travels without the simulation.
 
@@ -72,7 +72,7 @@ Whether it goes further, I don't know. Membranes. Cells. Synapses made of the su
 
 Everyone hits deadlocks where the usual moves don't work. A product that won't converge. A team that's stuck. A technical decision where every option has a fatal flaw. The instinct is always the same: stay inside the system, tweak harder, build more infrastructure, borrow someone else's solution.
 
-The moves that actually worked — every time, without exception — came from outside. Not from adjusting parameters. Not from better tooling. From going to a field I hadn't looked at yet and bringing back a principle that reframed the problem.
+The moves that actually worked came from outside. Every single time. I'd go read something in a field I hadn't looked at yet, and bring back a principle that reframed the problem. The parameter sweeps never got me there.
 
 That's not a finding about vibration physics. That's a finding about problem-solving. And it took building an entire fake universe to see it clearly, because in my real work, the domain shortcuts are always available, and I always take them.
 
