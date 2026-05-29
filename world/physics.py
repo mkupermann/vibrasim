@@ -976,16 +976,20 @@ def _gather_leaf_vibration_indices(world, node_idx: int) -> np.ndarray:
     """
     out: list[int] = []
     stack = [int(node_idx)]
-    while stack:
+    visited: set[int] = set()
+    max_depth = 1000
+    while stack and max_depth > 0:
+        max_depth -= 1
         i = stack.pop()
+        if i in visited:
+            continue  # prevent infinite loops from corrupt composition
+        visited.add(i)
         start = int(world.k_comp_offset[i])
         end = int(world.k_comp_end[i])
         if int(world.k_comp_kind[i]) == 0:
-            # Leaf node — composition span is vibration indices
             for k in range(start, end):
                 out.append(int(world.k_comp_indices[k]))
         else:
-            # Internal node — composition span is node indices
             for k in range(start, end):
                 stack.append(int(world.k_comp_indices[k]))
     return np.array(out, dtype=np.int64)
