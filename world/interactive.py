@@ -261,7 +261,7 @@ class InteractiveViewer:
         cloud["colors"] = (colors * 255).astype(np.uint8)
         self._vib_actor = pl.add_mesh(
             cloud, scalars="colors", rgb=True,
-            style="points", point_size=4, render_points_as_spheres=True,
+            style="points", point_size=6, render_points_as_spheres=True,
             name="vibrations",
         )
 
@@ -303,7 +303,7 @@ class InteractiveViewer:
         pc["index"] = idx.astype(np.int32)
 
         # Glyph: scale a unit sphere by per-point "radius"
-        unit_sphere = pv.Sphere(radius=1.0, theta_resolution=12, phi_resolution=12)
+        unit_sphere = pv.Sphere(radius=1.0, theta_resolution=32, phi_resolution=32)
         glyphs = pc.glyph(geom=unit_sphere, scale="radius", orient=False)
         # The glyph operation broadcasts point arrays; colors carry through.
         self._node_actor = pl.add_mesh(
