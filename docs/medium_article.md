@@ -1,6 +1,6 @@
 # I Built a Universe to Break My Own Problem-Solving
 
-I charge €1,300 a day to solve problems. Thirty years of software architecture. I'm good at it, and that became the problem — I stopped noticing when I was pattern-matching instead of thinking.
+I charge $$$ a day to solve problems. Thirty years of software architecture. I'm good at it, and that became the problem — I stopped noticing when I was pattern-matching instead of thinking.
 
 So I picked a topic I know nothing about. Not "a little rusty" nothing. Four disciplines past my training nothing. I decided to build matter from vibrations in a 3D box. No atoms pre-installed, no chemistry, no biology. Just oscillating points with frequencies, and a few local rules about when they stick together.
 
