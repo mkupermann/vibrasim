@@ -3127,6 +3127,20 @@ Kette steht bei: Wellen -> Elektronen -> Paare -> Triaden -> Atome.
 
 ---
 
+## 2026-05-29 — Kaskade bis Level 32, kompakte 3D-Cluster
+
+Bindungskaskade laeuft bis Level-Deckel (32). Drei unabhaengige
+L32-Strukturen mit je ~29 Atomen, spontan in 1000s Simulationszeit.
+
+Topologie (SVD auf Atom-Positionen): KOMPAKT (sphaerisch), nicht
+linear. SVD-Verhaeltnis 1.1 bei 82 Atomen. Ohne Richtungspraeferenz
+produziert die Bindungsphysik 3D-Cluster, nicht 1D-Ketten.
+
+Befund: Membranen und Ketten brauchen gerichtete Bindung (Valenz).
+Slot-Recycling-Bug: zirkulaere Komposition durch Slot-Wiederverwendung.
+
+---
+
 ## 2026-05-25 ~19:30 — BET-081 FAIL (T81c): Audio-Cortex learns structure but not selectivity
 
 10K-neuron cortical substrate (8K E + 2K I, 4.27M synapses) trained
