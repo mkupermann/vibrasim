@@ -28,7 +28,7 @@ CFG = WorldConfig(
     mol_fusion_enabled=True, resonance_coupling=15.0,
     node_thermal_speed=5.0,
     pair_decay_time=30.0, triad_decay_time=300.0, dt=0.5,
-    n_nodes_max=1024, n_vibrations_max=512, vibration_soft_cap=120,
+    n_nodes_max=2048, n_vibrations_max=512, vibration_soft_cap=120,
     repulsion_k=0.0, lambda_gen=0.0005, lambda_dec=0.0,
     neuron_dynamics_enabled=False, stdp_enabled=False, rng_seed=42,
 )
