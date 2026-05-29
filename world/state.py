@@ -114,7 +114,7 @@ class World:
         self.dream_subphase_counter: int = 0
 
         # CSR composition
-        comp_caps = K * 16  # Plan A.5: larger to accommodate slot recycling appending
+        comp_caps = K * 64  # increased for deep chain hierarchies (level 8+)
         self.k_comp_offset = np.zeros(K + 1, dtype=np.int32)
         # k_comp_end[i] stores the exclusive end of slot i's composition range.
         # Separate from k_comp_offset[i+1] so that recycling slot i does not
