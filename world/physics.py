@@ -1726,7 +1726,7 @@ def neuron_dynamics(world, dt: float) -> None:
     for ai in atom_indices:
         if world.t < world.k_refractory_until[ai]:
             continue
-        if n_alive_v == 0:
+        if n_alive_v <= 0:   # guard: n_alive can underflow to <0; v_pos undefined then
             continue
         ap = world.k_pos[ai]
         # Periodic-image squared distance
