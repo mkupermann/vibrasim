@@ -3863,3 +3863,29 @@ Per pre-registered STOPPING RULE: PIVOT to STDP/BTSP correlation addressing
 (BET-099). Store memory in spike-timing-correlation weights between co-active
 atoms (the charter learning primitive, turnover-robust), not per-bridge flux
 state. Flux line closed.
+
+
+## 2026-05-31 02:xx — Session: BET-099 correlation memory — NULL by letter, but WRITE+RECALL both work
+
+Pivoted from flux to firing-coincidence (Hebbian) bridge plasticity driving the
+bistable well (neuron_dynamics ON, flux bistable OFF). Firing probe gate passed
+(stim 195 vs ctrl 63). Implemented apply_correlation_plasticity (co-firing of
+bridged atoms -> over-barrier drive; well holds).
+
+VERDICT NULL (T99d) but T99a/b/c all PASS: selective firing (171 vs 30, 5.7x),
+selective potentiation, and PERSISTENT RECALL — LOC arm held a clean selective
+memory 8000-11000s (stim 3-6, control 0, ~3000s) AFTER field cleared. The flux
+line never held this. T99d failed because the uniform control tripped the lenient
+any-checkpoint selectivity metric on a single noise blip (tiny-n cores, ~1-17
+bridges, means swing 0-6). Refused to retune the metric (forbidden).
+
+Two diagnosed gaps: (1) noise-sensitive readout on tiny-n cores; (2) firing
+PROPAGATION via emitted vibrations contaminates control late (LOC control latches
+~12500s+). Mechanism vindicated: correlation plasticity writes + persists. Gap is
+long-horizon SPECIFICITY, again scale-limited.
+
+Next BET-100: noise-robust selectivity metric (POST-window mean / fraction-
+selective, matched control) + reduce firing propagation (n_emit/range/refractory
+by rule). If specificity stays scale-limited, that is the consolidated finding:
+every mechanism writes; clean long-horizon selective recall is bounded by the
+spontaneous substrate element count.

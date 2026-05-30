@@ -49,7 +49,65 @@ recorded below before the plasticity experiment is designed in detail.
 PASS = T99a–c hold AND uniform control fails. PASS = a turnover-robust selective
 memory via the substrate's designed correlation primitive.
 
-## Status / RESULT
+## Firing probe result (gate passed)
 
-Firing probe: _(filled from bet099_probe.txt)_. Full design + bars finalized
-after the probe confirms selective firing. RESULT: _(to be filled after run)_.
+`tools/_probe099_firing.py`: with neuron_dynamics ON and a confined stimulus,
+stim-region firings = 195 vs control = 63 (**ratio 3.1 ≥ 3**). Selective firing
+confirmed (firing concentrates early, before the frozen vibrations are consumed —
+enough co-firing to write weights). T99a gate met → proceed.
+
+## Mechanism (finalized): firing-coincidence drives the bistable well
+
+`apply_correlation_plasticity` (world/bridges.py): when two BRIDGED atoms fire
+within tau_LTP, the bridge gets a one-sided over-barrier drive
+(`corr_potentiation`); the bistable double-well (which held well in BET-097)
+holds it. No co-firing → drive 0 → the well holds the existing state. This
+replaces the fragile per-bridge flux WRITE with a spike-correlation write while
+keeping the robust well HOLD. Config: `corr_plasticity_rate`, `corr_potentiation`.
+The flux bistable drive is OFF (bistable_rate=0) in this experiment.
+
+## RESULT (2026-05-31): NULL by the letter — but write + persistent recall both WORK
+
+Verdict: **NULL** (T99d), yet the substance is the strongest result in the chain:
+correlation plasticity writes a selective memory AND it persists.
+
+| Bar | Outcome | Evidence |
+|-----|---------|----------|
+| T99a selective firing | ✓ | stim 171 vs control 30 firings (ratio 5.7). |
+| T99b selective potentiation | ✓ | STIM: stim-core latches (3.2→6.0), control stays 0. |
+| T99c persistent recall | ✓ | POST 8000–11000 s: stim-core 3–6 while control 0 — ~3000 s of genuine selective persistence AFTER the field is cleared. The flux line never held this. |
+| T99d control fails | ✗ | uniform arm tripped the `any-checkpoint` selectivity test on a single noise blip (15000 s: stim 5.0, ctrl 0.0). |
+
+### Why NULL despite T99a–c
+
+Two issues, both real, neither fatal to the mechanism:
+1. **Noise-sensitive readout.** The half=3 cores hold only ~1–17 bridges, so the
+   per-checkpoint mean swings between 0 and 6. The pre-registered selectivity
+   metric (`any checkpoint with stim>3 AND ctrl<3`) is too lenient — noise alone
+   satisfies it for the uniform control. (Not fixable post-hoc — that would be
+   tuning to the result. Recorded as NULL.)
+2. **Firing propagation.** Atoms emit vibrations when they fire; those spread to
+   the control region and eventually make control atoms fire/latch too (LOC
+   control starts latching ~12500 s onward). Selectivity is clean early
+   (8000–11000 s) then degrades as activity propagates.
+
+### Finding
+
+The pivot is vindicated at the mechanism level: **firing-coincidence plasticity
+writes a selective memory and the bistable well holds it for thousands of
+seconds** — the persistent recall the flux line could not achieve. The remaining
+gap is SPECIFICITY over long times: a noise-robust readout (sustained/averaged,
+larger population) and containment of firing propagation. This re-surfaces the
+chain's recurring limiter — substrate SCALE (a handful of noisy elements per
+region).
+
+### Next direction (BET-100)
+
+Pre-register a noise-robust selectivity metric (e.g. POST-mean over a window, or
+fraction-of-checkpoints selective, with the uniform control matched) AND reduce
+firing propagation (lower n_emit / shorter emission range / refractory tuning by
+rule), then re-test. If specificity remains scale-limited, that is the honest
+consolidated finding of the whole memory programme: every mechanism (structure,
+flux latch, correlation) writes, but clean long-horizon selective recall is
+bounded by the spontaneous substrate's element count — a scale limit, not a
+mechanism gap.

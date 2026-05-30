@@ -464,6 +464,65 @@ def apply_bistable_plasticity(world, dt: float) -> None:
         world.b_strength[b] = float(np.clip(s_new, 0.0, high + 1.0))
 
 
+def apply_correlation_plasticity(world, dt: float) -> None:
+    """BET-099: Hebbian firing-coincidence plasticity on bridges.
+
+    The flux-driven bistable latch (BET-089→098) wrote selectively but its
+    memory eroded — per-bridge flux state is fragile against bridge turnover.
+    Here the SAME bistable double-well (which holds well, BET-097) is driven by
+    a turnover-robust WRITE signal: when two BRIDGED atoms FIRE within tau_LTP
+    of each other (neuron_dynamics → firing_events), the bridge between them is
+    pushed over the barrier into the STRONG well. Bridges with no recent
+    co-firing get zero drive and relax to whichever well they are in — so the
+    well alone decides hold-vs-decay and "no input" means "hold".
+
+    Reuses substrate primitives only: firing_events (spike log), bridges
+    (b_atom_i/j, b_strength), and the bistable well params. No molecules, no LLM.
+    Gated by cfg.corr_plasticity_rate (0 = off).
+    """
+    cfg = world.config
+    rate = getattr(cfg, 'corr_plasticity_rate', 0.0)
+    if rate <= 0 or world.b_count == 0:
+        return
+    low = getattr(cfg, 'bistable_low', 1.0)
+    mid = getattr(cfg, 'bistable_mid', 3.0)
+    high = getattr(cfg, 'bistable_high', 6.0)
+    well_k = getattr(cfg, 'bistable_well_k', 0.04)
+    pot = getattr(cfg, 'corr_potentiation', 1.0)
+    tau = getattr(cfg, 'tau_LTP', 0.02)
+
+    # Bridge lookup by (sorted) atom pair.
+    bridge_of = {}
+    for b in range(world.b_count):
+        if world.b_alive[b]:
+            i, j = int(world.b_atom_i[b]), int(world.b_atom_j[b])
+            bridge_of[(i, j) if i < j else (j, i)] = b
+
+    # Bridges whose two atoms co-fired within tau_LTP this retention window.
+    cofired = set()
+    ev = world.firing_events
+    for x in range(len(ev)):
+        t_i, ai = ev[x]
+        for y in range(x + 1, len(ev)):
+            t_j, aj = ev[y]
+            if abs(t_j - t_i) > tau or ai == aj:
+                continue
+            key = (ai, aj) if ai < aj else (aj, ai)
+            b = bridge_of.get(key)
+            if b is not None:
+                cofired.add(b)
+
+    # Bistable well + rectified one-sided co-firing drive.
+    for b in range(world.b_count):
+        if not world.b_alive[b]:
+            continue
+        s = world.b_strength[b]
+        well = -well_k * (s - low) * (s - mid) * (s - high)
+        drive = pot if b in cofired else 0.0
+        s_new = s + rate * dt * (well + drive)
+        world.b_strength[b] = float(np.clip(s_new, 0.0, high + 1.0))
+
+
 def apply_structural_anchoring(world, dt: float) -> None:
     """Mature, fully-bonded atoms stiffen the lattice — they stop drifting.
 
