@@ -305,6 +305,60 @@ def apply_edge_closure(world, dt: float) -> None:
         world.k_vel[ia] += force
 
 
+def apply_flux_plasticity(world, dt: float) -> None:
+    """Bridge strength follows vibration flux through it.
+
+    A bridge whose endpoint atoms both sit in high-vibration-density
+    regions carries more flux and strengthens. Low-flux bridges weaken.
+    This is structural plasticity from physics — not an STDP rule, not
+    spike-timing, not supervised. Strength tracks the energy flowing
+    through the channel, the way a riverbed deepens under flow.
+    """
+    cfg = world.config
+    rate = getattr(cfg, 'flux_plasticity_rate', 0.0)
+    if rate <= 0:
+        return
+    K = world.k_count
+    if world.b_count == 0:
+        return
+    box = np.asarray(cfg.box_size, dtype=np.float64)
+    r_sense = cfg.r_2  # radius around an atom to count vibration flux
+    r_sense_sq = r_sense * r_sense
+    threshold = getattr(cfg, 'flux_threshold', 2.0)
+    decay = getattr(cfg, 'flux_decay', 0.05)
+    max_s = getattr(cfg, 'flux_max_strength', 10.0)
+
+    # Count vibrations near each atom that has a bridge
+    atoms_with_bridges = set()
+    for b in range(world.b_count):
+        if world.b_alive[b]:
+            atoms_with_bridges.add(int(world.b_atom_i[b]))
+            atoms_with_bridges.add(int(world.b_atom_j[b]))
+
+    vib_pos = world.s_pos
+    vib_alive = world.s_alive
+    density = {}
+    for a in atoms_with_bridges:
+        if a >= K or not world.k_alive[a]:
+            density[a] = 0
+            continue
+        ap = world.k_pos[a]
+        d = vib_pos - ap
+        d -= box * np.round(d / box)
+        d2 = (d * d).sum(axis=1)
+        density[a] = int(np.sum(vib_alive & (d2 < r_sense_sq)))
+
+    for b in range(world.b_count):
+        if not world.b_alive[b]:
+            continue
+        i, j = int(world.b_atom_i[b]), int(world.b_atom_j[b])
+        flux = density.get(i, 0) * density.get(j, 0)
+        if flux > threshold:
+            world.b_strength[b] = min(max_s, world.b_strength[b] + rate * dt * (flux / (threshold + 1.0)))
+        else:
+            world.b_strength[b] = max(0.0, world.b_strength[b] - decay * dt)
+
+
 def decay_bridges(world, dt: float) -> int:
     """Remove bridges whose atoms are dead."""
     removed = 0
