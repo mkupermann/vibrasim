@@ -3762,3 +3762,24 @@ Next (BET-094): probe whether confined/low-velocity injection can sustain a
 stim>>ctrl flux ratio. If not, pivot to STDP/BTSP correlation addressing (the
 charter learning primitives) in BET-095 — address memory by co-activity, not by
 spatial flux fields. Probe before pre-registering (Pattern 01).
+
+
+## 2026-05-31 00:xx — Session: BET-094 confined stimulus — REGIME-NULL (harness bug, mechanism sound)
+
+Pre-probe (tools/_probe094_gradient.py) showed zero-velocity confined injection
+sustains a 2.5-6x flux gradient (stim ~2000 vs ctrl ~400). BET-094 tried to use
+that in the full hysteresis protocol (warmup->starve->calibrate->stim->clear
+field->post) but got REGIME-NULL: T94a contrast ratio only 1.16 (stim 7332 vs
+ctrl 6311).
+
+Cause (Pattern 01: mechanism works, regime broke it): (1) lambda_gen=0.0005 is
+NOT starved — regeneration adds ~6 vib/step, refilling the culled field to the
+500 soft cap in ~75 steps; (2) the 1000-step calibrate window let that refill
+happen UNIFORMLY before stim, so the shared 500-vibration budget was already full
+and even — confined injection could not create a gradient. The probe worked
+because it injected immediately into a freshly-culled field, owning the budget.
+
+Fix is a regime change, not a tune: BET-095 reproduces the probe conditions
+inside the hysteresis protocol — lambda_gen=0 (true starve), immediate continuous
+confined injection, no uniform refill, fixed flux_ref=1000 (from probe levels).
+Same hysteresis bars, new amendment number (retry rule).

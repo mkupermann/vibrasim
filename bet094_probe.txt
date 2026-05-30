@@ -1,0 +1,10 @@
+probe vel=0.0 rate=40/step
+  t=3250s stim_flux=2033 ctrl_flux=420 ratio=4.84 free_vib=506
+  t=3500s stim_flux=2176 ctrl_flux=392 ratio=5.56 free_vib=506
+  t=3750s stim_flux=2168 ctrl_flux=340 ratio=6.38 free_vib=506
+  t=4000s stim_flux=1955 ctrl_flux=425 ratio=4.60 free_vib=506
+  t=4250s stim_flux=1397 ctrl_flux=568 ratio=2.46 free_vib=506
+  t=4500s stim_flux=2580 ctrl_flux=432 ratio=5.97 free_vib=506
+  t=4750s stim_flux=2238 ctrl_flux=660 ratio=3.39 free_vib=506
+  t=5000s stim_flux=2458 ctrl_flux=638 ratio=3.85 free_vib=506
+PROBE DONE
