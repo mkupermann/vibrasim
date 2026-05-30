@@ -12,9 +12,9 @@ cfg = WorldConfig(
     mol_fusion_enabled=False, resonance_coupling=15.0,
     node_thermal_speed=1.0, atom_valence=3,
     node_freq_binding=False, atom_repulsion_k=1.0, curvature_k=1.0,
-    flux_plasticity_rate=0.5, flux_threshold=3.0, flux_decay=0.02,
+    flux_plasticity_rate=0.2, flux_threshold=3.0, flux_decay=0.05,
     pair_decay_time=40.0, triad_decay_time=400.0, dt=0.5,
-    n_nodes_max=8192, n_vibrations_max=4096, vibration_soft_cap=600,
+    n_nodes_max=8192, n_vibrations_max=4096, vibration_soft_cap=500,
     repulsion_k=0.0, lambda_gen=0.012, lambda_dec=0.0,
     neuron_dynamics_enabled=False, stdp_enabled=False,
     slot_recycling_enabled=False, graceful_capacity=True, rng_seed=42,
@@ -35,11 +35,12 @@ def inject_stimulus(world, cx, n=20):
     if k == 0: return
     slots = free[:k]
     world.s_pos[slots] = np.column_stack([
-        rng.normal(cx, 3.0, k) % box[0],
-        rng.uniform(0, box[1], k),
-        rng.uniform(0, box[2], k),
+        rng.normal(cx, 2.0, k) % box[0],
+        rng.normal(box[1]/2, 3.0, k) % box[1],
+        rng.normal(box[2]/2, 3.0, k) % box[2],
     ])
-    world.s_vel[slots] = world._sample_velocities_3d(k)
+    # Slow vibrations stay localized → real density contrast in this region
+    world.s_vel[slots] = rng.normal(0, 1.0, (k, 3))
     world.s_freq[slots] = world._sample_frequencies(k)
     world.s_pol[slots] = rng.random(k) < 0.5
     world.s_alive[slots] = True

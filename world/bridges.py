@@ -348,15 +348,37 @@ def apply_flux_plasticity(world, dt: float) -> None:
         d2 = (d * d).sum(axis=1)
         density[a] = int(np.sum(vib_alive & (d2 < r_sense_sq)))
 
+    # Relative plasticity: compute flux per bridge, then potentiate
+    # bridges above the mean and depress below. Auto-adapts to background
+    # density — detects relative hotspots, not absolute level. Parameter-
+    # free competition between channels for the vibration flux.
+    fluxes = []
+    bridge_ids = []
     for b in range(world.b_count):
         if not world.b_alive[b]:
             continue
         i, j = int(world.b_atom_i[b]), int(world.b_atom_j[b])
-        flux = density.get(i, 0) * density.get(j, 0)
-        if flux > threshold:
-            world.b_strength[b] = min(max_s, world.b_strength[b] + rate * dt * (flux / (threshold + 1.0)))
-        else:
-            world.b_strength[b] = max(0.0, world.b_strength[b] - decay * dt)
+        fluxes.append(density.get(i, 0) * density.get(j, 0))
+        bridge_ids.append(b)
+    if not fluxes:
+        return
+    fluxes = np.array(fluxes, dtype=np.float64)
+    nb = len(bridge_ids)
+    total_flux = fluxes.sum()
+    if total_flux < 1e-6:
+        return
+    # Conserved redistribution: a fixed total bond-energy budget is shared
+    # among bridges in proportion to the flux they carry. High-flux bridges
+    # gain at the expense of low-flux ones. The system cannot globally
+    # saturate — strengthening one channel weakens others. Finite binding
+    # energy redistributed by flux. This is competition, not amplification.
+    budget = nb * 1.0  # mean strength stays ~1.0
+    target = budget * (fluxes / total_flux)  # proportional share
+    for k, b in enumerate(bridge_ids):
+        cur = world.b_strength[b]
+        # Relax toward flux-proportional target
+        world.b_strength[b] = float(np.clip(
+            cur + rate * dt * (target[k] - cur), 0.0, max_s))
 
 
 def decay_bridges(world, dt: float) -> int:
