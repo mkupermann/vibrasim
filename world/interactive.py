@@ -100,6 +100,7 @@ class InteractiveViewer:
         self._pl = None
         self._vib_actor = None
         self._node_actor = None
+        self._bridge_actor = None
         self._label_actor = None
         self._hud_actor = None
         self._info_actor = None
@@ -130,6 +131,7 @@ class InteractiveViewer:
         # Initial geometry
         self._rebuild_vibrations()
         self._rebuild_nodes()
+        self._rebuild_bridges()
 
         # HUD text actors
         self._hud_actor = pl.add_text("", position="upper_left",
@@ -201,6 +203,7 @@ class InteractiveViewer:
                 # Render
                 self._rebuild_vibrations()
                 self._rebuild_nodes()
+                self._rebuild_bridges()
                 self._update_labels()
                 self._update_hud()
 
@@ -326,6 +329,51 @@ class InteractiveViewer:
                 )
             except Exception:
                 pass
+
+    def _rebuild_bridges(self):
+        """Draw bridges as lines between connected atoms — shows membranes."""
+        import pyvista as pv
+        pl = self._pl
+        if self._bridge_actor is not None:
+            try:
+                pl.remove_actor(self._bridge_actor, render=False)
+            except Exception:
+                pass
+            self._bridge_actor = None
+
+        w = self.world
+        if not hasattr(w, 'b_count') or w.b_count == 0:
+            return
+
+        # Collect alive bridges as line segments
+        pts = []
+        lines = []
+        n = 0
+        for b in range(w.b_count):
+            if not w.b_alive[b]:
+                continue
+            i, j = int(w.b_atom_i[b]), int(w.b_atom_j[b])
+            if i >= w.k_count or j >= w.k_count:
+                continue
+            if not w.k_alive[i] or not w.k_alive[j]:
+                continue
+            # Skip bridges that wrap across the periodic boundary (visual clutter)
+            box = np.asarray(w.config.box_size)
+            d = w.k_pos[i] - w.k_pos[j]
+            if np.any(np.abs(d) > box * 0.5):
+                continue
+            pts.append(w.k_pos[i]); pts.append(w.k_pos[j])
+            lines.append([2, n, n + 1])
+            n += 2
+
+        if n == 0:
+            return
+
+        poly = pv.PolyData(np.array(pts), lines=np.hstack(lines))
+        self._bridge_actor = pl.add_mesh(
+            poly, color=(0.2, 1.0, 0.6), line_width=3,
+            name="bridges",
+        )
 
     def _update_labels(self):
         import pyvista as pv

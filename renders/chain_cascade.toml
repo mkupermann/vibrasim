@@ -1,22 +1,29 @@
-# Config for watching the binding cascade in real-time.
+# Live viewer config — the current frontier: 2D membrane sheets.
 # Run: python -m world gui --config renders/chain_cascade.toml
+#
+# Chain: Waves → Electrons → Pairs → Triads → Atoms → Bridges → Membrane sheets
+# Valence 3 + atom repulsion = triangulated 2D membrane (the cell precursor).
 
-n_initial_vibrations = 100
-box_size = [25.0, 25.0, 25.0]
+n_initial_vibrations = 300
+box_size = [30.0, 30.0, 30.0]
 r_1 = 5.0
 r_2 = 10.0
 freq_tolerance = 0.03
-mol_fusion_enabled = true
+mol_fusion_enabled = false
 resonance_coupling = 15.0
-node_thermal_speed = 5.0
+node_thermal_speed = 3.0
+atom_valence = 3
+node_freq_binding = false
+bridge_cooldown = 0.0
+atom_repulsion_k = 1.0
 pair_decay_time = 30.0
 triad_decay_time = 300.0
 dt = 0.1
-n_nodes_max = 4096
-n_vibrations_max = 1024
-vibration_soft_cap = 150
+n_nodes_max = 8192
+n_vibrations_max = 2048
+vibration_soft_cap = 400
 repulsion_k = 0.0
-lambda_gen = 0.002
+lambda_gen = 0.015
 lambda_dec = 0.0
 neuron_dynamics_enabled = false
 stdp_enabled = false
