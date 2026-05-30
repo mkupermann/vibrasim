@@ -80,6 +80,7 @@ class WorldConfig:
     atom_valence: int = 0                 # Max bindings per atom (0=unlimited). 2=linear chains, 3=branched, 4=tetrahedral.
     bridge_cooldown: float = 0.0          # Seconds after bridging before atom can bridge again (0=instant).
     node_freq_binding: bool = True        # Apply 8% rule to node→node binding. False = proximity-only (freq selectivity only at vibration→electron).
+    atom_repulsion_k: float = 0.0         # Repulsion between non-bonded atoms. With bridge tension, produces minimal-surface membranes.
 
     # Plan B — STDP and directional plasticity
     stdp_enabled: bool = False              # master switch — off preserves legacy behaviour

@@ -166,6 +166,58 @@ def apply_bridge_tension(world, dt: float) -> None:
         world.k_vel[j] *= 0.95
 
 
+def apply_atom_repulsion(world, dt: float) -> None:
+    """Non-bonded atoms repel each other. Combined with bridge tension
+    (bonded atoms attract), this produces minimal surfaces — rings flatten
+    into membranes, the way soap films and lipid bilayers minimize energy.
+
+    Only acts between atoms that are NOT directly bridged. Bridged pairs
+    are governed by bridge tension (attraction toward equilibrium).
+    """
+    cfg = world.config
+    rep_k = getattr(cfg, 'atom_repulsion_k', 0.0)
+    if rep_k <= 0:
+        return
+    K = world.k_count
+    box = np.asarray(cfg.box_size, dtype=np.float64)
+    r_rep = cfg.r_2 * 0.5  # short-range: only spread close atoms, don't block binding
+
+    atom_mask = world.k_alive[:K] & (world.k_level[:K] == 4)
+    atom_idx = np.where(atom_mask)[0]
+    n = len(atom_idx)
+    if n < 2:
+        return
+
+    # Bonded pairs to exclude
+    bonded = set()
+    for b in range(world.b_count):
+        if world.b_alive[b]:
+            i, j = int(world.b_atom_i[b]), int(world.b_atom_j[b])
+            bonded.add((min(i, j), max(i, j)))
+
+    pos = world.k_pos[atom_idx]
+    # All-pairs displacement
+    diff = pos[:, None, :] - pos[None, :, :]  # (n, n, 3)
+    diff -= box * np.round(diff / box)
+    dist = np.sqrt((diff * diff).sum(axis=2))  # (n, n)
+
+    for a in range(n):
+        force = np.zeros(3)
+        for b in range(n):
+            if a == b:
+                continue
+            d = dist[a, b]
+            if d >= r_rep or d < 1e-6:
+                continue
+            ia, ib = int(atom_idx[a]), int(atom_idx[b])
+            if (min(ia, ib), max(ia, ib)) in bonded:
+                continue  # bonded → bridge tension handles it
+            # Inverse repulsion: stronger when closer
+            mag = rep_k * (1.0 - d / r_rep) * dt
+            force += (diff[a, b] / d) * mag
+        world.k_vel[atom_idx[a]] += force
+
+
 def decay_bridges(world, dt: float) -> int:
     """Remove bridges whose atoms are dead."""
     removed = 0
