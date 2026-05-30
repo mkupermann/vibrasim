@@ -1,30 +1,35 @@
-# Live viewer config — the current frontier: 2D membrane sheets.
+# Live viewer — the current frontier: the CELL (closed membrane shell).
 # Run: python -m world gui --config renders/chain_cascade.toml
 #
-# Chain: Waves → Electrons → Pairs → Triads → Atoms → Bridges → Membrane sheets
-# Valence 3 + atom repulsion = triangulated 2D membrane (the cell precursor).
+# Chain: Waves → Electrons → Pairs → Triads → Atoms → Bridges →
+#        Sheets (valence 3) → closed membrane shell = CELL.
+# Replicated 5/5 seeds. sv_ratio 0.66-0.86, vibrations trapped inside.
+#
+# Watch: white atoms form, green bridges link them into a triangulated
+# sheet, spontaneous curvature domes it into a closed shell enclosing
+# a volume of trapped vibrations.
 
-n_initial_vibrations = 300
-box_size = [30.0, 30.0, 30.0]
+n_initial_vibrations = 400
+box_size = [28.0, 28.0, 28.0]
 r_1 = 5.0
 r_2 = 10.0
 freq_tolerance = 0.03
 mol_fusion_enabled = false
 resonance_coupling = 15.0
-node_thermal_speed = 3.0
+node_thermal_speed = 2.0
 atom_valence = 3
 node_freq_binding = false
-bridge_cooldown = 0.0
 atom_repulsion_k = 1.0
-pair_decay_time = 30.0
-triad_decay_time = 300.0
+curvature_k = 2.0
+pair_decay_time = 40.0
+triad_decay_time = 400.0
 dt = 0.1
 n_nodes_max = 8192
 n_vibrations_max = 2048
-vibration_soft_cap = 400
+vibration_soft_cap = 500
 repulsion_k = 0.0
-lambda_gen = 0.015
+lambda_gen = 0.012
 lambda_dec = 0.0
 neuron_dynamics_enabled = false
 stdp_enabled = false
-rng_seed = 42
+rng_seed = 99
