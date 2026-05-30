@@ -3109,6 +3109,44 @@ Migration zu Windows abgeschlossen (USB-Transfer 2.4GB).
 
 ---
 
+## 2026-05-30 — Kette erreicht die Zelle (geschlossene Membran-Huelle)
+
+Vier Glieder in einer Session, jedes pre-registriert und getestet:
+
+1. **Atom-Kaskade entstaut** (node_freq_binding=False). Die 8%-Regel
+   gilt nur beim Wellen→Elektron-Schritt; Node→Node-Bindung ist rein
+   raeumlich. Loest den Triade→Atom-Stau (summierte Frequenzen
+   divergieren ~200%, weit ausserhalb 8%). Atome 1-4 → 11-25.
+
+2. **Bridges statt Fusion**. Atome bleiben bestehen, Bridges verbinden
+   sie. Valenz begrenzt Bridges/Atom. Valenz 2 → 1D (Ketten, Ringe bis
+   17 Atome). Valenz 3 → 2D (triangulierte Flaechen, Grad ~3).
+
+3. **BET-085 FAIL**: Edge-Closure (Rand-Atome ziehen sich an) flacht
+   die Membran ab statt sie zu woelben — In-Ebene-Kraft. Befund:
+   Schliessung braucht Aus-der-Ebene-Kraft.
+
+4. **BET-086 PASS**: Spontankruemmung (Helfrich — Atom weg vom
+   Nachbar-Schwerpunkt druecken) woelbt die flache Flaeche zur
+   geschlossenen 3D-Huelle. 18 Atome, Grad 3.0, sv_ratio 0.6-0.80,
+   33-105 Vibrationen eingeschlossen, stabil ueber 30000s Sim.
+   **Das ist der Zell-Vorlaeufer: Innen verschieden von Aussen.**
+
+Kette: Wellen → Elektronen → Paare → Triaden → Atome → Bridges →
+Ringe → Flaechen → ZELLE.
+
+Performance: reines numpy, 1000-2700 t/s, kein Numba, kein Leak.
+Constraint-Checker (tools/constraint_checker.py) wacht ueber die
+Regeln: kein LLM, keine Labels, kein Backprop, Lernen muss aus
+Substrat-Physik emergieren. reading.py wurde geloescht (war
+supervised ML mit Substrat-Lack).
+
+Naechstes Glied (BET-087, laeuft): Flux-getriebene Bridge-Plastizitaet
+— Bridge-Staerke folgt dem Vibrations-Fluss. Plastizitaet aus Physik,
+nicht aus importierten STDP-Gleichungen.
+
+---
+
 ## 2026-05-27 — Kuramoto-Resonanz treibt Bindungskaskade bis Atome
 
 Frequenz-Synchronisation zwischen benachbarten Knoten (Kuramoto-Modell)
