@@ -1,0 +1,17 @@
+1000s: bridges=44 cv=0.02 max_frac=0.00 autocorr=--
+2000s: bridges=44 cv=0.04 max_frac=0.00 autocorr=0.20
+3000s: bridges=44 cv=0.03 max_frac=0.00 autocorr=0.43
+4000s: bridges=44 cv=0.03 max_frac=0.00 autocorr=0.07
+5000s: bridges=44 cv=0.03 max_frac=0.00 autocorr=0.15
+6000s: bridges=44 cv=0.03 max_frac=0.00 autocorr=-0.06
+7000s: bridges=44 cv=0.03 max_frac=0.00 autocorr=0.33
+8000s: bridges=44 cv=0.03 max_frac=0.00 autocorr=0.38
+9000s: bridges=44 cv=0.03 max_frac=0.00 autocorr=-0.05
+10000s: bridges=44 cv=0.03 max_frac=0.00 autocorr=0.16
+11000s: bridges=44 cv=0.02 max_frac=0.00 autocorr=0.15
+12000s: bridges=44 cv=0.03 max_frac=0.00 autocorr=0.15
+13000s: bridges=44 cv=0.03 max_frac=0.00 autocorr=0.63
+14000s: bridges=44 cv=0.02 max_frac=0.00 autocorr=-0.10
+15000s: bridges=44 cv=0.03 max_frac=0.00 autocorr=0.33
+16000s: bridges=44 cv=0.03 max_frac=0.00 autocorr=0.08
+DONE

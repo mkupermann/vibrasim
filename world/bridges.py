@@ -425,18 +425,28 @@ def apply_bistable_plasticity(world, dt: float) -> None:
         d -= box * np.round(d / box)
         density[a] = float(np.sum(vib_alive & ((d * d).sum(axis=1) < r_sense_sq)))
 
+    # Flux per bridge, then drive RELATIVE to the mean. Only above-average-
+    # flux bridges are pushed up; below-average pushed down. Combined with
+    # the double well, above-average bridges latch strong and STAY strong
+    # even after their flux returns to average (hysteresis = memory).
+    fluxes = []
+    ids = []
     for b in range(world.b_count):
         if not world.b_alive[b]:
             continue
         i, j = int(world.b_atom_i[b]), int(world.b_atom_j[b])
+        fluxes.append(density.get(i, 0.0) * density.get(j, 0.0))
+        ids.append(b)
+    if not ids:
+        return
+    fluxes = np.array(fluxes, dtype=np.float64)
+    mean_flux = max(fluxes.mean(), 1e-6)
+    for k, b in enumerate(ids):
         s = world.b_strength[b]
-        # Double-well restoring force (drives toward nearest stable state)
         well = -well_k * (s - low) * (s - mid) * (s - high)
-        # Flux drive: pushes strength up when local flux exceeds reference
-        flux = density.get(i, 0.0) * density.get(j, 0.0)
-        drive = flux_gain * (flux / flux_ref - 1.0)
+        drive = flux_gain * (fluxes[k] / mean_flux - 1.0)  # relative to mean
         s_new = s + rate * dt * (well + drive)
-        world.b_strength[b] = float(np.clip(s_new, 0.0, high + 2.0))
+        world.b_strength[b] = float(np.clip(s_new, 0.0, high + 1.0))
 
 
 def decay_bridges(world, dt: float) -> int:
