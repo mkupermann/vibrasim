@@ -2102,6 +2102,8 @@ def tick(world, dt: float) -> None:
     neuron_dynamics(world, dt)
     apply_bridge_atom_propagation(world, dt)  # NEW (G6) — direct atom→atom charge through strong bridges
     apply_stdp(world)              # NEW (Plan B)
+    from world.bridges import apply_correlation_plasticity
+    apply_correlation_plasticity(world, dt)  # BET-099 — firing-coincidence bridge plasticity (no-op when rate=0)
     apply_btsp(world, dt)          # NEW (G14) — second-scale eligibility-trace plasticity
     # G16: self-aware substrate — must run after apply_btsp so
     # eligibility traces and firings reflect this tick's reality.

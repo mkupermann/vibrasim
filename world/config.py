@@ -112,6 +112,11 @@ class WorldConfig:
     # UP (write); the bistable well alone holds or decays it. Prevents zero-flux
     # from erasing a latched memory. Default False preserves prior behaviour.
     bistable_drive_rectified: bool = False
+    # BET-099: firing-coincidence (Hebbian) bridge plasticity. When two bridged
+    # atoms fire within tau_LTP, the bridge is driven over the bistable barrier;
+    # the well holds it. A turnover-robust write signal (vs fragile flux state).
+    corr_plasticity_rate: float = 0.0     # master rate (0 = off)
+    corr_potentiation: float = 1.0        # co-firing drive magnitude (over-barrier push)
 
     # Plan B — STDP and directional plasticity
     stdp_enabled: bool = False              # master switch — off preserves legacy behaviour
