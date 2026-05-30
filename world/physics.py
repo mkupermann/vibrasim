@@ -1054,7 +1054,11 @@ def bind_nodes_upward(world) -> int:
             close = d2 < r2_sq
             ci, cj, targets = ci[close], cj[close], targets[close]
 
-        if len(ci) > 0:
+        # Frequency selectivity happens once, at vibration→electron binding.
+        # Node→node binding is structural (proximity + polarity). When
+        # node_freq_binding is False, the 8% rule is skipped for node pairs,
+        # unsticking the triad→atom step where summed frequencies diverge.
+        if len(ci) > 0 and getattr(cfg, 'node_freq_binding', True):
             # Freq check (only sub-atom)
             li = k_level[ci]
             lj = k_level[cj]
