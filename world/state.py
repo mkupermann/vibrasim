@@ -69,6 +69,15 @@ class World:
         # to all atoms with non-zero eligibility — one-shot learning at
         # the seconds time-scale (Magee 2026, Wu et al 2025).
         self.k_eligibility = np.zeros(K, dtype=np.float64)
+
+        # Bridge arrays — persistent connections between atoms.
+        # Bridges link two atoms without consuming them (unlike fusion).
+        B = K  # max bridges = max nodes
+        self.b_alive = np.zeros(B, dtype=bool)
+        self.b_atom_i = np.zeros(B, dtype=np.int32)
+        self.b_atom_j = np.zeros(B, dtype=np.int32)
+        self.b_strength = np.zeros(B, dtype=np.float64)
+        self.b_count = 0
         # G10 — pattern_id ('memory cell') per node. 0 = ambient/unassigned.
         # When the user trains a specific pattern, world.active_pattern_id
         # is set to a positive int; new atoms + bridges formed during that
