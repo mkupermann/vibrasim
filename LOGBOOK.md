@@ -3822,3 +3822,23 @@ writes UP; the bistable well alone decides hold vs decay. POST flux=0 -> drive=0
 -> stim relaxes INTO strong well (stays), control INTO weak well (stays) ->
 hysteresis holds. NOT the STDP-pivot branch (write already works); one-line
 principled drive correction. Selective WRITE is the milestone here.
+
+
+## 2026-05-31 01:xx — Session: BET-097 rectified drive — NULL, but hold improved; boundary contamination isolated
+
+Rectified the bistable drive (flux_gain*max(0,flux/flux_ref-1), one-sided write).
+Contrast PASS, selective write PASS again, and the hold measurably improved: POST
+stim held ~4.3-4.9 (vs BET-096 collapse to ~3.5). But T97c still NULL: control
+crept 3.60->4.27 in POST and at times exceeded stim.
+
+Diagnosis (confounds ruled out: flux_plasticity gated off, new bridges form at
+1.0): control reached 3.71 DURING stim despite median control flux 0, because
+r_2=10 sensing lets control-region boundary bridges (x~15.5) catch the tail of
+stim vibrations (sigma 2 around 7.5). Once over the barrier, the well latches
+them strong permanently. So the rectified drive is correct; the remaining failure
+is spatial blur at the region boundary.
+
+Next BET-098: tighter injection (sigma~1) + measure region cores only (guard gap
+around midline). Stopping rule: if clean persistent selectivity still fails, flux
+line = qualified partial success (write yes, clean persistent recall no), pivot to
+STDP/BTSP correlation addressing (BET-099).

@@ -448,10 +448,18 @@ def apply_bistable_plasticity(world, dt: float) -> None:
     # stim-region flux clears the reference and latches; resting flux does not.
     mode = getattr(cfg, 'bistable_drive_mode', 'relative')
     ref = flux_ref if mode == 'absolute' else mean_flux
+    # BET-097: rectified drive. The two-sided drive is negative whenever flux <
+    # ref, so when the field is removed (flux→0) it actively pushes latched
+    # bridges DOWN and erases the memory. Rectifying (max(0, ·)) makes flux a
+    # one-sided WRITE signal: it only pushes strength UP, and the bistable well
+    # alone decides hold-vs-decay. "No input" then means "hold", as a latch must.
+    rectified = getattr(cfg, 'bistable_drive_rectified', False)
     for k, b in enumerate(ids):
         s = world.b_strength[b]
         well = -well_k * (s - low) * (s - mid) * (s - high)
         drive = flux_gain * (fluxes[k] / ref - 1.0)
+        if rectified and drive < 0.0:
+            drive = 0.0
         s_new = s + rate * dt * (well + drive)
         world.b_strength[b] = float(np.clip(s_new, 0.0, high + 1.0))
 
