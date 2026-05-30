@@ -3686,3 +3686,34 @@ PERSISTENCE, not bridge count or mobility. Slowing atoms does nothing if they
 dissolve first. Next: extend high-level node lifetime so level-4 sites live on
 the memory timescale, THEN re-test anchoring. Refused to lower anchor_age to 13 s
 (would be tuning to the result, and would not fix non-persistence).
+
+
+## 2026-05-30 22:xx — Session: BET-091 atom persistence via valence commitment — NULL (persistence SOLVED)
+
+Diagnosed BET-090's persistence killer: ALL level-4 atom deaths come from
+bind_nodes_upward — the base upgrade rule (4,4)->5 fuses two atoms into a
+molecule, NOT gated by mol_fusion_enabled. Atoms lived ~13s until eaten.
+
+Mechanism (within primitives): valence commitment — a bonded atom resists
+fusion. New cfg.fusion_bond_block + a filter in bind_nodes_upward. Pre-data
+correction (logged in marker_protocol.md): threshold =1 caused intractable
+runaway node growth (~1138 atoms and climbing, O(n^2) blowup); corrected to
+=atom_valence (3) so only fully-saturated atoms lock. Probe confirmed bounded:
+~235 nodes, ~68 persistent atoms, flat cost.
+
+VERDICT: NULL — but the persistence half is a decisive WIN.
+- T91a persistence: PASS. ON bonded-atom mean lifetime 1513.6s vs OFF 4.3s
+  (~115x baseline). 66-68 stable bonded atoms, ~50-64 bridges/region (vs ~3
+  atoms / 1-7 bridges before). First persistent populated lattice in the chain.
+- T91c selective memory: FAIL. No bridge crossed the barrier (mid=3). The
+  bistable latch fired with partial local effect (strengths drifted to ~1.5-2.0)
+  but the relative-to-mean drive, calibrated for ~1-7 bridges, is too weak at
+  ~100 bridges (stimulus flux diluted, stim/mean ratio ~1). Pattern-01 triage:
+  mechanism engages, but a NEW constraint binds — latch drive vs barrier at
+  high bridge density.
+
+Finding: persistence is necessary but not sufficient. Constraint moved from
+'no structure' to 'write mechanism does not scale to a populated lattice'.
+Next (new pre-registered BET-092): re-derive bistable drive for the populated
+regime (absolute/localized drive, or density-scaled barrier). Refused to tune
+bistable_* post-result. Persistence mechanism kept — independent verified win.

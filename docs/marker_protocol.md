@@ -96,3 +96,21 @@ Pre-registration discipline prevents post-hoc threshold tuning *to results*. It 
 - The git diff on this file is the cryptographic proof: this correction landed before any run that ever produced a marker-5 result under the new definition.
 
 Future corrections of this kind — pre-data, same-construct, mis-specification cleanup — will be logged here following the same template. Post-data threshold tuning *to a result* will not happen; it would void the pre-registration and is excluded by `CHARTER.md` §"NULL is a valid verdict".
+
+
+---
+
+## Pre-data design correction (2026-05-30): BET-091 fusion-block threshold
+
+**Original specification (bet_091, as first pre-registered):** `fusion_bond_block = 1` — an atom with any single bridge resists fusion.
+
+**Problem identified BEFORE any data run:** a tractability probe (tools/_probe091.py, block=1) showed runaway node growth — alive level-4 atoms 610→981→1138 and still climbing at 300 sim-s, with per-tick cost exploding (O(n^2) all-pairs in bind_nodes_upward becomes intractable). Cause: a single bond makes an atom fusion-immune, but atoms readily form one bridge, so ~every atom is protected the instant it forms and nothing ever fuses. This is also conceptually wrong: atom_valence=3, so a 1-bonded atom still has spare valence and should remain fusion-eligible.
+
+**Correction:** `fusion_bond_block = atom_valence (=3)` — only a *fully valence-saturated* atom (no dangling bond) is locked into its lattice and resists fusion. Verified tractable (block=3 probe): alive nodes saturate ~235, persistent level-4 atoms ~68 (vs ~3 baseline), flat per-tick cost.
+
+**Why this is a correction and not a tuning:**
+- The construct is unchanged: 'an atom committed to its structure resists fusion'. Only the operational definition of 'committed' is sharpened from 'has any bond' to 'valence-saturated'.
+- The direction is unchanged (more bonds → more committed → more fusion-resistant).
+- It is made BEFORE the first data-collection run of BET-091, on tractability/coherence grounds, not to move a result. No PASS/FAIL/NULL outcome had been observed.
+
+**Why logged here and not silently fixed:** same reason as the marker-5 correction above — the git diff on this file is the proof that the threshold changed before, not after, the data. The amendment doc docs/amendments/bet_091_atom_persistence.md is updated to fusion_bond_block=3 in the same commit.

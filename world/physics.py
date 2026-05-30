@@ -1075,6 +1075,19 @@ def bind_nodes_upward(world) -> int:
                 pass_freq = ~sub_atom | freq_ok
                 ci, cj, targets = ci[pass_freq], cj[pass_freq], targets[pass_freq]
 
+        # BET-091 valence commitment: an atom already bonded into a structure
+        # (k_bond_count >= fusion_bond_block) has spent its valence on external
+        # bridges and resists internal fusion. Skip any candidate pair where a
+        # level-4 atom meets the bond threshold. Unbonded atoms fuse as before,
+        # so the cascade up to atom formation is untouched. 0 = off.
+        block = getattr(cfg, 'fusion_bond_block', 0)
+        if block > 0 and len(ci) > 0:
+            bc = world.k_bond_count[:K]
+            committed = (((k_level[ci] == 4) & (bc[ci] >= block)) |
+                         ((k_level[cj] == 4) & (bc[cj] >= block)))
+            keep = ~committed
+            ci, cj, targets = ci[keep], cj[keep], targets[keep]
+
         n_out = len(ci)
         if n_out > 0:
             out_i[:n_out] = ci
