@@ -1,0 +1,51 @@
+=== BET-093: flux contrast via starved ambient ===
+[LOC] 500s [WARM]: stim=0.77(n=48) ctrl=0.75(n=49)
+[LOC] 1000s [WARM]: stim=0.76(n=40) ctrl=0.76(n=57)
+[LOC] 1500s [WARM]: stim=0.76(n=47) ctrl=0.76(n=51)
+[LOC] 2000s [WARM]: stim=0.76(n=58) ctrl=0.76(n=44)
+[LOC] 2500s [WARM]: stim=0.75(n=60) ctrl=0.76(n=40)
+[LOC] 3000s [WARM]: stim=0.75(n=70) ctrl=0.76(n=29)
+[LOC] starved flux_ref(ctrl p90)=7336.0
+[LOC] 3500s [STIM]: stim=0.89(n=65) ctrl=0.88(n=36)
+[LOC] 4000s [STIM]: stim=0.87(n=51) ctrl=0.88(n=49)
+[LOC] 4500s [STIM]: stim=0.88(n=37) ctrl=0.87(n=61)
+[LOC] 5000s [STIM]: stim=0.86(n=38) ctrl=0.89(n=60)
+[LOC] 5500s [STIM]: stim=0.88(n=39) ctrl=0.88(n=61)
+[LOC] 6000s [STIM]: stim=0.86(n=47) ctrl=0.87(n=50)
+[LOC] 6500s [POST]: stim=0.88(n=47) ctrl=0.87(n=50)
+[LOC] 7000s [POST]: stim=0.88(n=52) ctrl=0.89(n=50)
+[LOC] 7500s [POST]: stim=0.88(n=64) ctrl=0.88(n=34)
+[LOC] 8000s [POST]: stim=0.88(n=65) ctrl=0.89(n=34)
+[LOC] 8500s [POST]: stim=0.88(n=57) ctrl=0.89(n=44)
+[LOC] 9000s [POST]: stim=0.86(n=63) ctrl=0.87(n=36)
+[LOC] wall budget hit at step 18657
+[UNI] 500s [WARM]: stim=0.77(n=48) ctrl=0.75(n=49)
+[UNI] 1000s [WARM]: stim=0.76(n=40) ctrl=0.76(n=57)
+[UNI] 1500s [WARM]: stim=0.76(n=47) ctrl=0.76(n=51)
+[UNI] 2000s [WARM]: stim=0.76(n=58) ctrl=0.76(n=44)
+[UNI] 2500s [WARM]: stim=0.75(n=60) ctrl=0.76(n=40)
+[UNI] 3000s [WARM]: stim=0.75(n=70) ctrl=0.76(n=29)
+[UNI] starved flux_ref(ctrl p90)=7336.0
+[UNI] 3500s [STIM]: stim=0.88(n=65) ctrl=0.88(n=36)
+[UNI] 4000s [STIM]: stim=0.89(n=51) ctrl=0.88(n=49)
+[UNI] 4500s [STIM]: stim=0.88(n=37) ctrl=0.87(n=61)
+[UNI] 5000s [STIM]: stim=0.87(n=38) ctrl=0.88(n=60)
+[UNI] 5500s [STIM]: stim=0.87(n=39) ctrl=0.88(n=61)
+[UNI] 6000s [STIM]: stim=0.86(n=47) ctrl=0.88(n=50)
+[UNI] 6500s [POST]: stim=0.89(n=47) ctrl=0.86(n=50)
+[UNI] 7000s [POST]: stim=0.88(n=52) ctrl=0.88(n=50)
+[UNI] 7500s [POST]: stim=0.87(n=64) ctrl=0.88(n=34)
+[UNI] 8000s [POST]: stim=0.88(n=65) ctrl=0.91(n=34)
+[UNI] 8500s [POST]: stim=0.88(n=57) ctrl=0.89(n=44)
+[UNI] 9000s [POST]: stim=0.87(n=63) ctrl=0.86(n=36)
+[UNI] wall budget hit at step 18617
+
+--- VERDICT ---
+stim flux median=6177 ctrl flux median=6141 ratio=1.01
+T93a contrast exists (>=1.5x) : False
+T93b selective latch (STIM)   : False
+T93c selective memory (POST)  : False
+T93d control (uniform) fails  : True
+
+BET-093: REGIME-NULL (no contrast)
+DONE
