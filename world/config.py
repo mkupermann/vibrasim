@@ -87,6 +87,14 @@ class WorldConfig:
     flux_threshold: float = 2.0           # Flux above this potentiates a bridge, below depresses.
     flux_decay: float = 0.05              # Strength decay per second for low-flux bridges.
     flux_max_strength: float = 10.0       # Max bridge strength.
+    # Bistable plasticity (BET-089): double-well bridge strength = memory latch.
+    bistable_rate: float = 0.0            # Master rate (0=off).
+    bistable_low: float = 1.0             # Weak stable state.
+    bistable_mid: float = 3.0             # Unstable barrier.
+    bistable_high: float = 6.0            # Strong stable state (latched).
+    bistable_well_k: float = 0.02         # Double-well restoring strength.
+    bistable_flux_gain: float = 0.02      # How hard flux pushes strength up.
+    bistable_flux_ref: float = 30.0       # Flux reference (above this = drive up).
 
     # Plan B — STDP and directional plasticity
     stdp_enabled: bool = False              # master switch — off preserves legacy behaviour

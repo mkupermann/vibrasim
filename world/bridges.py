@@ -381,6 +381,64 @@ def apply_flux_plasticity(world, dt: float) -> None:
             cur + rate * dt * (target[k] - cur), 0.0, max_s))
 
 
+def apply_bistable_plasticity(world, dt: float) -> None:
+    """Bistable bridge strength — the mechanism BET-087/088 found missing.
+
+    Each bridge sits in a double-well potential: stable WEAK and STRONG
+    states with an unstable barrier between. Vibration flux pushes
+    strength up. If flux pushes it past the barrier, it falls into the
+    STRONG well and LATCHES there — staying strong after the flux stops.
+    That hysteresis is memory: a record of past flux, not a mirror of
+    present flux. This is how a synapse holds LTP.
+
+    ds/dt = -k*(s-low)*(s-mid)*(s-high)  +  flux_drive
+    """
+    cfg = world.config
+    rate = getattr(cfg, 'bistable_rate', 0.0)
+    if rate <= 0:
+        return
+    K = world.k_count
+    if world.b_count == 0:
+        return
+    box = np.asarray(cfg.box_size, dtype=np.float64)
+    r_sense_sq = cfg.r_2 * cfg.r_2
+    low = getattr(cfg, 'bistable_low', 1.0)
+    mid = getattr(cfg, 'bistable_mid', 3.0)
+    high = getattr(cfg, 'bistable_high', 6.0)
+    well_k = getattr(cfg, 'bistable_well_k', 0.02)
+    flux_gain = getattr(cfg, 'bistable_flux_gain', 0.02)
+    flux_ref = getattr(cfg, 'bistable_flux_ref', 30.0)
+
+    # Local vibration density per bridged atom
+    atoms = set()
+    for b in range(world.b_count):
+        if world.b_alive[b]:
+            atoms.add(int(world.b_atom_i[b])); atoms.add(int(world.b_atom_j[b]))
+    vib_pos = world.s_pos
+    vib_alive = world.s_alive
+    density = {}
+    for a in atoms:
+        if a >= K or not world.k_alive[a]:
+            density[a] = 0.0
+            continue
+        d = vib_pos - world.k_pos[a]
+        d -= box * np.round(d / box)
+        density[a] = float(np.sum(vib_alive & ((d * d).sum(axis=1) < r_sense_sq)))
+
+    for b in range(world.b_count):
+        if not world.b_alive[b]:
+            continue
+        i, j = int(world.b_atom_i[b]), int(world.b_atom_j[b])
+        s = world.b_strength[b]
+        # Double-well restoring force (drives toward nearest stable state)
+        well = -well_k * (s - low) * (s - mid) * (s - high)
+        # Flux drive: pushes strength up when local flux exceeds reference
+        flux = density.get(i, 0.0) * density.get(j, 0.0)
+        drive = flux_gain * (flux / flux_ref - 1.0)
+        s_new = s + rate * dt * (well + drive)
+        world.b_strength[b] = float(np.clip(s_new, 0.0, high + 2.0))
+
+
 def decay_bridges(world, dt: float) -> int:
     """Remove bridges whose atoms are dead."""
     removed = 0
