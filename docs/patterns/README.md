@@ -84,7 +84,7 @@ index with status RETIRED so the trail is preserved.
 
 | # | Name | Status | Discovered | Last touched |
 |---|------|--------|------------|--------------|
-| — | (none yet) | — | — | — |
+| 01 | Three-way triage before you believe a null result | empirical | 2026-05-30 | 2026-05-30 |
 
 ---
 
