@@ -218,6 +218,47 @@ def apply_atom_repulsion(world, dt: float) -> None:
         world.k_vel[atom_idx[a]] += force
 
 
+def apply_spontaneous_curvature(world, dt: float) -> None:
+    """Push each bridged atom away from its bridge-neighbour centroid.
+
+    For an interior atom with symmetric neighbours the centroid sits on
+    the atom — no net force. For an edge atom the neighbours are on one
+    side, so the atom is pushed outward, curling the boundary up out of
+    the plane. Accumulated, a flat sheet domes into a shell (Helfrich
+    spontaneous curvature).
+    """
+    cfg = world.config
+    curv_k = getattr(cfg, 'curvature_k', 0.0)
+    if curv_k <= 0:
+        return
+    K = world.k_count
+    box = np.asarray(cfg.box_size, dtype=np.float64)
+
+    # Build adjacency
+    nbrs = {}
+    for b in range(world.b_count):
+        if world.b_alive[b]:
+            i, j = int(world.b_atom_i[b]), int(world.b_atom_j[b])
+            if i < K and j < K and world.k_alive[i] and world.k_alive[j]:
+                nbrs.setdefault(i, []).append(j)
+                nbrs.setdefault(j, []).append(i)
+
+    for i, ns in nbrs.items():
+        if len(ns) < 2:
+            continue
+        # Vector from neighbour centroid to atom (periodic)
+        acc = np.zeros(3)
+        for j in ns:
+            d = world.k_pos[i] - world.k_pos[j]
+            d -= box * np.round(d / box)
+            acc += d
+        # acc points from centroid toward atom; push further that way
+        norm = np.sqrt((acc * acc).sum())
+        if norm < 1e-6:
+            continue
+        world.k_vel[i] += (acc / norm) * curv_k * dt
+
+
 def apply_edge_closure(world, dt: float) -> None:
     """Edge atoms (free valence) attract other edge atoms, curling the
     sheet toward closure. Models the higher energy of exposed membrane

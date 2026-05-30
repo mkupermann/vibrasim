@@ -2070,7 +2070,8 @@ def tick(world, dt: float) -> None:
     form_bridges(world)
     apply_bridge_tension(world, dt)
     apply_atom_repulsion(world, dt)
-    apply_edge_closure(world, dt)
+    from world.bridges import apply_spontaneous_curvature
+    apply_spontaneous_curvature(world, dt)
     decay_bridges(world, dt)
     decay_unstable_nodes(world, dt)
     decay_high_level_nodes(world, dt)   # NEW (R2)

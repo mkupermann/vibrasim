@@ -82,6 +82,7 @@ class WorldConfig:
     node_freq_binding: bool = True        # Apply 8% rule to node→node binding. False = proximity-only (freq selectivity only at vibration→electron).
     atom_repulsion_k: float = 0.0         # Repulsion between non-bonded atoms. With bridge tension, produces minimal-surface membranes.
     edge_closure_k: float = 0.0           # Edge atoms (free valence) attract each other, curling sheets toward closed shells.
+    curvature_k: float = 0.0              # Spontaneous curvature: push atoms away from bridge-neighbour centroid. Domes flat sheets into shells.
 
     # Plan B — STDP and directional plasticity
     stdp_enabled: bool = False              # master switch — off preserves legacy behaviour
