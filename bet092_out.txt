@@ -1,0 +1,28 @@
+=== BET-092: fixed-reference latch drive (flux_ref=9785.0) ===
+[ABS] 1000s [STIM]: stim=0.75(n=35) ctrl=0.74(n=63) strong=0.00 mid=0.00
+[ABS] 2000s [STIM]: stim=0.75(n=52) ctrl=0.76(n=42) strong=0.00 mid=0.00
+[ABS] 3000s [STIM]: stim=0.77(n=58) ctrl=0.77(n=37) strong=0.00 mid=0.00
+[ABS] 4000s [STIM]: stim=0.76(n=55) ctrl=0.75(n=41) strong=0.00 mid=0.00
+[ABS] 5000s [STIM]: stim=0.79(n=52) ctrl=0.72(n=43) strong=0.00 mid=0.00
+[ABS] 6000s [STIM]: stim=0.77(n=58) ctrl=0.76(n=36) strong=0.00 mid=0.00
+[ABS] 7000s [POST]: stim=0.77(n=57) ctrl=0.79(n=36) strong=0.00 mid=0.00
+[ABS] 8000s [POST]: stim=0.76(n=64) ctrl=0.76(n=30) strong=0.00 mid=0.00
+[ABS] wall budget hit at step 17104
+[REL] 1000s [STIM]: stim=2.01(n=35) ctrl=1.00(n=63) strong=0.07 mid=0.00
+[REL] 2000s [STIM]: stim=1.37(n=52) ctrl=1.38(n=42) strong=0.07 mid=0.00
+[REL] 3000s [STIM]: stim=1.27(n=58) ctrl=1.54(n=37) strong=0.07 mid=0.00
+[REL] 4000s [STIM]: stim=1.02(n=55) ctrl=1.84(n=41) strong=0.07 mid=0.00
+[REL] 5000s [STIM]: stim=1.26(n=52) ctrl=1.39(n=43) strong=0.07 mid=0.00
+[REL] 6000s [STIM]: stim=1.35(n=58) ctrl=1.40(n=36) strong=0.07 mid=0.00
+[REL] 7000s [POST]: stim=1.07(n=57) ctrl=1.72(n=36) strong=0.07 mid=0.00
+[REL] 8000s [POST]: stim=1.32(n=64) ctrl=1.51(n=30) strong=0.07 mid=0.00
+[REL] wall budget hit at step 17183
+
+--- VERDICT ---
+T92a selective latch (STIM)   : False
+T92b selective memory (POST)  : False
+T92c bimodal                  : True
+T92d control (relative) fails : True
+
+BET-092: NULL/FAIL
+DONE

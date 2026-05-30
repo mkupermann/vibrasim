@@ -3717,3 +3717,25 @@ Finding: persistence is necessary but not sufficient. Constraint moved from
 Next (new pre-registered BET-092): re-derive bistable drive for the populated
 regime (absolute/localized drive, or density-scaled barrier). Refused to tune
 bistable_* post-result. Persistence mechanism kept — independent verified win.
+
+
+## 2026-05-30 23:xx — Session: BET-092 fixed-reference latch drive — NULL (relocates blocker to flux contrast)
+
+On the persistent lattice (BET-091), tested whether a fixed-reference
+(absolute) bistable drive latches selectively where relative-to-mean did not.
+Added cfg.bistable_drive_mode ('relative'|'absolute'). flux_ref set by
+pre-registered rule = resting p90 from a no-stim baseline probe = 9785.
+
+VERDICT: NULL. Absolute arm: stim 0.75 vs ctrl 0.74 — IDENTICAL, both collapsed
+below the weak well (all flux < 9785 -> negative drive -> decay). Relative arm
+non-selective as before. No bridge latched.
+
+Key finding: there is NO spatial flux contrast between stim and control regions.
+Flux = density_i*density_j; with ~500 ambient vibrations every atom is bathed in
+~8000 background flux, so the localized stimulus (20 vib/4 steps) is a small
+perturbation that produces no measurable gradient. Both latch forms are
+downstream of a contrast that does not exist. Blocker relocated: not structure
+(solved), not drive-form (both tested) — it is stimulus-to-ambient signal-to-
+noise. Next (BET-093): lower ambient density / concentrate stimulus to create a
+real flux gradient; pre-register a direct contrast check BEFORE testing the
+latch. Absolute-drive mode kept. No post-result tuning of bistable_*.

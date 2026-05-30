@@ -441,10 +441,17 @@ def apply_bistable_plasticity(world, dt: float) -> None:
         return
     fluxes = np.array(fluxes, dtype=np.float64)
     mean_flux = max(fluxes.mean(), 1e-6)
+    # BET-092: drive mode. 'relative' (default, BET-089 v2) drives strength up
+    # only for above-MEAN-flux bridges — but on a populated lattice the mean
+    # rides up with the stimulus and the ratio stays near 1, so nothing latches.
+    # 'absolute' drives up bridges above a FIXED reference (bistable_flux_ref):
+    # stim-region flux clears the reference and latches; resting flux does not.
+    mode = getattr(cfg, 'bistable_drive_mode', 'relative')
+    ref = flux_ref if mode == 'absolute' else mean_flux
     for k, b in enumerate(ids):
         s = world.b_strength[b]
         well = -well_k * (s - low) * (s - mid) * (s - high)
-        drive = flux_gain * (fluxes[k] / mean_flux - 1.0)  # relative to mean
+        drive = flux_gain * (fluxes[k] / ref - 1.0)
         s_new = s + rate * dt * (well + drive)
         world.b_strength[b] = float(np.clip(s_new, 0.0, high + 1.0))
 
