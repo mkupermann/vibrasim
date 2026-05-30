@@ -1,0 +1,22 @@
+1000s [STIM]: stim=0.00(n=0) ctrl=0.00(n=0) ratio=0.00
+2000s [STIM]: stim=0.00(n=0) ctrl=0.00(n=0) ratio=0.00
+3000s [STIM]: stim=1.00(n=3) ctrl=0.00(n=0) ratio=100.00
+4000s [STIM]: stim=0.00(n=0) ctrl=0.94(n=1) ratio=0.00
+5000s [STIM]: stim=1.00(n=3) ctrl=0.00(n=0) ratio=100.00
+6000s [POST]: stim=1.00(n=3) ctrl=0.00(n=0) ratio=100.00
+7000s [POST]: stim=0.00(n=0) ctrl=1.05(n=1) ratio=0.00
+8000s [POST]: stim=1.00(n=3) ctrl=0.00(n=0) ratio=100.00
+9000s [POST]: stim=1.07(n=1) ctrl=0.00(n=0) ratio=106.88
+10000s [POST]: stim=1.00(n=3) ctrl=0.00(n=0) ratio=100.00
+11000s [POST]: stim=1.07(n=1) ctrl=0.00(n=0) ratio=106.91
+12000s [POST]: stim=1.09(n=1) ctrl=0.00(n=0) ratio=108.70
+13000s [POST]: stim=1.00(n=3) ctrl=0.00(n=0) ratio=100.00
+14000s [POST]: stim=0.00(n=0) ctrl=1.01(n=1) ratio=0.00
+15000s [POST]: stim=1.00(n=3) ctrl=0.00(n=0) ratio=100.00
+16000s [POST]: stim=1.00(n=3) ctrl=0.00(n=0) ratio=100.00
+17000s [POST]: stim=0.00(n=0) ctrl=0.98(n=1) ratio=0.00
+18000s [POST]: stim=1.00(n=3) ctrl=0.00(n=0) ratio=100.00
+19000s [POST]: stim=1.07(n=1) ctrl=0.00(n=0) ratio=106.52
+20000s [POST]: stim=0.94(n=1) ctrl=1.11(n=1) ratio=0.85
+
+DONE
