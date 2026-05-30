@@ -3739,3 +3739,26 @@ downstream of a contrast that does not exist. Blocker relocated: not structure
 noise. Next (BET-093): lower ambient density / concentrate stimulus to create a
 real flux gradient; pre-register a direct contrast check BEFORE testing the
 latch. Absolute-drive mode kept. No post-result tuning of bistable_*.
+
+
+## 2026-05-31 00:xx — Session: BET-093 flux contrast via starved ambient — REGIME-NULL
+
+Tried to create a spatial flux gradient: warmup to build the persistent lattice,
+then starve ambient (lambda_gen 0.006->0.0005, cull free vibrations to 10%) and
+inject stimulus only in the stim region; absolute-drive latch; flux_ref re-derived
+from starved control p90 (=7336).
+
+VERDICT: REGIME-NULL. T93a contrast gate FAILED: STIM median stim-flux 6177 vs
+ctrl-flux 6141, ratio 1.01. Starving lowered the field uniformly (8000->6100) but
+created NO gradient. Cause: free vibrations delocalize — they carry velocity and
+the 30^3 periodic box homogenizes injected vibrations faster than fixed atoms
+consume them. A sustained spatial flux gradient is not achievable by ambient-rate
+control in this geometry.
+
+(Also fixed: WorldConfig is a frozen dataclass; mid-run knob changes use
+object.__setattr__.)
+
+Next (BET-094): probe whether confined/low-velocity injection can sustain a
+stim>>ctrl flux ratio. If not, pivot to STDP/BTSP correlation addressing (the
+charter learning primitives) in BET-095 — address memory by co-activity, not by
+spatial flux fields. Probe before pre-registering (Pattern 01).
