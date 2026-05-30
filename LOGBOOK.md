@@ -3842,3 +3842,24 @@ Next BET-098: tighter injection (sigma~1) + measure region cores only (guard gap
 around midline). Stopping rule: if clean persistent selectivity still fails, flux
 line = qualified partial success (write yes, clean persistent recall no), pivot to
 STDP/BTSP correlation addressing (BET-099).
+
+
+## 2026-05-31 01:xx — Session: BET-098 sharp separation — NULL; flux line ends, PIVOT to STDP
+
+Tight injection (sigma=1) + core-only readout (half=3) to kill boundary
+contamination. It worked for its target: T98b is the cleanest selective latch yet
+(stim-core 3.89 vs ctrl-core 1.72 during STIM, no contamination). But T98c (hold)
+still NULL: POST cores converge to ~2.7. Cause: bridge turnover — core bridge
+counts swing 12-35, bridges break/reform at strength 1.0, diluting the latched
+pattern. (T98a flux metric read 0/0 — artifact: sigma=1 clustered vibrations get
+consumed into nodes, free flux self-extinguishes.)
+
+Consolidated flux-line finding (BET-089->098): persistent lattice SOLVED;
+selective WRITE SOLVED; persistent selective RECALL NOT achieved — per-bridge
+bistable state is too fragile against bridge turnover + stimulus self-consumption.
+Qualified partial success.
+
+Per pre-registered STOPPING RULE: PIVOT to STDP/BTSP correlation addressing
+(BET-099). Store memory in spike-timing-correlation weights between co-active
+atoms (the charter learning primitive, turnover-robust), not per-bridge flux
+state. Flux line closed.
