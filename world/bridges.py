@@ -218,6 +218,52 @@ def apply_atom_repulsion(world, dt: float) -> None:
         world.k_vel[atom_idx[a]] += force
 
 
+def apply_edge_closure(world, dt: float) -> None:
+    """Edge atoms (free valence) attract other edge atoms, curling the
+    sheet toward closure. Models the higher energy of exposed membrane
+    edges that drives vesicle closure in lipid systems.
+    """
+    cfg = world.config
+    close_k = getattr(cfg, 'edge_closure_k', 0.0)
+    valence = getattr(cfg, 'atom_valence', 0)
+    if close_k <= 0 or valence <= 0:
+        return
+    K = world.k_count
+    box = np.asarray(cfg.box_size, dtype=np.float64)
+    r_close = cfg.r_2 * 2.0  # edges feel each other at longer range
+
+    atom_mask = world.k_alive[:K] & (world.k_level[:K] == 4)
+    atom_idx = np.where(atom_mask)[0]
+    # Edge atoms: have at least one free valence slot
+    edges = [int(a) for a in atom_idx if world.k_bond_count[a] < valence
+             and world.k_bond_count[a] > 0]  # bonded but not saturated
+    if len(edges) < 2:
+        return
+
+    bonded = set()
+    for b in range(world.b_count):
+        if world.b_alive[b]:
+            i, j = int(world.b_atom_i[b]), int(world.b_atom_j[b])
+            bonded.add((min(i, j), max(i, j)))
+
+    for a in range(len(edges)):
+        ia = edges[a]
+        force = np.zeros(3)
+        for b in range(a + 1, len(edges)):
+            ib = edges[b]
+            if (min(ia, ib), max(ia, ib)) in bonded:
+                continue
+            d = world.k_pos[ib] - world.k_pos[ia]
+            d -= box * np.round(d / box)
+            dist = np.sqrt((d * d).sum())
+            if dist < 1e-6 or dist > r_close:
+                continue
+            # Attraction toward other edge (pulls boundary together)
+            mag = close_k * (dist / r_close) * dt
+            force += (d / dist) * mag
+        world.k_vel[ia] += force
+
+
 def decay_bridges(world, dt: float) -> int:
     """Remove bridges whose atoms are dead."""
     removed = 0
