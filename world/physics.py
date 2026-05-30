@@ -2065,10 +2065,12 @@ def tick(world, dt: float) -> None:
     bind_nodes_upward(world)
     # Persistent bridges between atoms (valence-constrained)
     from world.bridges import (form_bridges, decay_bridges,
-                                apply_bridge_tension, apply_atom_repulsion)
+                                apply_bridge_tension, apply_atom_repulsion,
+                                apply_edge_closure)
     form_bridges(world)
     apply_bridge_tension(world, dt)
     apply_atom_repulsion(world, dt)
+    apply_edge_closure(world, dt)
     decay_bridges(world, dt)
     decay_unstable_nodes(world, dt)
     decay_high_level_nodes(world, dt)   # NEW (R2)
