@@ -32,6 +32,36 @@ flux asymmetry.
 
 Realistic: 8 min wall. Ceiling: 20 min.
 
+## RESULT (2026-05-30): NULL — and it names the missing mechanism
+
+Stable shell (44 bridges, constant) but:
+- T88a FAIL: cv = 0.03 (bridges uniform ~1.0, not differentiated)
+- T88b FAIL: autocorr 0.1-0.4 (random churn, no stable pattern)
+- T88c PASS trivially (nothing saturates)
+
+Two reasons, both instructive:
+1. **Symmetric flux**. Vibrations fill the box uniformly; the shell is
+   symmetric; every bridge sees ~the same density. No asymmetry → the
+   conserved rule pulls all strengths to the mean. No pattern to form.
+2. **No hysteresis**. The conserved-redistribution rule constantly
+   relaxes toward the instantaneous flux-proportional target. Strength
+   TRACKS flux; it does not LATCH. When flux is symmetric/noisy, the
+   target is uniform and strengths stay uniform.
+
+**This stacks with BET-087 to name the missing mechanism for memory:**
+plasticity that merely tracks flux is not memory. Memory requires
+BISTABILITY — a bridge with two stable states (weak, strong). Flux
+above a threshold flips weak→strong; the bridge STAYS strong until
+strong depression flips it back. That hysteresis is how a synapse holds
+LTP. Without it, strength is a mirror of present flux, not a record of
+past flux.
+
+**Next (BET-089): bistable bridges.** Strength has two attractors.
+Then expose the shell to an ASYMMETRIC, recurring stimulus and test
+whether the strengthened bridges latch and persist after the stimulus
+stops — and whether a different stimulus produces a different latched
+pattern (content-addressable memory).
+
 ## Not claimed
 
 - Not memory recall (no read-out mechanism yet)
