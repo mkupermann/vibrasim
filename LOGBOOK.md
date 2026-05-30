@@ -3801,3 +3801,24 @@ the warmup->stim transition so control starts weak. Discipline: BET-096 is the
 ONE clean shot; if it also fails the contrast/selectivity gate, the flux-
 addressing line is exhausted -> pivot to STDP/BTSP correlation addressing
 (BET-097, co-activity between connected atoms, not spatial flux fields).
+
+
+## 2026-05-31 01:xx — Session: BET-096 frozen+blank-slate — NULL but SELECTIVE WRITE achieved
+
+First real breakthrough in the memory chain. vel=0 (frozen stimulus) + true
+starve gave a CLEAN flux gradient: stim flux 404, control flux 0. And the latch
+selectively WROTE for the first time: during STIM stim bridges climbed 3.14->5.30
+(over barrier mid=3) while control stayed 0.77->~3.1 (mostly below). T96a contrast
+PASS, T96b selective latch PASS, T96d control PASS.
+
+But T96c (hold) FAILED: after field cleared, stim and control both drift to ~3.5
+and converge. Cause (real mechanism flaw): drive = flux_gain*(flux/flux_ref-1) is
+-0.3 at flux=0, so POST actively pushes every bridge DOWN; the -0.3 slightly
+exceeds the strong-well restoring force (~+0.28 at s=5.3), so latched bridges leak
+out. Absence of flux erases the memory instead of the well holding it.
+
+Fix (BET-097): rectify the drive -> flux_gain*max(0, flux/flux_ref-1). Flux only
+writes UP; the bistable well alone decides hold vs decay. POST flux=0 -> drive=0
+-> stim relaxes INTO strong well (stays), control INTO weak well (stays) ->
+hysteresis holds. NOT the STDP-pivot branch (write already works); one-line
+principled drive correction. Selective WRITE is the milestone here.
