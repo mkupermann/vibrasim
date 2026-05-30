@@ -105,6 +105,47 @@ def form_bridges(world) -> int:
     return formed
 
 
+def apply_bridge_tension(world, dt: float) -> None:
+    """Pull bridged atoms toward equilibrium distance.
+
+    Each bridge acts like a spring: atoms closer than r_eq are pushed
+    apart, atoms farther are pulled together. This straightens chains
+    and prevents bridge-connected atoms from clumping.
+    """
+    cfg = world.config
+    r_eq = cfg.r_2 * 0.5  # equilibrium = 50% of binding radius
+    tension_k = 0.5  # spring constant (gentle)
+    box = np.asarray(cfg.box_size, dtype=np.float64)
+
+    for b in range(world.b_count):
+        if not world.b_alive[b]:
+            continue
+        i = int(world.b_atom_i[b])
+        j = int(world.b_atom_j[b])
+        if not world.k_alive[i] or not world.k_alive[j]:
+            continue
+
+        # Periodic displacement
+        d = world.k_pos[j] - world.k_pos[i]
+        d -= box * np.round(d / box)
+        dist = np.sqrt((d * d).sum())
+        if dist < 1e-6:
+            continue
+
+        # Spring force: F = k * (dist - r_eq) toward/away
+        direction = d / dist
+        force = tension_k * (dist - r_eq) * dt
+
+        # Apply force (gentle, with velocity damping)
+        level_i = max(1.0, float(world.k_level[i]))
+        level_j = max(1.0, float(world.k_level[j]))
+        world.k_vel[i] += direction * force / level_i
+        world.k_vel[j] -= direction * force / level_j
+        # Damping: bridged atoms slow down (viscous medium)
+        world.k_vel[i] *= 0.95
+        world.k_vel[j] *= 0.95
+
+
 def decay_bridges(world, dt: float) -> int:
     """Remove bridges whose atoms are dead."""
     removed = 0
