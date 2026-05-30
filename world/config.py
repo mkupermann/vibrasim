@@ -100,6 +100,10 @@ class WorldConfig:
     anchor_damping: float = 0.0           # Velocity multiplier for mature atoms (0=off, e.g. 0.7=stiffen).
     anchor_bond_min: int = 2              # Min bond count to count as a mature interior site.
     anchor_age: float = 50.0              # Sim-seconds at bond_min before a site freezes.
+    # Valence commitment (BET-091): a bonded atom resists fusion, so the lattice
+    # persists. Level-4 atoms with k_bond_count >= this are skipped as fusion
+    # partners in bind_nodes_upward. 0 = off (atoms fuse freely, as before).
+    fusion_bond_block: int = 0
 
     # Plan B — STDP and directional plasticity
     stdp_enabled: bool = False              # master switch — off preserves legacy behaviour
