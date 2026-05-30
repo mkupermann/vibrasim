@@ -86,10 +86,23 @@ def form_bridges(world) -> int:
         if world.k_bond_count[i] >= valence or world.k_bond_count[j] >= valence:
             continue
 
+        # Bridge cooldown: atoms that recently bridged can't bridge again
+        # immediately. This prevents instant triangle closure and lets
+        # chains grow longer before closing.
+        cooldown = getattr(cfg, 'bridge_cooldown', 0.0)
+        if cooldown > 0:
+            age_i = world.t - world.k_birth[i]
+            age_j = world.t - world.k_birth[j]
+            # Use last_bridge_time stored in k_strength temporarily
+            last_i = getattr(world, '_last_bridge_time', {}).get(i, -1e6)
+            last_j = getattr(world, '_last_bridge_time', {}).get(j, -1e6)
+            if world.t - last_i < cooldown or world.t - last_j < cooldown:
+                continue
+
         # Form bridge
         b = world.b_count
         if b >= world.b_alive.shape[0]:
-            break  # bridge buffer full
+            break
 
         world.b_alive[b] = True
         world.b_atom_i[b] = i
@@ -101,6 +114,13 @@ def form_bridges(world) -> int:
         world.k_bond_count[j] += 1
         existing.add(key)
         formed += 1
+
+        # Record bridge time for cooldown
+        if cooldown > 0:
+            if not hasattr(world, '_last_bridge_time'):
+                world._last_bridge_time = {}
+            world._last_bridge_time[i] = world.t
+            world._last_bridge_time[j] = world.t
 
     return formed
 
