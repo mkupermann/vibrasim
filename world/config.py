@@ -104,6 +104,10 @@ class WorldConfig:
     # persists. Level-4 atoms with k_bond_count >= this are skipped as fusion
     # partners in bind_nodes_upward. 0 = off (atoms fuse freely, as before).
     fusion_bond_block: int = 0
+    # BET-092: bistable drive reference. 'relative' = drive vs moving mean flux
+    # (BET-089 v2); 'absolute' = drive vs fixed bistable_flux_ref, which latches
+    # on a populated lattice where the moving mean washes out the stimulus.
+    bistable_drive_mode: str = 'relative'
 
     # Plan B — STDP and directional plasticity
     stdp_enabled: bool = False              # master switch — off preserves legacy behaviour
