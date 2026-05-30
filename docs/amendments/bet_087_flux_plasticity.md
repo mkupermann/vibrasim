@@ -39,6 +39,36 @@ No target, no label, no gradient. Strength follows flux.
 
 Realistic: 10 min wall. Ceiling: 30 min.
 
+## RESULT (2026-05-30): NULL
+
+The mechanism works but the experiment cannot demonstrate spatial flux
+memory at this scale. Three iterations:
+
+- v1/v2 (absolute + relative-to-mean): all bridges SATURATE to max.
+  Background vibration density (~46/atom) exceeds any fixed threshold;
+  relative-to-mean always keeps ~half above mean, creeping to max.
+- v3 (localized slow stimulus, low background): real strength dynamics
+  (0.7-1.3) but only n=1 bridge per region — too sparse.
+- v4 (conserved redistribution): NO saturation (strengths stay ~1.0,
+  fixed budget shared by flux). But measurement dominated by structure
+  PRESENCE, not plasticity: n flips 0↔3 per region as the small mobile
+  structures drift between measurement zones. Ratio 100/0 just means
+  "stim region has bridges this instant" — noise.
+
+T87a/b not cleanly met. T87c (no saturation) achieved by v4.
+
+**Root cause**: plasticity needs STABLE structure. With ~18-25 mobile
+atoms and a handful of drifting bridges, there is no fixed substrate
+for place-specific flux memory to accumulate on.
+
+**Insight → BET-088**: put plastic bridges on the STABLE membrane shell
+(BET-086). The shell's bridges have fixed positions. Test whether shell
+bridges facing a recurring external stimulus strengthen and remember.
+Plasticity belongs on stable matter, not free-floating atoms.
+
+The conserved-redistribution mechanism (no saturation, strength tracks
+flux, competition between channels) is sound and carried forward.
+
 ## Not claimed
 
 - Not biological LTP/LTD (no NMDA, no calcium)
