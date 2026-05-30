@@ -2071,10 +2071,12 @@ def tick(world, dt: float) -> None:
     apply_bridge_tension(world, dt)
     apply_atom_repulsion(world, dt)
     from world.bridges import (apply_spontaneous_curvature,
-                                apply_flux_plasticity, apply_bistable_plasticity)
+                                apply_flux_plasticity, apply_bistable_plasticity,
+                                apply_structural_anchoring)
     apply_spontaneous_curvature(world, dt)
     apply_flux_plasticity(world, dt)
     apply_bistable_plasticity(world, dt)
+    apply_structural_anchoring(world, dt)  # BET-090: freeze mature sites (no-op when anchor_damping=0)
     decay_bridges(world, dt)
     decay_unstable_nodes(world, dt)
     decay_high_level_nodes(world, dt)   # NEW (R2)
