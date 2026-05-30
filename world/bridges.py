@@ -449,6 +449,47 @@ def apply_bistable_plasticity(world, dt: float) -> None:
         world.b_strength[b] = float(np.clip(s_new, 0.0, high + 1.0))
 
 
+def apply_structural_anchoring(world, dt: float) -> None:
+    """Mature, fully-bonded atoms stiffen the lattice — they stop drifting.
+
+    An atom that has held a high bond count for a sustained period is an
+    interior lattice site whose neighbours have locked in. Real membranes
+    and crystals rigidify this way: once the local coordination saturates,
+    the bonds stop rearranging and the site is fixed. We model that by
+    damping the velocity of mature atoms hard, freezing the scaffold.
+
+    This is NOT hand-placing atoms — the atoms emerged from the cascade.
+    It only freezes what already self-assembled, so the bridges riding on
+    them keep stable identities. Without it the handful of mobile bridges
+    drift between regions and no place-specific read-out is possible
+    (the confound that blocked BET-089's selective memory).
+    """
+    cfg = world.config
+    damping = getattr(cfg, 'anchor_damping', 0.0)
+    if damping <= 0:
+        return
+    bond_min = getattr(cfg, 'anchor_bond_min', 2)
+    age_req = getattr(cfg, 'anchor_age', 50.0)
+    K = world.k_count
+
+    if not hasattr(world, '_bond_mature_since'):
+        world._bond_mature_since = {}
+    mature = world._bond_mature_since
+
+    for a in range(K):
+        if not world.k_alive[a] or world.k_level[a] != 4:
+            mature.pop(a, None)
+            continue
+        if world.k_bond_count[a] >= bond_min:
+            if a not in mature:
+                mature[a] = world.t
+            # Freeze once it has been mature long enough
+            if world.t - mature[a] >= age_req:
+                world.k_vel[a] *= damping
+        else:
+            mature.pop(a, None)
+
+
 def decay_bridges(world, dt: float) -> int:
     """Remove bridges whose atoms are dead."""
     removed = 0

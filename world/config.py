@@ -95,6 +95,11 @@ class WorldConfig:
     bistable_well_k: float = 0.02         # Double-well restoring strength.
     bistable_flux_gain: float = 0.02      # How hard flux pushes strength up.
     bistable_flux_ref: float = 30.0       # Flux reference (above this = drive up).
+    # Structural anchoring (BET-090): freeze mature lattice sites so bridges
+    # keep stable place-identity (the missing ingredient for selective memory).
+    anchor_damping: float = 0.0           # Velocity multiplier for mature atoms (0=off, e.g. 0.7=stiffen).
+    anchor_bond_min: int = 2              # Min bond count to count as a mature interior site.
+    anchor_age: float = 50.0              # Sim-seconds at bond_min before a site freezes.
 
     # Plan B — STDP and directional plasticity
     stdp_enabled: bool = False              # master switch — off preserves legacy behaviour
