@@ -78,6 +78,7 @@ class WorldConfig:
     resonance_coupling: float = 0.0       # Kuramoto coupling for node freq synchronization (0=off)
     node_thermal_speed: float = 0.0       # Brownian speed for nodes (0=stationary). Actual speed = thermal/sqrt(level).
     atom_valence: int = 0                 # Max bindings per atom (0=unlimited). 2=linear chains, 3=branched, 4=tetrahedral.
+    bridge_cooldown: float = 0.0          # Seconds after bridging before atom can bridge again (0=instant).
 
     # Plan B — STDP and directional plasticity
     stdp_enabled: bool = False              # master switch — off preserves legacy behaviour
