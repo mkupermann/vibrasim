@@ -108,6 +108,10 @@ class WorldConfig:
     # (BET-089 v2); 'absolute' = drive vs fixed bistable_flux_ref, which latches
     # on a populated lattice where the moving mean washes out the stimulus.
     bistable_drive_mode: str = 'relative'
+    # BET-097: rectify the drive (one-sided). When True, flux only drives strength
+    # UP (write); the bistable well alone holds or decays it. Prevents zero-flux
+    # from erasing a latched memory. Default False preserves prior behaviour.
+    bistable_drive_rectified: bool = False
 
     # Plan B — STDP and directional plasticity
     stdp_enabled: bool = False              # master switch — off preserves legacy behaviour
