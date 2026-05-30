@@ -37,6 +37,20 @@ a defined interior and exterior. Spontaneous curvature (BET-086)
 succeeded where edge-closure attraction (BET-085) failed — the
 out-of-plane force domes the sheet, the in-plane force flattened it.
 
+## Replication (2026-05-30): 5/5 seeds
+
+Shells form across all tested seeds — not a lucky seed-42 configuration:
+
+  seed 42:   size 19, sv_ratio 0.78, inside 64
+  seed 7:    size 25, sv_ratio 0.66, inside 60
+  seed 99:   size 30, sv_ratio 0.78, inside 69
+  seed 123:  size 15, sv_ratio 0.86, inside 75
+  seed 2024: size 34, sv_ratio 0.75, inside 52
+
+All 5: closed 3D shell (sv_ratio > 0.5), >= 15 atoms, >= 50 vibrations
+trapped inside. The cell precursor is a robust, reproducible
+attractor of the substrate physics, not an artifact.
+
 ## Chain status
 
 ```
