@@ -1,0 +1,48 @@
+=== BET-090: anchored selective memory ===
+[ON ] 1000s [STIM]: stim=0.94(n=1) ctrl=1.00(n=1) frac_strong=0.00
+[ON ] 2000s [STIM]: stim=0.00(n=0) ctrl=1.00(n=3) frac_strong=0.00
+[ON ] 3000s [STIM]: stim=1.00(n=3) ctrl=0.00(n=0) frac_strong=0.00
+[ON ] 4000s [STIM]: stim=1.00(n=3) ctrl=0.00(n=0) frac_strong=0.00
+[ON ] 5000s [STIM]: stim=0.00(n=0) ctrl=1.00(n=3) frac_strong=0.00
+[ON ] 6000s [STIM]: stim=0.00(n=0) ctrl=1.00(n=3) frac_strong=0.00
+[ON ] 7000s [POST]: stim=0.00(n=0) ctrl=1.00(n=3) frac_strong=0.00
+[ON ] 8000s [POST]: stim=1.00(n=3) ctrl=0.00(n=0) frac_strong=0.00
+[ON ] 9000s [POST]: stim=1.06(n=2) ctrl=0.89(n=1) frac_strong=0.00
+[ON ] 10000s [POST]: stim=0.00(n=0) ctrl=1.00(n=3) frac_strong=0.00
+[ON ] 11000s [POST]: stim=1.02(n=1) ctrl=0.00(n=0) frac_strong=0.00
+[ON ] 12000s [POST]: stim=0.97(n=1) ctrl=1.02(n=2) frac_strong=0.00
+[ON ] 13000s [POST]: stim=0.00(n=0) ctrl=1.00(n=3) frac_strong=0.00
+[ON ] 14000s [POST]: stim=0.00(n=0) ctrl=1.00(n=3) frac_strong=0.00
+[ON ] 15000s [POST]: stim=0.99(n=1) ctrl=1.01(n=2) frac_strong=0.00
+[ON ] 16000s [POST]: stim=0.98(n=1) ctrl=1.01(n=2) frac_strong=0.00
+[ON ] 17000s [POST]: stim=0.00(n=0) ctrl=1.00(n=3) frac_strong=0.00
+[ON ] 18000s [POST]: stim=0.00(n=0) ctrl=1.00(n=3) frac_strong=0.00
+[ON ] 19000s [POST]: stim=1.08(n=1) ctrl=0.96(n=2) frac_strong=0.00
+[ON ] 20000s [POST]: stim=0.00(n=0) ctrl=1.02(n=2) frac_strong=0.00
+[OFF] 1000s [STIM]: stim=1.05(n=1) ctrl=0.98(n=2) frac_strong=0.00
+[OFF] 2000s [STIM]: stim=0.00(n=0) ctrl=1.00(n=3) frac_strong=0.00
+[OFF] 3000s [STIM]: stim=1.01(n=2) ctrl=0.00(n=0) frac_strong=0.00
+[OFF] 4000s [STIM]: stim=0.00(n=0) ctrl=1.00(n=3) frac_strong=0.00
+[OFF] 5000s [STIM]: stim=1.01(n=1) ctrl=1.00(n=1) frac_strong=0.00
+[OFF] 6000s [STIM]: stim=1.02(n=1) ctrl=0.99(n=2) frac_strong=0.00
+[OFF] 7000s [POST]: stim=0.00(n=0) ctrl=1.00(n=3) frac_strong=0.00
+[OFF] 8000s [POST]: stim=1.00(n=3) ctrl=0.00(n=0) frac_strong=0.00
+[OFF] 9000s [POST]: stim=0.00(n=0) ctrl=1.00(n=3) frac_strong=0.00
+[OFF] 10000s [POST]: stim=0.00(n=0) ctrl=1.00(n=3) frac_strong=0.00
+[OFF] 11000s [POST]: stim=1.06(n=1) ctrl=0.97(n=2) frac_strong=0.00
+[OFF] 12000s [POST]: stim=0.00(n=0) ctrl=1.00(n=3) frac_strong=0.00
+[OFF] 13000s [POST]: stim=1.03(n=1) ctrl=1.02(n=1) frac_strong=0.00
+[OFF] 14000s [POST]: stim=0.00(n=0) ctrl=1.00(n=3) frac_strong=0.00
+[OFF] 15000s [POST]: stim=0.99(n=2) ctrl=1.02(n=1) frac_strong=0.00
+[OFF] 16000s [POST]: stim=0.99(n=1) ctrl=1.01(n=2) frac_strong=0.00
+[OFF] 17000s [POST]: stim=0.00(n=0) ctrl=1.00(n=3) frac_strong=0.00
+[OFF] 18000s [POST]: stim=1.03(n=1) ctrl=0.98(n=2) frac_strong=0.00
+[OFF] 19000s [POST]: stim=1.01(n=2) ctrl=0.98(n=1) frac_strong=0.00
+[OFF] 20000s [POST]: stim=0.00(n=0) ctrl=1.00(n=3) frac_strong=0.00
+
+--- VERDICT ---
+ON (anchored):  {"T90a_freeze": false, "disp_early": [20.346531769610703, 3], "disp_late": [20.377690750812718, 3], "T90b_stim_selective": false, "T90c_memory_selective": false}
+OFF (control):  {"T90a_freeze": false, "disp_early": [18.204357530069682, 3], "disp_late": [13.89222535206288, 3], "T90b_stim_selective": false, "T90c_memory_selective": false}
+
+BET-090: NULL/FAIL (T90d control-fails=True)
+DONE

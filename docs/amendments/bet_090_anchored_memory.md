@@ -66,6 +66,56 @@ post-mortem in LOGBOOK.md, no quiet extension.
 - Content-addressability (distinct stimulus → distinct stable pattern) remains
   the follow-up once a single selective latch is shown.
 
-## RESULT
+## RESULT (2026-05-30): NULL — velocity-anchoring works, but atoms don't persist
 
-_(to be filled after the run — PASS / FAIL / NULL with evidence)_
+Verdict: **NULL**. Selective memory not achieved. The negative control failed
+as required (T90d ✓), so the comparison is valid, but the anchored arm did not
+clear T90a/b/c.
+
+| Bar | Outcome | Evidence |
+|-----|---------|----------|
+| T90a freeze | ✗ | ON-arm mature-atom drift 20.3→20.4 per 1000s window ≈ OFF control 18.2→13.9. No structural stiffening at the window scale. |
+| T90b stim-selective | ✗ | `frac_strong=0.00` every checkpoint, both arms — no bridge ever crossed the barrier. |
+| T90c memory-selective | ✗ | follows from T90b. |
+| T90d control fails | ✓ | OFF arm equally non-selective (required for defensibility). |
+
+### Why — diagnosed, not assumed
+
+The velocity-freeze **mechanism is sound**. Instrumented run: atoms past the
+maturity gate move at mean |vel| **0.0144** vs **0.0804** for the general
+level-4 population in the same arm — a 5.6× slowdown. Anchoring fires and bites
+(546–1027 distinct atoms entered maturity tracking; ~3 frozen at any instant).
+
+The mechanism is nonetheless **irrelevant at this scale** because the lattice
+sites do not persist:
+- **Mean level-4 atom lifetime ≈ 13 sim-seconds** — *shorter than the 50 s
+  maturity gate itself*. Most atoms die before they ever qualify to freeze.
+- **1027 distinct level-4 atoms** churned through 4000 sim-s; only ~3 alive at
+  the end. The structure is a standing wave of constant formation/death, not a
+  fixed lattice.
+- Freezing a site's velocity cannot preserve place-identity when the site
+  evaporates in 13 s and is replaced by a new atom elsewhere.
+
+T90a's window-scale drift metric also can't resolve freeze-vs-mobile: in a 30³
+box, even thermal 0.3 random-walks to box-scale displacement within one 1000 s
+window, so displacement saturates regardless. The velocity diagnostic above is
+the metric that actually discriminates, and it shows the freeze working.
+
+### Finding
+
+Velocity-anchoring is **insufficient**. The binding constraint is atom
+**persistence**, not mobility. Place-specific memory needs lattice sites that
+live on the memory timescale (≫ 13 s); slowing them down does nothing if they
+dissolve first. This sharpens the BET-087/088/089 substrate-scale limit: the
+missing quantity is *lifetime of high-level structure*, not bridge count or
+bridge mobility.
+
+### Next direction (not done here — no tuning to a result)
+
+Extend high-level node lifetime so level-4 atoms persist on the memory
+timescale (e.g. lengthen `triad_decay_time`/atom decay for bonded interior
+sites, or make bonds themselves protect their atoms from cascade decay). Only
+once a level-4 lattice survives ≫ maturity-gate seconds can anchoring give it
+stable place-identity and the three verified mechanisms compose. Lowering
+`anchor_age` to 13 s would be tuning to this result and would NOT fix the
+underlying non-persistence — explicitly rejected.

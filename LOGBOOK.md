@@ -3660,3 +3660,29 @@ All experiments done or 3x NULL on feedback.
 
 All experiments done or 3x NULL on feedback.
 
+
+
+## 2026-05-30 21:xx — Session: BET-090 anchored selective memory — NULL
+
+Resumed the uncommitted structural-anchoring work (apply_structural_anchoring
+was defined but inert: not wired into tick, config knobs absent). Pre-registered
+BET-090 (docs/amendments/bet_090_anchored_memory.md) BEFORE running, wired the
+function into physics.tick + added anchor_damping/anchor_bond_min/anchor_age to
+WorldConfig, and ran two arms (anchoring ON 0.7 vs OFF 0.0 negative control,
+same seed) via tools/run_bet090.py.
+
+VERDICT: NULL. Selective latch never formed (frac_strong=0.00 throughout both
+arms); negative control failed as required (T90d ok), so the comparison is valid.
+
+Root cause (diagnosed): the velocity-freeze mechanism WORKS — frozen atoms move
+at mean|vel| 0.0144 vs 0.0804 for unfrozen level-4 atoms (5.6x slower). But it is
+irrelevant because the lattice sites do not persist: mean level-4 atom lifetime
+~13 sim-s, SHORTER than the 50 s maturity gate; 1027 distinct level-4 atoms
+churned through 4000 sim-s, ~3 alive at the end. You cannot anchor a site that
+evaporates in 13 s.
+
+Finding: the binding substrate-scale constraint (BET-087/088/089/090) is atom
+PERSISTENCE, not bridge count or mobility. Slowing atoms does nothing if they
+dissolve first. Next: extend high-level node lifetime so level-4 sites live on
+the memory timescale, THEN re-test anchoring. Refused to lower anchor_age to 13 s
+(would be tuning to the result, and would not fix non-persistence).
