@@ -1,0 +1,59 @@
+=== BET-095: confined stimulus, starved field (flux_ref=1000.0) ===
+[LOC] 500s [WARM]: stim=7.00(n=48) ctrl=7.00(n=49)
+[LOC] 1000s [WARM]: stim=6.99(n=40) ctrl=7.00(n=57)
+[LOC] 1500s [WARM]: stim=7.00(n=47) ctrl=7.00(n=51)
+[LOC] 2000s [WARM]: stim=7.00(n=58) ctrl=7.00(n=44)
+[LOC] 2500s [WARM]: stim=7.00(n=60) ctrl=7.00(n=40)
+[LOC] 3000s [WARM]: stim=7.00(n=70) ctrl=7.00(n=29)
+[LOC] 3500s [STIM]: stim=6.74(n=65) ctrl=6.08(n=36)
+[LOC] 4000s [STIM]: stim=7.00(n=51) ctrl=6.97(n=49)
+[LOC] 4500s [STIM]: stim=7.00(n=37) ctrl=7.00(n=61)
+[LOC] 5000s [STIM]: stim=7.00(n=38) ctrl=7.00(n=60)
+[LOC] 5500s [STIM]: stim=7.00(n=39) ctrl=7.00(n=61)
+[LOC] 6000s [STIM]: stim=7.00(n=47) ctrl=7.00(n=50)
+[LOC] field cleared at STIM end
+[LOC] 6500s [POST]: stim=5.17(n=47) ctrl=5.17(n=50)
+[LOC] 7000s [POST]: stim=5.17(n=52) ctrl=5.17(n=50)
+[LOC] 7500s [POST]: stim=5.17(n=64) ctrl=5.17(n=34)
+[LOC] 8000s [POST]: stim=5.17(n=65) ctrl=5.17(n=34)
+[LOC] 8500s [POST]: stim=5.17(n=57) ctrl=5.17(n=44)
+[LOC] 9000s [POST]: stim=5.17(n=63) ctrl=5.17(n=36)
+[LOC] 9500s [POST]: stim=5.17(n=64) ctrl=5.17(n=34)
+[LOC] 10000s [POST]: stim=5.17(n=54) ctrl=5.17(n=46)
+[LOC] 10500s [POST]: stim=5.17(n=45) ctrl=5.17(n=55)
+[LOC] 11000s [POST]: stim=5.17(n=42) ctrl=5.17(n=61)
+[LOC] wall budget hit at step 22022
+[UNI] 500s [WARM]: stim=7.00(n=48) ctrl=7.00(n=49)
+[UNI] 1000s [WARM]: stim=6.99(n=40) ctrl=7.00(n=57)
+[UNI] 1500s [WARM]: stim=7.00(n=47) ctrl=7.00(n=51)
+[UNI] 2000s [WARM]: stim=7.00(n=58) ctrl=7.00(n=44)
+[UNI] 2500s [WARM]: stim=7.00(n=60) ctrl=7.00(n=40)
+[UNI] 3000s [WARM]: stim=7.00(n=70) ctrl=7.00(n=29)
+[UNI] 3500s [STIM]: stim=6.58(n=65) ctrl=6.33(n=36)
+[UNI] 4000s [STIM]: stim=6.98(n=51) ctrl=6.98(n=49)
+[UNI] 4500s [STIM]: stim=6.99(n=37) ctrl=7.00(n=61)
+[UNI] 5000s [STIM]: stim=7.00(n=38) ctrl=7.00(n=60)
+[UNI] 5500s [STIM]: stim=7.00(n=39) ctrl=7.00(n=61)
+[UNI] 6000s [STIM]: stim=7.00(n=47) ctrl=7.00(n=50)
+[UNI] field cleared at STIM end
+[UNI] 6500s [POST]: stim=5.17(n=47) ctrl=5.17(n=50)
+[UNI] 7000s [POST]: stim=5.17(n=52) ctrl=5.17(n=50)
+[UNI] 7500s [POST]: stim=5.17(n=64) ctrl=5.17(n=34)
+[UNI] 8000s [POST]: stim=5.17(n=65) ctrl=5.17(n=34)
+[UNI] 8500s [POST]: stim=5.17(n=57) ctrl=5.17(n=44)
+[UNI] 9000s [POST]: stim=5.17(n=63) ctrl=5.17(n=36)
+[UNI] 9500s [POST]: stim=5.17(n=64) ctrl=5.17(n=34)
+[UNI] 10000s [POST]: stim=5.17(n=54) ctrl=5.17(n=46)
+[UNI] 10500s [POST]: stim=5.17(n=45) ctrl=5.17(n=55)
+[UNI] 11000s [POST]: stim=5.17(n=42) ctrl=5.17(n=61)
+[UNI] wall budget hit at step 22147
+
+--- VERDICT ---
+stim_flux=6612 ctrl_flux=5929 ratio=1.12
+T95a contrast exists (>=1.5x) : False
+T95b selective latch (STIM)   : False
+T95c hysteresis memory (POST) : False
+T95d control (uniform) fails  : True
+
+BET-095: REGIME-NULL (no contrast)
+DONE

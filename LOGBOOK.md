@@ -3783,3 +3783,21 @@ Fix is a regime change, not a tune: BET-095 reproduces the probe conditions
 inside the hysteresis protocol — lambda_gen=0 (true starve), immediate continuous
 confined injection, no uniform refill, fixed flux_ref=1000 (from probe levels).
 Same hysteresis bars, new amendment number (retry rule).
+
+
+## 2026-05-31 00:xx — Session: BET-095 confined+starved — REGIME-NULL (two harness bugs)
+
+Regime-fixed retry of BET-094. Still REGIME-NULL: T95a contrast ratio 1.12
+(stim-flux 6612, ctrl 5929). Two compounding causes (Pattern 01):
+(1) vel_scale=0.01 is not zero — free vibrations move ballistically (no
+collisions), ~0.017 speed carries them ~50 units over the 3000-unit stim,
+across the whole 30-box; they delocalised into control. The probe held a gradient
+only at vel=0.0 EXACTLY. (2) warmup pre-latched every bridge to 7.0 (flux_ref
+1000 << warmup ambient ~8000), so control entered stim already saturated — no
+blank baseline. POST: both settle to 5.17, identical.
+
+Fix (BET-096): vel=0.0 exactly + blank all bridge strengths to the low well at
+the warmup->stim transition so control starts weak. Discipline: BET-096 is the
+ONE clean shot; if it also fails the contrast/selectivity gate, the flux-
+addressing line is exhausted -> pivot to STDP/BTSP correlation addressing
+(BET-097, co-activity between connected atoms, not spatial flux fields).
