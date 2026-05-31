@@ -3933,3 +3933,9 @@ control-dist should let local emission separate write from leak.
 
 Next BET-102: larger substrate (box 50^3, more atoms, regions far apart, moderate
 local emission). Direct test of the scale hypothesis. No more same-scale tuning.
+
+
+## 2026-05-31 02:52 — Autopilot idle
+
+All experiments done or 3x NULL on feedback.
+
