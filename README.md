@@ -25,6 +25,57 @@ If that is the verdict, I will not retune the marker thresholds to chase appeal.
 On 2026-05-19 I went back through the two key citations in this README — Magee 2026 *Nat Neurosci* and Wu et al 2025 *Nat Comm* — and checked directly via web search that both papers exist and say what I claim they say. They do. The Wu et al date in the published paper is 2025; an earlier draft of this README and the Medium article had it as 2024. That has been corrected throughout the codebase.
 
 
+## Update 2026-05-31 — what the autonomous run actually taught me
+
+On 2026-05-31 I let the autopilot drive an unbroken, self-paced research program:
+twenty pre-registered experiments (BET-089 → BET-109), most of them 5-way parallel
+sweeps, each with acceptance bars written *before* the run, matched negative
+controls, and a PASS/NULL/FAIL verdict recorded and committed. The full chain is
+in `docs/amendments/` and `LOGBOOK.md`; the consolidated finding is in
+`docs/amendments/MEMORY_PROGRAMME_SUMMARY.md`.
+
+The concrete result is a clean negative one, and I want to state it without
+softening. The substrate **can** be made to do three of the four things a
+selective memory needs: it holds a persistent lattice (atoms stopped churning
+once a fusion-block was added — level-4 lifetime went from ~13 s to ~1500 s), it
+**writes** a localized memory (a stimulated region latches while a control region
+stays blank), and it **contains** that write inside an engineered compartment
+wall. The fourth thing — holding that selective memory through a long recall
+window after the stimulus is gone — it never did, across every lever I tried
+(flux drive, firing-coincidence, graded propagation, consolidation/locking). It
+sat at roughly three of four bars and would not move.
+
+The reason is structural, and it is the same one every time: a homogeneous,
+spontaneously-assembled, tiny, fully-connected substrate lets activity
+**percolate** (no compartments → memory spreads), **churns** its own elements
+(turnover dilutes any readout), and is simply too small and too connected to be
+stable. I established this from five independent angles. It is not news to a
+neuroscientist — you need modularity and scale — but it is the honest ceiling of
+*this* design, found the hard way.
+
+Two things are worth keeping. First, two reusable mechanism patterns:
+`docs/patterns/01` (before you believe a null, check whether the mechanism fired,
+whether it had its local effect, and which constraint actually binds) and
+`docs/patterns/02` (the same coupling that writes a memory is often the one that
+corrupts it — reshape its locality, do not just scale its gain). Second, and
+honestly the better deliverable: the autopilot held real discipline for twenty
+iterations — it pre-registered, reported its NULLs, refused to retune a threshold
+to a result, diagnosed its own harness bugs, and **stopped at the wall instead of
+manufacturing a win**. The harness is now packaged as two skills
+(`.claude/skills/bet-experiment`, `.claude/skills/watch-results`) and a tutorial
+(`docs/EXPERIMENT_HARNESS.md`). As before, the process half travelled further than
+the substrate half.
+
+Where this goes next is a redesign, not another knob: stop waiting for cognition
+to self-assemble from physics, **engineer a stable modular scaffold** — frozen
+neuron modules, sparse directed inter-module connectivity that bounds percolation
+by construction — and run the *already-validated* learning rules on top, with a
+per-module readout that turnover cannot dilute. That is the charter's own
+"engineered topology, emergent dynamics" applied one level up. The plan is in
+`docs/NEW_DIRECTION.md`.
+
+---
+
 The premise is uncomfortable on purpose. If I picked something close to what I already know — another consulting framework, another piece of software architecture, another flavour of the work I have been doing for thirty years — I would fall back on the usual moves. I have thirty years of those. They mostly work, and that is exactly why I cannot use them here.
 So the topic had to land somewhere I can't bluff, and what I picked is roughly four disciplines past my actual training. I am building EQMOD: a 60×60×60 cube of vibrations — frequency, polarity, position, velocity, and nothing else — under a small set of local binding rules, and watching what comes out.
 
