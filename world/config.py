@@ -130,6 +130,10 @@ class WorldConfig:
     # bridge-charge write. Latched (written) bridges self-sustain recall; blank
     # bridges carry nothing, so unwritten regions stay silent. 0 = ungated.
     bridge_prop_min_strength: float = 0.0
+    # BET-108: consolidation — once a bridge strength reaches this, lock it at the
+    # strong well (immune to decay/turnover), so a written memory cannot fade in
+    # recall. 0 = off. Control bridges never reach it, so are never locked.
+    bridge_consolidate_threshold: float = 0.0
 
     # Plan B — STDP and directional plasticity
     stdp_enabled: bool = False              # master switch — off preserves legacy behaviour
