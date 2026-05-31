@@ -45,6 +45,46 @@ NULL → the limit is deeper than scale; record as the programme's end-state.
 This is the LAST regime experiment of the memory programme either way — PASS
 confirms the mechanism, NULL confirms the deeper limit; no further tuning.
 
-## RESULT
+## RESULT (2026-05-31): NULL — and the limit is DEEPER than scale: network percolation
 
-_(to be filled after the run — PASS / FAIL / NULL with evidence)_
+Run 1 hit wall budget mid-STIM (POST never reached; big box ~3× slower than
+estimated). Re-run with shorter phases (WARMUP 3000, STIM 3000) reached POST.
+
+| Bar | Outcome | Evidence |
+|-----|---------|----------|
+| T102a selective firing | ✓ | fire ratio 577. |
+| T102b selective potentiation | ✓ | stim-frac 0.67 — bigger box made the WRITE cleaner (stim pinned 5–6, control lower during STIM). |
+| T102c persistent recall | ✗ | POST: stim ~5.5 AND control ~4–5 (>mid). Control latched too. post-frac 0.00. |
+| T102d control fails | ✓ | (uniform arm also non-selective.) |
+
+### The deeper finding — percolation, not scale
+
+Adequate spatial separation (25 units ≫ r_2) + longer integration did NOT contain
+the memory. During STIM control was lower (2.8–3.8); by POST it had climbed to
+~5. The memory SPREAD into control over the stimulation period. Cause: the
+substrate is a **connected lattice**, and firing/co-firing **percolates** —
+a stim atom fires, co-activates a neighbour, which co-activates ITS neighbour,
+and the cascade hops atom-to-atom across the 25-unit gap over thousands of steps.
+Spatial distance only DELAYS percolation in a connected graph; it does not
+contain it. Bigger box ⇒ cleaner write but the same eventual spread.
+
+So the limit on clean PERSISTENT selective recall is not box size, element count,
+drive form, or emission range — it is **connectivity**. A homogeneous, fully
+connected substrate cannot hold a spatially-local selective memory at ANY scale;
+activity percolates to homogenise it.
+
+### Resolution points at the charter's own architecture
+
+Containment requires **engineered modular compartments** — weakly-coupled
+clusters that localise activity — i.e. exactly CONCEPT §4.8's engineered port
+topology, which the charter already designates as ENGINEERED (not emergent),
+while internals emerge. The memory programme thus converges on the project's
+founding design principle: selective memory needs engineered modularity; it will
+not emerge from a homogeneous substrate.
+
+### End-state (per pre-registration: no more regime tuning)
+
+This closes the spontaneous-substrate memory programme (BET-089→102) with a
+consolidated, defensible finding. See docs/amendments/MEMORY_PROGRAMME_SUMMARY.md.
+The honest next direction is architectural (engineered modular compartments /
+ports), not another regime knob — a strategic decision, surfaced to Michael.
