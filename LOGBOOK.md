@@ -3986,3 +3986,23 @@ DECOUPLE write from broadcast — drive co-activation along the BRIDGE GRAPH (G6
 apply_bridge_atom_propagation, atom->atom through strong bridges) which respects
 connectivity and can be made modular by cutting cross-compartment bridges, not via
 omnidirectional vibration broadcast. BET-104 (architectural) surfaced to Michael.
+
+
+## 2026-05-31 12:xx — Session: BET-104 5-variant PARALLEL sweep — all NULL, monotonic; broadcast write is the bottleneck
+
+Ran 5 variants in parallel (user: parallel tests, 5 ok) sweeping broadcast x wall:
+104e(n8,wall) 104a(n16,wall) 104b(n32,wall) 104c(n64,wall) 104d(n32,OFF). All NULL.
+Monotonic: post-frac 0.26(n8) -> 0.16(n16) -> 0(n32) -> 0(n64). Selectivity rises
+as broadcast FALLS. High broadcast floods (every atom fires, zero selectivity;
+wall-OFF n32 saturates identically). Lowest broadcast (n8)+wall = best but
+sub-threshold (0.26).
+
+Two findings: (1) the omnidirectional broadcast write is the bottleneck — floods
+high, percolates low, no clean-selective level exists; more broadcast does not
+help (the pre-registered fundamental branch). (2) the wall DOES help containment
+(uni-frac 0.06-0.10 wall-ON vs BET-099 full leak) — modularity isolates, it just
+cannot manufacture a write from a flooding field. Resolution confirmed:
+non-broadcast write via BRIDGE GRAPH (G6 propagation) + wall containment = BET-105.
+
+Infra: tools/run_bet104.py parameterized; 5 background processes; tools/
+watch_results.py streamed all 5 verdicts live.
