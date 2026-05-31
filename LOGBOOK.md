@@ -4272,3 +4272,20 @@ arbitrary relations — even the modular wall that beat every known method here 
 become recoverable), which random-code VSA+reservoir provably cannot do (BET-134
 T134d = 0.000). That is the one place the "substrate" could contribute something the
 textbook stack does not. High risk, may NULL. Raised to Michael for steer.
+
+## 2026-05-31 — BET-135 NULL: the novelty attempt bottomed out (honestly)
+
+Attempted the one plausibly-novel lever: emergent symbol codes shaped by a LOCAL
+error-correcting rule (not backprop), to break the modular-addition wall that the
+fixed-code textbook stack hits at 0.000. Result: 0.000 for BOTH learnable and frozen
+codes. The pre-registered diagnosis was right — additive (bundle) composition is
+separable in the two slots (pred = M1 E[a] + M2 E[b]), so NO choice of codes can make
+it select O[(a+b) mod V]. The limit is the OPERATOR, and the fix (circular
+convolution / Fourier HRR) is Plate 1995 — established, not new.
+
+Bottom line for Michael's challenge: I probed where the substrate could plausibly
+exceed the known stack, and the experiment says it doesn't here — the field's
+existing binding operators already define the representational boundary. Our EQMOD-2
+work is honest engineering within that boundary, with a clean pre-registered map of
+where additive composition stops (BET-133/134/135) and where convolution would be
+required. No new mathematics was found, and I will not claim any.
