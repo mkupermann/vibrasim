@@ -126,6 +126,10 @@ class WorldConfig:
     # bridged neighbours (gain × bridge strength), so co-activation travels along
     # the bridge graph instead of omnidirectional emission. 0 = off. Pair n_emit≈0.
     bridge_charge_prop_rate: float = 0.0
+    # BET-107: graded propagation — only bridges with strength >= this carry the
+    # bridge-charge write. Latched (written) bridges self-sustain recall; blank
+    # bridges carry nothing, so unwritten regions stay silent. 0 = ungated.
+    bridge_prop_min_strength: float = 0.0
 
     # Plan B — STDP and directional plasticity
     stdp_enabled: bool = False              # master switch — off preserves legacy behaviour
