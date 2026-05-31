@@ -4202,3 +4202,16 @@ Answers the language question: cannot reach written language by scaling N; the
 context-dependent sequence-prediction MECHANISM is the binding wall (language =
 extreme overlapping context-dependent sequences). Next BET-118: hierarchical
 predictive coding with an INFERRED hidden context (not hand-tagged).
+
+
+## 2026-05-31 16:xx — BET-118 sparse representations — NULL; multi-sequence line CONSOLIDATED
+
+Sparse codes: S=3 0.74, S=5 0.61 (vs dense 0.74/0.46), control 0.37. Helps
+marginally, does not break the interference wall. 5th NULL on the multi-sequence
+line (114-118: more N, context tags, sparse). Per discipline (>=3 NULLs -> stop
+the line), consolidated in docs/SEQUENCE_WALL.md: EQMOD-2 has a real working
+single-sequence learning system (110-113 PASS), but multiple overlapping
+context-dependent sequences are a MECHANISM wall (pairwise Hebbian transitions
+cannot disambiguate), not a capacity wall. This is exactly the language-relevant
+capability -> you cannot reach written language by scaling N; the predictor
+mechanism is the open problem.

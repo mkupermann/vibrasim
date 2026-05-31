@@ -1,0 +1,12 @@
+=== BET-118: sparse distributed representations ===
+sparse S=3 @N300: 0.740
+sparse S=5 @N300: 0.607
+sparse control (shuffled T): 0.373
+
+--- VERDICT ---
+T118a S=3 (>=0.90): False
+T118b S=5 (>=0.85): False
+T118c control (<0.70): True
+
+BET-118: NULL
+DONE
