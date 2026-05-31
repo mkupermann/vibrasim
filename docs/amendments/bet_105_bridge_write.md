@@ -48,6 +48,44 @@ A variant PASSES if Ta–Tc AND Td. PASS (any wall-ON variant, with 105d leaking
 milestone the whole programme pointed to, and validation that decoupling the
 write from broadcast is the resolution. All outcomes reported honestly.
 
-## RESULT
+## RESULT (2026-05-31): all 5 NULL — the bridge-write self-ignites whole compartments
 
-_(to be filled after all variants complete — per-variant + pattern)_
+| Variant | gain | wall | fire ratio | stim-frac | post-frac | verdict |
+|---------|-----:|------|-----------:|----------:|----------:|---------|
+| 105a | 4 | ON  | 1.8 | 0.00 | 0.00 | NULL |
+| 105b | 6 | ON  | 1.8 | 0.00 | 0.00 | NULL |
+| 105c | 8 | ON  | 1.8 | 0.00 | 0.00 | NULL |
+| 105d | 6 | OFF | 1.7 | 0.00 | 0.00 | NULL |
+| 105e | 6 | ON, n_emit1 | 1.3 | 0.00 | 0.00 | NULL |
+
+### Diagnosis — self-ignition, not selectivity
+
+Fire ratio ~1.8 (vs 3–6 selective baseline): control fires nearly as much as
+stim, in EVERY variant including wall-ON. Cause: with `gain ≥ theta_fire` (4),
+one firing atom deposits `gain × strength ≥ 4` into a bridged neighbour, which
+fires, which propagates onward — the bridge-write is SELF-SUSTAINING. A single
+spark ignites the whole compartment; the firing then loops indefinitely along
+the bridge graph. Control only needs one spark — and it has one: leftover atom
+CHARGE from warmup is not cleared at the stim-transition blank (blank_bridges
+resets bridge strength, not k_charge). So control self-ignites and stays lit; the
+wall cannot help because control ignites INTERNALLY, not by cross-boundary leak.
+
+This is a real property of the bridge-write: it is a bistable per-compartment
+switch (any spark → whole compartment ON), not a graded stimulus-selective write.
+
+### Two fixes for BET-106
+
+1. **Zero atom charge at the blank** so control starts truly silent (no spark).
+2. Then re-test the gain sweep: with control un-sparked, STIM ignites only the
+   stim compartment and self-sustains there (good = recall), while control stays
+   dark. If that yields selectivity, the bridge-write + charge-blank + wall is the
+   answer. If control still lights (e.g. cross-wall propagation or noise sparks),
+   gain must sit below self-ignition (gain × low-well < theta_fire) while still
+   reinforcing stim — a narrower design.
+
+### Pattern note
+
+This is a THIRD face of the recurring coupling: the write signal strong enough to
+propagate is strong enough to self-sustain everywhere. Pattern 02's lesson
+(reshape, don't just scale) applies — the next lever is the charge-blank (remove
+spurious sparks) and possibly sub-ignition gain with stimulus reinforcement.
