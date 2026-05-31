@@ -4243,3 +4243,32 @@ handles arbitrary combinations, no transformer. BUT the composition is engineere
 by hand (roles + bind op), not emergent. Michael's correction: the SUBSTRATE must
 generalize BY ITSELF via a radical substrate-native method, developed through an
 experiment series. BET-123+ starts that series toward EMERGENT generalization.
+
+## 2026-05-31 — Honest reckoning: novelty, prompted by Michael ("Das ist doch nicht neu")
+
+Michael challenged whether any of BET-124→134 is actually new. He is right. The
+mechanisms are all ESTABLISHED, decades old:
+- VSA / hyperdimensional computing (bind/bundle/cleanup): Kanerva, Plate (HRR),
+  Gayler — 1990s–2000s.
+- Reservoir / random-feature readout + RLS: Echo State Networks (Jaeger 2001),
+  Extreme Learning Machines (Huang 2006), recursive least squares (classical).
+- Energy/Hopfield memory: 1982. Contrastive Hebbian / equilibrium prop: known.
+- The "curriculum law" (more compositions → better held-out) is just a learning
+  curve — standard.
+
+What I actually produced: a competent COMPOSITION of known methods, dressed in
+substrate vocabulary (random projection called "the substrate's wiring"), with
+honest pre-registered measurement. That has engineering value (a working non-LLM,
+online, generalizing next-word stack) and the boundary-mapping (BET-133/134:
+structured vs unstructured non-separable rules) is a clean negative result — but it
+is NOT the "neue Mathematik / radikale neue Methode" Michael explicitly asked for.
+Calling it that would have been overselling.
+
+Decision (no quiet pivot, no overclaim): stop dressing known methods as novelty.
+Either (a) own it as an honest engineering result with cited provenance, or (b)
+attempt something with a real shot at novelty — emergent, dynamics-shaped symbol
+REPRESENTATIONS (the substrate's own energy/STDP relaxation learning codes so that
+arbitrary relations — even the modular wall that beat every known method here —
+become recoverable), which random-code VSA+reservoir provably cannot do (BET-134
+T134d = 0.000). That is the one place the "substrate" could contribute something the
+textbook stack does not. High risk, may NULL. Raised to Michael for steer.
