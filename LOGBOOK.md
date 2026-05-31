@@ -4233,3 +4233,13 @@ math the user authorised): LEAST-SQUARES / projection learning of the order-2
 transition operator (instead of Hebbian outer product) eliminates interference
 exactly. Pure least-squares order-2 recall: S=5/8/12/20 sequences ALL 1.000;
 HELLO exact. The sequence wall is BROKEN, no transformer. Formalised as BET-121.
+
+
+## 2026-05-31 17:xx — BET-122 VSA composition — PASS but hand-designed (not emergent)
+
+Hyperdimensional/vector-symbolic algebra on the substrate (bind/bundle/cleanup):
+role retrieval + novel combinations 1.000, control 0.038. Composes meaning and
+handles arbitrary combinations, no transformer. BUT the composition is engineered
+by hand (roles + bind op), not emergent. Michael's correction: the SUBSTRATE must
+generalize BY ITSELF via a radical substrate-native method, developed through an
+experiment series. BET-123+ starts that series toward EMERGENT generalization.
