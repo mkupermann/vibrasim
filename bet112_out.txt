@@ -1,0 +1,20 @@
+=== BET-112: noise robustness (error-correcting recall) ===
+  noise f=0.05  recovered overlap=1.000
+  noise f=0.10  recovered overlap=1.000
+  noise f=0.15  recovered overlap=1.000
+  noise f=0.20  recovered overlap=0.996
+  noise f=0.25  recovered overlap=0.952
+  noise f=0.30  recovered overlap=0.862
+  noise f=0.40  recovered overlap=0.762
+  noise f=0.50  recovered overlap=0.445
+
+--- VERDICT ---
+recovery@0.10=1.000  @0.20=0.996  control@0.10=0.552
+T112a corrects light noise (@0.10>=0.95) : True
+T112b basin (f<=0.20 -> >=0.90)          : True
+T112c control fails (@0.10<0.75)         : True
+T112d graceful (monotone)                : True
+
+BET-112: PASS
+saved bet112_noise.png
+DONE
