@@ -4150,3 +4150,17 @@ Flip f fraction of a stored patterns bits, relax freely. Recovery: f=0.10->1.00,
 0.20->0.996, 0.25->0.95, 0.30->0.86, 0.50->0.45 (chance). Control (shuffled W)
 @0.10 = 0.55. Basin radius ~25%% flipped bits. All bars PASS. A genuine
 content-addressable error-correcting attractor. Plot bet112_noise.png.
+
+
+## 2026-05-31 16:xx — BET-113 sequence prediction — PASS (predictive world-model primitive)
+
+Added asymmetric transition matrix T to EnergyNet + train_sequence/predict_step/
+recall_sequence. Store A->B->C->D->E, recall the whole sequence from A: every step
+overlap 1.000 (L=5 and L=8). One-step preds 1.000. Control (T=0) 0.000 beyond
+start. All bars PASS. A working self-supervised next-state predictive model
+(energy-based, local Hebbian, asymmetric transitions), no transformer. --demo
+plays the sequence in 3D via the existing viewer.
+
+EQMOD-2 track now 4/4 PASS: 110 memory, 111 capacity scaling (~0.095N), 112
+error-correcting recall (basin ~25%%), 113 sequence prediction. A real working
+learning system on the engineered modular geometric scaffold.
