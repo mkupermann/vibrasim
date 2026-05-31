@@ -65,31 +65,25 @@ def render_once(state, plotter, actors):
     phase = str(state['phase']); epoch = int(state['epoch'])
     acc = float(state['acc']); energy = float(state['energy'])
 
-    # nodes
-    if actors.get('nodes') is None:
-        nm = pv.PolyData(pos); nm['act'] = act
-        actors['node_mesh'] = nm
-        actors['nodes'] = plotter.add_mesh(
-            nm, scalars='act', cmap='coolwarm', clim=[-1, 1],
-            render_points_as_spheres=True, point_size=30, lighting=False,
-            scalar_bar_args={'title': 'activation'})
-    else:
-        actors['node_mesh']['act'] = act
+    # nodes as real 3D sphere glyphs (radius in world units) so they are large
+    # and vividly coloured. name= replaces the previous actor each frame.
+    nm = pv.PolyData(pos); nm['act'] = act
+    balls = nm.glyph(scale=False, orient=False,
+                     geom=pv.Sphere(radius=0.7, theta_resolution=12, phi_resolution=12))
+    plotter.add_mesh(balls, scalars='act', cmap='coolwarm', clim=[-1, 1],
+                     smooth_shading=True, name='nodes',
+                     scalar_bar_args={'title': 'activation (-1 ... +1)'})
 
-    # edges (rebuild — connectivity is fixed but cheap to recreate)
-    e, w = edge_list(W)
+    # edges (rebuild — cheap; weights change during training)
+    e, _ = edge_list(W)
     em = build_edges_polydata(pos, e)
-    if actors.get('edges') is not None:
-        plotter.remove_actor(actors['edges'])
-    actors['edges'] = plotter.add_mesh(em, color='gray', line_width=1,
-                                       opacity=0.18, show_scalar_bar=False)
+    plotter.add_mesh(em, color='dimgray', line_width=1, opacity=0.12,
+                     name='edges', show_scalar_bar=False)
 
-    txt = (f"EQMOD-2 energy memory\nphase: {phase}\nepoch: {epoch}\n"
-           f"completion: {acc:.3f}\nenergy: {energy:.1f}")
-    if actors.get('text') is not None:
-        actors['text'].SetText(2, txt)
-    else:
-        actors['text'] = plotter.add_text(txt, font_size=11, name='hud')
+    plotter.add_text(
+        f"EQMOD-2 energy memory\nphase: {phase}\nepoch: {epoch}\n"
+        f"completion: {acc:.3f}\nenergy: {energy:.1f}",
+        font_size=12, name='hud', color='black')
 
 
 def main():
@@ -125,30 +119,41 @@ def main():
     actors = {}
     render_once(st, plotter, actors)
     plotter.view_isometric()
+    plotter.camera.zoom(1.4)
 
     if snap is not None:
         plotter.screenshot(snap)
         print(f"wrote {snap}")
         return
 
-    plotter.show(interactive_update=True, auto_close=False)
-    print("Live viewer running (close the window to stop). Polling every ~1.2 s.")
-    last_epoch, last_phase = None, None
+    print("Live viewer running (close the window to stop). Refreshing ~1.2 s.")
+    prog = {'k': None}
+
+    def _tick(*_args):
+        s = load_state()
+        if s is None:
+            return
+        render_once(s, plotter, actors)
+        key = (str(s['phase']), int(s['epoch']))
+        if key != prog['k']:
+            print(f"  frame: phase={key[0]} epoch={key[1]} "
+                  f"completion={float(s['acc']):.3f}", flush=True)
+            prog['k'] = key
+
+    # Reliable live updates: a VTK interactor timer fires _tick during show().
     try:
-        while True:
-            time.sleep(1.2)
-            st = load_state()
-            if st is not None:
-                render_once(st, plotter, actors)
-                ep, ph = int(st['epoch']), str(st['phase'])
-                if (ep, ph) != (last_epoch, last_phase):
-                    print(f"  frame: phase={ph} epoch={ep} completion={float(st['acc']):.3f}",
-                          flush=True)
-                    last_epoch, last_phase = ep, ph
-            plotter.render()   # force redraw
-            plotter.update()
-    except Exception as e:
-        print(f"[viewer closed: {e}]")
+        plotter.add_callback(_tick, interval=1200)
+        plotter.show()
+    except Exception:
+        # fallback: non-blocking show + manual poll loop
+        plotter.show(interactive_update=True, auto_close=False)
+        try:
+            while True:
+                time.sleep(1.2)
+                _tick()
+                plotter.render(); plotter.update()
+        except Exception as e:
+            print(f"[viewer closed: {e}]")
 
 
 if __name__ == "__main__":
