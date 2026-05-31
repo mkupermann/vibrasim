@@ -530,6 +530,45 @@ def apply_correlation_plasticity(world, dt: float) -> None:
         world.b_strength[b] = float(np.clip(s_new, 0.0, high + 1.0))
 
 
+def apply_bridge_charge_propagation(world, dt: float) -> None:
+    """BET-105: non-broadcast write along the BRIDGE GRAPH.
+
+    The omnidirectional emission write (BET-104) floods or percolates — it is
+    the bottleneck. Here a firing atom deposits charge DIRECTLY into its bridged
+    neighbours (no emitted vibrations), scaled by bridge strength. Co-activation
+    then travels only along connectivity, so it does not flood; and the
+    compartment wall (cutting cross-boundary bridges) contains it WITHOUT
+    starving within-compartment propagation. Strength feeds back: a strong
+    bridge propagates harder, so a written memory self-sustains its own recall.
+
+    Reuses only firing_events, bridges, k_charge, and the bistable strength.
+    Gated by cfg.bridge_charge_prop_rate (0 = off). Pairs with n_emit≈0.
+    """
+    cfg = world.config
+    gain = getattr(cfg, 'bridge_charge_prop_rate', 0.0)
+    if gain <= 0 or world.b_count == 0:
+        return
+    K = world.k_count
+    t_now = world.t
+    firing = {int(ai) for (tf, ai) in world.firing_events if tf == t_now and ai < K}
+    if not firing:
+        return
+    bx = getattr(cfg, 'compartment_boundary', 0.0)
+    for b in range(world.b_count):
+        if not world.b_alive[b]:
+            continue
+        i, j = int(world.b_atom_i[b]), int(world.b_atom_j[b])
+        if i >= K or j >= K:
+            continue
+        if bx > 0 and ((world.k_pos[i][0] < bx) != (world.k_pos[j][0] < bx)):
+            continue  # cross-compartment bridge is cut — no propagation across
+        s = world.b_strength[b]
+        if i in firing and world.k_alive[j]:
+            world.k_charge[j] += gain * s
+        if j in firing and world.k_alive[i]:
+            world.k_charge[i] += gain * s
+
+
 def apply_structural_anchoring(world, dt: float) -> None:
     """Mature, fully-bonded atoms stiffen the lattice — they stop drifting.
 
