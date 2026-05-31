@@ -554,15 +554,24 @@ def apply_bridge_charge_propagation(world, dt: float) -> None:
     if not firing:
         return
     bx = getattr(cfg, 'compartment_boundary', 0.0)
+    # BET-107: graded propagation — only already-LATCHED bridges (strength >=
+    # prop_min) carry the recall signal. A written stim bridge self-sustains its
+    # memory; a blank control bridge (strength ~low) cannot carry any charge, so
+    # control is silent by construction. The initial WRITE still comes from the
+    # stimulus vibrations + correlation potentiation; propagation only sustains
+    # what has already been written. 0 = ungated (BET-105/106 behaviour).
+    prop_min = getattr(cfg, 'bridge_prop_min_strength', 0.0)
     for b in range(world.b_count):
         if not world.b_alive[b]:
+            continue
+        s = world.b_strength[b]
+        if s < prop_min:
             continue
         i, j = int(world.b_atom_i[b]), int(world.b_atom_j[b])
         if i >= K or j >= K:
             continue
         if bx > 0 and ((world.k_pos[i][0] < bx) != (world.k_pos[j][0] < bx)):
             continue  # cross-compartment bridge is cut — no propagation across
-        s = world.b_strength[b]
         if i in firing and world.k_alive[j]:
             world.k_charge[j] += gain * s
         if j in firing and world.k_alive[i]:
