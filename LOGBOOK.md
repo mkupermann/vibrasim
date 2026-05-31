@@ -4191,3 +4191,14 @@ Context tag (20 nodes) did not disambiguate 3 sequences: with-ctx 0.55, no-ctx
 0.52. At N=120 12 patterns is the static-capacity edge -> overloaded clean-up
 attractors -> context cannot help. Bottleneck is attractor capacity + transition
 interference. BET-117: test multi-sequence at larger N (capacity headroom).
+
+
+## 2026-05-31 16:xx — BET-117 multi-sequence at large N — NULL; MECHANISM is the wall
+
+S=3@N300=0.741 (vs 0.55@N120 — N helps a little), S=5@N400=0.465 (fails). Capacity
+headroom does NOT fix multi-sequence recall. Decisive: the Hebbian transition
+matrix interferes regardless of N -> capacity is necessary but not sufficient.
+Answers the language question: cannot reach written language by scaling N; the
+context-dependent sequence-prediction MECHANISM is the binding wall (language =
+extreme overlapping context-dependent sequences). Next BET-118: hierarchical
+predictive coding with an INFERRED hidden context (not hand-tagged).
