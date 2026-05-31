@@ -85,6 +85,7 @@ index with status RETIRED so the trail is preserved.
 | # | Name | Status | Discovered | Last touched |
 |---|------|--------|------------|--------------|
 | 01 | Three-way triage before you believe a null result | empirical | 2026-05-30 | 2026-05-30 |
+| 02 | The same coupling both writes and corrupts | empirical | 2026-05-31 | 2026-05-31 |
 
 ---
 

@@ -3889,3 +3889,28 @@ selective, matched control) + reduce firing propagation (n_emit/range/refractory
 by rule). If specificity stays scale-limited, that is the consolidated finding:
 every mechanism writes; clean long-horizon selective recall is bounded by the
 spontaneous substrate element count.
+
+
+## 2026-05-31 02:xx — Session: BET-100 contained propagation — NULL (over-correction); memory programme consolidated
+
+n_emit=0 to stop firing propagation + fraction-selective metric. Result: firing
+fully contained (ratio 125) but NOTHING latches (LOC stim-frac 0.00) — all bridges
+stay at 1.0. Diagnosis: emission IS the write mechanism. Co-firing needs bridged
+PAIRS firing within tau_LTP; an atom firing emits -> bridged neighbours fire ->
+pair co-fires -> bridge potentiates. With n_emit=0 + starved field, stim atoms
+fire alone, no pairs, no write. (WARM bridges latched at 6.0 even with n_emit=0,
+because dense ambient co-activated neighbours.) So emission both WRITES (co-firing
+pairs) and CONTAMINATES (propagation); BET-099 had both, BET-100 neither.
+
+CONSOLIDATED MEMORY-PROGRAMME FINDING (BET-089->100): persistent lattice SOLVED;
+selective WRITE solved (flux + correlation); persistent RECALL demonstrated
+transiently (BET-099 ~3000s); clean robust long-horizon selective recall BOUNDED
+by substrate scale + the propagation<->co-firing-write coupling tension —
+consistent across flux and correlation paradigms. A SCALE/COUPLING limit, not a
+missing mechanism. This answers the strategic question: the wall to learning is
+substrate SCALE, repeatedly.
+
+Strategic fork (not another blind tweak): (a) LOCAL emission (frozen low-velocity
+emitted vibrations -> co-activate neighbours without long-range propagation),
+(b) content-addressability on the BET-099 recall window, (c) larger substrate to
+test the scale limit. Default tee-up (a) = BET-101.
