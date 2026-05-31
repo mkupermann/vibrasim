@@ -1,0 +1,15 @@
+=== BET-111 capacity: N=320 ===
+N=320  patterns=  2  completion=1.000
+N=320  patterns=  4  completion=1.000
+N=320  patterns=  6  completion=1.000
+N=320  patterns=  8  completion=1.000
+N=320  patterns= 10  completion=1.000
+N=320  patterns= 12  completion=1.000
+N=320  patterns= 16  completion=1.000
+N=320  patterns= 20  completion=1.000
+N=320  patterns= 26  completion=1.000
+N=320  patterns= 32  completion=0.997
+N=320  patterns= 40  completion=0.494
+
+CAPACITY N=320: 32  (ratio cap/N = 0.100)
+DONE

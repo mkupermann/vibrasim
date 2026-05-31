@@ -4121,3 +4121,9 @@ polls ~/.eqmod/energy/state.npz (run_bet110_energy.py --demo) every ~1.2s — no
 coloured by activation, modular geometry, relaxation into attractors. Smoke frame
 bet110_frame.png renders. Next: scale, noisy cues, then sequence/predictive
 world-model (still energy-based, SSL, no transformer).
+
+
+## 2026-05-31 15:52 — Autopilot idle
+
+All experiments done or 3x NULL on feedback.
+
