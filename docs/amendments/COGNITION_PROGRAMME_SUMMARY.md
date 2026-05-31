@@ -63,10 +63,31 @@ generalization to experience. The remaining work is to point this engine at actu
 written symbols and scale the experience — engineering and curriculum, not a missing
 mechanism. NO LLM, NO transformer was used or needed.
 
+## The language step taken (BET-132 PASS)
+
+BET-131→132 pointed the engine at actual written words: a templated micro-language
+("<subject> <verb> <object>", 20 tokens) where each verb selects its object (a real
+selectional regularity). VSA-composed context → online readout → CLEANUP to the
+vocabulary emits the actual next word. Result (BET-132 PASS): the substrate generates
+the correct written next word for ALL held-out sentences (subject+verb combinations
+NEVER seen, 100%), online (0.75→1.00), and the ability collapses to chance with no
+rule (0.188) and to zero with the verb hidden (0.000) — it reads the structure, it
+does not memorize. (BET-131 was an honest NULL: a mis-designed control — a *shuffled*
+verb→object map is still a learnable function; corrected in BET-132 to a per-sentence
+random target.)
+
+So the full chain now works end to end with NO transformer: written symbols →
+analog-VSA composition → online self-generalizing readout → content-addressable
+cleanup → correct written next word for unseen sentences, improving per interaction.
+
 ## Next direction
 
-BET-131+: replace the relational toy target with real written-language next-symbol
-prediction over a small vocabulary — VSA-composed context codes → online reservoir
-readout → next symbol — and measure held-out generalization to novel contexts and
-online improvement per interaction. This is the bridge from "generalizes a relation"
-to "communicates in writing."
+BET-133+: scale the language from a 3-slot template toward longer/recursive
+structure and a larger vocabulary — multi-word context (order-K composition),
+multiple regularities at once, and held-out generalization to novel STRUCTURES (not
+just novel fillers). Then close the loop: feed generated words back as context for
+true autoregressive generation, and connect to a real interactive text channel so
+"every conversation" literally drives the curriculum (BET-130's law). Open question
+to watch: separable regularities are carried by the linear readout; genuinely
+non-separable linguistic dependencies may require the nonlinear reservoir features —
+test where linear stops and the reservoir must take over.
