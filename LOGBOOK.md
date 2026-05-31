@@ -4061,3 +4061,19 @@ contained (106a 3/4 bars); only recall metastable (Tc 0.32 — latched stim brid
 drift below mid in POST). Fix = freeze/lock a bridge once it latches past mid
 during STIM so it cannot decay, on the working BET-106 ungated regime. Targets the
 recall gap without breaking write/containment.
+
+
+## 2026-05-31 14:xx — Session: BET-108 consolidation — consol variants NULL (warmup-lock bug); baseline replicated
+
+Freeze-on-write (lock bridge at strong well once latched). Consol variants
+(108a/b/c) all NULL: locked EVERY bridge at 6 from the start, because consolidation
+fired during WARMUP and blank_bridges reset strength but NOT the _consolidated
+lock-set -> locked bridges snapped back to 6 (same class as the charge-at-blank
+bug). 108d control NULL. 108e (no consol) = 0.67/0.32/0.20, a clean replication of
+BET-106a (3/4 bars) and the baseline to beat.
+
+Fix applied: blank_bridges now clears world._consolidated too, so consolidation
+locks only bridges written DURING stim. BET-109 re-runs the same sweep with the
+fix. If a wall-ON consol variant then holds recall (Tc>=0.5) with containment while
+baseline stays ~0.32 -> MILESTONE. If recall still fades -> bridge TURNOVER dilutes
+the readout (not strength decay) -> strategic checkpoint (~20 amendments, 3/4 bars).

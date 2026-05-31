@@ -39,6 +39,33 @@ write with consolidation — substrate primitives only, no LLM. If Tc still < 0.
 even with locking, the readout fade is from bridge TURNOVER (new bridges at low
 dilute the region mean), not strength decay → next lever targets turnover.
 
-## RESULT
+## RESULT (2026-05-31): consol variants NULL (warmup-lock bug); baseline replicates BET-106
 
-_(to be filled after all variants complete — per-variant + pattern)_
+| Variant | gain | consol | wall | stim-frac | post-frac | uni | verdict |
+|---------|-----:|-------:|------|----------:|----------:|----:|---------|
+| 108a | 4 | 5 | ON  | 0.00 | 0.00 | 0.00 | NULL (all locked at 6) |
+| 108b | 4 | 4 | ON  | 0.00 | 0.00 | 0.00 | NULL (all locked) |
+| 108c | 6 | 5 | ON  | 0.00 | 0.00 | 0.00 | NULL (all locked) |
+| 108d | 4 | 5 | OFF | 0.00 | 0.00 | 0.00 | NULL (control) |
+| 108e | 4 | 0 | ON  | **0.67** | **0.32** | 0.20 | NULL — replicates BET-106a 3/4 bars |
+
+### Diagnosis — warmup-lock bug (fixable)
+
+The consol variants locked EVERY bridge at 6 — stim and control alike — from the
+first checkpoint. Cause: consolidation fired during WARMUP (full ambient → all
+bridges co-fire → all reach consol → all enter the lock-set), and
+`blank_bridges` reset bridge STRENGTH at the stim transition but NOT the
+`_consolidated` lock-set, so locked bridges immediately snapped back to 6. Same
+class as the charge-at-blank bug. The consolidation idea is untested, not refuted.
+
+108e (no consolidation) cleanly replicates BET-106a (0.67/0.32/0.20) — a good
+reproducibility check and the baseline to beat.
+
+### Fix → BET-109
+
+`blank_bridges` now also clears `world._consolidated`, so consolidation locks ONLY
+bridges written DURING stim. BET-109 re-runs this exact sweep with the fix; if a
+wall-ON consol variant then holds recall (Tc ≥ 0.5) while 108d-equivalent leaks
+and the no-consol baseline stays ~0.32, that is the milestone. If recall still
+fades, the cause is bridge TURNOVER diluting the region-mean readout (new bridges
+born weak), not strength decay — and that becomes the strategic checkpoint.
