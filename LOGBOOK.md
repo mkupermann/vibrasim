@@ -4358,3 +4358,9 @@ Honest: this is structural yield (foundation), not yet the higher functions. Nec
 not sufficient. Next (G28): re-test membrane formation + the memory/bridge chain on this
 rich substrate — does removing starvation unblock the levels that were element-count
 limited?
+
+
+## 2026-05-31 18:52 — Autopilot idle
+
+All experiments done or 3x NULL on feedback.
+
