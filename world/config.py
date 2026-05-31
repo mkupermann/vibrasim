@@ -122,6 +122,10 @@ class WorldConfig:
     # potentiation cannot cross it. Contains activity percolation (CONCEPT 4.8
     # engineered modularity). 0 = off (homogeneous substrate).
     compartment_boundary: float = 0.0
+    # BET-105: non-broadcast write — a firing atom deposits charge into its
+    # bridged neighbours (gain × bridge strength), so co-activation travels along
+    # the bridge graph instead of omnidirectional emission. 0 = off. Pair n_emit≈0.
+    bridge_charge_prop_rate: float = 0.0
 
     # Plan B — STDP and directional plasticity
     stdp_enabled: bool = False              # master switch — off preserves legacy behaviour
