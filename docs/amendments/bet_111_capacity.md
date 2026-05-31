@@ -27,6 +27,29 @@ substrate-scale ceiling that capped the spontaneous programme is gone; you buy
 more memory by adding nodes. NULL/sub-linear would itself be an informative
 capacity law.
 
-## RESULT
+## RESULT (2026-05-31): PASS — capacity scales linearly with N
 
-_(consolidated after all N complete)_
+| N | Capacity (completion ≥ 0.90) | cap/N |
+|---|------------------------------:|------:|
+| 80  | 10 | 0.125 |
+| 160 | 16 | 0.100 |
+| 240 | 26 | 0.108 |
+| 320 | 32 | 0.100 |
+
+| Bar | Outcome |
+|-----|---------|
+| T111a stores (≥2) | ✓ (10,16,26,32) |
+| T111b monotonic | ✓ (10 < 16 < 26 < 32) |
+| T111c scales (largest ≥ 2× smallest) | ✓ (32 ≥ 20) |
+
+**BET-111: PASS.** Capacity grows linearly with network size, slope ≈ **0.095·N**
+(linear fit), tracking just below the classic Hopfield bound of 0.138·N — the
+modest gap is the sparse, modular connectivity. The substrate-scale ceiling that
+capped the entire spontaneous programme (BET-089→109) is gone: you buy more
+memory by adding nodes. Plot: `bet111_capacity.png`.
+
+### Next on this track
+
+BET-112: robustness to noisy (not just masked) cues — error-correcting recall;
+BET-113: sequence / next-state prediction toward a predictive world-model. Still
+energy-based, still self-supervised, still no transformer.

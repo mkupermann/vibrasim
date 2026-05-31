@@ -33,7 +33,14 @@ def write_snapshot(net, phase, epoch, pattern_id, acc):
              pattern_id=np.array(pattern_id), acc=np.array(acc, dtype=np.float32),
              energy=np.array(net.energy(), dtype=np.float32),
              n_patterns=np.array(N_PATTERNS))
-    os.replace(tmp, STATE_FILE)
+    # Windows: os.replace fails if a reader (the viewer) holds the file open —
+    # retry briefly instead of crashing the producer.
+    for _ in range(20):
+        try:
+            os.replace(tmp, STATE_FILE)
+            return
+        except PermissionError:
+            time.sleep(0.04)
 
 
 def content_addressable(net, patterns, cue_frac, rng):
