@@ -52,7 +52,8 @@ class EnergyNet:
                     M[i, j] = M[j, i] = 1.0
         self.M = M
 
-        self.W = np.zeros((self.N, self.N), dtype=np.float64)   # learnable
+        self.W = np.zeros((self.N, self.N), dtype=np.float64)   # symmetric (attractors)
+        self.T = np.zeros((self.N, self.N), dtype=np.float64)   # asymmetric (transitions)
         self.b = np.zeros(self.N, dtype=np.float64)
         self.state = rng.choice([-1.0, 1.0], self.N)
         self._rng = rng
@@ -100,6 +101,36 @@ class EnergyNet:
             self.W += lr * dW
             np.fill_diagonal(self.W, 0.0)
             self.W = 0.5 * (self.W + self.W.T)
+
+    # --- sequences / prediction (predictive world-model step) ---------------
+    def train_sequence(self, seq, lr_T: float = 0.06, lr_W: float = 0.02,
+                       assoc_epochs: int = 80):
+        """Learn a temporal sequence: each pattern becomes a clean-up ATTRACTOR
+        (symmetric W, via the self-supervised rule) AND directed transitions are
+        stored in the asymmetric T (Hebbian: next outer current). Self-supervised:
+        the only target is the sequence predicting its own next step."""
+        for _ in range(assoc_epochs):
+            self.train_epoch(seq, cue_frac=0.5, lr=lr_W, relax_steps=12)
+        for t in range(len(seq) - 1):
+            a = seq[t].astype(np.float64); b = seq[t + 1].astype(np.float64)
+            self.T += lr_T * np.outer(b, a) * self.M
+        np.fill_diagonal(self.T, 0.0)
+
+    def predict_step(self, s, cleanup_steps: int = 12):
+        """Predict the next state via the transition matrix, then clean it up to
+        the nearest stored attractor (energy relaxation)."""
+        nxt = np.tanh(self.beta * ((self.T * self.M) @ s))
+        self.state = nxt
+        self.relax(None, None, cleanup_steps)
+        return self.state.copy()
+
+    def recall_sequence(self, start, length: int, cleanup_steps: int = 12):
+        s = np.sign(np.asarray(start, dtype=np.float64))
+        out = [s.copy()]
+        for _ in range(length - 1):
+            s = self.predict_step(s, cleanup_steps)
+            out.append(s.copy())
+        return out
 
     # --- evaluation ---------------------------------------------------------
     def complete(self, pattern, cue_frac: float = 0.5, relax_steps: int = 30,
