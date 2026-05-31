@@ -1,0 +1,12 @@
+=== BET-111 capacity: N=160 ===
+N=160  patterns=  2  completion=1.000
+N=160  patterns=  4  completion=1.000
+N=160  patterns=  6  completion=1.000
+N=160  patterns=  8  completion=1.000
+N=160  patterns= 10  completion=1.000
+N=160  patterns= 12  completion=1.000
+N=160  patterns= 16  completion=0.994
+N=160  patterns= 20  completion=0.491
+
+CAPACITY N=160: 16  (ratio cap/N = 0.100)
+DONE
