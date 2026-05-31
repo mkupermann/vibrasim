@@ -42,6 +42,37 @@ stays clean (blank control cannot propagate). If Tc still < 0.5, the write itsel
 decays (latched bridges drift below the gate) → next lever is recall reinforcement
 or a deeper well.
 
-## RESULT
+## RESULT (2026-05-31): all 5 NULL — the gate broke the write bootstrap
 
-_(to be filled after all variants complete — per-variant + pattern)_
+Every variant: stim-frac 0.00, post-frac 0.00 — NOTHING latched (stim stuck at
+~1.0 through STIM/POST). The graded gate killed the write entirely.
+
+| Variant | gain | prop_min | wall | stim-frac | post-frac | verdict |
+|---------|-----:|---------:|------|----------:|----------:|---------|
+| 107a | 4 | 3 | ON  | 0.00 | 0.00 | NULL |
+| 107b | 6 | 3 | ON  | 0.00 | 0.00 | NULL |
+| 107c | 8 | 4 | ON  | 0.00 | 0.00 | NULL |
+| 107d | 6 | 3 | OFF | 0.00 | 0.00 | NULL |
+| 107e | 4 | 2 | ON  | 0.00 | 0.00 | NULL |
+
+### Why — the bootstrap is broken
+
+Bridges start blank (strength=1 < prop_min). With propagation gated to
+strength ≥ prop_min, NO bridge propagates initially, so the cascade cannot start.
+In BET-106 the propagation was PART of the write — firing → propagate →
+neighbour fires → co-fire → potentiate past mid. Gating propagation until a
+bridge is "written" removes the amplification that does the writing:
+chicken-and-egg. Correlation potentiation from the stimulus vibrations alone does
+not latch (stim stays at 1.0). So the gate is the wrong tool — it cannot
+distinguish "already written" (good to sustain) from "being written" (needs the
+amplification it just blocked).
+
+### Corrected next lever (BET-108): consolidation, not gating
+
+BET-106's regime already WROTE and CONTAINED correctly (106a: Ta/Tb/Td ✓); the
+only gap was recall metastability (Tc 0.32 — latched stim bridges drift back below
+mid in POST). The right fix is NOT to gate propagation but to CONSOLIDATE the
+written pattern: once a bridge latches past mid during STIM, lock/freeze its
+strength (or steepen the well) so it cannot decay in POST. That preserves recall
+without touching the write or containment. BET-108 implements freeze-on-write on
+the working BET-106 ungated regime.

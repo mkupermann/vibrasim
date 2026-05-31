@@ -4045,3 +4045,19 @@ only gap is RECALL persistence (metastable — stim self-sustains noisily, holds
 propagate, so a latched (written) stim bridge carries recall and self-sustains
 while blank control bridges cannot carry any signal (silent by construction).
 Implemented as bridge_prop_min_strength; parallel sweep. Results streamed live.
+
+
+## 2026-05-31 14:xx — Session: BET-107 graded propagation — all 5 NULL (gate broke the write bootstrap)
+
+Graded propagation (only bridges with strength>=prop_min propagate) to stabilize
+recall. All 5 NULL, nothing latched (stim stuck ~1.0). Cause: bridges start blank
+(1<prop_min) so NO bridge propagates initially -> cascade cannot start. In BET-106
+propagation was PART of the write (firing->propagate->co-fire->potentiate); gating
+it until written removes the amplification that writes -> chicken-and-egg. The gate
+cannot distinguish already-written (sustain) from being-written (needs amplify).
+
+Corrected lever BET-108: NOT gating but CONSOLIDATION. BET-106 already wrote +
+contained (106a 3/4 bars); only recall metastable (Tc 0.32 — latched stim bridges
+drift below mid in POST). Fix = freeze/lock a bridge once it latches past mid
+during STIM so it cannot decay, on the working BET-106 ungated regime. Targets the
+recall gap without breaking write/containment.
