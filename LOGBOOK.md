@@ -4289,3 +4289,29 @@ existing binding operators already define the representational boundary. Our EQM
 work is honest engineering within that boundary, with a clean pre-registered map of
 where additive composition stops (BET-133/134/135) and where convolution would be
 required. No new mathematics was found, and I will not claim any.
+
+## 2026-05-31 — The honest disconnect: cognition work vs the physical substrate (Michael)
+
+Michael: "Was hat das Substrat damit zu tun. Wellen, zu Elektronen, zu Atomen, zu
+Molekülen..." He is right, and it is the central gap.
+
+EQMOD's substrate is a BOTTOM-UP PHYSICS sim: vibrations/waves -> bonds/bridges ->
+atoms -> molecules -> cells (world/bridges.py, the vibration engine, etc.). The whole
+cognition stack I built since the pivot — energy.py, vsa.py, reservoir.py,
+knowledge.py, codelearn.py — runs in abstract numpy/AST land several layers ABOVE that
+physics and never touches it. I kept the word "substrate" but cut the cord.
+
+Honest history of how: the memory programme (BET-089->102) DID try to grow selective
+memory directly in the physical substrate and hit a hard structural ceiling
+(percolation: a homogeneous connected medium can't hold a localized memory at any
+scale). To keep making "cognition" progress I pivoted to an abstract layer (EQMOD-2)
+and, over dozens of BETs, built genuinely-working retrieval/composition/code-gen — but
+that layer is independent of the waves->atoms->molecules vision. The QA system, the
+code recombiner, the (proposed) defect repair: all abstract symbolic ML, none emergent
+from the physics.
+
+So the bridge from the bottom (physics) to the top (memory/language/code) — which is
+the exact deadlock EQMOD set out to break — is NOT bridged by anything I built. I
+sidestepped it. That is the truthful status, and it compounds Michael's earlier proof:
+not only did I combine known methods, I also detached them from the project's own
+substrate while keeping its vocabulary.
