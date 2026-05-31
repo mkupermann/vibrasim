@@ -4028,3 +4028,20 @@ control starts silent; re-run gain sweep — STIM should ignite only its compart
 and self-sustain (recall) while control stays dark. If control still lights, gain
 must sit below self-ignition while stimulus reinforces. Mechanism committed (gated
 off); results streamed live via watch_results.py.
+
+
+## 2026-05-31 13:xx — Session: BET-106 charge-blank gain sweep — all NULL but CLOSEST yet (3/4 bars)
+
+Charge-blank fix (blank_bridges zeros k_charge+refractory) WORKED: fire ratios
+8-38 (vs ~1.8 BET-105), control now dark. 5-variant gain sweep. 106a(gain4,wall):
+ratio 38.6, stim-frac 0.67, post-frac 0.32, uni 0.19 -> passes Ta(firing) Tb(write)
+Td(containment), fails only Tc(recall 0.32<0.5). 106b(gain6): containment perfect
+(uni 0.00) but recall WORSE (0.19) — brute gain is not the lever. 106c/e (gain3/2)
+no write; 106d(wallOFF) leaks.
+
+Closest the programme has come: selective write + containment both solved; the
+only gap is RECALL persistence (metastable — stim self-sustains noisily, holds
+~1/3 of POST). Next BET-107: GRADED propagation — only bridges with strength>mid
+propagate, so a latched (written) stim bridge carries recall and self-sustains
+while blank control bridges cannot carry any signal (silent by construction).
+Implemented as bridge_prop_min_strength; parallel sweep. Results streamed live.
