@@ -4142,3 +4142,11 @@ runs the snapshot producer in a background thread = SINGLE command shows a live
 changing view; (2) Windows os.replace race fixed (producer retries; viewer closes
 the npz promptly) so concurrent read/write no longer crashes; (3) force render()
 each poll. Verified: 6 distinct snapshots, producer stable.
+
+
+## 2026-05-31 16:xx — BET-112 noise robustness — PASS (error-correcting attractor)
+
+Flip f fraction of a stored patterns bits, relax freely. Recovery: f=0.10->1.00,
+0.20->0.996, 0.25->0.95, 0.30->0.86, 0.50->0.45 (chance). Control (shuffled W)
+@0.10 = 0.55. Basin radius ~25%% flipped bits. All bars PASS. A genuine
+content-addressable error-correcting attractor. Plot bet112_noise.png.
