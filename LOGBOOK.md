@@ -4101,3 +4101,23 @@ selective write, containment; transient persistent recall (~3000s, BET-099);
 clean long-horizon selective RECALL never reached (structural: scale/connectivity/
 turnover). 2 reusable patterns (null-triage; write=broadcast=leak). Honest ceiling
 at 3/4 bars.
+
+
+## 2026-05-31 15:xx — NEW TRACK BET-110: energy-based self-supervised memory — PASS (first genuine learning)
+
+EQMOD-2 redesign live. world/energy.py: modular geometric energy net (frozen 3D
+sites, engineered sparse/modular connectivity mask, Hopfield-style energy),
+self-supervised contrastive-Hebbian / equilibrium-prop learning (masked completion,
+local updates, no backprop/transformer/labels).
+
+BET-110 PASS: trained completion 0.995, shuffled-weight control 0.510, 6/6
+content-addressable. First PASS in the whole project and the first time it really
+LEARNS. The engineered modular scaffold + energy/attractor formulation deliver the
+stable, selective, content-addressable recall the spontaneous substrate never
+could (percolation/turnover gone by construction).
+
+Built a decoupled 3D near-real-time viewer (tools/viz3d_energy.py, pyvista) that
+polls ~/.eqmod/energy/state.npz (run_bet110_energy.py --demo) every ~1.2s — nodes
+coloured by activation, modular geometry, relaxation into attractors. Smoke frame
+bet110_frame.png renders. Next: scale, noisy cues, then sequence/predictive
+world-model (still energy-based, SSL, no transformer).
