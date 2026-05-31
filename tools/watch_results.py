@@ -55,9 +55,11 @@ def scan_once():
 
 def watch():
     print("=== BET results watcher — live (Ctrl+C to stop) ===", flush=True)
+    # Show the current results board first, so the screen is never blank.
+    scan_once()
+    print("--- now watching for NEW results (live) ---", flush=True)
     offsets = {}
-    # Start at end of existing files so we only show NEW results, but print a
-    # one-line note of the most recent verdict already on disk.
+    # Start at end of existing files so we only show NEW results from here on.
     for f in glob.glob(os.path.join(REPO, "bet*_out.txt")):
         try:
             offsets[f] = os.path.getsize(f)
