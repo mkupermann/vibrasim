@@ -67,9 +67,12 @@ def render_once(state, plotter, actors):
 
     # nodes as real 3D sphere glyphs (radius in world units) so they are large
     # and vividly coloured. name= replaces the previous actor each frame.
-    nm = pv.PolyData(pos); nm['act'] = act
-    balls = nm.glyph(scale=False, orient=False,
-                     geom=pv.Sphere(radius=0.7, theta_resolution=12, phi_resolution=12))
+    nm = pv.PolyData(pos)
+    nm['act'] = act
+    nm['size'] = 0.35 + 0.55 * np.abs(act)          # active neurons pulse larger
+    nm.set_active_scalars('size')
+    balls = nm.glyph(scale='size', orient=False,
+                     geom=pv.Sphere(radius=1.0, theta_resolution=12, phi_resolution=12))
     plotter.add_mesh(balls, scalars='act', cmap='coolwarm', clim=[-1, 1],
                      smooth_shading=True, name='nodes',
                      scalar_bar_args={'title': 'activation (-1 ... +1)'})
@@ -130,10 +133,15 @@ def main():
     prog = {'k': None}
 
     def _tick(*_args):
+        try:                       # slow camera orbit -> visible 3D motion
+            plotter.camera.Azimuth(4.0)
+        except Exception:
+            pass
         s = load_state()
         if s is None:
-            return
+            plotter.render(); return
         render_once(s, plotter, actors)
+        plotter.render()
         key = (str(s['phase']), int(s['epoch']))
         if key != prog['k']:
             print(f"  frame: phase={key[0]} epoch={key[1]} "
@@ -141,11 +149,16 @@ def main():
             prog['k'] = key
 
     # Reliable live updates: a VTK interactor timer fires _tick during show().
+    # pyvista 0.48 has add_timer_event(max_steps, duration_ms, callback).
+    started = False
     try:
-        plotter.add_callback(_tick, interval=1200)
+        plotter.add_timer_event(max_steps=10_000_000, duration=1200, callback=_tick)
+        started = True
+    except Exception as e:
+        print(f"(timer unavailable: {e}; using poll loop)")
+    if started:
         plotter.show()
-    except Exception:
-        # fallback: non-blocking show + manual poll loop
+    else:
         plotter.show(interactive_update=True, auto_close=False)
         try:
             while True:
