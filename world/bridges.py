@@ -519,15 +519,31 @@ def apply_correlation_plasticity(world, dt: float) -> None:
             if b is not None:
                 cofired.add(b)
 
+    # BET-108: consolidation. Once a bridge latches past consol_threshold it is
+    # locked at the strong well — immune to subsequent decay/turnover — so a
+    # written memory cannot drift back below mid in POST (the recall metastability
+    # that capped BET-106 at 0.32). 0 = off. Control bridges never reach the
+    # threshold, so they are never locked.
+    consol = getattr(cfg, 'bridge_consolidate_threshold', 0.0)
+    if consol > 0 and not hasattr(world, '_consolidated'):
+        world._consolidated = set()
+
     # Bistable well + rectified one-sided co-firing drive.
     for b in range(world.b_count):
         if not world.b_alive[b]:
+            continue
+        if consol > 0 and b in world._consolidated:
+            world.b_strength[b] = high        # locked (consolidated memory)
             continue
         s = world.b_strength[b]
         well = -well_k * (s - low) * (s - mid) * (s - high)
         drive = pot if b in cofired else 0.0
         s_new = s + rate * dt * (well + drive)
-        world.b_strength[b] = float(np.clip(s_new, 0.0, high + 1.0))
+        s_new = float(np.clip(s_new, 0.0, high + 1.0))
+        world.b_strength[b] = s_new
+        if consol > 0 and s_new >= consol:
+            world._consolidated.add(b)
+            world.b_strength[b] = high
 
 
 def apply_bridge_charge_propagation(world, dt: float) -> None:
