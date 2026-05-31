@@ -62,6 +62,11 @@ def blank_bridges(world, low):
     for b in range(world.b_count):
         if world.b_alive[b]:
             world.b_strength[b] = float(low)
+    # BET-106: also blank atom charge + refractory, so no region carries leftover
+    # warmup charge that could spark a self-sustaining cascade after the blank.
+    K = world.k_count
+    world.k_charge[:K] = 0.0
+    world.k_refractory_until[:K] = world.t
 
 
 def run_arm(name, uniform, wall_budget=420):
