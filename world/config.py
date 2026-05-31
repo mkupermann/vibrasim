@@ -117,6 +117,11 @@ class WorldConfig:
     # the well holds it. A turnover-robust write signal (vs fragile flux state).
     corr_plasticity_rate: float = 0.0     # master rate (0 = off)
     corr_potentiation: float = 1.0        # co-firing drive magnitude (over-barrier push)
+    # BET-103: engineered modular compartment. If > 0, an x-plane wall: atoms only
+    # integrate charge from vibrations on their own side, and co-firing
+    # potentiation cannot cross it. Contains activity percolation (CONCEPT 4.8
+    # engineered modularity). 0 = off (homogeneous substrate).
+    compartment_boundary: float = 0.0
 
     # Plan B — STDP and directional plasticity
     stdp_enabled: bool = False              # master switch — off preserves legacy behaviour

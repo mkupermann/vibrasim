@@ -3963,3 +3963,26 @@ MEMORY_PROGRAMME_SUMMARY.md). Solved: persistent lattice, selective write,
 transient persistent recall. Not achieved: clean long-horizon selective recall
 (percolation). Next is architectural (modular compartments), a strategic decision
 surfaced to Michael — no more regime tuning.
+
+
+## 2026-05-31 12:xx — Session: BET-103 engineered compartment — NULL; write field IS leak field (Pattern 02 fundamental)
+
+Implemented an x-plane compartment wall (compartment_boundary=15, box 30): atoms
+integrate charge only from their own side; co-firing cannot potentiate across.
+Goal: contain the percolation that broke BET-099/102 selectivity.
+
+Result NULL: the wall CONTAINED percolation (control stayed 1.00) but STARVED the
+write — nothing latched anywhere (stim 1.00 through STIM/POST) despite stim firing
+(ratio 125). BET-099 (same config, no wall) wrote fine. Diagnosis: the co-firing
+that wrote BET-099 was sustained by the GLOBAL broadcast field (emitted vibrations
+flooding the box, co-activating bridged neighbours everywhere). Halving it
+(same-side only) dropped co-firing below the write threshold — even in the stim
+compartment, whose local zone the wall did not even touch.
+
+Deepened finding (Pattern 02 fundamental here): write = broadcast = leak. The
+activity field that writes memory IS the field that percolates; engineered
+modularity that blocks the leak necessarily starves the write. Resolution must
+DECOUPLE write from broadcast — drive co-activation along the BRIDGE GRAPH (G6
+apply_bridge_atom_propagation, atom->atom through strong bridges) which respects
+connectivity and can be made modular by cutting cross-compartment bridges, not via
+omnidirectional vibration broadcast. BET-104 (architectural) surfaced to Michael.
