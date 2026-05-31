@@ -1,0 +1,40 @@
+=== BET-102: scale test (box 50^3, tau=2.0, emit_speed=6) ===
+[LOC] 500s [WARM]: stim=6.19(n=12) ctrl=0.00(n=0)
+[LOC] 1000s [WARM]: stim=6.09(n=5) ctrl=6.10(n=4)
+[LOC] 1500s [WARM]: stim=0.00(n=0) ctrl=0.00(n=0)
+[LOC] 2000s [STIM]: stim=6.00(n=42) ctrl=1.00(n=5)
+[LOC] 2500s [STIM]: stim=5.72(n=36) ctrl=2.88(n=8)
+[LOC] 3000s [STIM]: stim=5.64(n=56) ctrl=3.31(n=13)
+[LOC] field cleared at STIM end
+[LOC] 3500s [POST]: stim=5.79(n=48) ctrl=3.50(n=10)
+[LOC] 4000s [POST]: stim=5.17(n=48) ctrl=5.44(n=9)
+[LOC] 4500s [POST]: stim=5.69(n=49) ctrl=5.00(n=5)
+[LOC] 5000s [POST]: stim=5.50(n=40) ctrl=5.55(n=11)
+[LOC] 5500s [POST]: stim=5.67(n=30) ctrl=4.21(n=14)
+[LOC] 6000s [POST]: stim=5.34(n=38) ctrl=4.61(n=18)
+[LOC] 6500s [POST]: stim=5.57(n=35) ctrl=5.00(n=15)
+[LOC] 7000s [POST]: stim=5.49(n=39) ctrl=5.06(n=16)
+[LOC] wall budget hit at step 14793
+[UNI] 500s [WARM]: stim=6.19(n=12) ctrl=0.00(n=0)
+[UNI] 1000s [WARM]: stim=6.09(n=5) ctrl=6.10(n=4)
+[UNI] 1500s [WARM]: stim=0.00(n=0) ctrl=0.00(n=0)
+[UNI] 2000s [STIM]: stim=5.68(n=31) ctrl=4.95(n=38)
+[UNI] 2500s [STIM]: stim=5.58(n=12) ctrl=4.39(n=31)
+[UNI] 3000s [STIM]: stim=3.31(n=13) ctrl=4.00(n=30)
+[UNI] field cleared at STIM end
+[UNI] 3500s [POST]: stim=6.00(n=18) ctrl=4.71(n=31)
+[UNI] 4000s [POST]: stim=6.00(n=23) ctrl=5.22(n=32)
+[UNI] 4500s [POST]: stim=6.00(n=24) ctrl=5.55(n=33)
+[UNI] 5000s [POST]: stim=6.00(n=20) ctrl=4.94(n=33)
+[UNI] 5500s [POST]: stim=6.00(n=18) ctrl=5.38(n=32)
+[UNI] wall budget hit at step 11375
+
+--- VERDICT ---
+fire ratio=577.0 | LOC stim-frac=0.67 LOC post-frac=0.00 UNI post-frac=0.00
+T102a selective firing (>=3x) : True
+T102b selective potentiation  : True (>=0.5)
+T102c persistent recall       : False (>=0.5)
+T102d control fails (<0.25)   : True
+
+BET-102: NULL/FAIL
+DONE

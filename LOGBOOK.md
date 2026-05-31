@@ -3939,3 +3939,27 @@ local emission). Direct test of the scale hypothesis. No more same-scale tuning.
 
 All experiments done or 3x NULL on feedback.
 
+
+
+## 2026-05-31 03:xx — Session: BET-102 scale test — NULL; limit is CONNECTIVITY not scale; memory programme CLOSED
+
+Run 1 hit wall budget mid-STIM (big box ~3x slower; POST never reached) — budget
+estimate wrong, re-ran with shorter phases (WARMUP/STIM 3000). Re-run reached POST.
+T102a/b PASS (fire ratio 577; stim-frac 0.67 — bigger box made WRITE cleaner),
+T102c FAIL: POST stim ~5.5 AND control ~4-5 (>mid). Control latched too.
+
+Deeper finding: separation (25u >> r_2) + longer tau did NOT contain the memory.
+During STIM control was 2.8-3.8; by POST it climbed to ~5. The memory SPREAD via
+PERCOLATION — firing co-activates neighbours, cascading atom-to-atom across the
+gap over thousands of steps. Distance only delays percolation in a connected
+graph. Root cause of the whole programme's recall failure = CONNECTIVITY, not
+scale/drive/range. A homogeneous connected substrate cannot hold a local selective
+memory at any scale.
+
+Resolution converges on the charter: containment needs ENGINEERED MODULAR
+COMPARTMENTS (CONCEPT 4.8 ports, engineered; internals emergent). Memory programme
+(BET-089->102) CLOSED with consolidated finding (docs/amendments/
+MEMORY_PROGRAMME_SUMMARY.md). Solved: persistent lattice, selective write,
+transient persistent recall. Not achieved: clean long-horizon selective recall
+(percolation). Next is architectural (modular compartments), a strategic decision
+surfaced to Michael — no more regime tuning.
