@@ -67,6 +67,10 @@ def blank_bridges(world, low):
     K = world.k_count
     world.k_charge[:K] = 0.0
     world.k_refractory_until[:K] = world.t
+    # BET-109: also clear the consolidation lock-set, so consolidation only locks
+    # bridges written DURING stim (warmup-latched bridges must not stay locked).
+    if hasattr(world, '_consolidated'):
+        world._consolidated.clear()
 
 
 def run_arm(name, uniform, wall_budget=420):
