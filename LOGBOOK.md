@@ -4006,3 +4006,25 @@ non-broadcast write via BRIDGE GRAPH (G6 propagation) + wall containment = BET-1
 
 Infra: tools/run_bet104.py parameterized; 5 background processes; tools/
 watch_results.py streamed all 5 verdicts live.
+
+
+## 2026-05-31 13:xx — Session: BET-105 bridge-graph write 5-variant sweep — all NULL, self-ignition
+
+Non-broadcast write (firing atom deposits gain*strength into bridged neighbours;
+n_emit=0, tau_LTP=1.0, wall cuts cross-boundary bridges). 5 parallel variants
+(gain 4/6/8 wall, gain6 wall-OFF, gain6 wall n_emit1). ALL NULL, fire ratio ~1.8
+(control fires nearly as much as stim) in every variant including wall-ON.
+
+Diagnosis: with gain >= theta_fire (4), one firing atom ignites a bridged
+neighbour (gain*strength >= 4), which propagates onward — the bridge-write is
+SELF-SUSTAINING. A single spark lights the whole compartment. Control sparks from
+leftover warmup CHARGE (blank_bridges resets bridge strength but not k_charge), so
+control self-ignites internally; the wall cannot help. The bridge-write is a
+bistable per-compartment ON/OFF switch, not a graded selective write.
+
+Third face of the recurring coupling (write strong enough to propagate is strong
+enough to self-sustain everywhere). BET-106 fix: zero k_charge at the blank so
+control starts silent; re-run gain sweep — STIM should ignite only its compartment
+and self-sustain (recall) while control stays dark. If control still lights, gain
+must sit below self-ignition while stimulus reinforces. Mechanism committed (gated
+off); results streamed live via watch_results.py.
