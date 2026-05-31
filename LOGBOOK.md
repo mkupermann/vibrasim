@@ -4215,3 +4215,11 @@ context-dependent sequences are a MECHANISM wall (pairwise Hebbian transitions
 cannot disambiguate), not a capacity wall. This is exactly the language-relevant
 capability -> you cannot reach written language by scaling N; the predictor
 mechanism is the open problem.
+
+
+## 2026-05-31 16:xx — BET-119 character replay — PASS (working demo + the limit on text)
+
+Single-sequence predictor on real characters: BRAIN->BRAIN, GEOMTRICAVS->exact
+(unique chars work); HELLO->HELOL (repeated L breaks at the ambiguous L->L vs L->O
+transition). PASS. Demonstrates the working capability on readable text AND the
+context wall in one word. Ties the whole finding to language concretely.
