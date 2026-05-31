@@ -4378,3 +4378,9 @@ atoms but 0 molecules. The frequency-compatibility rule is the STRUCTURING PRINC
 not just a bottleneck. Conclusion: WIDEN the window (G27 ±2% -> 12x atoms, 22x
 molecules), don't DELETE it. "8% is gone" honestly means the narrow 0.08±0.005 value is
 replaced by a broader compatibility window, not no frequency selectivity.
+
+
+## 2026-05-31 19:52 — Autopilot idle
+
+All experiments done or 3x NULL on feedback.
+
