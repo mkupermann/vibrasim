@@ -498,6 +498,10 @@ def apply_correlation_plasticity(world, dt: float) -> None:
             i, j = int(world.b_atom_i[b]), int(world.b_atom_j[b])
             bridge_of[(i, j) if i < j else (j, i)] = b
 
+    # BET-103: engineered compartment — co-firing potentiation cannot cross the
+    # x-plane wall (0 = off).
+    bx = getattr(cfg, 'compartment_boundary', 0.0)
+
     # Bridges whose two atoms co-fired within tau_LTP this retention window.
     cofired = set()
     ev = world.firing_events
@@ -507,6 +511,9 @@ def apply_correlation_plasticity(world, dt: float) -> None:
             t_j, aj = ev[y]
             if abs(t_j - t_i) > tau or ai == aj:
                 continue
+            if bx > 0 and ai < world.k_count and aj < world.k_count:
+                if (world.k_pos[ai][0] < bx) != (world.k_pos[aj][0] < bx):
+                    continue  # pair straddles the compartment wall — no cross-write
             key = (ai, aj) if ai < aj else (aj, ai)
             b = bridge_of.get(key)
             if b is not None:

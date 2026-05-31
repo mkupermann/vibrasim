@@ -1723,6 +1723,11 @@ def neuron_dynamics(world, dt: float) -> None:
     if n_alive_v > 0:
         v_pos = world.s_pos[:n_alive_v]
         v_alive = world.s_alive[:n_alive_v]
+    # BET-103: engineered compartment wall on the x-plane (0 = off). Atoms only
+    # integrate charge from vibrations on their own side, so firing cannot be
+    # driven across the boundary (contains activity percolation).
+    bx = getattr(cfg, 'compartment_boundary', 0.0)
+    vx = v_pos[:, 0] if (bx > 0 and n_alive_v > 0) else None
     for ai in atom_indices:
         if world.t < world.k_refractory_until[ai]:
             continue
@@ -1734,7 +1739,10 @@ def neuron_dynamics(world, dt: float) -> None:
         # wrap to [-box/2, box/2]
         d -= box * np.round(d / box)
         d2 = (d * d).sum(axis=1)
-        n_in = int(((d2 <= r2) & v_alive).sum())
+        in_range = (d2 <= r2) & v_alive
+        if bx > 0:
+            in_range = in_range & ((vx < bx) == (ap[0] < bx))  # same compartment only
+        n_in = int(in_range.sum())
         if n_in > 0:
             world.k_charge[ai] += float(n_in)
 
