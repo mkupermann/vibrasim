@@ -4223,3 +4223,13 @@ Single-sequence predictor on real characters: BRAIN->BRAIN, GEOMTRICAVS->exact
 (unique chars work); HELLO->HELOL (repeated L breaks at the ambiguous L->L vs L->O
 transition). PASS. Demonstrates the working capability on readable text AND the
 context wall in one word. Ties the whole finding to language concretely.
+
+
+## 2026-05-31 16:xx — BET-120 order-2 transitions — PARTIAL (HELLO fixed!), then BET-121 FULL solve
+
+Order-2 (history) transitions fixed the repeated-token wall: HELLO->HELLO exact.
+Multi-sequence still failed with Hebbian T2 (S3 0.43, S5 0.48). The fix (the new
+math the user authorised): LEAST-SQUARES / projection learning of the order-2
+transition operator (instead of Hebbian outer product) eliminates interference
+exactly. Pure least-squares order-2 recall: S=5/8/12/20 sequences ALL 1.000;
+HELLO exact. The sequence wall is BROKEN, no transformer. Formalised as BET-121.
