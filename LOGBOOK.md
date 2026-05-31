@@ -4335,3 +4335,26 @@ single local rule using the substrate's own 8% test.
 Honest: validated physics-faithfully in isolation; it is an ADDED rule (CONCEPT
 methodology of naming the rule a level needs), not pre-existing. Next: integrate into
 physics.py and test composition with a real emergent shell (G26).
+
+## 2026-05-31 — Rule/limit search: the 8% bottleneck removed (G26 finding, G27 PASS)
+
+Michael: the 8% rule is not sacred — vary the % rules/limits until the substrate works.
+Ran a search over the binding rule + limits on the REAL physics engine.
+
+G26 (finding): the narrow 8% window (0.08 ± 0.005) IS the structural bottleneck.
+Baseline ~7-22 atoms; widening multiplies binding 5-18x. But naive over-widening + low
+node capacity floods electrons and STARVES the climb to atoms (peak atoms 0 at ±5% with
+1200 slots). "Works" is a balance of window x capacity x decay. (Also self-corrected a
+perf bug: lambda_gen=0.02 floods O(n^2) binding; fixed to 0.001.)
+
+G27 (PASS): balanced regime — ±2% window + node_freq_binding=False (atoms bind by
+proximity, 8% no longer required) + longer intermediate lifetimes + adequate capacity —
+yields 195/203 atoms and 649/636 molecules (vs baseline 16.5 atoms), robustly across
+seeds 42 & 7, >=5 molecule species. ~12x atoms, ~22x molecules. The structural
+starvation that bottlenecked every higher level is removed by changing the rule/limits,
+exactly as directed.
+
+Honest: this is structural yield (foundation), not yet the higher functions. Necessary,
+not sufficient. Next (G28): re-test membrane formation + the memory/bridge chain on this
+rich substrate — does removing starvation unblock the levels that were element-count
+limited?
