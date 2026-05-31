@@ -4183,3 +4183,11 @@ INTERFERENCE between concurrent sequences in the shared Hebbian transition matri
 T, not attractor capacity. Honest NULL. The transition WRITE is the weak link;
 multiple sequences need CONTEXT. Next BET-116: context-gated transitions (hidden
 context state) = hierarchical predictive coding step.
+
+
+## 2026-05-31 16:xx — BET-116 context-gated transitions — NULL (capacity edge, not just transitions)
+
+Context tag (20 nodes) did not disambiguate 3 sequences: with-ctx 0.55, no-ctx
+0.52. At N=120 12 patterns is the static-capacity edge -> overloaded clean-up
+attractors -> context cannot help. Bottleneck is attractor capacity + transition
+interference. BET-117: test multi-sequence at larger N (capacity headroom).
