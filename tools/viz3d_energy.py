@@ -13,20 +13,23 @@ simulation is never blocked by rendering.
 
   python tools/viz3d_energy.py --snapshot frame.png   # render one frame (smoke test)
 """
-import sys, time
+import sys, time, threading
 import numpy as np
 from pathlib import Path
+
+# ensure repo root on path so `world` / `tools` import when run as a script
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 STATE_FILE = Path.home() / '.eqmod' / 'energy' / 'state.npz'
 
 
-def load_state(retries=3):
+def load_state(retries=4):
     for _ in range(retries):
         try:
-            d = np.load(STATE_FILE, allow_pickle=False)
-            return {k: d[k] for k in d.files}
+            with np.load(STATE_FILE, allow_pickle=False) as d:  # close promptly
+                return {k: d[k] for k in d.files}
         except Exception:
-            time.sleep(0.1)
+            time.sleep(0.08)
     return None
 
 
@@ -95,6 +98,18 @@ def main():
     if '--snapshot' in sys.argv:
         snap = sys.argv[sys.argv.index('--snapshot') + 1]
 
+    # --demo: run the snapshot producer in a background thread so a SINGLE command
+    # shows a live, changing view (no need for a second terminal).
+    if '--demo' in sys.argv and snap is None:
+        from tools.run_bet110_energy import demo_run
+        threading.Thread(target=demo_run, daemon=True).start()
+        print("started snapshot producer in background (--demo)")
+        # wait for the first snapshot to appear
+        for _ in range(60):
+            if STATE_FILE.exists():
+                break
+            time.sleep(0.5)
+
     st = load_state()
     if st is None:
         print(f"No state yet at {STATE_FILE}. Start: python tools/run_bet110_energy.py --demo")
@@ -118,12 +133,19 @@ def main():
 
     plotter.show(interactive_update=True, auto_close=False)
     print("Live viewer running (close the window to stop). Polling every ~1.2 s.")
+    last_epoch, last_phase = None, None
     try:
         while True:
             time.sleep(1.2)
             st = load_state()
             if st is not None:
                 render_once(st, plotter, actors)
+                ep, ph = int(st['epoch']), str(st['phase'])
+                if (ep, ph) != (last_epoch, last_phase):
+                    print(f"  frame: phase={ph} epoch={ep} completion={float(st['acc']):.3f}",
+                          flush=True)
+                    last_epoch, last_phase = ep, ph
+            plotter.render()   # force redraw
             plotter.update()
     except Exception as e:
         print(f"[viewer closed: {e}]")

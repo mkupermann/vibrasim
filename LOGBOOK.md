@@ -4127,3 +4127,18 @@ world-model (still energy-based, SSL, no transformer).
 
 All experiments done or 3x NULL on feedback.
 
+
+
+## 2026-05-31 15:xx — BET-111 capacity scaling — PASS; viewer made single-command + concurrency-safe
+
+Parallel sweep over N: capacity (max patterns with completion>=0.9) = 10(N80),
+16(N160), 26(N240), 32(N320). Linear scaling, slope ~0.095*N, just below Hopfield
+0.138*N (gap = sparse modular connectivity). Monotonic, largest >= 2x smallest ->
+PASS. The substrate-scale memory ceiling is gone: more nodes = more memory. Plot
+bet111_capacity.png.
+
+Viewer fixes (user: live 3D showed no changes): (1) viz3d_energy.py --demo now
+runs the snapshot producer in a background thread = SINGLE command shows a live
+changing view; (2) Windows os.replace race fixed (producer retries; viewer closes
+the npz promptly) so concurrent read/write no longer crashes; (3) force render()
+each poll. Verified: 6 distinct snapshots, producer stable.
