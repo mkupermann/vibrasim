@@ -4364,3 +4364,17 @@ limited?
 
 All experiments done or 3x NULL on feedback.
 
+
+## 2026-05-31 — G28/G29: the frequency rule is load-bearing (widen, don't delete)
+
+G28: the membrane/bridge element-count ceiling (~10-25 atoms in the old memory
+programme) is LIFTED — with persistence (fusion_bond_block) + capacity, the substrate
+forms a single connected bridged structure of 100-313 atoms. (Honest: G28 still
+anchored on the 8% rule — a baseline_8pct arm + freq_ratio=0.08 — which Michael flagged.)
+
+G29 (NULL): dropped the frequency rule ENTIRELY (proximity+polarity binding, no gate at
+any level). The substrate COLLAPSES: seeds 42 & 7 produce 0 atoms; seed 99 makes 58
+atoms but 0 molecules. The frequency-compatibility rule is the STRUCTURING PRINCIPLE,
+not just a bottleneck. Conclusion: WIDEN the window (G27 ±2% -> 12x atoms, 22x
+molecules), don't DELETE it. "8% is gone" honestly means the narrow 0.08±0.005 value is
+replaced by a broader compatibility window, not no frequency selectivity.

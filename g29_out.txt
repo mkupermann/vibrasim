@@ -1,2 +1,13 @@
 === G29: NO frequency rule — proximity + polarity binding only ===
   seed 42: peak_atom=   0 final_atom=   0 peak_mol=   0 species=0 bridges=   0 max_chain=   0
+  seed 7: peak_atom=   0 final_atom=   0 peak_mol=   0 species=0 bridges=   0 max_chain=   0
+  seed 99: peak_atom=  58 final_atom=  58 peak_mol=   0 species=0 bridges=  87 max_chain=  58
+
+--- VERDICT ---
+  atoms=[0, 0, 58] max_chain=[0, 0, 58] species=[0, 0, 0]
+G29a atoms>=100 all seeds : False
+G29b max_chain>=50 all    : False
+G29c species>=5 all       : False
+
+G29: NULL/partial
+DONE
