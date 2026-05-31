@@ -63,6 +63,65 @@ across), the validated Hebbian+bistable write, per-module readout. Re-test the
 four bars (selective firing, selective write, persistent recall, containment).
 Build it with the `bet-experiment` skill; watch with `watch-results`.
 
+## Decided learning paradigm (2026-05-31): energy-based, predictive, self-supervised — no transformer
+
+Constraint from Michael: NO transformer. If anything, **geometric math AI** that
+is **self-supervised-learning capable**. That fits the substrate's nature (it is
+already a geometric dynamical system) and it fits the scaffold above. The decision:
+
+**A modular, energy-based / predictive-coding geometric substrate that learns
+self-supervised by minimizing the prediction error of its own dynamics, using
+LOCAL plasticity — no backprop, no attention, no transformer.**
+
+Three pillars, each non-negotiable:
+
+1. **Geometric / energy-based.** The substrate state (module activations, bridge
+   weights) defines an **energy landscape**. Memory = **attractor basins** —
+   "sliding into an energy valley" (the README's own Phase-6 framing, now made
+   central, not incidental). Recall = relaxation dynamics to the nearest
+   attractor; pattern completion falls out for free. This is geometry of the
+   state manifold, not a sequence model.
+
+2. **Self-supervised objective.** No labels, ever. The system learns by
+   **predicting / reconstructing its own input** — mask part of a pattern and
+   force the dynamics to complete it; or predict the next state of the geometric
+   field. The training signal is the substrate's *own* prediction error (EQMOD
+   already has prediction-error machinery in G16/G17 and offline replay in
+   G15/G18 — reused, not bolted on).
+
+3. **Local, biologically-plausible learning — explicitly NON-transformer.** The
+   weight updates come from local rules in the spirit of **predictive coding**
+   (Rao–Ballard / Millidge–Bogacz) and **equilibrium propagation** (Scellier–
+   Bengio): the network settles to an equilibrium, a small nudge toward lower
+   prediction error is applied, and the difference of the two equilibria gives a
+   purely local weight update. This is the established alternative to backprop and
+   transformers, and it maps cleanly onto the substrate's existing Hebbian /
+   bistable bridge plasticity.
+
+Why this is the right synthesis: the modular scaffold gives **stable structure**
+(fixes percolation + turnover, the two things that killed the spontaneous run);
+the energy/attractor formulation gives **geometric, content-addressable memory**
+(the thing the latch could only approximate); and the predictive self-supervised
+objective gives a **label-free learning signal** grounded in the project's own
+prediction-error and replay primitives. Nothing here is a transformer, and nothing
+requires a pretrained model.
+
+### First falsifiable experiment (BET-110, new track)
+
+A minimal energy module: a small modular scaffold of frozen sites whose bridge
+weights define an energy. Train SELF-SUPERVISED on a handful of unlabeled spatial
+patterns by masked-completion (present a pattern with part masked; relax; apply a
+local predictive-coding / equilibrium-prop weight update toward the un-masked
+pattern). Then test **pattern completion**: present a partial cue, relax, measure
+overlap with the stored pattern vs a control with no training. Bars: completion
+accuracy clearly above the untrained control; distinct patterns settle to distinct
+attractors (content-addressable); zero labels used. Build with `bet-experiment`,
+watch with `watch-results`.
+
+If a tiny energy-based module learns to complete patterns self-supervised on a
+stable geometric scaffold, that is the first thing in the whole project that is
+genuinely *learning* — and it is reusable far beyond the substrate.
+
 ## The meta-option (worth naming)
 
 The most reusable thing this project produced is **the autonomous, pre-registered
