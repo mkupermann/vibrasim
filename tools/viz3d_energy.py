@@ -68,7 +68,7 @@ def render_once(state, plotter, actors):
         actors['node_mesh'] = nm
         actors['nodes'] = plotter.add_mesh(
             nm, scalars='act', cmap='coolwarm', clim=[-1, 1],
-            render_points_as_spheres=True, point_size=30,
+            render_points_as_spheres=True, point_size=30, lighting=False,
             scalar_bar_args={'title': 'activation'})
     else:
         actors['node_mesh']['act'] = act
