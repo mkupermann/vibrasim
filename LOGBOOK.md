@@ -4173,3 +4173,13 @@ overlap 0.517, cross-talk 9/12, control fails. One sequence perfect (1.0) but th
 12-pattern pack sits at capacity so clean-up attractors are marginal and sequence
 recall breaks. Honest NULL = capacity-edge, not mechanism. Next BET-115: measure
 temporal capacity directly (max sequences vs N).
+
+
+## 2026-05-31 16:xx — BET-115 temporal capacity — NULL (concurrent sequences interfere)
+
+max-sequences vs N = [1,2,1,2,2] (N=120..280): only ~1-2 length-4 sequences, no
+scaling with N. But BET-113 ran one length-8 sequence perfectly -> the limit is
+INTERFERENCE between concurrent sequences in the shared Hebbian transition matrix
+T, not attractor capacity. Honest NULL. The transition WRITE is the weak link;
+multiple sequences need CONTEXT. Next BET-116: context-gated transitions (hidden
+context state) = hierarchical predictive coding step.
