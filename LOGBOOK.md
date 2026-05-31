@@ -4164,3 +4164,12 @@ plays the sequence in 3D via the existing viewer.
 EQMOD-2 track now 4/4 PASS: 110 memory, 111 capacity scaling (~0.095N), 112
 error-correcting recall (basin ~25%%), 113 sequence prediction. A real working
 learning system on the engineered modular geometric scaffold.
+
+
+## 2026-05-31 16:xx — BET-114 multiple sequences — NULL (capacity edge)
+
+3 sequences x length 4 = 12 patterns on N=120 (static cap ~12). min per-step
+overlap 0.517, cross-talk 9/12, control fails. One sequence perfect (1.0) but the
+12-pattern pack sits at capacity so clean-up attractors are marginal and sequence
+recall breaks. Honest NULL = capacity-edge, not mechanism. Next BET-115: measure
+temporal capacity directly (max sequences vs N).
