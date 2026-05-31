@@ -3914,3 +3914,22 @@ Strategic fork (not another blind tweak): (a) LOCAL emission (frozen low-velocit
 emitted vibrations -> co-activate neighbours without long-range propagation),
 (b) content-addressability on the BET-099 recall window, (c) larger substrate to
 test the scale limit. Default tee-up (a) = BET-101.
+
+
+## 2026-05-31 02:xx — Session: BET-101 local emission — NULL; write/contaminate geometrically inseparable at this scale
+
+emit_speed=2.0 (n_emit=8 retained) to localize emission per Pattern 02. Result
+NULL: fire ratio 125 (contained) but LOC stim-frac 0.00 — no write. Slow emission
+never reaches bridged neighbours within tau_membrane (~1 step), so no co-firing
+pairs form. Decisive: for emission to WRITE it must reach a neighbour (~5-10u)
+within one charge-decay window; control is ~15u — comparable distance. No
+emit_speed reaches 5-10u but not 15u in one step. Pattern 02's locality fix is
+right in principle but inapplicable at this scale (neighbour-dist ~ control-dist).
+
+Consolidated finding confirmed from three angles: selective WRITE solved;
+persistent RECALL transient (BET-099); clean long-horizon selective recall bounded
+by substrate SCALE/GEOMETRY. Falsifiable: bigger box where neighbour-dist <<
+control-dist should let local emission separate write from leak.
+
+Next BET-102: larger substrate (box 50^3, more atoms, regions far apart, moderate
+local emission). Direct test of the scale hypothesis. No more same-scale tuning.
