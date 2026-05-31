@@ -4315,3 +4315,23 @@ the exact deadlock EQMOD set out to break — is NOT bridged by anything I built
 sidestepped it. That is the truthful status, and it compounds Michael's earlier proof:
 not only did I combine known methods, I also detached them from the project's own
 substrate while keeping its vocabulary.
+
+## 2026-05-31 — Return to the substrate (Phase 3 selective permeability), honest
+
+Michael asked me to return to the physical substrate and work honestly on it. Grounded
+in the real code: Phase 3 STRUCTURE is done (BET-086 closed shells, 5/5 seeds), but
+selective PERMEABILITY is absent — and the code shows why: move_vibrations is pure
+inertial motion, scale repulsion touches only bound nodes, and a free vibration
+interacts with an atom ONLY via the 8% binding rule. The membrane is transparent to
+free vibrations. The missing piece is a RULE, not a parameter.
+
+G24 (NULL/partial): proposed a local 8%-gated reflection rule; control non-selective
+(good), rule blocked incompatible (0.000) but my "interior fraction" metric conflated
+permeability with retention (compatible transit through and exit). Wrong metric.
+G25 (PASS): re-measured as inward-crossing FLUX. Control transparent (both 1.000);
+rule ON compatible 1.000 / incompatible 0.000 — clean selective permeability from a
+single local rule using the substrate's own 8% test.
+
+Honest: validated physics-faithfully in isolation; it is an ADDED rule (CONCEPT
+methodology of naming the rule a level needs), not pre-existing. Next: integrate into
+physics.py and test composition with a real emergent shell (G26).
