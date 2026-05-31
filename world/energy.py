@@ -162,3 +162,60 @@ def make_patterns(net: EnergyNet, n_patterns: int = 5, seed: int = 7):
     """Random ±1 target patterns over the nodes (clean completion metric)."""
     rng = np.random.default_rng(seed)
     return [rng.choice([-1.0, 1.0], net.N) for _ in range(n_patterns)]
+
+
+class SequencePredictor:
+    """Order-2, least-squares (projection) sequence memory — the mechanism that
+    breaks the sequence-prediction wall (BET-121).
+
+    Two ideas, both non-transformer:
+    1. **Order-2 context.** The next state is predicted from the PAIR
+       [state(t), state(t-1)], so a repeated token in different contexts
+       ("L after E" vs "L after L") predicts differently — fixes HELLO -> HELLO.
+    2. **Least-squares (projection) learning.** The transition operator T2 is the
+       ridge least-squares fit of all (context -> next) pairs, not a Hebbian
+       outer-product sum. This stores many overlapping sequences with essentially
+       zero cross-talk (up to ~2·dim transitions), where Hebbian interferes.
+
+    Prediction is exact, so no attractor clean-up is needed (clean-up actually
+    corrupts it). Purely linear algebra + a sign nonlinearity; no attention, no
+    backprop, no transformer.
+    """
+    def __init__(self, dim: int, order: int = 2, lam: float = 0.05):
+        self.dim = dim
+        self.order = order              # how many past states form the context
+        self.lam = lam
+        self.X, self.Y = [], []
+        self.START = np.zeros(dim)
+        self.T = None
+
+    def _context(self, hist):
+        """Concatenate the last `order` states (START-padded) into one vector."""
+        h = list(hist)[-self.order:]
+        while len(h) < self.order:
+            h = [self.START] + h
+        return np.concatenate(h[::-1])   # [most-recent, ..., oldest]
+
+    def add_sequence(self, seq):
+        for t in range(len(seq) - 1):
+            self.X.append(self._context(seq[:t + 1]))
+            self.Y.append(seq[t + 1])
+
+    def fit(self):
+        X = np.asarray(self.X, dtype=np.float64)
+        Y = np.asarray(self.Y, dtype=np.float64)
+        A = X.T @ X + self.lam * np.eye(X.shape[1])
+        self.T = np.linalg.solve(A, X.T @ Y).T        # (dim, order*dim)
+        return self
+
+    def predict(self, hist):
+        return np.sign(self.T @ self._context([np.sign(h) for h in hist]))
+
+    def recall(self, start, length):
+        hist = [np.sign(np.asarray(start, dtype=np.float64))]
+        out = [hist[0].copy()]
+        for _ in range(length - 1):
+            nxt = self.predict(hist)
+            hist.append(nxt)
+            out.append(nxt.copy())
+        return out
