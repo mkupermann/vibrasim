@@ -1,0 +1,12 @@
+=== G30: closed membrane on the rich substrate (broad band, not 8%) ===
+  seed 42: comp_size= 112 peak_chain= 112 sigma/R=0.277 R=10.9 interior= 179
+  seed 7: comp_size= 110 peak_chain= 110 sigma/R=0.246 R=11.1 interior= 213
+
+--- VERDICT ---
+G30a comp>=50      : True
+G30b shell-like    : True (sigma/R<0.35)
+G30c encloses>=10  : True
+G30d persists      : True
+
+G30: PASS - a large closed membrane forms and persists on the rich substrate with a broad (non-8%) compatibility band
+DONE
