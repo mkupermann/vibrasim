@@ -4384,3 +4384,9 @@ replaced by a broader compatibility window, not no frequency selectivity.
 
 All experiments done or 3x NULL on feedback.
 
+
+
+## 2026-05-31 20:52 — Autopilot idle
+
+All experiments done or 3x NULL on feedback.
+
