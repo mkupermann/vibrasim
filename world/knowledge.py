@@ -56,29 +56,64 @@ class HDSpace:
         return v
 
 
+def _trigrams(word: str):
+    w = f"#{word}#"
+    return [w[i:i + 3] for i in range(len(w) - 2)]
+
+
 class KnowledgeBase:
-    def __init__(self, dim: int = 4096):
+    def __init__(self, dim: int = 4096, lam_ctx: float = 0.7, lam_ng: float = 0.5):
         self.hd = HDSpace(dim)
         self.dim = dim
+        self.lam_ctx = lam_ctx          # weight of distributional (co-occurrence) semantics
+        self.lam_ng = lam_ng            # weight of character n-gram (morphology) channel
         self.passages: list[str] = []
         self.vectors: list[np.ndarray] = []        # normalized passage HD vectors
         self.df: dict[str, int] = {}               # document frequency per word
         self.n_docs = 0
         self._tok_cache: list[list[str]] = []
-        # online re-ranker (RLS): maps query HD vector -> a small bias per stored passage
-        self._W = None                              # lazily sized
+        self._ctx: dict[str, np.ndarray] = {}      # Random-Indexing context vectors
+        self._rep_cache: dict[str, np.ndarray] = {}
+        # online re-ranker: maps query HD vector -> a small bias per stored passage
+        self._W = None
 
     # --- IDF -----------------------------------------------------------------
     def _idf(self, word: str) -> float:
         df = self.df.get(word, 0)
         return float(np.log((1.0 + self.n_docs) / (1.0 + df)) + 1.0)
 
+    # --- word representation: index + co-occurrence context + char n-grams ----
+    def _ngram_vec(self, word: str) -> np.ndarray:
+        acc = np.zeros(self.dim)
+        for t in _trigrams(word):
+            acc += self.hd.word_vec("§" + t)
+        n = np.linalg.norm(acc)
+        return acc / n if n > 0 else acc
+
+    def _rep(self, word: str) -> np.ndarray:
+        """Word vector = random index (lexical) + distributional context + morphology."""
+        v = self._rep_cache.get(word)
+        if v is not None:
+            return v
+        rep = self.hd.word_vec(word).copy()
+        ctx = self._ctx.get(word)
+        if ctx is not None:
+            cn = np.linalg.norm(ctx)
+            if cn > 0:
+                rep = rep + self.lam_ctx * (ctx / cn) * np.sqrt(self.dim)
+        if self.lam_ng > 0:
+            rep = rep + self.lam_ng * self._ngram_vec(word) * np.sqrt(self.dim)
+        n = np.linalg.norm(rep)
+        rep = rep / n if n > 0 else rep
+        self._rep_cache[word] = rep
+        return rep
+
     def _encode(self, tokens) -> np.ndarray:
         if not tokens:
             return np.zeros(self.dim)
         acc = np.zeros(self.dim)
         for w in tokens:
-            acc += self._idf(w) * self.hd.word_vec(w)   # IDF-weighted analog bundle
+            acc += self._idf(w) * self._rep(w)
         n = np.linalg.norm(acc)
         return acc / n if n > 0 else acc
 
@@ -92,9 +127,16 @@ class KnowledgeBase:
             self.n_docs += 1
             for w in set(toks):
                 self.df[w] = self.df.get(w, 0) + 1
+            # Random Indexing: accumulate co-occurring words' index vectors as context
+            for i, w in enumerate(toks):
+                if w not in self._ctx:
+                    self._ctx[w] = np.zeros(self.dim)
+                for j, nb in enumerate(toks):
+                    if i != j:
+                        self._ctx[w] += self.hd.word_vec(nb)
             self.passages.append(p)
             self._tok_cache.append(toks)
-        # (re)encode all passages so IDF reflects the full corpus
+        self._rep_cache.clear()                     # context changed -> rebuild reps
         self.vectors = [self._encode(t) for t in self._tok_cache]
         return len(new)
 
