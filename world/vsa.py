@@ -43,6 +43,14 @@ def bundle(vecs) -> np.ndarray:
     return out
 
 
+def bundle_analog(vecs) -> np.ndarray:
+    """ANALOG superposition: sum WITHOUT the sign() clamp. Keeps the graded
+    magnitude a linear readout needs to unbind a slot and recover each filler's
+    value (BET-126). Matches the substrate's tanh-graded activations; ±1 bundle was
+    a discretization. Stays substrate-native — just addition, no new machinery."""
+    return np.sum(np.asarray(vecs, dtype=np.float64), axis=0)
+
+
 def sim(a: np.ndarray, b: np.ndarray) -> float:
     return float(np.dot(a, b) / len(a))
 
