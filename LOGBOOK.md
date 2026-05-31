@@ -4077,3 +4077,27 @@ locks only bridges written DURING stim. BET-109 re-runs the same sweep with the
 fix. If a wall-ON consol variant then holds recall (Tc>=0.5) with containment while
 baseline stays ~0.32 -> MILESTONE. If recall still fades -> bridge TURNOVER dilutes
 the readout (not strength decay) -> strategic checkpoint (~20 amendments, 3/4 bars).
+
+
+## 2026-05-31 15:xx — Session: BET-109 + PIVOT. Memory programme closed; new direction set.
+
+BET-109 (consolidation with blank-clears-lock fix): consolidation does NOT close
+recall — it slightly HURTS. Baseline (109e no-consol) best at 0.67/0.32/0.20;
+locking (109a/b) 0.33/0.26 and broke containment (uni 0.25). Recall is structurally
+capped (~0.3) across gain/gating/locking -> not strength decay but cascade
+metastability + bridge-turnover-diluted readout in a tiny churning lattice.
+
+DECISION (Michael): stop the spontaneous-substrate grind; package the tooling and
+radically rethink. Added Claude-Code skills (.claude/skills/bet-experiment,
+watch-results), a harness tutorial (docs/EXPERIMENT_HARNESS.md), and the new
+direction (docs/NEW_DIRECTION.md): ENGINEERED MODULAR SCAFFOLD + EMERGENT DYNAMICS
+— pre-place frozen neuron modules with engineered sparse/modular directed
+connectivity, run the VALIDATED learning primitives (Hebbian co-firing, bistable
+latch, charge-blank) on top, per-module readout. Bounds percolation + turnover by
+construction (the two structural blockers). Autonomous BET loop wound down here.
+
+Programme tally (BET-089->109, ~20 amendments): SOLVED persistent lattice,
+selective write, containment; transient persistent recall (~3000s, BET-099);
+clean long-horizon selective RECALL never reached (structural: scale/connectivity/
+turnover). 2 reusable patterns (null-triage; write=broadcast=leak). Honest ceiling
+at 3/4 bars.
