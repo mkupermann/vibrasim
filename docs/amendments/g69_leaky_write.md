@@ -33,3 +33,20 @@ and recalls selectively (e.g. every leak that decays control also decays stim, o
 co-firing is continuous enough to hold), the deadlock is robust even to temporal-structure
 exploitation — the write=leak identity is deeper than the well's hold dynamics. Honest either way.
 No post-hoc threshold tuning (leak sweep pre-registered; "works" = all three bars at one leak).
+
+## RESULT (2026-06-03): NULL — leak too strong; it decays stim BEFORE it consolidates
+
+| run | leak {0.1,0.2,0.3} | stim-frac | post-frac |
+|-----|--------------------|-----------|-----------|
+| G69 (leaky alone) | all | 0.00 | 0.00 |
+| G69R (leaky + refractory=0.5) | all | 0.00 | 0.00 |
+
+Both NULL — stim-frac 0.00 at every leak. The leak (even 0.1) kills the WRITE: it decays stim
+bridges faster than co-firing can climb them to the consolidation threshold during STIM, so nothing
+latches. Notably G69R had refractory=0.5 (which alone gave a 0.83 write, G66) — adding the leak
+dropped it to 0.00. **Diagnosis:** the leak must NOT act during STIM (it prevents consolidation); it
+should only clear the control recall-leak in POST. The right design: refractory (selective write) +
+consolidation (lock stim during STIM) + a WEAK leak (decay unconsolidated control in POST). Tested
+as G70a (refractory + consolidation, no leak) and G70b (refractory + consolidation + weak leak),
+in parallel. If both NULL, the write-rule evolution is exhausted -> pivot to a structurally different
+approach.
