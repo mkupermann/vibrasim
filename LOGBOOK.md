@@ -4894,3 +4894,13 @@ is a clean FIRST-ORDER LINEAR homeostatic controller (clearance rate ∝ load = 
 efflux). Quantitative control property on top of G44's qualitative regulation. Next G59: steady-
 state disturbance rejection under SUSTAINED influx (does ss interior scale with influx rate, the
 first-order controller prediction) — completes the linear controller model.
+
+
+## 2026-06-02 — G59: steady-state disturbance rejection — PASS (proportional offset)
+
+Sustained foreign influx {2,4,8}/tick: ss interior conc scales linearly (seed42 0.122/0.238/0.472,
+gain 3.88; seed7 gain 4.35), bounded <0.5. Exactly the first-order prediction ss=influx*tau. With
+G58 (transient tau magnitude-independent), the proto-cell is a COMPLETELY characterized first-order
+linear homeostatic controller (step response + DC gain). Next G60: frequency response — oscillating
+influx at varied frequencies, does the interior low-pass filter it (track slow, attenuate fast,
+cutoff ~1/tau)? Completes the linear system ID (proto-cell as a substrate-level analog low-pass filter).
