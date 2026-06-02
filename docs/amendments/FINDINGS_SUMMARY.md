@@ -97,3 +97,21 @@ digital/selective MEMORY (write=leak deadlock, all channels) but it CAN do ANALO
 (tunable low-pass filtering, disturbance rejection, denoising) — because these use the channel's
 selective EFFLUX/containment (the substrate's strength), not a selective write (its deadlock).
 The substrate is an analog signal processor, not a digital memory.
+
+## ADDENDUM 2 (2026-06-03) — directional/self-limiting write evolution: EXHAUSTED (refractory 0.44 high-water mark)
+
+Pursued the user-requested "directional self-limiting write" to break the memory deadlock, with NEW
+mechanisms: local emission (G64), k-WTA lateral inhibition (G65), refractory (G66), high threshold
+(G67), combos (G68), leaky write (G69), consolidation + weak leak (G70), fast-lock (G71), sleep-sweep
+(G72). ALL NULL on selective persistent recall. Findings:
+- **Refractory firing is the one real advance** — t_refractory=0.5 gives a SELECTIVE WRITE (stim-frac
+  0.83) and recall 0.44, the best ever (vs ~0.3 prior). Directional firing (no immediate re-fire) is
+  genuinely useful.
+- **But the deadlock holds at the root:** G72 shows CONTROL bridges consolidate too (9 locked in the
+  uniform arm). The control region is never blank — it co-fires and consolidates indistinguishably
+  from stim, because the substrate is HOMOGENEOUSLY ACTIVE. No leak/threshold/consolidation/sweep
+  separates them; the leak that drains control also kills stim (too-similar co-firing rates).
+- **Conclusion:** write=leak is fundamental — not a tuning gap but a structural property of a
+  homogeneously self-active medium. Breaking it needs a genuinely QUIESCENT substrate (no baseline
+  activity outside driven regions), which is an architectural change, not a knob. The substrate's
+  real computational value remains ANALOG signal processing (Addendum 1), not digital memory.

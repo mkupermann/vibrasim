@@ -27,3 +27,21 @@ claim. NULL: if control also consolidates (its co-firing crosses the threshold t
 consolidate, the deadlock is robust even to discrete consolidation — the write=leak identity is
 fundamental, and the refractory 0.44 stands as the honest high-water mark. This is the LAST
 write-rule attempt; pivot if NULL. No post-hoc threshold tuning (sweep pre-registered).
+
+## RESULT (2026-06-03): NULL — control CONSOLIDATES too; deadlock proven at the root
+
+| threshold | stim-frac | post-frac | uni-post | consolidated (LOC / UNI) |
+|-----------|-----------|-----------|----------|--------------------------|
+| 3.5 / 4.0 / 4.5 | 0.83 | 0.44 | 0.20 | 13–14 / 9 |
+
+Same 0.44 plateau at every threshold, AND the sleep-sweep "kept 9 consolidated" in the UNIFORM arm:
+**control bridges cross the consolidation threshold and lock too.** Keeping consolidated bridges keeps
+control's. No threshold separates stim from control consolidation.
+
+**Definitive root finding.** The control region is never blank — it co-fires and consolidates at a
+rate indistinguishable from stim by ANY plasticity/consolidation/sweep rule, because the substrate
+is HOMOGENEOUSLY ACTIVE. This is the write=leak deadlock proven at the mechanism's root: not a tuning
+gap but a structural fact. The write-rule / consolidation / sleep family (G64–G72) is exhausted. The
+honest high-water mark is REFRACTORY (t_refractory=0.5): selective WRITE 0.83 + recall 0.44 (region
+-mean), the best the BET-089→G72 programme ever achieved — but control consolidates at the bridge
+level, so even that is not clean. Pivot.
