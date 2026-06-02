@@ -4872,3 +4872,14 @@ single homeostatic fluid membrane. Pivoting to the OTHER frontier — selective 
 NON-broadcast write: combine the NEW engineered compartment wall (robust firing containment, this
 session) with the OLD flux/bistable write (local, non-broadcasting, BET-096/097) — an untried
 combination (the wall postdates the flux work). G57.
+
+
+## 2026-06-02 — G57: flux-write + engineered wall — NULL. Memory deadlock CONFIRMED fundamental.
+
+Untried combination: BET-096/097 local flux-write (non-broadcast) + the engineered containment wall
+(this session). Result (seed 42): selective WRITE ✓ (stim-frac 0.50) but persistent recall ✗
+(post-frac 0.00) — even WITH the wall, control crept above 3 in POST. The wall reflects free
+vibrations but the contamination isn't vibration-transit; it's bistable-well boundary drift the
+wall can't reach. A FRESH test (flux+wall never combined) confirms write=leak is fundamental even
+for the local write + containment. Memory frontier definitively closed (both firing AND flux writes,
+all channels, with and without the wall). Pivoting to a genuinely orthogonal fresh question (G58).
