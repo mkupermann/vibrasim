@@ -1,5 +1,11 @@
 # G37 — Specular mirror wall: does proper reflection write AND contain?
 
+> **RETRACTED as a milestone (see G38).** The seed-42 PASS below did NOT replicate: G38
+> (seeds 42/7/99) showed the selective engram is seed-dependent (|E|=0 on seed 99, control
+> non-selective on seed 7). What IS robust is firing CONTAINMENT (300–330× every seed); the
+> selective-recall PASS was within the tiny-core latching noise. No milestone. Kept below
+> for the honest record.
+
 Pre-registered: 2026-06-02 (BEFORE the run). G36 showed the clamp wall contains firing
 259× but writes nothing (|E|=0) because it collapses every reflected vibration onto one
 degenerate shell (r = R·0.999), erasing the interior charge field that drives co-firing.
