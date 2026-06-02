@@ -4756,3 +4756,15 @@ form the new bonds a wound needs; edge-closure has no free valence to use). Long
 repair are in genuine tension. Honest caveat: the wound over-fragments (largest comp -> 24/33),
 but zero regrowth is robust to wound shape. Testable prediction G48: relax fusion_bond_block ->
 membrane heals but loses persistence (confirms the trade-off).
+
+
+## 2026-06-02 — G48: persistence/repair trade-off — NULL, REFUTES the G47 hypothesis
+
+Varied fusion_bond_block {0,2} x {wounded,unwounded}. Result: block=0 and block=2 IDENTICAL —
+both persist 1.00, both heal 0.00. So the G47 "persistence ⊥ self-repair via valence commitment"
+hypothesis is FALSIFIED: persistence is NOT from fusion_bond_block (membrane persists with
+block=0 — longevity comes from the bridge network + curvature/repulsion), and relaxing commitment
+does NOT enable healing. The real reason the membrane is static (corrected): positional rigidity
++ no wound-targeting — removed atoms leave a gap the rigid shell doesn't migrate to close, and
+untargeted new atoms don't bridge it. Confirmatory test falsified my own proposed mechanism;
+recorded as such (honesty over consistency). Corrected PROTOCELL_SUMMARY.

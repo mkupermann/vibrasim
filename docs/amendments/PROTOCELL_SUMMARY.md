@@ -32,13 +32,17 @@ membrane boundary engineered (CONCEPT §4.8) and its internals emergent?
   without the channel (ON/OFF = 1.00): it runs on compatible species that pass freely either
   way. The channel does environmental REGULATION; interior chemistry is autonomous — the two
   functions are decoupled. (Prevents overclaiming the channel as a metabolism enabler.)
-- **No structural self-repair (G46, G47).** A wounded shell does not heal (recovered ≡ post-wound
-  ≡ control), even with the substrate's own wound-targeting mechanism (`edge_closure_k`, G47) —
-  the component never regrows (peak ≡ post). **Mechanistic cause: persistence ⊥ self-repair.**
-  The `fusion_bond_block` valence commitment that makes the membrane PERSIST is exactly what
-  prevents HEALING: committed atoms cannot form the new bonds a wound needs, so edge-closure has
-  no free valence to work with. Longevity and self-repair are a genuine trade-off in this
-  mechanism, not a tunable. The membrane is persistent and functional but STATIC.
+- **No structural self-repair (G46, G47, G48).** A wounded shell does not heal (recovered ≡
+  post-wound ≡ control), even with the substrate's wound-targeting mechanism (`edge_closure_k`,
+  G47) or with valence commitment relaxed (`fusion_bond_block`=0, G48) — the component never
+  regrows (peak ≡ post). **Cause (corrected by G48): positional rigidity + no wound-targeting**,
+  NOT valence commitment. G48 refuted the G47 "persistence ⊥ repair" hypothesis: block=0 and
+  block=2 behave identically (both persist 1.00, both heal 0.00), so persistence comes from the
+  bridge network + curvature/repulsion (independent of fusion_bond_block), and the no-heal is
+  because removed atoms leave a gap the rigid remaining shell does not migrate to close and
+  untargeted new atoms do not bridge. The membrane is a rigid, stable structure, not a fluid
+  self-renewing one. (Honesty note: G47 proposed a trade-off; the G48 confirmatory test
+  falsified it — recorded as such.)
 
 ## Honest characterization
 The substrate builds a **persistent, self-regulating, but non-self-renewing membrane
