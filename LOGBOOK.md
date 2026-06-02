@@ -4509,3 +4509,24 @@ non-persistent readout remains and now dominates — propagation containment is 
 but not sufficient. Next (G34): velocity-only wall (remove the clamp confound) + a
 turnover-robust SET-based readout (track the bridges potentiated during STIM and measure
 that set's persistence, not a region spatial mean).
+
+
+## 2026-06-02 — G34: set-based engram readout — NULL/partial, OVERTURNS G33's turnover hypothesis
+
+Replaced the region-mean recall readout (which G33 said was drowned in turnover) with a
+turnover-robust SET readout: snapshot the specific strong bridges (>=5.0) written during
+STIM, keyed by frozenset of (atom slot, k_birth) so slot reuse can't fake a match; track
+that set's retention through POST. LOC arm, no wall.
+
+Result: retE = retC = retR = 1.00 at all 25 POST checkpoints over 14000 s; n_strong dead
+constant at 13. Findings: (b) strong bridges are PERFECTLY persistent — zero turnover of
+the engram (G34b PASS). This CORRECTS G33: the recall failure was NOT turnover eroding the
+engram. G33's region-mean 0<->6 oscillation was weak-bridge churn around a stable strong
+core + region-membership drift = a readout artifact, exactly what the set statistic
+removes. (c,d) But not selective: with no wall, the unstimulated control region grew its
+OWN equally-persistent strong core (|C|=|E|=3), contaminated by stim emissions. The real
+blocker is SELECTIVITY, not persistence/turnover. (a) |E|=3<5 — tiny but permanent core.
+
+Composition to the solve: G33's wall contains firing (kills control contamination); G34
+proves the engram is permanent and set-readable. Next G35 = wall + set readout: expect
+retE->1.0, retC->0 = clean selective persistent recall.
