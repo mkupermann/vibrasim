@@ -1746,6 +1746,41 @@ def apply_membrane_channel(world, dt: float) -> None:
     pos[sel] = (pos[sel] - v_sel * dt) % box
 
 
+def apply_engineered_compartment(world, dt: float) -> None:
+    """G33: engineered compartment wall (CONCEPT §4.8 port topology). Reflect every alive
+    free vibration that is at/beyond a fixed engineered sphere and moving OUTWARD, keeping
+    a region's emissions local (the write proceeds; propagation to other regions is cut).
+    No-op when cfg.compartment_k == 0. Touches only free vibrations, never bound atoms."""
+    cfg = world.config
+    if cfg.compartment_k == 0.0:
+        return
+    box = np.asarray(cfg.box_size, dtype=np.float64)
+    centre = np.asarray(cfg.compartment_centre, dtype=np.float64)
+    R = cfg.compartment_radius
+    if R <= 0.0:
+        return
+    alive = world.s_alive
+    if not alive.any():
+        return
+    d = world.s_pos[alive] - centre
+    d -= box * np.round(d / box)
+    r = np.linalg.norm(d, axis=1)
+    n_hat = d / (r[:, None] + 1e-9)
+    v = world.s_vel[alive]
+    outbound = (v * n_hat).sum(axis=1) > 0.0
+    reflect = (r >= R) & outbound
+    if not reflect.any():
+        return
+    alive_idx = np.where(alive)[0]
+    sel = alive_idx[reflect]
+    nh = n_hat[reflect]
+    v_sel = world.s_vel[sel]
+    vr = (v_sel * nh).sum(axis=1)
+    world.s_vel[sel] = v_sel - 2.0 * vr[:, None] * nh          # flip radial component inward
+    # Clamp position just inside the wall along the inward normal.
+    world.s_pos[sel] = (centre + nh * (R * 0.999)) % box
+
+
 def apply_scale_repulsion(world, dt: float) -> None:
     """§4.6 scale-separation repulsion.
 
@@ -2234,6 +2269,7 @@ def tick(world, dt: float) -> None:
     cull_excess_vibrations(world)
     move_vibrations(world.s_pos, world.s_vel, world.s_alive, box, dt)
     apply_membrane_channel(world, dt)  # G31 — selective-permeability barrier (no-op when membrane_channel_k=0)
+    apply_engineered_compartment(world, dt)  # G33 — engineered port wall (no-op when compartment_k=0)
     apply_scale_repulsion(world, dt)
     move_nodes(world, dt)
     # Resonance every 10 ticks (expensive O(n^2) neighbor query)
