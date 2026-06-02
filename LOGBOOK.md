@@ -4838,3 +4838,16 @@ partial BREAKTHROUGH: the rigidity ceiling is breakable, no fluidity/stability t
 Healing just not yet robust/strong. Updated FINDINGS_SUMMARY (ceiling is a tuning frontier, not a
 hard wall). Next G54: strengthen healing (longer window 250->500 + stronger surface-closure) for
 robust >=0.3 both seeds — strengthening the mechanism, NOT lowering the bar.
+
+
+## 2026-06-02 — G54: robust fluid self-repair — NULL/partial; healing improved, robust repair at threshold
+
+Strengthened G53 (window 500, edge_closure_k=2.0, rates {0.1,0.15}). At rate 0.15: seed 42 healed
+0.49 (up from 0.37), seed 7 healed 0.26 (up from 0.05) — monotonic improvement on BOTH seeds,
+persist 1.00 throughout. NULL on the locked bar (seed 7 0.26 < 0.3, 0.04 short). DECISION: stopped
+tuning — two pre-registered strengthening passes both land just-below on seed 7; grinding a third
+to clear an arbitrary threshold on one seed is bar-optimization, not science. Honest finding stands:
+bond turnover BREAKS the rigidity ceiling — fluid partial self-repair up to 49%, monotonically
+improving, no fluidity/stability trade-off; robust repair at the threshold. The ceiling is a
+breakable tunable frontier, not a hard wall. Next: a FRESH question (growth/division on the fluid
+membrane), not more repair-bar tuning.
