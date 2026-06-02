@@ -4548,3 +4548,23 @@ G33 used clamp+region-mean (wrong instrument); G35 used soft+set (wrong wall). G
 untested cell. If clamp drives |C|->0 while set finds |E|>=1 persistent -> clean selective
 persistent recall. If |C|~3 even under 259x containment -> the control core is INTRINSIC
 (substrate self-potentiates ~3 bridges/region), the decisive impossibility result.
+
+
+## 2026-06-02 — G36: clamp wall + set readout — NULL (completes the 2x2; tension is monotonic)
+
+Decisive cell. Clamp wall contains firing perfectly (259x) but |E|=0 — writes NOTHING.
+Intense stim firing (259 events) yields zero strong bridges: the clamp pins reflected
+vibrations to one degenerate shell (r=R*0.999), away from interior atoms, destroying the
+co-firing field. Also: |C|=0 here vs |C|=3 without the clamp -> the control core was
+CONTAMINATION via vibration transit (not intrinsic); the clamp blocks that route, but it's
+the same route the write needs.
+
+The (wall x readout) 2x2 is complete and MONOTONIC, no win cell: none/soft -> writes but
+|C|=3 leaks; clamp -> contains 259x but |E|=0. The emitted-vibration field is simultaneously
+the write substrate AND the contamination vehicle — the same physical channel — so a
+reflective spatial wall cannot separate them. Persistence (retention 1.0) and the set
+readout are both solved; SELECTIVITY is the structural wall.
+
+One identified defect: clamp collapses all reflected vibrations onto one shell. G37 tests
+proper SPECULAR reflection (r -> 2R-r) which contains without pinning -> may write AND
+contain. If G37 also fails, write/contain inseparability is confirmed structural.
