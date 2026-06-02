@@ -4640,3 +4640,17 @@ single-region containment, wrong for multi-compartment isolation.
 
 Fix: compartment_mode='seal' (two-way) — reflect inbound-from-outside AND outbound-from-inside,
 so foreign emissions bounce off. Added to physics. Re-test as G41 (same bars).
+
+
+## 2026-06-02 — G41: sealed two-way compartments — NULL/partial (seal works; geometry can't decide)
+
+compartment_mode='seal' (two-way) roughly DOUBLED isolation vs the one-way wall (A-seal A/B
+7.9 vs G40 3.3; B-seal B/A 10.2 vs 2.4) — foreign cross-talk B_fire fell 62->22. The two-way
+fix is mechanistically correct. But bars NULL: at 15-unit separation the no-wall baseline
+already isolates 5.7x (distance decay), so the seal's marginal benefit is modest and the
+residual ~16-22 fires in the silent compartment look like INTRINSIC baseline, not cross-talk.
+Raw ratio conflates baseline with leakage.
+
+Correct test G42: CLOSE compartments (distance can't isolate) + independence metric (each
+compartment's firing under stim-other vs stim-none). Show the seal restores independence
+where no-wall heavily cross-talks. Then consolidate the modular-port thread regardless.
