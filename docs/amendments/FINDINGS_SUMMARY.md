@@ -86,3 +86,14 @@ retracted. Honesty over consistency, throughout.
   divide (those need a different driver). Net: bond turnover yields a fluid, partially self-
   repairing, size-homeostatic membrane — a richer dynamic cell precursor, still short of growth/
   division.
+
+## ADDENDUM (2026-06-02) — the substrate's positive COMPUTATIONAL capability is ANALOG SIGNAL PROCESSING
+
+Beyond structure/homeostasis, the proto-cell is a fully characterized, TUNABLE first-order linear
+analog element (G44 regulation, G58 step response, G59 DC gain, G60 low-pass frequency response,
+G61 cutoff ∝ membrane radius, G62 ~9× denoising — all PASS, both seeds). docs/patterns/
+protocell_controller.md. The honest framing of the substrate's computational value: it CANNOT do
+digital/selective MEMORY (write=leak deadlock, all channels) but it CAN do ANALOG SIGNAL PROCESSING
+(tunable low-pass filtering, disturbance rejection, denoising) — because these use the channel's
+selective EFFLUX/containment (the substrate's strength), not a selective write (its deadlock).
+The substrate is an analog signal processor, not a digital memory.
