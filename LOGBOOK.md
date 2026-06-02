@@ -4568,3 +4568,19 @@ readout are both solved; SELECTIVITY is the structural wall.
 One identified defect: clamp collapses all reflected vibrations onto one shell. G37 tests
 proper SPECULAR reflection (r -> 2R-r) which contains without pinning -> may write AND
 contain. If G37 also fails, write/contain inseparability is confirmed structural.
+
+
+## 2026-06-02 — G37: specular mirror wall + set readout — PASS (seed 42), replication pending
+
+The decider. compartment_mode='mirror' (r -> 2R-r): contains fully WITHOUT pinning, so the
+interior co-firing field survives. Result (seed 42): |E|=3 |C|=1, fire ratio 321x (control
+fired 0 times), E persists 3/3 and C persists 1/1 over 14000s. ALL FOUR BARS PASS.
+
+The write/contain tension across G33-G36 was an IMPLEMENTATION ARTIFACT of degenerate
+reflection (clamp pinned all vibrations to one shell -> killed write; soft leaked ->
+contamination). Proper specular reflection resolves it: writes (|E|=3) AND contains (321x).
+First clean selective persistent content-bearing memory in the BET-089->G37 programme,
+substrate primitives + engineered 4.8 port wall + turnover-robust set readout. No LLM.
+
+Discipline: ONE seed. Not yet a robust milestone. G38 = replicate seeds {42,7,99} with the
+matched no-wall control failing each seed, BEFORE any milestone claim / summary update.

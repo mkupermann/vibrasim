@@ -1774,12 +1774,19 @@ def apply_engineered_compartment(world, dt: float) -> None:
     alive_idx = np.where(alive)[0]
     sel = alive_idx[reflect]
     nh = n_hat[reflect]
+    r_sel = r[reflect]
     v_sel = world.s_vel[sel]
     vr = (v_sel * nh).sum(axis=1)
     world.s_vel[sel] = v_sel - 2.0 * vr[:, None] * nh          # flip radial component inward
     if cfg.compartment_mode == "soft":
         # Revert this step's overshoot only — no dense boundary layer (G35).
         world.s_pos[sel] = (world.s_pos[sel] - v_sel * dt) % box
+    elif cfg.compartment_mode == "mirror":
+        # Specular reflection: mirror the radial overshoot about R (r -> 2R-r). Contains
+        # fully without pinning — reflected vibrations stay distributed through the interior
+        # and keep driving the co-firing field (G37).
+        r_new = np.clip(2.0 * R - r_sel, 0.0, R * 0.999)
+        world.s_pos[sel] = (centre + nh * r_new[:, None]) % box
     else:
         # Clamp position just inside the wall along the inward normal (G33 default).
         world.s_pos[sel] = (centre + nh * (R * 0.999)) % box
