@@ -87,6 +87,7 @@ class WorldConfig:
     membrane_channel_k: float = 0.0       # 0=off (no-op). >0 enables apply_membrane_channel: reflect free vibrations crossing the shell unless frequency-compatible with the membrane.
     membrane_channel_recompute: int = 20  # Re-derive membrane geometry (centre, radius, f_mem) every N ticks.
     membrane_channel_width: float = 1.5   # Half-thickness (in length units) of the reflective shell surface band.
+    membrane_channel_mode: str = "sphere" # 'sphere' = fitted-sphere reflector (G31). 'atom' = reflect off the nearest real membrane atom within r_2 (G32).
     flux_plasticity_rate: float = 0.0     # Bridge strengthening rate from vibration flux (0=off). Plasticity from physics.
     flux_threshold: float = 2.0           # Flux above this potentiates a bridge, below depresses.
     flux_decay: float = 0.05              # Strength decay per second for low-flux bridges.
