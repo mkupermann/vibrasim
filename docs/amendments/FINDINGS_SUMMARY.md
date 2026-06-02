@@ -70,5 +70,10 @@ retracted. Honesty over consistency, throughout.
 ## What would move the needle next (requires new primitives / a decision, not a regime knob)
 - Selective memory: a write channel DECOUPLED from broadcast (directional, non-leaking) — not
   achievable with current primitives (BET-105 tried bridge-graph write; it self-ignites).
-- Metabolism/repair/division: a FLUID membrane (atoms that can migrate and re-bond) — current
-  bonds are positionally rigid once formed. This is a substrate-mechanism change, a strategic call.
+- Metabolism/repair/division: a FLUID membrane (atoms that can migrate and re-bond). G52 pinned
+  the rigidity precisely to PERMANENT BONDS (not stationarity — atom mobility alone heals nothing,
+  the atoms are tethered). The specific needle-mover is BOND TURNOVER: a mechanism for bonds to
+  spontaneously break and reform so the network remodels and atoms flow into a wound. This is a
+  new substrate primitive (decay_bridges currently breaks bonds only on atom death), the defined
+  strategic next step (G53). Risk: the fluidity/stability trade-off — too much turnover dissolves
+  the membrane.
