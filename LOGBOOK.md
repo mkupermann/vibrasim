@@ -4728,3 +4728,19 @@ analog of G44's functional recovery).
 
 All experiments done or 3x NULL on feedback.
 
+
+
+## 2026-06-02 — G46: membrane self-repair — NULL. Proto-cell thread CONSOLIDATED (G30->G46).
+
+Wounded the membrane (kill a polar cap of shell atoms + their bridges). Result (seeds 42 & 7):
+recovered ≡ post-wound ≡ control (0.21/0.30 N0) — the shell does NOT heal, with or without
+regeneration. fusion_bond_block gives persistence but the committed valence prevents new bonds
+bridging the wound, and nothing targets new atoms to the damage. Honest boundary: the membrane
+is persistent + functional but STATIC (no self-renewal) — a named difference from living cells.
+
+PROTO-CELL THREAD COMPLETE (docs/amendments/PROTOCELL_SUMMARY.md). Has: forms (G30), selective
+permeability (G32), maintained gradient (G43), regulation to set-point (G44), interior chemistry
+(G45b). Lacks: channel-gated synthesis (G45c), self-repair (G46). A persistent, self-regulating,
+non-self-renewing membrane compartment — genuine cell precursor with function, honestly bounded.
+Succeeded where memory failed because it needs only CONTAINMENT (substrate's strength), not a
+selective write (the mapped deadlock).
