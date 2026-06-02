@@ -24,3 +24,7 @@ DYNAMICAL element, not a memory.
 **Where it applies.** Substrate-level analog signal conditioning: bounded regulation, disturbance
 rejection, temporal low-pass filtering / leaky integration of a chemical signal. See
 docs/amendments/g44, g58, g59, g60.
+
+**Tunable cutoff (G61).** The time-constant scales with membrane radius: τ ∝ R (R up 1.5× → τ up
+1.55×, both seeds), consistent with τ = interior_size / efflux_speed. So the low-pass cutoff (~1/τ)
+is set by the emergent membrane size — a tunable analog filter with a clean design law.
