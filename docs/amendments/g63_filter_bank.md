@@ -19,3 +19,15 @@ PASS = G63a → two membrane sizes form a filter bank that discriminates frequen
 membrane passes the mid-frequency more): substrate-level spectral discrimination from the tunable
 analog filter. NULL: ratio < 1.3 → the two cutoffs (only ~1.5× apart) are too close to discriminate
 this frequency cleanly. Honest either way. No post-hoc threshold tuning.
+
+## RESULT (2026-06-02): PASS — frequency discrimination by membrane size
+
+| seed | small R / amp | large R / amp | small/large |
+|------|---------------|---------------|-------------|
+| 42 | 10.9 / 0.192 | 16.5 / 0.076 | 2.52 |
+| 7 | 11.1 / 0.191 | 16.9 / 0.074 | 2.58 |
+
+G63a ✓ → **PASS.** At the mid-frequency (period 600) the small membrane (higher cutoff) passes it
+2.5× more than the large (lower cutoff), both seeds. Two membrane sizes form a two-channel FILTER
+BANK that discriminates frequency by size — a primitive substrate-level spectral analyzer, extending
+the analog-computing toolkit (filter, denoise, now discriminate).

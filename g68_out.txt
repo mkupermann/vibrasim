@@ -1,0 +1,18 @@
+﻿=== G68: sweep emit_speed [5.0, 10.0] extras={'global_wta_k': 10} ===
+[LOC] 500s [WARM]: stim=3.75(n=2) ctrl=3.15(n=13)
+[LOC] 1000s [WARM]: stim=6.02(n=4) ctrl=4.49(n=6)
+[LOC] 1500s [WARM]: stim=6.00(n=3) ctrl=4.13(n=5)
+[LOC] 2000s [WARM]: stim=6.00(n=5) ctrl=5.73(n=8)
+[LOC] 2500s [WARM]: stim=6.05(n=2) ctrl=6.00(n=5)
+[LOC] 3000s [WARM]: stim=6.01(n=6) ctrl=6.00(n=3)
+[LOC] 3500s [STIM]: stim=1.05(n=97) ctrl=1.00(n=86)
+[LOC] 4000s [STIM]: stim=1.05(n=103) ctrl=1.11(n=87)
+[LOC] 4500s [STIM]: stim=1.06(n=88) ctrl=1.10(n=98)
+[LOC] 5000s [STIM]: stim=1.05(n=94) ctrl=1.10(n=96)
+[LOC] wall budget hit at step 10501
+[UNI] 500s [WARM]: stim=3.75(n=2) ctrl=3.15(n=13)
+[UNI] 1000s [WARM]: stim=6.02(n=4) ctrl=4.49(n=6)
+[UNI] 1500s [WARM]: stim=6.00(n=3) ctrl=4.13(n=5)
+[UNI] 2000s [WARM]: stim=6.00(n=5) ctrl=5.73(n=8)
+[UNI] 2500s [WARM]: stim=6.05(n=2) ctrl=6.00(n=5)
+[UNI] 3000s [WARM]: stim=6.01(n=6) ctrl=6.00(n=3)

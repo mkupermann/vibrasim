@@ -1,2 +1,0 @@
-﻿=== G63: filter bank / frequency discrimination by membrane size ===
-  seed 42: SMALL R=10.9 amp=0.1922 | LARGE R=16.5 amp=0.0764 | small/large=2.52
