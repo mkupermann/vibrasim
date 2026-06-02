@@ -4444,3 +4444,21 @@ All experiments done or 3x NULL on feedback.
 
 All experiments done or 3x NULL on feedback.
 
+
+
+## 2026-06-02 — G31: membrane channel integrated into the engine (NULL/partial)
+
+Implemented `apply_membrane_channel` in world/physics.py (config-gated, no-op by
+default) and tested selective permeability on the REAL emergent G30 shell (~110 atoms),
+not the G25 idealised Fibonacci sphere. Result: 4/5 bars. The channel is strongly
+SELECTIVE (compatible probes 1.000 cross, incompatible 0.255/0.450, gap +0.65) and does
+NOT destabilise the lattice (final 112/110 unchanged). It MISSES the tight-seal bar
+(G31b incompatible <0.20; got 0.35) → recorded NULL per discipline, not retuned.
+
+Honest diagnosis: the fitted-sphere reflector leaks because the emergent shell BREATHES
+(σ_r/R≈0.27; fitted R drifts), so probes in the outer band get engulfed when R grows at
+a recompute without ever triggering a crossing. The clean idealised-sphere rule (G25
+leak 0.000) does NOT transfer to irregular, dynamic emergent geometry — the exact
+composition risk this BET was pre-registered to test. Next: G32 atom-proximity reflector
+(reflect off the actual nearest membrane atom, tracking the real breathing surface),
+same locked bars.

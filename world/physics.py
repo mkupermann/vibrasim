@@ -1587,6 +1587,117 @@ def _apply_scale_repulsion_njit(
             k_vel[i, 2] += az * dt
 
 
+def _largest_bridged_component(world):
+    """Indices of atoms in the largest connected bridged component (BFS over alive bridges)."""
+    from collections import defaultdict, deque
+    adj = defaultdict(set)
+    for b in range(world.b_count):
+        if world.b_alive[b]:
+            i, j = int(world.b_atom_i[b]), int(world.b_atom_j[b])
+            adj[i].add(j); adj[j].add(i)
+    best, seen = [], set()
+    for s in adj:
+        if s in seen:
+            continue
+        comp, q = [], deque([s]); seen.add(s)
+        while q:
+            n = q.popleft(); comp.append(n)
+            for nb in adj[n]:
+                if nb not in seen:
+                    seen.add(nb); q.append(nb)
+        if len(comp) > len(best):
+            best = comp
+    return best
+
+
+def _fit_sphere(points):
+    """Least-squares sphere fit. Returns (centre, radius). Mirrors tools/detect_membranes.fit_sphere."""
+    p = np.asarray(points, dtype=np.float64)
+    A = np.hstack([2.0 * p, np.ones((p.shape[0], 1))])
+    f = (p * p).sum(axis=1)
+    c, *_ = np.linalg.lstsq(A, f, rcond=None)
+    centre = c[:3]
+    radius = math.sqrt(max(c[3] + centre.dot(centre), 0.0))
+    return centre, radius
+
+
+def apply_membrane_channel(world, dt: float) -> None:
+    """G31: selective permeability. A frequency-gated reflection barrier at the emergent
+    shell surface. No-op when cfg.membrane_channel_k == 0.
+
+    Every cfg.membrane_channel_recompute ticks, derive the membrane from the actual
+    structure (largest bridged atom component → sphere fit → centre C, radius R; f_mem =
+    mean frequency of those atoms). Each tick, a free vibration that crossed the shell
+    surface inward this step is reflected UNLESS it is frequency-compatible with the
+    membrane under the substrate's OWN binding band. Compatible passes; incompatible is
+    contained outside.
+    """
+    cfg = world.config
+    if cfg.membrane_channel_k == 0.0 or world.k_count == 0:
+        return
+    box = np.asarray(cfg.box_size, dtype=np.float64)
+
+    # (Re)derive membrane geometry on a cadence; cache on the world.
+    counter = getattr(world, "_membrane_channel_counter", 0)
+    geom = getattr(world, "_membrane_channel_geom", None)
+    if geom is None or counter % max(1, cfg.membrane_channel_recompute) == 0:
+        comp = _largest_bridged_component(world)
+        if len(comp) >= 8:
+            idx = np.array(comp)
+            centre, radius = _fit_sphere(world.k_pos[idx])
+            f_mem = float(world.k_freq[idx].mean())
+            geom = (centre, radius, f_mem) if radius > 1e-6 else None
+        else:
+            geom = None
+        world._membrane_channel_geom = geom
+    world._membrane_channel_counter = counter + 1
+    if geom is None:
+        return
+    centre, radius, f_mem = geom
+
+    alive = world.s_alive
+    if not alive.any():
+        return
+    pos = world.s_pos
+    vel = world.s_vel
+    freq = world.s_freq
+
+    # Radial distance (minimum-image) to the shell centre, this step and previous step.
+    d = pos[alive] - centre
+    d -= box * np.round(d / box)
+    r = np.linalg.norm(d, axis=1)
+    prev = (pos[alive] - vel[alive] * dt) - centre
+    prev -= box * np.round(prev / box)
+    r_prev = np.linalg.norm(prev, axis=1)
+
+    width = cfg.membrane_channel_width
+    crossed_in = (r_prev > radius) & (r <= radius) & (np.abs(r - radius) < width + 1e-9)
+    if not crossed_in.any():
+        return
+
+    # Substrate's own compatibility band relative to f_mem.
+    fmin = np.minimum(freq[alive], f_mem)
+    ratio = np.abs(freq[alive] - f_mem) / np.maximum(fmin, 1e-12)
+    fmin_ratio = cfg.freq_ratio - cfg.freq_tolerance
+    fmax_ratio = cfg.freq_ratio + cfg.freq_tolerance
+    compatible = (ratio >= fmin_ratio) & (ratio <= fmax_ratio)
+
+    reflect = crossed_in & ~compatible
+    if not reflect.any():
+        return
+
+    alive_idx = np.where(alive)[0]
+    sel = alive_idx[reflect]
+    d_sel = d[reflect]
+    r_sel = r[reflect]
+    n_hat = d_sel / (r_sel[:, None] + 1e-9)
+    v_sel = vel[sel]
+    vr = (v_sel * n_hat).sum(axis=1)
+    vel[sel] = v_sel - 2.0 * vr[:, None] * n_hat
+    # Revert position to just outside the shell along the inbound path.
+    pos[sel] = (pos[sel] - v_sel * dt) % box
+
+
 def apply_scale_repulsion(world, dt: float) -> None:
     """§4.6 scale-separation repulsion.
 
@@ -2074,6 +2185,7 @@ def tick(world, dt: float) -> None:
     # processes all of them. Default cap = 0 → no-op for legacy worlds.
     cull_excess_vibrations(world)
     move_vibrations(world.s_pos, world.s_vel, world.s_alive, box, dt)
+    apply_membrane_channel(world, dt)  # G31 — selective-permeability barrier (no-op when membrane_channel_k=0)
     apply_scale_repulsion(world, dt)
     move_nodes(world, dt)
     # Resonance every 10 ticks (expensive O(n^2) neighbor query)

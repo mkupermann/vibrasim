@@ -83,6 +83,10 @@ class WorldConfig:
     atom_repulsion_k: float = 0.0         # Repulsion between non-bonded atoms. With bridge tension, produces minimal-surface membranes.
     edge_closure_k: float = 0.0           # Edge atoms (free valence) attract each other, curling sheets toward closed shells.
     curvature_k: float = 0.0              # Spontaneous curvature: push atoms away from bridge-neighbour centroid. Domes flat sheets into shells.
+    # G31: selective permeability — a frequency-gated reflection barrier at the emergent shell surface.
+    membrane_channel_k: float = 0.0       # 0=off (no-op). >0 enables apply_membrane_channel: reflect free vibrations crossing the shell unless frequency-compatible with the membrane.
+    membrane_channel_recompute: int = 20  # Re-derive membrane geometry (centre, radius, f_mem) every N ticks.
+    membrane_channel_width: float = 1.5   # Half-thickness (in length units) of the reflective shell surface band.
     flux_plasticity_rate: float = 0.0     # Bridge strengthening rate from vibration flux (0=off). Plasticity from physics.
     flux_threshold: float = 2.0           # Flux above this potentiates a bridge, below depresses.
     flux_decay: float = 0.05              # Strength decay per second for low-flux bridges.
