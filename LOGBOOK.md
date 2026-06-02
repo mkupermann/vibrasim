@@ -4607,3 +4607,23 @@ large G28/G30 ~110-atom core so latching noise averages out; re-test selectivity
 
 All experiments done or 3x NULL on feedback.
 
+
+
+## 2026-06-02 — G39: scale-via-injection — NULL. Recall thread CLOSED; PIVOT decided.
+
+Enlarged the engram core (n=120, sigma=2.5, half=5) inside the mirror wall, seeds {42,7,99}.
+The engram would NOT grow (|E| stayed 1-6 regardless of 3x input — capped by co-firing/
+bistable dynamics, not drive), and persistence is seed-dependent (seed 99 dissolved to 0).
+Containment robust (175-251x). Scale-via-injection refuted.
+
+VERDICT on selective persistent CONTENT recall: robust NEGATIVE across ~25 experiments
+(BET-089->102 + G33->G39). The substrate's plasticity makes only a tiny (1-6), stochastic
+engram — not growable, not reliably persistent, not stimulus-selective — even with the
+propagation route cut. Complete honest characterization.
+
+PIVOT (decided autonomously, per Michael "you decide on the pivot and never ask me again"):
+close the recall thread; surface the robust positives (engineered specular port wall =
+docs/patterns/engineered_port_wall.md; set-based readout; mapped deadlock). New thread G40+:
+MODULAR INDEPENDENCE — two engineered port compartments, each fires on its own stimulus with
+NO cross-talk. Build on what the wall robustly delivers (activity modularity, CONCEPT 4.8),
+not on the plasticity layer that can't support selective memory.

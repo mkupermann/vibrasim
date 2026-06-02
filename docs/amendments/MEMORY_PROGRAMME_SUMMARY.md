@@ -102,7 +102,34 @@ on the BET-099/100 recall protocol:
 **Refined root cause.** The deadlock is no longer propagation (cuttable by the wall) nor
 turnover (engram is permanent) nor readout (set-based works). It is **stochastic latching on
 a tiny core**: too few elements per region for *which* bridges potentiate to be controlled
-by the stimulus rather than noise. This is the SCALE limit, isolated. **Indicated next
-lever:** write the engram on a LARGE persistent core (the G28/G30 ~110-atom lattice now
-available) so latching noise averages out, then re-test selectivity across seeds. New
-reusable mechanism: the engineered specular port wall (robust firing containment).
+by the stimulus rather than noise. This is the SCALE limit, isolated. New reusable mechanism:
+the engineered specular port wall (robust firing containment) — docs/patterns/engineered_port_wall.md.
+
+## CLOSE (2026-06-02) — G39 refutes the scale lever; recall thread closed as a robust negative
+
+G39 tested the scale lever (enlarge the core by 3× injection, seeds {42,7,99}): it FAILED.
+The engram will NOT grow on demand (|E| stayed 1–6 regardless of input — the strong-bridge
+count is capped by the co-firing/bistable dynamics, not the drive), and persistence is itself
+seed-dependent at this scale (seed 99's engram dissolved to 0). Only containment stayed robust.
+
+**Verdict on selective persistent CONTENT recall: robust NEGATIVE.** Across BET-089→102 and
+G33→G39 (~25 experiments, two sessions), every selective-recall result was NULL or a
+single-seed fluke. The substrate's plasticity produces only a tiny (1–6), stochastic engram
+that cannot be grown, reliably persisted, or made stimulus-selective — at any core size
+reachable by these means, even with the propagation route cleanly cut. This is a complete,
+honest characterization, not a missing knob.
+
+**What the programme DID deliver (robust positives):**
+1. Persistent lattice / structure (BET-091; G30 ~110-atom closed membrane; G32 sealed it).
+2. Robust ACTIVITY containment via the engineered specular port wall (G37–G39, 175–330× every seed).
+3. The set-based engram readout (correct instrument; region-mean was an artifact).
+4. A mapped deadlock: selective local memory does not emerge from this homogeneous substrate's
+   plasticity even with engineered firing containment — the charter's actual deliverable
+   (developing/mapping the deadlock-breaking process), now precisely bounded.
+
+**PIVOT (decided 2026-06-02, autonomous).** Stop iterating the recall mechanism (diminishing
+returns). Build on the robust positive: use the engineered port wall as a CONCEPT §4.8
+modular building block. Next thread (G40+): demonstrate MODULAR INDEPENDENCE — two engineered
+port compartments in one substrate, each firing on its own stimulus with NO cross-talk — a
+positive the substrate can actually produce, advancing the engineered-modular-architecture
+path instead of forcing selective memory the plasticity layer cannot support.
