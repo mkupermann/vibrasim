@@ -4815,3 +4815,13 @@ are the same fact: a strongly-coupled, positionally-rigid connected medium. Exce
 regulation; fails at selective localization / fluid reorganization. The charter's deadlock-breaking
 deliverable is now comprehensively mapped. Next needle-movers require new primitives (decoupled
 write channel; fluid membrane), a strategic decision not a regime knob.
+
+
+## 2026-06-02 — G52: fluid membrane probe (atom mobility) — NULL. Rigidity = PERMANENT BONDS.
+
+Re-ran self-repair with node_thermal_speed=0.5 (mobile atoms). Result (seeds 42 & 7): mobile
+wounded heal=0.00 (no healing), mobile unwound persist=1.00 (membrane intact), rigid heal=0.00.
+Mobility changes NOTHING — atoms are tethered by permanent bonds, vibrate in place, can't flow
+into a wound. Precise localization: rigidity is PERMANENT BONDS (decay_bridges breaks bonds only
+on atom death), not stationarity. A fluid self-healing membrane needs BOND TURNOVER (spontaneous
+break + reform) — a specific new primitive, the defined next step G53. Updated FINDINGS_SUMMARY.
