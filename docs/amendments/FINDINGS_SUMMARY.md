@@ -71,9 +71,10 @@ retracted. Honesty over consistency, throughout.
 - Selective memory: a write channel DECOUPLED from broadcast (directional, non-leaking) — not
   achievable with current primitives (BET-105 tried bridge-graph write; it self-ignites).
 - Metabolism/repair/division: a FLUID membrane (atoms that can migrate and re-bond). G52 pinned
-  the rigidity precisely to PERMANENT BONDS (not stationarity — atom mobility alone heals nothing,
-  the atoms are tethered). The specific needle-mover is BOND TURNOVER: a mechanism for bonds to
-  spontaneously break and reform so the network remodels and atoms flow into a wound. This is a
-  new substrate primitive (decay_bridges currently breaks bonds only on atom death), the defined
-  strategic next step (G53). Risk: the fluidity/stability trade-off — too much turnover dissolves
-  the membrane.
+  the rigidity precisely to PERMANENT BONDS (not stationarity). G53 BUILT the needle-mover
+  (`bond_turnover_rate`: spontaneous bond break + reform) and showed the rigidity ceiling is
+  BREAKABLE: with turnover the membrane partially self-repairs (37% of a wound healed at rate 0.1,
+  seed 42) WHILE staying fully intact (persist 1.00 — no fluidity/stability trade-off at ≤0.3).
+  The healing is not yet robust (seed-dependent, sub-threshold), but the mechanism is right — the
+  ceiling is a tuning frontier, not a hard wall. Next: strengthen healing (longer window + stronger
+  surface-closure forces) for robust repair (G54); then growth/division on a fluid membrane.
