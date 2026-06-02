@@ -4688,3 +4688,22 @@ Proto-cell homeostasis: a closed spontaneously-formed membrane that REGULATES it
 engineered 4.8 selective channel, no LLM. Chain: G27 rich substrate -> G30 closed membrane ->
 G32 selective permeability -> G43 maintained interior environment. Next G44: does a DISTINCT
 interior chemistry (molecular species) assemble inside the protected environment?
+
+
+## 2026-06-02 — G44: proto-cell homeostatic RECOVERY — PASS (both seeds)
+
+Stronger homeostasis: perturb the proto-cell interior with a foreign bolus, does it return to
+set-point? Channel establishes depleted set-point (interior incompat conc ~0.0009) -> bolus
+perturbs ~100x (peak ~0.10) -> interior RESTORES to depleted (end/peak 0.03); channel OFF stays
+perturbed (0.64-0.65). All three bars PASS, both seeds. Foreign leaks out (outbound unreflected),
+channel blocks re-entry -> self-clearing back to set-point = REGULATION, not just a held gradient.
+
+Two honest protocol fixes (bars unchanged): (1) bolus didn't inject on run 1 (buffer full) ->
+free far-field slots; (2) baseline contaminated on run 2 -> add pre-clear phase to the depleted
+set-point before perturbing. Recovery dynamics passed on every run; fixes only made the
+perturbation a clean disturbance-from-set-point.
+
+Chain: G27 rich chemistry -> G30 closed membrane -> G32 selective permeability -> G43 maintained
+interior -> G44 regulation to set-point. Genuine bottom-up cell-precursor FUNCTION from substrate
+primitives + engineered 4.8 channel, no LLM. Pattern: docs/patterns/protocell_homeostasis.md.
+Next G45: does a DISTINCT interior chemistry assemble inside the protected environment?
