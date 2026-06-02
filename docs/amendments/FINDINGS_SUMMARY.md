@@ -81,4 +81,8 @@ retracted. Honesty over consistency, throughout.
   at the threshold (seed 7 0.04 short). Stopped tuning there (chasing one seed's gap is bar-
   optimization, not science). **Established: the rigidity ceiling is a breakable, tunable frontier,
   not a hard wall** — bond turnover gives fluid partial self-repair (up to 49%) with no fluidity/
-  stability trade-off. Next: growth/division on the fluid membrane (a fresh question, G55).
+  stability trade-off. G55 then showed the fluid membrane is SIZE-HOMEOSTATIC (holds a set-point
+  size — neither grows ≥1.2× nor dissolves), a stable dynamic structure; it does NOT grow or
+  divide (those need a different driver). Net: bond turnover yields a fluid, partially self-
+  repairing, size-homeostatic membrane — a richer dynamic cell precursor, still short of growth/
+  division.
