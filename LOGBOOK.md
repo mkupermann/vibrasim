@@ -4530,3 +4530,21 @@ blocker is SELECTIVITY, not persistence/turnover. (a) |E|=3<5 — tiny but perma
 Composition to the solve: G33's wall contains firing (kills control contamination); G34
 proves the engram is permanent and set-readable. Next G35 = wall + set readout: expect
 retE->1.0, retC->0 = clean selective persistent recall.
+
+
+## 2026-06-02 — G35: wall + set readout — NULL/partial (tension moves to the wall)
+
+Synthesis attempt: soft engineered wall (compartment_mode='soft', velocity-only reflect to
+avoid G33's dense boundary layer) + G34 set readout. Two arms, seed 42.
+
+Result: (a) soft wall FIXES G33's write-suppression — |E|=3 forms and persists 3/3 over
+14000s; the hard clamp WAS the G33b culprit. (c) But NOT selective: |C|=3 under the wall,
+identical to no-wall |C|=3 across G34/G35. The soft wall leaks emissions. The write/contain
+tension just moved to the wall: clamp contains (259x) but suppresses; soft writes but leaks.
+Persistence total in all cases (n_strong stable 13-36).
+
+Decisive next: G36 = CLAMP wall (proven 259x containment) + SET readout (right instrument).
+G33 used clamp+region-mean (wrong instrument); G35 used soft+set (wrong wall). G36 is the
+untested cell. If clamp drives |C|->0 while set finds |E|>=1 persistent -> clean selective
+persistent recall. If |C|~3 even under 259x containment -> the control core is INTRINSIC
+(substrate self-potentiates ~3 bridges/region), the decisive impossibility result.

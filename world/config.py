@@ -92,6 +92,7 @@ class WorldConfig:
     compartment_k: float = 0.0            # 0=off (no-op). >0 enables apply_engineered_compartment.
     compartment_centre: tuple = (0.0, 0.0, 0.0)  # Sphere centre (engineered port boundary).
     compartment_radius: float = 0.0       # Sphere radius; outbound free vibrations are reflected back inside.
+    compartment_mode: str = "clamp"       # 'clamp' (G33, snap to R*0.999) or 'soft' (G35, revert the overshoot only — avoids a dense boundary layer that suppresses the write).
     flux_plasticity_rate: float = 0.0     # Bridge strengthening rate from vibration flux (0=off). Plasticity from physics.
     flux_threshold: float = 2.0           # Flux above this potentiates a bridge, below depresses.
     flux_decay: float = 0.05              # Strength decay per second for low-flux bridges.
