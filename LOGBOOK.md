@@ -4861,3 +4861,14 @@ HOMEOSTATIC — turnover balances accretion/loss at a set-point size; stable, no
 Net fluid-membrane characterization: turnover -> fluidity (partial self-repair, G53/54) + size
 homeostasis (G55), remaining stable. A richer dynamic cell precursor, short of growth/division
 (which need a different driver). Natural honest culmination of the structural thread.
+
+
+## 2026-06-02 — G56: fluid membrane fission — NULL. Stays a single shell (no division).
+
+Strong curvature (4.0) on a fluid membrane: max_shells=1 throughout both seeds (rigid too). No
+fission — the substrate robustly coalesces to ONE minimal surface; curvature deforms but doesn't
+pinch off a daughter. Division does not occur by this route. Structural thread at its ceiling:
+single homeostatic fluid membrane. Pivoting to the OTHER frontier — selective memory via a
+NON-broadcast write: combine the NEW engineered compartment wall (robust firing containment, this
+session) with the OLD flux/bistable write (local, non-broadcasting, BET-096/097) — an untried
+combination (the wall postdates the flux work). G57.
