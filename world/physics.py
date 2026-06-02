@@ -1654,6 +1654,10 @@ def _membrane_channel_atom(world, dt, centre, f_mem, atom_idx, box):
                      & (ratio <= cfg.freq_ratio + cfg.freq_tolerance))
 
     reflect = near & inbound & incompatible
+    if cfg.membrane_channel_uptake:
+        # G49: also reflect COMPATIBLE OUTBOUND vibrations back inside (trap nutrient) ->
+        # the interior accumulates compatible species = active uptake, not just exclusion.
+        reflect = reflect | (near & (~inbound) & (~incompatible))
     if not reflect.any():
         return
     alive_idx = np.where(alive)[0]

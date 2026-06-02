@@ -88,6 +88,7 @@ class WorldConfig:
     membrane_channel_recompute: int = 20  # Re-derive membrane geometry (centre, radius, f_mem) every N ticks.
     membrane_channel_width: float = 1.5   # Half-thickness (in length units) of the reflective shell surface band.
     membrane_channel_mode: str = "sphere" # 'sphere' = fitted-sphere reflector (G31). 'atom' = reflect off the nearest real membrane atom within r_2 (G32).
+    membrane_channel_uptake: bool = False # G49: in 'atom' mode, ALSO reflect COMPATIBLE outbound vibrations (trap nutrient inside) -> active accumulation/uptake, not just exclusion.
     # G33: engineered compartment wall (CONCEPT §4.8 port topology) — reflect outbound free vibrations to keep a region's emissions local.
     compartment_k: float = 0.0            # 0=off (no-op). >0 enables apply_engineered_compartment.
     compartment_centre: tuple = (0.0, 0.0, 0.0)  # Sphere centre (engineered port boundary).
