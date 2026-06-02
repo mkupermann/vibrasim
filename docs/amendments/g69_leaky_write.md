@@ -63,3 +63,17 @@ approach.
 threshold. Fix = FAST-LOCK consolidation (threshold just above mid, ~3.3–4.0) so stim locks the
 instant it crosses mid (immune to leak), while the leak still drains control (which never crosses).
 G71 tests refractory + fast-lock + leak — the final write-rule attempt; pivot if NULL.
+
+## G71 RESULT (2026-06-03): NULL — leak kills the write even with fast-lock; leak is a dead end
+
+refractory=0.5 + fast-lock {3.3,3.6,4.0} + leak=0.1: stim-frac 0.17/0.00/0.00. The leak (0.1) decays
+stim below mid before it can climb to even 3.3 and lock. With G70b (0.02 = no effect, 0.05+ = kills
+write), this is conclusive: NO leak value separates stim from control — they co-fire at too-similar
+rates for a continuous leak to distinguish. The leak is a dead end.
+
+**Sharp final diagnosis:** the 0.44 plateau is control bridges drifting up IN POST (the bistable
+well pulls anything above mid toward high). A continuous leak can't fix it (kills stim too). The
+right tool is a DISCRETE consolidation sweep — at STIM end, reset every NON-consolidated bridge to
+baseline (a "sleep" keeping the locked engram, clearing the working slate). Refractory makes the
+write selective so only stim consolidates; the sweep then erases control's drift before POST. G72 —
+the LAST write-rule attempt; pivot if NULL.
