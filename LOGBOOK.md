@@ -4904,3 +4904,12 @@ G58 (transient tau magnitude-independent), the proto-cell is a COMPLETELY charac
 linear homeostatic controller (step response + DC gain). Next G60: frequency response — oscillating
 influx at varied frequencies, does the interior low-pass filter it (track slow, attenuate fast,
 cutoff ~1/tau)? Completes the linear system ID (proto-cell as a substrate-level analog low-pass filter).
+
+
+## 2026-06-02 — G60: controller frequency response — PASS (first-order LOW-PASS FILTER)
+
+Modulated foreign influx, slow (P=600) vs fast (P=60) drive: interior amplitude 0.22 vs 0.035,
+ratio 6.4/6.6 both seeds. The proto-cell low-pass filters disturbances (tracks slow, attenuates
+fast) = first-order dynamics. Completes the linear system-ID (G44 regulation + G58 step + G59 DC
+gain + G60 freq response, all PASS). The proto-cell is a fully characterized substrate-level analog
+low-pass / first-order homeostatic controller. Surfaced docs/patterns/protocell_controller.md.
