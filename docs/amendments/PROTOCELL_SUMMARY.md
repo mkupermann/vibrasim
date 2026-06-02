@@ -32,10 +32,13 @@ membrane boundary engineered (CONCEPT §4.8) and its internals emergent?
   without the channel (ON/OFF = 1.00): it runs on compatible species that pass freely either
   way. The channel does environmental REGULATION; interior chemistry is autonomous — the two
   functions are decoupled. (Prevents overclaiming the channel as a metabolism enabler.)
-- **No structural self-repair (G46).** A wounded shell does not heal (recovered ≡ post-wound ≡
-  control). `fusion_bond_block` gives persistence (bonded atoms don't break) but the same valence
-  commitment prevents forming new bonds to bridge a wound, and nothing targets new atoms to the
-  damage. The membrane is persistent and functional but STATIC — it maintains, it does not renew.
+- **No structural self-repair (G46, G47).** A wounded shell does not heal (recovered ≡ post-wound
+  ≡ control), even with the substrate's own wound-targeting mechanism (`edge_closure_k`, G47) —
+  the component never regrows (peak ≡ post). **Mechanistic cause: persistence ⊥ self-repair.**
+  The `fusion_bond_block` valence commitment that makes the membrane PERSIST is exactly what
+  prevents HEALING: committed atoms cannot form the new bonds a wound needs, so edge-closure has
+  no free valence to work with. Longevity and self-repair are a genuine trade-off in this
+  mechanism, not a tunable. The membrane is persistent and functional but STATIC.
 
 ## Honest characterization
 The substrate builds a **persistent, self-regulating, but non-self-renewing membrane
