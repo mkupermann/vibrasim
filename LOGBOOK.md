@@ -4672,3 +4672,19 @@ robust positives (specular port wall = firing containment; set-readout = engram 
 correcting the turnover narrative; G42 channel decomposition). PIVOT to the STRUCTURAL frontier
 where the substrate delivers positives (G27/G30/G32): next build toward a PROTO-CELL — a closed
 membrane enclosing a DISTINCT interior chemistry maintained by selective permeability.
+
+
+## 2026-06-02 — G43: proto-cell homeostasis — PASS (both seeds). Structural pivot delivers.
+
+First experiment after pivoting to the structural frontier. G30 emergent membrane (~110 atoms)
++ G32 selective channel: does it maintain a sustained interior-exterior gradient under
+continuous ambient pressure? Result (seeds 42 & 7): channel ON -> interior incompatible-species
+concentration ratio 0.00 (interior completely depleted of foreign species), sustained 100% of
+the steady-state window; channel OFF -> ratio ~1.0 (equilibrated). All four bars PASS, both
+seeds, decisive margin (0.00 vs ~1.0) — robust, not a single-seed fluke.
+
+Proto-cell homeostasis: a closed spontaneously-formed membrane that REGULATES its interior
+(keeps it chemically distinct from outside), not just encloses it. Substrate primitives +
+engineered 4.8 selective channel, no LLM. Chain: G27 rich substrate -> G30 closed membrane ->
+G32 selective permeability -> G43 maintained interior environment. Next G44: does a DISTINCT
+interior chemistry (molecular species) assemble inside the protected environment?
