@@ -4768,3 +4768,9 @@ does NOT enable healing. The real reason the membrane is static (corrected): pos
 + no wound-targeting — removed atoms leave a gap the rigid shell doesn't migrate to close, and
 untargeted new atoms don't bridge it. Confirmatory test falsified my own proposed mechanism;
 recorded as such (honesty over consistency). Corrected PROTOCELL_SUMMARY.
+
+
+## 2026-06-02 18:52 — Autopilot idle
+
+All experiments done or 3x NULL on feedback.
+
