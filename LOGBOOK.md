@@ -4483,3 +4483,29 @@ Chain now closed for Phase-3 structure+function on the real substrate: widen the
 selectively permeable in the engine (G32). Reusable mechanism surfaced as
 docs/patterns/atom_proximity_reflector.md. Next frontier: memory/recall on the large
 lattice (bridge firing-coincidence, element-count-starved at ~25 atoms before G28).
+
+
+## 2026-06-02 — G33: engineered compartment containment — NULL (localizes the blocker)
+
+Tested the memory-programme summary's prescription directly: an ENGINEERED compartment
+wall (CONCEPT §4.8 port; apply_engineered_compartment, no-op by default) that reflects a
+region's outbound emissions back inside, to cut the percolation route while keeping the
+co-firing write. Reused the BET-099/100 correlation-memory protocol verbatim; wall raised
+at STIM start (after the lattice forms everywhere). Three arms with matched-wallclock
+controls.
+
+Result: NULL (2/5 bars). (a) The wall WORKS as a firing barrier — firing contained 259:1
+to the stim region, propagation route cleanly cut. (b) But confinement SUPPRESSED the
+write: stim bridges reached only ~2.4-3.0 under the wall vs 3.2-6.0 without — reflecting
+emissions into a 6-unit sphere makes a turbulent over-dense region where bridges churn
+instead of latching (fresh face of Pattern 02; hard position-clamp confound noted).
+(c) Recall still failed AND the no-wall control did NOT cleanly flood (0.44, ~chance):
+in both arms region-mean bridge strength oscillates 0<->6, drowned in bridge-TURNOVER
+noise on tiny-n cores (n~3-17). 
+
+Honest localization: the deadlock has two layers. Propagation/percolation IS addressable
+by an engineered wall (G33a proves the route can be cut). But bridge turnover -> noisy
+non-persistent readout remains and now dominates — propagation containment is necessary
+but not sufficient. Next (G34): velocity-only wall (remove the clamp confound) + a
+turnover-robust SET-based readout (track the bridges potentiated during STIM and measure
+that set's persistence, not a region spatial mean).
