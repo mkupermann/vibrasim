@@ -75,6 +75,10 @@ retracted. Honesty over consistency, throughout.
   (`bond_turnover_rate`: spontaneous bond break + reform) and showed the rigidity ceiling is
   BREAKABLE: with turnover the membrane partially self-repairs (37% of a wound healed at rate 0.1,
   seed 42) WHILE staying fully intact (persist 1.00 — no fluidity/stability trade-off at ≤0.3).
-  The healing is not yet robust (seed-dependent, sub-threshold), but the mechanism is right — the
-  ceiling is a tuning frontier, not a hard wall. Next: strengthen healing (longer window + stronger
-  surface-closure forces) for robust repair (G54); then growth/division on a fluid membrane.
+  The healing is not yet robust (seed-dependent, sub-threshold), but the mechanism is right. G54
+  strengthened it (window 500, edge-closure 2.0): at turnover 0.15 healing rose to 0.49 (seed 42) /
+  0.26 (seed 7), monotonically improving, membrane fully stable — robust ≥0.3-both-seeds repair is
+  at the threshold (seed 7 0.04 short). Stopped tuning there (chasing one seed's gap is bar-
+  optimization, not science). **Established: the rigidity ceiling is a breakable, tunable frontier,
+  not a hard wall** — bond turnover gives fluid partial self-repair (up to 49%) with no fluidity/
+  stability trade-off. Next: growth/division on the fluid membrane (a fresh question, G55).
