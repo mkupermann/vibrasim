@@ -4922,3 +4922,12 @@ low-pass / first-order homeostatic controller. Surfaced docs/patterns/protocell_
 proto-cell low-pass cutoff is TUNABLE by membrane size — a substrate-level design law. The proto-cell
 is a fully characterized, tunable first-order analog low-pass element (G44/G58/G59/G60/G61 all PASS).
 Next G62: USE it — analog signal denoising (slow signal + fast noise -> interior recovers the signal).
+
+
+## 2026-06-02 — G62: analog denoising — PASS (~9x SNR gain)
+
+Slow signal + fast noise (equal amplitude) driven into the proto-cell interior: output signal 0.13,
+noise 0.014 -> ~9x SNR gain, both seeds. The proto-cell DENOISES (recovers signal, rejects noise) =
+a substrate-level analog computation. The substrate can PROCESS signals (analog signal processing)
+though it cannot STORE selective memory. Computing vein: G44/G58/G59/G60/G61/G62 all PASS — the
+proto-cell is a tunable analog low-pass element that denoises. Updated FINDINGS_SUMMARY.
