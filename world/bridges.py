@@ -528,6 +528,14 @@ def apply_correlation_plasticity(world, dt: float) -> None:
     if consol > 0 and not hasattr(world, '_consolidated'):
         world._consolidated = set()
 
+    # G69: LEAKY write. A continuous downward pull toward `low`, so a bridge stays high ONLY while
+    # CONTINUOUSLY reinforced (drive must beat leak). This breaks the bistable well's "no input =
+    # hold" — which latched any control bridge that transiently crossed mid. With a leak, the
+    # stim engram (continuous co-firing) holds and consolidates, while control's INTERMITTENT
+    # co-firing decays back to low between bumps and never consolidates -> selective by the
+    # temporal structure of the drive. 0 = off (original hold-forever well).
+    leak = getattr(cfg, 'bridge_leak_rate', 0.0)
+
     # Bistable well + rectified one-sided co-firing drive.
     for b in range(world.b_count):
         if not world.b_alive[b]:
@@ -538,7 +546,7 @@ def apply_correlation_plasticity(world, dt: float) -> None:
         s = world.b_strength[b]
         well = -well_k * (s - low) * (s - mid) * (s - high)
         drive = pot if b in cofired else 0.0
-        s_new = s + rate * dt * (well + drive)
+        s_new = s + rate * dt * (well + drive) - leak * dt * (s - low)
         s_new = float(np.clip(s_new, 0.0, high + 1.0))
         world.b_strength[b] = s_new
         if consol > 0 and s_new >= consol:
