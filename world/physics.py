@@ -1746,17 +1746,13 @@ def apply_membrane_channel(world, dt: float) -> None:
     pos[sel] = (pos[sel] - v_sel * dt) % box
 
 
-def apply_engineered_compartment(world, dt: float) -> None:
-    """G33: engineered compartment wall (CONCEPT §4.8 port topology). Reflect every alive
-    free vibration that is at/beyond a fixed engineered sphere and moving OUTWARD, keeping
-    a region's emissions local (the write proceeds; propagation to other regions is cut).
-    No-op when cfg.compartment_k == 0. Touches only free vibrations, never bound atoms."""
-    cfg = world.config
-    if cfg.compartment_k == 0.0:
-        return
-    box = np.asarray(cfg.box_size, dtype=np.float64)
-    centre = np.asarray(cfg.compartment_centre, dtype=np.float64)
-    R = cfg.compartment_radius
+def _reflect_at_sphere(world, dt, centre, R, mode, box):
+    """Reflect free vibrations at one engineered sphere (centre, R).
+
+    Default modes (clamp/soft/mirror) are ONE-WAY: reflect only OUTBOUND vibrations
+    (keep a region's own emissions in). 'seal' is TWO-WAY: also reflect INBOUND
+    vibrations approaching from OUTSIDE, so foreign emissions cannot enter — required to
+    isolate multiple compartments (G41)."""
     if R <= 0.0:
         return
     alive = world.s_alive
@@ -1767,8 +1763,14 @@ def apply_engineered_compartment(world, dt: float) -> None:
     r = np.linalg.norm(d, axis=1)
     n_hat = d / (r[:, None] + 1e-9)
     v = world.s_vel[alive]
-    outbound = (v * n_hat).sum(axis=1) > 0.0
-    reflect = (r >= R) & outbound
+    vdotn = (v * n_hat).sum(axis=1)
+    if mode == "seal":
+        # Two-way: inside moving out (keep in) OR outside moving in within a band (keep out).
+        band = 2.0
+        reflect = ((r < R) & (vdotn > 0.0)) | ((r >= R) & (r < R + band) & (vdotn < 0.0))
+    else:
+        outbound = vdotn > 0.0
+        reflect = (r >= R) & outbound
     if not reflect.any():
         return
     alive_idx = np.where(alive)[0]
@@ -1778,18 +1780,42 @@ def apply_engineered_compartment(world, dt: float) -> None:
     v_sel = world.s_vel[sel]
     vr = (v_sel * nh).sum(axis=1)
     world.s_vel[sel] = v_sel - 2.0 * vr[:, None] * nh          # flip radial component inward
-    if cfg.compartment_mode == "soft":
+    if mode == "seal":
+        # Two-way seal: keep inside vibrations just inside, push entering vibrations just
+        # outside — so foreign emissions bounce off and own emissions stay in (G41).
+        inside = r_sel < R
+        r_new = np.where(inside, R * 0.999, R * 1.001)
+        world.s_pos[sel] = (centre + nh * r_new[:, None]) % box
+    elif mode == "soft":
         # Revert this step's overshoot only — no dense boundary layer (G35).
         world.s_pos[sel] = (world.s_pos[sel] - v_sel * dt) % box
-    elif cfg.compartment_mode == "mirror":
+    elif mode == "mirror":
         # Specular reflection: mirror the radial overshoot about R (r -> 2R-r). Contains
         # fully without pinning — reflected vibrations stay distributed through the interior
-        # and keep driving the co-firing field (G37).
+        # (G37; docs/patterns/engineered_port_wall.md).
         r_new = np.clip(2.0 * R - r_sel, 0.0, R * 0.999)
         world.s_pos[sel] = (centre + nh * r_new[:, None]) % box
     else:
         # Clamp position just inside the wall along the inward normal (G33 default).
         world.s_pos[sel] = (centre + nh * (R * 0.999)) % box
+
+
+def apply_engineered_compartment(world, dt: float) -> None:
+    """G33/G40: engineered compartment wall(s) (CONCEPT §4.8 port topology). Reflect every
+    alive free vibration at/beyond an engineered sphere moving OUTWARD, keeping each region's
+    emissions local. No-op when cfg.compartment_k == 0. Touches only free vibrations, never
+    bound atoms. Supports MULTIPLE compartments via cfg.compartments (each (cx,cy,cz,R));
+    falls back to the single cfg.compartment_centre / compartment_radius."""
+    cfg = world.config
+    if cfg.compartment_k == 0.0:
+        return
+    box = np.asarray(cfg.box_size, dtype=np.float64)
+    if cfg.compartments:
+        spheres = [(np.asarray(c[:3], dtype=np.float64), float(c[3])) for c in cfg.compartments]
+    else:
+        spheres = [(np.asarray(cfg.compartment_centre, dtype=np.float64), cfg.compartment_radius)]
+    for centre, R in spheres:
+        _reflect_at_sphere(world, dt, centre, R, cfg.compartment_mode, box)
 
 
 def apply_scale_repulsion(world, dt: float) -> None:
