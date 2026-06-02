@@ -4744,3 +4744,15 @@ permeability (G32), maintained gradient (G43), regulation to set-point (G44), in
 non-self-renewing membrane compartment — genuine cell precursor with function, honestly bounded.
 Succeeded where memory failed because it needs only CONTAINMENT (substrate's strength), not a
 selective write (the mapped deadlock).
+
+
+## 2026-06-02 — G47: self-repair via edge-closure — NULL. Persistence ⊥ self-repair.
+
+Retested membrane self-repair (G46 protocol) with edge_closure_k=1.0 (free-valence wound edges
+attract). Result (seeds 42 & 7): recovered ≡ post ≡ control (24/33), peak ≡ post — the component
+NEVER grew. Edge-closure does not heal the wound. Mechanistic cause: the fusion_bond_block valence
+commitment that makes the membrane PERSIST is exactly what blocks HEALING (committed atoms can't
+form the new bonds a wound needs; edge-closure has no free valence to use). Longevity and self-
+repair are in genuine tension. Honest caveat: the wound over-fragments (largest comp -> 24/33),
+but zero regrowth is robust to wound shape. Testable prediction G48: relax fusion_bond_block ->
+membrane heals but loses persistence (confirms the trade-off).
