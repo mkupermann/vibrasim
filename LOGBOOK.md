@@ -4774,3 +4774,15 @@ recorded as such (honesty over consistency). Corrected PROTOCELL_SUMMARY.
 
 All experiments done or 3x NULL on feedback.
 
+
+
+## 2026-06-02 — G49: selective uptake — NULL (free nutrient doesn't accumulate; likely consumed by binding)
+
+Added membrane_channel_uptake mode (trap compatible outbound -> accumulate nutrient inside).
+Result (seeds 42 & 7): interior/exterior compatible = 1.00 for BOTH uptake and plain — no free-
+nutrient accumulation. Likely reason: trapped compatible species BIND (-> the ~16 interior atoms
+of G45) rather than accumulating as free vibrations, so the free-nutrient metric can't see uptake.
+Reframes to the right test: does uptake increase interior STRUCTURE (channel-coupled synthesis)?
+That directly targets the G45c boundary. G50 measures interior atom count under uptake vs plain.
+Watching for diminishing returns (G45-G49 now NULL) — G50 is decisive: positive = metabolism,
+null = interior assembly saturated -> consolidate the proto-cell thread.

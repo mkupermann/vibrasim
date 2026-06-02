@@ -27,3 +27,20 @@ against a gradient), and only with the uptake trap: a richer cell-precursor func
 uptake) on top of homeostasis. NULL: if G49b fails the trap does not accumulate compatible
 (the uptake mechanism does not concentrate at this scale); if G49c also accumulates, the
 geometry traps species regardless of the mode. Honest either way. No post-hoc threshold tuning.
+
+## RESULT (2026-06-02): NULL — free nutrient does not accumulate (likely consumed by binding)
+
+| seed | component | UPTAKE interior/exterior compatible | PLAIN |
+|------|-----------|-------------------------------------|-------|
+| 42 | 112 | 1.00 | 1.00 |
+| 7 | 110 | 1.00 | 1.00 |
+
+G49b ✗ (no accumulation), G49c ✓. **Verdict: NULL.** The uptake trap does not raise the FREE
+compatible concentration — identical to plain (1.00).
+
+**Likely reason (reframes the question):** trapped compatible species are COMPATIBLE, so they
+bind — they convert into the ~16 interior bound atoms (G45) rather than accumulating as free
+vibrations. The free-nutrient observable cannot see uptake because the nutrient is consumed by
+synthesis. The right test is whether uptake increases interior STRUCTURE (bound atoms), which
+would be channel-coupled synthesis — exactly the G45c boundary. **G50 measures interior atom
+assembly under uptake vs plain.**
