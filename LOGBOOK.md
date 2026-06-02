@@ -4941,3 +4941,9 @@ selective than LOC (noise). RULES OUT the spatial form of the directional write 
 emission transit but control atoms CO-FIRING on their own (ambient field) and latching. The fix must
 suppress control firing. Next G65: competitive/inhibitory firing (k-WTA) so only strongly-driven stim
 atoms fire. Honest: testing genuinely new mechanisms vs the deadlock; G64 confirms it.
+
+
+## 2026-06-02 23:52 — Autopilot idle
+
+All experiments done or 3x NULL on feedback.
+
