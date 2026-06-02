@@ -4798,3 +4798,20 @@ extensions hit a consistent ceiling: a persistent, self-regulating, but STATIC a
 membrane compartment. Membrane-channel extension thread CLOSED (PROTOCELL_SUMMARY updated).
 Decision: stop grinding channel variants; next a FRESH structural question (multiple membranes /
 proto-cell population) rather than another extension.
+
+
+## 2026-06-02 — G51: multiple proto-cells — NULL/partial. Substrate coalesces to ONE scale-invariant membrane.
+
+Larger box (33^3, 3.4x) -> ONE big shell (372/385 atoms, sigma/R 0.27), not a population. Notable
+positive inside the NULL: membrane formation is SCALE-INVARIANT (same shell quality at 3.4x size).
+The substrate self-organizes to a single minimal surface regardless of scale (coalescence). G45-G51
+(seven structural extensions) all NULL/partial -> the substrate's ceiling is a single persistent,
+self-regulating, scale-invariant membrane. No metabolism, no self-repair, no population.
+
+CAPSTONE: wrote docs/amendments/FINDINGS_SUMMARY.md — top-level synthesis of both threads. The
+substrate builds a proto-cell with FUNCTION (forms/seals/regulates) but cannot do selective memory
+(write=leak across all channels) or fluid cell behavior (metabolism/repair/division) — both ceilings
+are the same fact: a strongly-coupled, positionally-rigid connected medium. Excels at containment/
+regulation; fails at selective localization / fluid reorganization. The charter's deadlock-breaking
+deliverable is now comprehensively mapped. Next needle-movers require new primitives (decoupled
+write channel; fluid membrane), a strategic decision not a regime knob.
