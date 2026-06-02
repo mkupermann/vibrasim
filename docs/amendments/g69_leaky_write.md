@@ -50,3 +50,16 @@ consolidation (lock stim during STIM) + a WEAK leak (decay unconsolidated contro
 as G70a (refractory + consolidation, no leak) and G70b (refractory + consolidation + weak leak),
 in parallel. If both NULL, the write-rule evolution is exhausted -> pivot to a structurally different
 approach.
+
+## G70a/G70b RESULT (2026-06-03): both NULL — the 0.44 refractory plateau won't move
+
+- G70a (refractory=0.5 + consolidation {4,5,6}, no leak): 0.83 / 0.44 / 0.20 at EVERY threshold —
+  consolidation makes no difference (control still drifts up in POST in ~half the checkpoints).
+- G70b (refractory + consol=5 + leak {0.02,0.05,0.08}): leak=0.02 → 0.83/0.44 (too weak, = no leak);
+  0.05 → 0.17 (starts killing the write); 0.08 → 0.00. No leak helps — any leak that drains control
+  also kills stim, because at consol threshold 5 stim must CLIMB 3→5 while being leaked.
+
+**The precise unsolved cell:** stim gets leaked to death while climbing to a far consolidation
+threshold. Fix = FAST-LOCK consolidation (threshold just above mid, ~3.3–4.0) so stim locks the
+instant it crosses mid (immune to leak), while the leak still drains control (which never crosses).
+G71 tests refractory + fast-lock + leak — the final write-rule attempt; pivot if NULL.
