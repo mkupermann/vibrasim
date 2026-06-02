@@ -4601,3 +4601,9 @@ multi-seed gate (its exact purpose). Retracted the G37 milestone framing; update
 MEMORY_PROGRAMME_SUMMARY: the gap moved from propagation/turnover/readout (all addressed) to
 SCALE (stochastic latching on a tiny core). Indicated next lever: write the engram on the
 large G28/G30 ~110-atom core so latching noise averages out; re-test selectivity across seeds.
+
+
+## 2026-06-02 16:52 — Autopilot idle
+
+All experiments done or 3x NULL on feedback.
+
