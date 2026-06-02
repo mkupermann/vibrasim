@@ -2027,6 +2027,16 @@ def neuron_dynamics(world, dt: float) -> None:
         can_fire = can_fire & eligibility
     firing_atoms = atom_indices[can_fire]
 
+    # G65: global k-winner-take-all lateral inhibition. Only the top-K most-charged atoms fire
+    # each tick; weakly-driven atoms are suppressed. A directionally self-limiting write: only
+    # strongly-driven (e.g. stimulated) atoms fire and co-fire, so the write cannot spread to
+    # weakly-driven regions. No-op when global_wta_k == 0.
+    gk = getattr(cfg, 'global_wta_k', 0)
+    if gk > 0 and len(firing_atoms) > gk:
+        ch = world.k_charge[firing_atoms]
+        top = np.argpartition(-ch, gk - 1)[:gk]
+        firing_atoms = firing_atoms[top]
+
     # G11: sparse-firing winner-take-all per port. When enabled, only the
     # top-K atoms per port (by charge) fire each tick. This forces sparse
     # pattern-specific activation: different stimuli charge different

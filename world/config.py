@@ -176,6 +176,7 @@ class WorldConfig:
                                                     #     RuntimeError on n_nodes_max exhaustion. Used by the
                                                     #     real-time talk app so binding cascades don't crash
                                                     #     the realtime thread when capacity fills.
+    global_wta_k: int = 0                           # G65: global k-winner-take-all lateral inhibition — only the top-K most-charged atoms fire each tick (0=off). Self-limiting write: only strongly-driven atoms fire.
     lateral_inhibition_enabled: bool = False        # G8: when an STDP causal-pair LTP fires on a bridge,
                                                     #     apply LTD to all other level-5+ molecules within
                                                     #     `lateral_inhibition_radius` of the LTP'd bridge.
