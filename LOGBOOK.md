@@ -4462,3 +4462,24 @@ leak 0.000) does NOT transfer to irregular, dynamic emergent geometry — the ex
 composition risk this BET was pre-registered to test. Next: G32 atom-proximity reflector
 (reflect off the actual nearest membrane atom, tracking the real breathing surface),
 same locked bars.
+
+
+## 2026-06-02 — G32: atom-proximity membrane channel — PASS (clean seal)
+
+Mechanism fix for G31's leak. Replaced the fitted-sphere reflector with an atom-proximity
+reflector (membrane_channel_mode='atom'): reflect an inbound, frequency-incompatible free
+vibration when it comes within r_2 of any CURRENT membrane-atom position — tracking the
+real, breathing, thick shell instead of a smooth mean-radius proxy. Same locked bars, same
+metric, only the mechanism changed.
+
+Result on the REAL emergent G30 shell (seeds 42 & 7): 5/5 bars. Compatible probes pass
+1.000, incompatible fully contained 0.000 (vs G31's 0.35 fitted-sphere leak), gap +1.000,
+lattice untouched (final = peak = control). The G31→G32 step confirmed the honest
+diagnosis: the leak was the smooth sphere failing to cover the thick (σ_r≈3) breathing
+shell; gating off the actual atoms seals it.
+
+Chain now closed for Phase-3 structure+function on the real substrate: widen the rule
+(G27) → rich substrate → ceiling lifts (G28) → large closed membrane (G30) → membrane is
+selectively permeable in the engine (G32). Reusable mechanism surfaced as
+docs/patterns/atom_proximity_reflector.md. Next frontier: memory/recall on the large
+lattice (bridge firing-coincidence, element-count-starved at ~25 atoms before G28).

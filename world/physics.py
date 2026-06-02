@@ -1621,6 +1621,50 @@ def _fit_sphere(points):
     return centre, radius
 
 
+def _membrane_channel_atom(world, dt, centre, f_mem, atom_idx, box):
+    """G32: atom-proximity reflector. Reflect an inbound, frequency-incompatible free
+    vibration when it comes within r_2 of any CURRENT membrane-atom position. Tracks the
+    real, breathing, irregular shell instead of a smooth fitted sphere."""
+    cfg = world.config
+    alive = world.s_alive
+    if not alive.any():
+        return
+    A = world.k_pos[atom_idx]                      # current atom positions (breathing)
+    P = world.s_pos[alive]
+    vel = world.s_vel[alive]
+    freq = world.s_freq[alive]
+
+    # Nearest membrane-atom distance per free vibration (min-image).
+    diff = P[:, None, :] - A[None, :, :]
+    diff -= box * np.round(diff / box)
+    d2 = (diff * diff).sum(axis=2)
+    near = d2.min(axis=1) < (cfg.r_2 * cfg.r_2)
+
+    # Outward radial normal from the shell centre; inbound = moving toward the centre.
+    rad = P - centre
+    rad -= box * np.round(rad / box)
+    r = np.linalg.norm(rad, axis=1)
+    n_hat = rad / (r[:, None] + 1e-9)
+    inbound = (vel * n_hat).sum(axis=1) < 0.0
+
+    # Frequency-incompatible under the substrate's own binding band.
+    fmin = np.minimum(freq, f_mem)
+    ratio = np.abs(freq - f_mem) / np.maximum(fmin, 1e-12)
+    incompatible = ~((ratio >= cfg.freq_ratio - cfg.freq_tolerance)
+                     & (ratio <= cfg.freq_ratio + cfg.freq_tolerance))
+
+    reflect = near & inbound & incompatible
+    if not reflect.any():
+        return
+    alive_idx = np.where(alive)[0]
+    sel = alive_idx[reflect]
+    v_sel = world.s_vel[sel]
+    nh = n_hat[reflect]
+    vr = (v_sel * nh).sum(axis=1)
+    world.s_vel[sel] = v_sel - 2.0 * vr[:, None] * nh
+    world.s_pos[sel] = (world.s_pos[sel] - v_sel * dt) % box
+
+
 def apply_membrane_channel(world, dt: float) -> None:
     """G31: selective permeability. A frequency-gated reflection barrier at the emergent
     shell surface. No-op when cfg.membrane_channel_k == 0.
@@ -1637,7 +1681,7 @@ def apply_membrane_channel(world, dt: float) -> None:
         return
     box = np.asarray(cfg.box_size, dtype=np.float64)
 
-    # (Re)derive membrane geometry on a cadence; cache on the world.
+    # (Re)derive membrane on a cadence; cache atom indices + centre + f_mem on the world.
     counter = getattr(world, "_membrane_channel_counter", 0)
     geom = getattr(world, "_membrane_channel_geom", None)
     if geom is None or counter % max(1, cfg.membrane_channel_recompute) == 0:
@@ -1646,14 +1690,18 @@ def apply_membrane_channel(world, dt: float) -> None:
             idx = np.array(comp)
             centre, radius = _fit_sphere(world.k_pos[idx])
             f_mem = float(world.k_freq[idx].mean())
-            geom = (centre, radius, f_mem) if radius > 1e-6 else None
+            geom = (centre, radius, f_mem, idx) if radius > 1e-6 else None
         else:
             geom = None
         world._membrane_channel_geom = geom
     world._membrane_channel_counter = counter + 1
     if geom is None:
         return
-    centre, radius, f_mem = geom
+    centre, radius, f_mem, atom_idx = geom
+
+    if cfg.membrane_channel_mode == "atom":
+        _membrane_channel_atom(world, dt, centre, f_mem, atom_idx, box)
+        return
 
     alive = world.s_alive
     if not alive.any():
