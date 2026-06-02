@@ -4786,3 +4786,15 @@ Reframes to the right test: does uptake increase interior STRUCTURE (channel-cou
 That directly targets the G45c boundary. G50 measures interior atom count under uptake vs plain.
 Watching for diminishing returns (G45-G49 now NULL) — G50 is decisive: positive = metabolism,
 null = interior assembly saturated -> consolidate the proto-cell thread.
+
+
+## 2026-06-02 — G50: channel-coupled synthesis — NULL. Proto-cell extensions CONSOLIDATED/closed.
+
+Does uptake increase interior structure assembly? Result (seeds 42 & 7): interior atoms
+16.0/16.9 IDENTICAL across uptake/plain/off (ratio 1.00). No channel-coupled metabolism —
+interior synthesis is supply-independent, fixed by local geometry/binding. G45-G50 (six interior/
+repair/metabolism extensions) ALL NULL. The proto-cell's core positives (G30-G44) are complete;
+extensions hit a consistent ceiling: a persistent, self-regulating, but STATIC and NON-METABOLIC
+membrane compartment. Membrane-channel extension thread CLOSED (PROTOCELL_SUMMARY updated).
+Decision: stop grinding channel variants; next a FRESH structural question (multiple membranes /
+proto-cell population) rather than another extension.

@@ -28,10 +28,12 @@ membrane boundary engineered (CONCEPT §4.8) and its internals emergent?
 
 ## What it LACKS (honest boundaries — pre-registered NULLs)
 
-- **Interior synthesis is NOT channel-gated (G45c).** Interior assembly is identical with and
-  without the channel (ON/OFF = 1.00): it runs on compatible species that pass freely either
-  way. The channel does environmental REGULATION; interior chemistry is autonomous — the two
-  functions are decoupled. (Prevents overclaiming the channel as a metabolism enabler.)
+- **Interior synthesis is NOT channel-gated, and there is NO channel-coupled metabolism
+  (G45c, G49, G50).** Interior assembly is identical with channel ON/OFF AND with active uptake
+  (G50: 16.0/16.9 atoms across uptake/plain/off, ratio 1.00). The ~16-atom interior chemistry is
+  fixed by local geometry/binding, not driven by nutrient supply or the channel. The channel does
+  environmental REGULATION; interior chemistry is an autonomous, saturated background process the
+  membrane does not control. (Prevents overclaiming the channel as a metabolism enabler.)
 - **No structural self-repair (G46, G47, G48).** A wounded shell does not heal (recovered ≡
   post-wound ≡ control), even with the substrate's wound-targeting mechanism (`edge_closure_k`,
   G47) or with valence commitment relaxed (`fusion_bond_block`=0, G48) — the component never
