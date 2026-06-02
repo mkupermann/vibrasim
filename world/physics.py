@@ -1777,8 +1777,12 @@ def apply_engineered_compartment(world, dt: float) -> None:
     v_sel = world.s_vel[sel]
     vr = (v_sel * nh).sum(axis=1)
     world.s_vel[sel] = v_sel - 2.0 * vr[:, None] * nh          # flip radial component inward
-    # Clamp position just inside the wall along the inward normal.
-    world.s_pos[sel] = (centre + nh * (R * 0.999)) % box
+    if cfg.compartment_mode == "soft":
+        # Revert this step's overshoot only — no dense boundary layer (G35).
+        world.s_pos[sel] = (world.s_pos[sel] - v_sel * dt) % box
+    else:
+        # Clamp position just inside the wall along the inward normal (G33 default).
+        world.s_pos[sel] = (centre + nh * (R * 0.999)) % box
 
 
 def apply_scale_repulsion(world, dt: float) -> None:
