@@ -77,3 +77,32 @@ BET-103+: introduce **engineered modular compartments** (e.g. weak inter-cluster
 bridge coupling / port-bounded firing) so a localized memory cannot percolate
 out, then re-test selective persistent recall and content-addressability. This is
 the engineered-topology path the charter prescribes.
+
+## Update (2026-06-02) — G33→G38: engineered wall built and tested; the gap moved, not closed
+
+Implemented the prescribed engineered compartment as `apply_engineered_compartment`
+(CONCEPT §4.8 port wall, config-gated, no-op by default) and ran the (wall × readout) grid
+on the BET-099/100 recall protocol:
+
+- **Firing containment: now SOLVED and robust.** A specular mirror wall
+  (`compartment_mode='mirror'`, r → 2R−r) contains firing to the stim region 300–330×
+  across seeds {42,7,99} (G37/G38). The clamp wall pins vibrations to a degenerate shell
+  and suppresses the write (G36); the soft wall leaks (G35); the mirror wall both writes
+  and contains. The percolation/propagation route the original programme blamed CAN be cut.
+- **Readout: the region-mean statistic was an ARTIFACT.** Strong bridges, once latched,
+  persist with retention 1.0 over 14 000 s (G34) — there is no turnover of the engram. The
+  earlier 0↔6 "turnover noise" was weak-bridge churn + region-membership drift. A set-based
+  readout (bridges keyed by atom slot + k_birth) reads the engram correctly.
+- **Selective persistent recall: still NOT robust.** With containment solved and the right
+  readout, selectivity replication still FAILED (G38): on n≈3 strong-bridge cores, *which*
+  bridges latch is stochastic (no engram on seed 99; control non-selective on seed 7; the
+  single-seed G37 PASS was within the noise). The matched no-wall control was itself
+  inconsistent (|C|=0 on 2/3 seeds), so even the "contamination" was not robust.
+
+**Refined root cause.** The deadlock is no longer propagation (cuttable by the wall) nor
+turnover (engram is permanent) nor readout (set-based works). It is **stochastic latching on
+a tiny core**: too few elements per region for *which* bridges potentiate to be controlled
+by the stimulus rather than noise. This is the SCALE limit, isolated. **Indicated next
+lever:** write the engram on a LARGE persistent core (the G28/G30 ~110-atom lattice now
+available) so latching noise averages out, then re-test selectivity across seeds. New
+reusable mechanism: the engineered specular port wall (robust firing containment).

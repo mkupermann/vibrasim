@@ -4584,3 +4584,20 @@ substrate primitives + engineered 4.8 port wall + turnover-robust set readout. N
 
 Discipline: ONE seed. Not yet a robust milestone. G38 = replicate seeds {42,7,99} with the
 matched no-wall control failing each seed, BEFORE any milestone claim / summary update.
+
+
+## 2026-06-02 — G38: multi-seed replication — NULL. G37 was a seed-42 coincidence; NO milestone.
+
+Replicated G37 (mirror wall + set readout) + matched no-wall control across seeds {42,7,99}.
+seed 42: mirror |E|=3 |C|=1 selective (the G37 PASS), no-wall |C|=3. seed 7: mirror |E|=3
+|C|=3 NOT selective, no-wall |C|=0. seed 99: mirror |E|=0 (no engram), no-wall |C|=0.
+All three bars fail. The G37 selective-recall PASS does NOT replicate — it was within the
+tiny-core stochastic-latching noise.
+
+What IS robust: firing containment (mirror wall, 300-330x every seed) and engram persistence
+(retention 1.0) and the set readout. What is NOT: selective CONTENT recall — on n~3 cores,
+which bridges latch is noise, not controlled by the stimulus. Caught by the pre-registered
+multi-seed gate (its exact purpose). Retracted the G37 milestone framing; updated
+MEMORY_PROGRAMME_SUMMARY: the gap moved from propagation/turnover/readout (all addressed) to
+SCALE (stochastic latching on a tiny core). Indicated next lever: write the engram on the
+large G28/G30 ~110-atom core so latching noise averages out; re-test selectivity across seeds.
