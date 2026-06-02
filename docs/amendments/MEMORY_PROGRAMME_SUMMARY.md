@@ -133,3 +133,37 @@ modular building block. Next thread (G40+): demonstrate MODULAR INDEPENDENCE —
 port compartments in one substrate, each firing on its own stimulus with NO cross-talk — a
 positive the substrate can actually produce, advancing the engineered-modular-architecture
 path instead of forcing selective memory the plasticity layer cannot support.
+
+## DEFINITIVE CLOSE (2026-06-02) — the deadlock is mapped across ALL coupling channels
+
+The modular-port thread (G40–G42) also hit the wall, and tying it to the earlier
+architectural attempts (BET-103/104/105) completes the map:
+
+- **G40–G42 (modular ports):** the one-way containment wall TRAPS foreign emissions (G40);
+  the two-way seal helps at long range but is redundant there (distance already isolates,
+  G41); at CLOSE range the seal makes NO difference (G42) because cross-talk there is carried
+  by the neuron CHARGE-integration field (r_integrate) and BRIDGE graph, not free vibrations.
+- **BET-103/104 (charge-channel gate):** gating the broadcast/charge field contains the leak
+  but STARVES the write (write = broadcast = leak; same field).
+- **BET-105/106 (bridge-graph write):** the non-broadcast write self-ignites whole compartments.
+
+**Every coupling channel has now been gated or rerouted, and every attempt fails the same
+way:** the signal that WRITES a memory is the signal that LEAKS it, on whichever channel you
+choose (vibration broadcast, charge field, or bridge graph). Selective persistent CONTENT
+memory does not emerge in this substrate — a robust, exhaustively-characterized NEGATIVE
+across ~30 experiments and two sessions. This IS the charter's deliverable: the deadlock,
+mapped and bounded, not papered over.
+
+**New robust POSITIVES surfaced this session** (kept and reusable):
+1. Engineered specular port wall → robust single-region firing containment (175–330×),
+   docs/patterns/engineered_port_wall.md (mode='mirror'; one-way valve caveat documented).
+2. Set-based engram readout → proved the strong-bridge engram is PERMANENT (retention 1.0);
+   the old "turnover" narrative was a region-mean artifact. (Corrects the earlier summary.)
+3. Channel decomposition (G42): close-range coupling is charge/bridges, not vibration.
+
+**PIVOT (decided 2026-06-02, autonomous) — to the STRUCTURAL frontier.** The cognition/memory
+side is a comprehensively-mapped negative; the substrate's robust POSITIVES are structural
+(G27 rich chemistry, G30 large closed membrane, G32 selective permeability). Next work moves
+there: build toward a proto-cell — a membrane (G30) enclosing a DISTINCT interior chemistry
+maintained by selective permeability (G32) — a bottom-up structural milestone the substrate
+has shown it can actually reach. The memory programme is closed.

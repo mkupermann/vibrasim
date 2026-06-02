@@ -4654,3 +4654,21 @@ Raw ratio conflates baseline with leakage.
 Correct test G42: CLOSE compartments (distance can't isolate) + independence metric (each
 compartment's firing under stim-other vs stim-none). Show the seal restores independence
 where no-wall heavily cross-talks. Then consolidate the modular-port thread regardless.
+
+
+## 2026-06-02 — Memory/modularity deadlock CLOSED definitively; PIVOT to structural frontier
+
+Checked the earlier architectural attempts: BET-103/104 (charge-channel gate) contained the
+leak but STARVED the write; BET-105/106 (bridge-graph write) self-ignited whole compartments.
+Combined with this session's G33-G42 (vibration-seal + set-readout + scale + modular ports),
+EVERY coupling channel (vibration broadcast, charge field, bridge graph) has now been gated or
+rerouted, and all fail identically: the signal that WRITES is the signal that LEAKS. Selective
+persistent content memory is a robust, exhaustively-mapped NEGATIVE across ~30 experiments /
+two sessions. This is the charter's deliverable (the deadlock, mapped).
+
+Decision (autonomous, per Michael "you decide on the pivot"): do NOT run G43 (charge+bridge
+gate) — it would re-derive BET-103/105. CLOSE the memory thread. Surface this session's new
+robust positives (specular port wall = firing containment; set-readout = engram is permanent,
+correcting the turnover narrative; G42 channel decomposition). PIVOT to the STRUCTURAL frontier
+where the substrate delivers positives (G27/G30/G32): next build toward a PROTO-CELL — a closed
+membrane enclosing a DISTINCT interior chemistry maintained by selective permeability.
