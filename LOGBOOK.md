@@ -4851,3 +4851,13 @@ bond turnover BREAKS the rigidity ceiling — fluid partial self-repair up to 49
 improving, no fluidity/stability trade-off; robust repair at the threshold. The ceiling is a
 breakable tunable frontier, not a hard wall. Next: a FRESH question (growth/division on the fluid
 membrane), not more repair-bar tuning.
+
+
+## 2026-06-02 — G55: fluid membrane growth — NULL/partial; fluid membrane is SIZE-HOMEOSTATIC
+
+Does the fluid membrane grow (accrete) or hold size? Result (seeds 42 & 7): fluid growth 1.09/1.00
+(no growth), min_frac 1.00 (never shrinks); rigid 1.00 (locked). The fluid membrane is SIZE-
+HOMEOSTATIC — turnover balances accretion/loss at a set-point size; stable, not growing/dividing.
+Net fluid-membrane characterization: turnover -> fluidity (partial self-repair, G53/54) + size
+homeostasis (G55), remaining stable. A richer dynamic cell precursor, short of growth/division
+(which need a different driver). Natural honest culmination of the structural thread.
