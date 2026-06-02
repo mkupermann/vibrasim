@@ -4707,3 +4707,18 @@ Chain: G27 rich chemistry -> G30 closed membrane -> G32 selective permeability -
 interior -> G44 regulation to set-point. Genuine bottom-up cell-precursor FUNCTION from substrate
 primitives + engineered 4.8 channel, no LLM. Pattern: docs/patterns/protocell_homeostasis.md.
 Next G45: does a DISTINCT interior chemistry assemble inside the protected environment?
+
+
+## 2026-06-02 — G45: interior chemistry — NULL/partial (interior IS a reaction chamber, but channel-independent)
+
+Does the protected proto-cell interior assemble bound structure, channel-enabled? Result
+(seeds 42 & 7): interior assembles ~16 bound atoms (r<0.6R, distinct from the ~110-atom shell)
+— G45b PASS, it IS a reaction chamber. BUT ON/OFF = 1.00 exactly — assembly is channel-
+INDEPENDENT (G45c NULL). Interior atoms form from compatible species (which bind and pass the
+channel freely either way); foreign don't bind regardless. So the channel does REGULATION
+(foreign exclusion, G43/G44), decoupled from interior SYNTHESIS (autonomous). Honest boundary —
+prevents overclaiming the channel as a metabolism enabler.
+
+Proto-cell fully characterized G30->G45: forms, seals selectively, maintains gradient, regulates
+to set-point, hosts autonomous interior chemistry. Next G46: membrane SELF-REPAIR (structural
+analog of G44's functional recovery).
