@@ -4931,3 +4931,13 @@ noise 0.014 -> ~9x SNR gain, both seeds. The proto-cell DENOISES (recovers signa
 a substrate-level analog computation. The substrate can PROCESS signals (analog signal processing)
 though it cannot STORE selective memory. Computing vein: G44/G58/G59/G60/G61/G62 all PASS — the
 proto-cell is a tunable analog low-pass element that denoises. Updated FINDINGS_SUMMARY.
+
+
+## 2026-06-02 — G64: local-emission self-limiting write — NULL (leak is control co-firing, not transit)
+
+Swept emit_speed {4,8,16} on BET-099 correlation memory. No speed gives selective persistent recall:
+control bridges latch to 3-4 during STIM regardless of emission range; uniform control often more
+selective than LOC (noise). RULES OUT the spatial form of the directional write — the leak is NOT
+emission transit but control atoms CO-FIRING on their own (ambient field) and latching. The fix must
+suppress control firing. Next G65: competitive/inhibitory firing (k-WTA) so only strongly-driven stim
+atoms fire. Honest: testing genuinely new mechanisms vs the deadlock; G64 confirms it.
