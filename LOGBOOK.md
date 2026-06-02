@@ -4627,3 +4627,16 @@ docs/patterns/engineered_port_wall.md; set-based readout; mapped deadlock). New 
 MODULAR INDEPENDENCE — two engineered port compartments, each fires on its own stimulus with
 NO cross-talk. Build on what the wall robustly delivers (activity modularity, CONCEPT 4.8),
 not on the plasticity layer that can't support selective memory.
+
+
+## 2026-06-02 — G40: modular independence — NULL. Containment wall is a ONE-WAY valve.
+
+PIVOT's first experiment. Two engineered compartments (mirror walls), stim one, measure
+firing in both. Result: walls made cross-talk WORSE — with A stimulated, B fired MORE with
+walls (62) than without (30); no-wall ratio 5.7 beat walled 3.3. Diagnosis: the G33
+containment wall reflects only OUTBOUND vibrations, so A's leaked emissions ENTER B (inbound,
+not reflected) and then get TRAPPED by B's wall -> extra B firing. One-way valve: right for
+single-region containment, wrong for multi-compartment isolation.
+
+Fix: compartment_mode='seal' (two-way) — reflect inbound-from-outside AND outbound-from-inside,
+so foreign emissions bounce off. Added to physics. Re-test as G41 (same bars).
