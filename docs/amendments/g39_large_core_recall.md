@@ -28,3 +28,30 @@ NULL: if |E| stays small (G39a fails) the substrate cannot grow the engram on de
 |E| is large but G39c still fails per-seed, latching noise is NOT averaged out by scale and
 the deadlock is deeper than core size. Either is reported honestly; no milestone on a
 partial. No post-hoc threshold tuning.
+
+## RESULT (2026-06-02): NULL — the engram won't grow, and persistence is seed-dependent
+
+| seed | \|E\| @ STIM end | \|E\| @ horizon | \|C\| | fire |
+|------|------------------|------------------|-------|------|
+| 42 | 1 | 1 | 0 | 176× |
+| 7 | 6 | 6 | 0 | 175× |
+| 99 | 4 | **0 (dissolved)** | 4 | 251× |
+
+G39a ✗ (|E| max 6, never ≥10), G39b ✗ (seed 99 engram dissolved to 0), G39c ✗,
+G39d ✓ (containment robust). **Verdict: NULL — scale-via-injection does not work.**
+
+1. **The engram will not grow on demand.** Tripling the injected drive (n=120 vs 40,
+   σ=2.5 vs 1.0) left |E| at 1–6 strong bridges. The strong-bridge count is capped by the
+   co-firing + bistable dynamics, not by input — you cannot enlarge the engram this way.
+2. **Persistence is itself seed-dependent at this scale.** Seed 99's 4 strong bridges
+   DISSOLVED to 0 by the horizon — the "retention 1.0" seen on seeds 42/7 (and in G34/G37)
+   is NOT universal; on a small stochastic core even persistence is unreliable.
+3. Containment remains robust (175–251×) — the only thing that does.
+
+**This closes the scale lever (via injection).** Selective persistent content recall is a
+robust NEGATIVE in this plasticity regime: the engram is small (1–6 bridges), stochastic in
+both formation and persistence, and cannot be grown by stronger input. The one untested
+variant remaining is a fundamentally different substrate — correlation write on the LARGE
+G28/G30 ~110-atom lattice (a different formation regime, not more injection) — but the
+pattern across G33–G39 (every selective-recall attempt NULL or seed-flukey) indicates
+diminishing returns on the recall thread. Decision recorded in LOGBOOK.
