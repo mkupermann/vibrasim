@@ -4913,3 +4913,12 @@ ratio 6.4/6.6 both seeds. The proto-cell low-pass filters disturbances (tracks s
 fast) = first-order dynamics. Completes the linear system-ID (G44 regulation + G58 step + G59 DC
 gain + G60 freq response, all PASS). The proto-cell is a fully characterized substrate-level analog
 low-pass / first-order homeostatic controller. Surfaced docs/patterns/protocell_controller.md.
+
+
+## 2026-06-02 — G61: tunable cutoff — PASS (τ ∝ R)
+
+τ on small (R≈11) vs large (R≈16.5) membrane: 80 vs 124 (seed42), 79 vs 122 (seed7); τ_ratio 1.55
+≈ R_ratio 1.5. So τ scales linearly with membrane radius (τ ∝ R = interior_size/efflux_speed). The
+proto-cell low-pass cutoff is TUNABLE by membrane size — a substrate-level design law. The proto-cell
+is a fully characterized, tunable first-order analog low-pass element (G44/G58/G59/G60/G61 all PASS).
+Next G62: USE it — analog signal denoising (slow signal + fast noise -> interior recovers the signal).
