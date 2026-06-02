@@ -4883,3 +4883,14 @@ vibrations but the contamination isn't vibration-transit; it's bistable-well bou
 wall can't reach. A FRESH test (flux+wall never combined) confirms write=leak is fundamental even
 for the local write + containment. Memory frontier definitively closed (both firing AND flux writes,
 all channels, with and without the wall). Pivoting to a genuinely orthogonal fresh question (G58).
+
+
+## 2026-06-02 — G58: homeostatic controller dynamics — PASS (first-order linear controller)
+
+Injected foreign boluses of 60/120/240 into the proto-cell interior; measured clearance τ. Result
+(seeds 42 & 7): peak scales exactly linearly with bolus (0.053/0.105/0.208), and τ is magnitude-
+INDEPENDENT (~75 ticks; ratios 1.07/1.14). All sizes recover (end/peak 0.01-0.06). The proto-cell
+is a clean FIRST-ORDER LINEAR homeostatic controller (clearance rate ∝ load = passive selective
+efflux). Quantitative control property on top of G44's qualitative regulation. Next G59: steady-
+state disturbance rejection under SUSTAINED influx (does ss interior scale with influx rate, the
+first-order controller prediction) — completes the linear controller model.
