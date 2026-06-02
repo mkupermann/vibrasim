@@ -4955,3 +4955,9 @@ Same mid-frequency (P=600) to small (R~11) vs large (R~16.5) membrane: amplitude
 small passes it 2.5x more (higher cutoff). Two sizes = a 2-channel filter bank discriminating
 frequency by size. Analog-computing vein now 7 PASSes (G44/58/59/60/61/62/63): filter, denoise,
 discriminate.
+
+
+## 2026-06-03 00:52 — Autopilot idle
+
+All experiments done or 3x NULL on feedback.
+
