@@ -4947,3 +4947,11 @@ atoms fire. Honest: testing genuinely new mechanisms vs the deadlock; G64 confir
 
 All experiments done or 3x NULL on feedback.
 
+
+
+## 2026-06-02 — G63: filter bank — PASS (frequency discrimination by membrane size)
+
+Same mid-frequency (P=600) to small (R~11) vs large (R~16.5) membrane: amplitude ratio 2.52/2.58 —
+small passes it 2.5x more (higher cutoff). Two sizes = a 2-channel filter bank discriminating
+frequency by size. Analog-computing vein now 7 PASSes (G44/58/59/60/61/62/63): filter, denoise,
+discriminate.
