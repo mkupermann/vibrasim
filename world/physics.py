@@ -1750,6 +1750,31 @@ def apply_membrane_channel(world, dt: float) -> None:
     pos[sel] = (pos[sel] - v_sel * dt) % box
 
 
+def apply_bond_turnover(world, dt: float) -> None:
+    """G53: fluid-membrane primitive. Each alive bridge spontaneously breaks with probability
+    bond_turnover_rate*dt, freeing both atoms' valence so form_bridges can re-bond them as atoms
+    drift. Bonds break + reform → the network REMODELS (atoms can flow into a wound). No-op when
+    bond_turnover_rate == 0. Too high a rate dissolves the membrane (fluidity/stability trade-off)."""
+    cfg = world.config
+    rate = getattr(cfg, 'bond_turnover_rate', 0.0)
+    B = world.b_count
+    if rate <= 0.0 or B == 0:
+        return
+    alive = world.b_alive[:B]
+    idx = np.where(alive)[0]
+    if len(idx) == 0:
+        return
+    p = rate * dt
+    breaking = idx[world.rng.random(len(idx)) < p]
+    for b in breaking:
+        i = int(world.b_atom_i[b]); j = int(world.b_atom_j[b])
+        world.b_alive[b] = False
+        if i < world.k_count:
+            world.k_bond_count[i] = max(0, world.k_bond_count[i] - 1)
+        if j < world.k_count:
+            world.k_bond_count[j] = max(0, world.k_bond_count[j] - 1)
+
+
 def _reflect_at_sphere(world, dt, centre, R, mode, box):
     """Reflect free vibrations at one engineered sphere (centre, R).
 
@@ -2336,6 +2361,7 @@ def tick(world, dt: float) -> None:
     apply_bistable_plasticity(world, dt)
     apply_structural_anchoring(world, dt)  # BET-090: freeze mature sites (no-op when anchor_damping=0)
     decay_bridges(world, dt)
+    apply_bond_turnover(world, dt)      # G53 — spontaneous bond break (fluid membrane); no-op when bond_turnover_rate=0
     decay_unstable_nodes(world, dt)
     decay_high_level_nodes(world, dt)   # NEW (R2)
     ambient_regeneration(world, dt)

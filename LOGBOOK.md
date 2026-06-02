@@ -4825,3 +4825,16 @@ Mobility changes NOTHING — atoms are tethered by permanent bonds, vibrate in p
 into a wound. Precise localization: rigidity is PERMANENT BONDS (decay_bridges breaks bonds only
 on atom death), not stationarity. A fluid self-healing membrane needs BOND TURNOVER (spontaneous
 break + reform) — a specific new primitive, the defined next step G53. Updated FINDINGS_SUMMARY.
+
+
+## 2026-06-02 — G53: bond-turnover fluid membrane — NULL/partial, but the ceiling IS BREAKABLE
+
+Built the needle-mover primitive bond_turnover_rate (spontaneous bond break + reform -> fluid,
+remodeling network). Swept {0, 0.1, 0.3} + mobility + edge-closure, wounded vs unwounded. Result:
+rigid (0.0) heals 0.00 both seeds; turnover rate 0.1 -> seed 42 healed 0.37 (!) of the wound,
+seed 7 only 0.05; persist=1.00 EVERYWHERE (no dissolution). First healing in the entire self-repair
+line (G46/47/48/52 all 0.00). NULL on the locked bar (no rate >=0.3 both seeds), but a genuine
+partial BREAKTHROUGH: the rigidity ceiling is breakable, no fluidity/stability trade-off at <=0.3.
+Healing just not yet robust/strong. Updated FINDINGS_SUMMARY (ceiling is a tuning frontier, not a
+hard wall). Next G54: strengthen healing (longer window 250->500 + stronger surface-closure) for
+robust >=0.3 both seeds — strengthening the mechanism, NOT lowering the bar.
