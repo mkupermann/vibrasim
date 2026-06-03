@@ -1,0 +1,37 @@
+# Communication programme summary (G97–G99)
+
+## One-line
+The quiet substrate is a usable real-time COMMUNICATION line — multiple independent spatial channels,
+carrying multi-symbol messages at ~4 bits/symbol — provided each symbol is actively reset. This is the
+constructive complement to the closed memory deadlock: communication-without-an-LLM works as real-time
+transduction, not storage.
+
+## The arc
+| G   | question | verdict | key number |
+|-----|----------|---------|-----------|
+| G97 | how many independent spatial channels, crosstalk-free? | PASS | pitch d~3 (box=30) → ~10 channels/axis; 2 channels @ 1.00 |
+| G98 | can it carry a message free-running (decay clears ISI)? | NULL | sub-chance (0.17); vibrations accumulate & blow up |
+| G99 | can it carry a message WITH a per-symbol reset?         | PASS | alphabet K=16 (4 bits/symbol), acc 0.94–1.00 both seeds |
+
+## What it is, honestly
+- Standard digital communication over a linear channel (linear MIMO + multiclass linear decode). Named
+  as established methods; NOT presented as novel mechanism. The contribution is the in-substrate
+  MEASUREMENT: spatial pitch, ISI failure mode, and symbol alphabet.
+- The decoder is LINEAR. The substrate reads and routes parallel inputs but does not combine them
+  nonlinearly in real time (spatial XOR is NULL: G82/G83/G87). It is a channel, not a computer.
+
+## The through-line to the memory result
+The SAME physical accumulation that defeated selective persistent memory (G88–G96) reappears here as
+inter-symbol interference (G98): the substrate RETAINS and SUPERIMPOSES signal rather than
+storing-and-recalling it. Selective memory needs to keep one engram while staying blank elsewhere — the
+substrate can't (active → contaminated, quiet → eroded). Communication needs the opposite: transmit and
+CLEAR. The active reset (a cull) that ruins it as a memory is exactly what makes it work as a channel.
+The substrate's nature is a fast, leaky, resettable medium — good for transduction, wrong for storage.
+
+## Reusable
+- docs/patterns/parallel_spatial_channel.md — the channel recipe + caveats.
+
+## Open next
+- G100+: couple the channel to the proto-cell analog filter (a real receiver front-end: demodulate an
+  amplitude-modulated symbol stream), or characterise bit-rate vs reset cost. Optional; the core
+  communication primitive (encode → transmit → decode, no LLM, no persistence) is demonstrated.

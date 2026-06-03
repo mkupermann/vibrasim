@@ -25,6 +25,10 @@ G88–G96).
 - G83: single quiet-substrate input reads at balanced-accuracy 1.00 (the active substrate drowns it).
 - G97: two channels decode at 1.00 down to pitch d=3 (box=30), crosstalk at/near chance (0.46–0.58),
   both seeds. Implies ~10 independent spatial channels per axis.
+- G99: as a MESSAGE channel (one-hot symbols + per-symbol reset) it carries an alphabet of K=16
+  (4 bits/symbol) at acc 0.94–1.00, both seeds.
+- G98 (the boundary): WITHOUT the per-symbol reset, accumulation causes inter-symbol interference and
+  decode falls to chance — the reset in step 5 is MANDATORY, not optional.
 
 ## Caveats / honesty
 - The decoder is LINEAR. The substrate reads parallel inputs but does NOT combine them nonlinearly in

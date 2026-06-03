@@ -1,0 +1,13 @@
+=== G99: message transmission with reset; alphabet-size sweep ===
+  seed 42 K= 4: symbol-acc=1.00 (chance=0.250, n=240)
+  seed 42 K= 8: symbol-acc=1.00 (chance=0.125, n=240)
+  seed 42 K=16: symbol-acc=0.97 (chance=0.062, n=240)
+  seed 7 K= 4: symbol-acc=1.00 (chance=0.250, n=240)
+  seed 7 K= 8: symbol-acc=1.00 (chance=0.125, n=240)
+  seed 7 K=16: symbol-acc=0.94 (chance=0.062, n=240)
+
+--- VERDICT ---
+G99a sanity (K=4 acc>=0.90 both seeds): True
+G99b max alphabet at >=0.90 (both)    : 16
+G99: PASS - with active reset the substrate transmits messages; alphabet up to K=16 symbols
+DONE
