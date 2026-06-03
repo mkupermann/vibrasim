@@ -115,3 +115,19 @@ mechanisms: local emission (G64), k-WTA lateral inhibition (G65), refractory (G6
   homogeneously self-active medium. Breaking it needs a genuinely QUIESCENT substrate (no baseline
   activity outside driven regions), which is an architectural change, not a knob. The substrate's
   real computational value remains ANALOG signal processing (Addendum 1), not digital memory.
+
+## ADDENDUM 3 (2026-06-03) — THE ROOT, causally confirmed: homogeneous self-activity
+
+After ~50 experiments mapping limits (memory deadlock, reservoir NULL, computation NULL), G81-G83
+isolated the SINGLE ROOT: the substrate's HOMOGENEOUS SELF-ACTIVITY drowns localized signal. On the
+active substrate a localized input is unreadable (≈chance); on a QUIET substrate (background culled)
+the SAME input is read PERFECTLY (sanity 1.00, both seeds, G83). This one fact unifies every failure:
+- Memory fails because control is never blank (self-activity) — but measured on the ACTIVE substrate.
+- Reservoir fails because no clean state encodes input (self-activity drowns it).
+- Computation fails because the input doesn't register (self-activity).
+And it explains the proto-cell successes: the channel PROTECTS a quiet interior where signal stands out.
+
+**The architectural lever: a QUIET/SPARSE substrate** (atoms silent unless driven). This is the one
+untested architecture that could unlock memory AND computation — the deadlock-breaking direction the
+whole programme points to. The memory "fundamental" verdict (Addendum 2) was conditional on the ACTIVE
+substrate; it must be re-tested on a quiet one. That is the live frontier.
