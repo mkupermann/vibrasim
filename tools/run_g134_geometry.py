@@ -13,11 +13,11 @@ from tools.run_bet098 import inject_tight
 from tools.run_g43_protocell import cfg as protocfg
 
 SETTLE = 200
-N = 120
-KP = 5
+N = 100
+KP = 4
 SPAN = (6.0, 24.0)
-DTHRESH = 1.6
-TICKS = 25
+DTHRESH = None  # adaptive: median min-dist -> balanced
+TICKS = 18
 NB = 16
 
 
@@ -71,7 +71,9 @@ def run(seed):
     snap = snapshot(w)
     rng = np.random.default_rng(13400 + seed)
     P = rng.uniform(SPAN[0], SPAN[1], (N, KP))
-    y = np.array([1.0 if np.min(np.abs(p[:, None] - p[None, :]) + np.eye(KP) * 999) < DTHRESH else 0.0 for p in P])
+    mind = np.array([np.min(np.abs(p[:, None] - p[None, :]) + np.eye(KP) * 999) for p in P])
+    thr = float(np.median(mind))            # adaptive threshold -> ~50/50 balanced
+    y = (mind < thr).astype(float)
     Psort = np.sort(P, axis=1)   # raw features sorted (give linear its best shot)
     t0 = time.time()
     Phi_phys = np.array([phys_features(w, c, snap, P[i], box) for i in range(N)])
