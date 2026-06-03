@@ -51,7 +51,9 @@ IMPORTANT BOUND (G120): the memory is MAINTAINED, not static — WRITTEN bits pe
 (carrier holds position, no upkeep, G115), but EMPTY bits need active spatially-selective clearing or
 background repopulates them. The decisive contrast with the activity deadlock is that this maintenance is
 SELECTIVE and NON-DESTRUCTIVE (it refreshes the 0s without disturbing the 1s) — "maintenance=contamination"
-does NOT apply to matter, so a maintained selective memory is possible where an activity one was not.
+does NOT apply to matter, so a maintained selective memory is possible where an activity one was not. (The
+working maintenance is full spatially-selective atom-clearing, G116/G119c, which holds at POST=1500; a
+lighter vibration-cull variant works only for short holds — G122 PASS@800, G123 NULL@1500.)
 The route out came from chasing and correcting three wrong transport claims (G107/G110 retracted) — the
 honesty discipline literally produced the breakthrough.
 

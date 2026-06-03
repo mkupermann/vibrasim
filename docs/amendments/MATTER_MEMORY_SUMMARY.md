@@ -24,7 +24,8 @@ is exactly what activity could never do, so it became a memory representation.
 | G119b/c | PASS | WIDE spacing → CLEAN multi-bit content memory, 1.000/bit both seeds (settle-once harness) |
 | G120 | NULL | band scaffold is LOAD-BEARING: without active clearing, empty cells repopulate → MAINTAINED, not static |
 | G121 | (diag) | repopulation ≈ 56% drift-in + 44% new formation (in the broad band) |
-| G122 | PASS | maintenance is LIGHT + NON-INVASIVE: culling band free-vibrations (formation suppression) holds the pattern; carriers never touched |
+| G122 | PASS* | light maintenance (cull band vibrations) holds a SHORT hold (~800 ticks); carriers untouched |
+| G123 | NULL | over a LONG hold (1500), light maintenance FAILS (cells fill / carriers destabilize) — corrects the G122 generalization |
 
 ## What it IS, honestly
 - The FIRST selective + persistent + clean multi-bit content-addressable memory on this substrate.
