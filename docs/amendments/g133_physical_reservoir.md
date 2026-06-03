@@ -18,4 +18,19 @@ vib/atom/charge histograms). Ridge readout, held-out 70/30 R2. Both seeds.
 - NULL: physical R2 ~ linear -> the physics is decorative; the cognition is the abstract ELM alone.
 
 ## Result
-_(pending run)_
+| features | seed 42 R2 | seed 7 R2 |
+|----------|------------|-----------|
+| linear (raw x)        | 0.90 | 0.92 |
+| abstract ELM tanh(Rx) | 0.94 | 0.92 |
+| PHYSICAL substrate    | **-0.49** | **-0.40** |
+
+**VERDICT: NULL** (both seeds) — physical features are WORSE than the mean (negative R2); the cognition
+power is the abstract ELM, not the physics.
+
+## Finding — for ALGEBRA the physical substrate is NOISE, not just decorative
+On a nonlinear algebraic task the physics gave R2 < 0 (worse than predicting the mean) while the abstract
+ELM matrix worked. The EQMOD-2 cognition stack's capability is classical ELM/VSA/RLS; the physical
+substrate contributes nothing to it — BET-143's worry, now measured. (Caveat: the product task on
+uniform[0,1] is largely linear, so the ELM only marginally beat linear; but the physical NEGATIVE R2 is
+the clear, robust result.) This is the pivot to the geometric niche — G134 asks whether the physics earns
+its place on a SPATIAL/proximity task where raw+linear fails.

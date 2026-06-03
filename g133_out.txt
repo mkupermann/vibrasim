@@ -1,0 +1,9 @@
+=== G133: PHYSICAL substrate as reservoir vs abstract ELM (held-out R2 on a nonlinear task) ===
+  seed 42: linear R2=0.90 | abstract-ELM R2=0.94 | PHYSICAL-substrate R2=-0.49  (226.9s)
+  seed 7: linear R2=0.92 | abstract-ELM R2=0.92 | PHYSICAL-substrate R2=-0.40  (234.3s)
+
+--- VERDICT ---
+abstract ELM adds nonlinear features (R2>lin+0.15 both): False
+PHYSICAL substrate adds nonlinear features (both)       : False
+G133: NULL - the physical substrate does NOT provide usable nonlinear features (~linear baseline); the cognition stack's power is the abstract ELM, the physical substrate is DECORATIVE (confirms BET-143's worry)
+DONE
