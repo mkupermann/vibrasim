@@ -37,3 +37,15 @@ and the classical no-LLM cognition plateaus at trivial-LM level on real language
 no-LLM MEMORY (matter-position) and a bounded no-LLM symbolic/statistical toolkit — useful, honest, and
 not a mind. Closing the gap to human-like language is the established hard problem that transformers
 address and these methods do not.
+
+## G136b — best-shot sweep CONFIRMS the ceiling (and worse)
+Gave the stack its best shot: K∈{2,3,4} context × D∈{600,1500,3000} dim (3-seed mean), vs bigram 0.48.
+| K | best acc over D |
+|---|-----------------|
+| 2 | 0.52 |
+| 3 | 0.30–0.32 |
+| 4 | 0.32–0.36 |
+Best config = (K=2, D=600) at 0.52 ≈ bigram. CRUCIALLY, MORE context makes it WORSE (0.30–0.36) — the
+stack cannot exploit longer context on real text (it scrambles/overfits). So it is not merely bigram-level;
+it is bigram-level AT BEST and sub-bigram with context. The ceiling is solid: on real language the no-LLM
+stack captures nothing beyond the immediately-previous word. Definitive, fair (best-of-sweep), no physics.
