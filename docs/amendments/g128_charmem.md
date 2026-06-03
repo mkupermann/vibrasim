@@ -11,4 +11,16 @@ byte → char. Text "EQ"; both seeds. No LLM.
 NULL/PARTIAL otherwise.
 
 ## Result
-_(pending run)_
+Stored "EQ" → recalled "EQ" EXACTLY on BOTH seeds. **VERDICT: PASS.**
+
+## Finding — the matter memory stores and recalls real TEXT CHARACTERS
+Each ASCII byte (two nibbles across two cell-rows) is written into the substrate, held, and read back
+exactly — the text "EQ" round-trips perfectly on both seeds, no LLM/transformer/embedding. This lifts the
+matter-position memory from abstract bits (G116/G119c) and hex symbols (G127) to genuine TEXT: a
+character written into the substrate's physics and recalled.
+
+Honest scope (unchanged): engineered cell layout in maintained cleared rows (scaffold ~ §4.8), short
+in-window hold, presence-by-cell readout. The READ/WRITE/encode parts are established (a 2-row position
+register with refresh); the substrate-specific result is that this physics holds text positionally where
+its activity dynamics never could. Multi-char words and long-hold retention (anchoring, G125) are the
+next scaling steps.
