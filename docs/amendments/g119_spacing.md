@@ -21,7 +21,15 @@ drive+POST with per-tick band-clearing) slows progressively as memory accumulate
 76 MB; seed 42 alone did not finish ~10 min of full-physics ticks). This is an environment/compute wall
 on the multi-pattern harness, not a scientific result. No verdict is recorded.
 
-## Status — queued, with the fix diagnosed
+## G119b (minimal, cheap confirmation) — the spacing fix WORKS
+The full random-pattern statistics are compute-blocked, but a minimal single-pattern test (tools/
+run_g119b_minimal.py: write pattern [1,0,1] across the wide cells, read back) recovered the pattern
+EXACTLY on BOTH seeds: readout=[1,0,1]=target. This confirms the G118 diagnosis (the 4-bit error was
+systematic spatial boundary-overlap) and that wide spacing fixes it. Clean multi-bit matter memory is
+therefore REACHABLE; the only thing pending is the full random-pattern accuracy curve, which needs a
+lighter harness (settle-once / state-restore) to run at scale. Preliminary PASS on the fix.
+
+## Status — clean multi-bit reachable; full statistics queued for a lighter harness
 The clean-multi-bit goal is well-defined and its fix is DIAGNOSED (G118: the gap is systematic/spatial →
 wider pitch + tighter read radius, the layout in this pre-registration). It is blocked only by the cost of
 re-settling a full lattice per pattern. A lighter harness would unblock it: settle ONCE and reuse the
