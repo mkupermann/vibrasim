@@ -18,4 +18,25 @@ PASS = G113a AND G113b → driven matter is a working K-ary transmission line ov
 atoms arrive but y-band not preserved. NULL = too few arrive.
 
 ## Result
-_(pending run)_
+| seed | arrived | symbol-acc (on arrivals) |
+|------|---------|--------------------------|
+| 42   | 16/16   | 1.00 |
+| 7    | 16/16   | 1.00 |
+(K=3, chance 0.33)
+
+G113a (throughput ≥50%): **True** · G113b (fidelity ≥0.85): **True** → **VERDICT: PASS**
+
+## Finding — driven matter is a working K-ary transmission line over distance
+Every driven atom (16/16, both seeds) traversed >20 units and its source y-band was recovered exactly at
+the far end (symbol accuracy 1.00, K=3). Driven matter is therefore a genuine slow transmission line: it
+carries multi-symbol information across distance with full fidelity, no LLM/transformer/embedding.
+
+This completes the communication arc and the corrected transport picture. The substrate supports TWO
+distinct communication modes:
+- **Co-located codec** (G97–G104): fast (1 tick/symbol), same-site encode/decode, verbatim text.
+- **Driven-matter transmission line** (G110–G113): slow (~200 ticks per ~20 units), over-distance, K-ary
+  symbols at 100% fidelity.
+The driven-matter mode is the positive that three honest self-corrections uncovered — it would have been
+buried by the wrong "overdamped, nothing travels" conclusion (G110). Surfaced as
+docs/patterns/driven_matter_transport.md. The communication programme (G97–G113) is complete: the
+substrate genuinely communicates, both locally and over distance, with no learned language model.

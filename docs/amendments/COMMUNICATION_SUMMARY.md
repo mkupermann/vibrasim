@@ -30,7 +30,8 @@ with their y/symbol coordinate preserved (drift <0.4; G112 PASS, both seeds), at
 (mass-scaled, NOT bond-restrained, G110/G111). Three mechanism claims were tested and RETRACTED on the way
 ("condenses into an atom" G107→G108; "overdamped, nothing travels" G110→G111; the general "transport
 closed" framing G112). So the substrate has TWO communication modes: a fast CO-LOCATED codec (G104) and a
-slow driven-MATTER transmission line (G112). Transport is OPEN, bounded by speed not possibility.
+slow driven-MATTER transmission line (G112/G113: 16/16 atoms traverse, K=3 symbol fidelity 1.00, both
+seeds). Transport is OPEN and DEMONSTRATED, bounded by speed not possibility.
 
 **End-to-end demonstration achieved (G104), with scope set by G105:** a text string is written into the
 substrate as localized excitations and read back verbatim on both seeds, no LLM/transformer/embedding —
