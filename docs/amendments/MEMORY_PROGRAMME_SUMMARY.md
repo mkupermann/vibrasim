@@ -167,3 +167,43 @@ side is a comprehensively-mapped negative; the substrate's robust POSITIVES are 
 there: build toward a proto-cell — a membrane (G30) enclosing a DISTINCT interior chemistry
 maintained by selective permeability (G32) — a bottom-up structural milestone the substrate
 has shown it can actually reach. The memory programme is closed.
+
+---
+
+## Addendum — the G88–G95 reopening (2026-06-03): the deadlock re-closed at a sharper level
+
+The memory programme was reopened when G88, instrumenting the "no stable blank state" claim, found a
+PERFECT zero-input blank state (bridges 1.00, zero firing). That refuted the earlier close and forced
+a fresh attack with a new tool: the QUIET substrate (free vibrations culled, lambda_gen=0) so a
+localized signal is not drowned by homogeneous self-activity (the G83 root).
+
+Chain (all pre-registered, all committed):
+- **G89** — low stim (n=4) keeps the control region region-mean-blank (uni-post 0.00): the
+  self-ignition cascade is dose-dependent and can be kept sub-threshold. Recall ~0.44.
+- **G91** — quiet + disconnected + refractory + consolidation, n=6: a STRONG selective write
+  (stim-frac 0.83) with region-mean-blank control. Recall still on the 0.44 plateau.
+- **G92** — SET readout (strong bridges by identity) REFUTES the "0.44 = region-mean dilution
+  artifact" hypothesis: the strong engram bridges genuinely DECAY in POST (1–2 of 6–10 survive), and
+  the set metric exposes strong CONTROL bridges that region-mean hid.
+- **G93** — ROOT: the decay is **atom erosion**. In the quiet substrate the engram's level>=4 atoms
+  lose ~74% of members by horizon (persist 0.26) and the bridges die with them. Consolidation re-pins
+  bridge STRENGTH every tick but cannot keep a bridge alive once its atoms erode.
+- **G94** — localized maintenance (feed the stim region a small flux while culling the rest): NULL.
+  The weak pulse doesn't rescue atoms (persist 0.19–0.30), helps bridges only erratically (seed 42
+  0.50, seed 7 0.00), and control carries 2–18 persistent strong bridges in EVERY arm — including
+  no-maintenance. Consolidated bridges self-sustain via bridge→atom charge propagation regardless of
+  flux, so persistence is INDISCRIMINATE.
+- **G95** — structural readout (largest connected strong-bridge component): NULL. The engram is 2–3
+  scattered strong-bridge pairs, never a connected mesh — same topology as control. No exploitable
+  engram structure.
+
+**Sharper statement of the deadlock.** The original close was "write = broadcast = leak" (the write
+signal is the leak signal on every channel). G88–G95 add the PERSISTENCE-layer twin:
+**maintenance = contamination.** The free-vibration flux that keeps the engram's atoms alive is the
+same flux that drives the self-ignition cascade contaminating the control region. Quiet the substrate
+and control goes blank but the engram atoms starve and erode (G93); feed the engram and control
+re-contaminates (G94). And the only thing that persists WITHOUT flux — a consolidated bridge — persists
+non-selectively, by count (G94) and by topology (G95). The earlier "engram is permanent (retention
+1.0)" was true only in the ACTIVE substrate, where ambient flux sustained the atoms AND contaminated
+control; it does not survive the move to a quiet substrate. Selective + persistent content memory is
+blocked on BOTH horns: active → contaminated, quiet → eroded. Re-closed, more precisely than at G86.
