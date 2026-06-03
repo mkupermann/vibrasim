@@ -24,3 +24,19 @@ readout, NO writable internal memory — sidesteps write=leak). A real, deadlock
 learning system on the physics. NULL = held-out XOR ≈ chance (the reservoir lacks the memory/
 nonlinearity to generalize). Honest either way. No post-hoc threshold tuning. (Reservoir computing
 itself is established — Jaeger/Maass; the only novelty would be using THIS physics substrate.)
+
+## RESULT (2026-06-03): NULL — reservoir doesn't generalize XOR; readout too impoverished
+
+| seed | reservoir XOR (held-out) | memory bit[t-1] | linear-on-raw-bits XOR |
+|------|--------------------------|-----------------|------------------------|
+| 42 | 0.47 | 0.73 | 0.93 (control broken) |
+| 7 | 0.36 | 0.60 | 0.18 (control broken) |
+
+G78a ✗ (XOR ≈ chance), G78b ✗. **NULL.** Two honest caveats: (1) the substrate shows PARTIAL fading
+memory (bit[t-1] at 0.73 on seed 42 — it retains some input history); (2) the linear-on-raw-bits XOR
+control gave 0.93/0.18 — impossible for true XOR — revealing the held-out set (~44 points, class-
+imbalanced) is too small for reliable thresholded accuracy. The likely cause of the NULL: the
+proto-cell INTERIOR is a poor reservoir — ~16 particles → 8 sparse, noisy octant counts is far too
+LOW-DIMENSIONAL and noisy. This is a readout/scale problem, not a clean substrate verdict. The fair
+test (G79): a LARGER substrate, a high-dimensional state read from a 3D spatial grid, a longer bit
+stream, and a noise-robust metric (correlation + accuracy on a bigger held-out set).
