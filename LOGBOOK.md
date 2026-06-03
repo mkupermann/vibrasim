@@ -5020,3 +5020,26 @@ persistence from selectivity (localized matter doesn't spread, persists once rel
 REPRESENTATIONAL, not absolute. Honest scope: 1-bit presence store in an engineered cleared band;
 content-addressable multi-pattern memory is the next frontier (G117). The route out came from chasing and
 correcting THREE wrong transport claims (G107/G110 retracted) — the honesty discipline produced the win.
+
+## 2026-06-03 20:25 — Session close: G88–G119 (32 amendments, autonomous)
+
+A long autonomous arc that went from re-closing a deadlock to BREAKING it via a new representation.
+
+MEMORY (activity) re-closed sharper — G88–G96: maintenance=contamination; non-selective by count & topology.
+COMMUNICATION codec — G97–G104: quiet substrate is a co-located spatial codec; verbatim text ("EQMOD
+  SUBSTRATE SPEAKS") recovered at K=4 (G104), no LLM. G98 boundary: needs active reset.
+TRANSPORT — G105–G113: free carriers don't travel (vibrations diffusive G109, charge decays G106); DRIVEN
+  MATTER does (G110–G113), a slow K-ary transmission line (G113, fidelity 1.00). Found via THREE honest
+  self-corrections (retracted "transmission" overclaim, "condenses into an atom" G107, "overdamped/nothing
+  travels" G110).
+BREAKTHROUGH — G114–G118: matter POSITION is a selective+persistent memory — the FIRST on this substrate.
+  G115 PASS (position persists, identity stable), G116 PASS (selective: write A / B empty / control empty,
+  both seeds). Reframes the central negative as REPRESENTATIONAL (activity fails; matter-position works).
+  Bounded honestly: 1-bit clean (G116); 4-bit at 0.88/bit (G117); redundancy doesn't fix it (G118 — error
+  is systematic/spatial, parallels G103); clean multi-bit via spacing (G119) diagnosed but compute-blocked.
+
+Method notes: every step pre-registered; PASS/NULL/PARTIAL/INCONCLUSIVE all used honestly; two retracted
+mechanisms and one invalid design (G114) caught and corrected; negative controls held; multi-seed gate
+(G37→G38) respected. The discovery literally came from chasing and correcting wrong claims — the honesty
+discipline produced the win. All committed and pushed. Next: lighter multi-pattern harness → G119 clean
+multi-bit; then content-addressable matter memory at scale.

@@ -15,5 +15,17 @@ Chance 0.50.
 - G119 PASS: per-bit accuracy >= 0.95 on both seeds → clean multi-bit matter memory.
 NULL/PARTIAL below.
 
-## Result
-_(pending run)_
+## Result — NOT RUN TO COMPLETION (compute-limited)
+Aborted: the multi-pattern memory protocol (fresh World + 200-tick settle per pattern, plus a long
+drive+POST with per-tick band-clearing) slows progressively as memory accumulates (working set grew past
+76 MB; seed 42 alone did not finish ~10 min of full-physics ticks). This is an environment/compute wall
+on the multi-pattern harness, not a scientific result. No verdict is recorded.
+
+## Status — queued, with the fix diagnosed
+The clean-multi-bit goal is well-defined and its fix is DIAGNOSED (G118: the gap is systematic/spatial →
+wider pitch + tighter read radius, the layout in this pre-registration). It is blocked only by the cost of
+re-settling a full lattice per pattern. A lighter harness would unblock it: settle ONCE and reuse the
+world across patterns (reset only the band each pattern), or precompute a small fixed atom set. Logged as
+the immediate next step. The BREAKTHROUGH does not depend on it: the clean 1-bit selective+persistent
+matter-position store (G116 PASS) and the 4-bit store at 0.88/bit (G117) stand on their own; G119 would
+only cement the clean multi-bit version.
