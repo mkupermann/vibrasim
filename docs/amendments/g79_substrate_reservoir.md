@@ -21,3 +21,23 @@ NULL = XOR ≈ chance even with the rich state → the substrate's reservoir cap
 nonlinear separation) is insufficient for temporal logic; report what memory it does have (G79b).
 Honest either way. No post-hoc tuning. (Reservoir computing is established — Jaeger/Maass; novelty
 only in using this physics substrate.)
+
+## RESULT (2026-06-03): NULL — no usable reservoir; high-dim XOR memory not co-available
+
+| seed | XOR balanced-acc | memory (bit[t-1]) balanced-acc |
+|------|------------------|--------------------------------|
+| 42 | 0.57 | 0.50 |
+| 7 | 0.48 | 0.42 |
+
+G79a ✗ (XOR ≈ chance), G79b ✗ (memory ≈ chance). **Clean NULL.** The full firing lattice has
+essentially NO readable fading memory (bit[t-1] ≈ chance) — firing RESETS atom charge, destroying
+input history. Contrast: the proto-cell interior (G78) had MORE memory (0.73) because its slow
+clearance is an integrator — but it is effectively ~1-dimensional, too low-dim to separate XOR.
+
+**Unifying finding.** The substrate cannot simultaneously provide a HIGH-DIMENSIONAL state AND
+FADING MEMORY: proto-cell = memory but ~1-dim; firing lattice = high-dim but no retained memory
+(firing resets). Reservoir computing needs both → the substrate is not a usable reservoir for
+temporal logic. This is the SAME memory wall that blocks digital storage, now blocking reservoir
+computing too. One untested configuration is both high-dim and slow: BRIDGE STRENGTHS (hundreds,
+each integrating co-firing history). G80 reads the bridge-strength state (with a leak to avoid
+saturation) — the genuine high-dim-with-memory candidate.
