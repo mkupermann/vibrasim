@@ -28,3 +28,10 @@ docs/amendments/g44, g58, g59, g60.
 **Tunable cutoff (G61).** The time-constant scales with membrane radius: τ ∝ R (R up 1.5× → τ up
 1.55×, both seeds), consistent with τ = interior_size / efflux_speed. So the low-pass cutoff (~1/τ)
 is set by the emergent membrane size — a tunable analog filter with a clean design law.
+
+**Nonlinear computation (G74/G75).** The controller is linear only for small inputs; it SATURATES at
+high drive (G74, clamped-linear unit). That nonlinearity lets it COMPUTE, not just filter: it
+performs AM DEMODULATION (G75) — recovering a slow envelope carried in a fast amplitude modulation
+(env/carrier ~10x), which a linear filter cannot do. So the proto-cell is a nonlinear analog element:
+tunable low-pass + saturating nonlinearity = filter + demodulator. (Both textbook analog operations,
+reproduced from substrate primitives — characterization, not novelty.)
