@@ -14,24 +14,27 @@ from tools.run_g43_protocell import cfg as protocfg
 SETTLE = 200
 VX = 6.0
 DRIVE_T = 320
-POST_T = 800
+POST_T = 500
 BAND_Y, BAND_HALF = 15.0, 4.0
 CELLS = [8.0, 13.0, 18.0, 23.0]     # K=4 cells, pitch 5 (> G97 ~3)
 K = len(CELLS)
 CELLR = 2.0
-NPAT = 6
+NPAT = 4
 
 
-def clear_band_except(w, keep):
+def clear_band_except(w, keep_arr):
     K_ = w.k_count
     if K_ == 0:
         return
     al = w.k_alive[:K_]
     y = w.k_pos[:K_, 1]
-    inband = np.where(al & (np.abs(y - BAND_Y) < BAND_HALF))[0]
-    for i in inband:
-        if int(i) not in keep:
-            w.k_alive[i] = False
+    inband = al & (np.abs(y - BAND_Y) < BAND_HALF)
+    if keep_arr is not None and len(keep_arr):
+        kmask = np.zeros(K_, dtype=bool)
+        valid = keep_arr[keep_arr < K_]
+        kmask[valid] = True
+        inband = inband & ~kmask
+    w.k_alive[:K_][inband] = False
 
 
 def cell_occupied(w, cx):
@@ -60,9 +63,9 @@ def write_read(w, c, box, pattern):
             ci = int(order.pop(0))
             w.k_pos[ci, 1] = BAND_Y
             assign[ci] = CELLS[k]
-    keep = set(assign.keys())
+    keep_arr = np.array(list(assign.keys()), dtype=int)
     for _ in range(DRIVE_T):
-        clear_band_except(w, keep)
+        clear_band_except(w, keep_arr)
         for ci, tx in assign.items():
             if w.k_alive[ci]:
                 w.k_vel[ci, 0] = VX if w.k_pos[ci, 0] < tx else 0.0
@@ -71,7 +74,7 @@ def write_read(w, c, box, pattern):
         if w.k_alive[ci]:
             w.k_vel[ci] = 0.0
     for _ in range(POST_T):
-        clear_band_except(w, keep)
+        clear_band_except(w, keep_arr)
         tick(w, c.dt)
     return [cell_occupied(w, CELLS[k]) for k in range(K)]
 
