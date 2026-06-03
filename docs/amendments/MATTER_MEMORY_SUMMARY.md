@@ -42,7 +42,9 @@ is exactly what activity could never do, so it became a memory representation.
 The memory is FINITE-RETENTION: stable through ~1500-2000 ticks (G116/G119c PASS @1500; G115 carriers hold
 to 2000), but by ~2500 a carrier drifts out of its cell and is lost (G124 NULL) — even though full
 maintenance keeps the empty cells clean. So it is a volatile store with a finite retention window bounded
-by slow carrier drift; a longer-retention variant would need to PIN the carriers (anchoring).
+by slow carrier drift. ANCHORING removes it: re-pinning carriers to their cells holds the pattern at
+POST=2500 (G125 PASS, seed 42 + deterministic mechanism) where the un-anchored memory lost a carrier.
+So retention is a TUNABLE engineering parameter (anchoring cost), not a hard wall.
 
 ## What is NOT yet shown (honest open frontiers)
 - A fully PASSIVE/static variant: a structural y-barrier blocks only the drift-in half of repopulation

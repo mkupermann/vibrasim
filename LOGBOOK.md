@@ -5054,3 +5054,15 @@ store failed. Full chain: G115 persists → G116 1-bit selective (PASS) → G117
 fails (systematic spatial) → G119b/c wide spacing → 1.000/bit. The central deadlock is broken via a new
 representation (position, not activity), reached by correcting three wrong transport claims. Honest scope:
 engineered cleared band, presence-by-cell readout. Session G88–G119c complete; all committed and pushed.
+
+## 2026-06-03 21:55 — Matter-memory fully characterized (G120–G125); session close
+
+Bounded the breakthrough to completion: G120 (band scaffold load-bearing → MAINTAINED not static) →
+G121 (repopulation = drift + formation) → G122 (light maintenance holds short holds) → G123 (light
+maintenance FAILS long holds — corrects G122) → G124 (full maintenance: control clean but bare-carrier
+retention ~2000 ticks, carrier drift) → G125 (ANCHORING re-pins carriers → holds at POST=2500; retention
+is engineerable). Final honest standing: matter-position is the FIRST selective+persistent+clean
+multi-bit content-addressable memory on the substrate; MAINTAINED (full atom-clearing, non-destructive to
+the 1s, holds the 0s indefinitely); finite bare-carrier retention extended by anchoring. Five honest
+self-corrections across the session (transmission/atom-condensation/overdamped/light-maintenance), each
+deepening the result. Session G88–G125 (44 amendments) complete; all committed and pushed.
