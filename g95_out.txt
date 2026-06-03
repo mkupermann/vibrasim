@@ -1,0 +1,10 @@
+=== G95: structural memory (largest connected strong-bridge component) ===
+  seed 42: stim_end=2 | horizon stim=2 ctrl=2
+  seed 7: stim_end=3 | horizon stim=3 ctrl=2
+
+--- VERDICT ---
+G95a stim connected engram (end>=4)   : False
+G95b engram persists (horizon>=3)     : False
+G95c selective topology (ctrl<=2,gap>=2): False
+G95: NULL/partial
+DONE
