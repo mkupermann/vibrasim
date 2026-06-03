@@ -1,0 +1,9 @@
+=== G123: full memory cycle (write -> 1500-tick hold w/ light maintenance -> read), 3 patterns ===
+  seed 42: per-bit accuracy=0.333 | no-write control readout=[1, 1, 1]
+  seed 7: per-bit accuracy=0.556 | no-write control readout=[0, 0, 0]
+
+--- VERDICT ---
+G123a patterns recovered over long hold (acc>=0.95 both): False
+G123b no-write control empty (both)                     : False
+G123: NULL/PARTIAL - full cycle did not hold (see accuracy/control)
+DONE
