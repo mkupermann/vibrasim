@@ -74,9 +74,9 @@ def run(seed, maint, budget=300):
             cull_free_vibrations(w, keep_frac=0.0)
             A = atoms_in_region(w, STIM_X); Bs = strong_bridges_in_region(w, STIM_X)
         if step > STIM_END:
-            cull_control_side(w)                     # keep control blank every POST tick
+            cull_free_vibrations(w, keep_frac=0.0)   # quiet EVERYWHERE (bounded) — control stays blank
             if maint:
-                inject_tight(w, cfg, box, STIM_X, n=N_MAINT)   # local maintenance flux
+                inject_tight(w, cfg, box, STIM_X, n=N_MAINT)   # tiny local maintenance pulse (bounded by the cull)
         tick(w, dt)
         if step > STIM_END and step % 1000 == 999 and A is not None:
             aCur = atoms_in_region(w, STIM_X)

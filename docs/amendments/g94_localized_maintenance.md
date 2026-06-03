@@ -8,8 +8,11 @@ maintenance flux so its atoms survive. This is the proto-cell-membrane function 
 applied to the memory engram.
 
 Protocol: standard quiet+disconnected+refractory+consolidation, n=6 write. In POST, every tick cull
-free vibrations on the CONTROL side (x>15) and, in the MAINT arm only, inject a minimal n=2
-maintenance flux at the stim centre. Two arms:
+ALL free vibrations (substrate quiet everywhere — control blank by construction) and, in the MAINT
+arm only, inject a minimal n=2 maintenance pulse at the stim centre AFTER the cull (a tiny bounded
+local flux while the rest stays silent). [Method note: an initial control-side-only cull caused
+unbounded stim-side vibration accumulation and was replaced, BEFORE any result was read, with
+cull-all-then-pulse; the bars below are unchanged.] Two arms:
 - MAINT  : POST maintenance injection ON  (test the fix)
 - NOMAINT: POST maintenance injection OFF (baseline; engram must still die → maintenance is the cause)
 
