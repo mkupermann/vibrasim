@@ -21,9 +21,15 @@ real-time, same-site transduction, not storage and not spatial transmission.
 | G105| is it transport over DISTANCE or co-located readout?    | PARTIAL | far-end = chance; co-located = 1.00 → CO-LOCATED, not transport |
 | G106| does CHARGE transport over distance (bridge graph)?     | PARTIAL | far charge energy = 0.0; co-located = 1.00 → charge is local too |
 
-**Transport question CLOSED:** the substrate is LOCAL-ONLY on both candidate channels — free vibrations
-(G105, absorbed) and charge along bridges (G106, decays before crossing). No transmission over distance;
-genuine transport would need an engineered low-loss conduit (a structural addition).
+| G107| can an engineered conduit add transport?               | NULL | cleared corridor delivers 0.0 far energy — packet binds to matter at source |
+
+**Transport question CLOSED with a cause:** the substrate is LOCAL-ONLY on both candidate channels — free
+vibrations (G105, absorbed) and charge along bridges (G106, decays). G107 finds the mechanism: a
+symbol-strength vibration packet CONDENSES into a stationary atom at the injection site before it can
+travel ("to send is to freeze") — so even a cleared corridor delivers nothing. A sparse non-binding
+excitation would propagate but is too weak to carry a symbol; the loss is at the SOURCE, not the path.
+Genuine transport would require moving a BOUND structure (a travelling bridge front along a pre-built
+"wire") — a structural build, not a property of the bare medium.
 
 **End-to-end demonstration achieved (G104), with scope set by G105:** a text string is written into the
 substrate as localized excitations and read back verbatim on both seeds, no LLM/transformer/embedding —
