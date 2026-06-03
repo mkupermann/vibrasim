@@ -33,10 +33,12 @@ closure: **the substrate is an OVERDAMPED / high-viscosity medium in which nothi
 bound matter — travels coherently across distance.** Every excitation stays essentially where it is
 created.
 
-This is why the communication result is a CO-LOCATED codec (G104) and why there is no transmission over
-distance (G105–G108): not absorption, not atom-condensation (G107, retracted), not death — simply that
-the medium does not move its contents. It is the spatial twin of the temporal finding that the substrate
-has no fading memory: in space it does not propagate, in time it does not persist-selectively. Transport
-is closed at the most fundamental level the simulation exposes; a transmission line would require adding a
-NON-overdamped conduit (an engineered low-loss waveguide) — a new structural mechanism, not a property of
-the bare medium. The transport question is fully and mechanistically closed.
+This is why the communication result is a CO-LOCATED codec (G104) and why short-window transport failed
+(G105–G108).
+
+**CORRECTION (G111):** the strong wording here — "overdamped medium where NOTHING travels / transport is
+closed at the most fundamental level" — OVERCLAIMED, and is retracted. G111 cut the atom's bonds (no
+change → not bond-restrained) and re-asserted the drive (steady 0.10/tick → atoms move COHERENTLY, just
+mass-scaled to ~3% of nominal). So a continuously-driven atom DOES travel; over ~140 ticks it would cross
+the box. The bare-carrier routes (free vibration G109, charge G106) are closed, but SLOW driven-MATTER
+transport is an open, untested avenue, not a proven impossibility. See g111_unbonded.md.

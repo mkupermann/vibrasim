@@ -40,19 +40,21 @@ persistent. Signal behaviour is density-dependent and offers no usable middle:
 - **Too sparse/active → it SPREADS uncontrollably.** Writing a memory broadcasts ("write = leak");
   sustaining an engram drives self-activity that contaminates elsewhere ("maintenance = contamination").
   You cannot keep a signal LOCAL.
-- **It does not TRAVEL.** A symbol-strength excitation never reaches the far end at ANY density — free
-  vibrations (G105/G107/G108) and charge (G106). MECHANISM (measured, G109–G110): the substrate is an
-  OVERDAMPED medium. A free vibration given velocity 6 drifts ~0.1 units/tick (G109); a BOUND ATOM given
-  velocity 6 moves only ~0.5 units in 8 ticks while its velocity bleeds away (G110). NOTHING — free
-  excitation or bound matter — travels coherently; every excitation stays essentially where it is created.
-  (My earlier "condenses into a stationary atom" guess, G107, was refuted by G108 and retracted; G109/G110
-  traced the real cause.) You cannot make a signal MOVE.
-Between the two, there is no operating point that is simultaneously localized, persistent, and mobile —
-so the substrate gets selective MEMORY (needs localized + persistent) and TRANSPORT (needs mobile) both
-wrong. What it DOES do well needs only ONE of the three at a time: co-located readout (localized,
-mobility not required, G104), analog filtering, proto-cell homeostasis (persistent structure with no
-signal to move). The deadlock is not a tuning failure; it is the absence of a controllable middle regime
-in the medium itself.
+- **FREE carriers do not TRAVEL; bound matter travels only SLOWLY.** A symbol-strength FREE excitation
+  never reaches the far end in a short window — free vibrations (G105/G107/G108; velocity not conserved,
+  diffusive, G109) and charge (G106; decays along bridges). But BOUND matter is different: an atom under
+  SUSTAINED drive moves coherently at ~3% of nominal speed (mass-scaled; ~0.10 units/tick for k_vel=6,
+  G110/G111), NOT bond-restrained (cutting its bridges changes nothing, G111). So driven matter would
+  cross the box in ~140 ticks. (Two retractions en route: "condenses into an atom", G107→G108; and
+  "overdamped medium where nothing travels", G110→G111.) Net: the FREE-carrier transport routes are
+  closed, but SLOW driven-MATTER transport is an open, untested avenue — not a proven impossibility.
+Between the two, there is no easy operating point that is simultaneously localized, persistent, and
+FAST-mobile: selective MEMORY (localized + persistent) fails because activity spreads; FREE-carrier
+TRANSPORT fails because vibrations are diffusive and charge decays. The one mobility that DOES exist —
+driven bound matter — is ~30× too slow to be practical in a short window (G111), an open avenue rather
+than a clean win. What the substrate DOES do well needs only ONE property at a time: co-located readout
+(localized; mobility not required, G104), analog filtering, proto-cell homeostasis (persistent structure,
+no signal to move). The deadlock is a hard trade-off in the medium, not a tuning failure.
 
 ## Update — G88–G107 (2026-06-03): memory re-closed sharper, COMMUNICATION positive, TRANSPORT closed
 - **Memory deadlock re-opened (G88) then re-closed at a sharper level (G88–G96).** G88 found a perfect
@@ -75,9 +77,10 @@ in the medium itself.
 **The substrate is a memoryless but MULTI-CHANNEL, nonlinear ANALOG signal processor and CO-LOCATED
 spatial codec — and a self-regulating proto-cell.** It computes instantaneous continuous functions
 (filter, integrate, demodulate, denoise) and encodes/reads-back information in real time at one site
-(parallel spatial channels; verbatim text end-to-end with an active reset) — but it does NOT transport a
-signal across distance (G105: free vibrations are absorbed locally), and it cannot store, learn, or
-compute over time. The reset that makes it a usable codec is the very operation it cannot avoid, because
+(parallel spatial channels; verbatim text end-to-end with an active reset) — but free carriers do not
+transport a signal across distance (vibrations diffusive G109, charge decays G106; only driven matter
+moves, and ~30× too slowly to be practical, G110/G111), and it cannot store, learn, or compute over
+time. The reset that makes it a usable codec is the very operation it cannot avoid, because
 it retains-and-superimposes rather than storing selectively. A memory/learning system on this physics
 requires a fundamentally different SUBSTRATE — sparse, quiescent-by-design, with a stable blank state and
 cuttable connectivity — an architecture, not a parameter. That is the deadlock, mapped to its root; the
