@@ -40,14 +40,17 @@ persistent. Signal behaviour is density-dependent and offers no usable middle:
 - **Too sparse/active → it SPREADS uncontrollably.** Writing a memory broadcasts ("write = leak");
   sustaining an engram drives self-activity that contaminates elsewhere ("maintenance = contamination").
   You cannot keep a signal LOCAL.
-- **Too dense → it FREEZES in place.** A symbol-strength packet condenses into stationary matter at its
-  source ("to send is to freeze", G107). You cannot make a signal MOVE.
+- **It does not TRAVEL.** A symbol-strength excitation never reaches the far end at ANY density — free
+  vibrations (G105/G107/G108) and charge (G106) are removed within a few ticks of the source. (The
+  specific "condenses into a stationary atom" mechanism I proposed at G107 was REFUTED by the G108
+  dose-response — no atoms form, density is not the lever — and is retracted; the robust fact is only
+  that the carrier does not survive transit, by an unidentified path.) You cannot make a signal MOVE.
 Between the two, there is no operating point that is simultaneously localized, persistent, and mobile —
 so the substrate gets selective MEMORY (needs localized + persistent) and TRANSPORT (needs mobile) both
-wrong, for opposite reasons. What it DOES do well needs only ONE of the three at a time: co-located
-readout (localized + mobile-not-required, G104), analog filtering (mobile-not-required), proto-cell
-homeostasis (persistent structure with no signal to move). The deadlock is not a tuning failure; it is
-the absence of a controllable middle regime in the medium itself.
+wrong. What it DOES do well needs only ONE of the three at a time: co-located readout (localized,
+mobility not required, G104), analog filtering, proto-cell homeostasis (persistent structure with no
+signal to move). The deadlock is not a tuning failure; it is the absence of a controllable middle regime
+in the medium itself.
 
 ## Update — G88–G107 (2026-06-03): memory re-closed sharper, COMMUNICATION positive, TRANSPORT closed
 - **Memory deadlock re-opened (G88) then re-closed at a sharper level (G88–G96).** G88 found a perfect

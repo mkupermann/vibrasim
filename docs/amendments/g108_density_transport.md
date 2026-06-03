@@ -22,4 +22,28 @@ NO culling; then measure (a) far-region (x>18) free-vibration energy and (b) ato
 PASS = G108a AND G108b → "to send is to freeze" confirmed by dose-response. NULL otherwise.
 
 ## Result
-_(pending run)_
+| seed | n=2 (far/atoms) | n=6 | n=14 | n=28 |
+|------|-----------------|-----|------|------|
+| 42   | 0.00 / 0.03 | 0.00 / 0.03 | 0.00 / 0.03 | 0.00 / 0.03 |
+| 7    | 0.00 / 0.00 | 0.00 / 0.00 | 0.00 / 0.00 | 0.00 / 0.00 |
+
+G108a (far n=2 > far n=28): **False** · G108b (atoms n=28 > n=2): **False** → **VERDICT: NULL**
+
+## Finding — REFUTES my G107 mechanism ("freeze into an atom"); transport closure stands, mechanism does not
+The predicted dose-response did not appear. Far-region energy is 0 at EVERY density — even n=2 sparse
+packets fail to traverse — and atoms_formed is ≈0 at every density. So the specific G107 mechanism I
+proposed ("a dense, symbol-strength packet CONDENSES into a stationary ATOM at the source") is WRONG:
+no atoms form, and density makes no difference. I retract "to send is to freeze (into an atom)."
+
+What remains ROBUST (G105/G106/G107/G108): the substrate moves NOTHING a symbol's worth across ~14–18
+units — free vibrations and charge both fail, at every density tested, even in cleared space. The carrier
+is removed within a few ticks of the source by a mechanism I have NOT identified (not level-4 atom
+formation; possibly sub-atomic locking or a free-vibration decay path I did not trace). `move_vibrations`
+integrates velocity correctly, so a SURVIVING free packet would reach the far bins — therefore the
+packets do not survive; they neither arrive nor become countable atoms.
+
+Honest status: the TRANSPORT CLOSURE is solid and multiply-confirmed; the MECHANISM is open, and my
+earlier causal story was over-confident. The co-located spatial codec (G104) is unaffected — it reads at
+the source within a tick, before the carrier is lost. This is the session's second self-correction
+(after retracting the "transmission" overclaim): an elegant inference, tested directly, refuted by the
+data.

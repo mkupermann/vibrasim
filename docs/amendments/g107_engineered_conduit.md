@@ -49,8 +49,13 @@ propagate ballistically (move_vibrations works), but it would be too weak to car
 background — the same density/transport trade. An engineered corridor cannot help because the loss is at
 the SOURCE, not along the path.
 
-The transport question is therefore closed with a CAUSE: the bare substrate has no symbol-strength
-propagating carrier. Genuine transport would require a mechanism that moves a BOUND structure (e.g. a
-travelling bridge front along a pre-built atom "wire") rather than a free packet — a substantial
-structural build, logged as an open frontier, not a property of the medium. The validated communication
-result stands as a CO-LOCATED spatial codec (G104), now with its boundary fully understood.
+The transport question is therefore closed: the bare substrate has no symbol-strength propagating
+carrier. The validated communication result stands as a CO-LOCATED spatial codec (G104), reading at the
+source before the carrier is lost.
+
+**Correction (G108):** the specific mechanism asserted above — that a dense packet CONDENSES into a
+stationary ATOM at the source — was tested directly in G108 and REFUTED: across densities n∈{2,6,14,28}
+no atoms form (atoms_formed≈0) and far energy stays 0 even for sparse n=2. So density is not the lever
+and atom-condensation is not the cause. The robust fact is only that the carrier does not survive transit
+(removed within a few ticks of the source by an unidentified path); the "freeze into an atom" wording
+here is retracted. See g108_density_transport.md.
