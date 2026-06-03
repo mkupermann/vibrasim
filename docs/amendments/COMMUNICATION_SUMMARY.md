@@ -12,6 +12,10 @@ transduction, not storage.
 | G97 | how many independent spatial channels, crosstalk-free? | PASS | pitch d~3 (box=30) → ~10 channels/axis; 2 channels @ 1.00 |
 | G98 | can it carry a message free-running (decay clears ISI)? | NULL | sub-chance (0.17); vibrations accumulate & blow up |
 | G99 | can it carry a message WITH a per-symbol reset?         | PASS | alphabet K=16 (4 bits/symbol), acc 0.94–1.00 both seeds |
+| G100| how few ticks per symbol (bit rate)?                    | PASS | WIN=1 tick/symbol @ 1.00 → 3–4 bits per injection tick |
+
+Channel spec (quiet substrate + active reset): ~10 parallel spatial channels × up to 4 bits/symbol ×
+1 tick/symbol. Bounded everywhere by the reset requirement, never by integration time.
 
 ## What it is, honestly
 - Standard digital communication over a linear channel (linear MIMO + multiclass linear decode). Named
