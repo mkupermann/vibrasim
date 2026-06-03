@@ -34,17 +34,36 @@ ceaseless activity drowns signal and latches structure everywhere — this singl
 negative (memory, reservoir, multi-channel computation) AND explains every positive (the proto-cell
 works because its channel PROTECTS a quiet interior where signal stands out).
 
+## Update — G88–G104 (2026-06-03): memory re-closed sharper, and a COMMUNICATION positive
+- **Memory deadlock re-opened (G88) then re-closed at a sharper level (G88–G96).** G88 found a perfect
+  zero-input blank state, refuting the "no stable blank state" wording. The deeper truth: persistence
+  and selectivity are coupled on BOTH horns — ACTIVE substrate sustains the engram but contaminates
+  control; QUIET substrate keeps control blank but ERODES the engram's anchoring atoms (G93). Bridge
+  consolidation persists NON-selectively, by count (G94) and topology (G95); vibration seals are inert
+  vs the charge/bridge channel (G96). New slogan beside "write=leak": **"maintenance=contamination."**
+- **A COMMUNICATION positive (G97–G104) — corrects "single-channel".** The quiet substrate is a clean
+  MULTI-channel real-time line: ~10 parallel spatial channels (pitch ~3, G97) × 4 bits/symbol (G99) × 1
+  tick/symbol (G100), noise-robust (G101). It needs an active reset between symbols (G98) — the SAME
+  accumulation that defeats memory, seen as inter-symbol interference. CAPSTONE: a text string was
+  written into the substrate and read back VERBATIM on both seeds (G104, K=4), no LLM/transformer/
+  embedding. G102/G103 are the instructive failures (K=16 violates the G97 pitch; coding can't fix the
+  resulting systematic confusion). See COMMUNICATION_SUMMARY.md.
+
 ## The honest headline
-**The substrate is a memoryless, single-channel, nonlinear ANALOG signal processor — and a
-self-regulating proto-cell.** It computes instantaneous continuous functions (filter, integrate,
-demodulate, denoise); it cannot store, learn, or compute over time. A memory/learning system on this
-physics requires a fundamentally different SUBSTRATE — sparse, quiescent-by-design, with a stable
-blank state and cuttable connectivity — an architecture, not a parameter. That is the deadlock,
-mapped to its root: the charter's deliverable.
+**The substrate is a memoryless but MULTI-CHANNEL, nonlinear ANALOG signal processor and communication
+line — and a self-regulating proto-cell.** It computes instantaneous continuous functions (filter,
+integrate, demodulate, denoise) and TRANSMITS information in real time (parallel spatial channels;
+verbatim text end-to-end with an active reset); it cannot store, learn, or compute over time. The reset
+that makes it a usable channel is the very operation it cannot avoid, because it retains-and-superimposes
+rather than storing selectively. A memory/learning system on this physics requires a fundamentally
+different SUBSTRATE — sparse, quiescent-by-design, with a stable blank state and cuttable connectivity —
+an architecture, not a parameter. That is the deadlock, mapped to its root; the communication line is the
+constructive complement. Both are the charter's deliverable.
 
 ## Reusable mechanisms (docs/patterns/)
 atom_proximity_reflector · engineered_port_wall · protocell_homeostasis · protocell_controller ·
-01-which-constraint-binds · 02-write-contaminate-tension.
+parallel_spatial_channel · 01-which-constraint-binds · 02-write-contaminate-tension.
 
 ## Sub-summaries
-MEMORY_PROGRAMME_SUMMARY · PROTOCELL_SUMMARY · ANALOG_COMPUTER_SUMMARY · FINDINGS_SUMMARY (+4 addenda).
+MEMORY_PROGRAMME_SUMMARY (+G88–G96 addendum) · PROTOCELL_SUMMARY · ANALOG_COMPUTER_SUMMARY ·
+COMMUNICATION_SUMMARY (G97–G104) · FINDINGS_SUMMARY (+4 addenda).
