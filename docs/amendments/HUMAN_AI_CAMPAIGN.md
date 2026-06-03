@@ -18,9 +18,11 @@ classical algorithm and which is the substrate, so we never mistake the peripher
 
 ## The rungs (each a pre-registered experiment, honest PASS/NULL)
 - **R1 — Selective persistent MEMORY.** DONE ✓ (matter-position, G116–G129; clean multi-bit, text).
-- **R2 — Associative LEARNING + generalization (G132).** A classical linear/Hebbian associator learns
-  A→B pairs and recalls B from NOISY/novel A. Establishes the learning engine is classical ML and runs
-  with substrate-stored weights. (The substrate does NOT learn; the algorithm does.)
+- **R2 — Associative LEARNING via substrate primitives (G132): NULL.** With the full substrate learning
+  machinery (STDP+BTSP+correlation+bistable+propagation) and a proper BTSP-eligibility readout, training
+  A→B for 80 pairings produced NO selective association (trained ≈ untrained ≈ control region). The
+  substrate's own primitives cannot learn — charter-faithful confirmation. A classical learner would
+  work but is a bolted-on neural-net layer, FORBIDDEN by the charter. So this rung is a hard stop.
 - **R3 — Sequence prediction (next-symbol over text).** Classical n-gram / VSA+reservoir readout
   (the EQMOD-2 territory; named as established ELM/RLS, not novel). PASS = above-chance next-symbol on
   held-out text, no transformer.
@@ -28,6 +30,14 @@ classical algorithm and which is the substrate, so we never mistake the peripher
   the matter-memory holding context. Honest eval: plausible, not understanding.
 - **R5 — Honest capability audit.** Quantify how far this is from "human-like" (it will be far): no
   grounding, no reasoning, no generalization beyond the training distribution.
+
+## Outcome (R2 reached): the campaign hits a HARD STOP at the learning rung
+R1 (memory) PASS; R2 (learning) NULL via substrate primitives, and the only alternative (classical ML
+layer) is charter-forbidden. There is no R3+ within the charter: sequence prediction, generative
+response, etc. all require the learning layer R2 could not provide. The honest end: the substrate is a
+no-LLM MEMORY + I/O medium; the cognitive layer cannot be built on it under the charter. To go further
+one must EITHER relax the charter (allow a classical no-LLM learner — e.g. the separate EQMOD-2 VSA/
+reservoir stack — using the substrate only as memory) OR accept the substrate as a data peripheral.
 
 ## Expected honest endpoint
 A classical statistical communicator (no LLM) with substrate-based memory/IO: it can store, recall, and
