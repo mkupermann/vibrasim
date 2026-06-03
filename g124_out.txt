@@ -1,0 +1,2 @@
+=== G124: long-term stability, FULL maintenance, POST=2500 ===
+  seed 42: WRITE readout=[1, 0, 0] target=[1,0,1] | CONTROL=[0, 0, 0]
