@@ -29,3 +29,16 @@ supplies the nonlinear feature map — NO writable internal memory needed. A gen
 responsive/learning system on the physics, bypassing the memory deadlock. NULL = the readout cannot
 solve XOR (the substrate state does not encode the input interaction separably). Honest either way.
 No post-hoc threshold tuning.
+
+## RESULT (2026-06-03): INVALID — overfitting artifact, NOT a real result
+
+preds=[-0.5,0.5,0.5,-0.5], margin 0.5, both seeds — a SUSPICIOUSLY perfect XOR fit. The reason: the
+readout used ~12 trajectory features but only 4 data points (the 4 XOR patterns). With more features
+than points, least-squares perfectly interpolates ANY labeling — even from random/meaningless
+features. So this "PASS" demonstrates nothing about reservoir capability; it is a textbook
+over-parameterization artifact. **Recorded as INVALID (caught in self-review).**
+
+A valid reservoir test needs #samples >> #features AND a HELD-OUT train/test split so the readout
+must GENERALIZE. Redone as G78: a long random bit stream, a higher-dimensional reservoir state read
+from multiple spatial sub-regions, temporal-XOR/parity target, ridge readout trained on the first
+portion and evaluated on a held-out tail. Test accuracy >> chance = a genuine reservoir.
