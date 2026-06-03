@@ -1,0 +1,8 @@
+=== G131: associative learning A->B (can the substrate learn?) ===
+  seed 42: trained A->B response=0.0 (ctrl-region C=0.0) | untrained A->B=0.0
+  seed 7: trained A->B response=0.0 (ctrl-region C=0.0) | untrained A->B=0.0
+
+--- VERDICT ---
+G131 substrate learned A->B (trained>1.5x untrained AND >1.5x ctrl-region, both seeds): False
+G131: NULL - the substrate does NOT learn A->B; it cannot form associations -> no cognitive/communication capacity from its own dynamics (the boundary, with evidence)
+DONE

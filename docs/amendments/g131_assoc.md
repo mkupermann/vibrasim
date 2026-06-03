@@ -15,4 +15,13 @@ plasticity could wire A->B. PROBE: present A ALONE, measure B-region firing vs (
 NULL otherwise → the substrate cannot form associations.
 
 ## Result
-_(pending run)_
+Both seeds: trained A→B = 0.0, untrained = 0.0, control C = 0.0. **VERDICT: NULL (no learning signal),
+but the readout is INCONCLUSIVE.**
+
+## Honest note — weak readout
+All-zeros means the B-region activity probe captured nothing (no `k_fired` boolean read; the charge
+fallback is 0 because charge doesn't propagate A→B over 8 units, G106/G130). So this shows NO
+trained-vs-untrained difference (no learning signal) but does NOT cleanly prove non-learning — a dead
+probe also reads zero. Recorded as inconclusive, not a clean NULL. The substrate's inability to form
+selective persistent associations is already established robustly by the ~70-experiment memory programme
+(G33–G96); G131 adds nothing clean to that. See HUMAN_AI_CAMPAIGN.md.
