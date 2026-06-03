@@ -131,3 +131,16 @@ And it explains the proto-cell successes: the channel PROTECTS a quiet interior 
 untested architecture that could unlock memory AND computation — the deadlock-breaking direction the
 whole programme points to. The memory "fundamental" verdict (Addendum 2) was conditional on the ACTIVE
 substrate; it must be re-tested on a quiet one. That is the live frontier.
+
+## ADDENDUM 4 (2026-06-03) — memory thread CLOSED after exhausting even physical disconnection
+
+The root-removal campaign (G83-G86) confirmed the homogeneous-activity root (quiet substrate reads
+input perfectly, G83) but did NOT break the memory deadlock: on a quiet substrate control latches via
+emission transit (G84), then bridge percolation (G85), then -- even with stim/control FULLY
+DISCONNECTED (cut bridges + gated charge, G86) -- INTRINSICALLY. The invariant across ~70 experiments:
+the substrate has no stable BLANK state; any structured region latches activity, so there is never a
+written-vs-unwritten contrast. Selective memory is impossible in this medium, conclusively. DECISION:
+the memory thread is closed; chasing further layers past 70 NULLs would be refusing a robust negative.
+The substrate is a memoryless nonlinear analog processor (instantaneous single-channel computation
+only). A learning/memory system requires a fundamentally different (sparse, quiescent-by-design,
+disconnect-capable) substrate -- an architecture, not a knob.
