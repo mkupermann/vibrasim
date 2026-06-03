@@ -1,0 +1,2 @@
+=== G92: set-based readout (quiet + refractory + consolidation, n=6) ===
+  seed 42: |E(stim)|=6 |C(ctrl)|=1 | horizon E_persist=1 C_persist=1
