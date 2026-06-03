@@ -12,4 +12,21 @@ region C. Both seeds.
 NULL otherwise → substrate primitives cannot form the association (charter-faithful evidence).
 
 ## Result
-_(pending run)_
+| seed | trained A→B elig | control-region C | untrained A→B |
+|------|------------------|------------------|----------------|
+| 42   | 17.84            | 17.82            | 15.96          |
+| 7    | 7.31             | 6.52             | 7.10           |
+
+G132: **NULL** — trained ≈ untrained (1.1×, below 1.5× bar) AND trained-B ≈ trained-C (no A→B specificity).
+
+## Finding — substrate primitives do NOT learn (clean, charter-faithful evidence)
+With the full learning machinery active and a real activity readout (BTSP eligibility, non-zero), training
+A→B for 80 pairings produced NO selective association: A's probe raises activity at B no more than at an
+unrelated control region C, and no more than in the untrained substrate. The substrate does not wire A→B.
+
+This is the clean version of the G131 test (dead probe) and the decisive evidence for the campaign's R2
+rung: **the substrate's own primitives cannot form a learned association.** Combined with the charter rule
+forbidding bolted-on neural-net layers and the prior NULLs (substrate-as-reservoir G78–G80), every route
+to a learning/cognitive layer on this substrate is either forbidden or empirically empty. Honest campaign
+conclusion: a cognitive/learning layer cannot be built on this substrate within the charter; the
+substrate's role is memory + I/O only. See HUMAN_AI_CAMPAIGN.md (R2 = NULL).
