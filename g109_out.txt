@@ -1,0 +1,42 @@
+=== G109: trace a moving packet (what removes the carrier?) ===
+  columns: tick | alive | mean_x | max_x | atoms_formed   (inject x=4, vx=6, dt=0.5)
+  seed 42 n=2:
+     t=1 alive= 2 mean_x=  3.7 max_x=  4.5 atoms=0
+     t=2 alive= 2 mean_x=  3.8 max_x=  4.6 atoms=0
+     t=3 alive= 2 mean_x=  3.9 max_x=  4.7 atoms=0
+     t=4 alive= 2 mean_x=  4.0 max_x=  4.8 atoms=0
+     t=5 alive= 2 mean_x=  4.1 max_x=  4.9 atoms=0
+     t=6 alive= 2 mean_x=  4.2 max_x=  5.0 atoms=0
+     t=7 alive= 2 mean_x=  4.3 max_x=  5.1 atoms=0
+     t=8 alive= 2 mean_x=  4.4 max_x=  5.2 atoms=0
+  seed 42 n=14:
+     t=1 alive=14 mean_x=  4.0 max_x=  4.8 atoms=0
+     t=2 alive=14 mean_x=  4.1 max_x=  4.9 atoms=0
+     t=3 alive=14 mean_x=  4.2 max_x=  5.0 atoms=0
+     t=4 alive=14 mean_x=  4.3 max_x=  5.1 atoms=0
+     t=5 alive=14 mean_x=  4.4 max_x=  5.2 atoms=0
+     t=6 alive=14 mean_x=  4.5 max_x=  5.3 atoms=0
+     t=7 alive=14 mean_x=  4.6 max_x=  5.4 atoms=0
+     t=8 alive=14 mean_x=  4.7 max_x=  5.5 atoms=0
+  seed 7 n=2:
+     t=1 alive= 2 mean_x=  3.9 max_x=  4.5 atoms=0
+     t=2 alive= 2 mean_x=  4.0 max_x=  4.6 atoms=0
+     t=3 alive= 2 mean_x=  4.1 max_x=  4.7 atoms=0
+     t=4 alive= 2 mean_x=  4.2 max_x=  4.8 atoms=0
+     t=5 alive= 2 mean_x=  4.3 max_x=  4.9 atoms=0
+     t=6 alive= 2 mean_x=  4.4 max_x=  5.0 atoms=0
+     t=7 alive= 2 mean_x=  4.5 max_x=  5.1 atoms=0
+     t=8 alive= 2 mean_x=  4.6 max_x=  5.2 atoms=0
+  seed 7 n=14:
+     t=1 alive=14 mean_x=  4.2 max_x=  6.2 atoms=0
+     t=2 alive=14 mean_x=  4.3 max_x=  6.3 atoms=0
+     t=3 alive=14 mean_x=  4.4 max_x=  6.4 atoms=0
+     t=4 alive=14 mean_x=  4.5 max_x=  6.5 atoms=0
+     t=5 alive=14 mean_x=  4.6 max_x=  6.6 atoms=0
+     t=6 alive=14 mean_x=  4.7 max_x=  6.7 atoms=0
+     t=7 alive=14 mean_x=  4.8 max_x=  6.8 atoms=0
+     t=8 alive=14 mean_x=  4.9 max_x=  6.9 atoms=0
+
+  Interpretation: mean_x rising then alive->0 = moves-then-dies; mean_x~4 = velocity not applied;
+  alive->0 at t=1 = removed at source. (See docs/amendments/g109_trace.md.)
+DONE
