@@ -1,2 +1,10 @@
 === G92: set-based readout (quiet + refractory + consolidation, n=6) ===
   seed 42: |E(stim)|=6 |C(ctrl)|=1 | horizon E_persist=1 C_persist=1
+  seed 7: |E(stim)|=10 |C(ctrl)|=7 | horizon E_persist=2 C_persist=5
+
+--- VERDICT ---
+G92a stim engram forms (|E|>=3)   : True
+G92b engram persists (>=0.5)      : False
+G92c selective (C<=1, E-C>=2)     : False
+G92: NULL/partial
+DONE
