@@ -20,3 +20,17 @@ nonlinear computer (it just can't compute over time). NULL = even instantaneous 
 readable → the nonlinearity does not create a usable interaction feature in the readable state; the
 substrate's computation is limited to single-channel nonlinear transforms (filter/demodulate), not
 multi-input logic. Honest either way. No post-hoc tuning.
+
+## RESULT (2026-06-03): NULL — but CONFOUNDED (atom-charge state doesn't encode the input)
+
+| seed | spatial XOR balanced-acc | single-input(A) acc |
+|------|--------------------------|---------------------|
+| 42 | 0.54 | 0.53 |
+| 7 | 0.50 | 0.48 |
+
+G81a ✗ AND G81b ✗ (sanity). The single-input sanity FAILED (A alone ≈ chance) — the atom-charge grid
+does not encode which region was driven, because firing resets charge and it decays fast (no signal
+at readout). So this is a READOUT confound, not a clean verdict: I cannot test XOR when the state
+doesn't even register the input. Fix (G82): read FREE-VIBRATION density (injected vibrations sit
+where placed → reliably encodes input; sanity should pass), so XOR cleanly tests whether the
+substrate's nonlinearity creates the interaction feature.
