@@ -37,15 +37,23 @@ def run(seed):
     for _ in range(SETTLE):
         tick(w, c.dt)
     object.__setattr__(c, 'lambda_gen', 0.0)
-    # clear atoms, inject a TIGHT cluster of vibrations -> forms a clustered atom group
-    if w.k_count:
-        w.k_alive[:w.k_count] = False
     from tools.run_bet093 import cull_free_vibrations
     cull_free_vibrations(w, keep_frac=0.0)
-    for _ in range(KA):
-        inject_tight(w, c, box, 15.0, n=14, sigma=0.6)   # all near x=15 (clustered)
-        for _ in range(2):
-            tick(w, c.dt)
+    # Use EXISTING settled atoms: pick KA level>=4 atoms and CLUSTER them tightly at x=15
+    K_ = w.k_count
+    al = np.where(w.k_alive[:K_] & (w.k_level[:K_] >= 4))[0]
+    rng = np.random.default_rng(seed)
+    if len(al) > KA:
+        al = rng.choice(al, KA, replace=False)
+    # deactivate all other atoms so only our KA are tracked
+    keep = set(int(i) for i in al)
+    for i in range(K_):
+        if w.k_alive[i] and int(i) not in keep:
+            w.k_alive[i] = False
+    for j, i in enumerate(al):
+        w.k_pos[i, 0] = 15.0 + (j - KA/2) * 0.4   # tight cluster around x=15
+        w.k_pos[i, 1] = box[1] / 2
+        w.k_vel[i] = 0.0
     xs0 = atom_xs(w); gv0 = gap_var(xs0)
     for _ in range(T):
         tick(w, c.dt)
