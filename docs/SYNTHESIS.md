@@ -42,10 +42,12 @@ representation: MATTER POSITION. An atom driven to a location holds it after rel
 12/12 atoms, drift<2 over 2000 ticks, identity stable), and a written cell A stays occupied while an
 unwritten cell B stays empty and a no-write control leaves A empty (selective, G116 PASS both seeds). So
 matter-position is the FIRST selective+persistent store on this substrate — the deadlock was
-REPRESENTATIONAL, not absolute. Scope (honest): a 1-bit presence store in an engineered cleared band
-(scaffold ~ §4.8 ports); content-addressable multi-pattern memory is the next frontier. The route out
-came from chasing and correcting three wrong transport claims (G107/G110 retracted) — the honesty
-discipline literally produced the breakthrough.
+REPRESENTATIONAL, not absolute. And it SCALES: with wide spacing (the G118-diagnosed fix for a systematic
+spatial error: G117 0.88/bit → G118 redundancy-immune → G119 spacing), a CLEAN multi-bit
+content-addressable matter memory recovers random patterns at 1.000/bit on both seeds (G119c, 5 patterns ×
+3 bits). Scope (honest): in an engineered cleared band (scaffold ~ §4.8 ports), read by presence-by-cell.
+The route out came from chasing and correcting three wrong transport claims (G107/G110 retracted) — the
+honesty discipline literally produced the breakthrough.
 
 ## The deep unification (G88–G107): no controllable middle regime [superseded in part by G116]
 NOTE: the "no signal is localized+persistent+mobile" framing below holds for ACTIVITY signals; G116 shows

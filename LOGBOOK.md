@@ -5043,3 +5043,14 @@ mechanisms and one invalid design (G114) caught and corrected; negative controls
 (G37→G38) respected. The discovery literally came from chasing and correcting wrong claims — the honesty
 discipline produced the win. All committed and pushed. Next: lighter multi-pattern harness → G119 clean
 multi-bit; then content-addressable matter memory at scale.
+
+## 2026-06-03 21:00 — Breakthrough CEMENTED: clean multi-bit matter memory (G119c PASS)
+
+Built a settle-once / state-restore harness (reusable infra; removes the re-settle + accumulation compute
+wall). With wide spacing (G118-diagnosed fix), full random-pattern test: per-bit accuracy 1.000 on BOTH
+seeds (G119c, 5 patterns × 3 bits). Matter-position is now a CLEAN, selective, persistent,
+content-addressable multi-bit memory — the first real memory on this substrate, where every activity-based
+store failed. Full chain: G115 persists → G116 1-bit selective (PASS) → G117 4-bit 0.88 → G118 redundancy
+fails (systematic spatial) → G119b/c wide spacing → 1.000/bit. The central deadlock is broken via a new
+representation (position, not activity), reached by correcting three wrong transport claims. Honest scope:
+engineered cleared band, presence-by-cell readout. Session G88–G119c complete; all committed and pushed.

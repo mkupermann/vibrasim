@@ -1,0 +1,8 @@
+=== G119c: full multi-bit matter memory, settle-once harness (K=3, 5 patterns, wide pitch) ===
+  seed 42: per-bit accuracy = 1.000 (chance 0.50)
+  seed 7: per-bit accuracy = 1.000 (chance 0.50)
+
+--- VERDICT ---
+G119c clean multi-bit (per-bit acc>=0.95 both seeds): True
+G119c: PASS - CLEAN multi-bit content-addressable matter memory (wide spacing); breakthrough cemented at scale
+DONE
