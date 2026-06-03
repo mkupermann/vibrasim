@@ -23,13 +23,15 @@ real-time, same-site transduction, not storage and not spatial transmission.
 
 | G107| can an engineered conduit add transport?               | NULL | cleared corridor delivers 0.0 far energy — packet binds to matter at source |
 
-**Transport question CLOSED with a cause:** the substrate is LOCAL-ONLY on both candidate channels — free
-vibrations (G105, absorbed) and charge along bridges (G106, decays). G107 finds the mechanism: a
-symbol-strength vibration packet CONDENSES into a stationary atom at the injection site before it can
-travel ("to send is to freeze") — so even a cleared corridor delivers nothing. A sparse non-binding
-excitation would propagate but is too weak to carry a symbol; the loss is at the SOURCE, not the path.
-Genuine transport would require moving a BOUND structure (a travelling bridge front along a pre-built
-"wire") — a structural build, not a property of the bare medium.
+**Transport — FREE carriers closed; slow driven-matter open (after two retractions).** Free carriers do
+not cross distance: vibrations are diffusive (velocity not conserved, G109), charge decays along bridges
+(G106). Two mechanism guesses were tested and RETRACTED: "condenses into an atom" (G107 → refuted by G108,
+no atoms form) and "overdamped medium where nothing travels" (G110 → refuted by G111). The measured truth
+(G109–G111): free excitations don't propagate, but a BOUND atom under sustained drive moves coherently at
+~3% of nominal speed (mass-scaled; NOT bond-restrained — cutting its bridges changes nothing). So
+driven-MATTER transport across the box (~140 ticks) is an open, untested avenue, not a proven
+impossibility. The short-window G105–G108 nulls used free/undriven carriers. The CO-LOCATED codec (G104)
+is unaffected.
 
 **End-to-end demonstration achieved (G104), with scope set by G105:** a text string is written into the
 substrate as localized excitations and read back verbatim on both seeds, no LLM/transformer/embedding —

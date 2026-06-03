@@ -1,0 +1,9 @@
+=== G111: bonded vs bridge-cut atom motion (vx=6 re-asserted; ballistic ~3.0/tick) ===
+  seed 42 BONDED: x0=0.11 -> x8=0.91 (net 0.80); traj=[0.21, 0.31, 0.41, 0.51, 0.61, 0.71, 0.81, 0.91]
+  seed 42 BRIDGE-CUT(n=3): x0=0.11 -> x8=0.91 (net 0.80); traj=[0.21, 0.31, 0.41, 0.51, 0.61, 0.71, 0.81, 0.91]
+  seed 7 BONDED: x0=0.17 -> x8=0.97 (net 0.80); traj=[0.27, 0.37, 0.47, 0.57, 0.67, 0.77, 0.87, 0.97]
+  seed 7 BRIDGE-CUT(n=3): x0=0.17 -> x8=0.97 (net 0.80); traj=[0.27, 0.37, 0.47, 0.57, 0.67, 0.77, 0.87, 0.97]
+
+  Interpretation: cut atom travels (net >> bonded) = lattice atoms are BOND-RESTRAINED, not
+  intrinsically immobile. Cut atom also stuck = motion damped regardless of bonds. See g111_unbonded.md.
+DONE
