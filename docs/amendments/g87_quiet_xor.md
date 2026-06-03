@@ -17,3 +17,16 @@ PASS = G87a -> the quiet substrate computes instantaneous spatial XOR: genuine n
 logic (the overlap binding provides the A*B interaction), no memory needed. NULL with sanity PASS =
 inputs readable but no usable nonlinear interaction (linear-only spatial computation). INCONCLUSIVE
 if sanity fails. Honest either way. No post-hoc tuning.
+
+## RESULT (2026-06-03): NULL (sanity PASS) — quiet substrate is a LINEAR spatial reader, no XOR
+
+| seed | single-input(A) | spatial XOR |
+|------|-----------------|-------------|
+| 42 | 1.00 | 0.52 |
+| 7 | 1.00 | 0.49 |
+
+Sanity PASS (1.00 both) confirms G83: a quiet substrate reads input perfectly. But XOR ≈ chance —
+the overlap region does NOT provide a usable A*B interaction. The quiet substrate does LINEAR
+instantaneous spatial computation (reads A, reads B, sums them) but NOT nonlinear multi-input logic.
+Its proven nonlinearity (saturation/demodulation, G74/G75) is SINGLE-CHANNEL (one accumulator), not
+a cross-input interaction. Precise bound: instantaneous spatial computation is LINEAR-only.
