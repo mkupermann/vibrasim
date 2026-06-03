@@ -1,0 +1,9 @@
+=== G107: engineered cleared corridor — transport over distance? ===
+  seed 42: far_energy=0.0 | far_decode=0.00 (chance=0.50, n=220)
+  seed 7: far_energy=0.0 | far_decode=0.00 (chance=0.50, n=220)
+
+--- VERDICT ---
+G107a packet arrives (far_energy>0 both): False
+G107b symbol survives (decode>=0.85 both): False
+G107: NULL - even a cleared corridor does not deliver a packet to the far end
+DONE

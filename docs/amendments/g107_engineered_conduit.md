@@ -25,4 +25,32 @@ PASS = G107a AND G107b → engineered conduit enables genuine transport over dis
 G107a (energy arrives but symbol scrambled). NULL if neither (even a cleared corridor doesn't transport).
 
 ## Result
-_(pending run)_
+| seed | far energy (x>16) | far decode |
+|------|-------------------|------------|
+| 42   | 0.0               | 0.00       |
+| 7    | 0.0               | 0.00       |
+(K=2, chance 0.5, n=220)
+
+G107a (packet arrives): **False** · G107b (symbol survives): **False** → **VERDICT: NULL**
+
+## Finding — "to send is to freeze": dense excitations condense into stationary matter at the source
+Even with a cleared corridor, the far region receives EXACTLY zero free-vibration energy on both seeds.
+This is not absorption en route and not a velocity-integration bug: `move_vibrations` correctly advances
+`s_pos += s_vel·dt`, so a packet launched at x=4 with vx=6 would reach x≈22 in PROP=6 ticks IF it stayed
+a free packet. It does not — a dense n=14 injection (σ=0.8) BINDS into a stationary atom at the source
+within a tick or two (the same binding that builds the lattice), and that atom, sitting in the corridor
+band, is then cleared. Nothing ever leaves x≈4 as a moving carrier.
+
+This is the mechanistic root of the whole transport closure (G105/G106/G107): **a signal dense enough to
+encode a symbol is dense enough to condense into matter where it is injected**, so it cannot propagate.
+"To send is to freeze" — the transport analogue of the substrate's other binding tensions
+("write = leak", "maintenance = contamination"). A sparse-enough excitation that did NOT bind would
+propagate ballistically (move_vibrations works), but it would be too weak to carry a symbol against
+background — the same density/transport trade. An engineered corridor cannot help because the loss is at
+the SOURCE, not along the path.
+
+The transport question is therefore closed with a CAUSE: the bare substrate has no symbol-strength
+propagating carrier. Genuine transport would require a mechanism that moves a BOUND structure (e.g. a
+travelling bridge front along a pre-built atom "wire") rather than a free packet — a substantial
+structural build, logged as an open frontier, not a property of the medium. The validated communication
+result stands as a CO-LOCATED spatial codec (G104), now with its boundary fully understood.
