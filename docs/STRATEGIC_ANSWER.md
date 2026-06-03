@@ -27,10 +27,29 @@ experiments and controls. Honest verdicts; established methods named as such.
 - **A conceptual model** of physical/analog spatial computation — valuable as theory and as an analog-
   HARDWARE design target (where parallel physics is genuinely free/fast), unreachable as a software speedup.
 
+## The no-LLM toolkit's PRECISE boundary (G137)
+It generalizes relations that are LINEAR in per-symbol features (comparison v[i]>v[j], weighted votes —
+BET-130/132). It is at CHANCE on NONLINEAR composition (modular sum / XOR-like — G137) and bigram-level on
+open language (G136). So the niche is "linearly-composable structured relations + retrieval + rule-based
+synthesis," not open language. (Also: tasks whose answer depends only on the previous token are
+bigram-trivial and prove nothing — a caveat for reading the BET headline numbers.)
+
 ## Why "human-like" is out of reach here
-Human-like language needs open-domain understanding/generalization. The physics can't learn; the classical
-no-LLM methods plateau at local statistics on real text — which is exactly the gap transformers/LLMs were
-built to cross. No mix of these pieces crosses it; that is an established result, not a missing experiment.
+Human-like language needs open-domain understanding and NONLINEAR/contextual generalization. The physics
+can't learn; the classical no-LLM readout is linear, so it plateaus at local statistics / linear
+composition. That is exactly the gap transformers cross; no mix of these pieces crosses it — an established
+result, not a missing experiment.
+
+## On building HARDWARE (the one path that could give the substrate a real edge)
+Honest: you CAN build a parallel hardware version (FPGA/ASIC running the EQMOD update rules with each
+spatial cell as a processing element, updating simultaneously — the physics that is serial in Python
+becomes parallel in silicon). BUT it would be FAST AT NOTHING USEFUL: G133–G135 proved the physics computes
+no useful function (memory only). A fast implementation of an empty computation is still empty. The real,
+established analog-computing substrates that DO compute useful things are DIFFERENT from EQMOD's physics:
+memristor crossbars (O(1) analog matrix-vector products), coupled-oscillator / Ising machines (combinatorial
+optimization — the closest match to EQMOD's "vibrations"), and reaction-diffusion chemical computers
+(spatial/geometry problems). Pursue those if the goal is physical computation; EQMOD-specific hardware is
+not justified by any computational result here.
 
 ## The only paths that could change this (each a real decision, not an experiment)
 - **Allow an LLM/transformer** (drop the charter constraint) — then the substrate is a peripheral.
