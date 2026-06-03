@@ -1,0 +1,16 @@
+=== G100: channel bit rate (min ticks/symbol, K=8) ===
+  seed 42 WIN=8: symbol-acc=1.00 (chance=0.125, n=240)
+  seed 42 WIN=4: symbol-acc=1.00 (chance=0.125, n=240)
+  seed 42 WIN=2: symbol-acc=1.00 (chance=0.125, n=240)
+  seed 42 WIN=1: symbol-acc=1.00 (chance=0.125, n=240)
+  seed 7 WIN=8: symbol-acc=1.00 (chance=0.125, n=240)
+  seed 7 WIN=4: symbol-acc=1.00 (chance=0.125, n=240)
+  seed 7 WIN=2: symbol-acc=1.00 (chance=0.125, n=240)
+  seed 7 WIN=1: symbol-acc=1.00 (chance=0.125, n=240)
+
+--- VERDICT ---
+G100a sanity (WIN=8 acc>=0.90 both seeds): True
+G100b min WIN >=0.90 (both)              : 1
+        -> bit rate = log2(8)/1 = 3.00 bits per injection tick
+G100: PASS - channel bandwidth characterised; reliable down to WIN=1 ticks/symbol
+DONE
