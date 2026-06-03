@@ -1,0 +1,10 @@
+﻿=== G79: whole-substrate reservoir (27-node grid state, held-out) ===
+  seed 42 (n=200): XOR balanced-acc=0.57 (raw 0.58) | memory balanced-acc=0.50
+  seed 7 (n=200): XOR balanced-acc=0.48 (raw 0.48) | memory balanced-acc=0.42
+
+--- VERDICT ---
+G79a reservoir XOR balanced-acc >=0.65 (both) : False
+G79b fading memory >=0.65 (both)              : False
+
+G79: NULL - substrate reservoir does not generalize XOR above chance
+DONE
