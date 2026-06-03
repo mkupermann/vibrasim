@@ -1,0 +1,9 @@
+=== G127: store+recall hex nibbles (edge-margin fix: cells x=6,11,16,21) ===
+  stored : ['0xe', '0x4', '0xa', '0x7']
+  seed 42: recalled=['0xe', '0x4', '0xa', '0x7'] exact=True
+  seed 7: recalled=['0xe', '0x4', '0xa', '0x7'] exact=True
+
+--- VERDICT ---
+G127 all nibbles recalled exactly (both seeds): True
+G127: PASS - CLEAN store+recall of written hex symbols in matter memory (edge-margin fix); deep goal demonstrated, no LLM
+DONE
