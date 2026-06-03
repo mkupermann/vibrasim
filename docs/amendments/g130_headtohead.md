@@ -19,4 +19,25 @@ PASS = both → the activity-spreads / position-stays asymmetry that underlies t
 in a single run. (Names established quantities; the contribution is the direct in-substrate demonstration.)
 
 ## Result
-_(pending run)_
+| seed | charge A0→A | charge B | spread B/A | B-region atom gain |
+|------|-------------|----------|------------|--------------------|
+| 42   | 1326 → 462  | 0.0      | 0.00       | -74                |
+| 7    | 1368 → 558  | 0.0      | 0.00       | -89                |
+
+G130a (activity spreads, B/A>=0.2): **False** · G130b (position stays): True → **VERDICT: NULL**
+
+## Finding — REFINES the mechanism: "activity spreads" is REGIME-specific, not same-conditions
+In the QUIET substrate the deposited charge did NOT spread to the neighbour (B-charge 0.0); it decayed in
+place — consistent with G106 (charge doesn't propagate across distance). So the simple framing "activity
+spreads while position stays, in the same conditions" is WRONG: in the quiet regime, charge is local too.
+The activity-memory failure (write=leak, G88–G96) was an ACTIVE-substrate phenomenon — the self-ignition
+broadcast cascade in a substrate full of self-activity (the G83 root) — not generic charge diffusion.
+
+Corrected mechanism of the discovery (6th self-correction): the two representations require INCOMPATIBLE
+REGIMES. Activity-memory needs the ACTIVE substrate (atoms need flux to write/sustain) — and that active
+regime self-contaminates → fails. Matter-position works in the QUIET substrate (atoms stay put, no
+self-activity) — and that quiet regime cannot support an activity write. So the escape is not "matter
+diffuses slower than charge in the same conditions"; it is "matter-position is readable+stable in the
+QUIET regime, which is the only regime without the contaminating self-activity." The breakthrough
+(position memory works where activity failed) STANDS; the one-line mechanistic story is corrected to a
+regime statement, not a same-conditions spread asymmetry.
