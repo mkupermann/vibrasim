@@ -20,4 +20,22 @@ PASS = G95a AND G95b AND G95c → structural memory is selective + persistent wh
 Else NULL/PARTIAL.
 
 ## Result
-_(pending run)_
+| seed | stim_end | stim_horizon | ctrl_horizon |
+|------|----------|--------------|--------------|
+| 42   | 2        | 2            | 2            |
+| 7    | 3        | 3            | 2            |
+
+G95a False · G95b False · G95c False → **VERDICT: NULL**
+
+## Finding — there is no exploitable engram topology
+The largest connected component of strong bridges in the stim region is only 2–3 atoms — i.e. the
+"engram" is a couple of ISOLATED strong-bridge pairs, never a connected mesh (G95a needed >=4). Tight
+spatial injection does NOT build a percolating cluster: atoms bridge to a nearest neighbour or two and
+stop. Control's largest component is 2 — identical scattered pairs. Topology does not separate signal
+from contamination because the signal has no distinctive topology.
+
+Combined with G94 (non-selective by COUNT) this closes the bridge-memory question on two independent
+readouts: the substrate's consolidated-bridge memory is non-selective for persistence by strong-bridge
+count AND by connected-component structure. Whatever survives into POST — engram or cascade
+contamination — survives as the same scattered strong-bridge pairs. The deadlock is structural, not a
+readout artifact.
