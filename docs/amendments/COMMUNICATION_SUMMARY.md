@@ -13,6 +13,7 @@ transduction, not storage.
 | G98 | can it carry a message free-running (decay clears ISI)? | NULL | sub-chance (0.17); vibrations accumulate & blow up |
 | G99 | can it carry a message WITH a per-symbol reset?         | PASS | alphabet K=16 (4 bits/symbol), acc 0.94–1.00 both seeds |
 | G100| how few ticks per symbol (bit rate)?                    | PASS | WIN=1 tick/symbol @ 1.00 → 3–4 bits per injection tick |
+| G101| robust to interference?                                 | PASS | 1.00 up to interferer=signal (random-location noise; not adversarial) |
 
 Channel spec (quiet substrate + active reset): ~10 parallel spatial channels × up to 4 bits/symbol ×
 1 tick/symbol. Bounded everywhere by the reset requirement, never by integration time.
