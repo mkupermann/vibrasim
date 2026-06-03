@@ -1,0 +1,9 @@
+=== G101: channel noise robustness (clean-trained decoder under interference) ===
+  seed 42: m=0:1.00 m=4:1.00 m=8:1.00 m=14:1.00 (chance=0.125)
+  seed 7: m=0:1.00 m=4:1.00 m=8:1.00 m=14:1.00 (chance=0.125)
+
+--- VERDICT ---
+G101a sanity (m=0 transfer >=0.90 both): True
+G101b max interferer m at >=0.90 (both): 14
+G101: PASS - channel tolerates interference up to m=14 (ratio 1.00) at >=0.90
+DONE
