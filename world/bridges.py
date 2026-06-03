@@ -58,6 +58,15 @@ def form_bridges(world) -> int:
     ci = atom_idx[ii[close]]
     cj = atom_idx[jj[close]]
 
+    # G86: engineered modularity at the BRIDGE level — no bridge may form across the
+    # compartment boundary plane (x = compartment_boundary). Disconnects stim from control
+    # so charge cannot percolate along the lattice graph. 0 = off.
+    bx = getattr(cfg, 'compartment_boundary', 0.0)
+    if bx > 0 and len(ci) > 0:
+        same_side = (world.k_pos[ci][:, 0] < bx) == (world.k_pos[cj][:, 0] < bx)
+        ci = ci[same_side]
+        cj = cj[same_side]
+
     # Check valence: both atoms must have room
     bonds_i = world.k_bond_count[ci]
     bonds_j = world.k_bond_count[cj]
