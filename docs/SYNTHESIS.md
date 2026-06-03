@@ -16,11 +16,12 @@ deadlock-BREAKING PROCESS, not guaranteed success; this document is that process
    self-repairing, size-homeostatic structure (G53-G55) — the rigidity ceiling is a tunable frontier.
 
 ## What the substrate CANNOT do (robust, causal negatives)
-1. **No selective persistent MEMORY** — exhausted across ~70 experiments (BET-089→102, G33-G73,
-   G64-G86): every write mechanism, firing rule, plasticity rule, consolidation, sleep-sweep, charge
-   gate, quiet substrate, local emission, AND physical disconnection fails identically. CAUSE: the
-   substrate has NO STABLE BLANK STATE — any region with atoms develops latched bridge activity, so
-   there is never a written-vs-unwritten contrast. write=leak is fundamental.
+1. **No selective persistent MEMORY *in an ACTIVITY representation*** — exhausted across ~70 experiments
+   (BET-089→102, G33-G73, G64-G96): every write mechanism, firing rule, plasticity rule, consolidation,
+   sleep-sweep, charge gate, quiet substrate, local emission, AND physical disconnection fails
+   identically. CAUSE: write=leak / maintenance=contamination — activity spreads. **[BOUNDED: this holds
+   only for activity-based stores. A MATTER-POSITION representation BREAKS it — see the BREAKTHROUGH
+   section (G114–G121): the first selective+persistent+multi-bit memory on the substrate.]**
 2. **No TEMPORAL / reservoir computation** — held-out temporal XOR ≈ chance via every reservoir state
    (proto-cell interior G78, firing lattice G79, bridge strengths G80). CAUSE: the substrate can't
    hold a high-dimensional fading memory; the same memory wall.
