@@ -1,0 +1,1 @@
+=== G117: multi-bit content memory via matter position (K=4 cells, 6 random patterns) ===
