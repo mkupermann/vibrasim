@@ -1,0 +1,2 @@
+=== G94: localized maintenance (cull control side; feed stim) ===
+  [MAINT]   seed 42: atoms 23->5 (0.22) | bridges 6->1 (0.17) | ctrl_persist=55
