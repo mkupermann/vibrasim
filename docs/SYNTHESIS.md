@@ -41,12 +41,12 @@ persistent. Signal behaviour is density-dependent and offers no usable middle:
   sustaining an engram drives self-activity that contaminates elsewhere ("maintenance = contamination").
   You cannot keep a signal LOCAL.
 - **It does not TRAVEL.** A symbol-strength excitation never reaches the far end at ANY density — free
-  vibrations (G105/G107/G108) and charge (G106). MECHANISM (measured, G109): free vibrations are
-  QUASI-STATIONARY — an injected directional velocity of 6 yields only ~0.1 units/tick of drift (velocity
-  is not conserved; motion is thermal/diffusive), so the carrier stays within ~1 unit of its source and
-  never traverses. (My earlier "condenses into a stationary atom" guess, G107, was refuted by G108 — no
-  atoms form — and retracted; G109 traced the real cause: the carrier does not move, it does not die.)
-  You cannot make a signal MOVE.
+  vibrations (G105/G107/G108) and charge (G106). MECHANISM (measured, G109–G110): the substrate is an
+  OVERDAMPED medium. A free vibration given velocity 6 drifts ~0.1 units/tick (G109); a BOUND ATOM given
+  velocity 6 moves only ~0.5 units in 8 ticks while its velocity bleeds away (G110). NOTHING — free
+  excitation or bound matter — travels coherently; every excitation stays essentially where it is created.
+  (My earlier "condenses into a stationary atom" guess, G107, was refuted by G108 and retracted; G109/G110
+  traced the real cause.) You cannot make a signal MOVE.
 Between the two, there is no operating point that is simultaneously localized, persistent, and mobile —
 so the substrate gets selective MEMORY (needs localized + persistent) and TRANSPORT (needs mobile) both
 wrong. What it DOES do well needs only ONE of the three at a time: co-located readout (localized,
