@@ -1,0 +1,9 @@
+=== G129: store+recall a WORD in matter memory (char-by-char, 2 rows/byte) ===
+  stored text: 'EQMOD'
+  seed 42: recalled='EQMOD' exact=True
+  seed 7: recalled='EQMOD' exact=True
+
+--- VERDICT ---
+G129 word recalled exactly (both seeds): True
+G129: PASS - the substrate writes and recalls a WORD from persistent matter memory (no LLM)
+DONE
