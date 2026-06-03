@@ -20,3 +20,21 @@ breaks the write=leak deadlock that no plasticity/firing knob could. This would 
 milestone — replicate across seeds before any claim. NULL = the deadlock persists even quiet (the
 write still needs a spreading field that contaminates, or culling starves the write) -> the deadlock
 is deeper than background activity. Honest either way. No post-hoc tuning.
+
+## RESULT (2026-06-03): NULL — control latches via FAST EMISSION TRANSIT (emit_speed=30 beats the cull)
+
+| phase | stim_mean | ctrl_mean |
+|-------|-----------|-----------|
+| STIM | 6.03 | 5.60 |
+
+stim-frac 0.00 — NOT because the write failed (it didn't: stim=6.03, lattice + write intact) but
+because CONTROL ALSO latched (ctrl=5.60) even with the background culled EVERY tick and only stim
+injected (LOC arm). Mechanism: emit_speed=30, dt=0.5 → emitted vibrations travel 15 units in ONE
+tick = exactly the stim→control distance, so stim's firing emissions reach control BEFORE the next
+cull, charge control atoms → control co-fires → control bridges latch. The contamination is FAST
+EMISSION TRANSIT, faster than the cull interval — quieting the background alone can't stop it.
+
+**The untested fix.** G64 tried LOCAL emission (low emit_speed) but on the ACTIVE substrate (background
+drowned it). G84 quieted the substrate but emit_speed=30 still reached control. The combination —
+QUIET substrate (control not self-active) + LOCAL emission (write field stays near stim, never reaches
+control) — addresses BOTH routes and is untested. G85.
