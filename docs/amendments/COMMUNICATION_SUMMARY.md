@@ -19,6 +19,11 @@ real-time, same-site transduction, not storage and not spatial transmission.
 | G103| fix it with a repetition code?                          | NULL | fixes random errors only; seed 7 errors are systematic |
 | G104| recover text VERBATIM by respecting the pitch (K=4)?    | PASS | `EQMOD SUBSTRATE SPEAKS` recovered exactly, both seeds, no ECC |
 | G105| is it transport over DISTANCE or co-located readout?    | PARTIAL | far-end = chance; co-located = 1.00 → CO-LOCATED, not transport |
+| G106| does CHARGE transport over distance (bridge graph)?     | PARTIAL | far charge energy = 0.0; co-located = 1.00 → charge is local too |
+
+**Transport question CLOSED:** the substrate is LOCAL-ONLY on both candidate channels — free vibrations
+(G105, absorbed) and charge along bridges (G106, decays before crossing). No transmission over distance;
+genuine transport would need an engineered low-loss conduit (a structural addition).
 
 **End-to-end demonstration achieved (G104), with scope set by G105:** a text string is written into the
 substrate as localized excitations and read back verbatim on both seeds, no LLM/transformer/embedding —
