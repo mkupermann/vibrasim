@@ -1,10 +1,11 @@
-# Communication programme summary (G97–G99)
+# Communication programme summary (G97–G105)
 
 ## One-line
-The quiet substrate is a usable real-time COMMUNICATION line — multiple independent spatial channels,
-carrying multi-symbol messages at ~4 bits/symbol — provided each symbol is actively reset. This is the
-constructive complement to the closed memory deadlock: communication-without-an-LLM works as real-time
-transduction, not storage.
+The quiet substrate is a usable CO-LOCATED spatial codec — multiple independent spatial channels at one
+site, encoding multi-symbol messages at ~4 bits/symbol and reading them back in the same tick — provided
+each symbol is actively reset. NOT transport across distance (G105): vibrations are absorbed locally.
+This is the constructive complement to the closed memory deadlock: encode-without-an-LLM works as
+real-time, same-site transduction, not storage and not spatial transmission.
 
 ## The arc
 | G   | question | verdict | key number |
@@ -16,11 +17,15 @@ transduction, not storage.
 | G101| robust to interference?                                 | PASS | 1.00 up to interferer=signal (random-location noise; not adversarial) |
 | G102| transmit a real ASCII string?                           | PARTIAL | seed 7 verbatim, seed 42 garbled — K=16 violates the pitch |
 | G103| fix it with a repetition code?                          | NULL | fixes random errors only; seed 7 errors are systematic |
-| G104| transmit text VERBATIM by respecting the pitch (K=4)?   | PASS | `EQMOD SUBSTRATE SPEAKS` recovered exactly, both seeds, no ECC |
+| G104| recover text VERBATIM by respecting the pitch (K=4)?    | PASS | `EQMOD SUBSTRATE SPEAKS` recovered exactly, both seeds, no ECC |
+| G105| is it transport over DISTANCE or co-located readout?    | PARTIAL | far-end = chance; co-located = 1.00 → CO-LOCATED, not transport |
 
-**End-to-end demonstration achieved (G104):** a text string is written into the substrate physics and
-read back verbatim on both seeds, no LLM/transformer/embedding — using K=4 to stay within G97's pitch.
-G102/G103 are the instructive failures (operating past the pitch; coding can't fix systematic confusion).
+**End-to-end demonstration achieved (G104), with scope set by G105:** a text string is written into the
+substrate as localized excitations and read back verbatim on both seeds, no LLM/transformer/embedding —
+using K=4 to stay within G97's pitch. This is CO-LOCATED encode/decode (same site, same tick), NOT
+transmission across distance — G105 shows free vibrations are absorbed locally and do not carry the symbol
+downstream. G102/G103 are the instructive failures (operating past the pitch; coding can't fix systematic
+confusion).
 
 Channel spec (quiet substrate + active reset): ~10 parallel spatial channels × up to 4 bits/symbol ×
 1 tick/symbol. Bounded everywhere by the reset requirement, never by integration time.
@@ -44,6 +49,8 @@ The substrate's nature is a fast, leaky, resettable medium — good for transduc
 - docs/patterns/parallel_spatial_channel.md — the channel recipe + caveats.
 
 ## Open next
-- G100+: couple the channel to the proto-cell analog filter (a real receiver front-end: demodulate an
-  amplitude-modulated symbol stream), or characterise bit-rate vs reset cost. Optional; the core
-  communication primitive (encode → transmit → decode, no LLM, no persistence) is demonstrated.
+- The core primitive (encode → read-back at one site → decode, no LLM, no persistence) is demonstrated
+  and SCOPED (co-located, not transport). A genuine TRANSMISSION line would need a carrier that survives
+  propagation — G105 shows free vibrations don't. Open question: does any substrate quantity (a bridge
+  wavefront, a charge front) propagate far enough to carry a symbol? Until then the honest claim is a
+  co-located spatial codec, not a transmission line.
