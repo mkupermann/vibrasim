@@ -23,4 +23,24 @@ If G106a → transport exists via charge. If only G106b → substrate is local-o
 (vibration G105 + charge G106); the co-located-codec framing is final. Chance = 0.25.
 
 ## Result
-_(pending run)_
+| seed | far (x>20) | co-located | far charge energy |
+|------|-----------|------------|-------------------|
+| 42   | 0.00      | 1.00       | 0.0 |
+| 7    | 0.00      | 1.00       | 0.0 |
+(K=4, chance 0.25)
+
+G106a (charge transport): **False** · G106b (co-located sanity): **True** → **VERDICT: PARTIAL**
+
+## Finding — charge is local-only too; the transport question is CLOSED
+The far-region charge energy is literally 0.0 on both seeds — deposited charge never reaches x>20. It
+propagates only to immediately bridged neighbours and decays within a few ticks; the settled bridge graph
+does not carry it across the box (atoms cluster; the graph is fragmented over distance). Co-located
+readout is perfect (1.00), so the deposit is distinguishable — it simply does not travel.
+
+**The substrate is LOCAL-ONLY on both candidate transport channels:** free vibrations (G105, absorbed
+locally) and charge along bridges (G106, decays before crossing). There is no transmission over distance.
+This definitively closes the transport question and finalises the communication framing: the G97–G104
+result is a CO-LOCATED spatial codec — symbols written as localized excitations and read back at the same
+site in the same tick — not a transmission line. The verbatim-text demonstration (G104) stands within
+that honest scope. To get genuine transport one would need an engineered low-loss conduit (a maintained
+bridge "wire" or a reflecting waveguide) — a structural addition, not a property the bare substrate has.

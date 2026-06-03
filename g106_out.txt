@@ -1,0 +1,9 @@
+=== G106: charge transport across distance (far x>20) vs co-located ===
+  seed 42: far(x>20)=0.00 | co-located=1.00 (chance=0.25, n=168, far_charge_energy=0.0)
+  seed 7: far(x>20)=0.00 | co-located=1.00 (chance=0.25, n=161, far_charge_energy=0.0)
+
+--- VERDICT ---
+G106a charge transport (far >=0.85 both): False
+G106b co-located sanity (>=0.85 both)   : True
+G106: PARTIAL - charge deposited distinguishably but does NOT transport to the far end; substrate is LOCAL-ONLY on both channels (vibration G105 + charge G106) -> co-located codec is final
+DONE
