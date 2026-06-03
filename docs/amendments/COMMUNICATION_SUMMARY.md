@@ -23,15 +23,14 @@ real-time, same-site transduction, not storage and not spatial transmission.
 
 | G107| can an engineered conduit add transport?               | NULL | cleared corridor delivers 0.0 far energy — packet binds to matter at source |
 
-**Transport — FREE carriers closed; slow driven-matter open (after two retractions).** Free carriers do
-not cross distance: vibrations are diffusive (velocity not conserved, G109), charge decays along bridges
-(G106). Two mechanism guesses were tested and RETRACTED: "condenses into an atom" (G107 → refuted by G108,
-no atoms form) and "overdamped medium where nothing travels" (G110 → refuted by G111). The measured truth
-(G109–G111): free excitations don't propagate, but a BOUND atom under sustained drive moves coherently at
-~3% of nominal speed (mass-scaled; NOT bond-restrained — cutting its bridges changes nothing). So
-driven-MATTER transport across the box (~140 ticks) is an open, untested avenue, not a proven
-impossibility. The short-window G105–G108 nulls used free/undriven carriers. The CO-LOCATED codec (G104)
-is unaffected.
+**Transport — FREE carriers closed; slow driven-MATTER transport DEMONSTRATED (after three retractions).**
+Free carriers do not cross distance: vibrations are diffusive (velocity not conserved, G109), charge
+decays along bridges (G106). But BOUND matter does: continuously-driven atoms traverse >20 units alive
+with their y/symbol coordinate preserved (drift <0.4; G112 PASS, both seeds), at ~3% nominal speed
+(mass-scaled, NOT bond-restrained, G110/G111). Three mechanism claims were tested and RETRACTED on the way
+("condenses into an atom" G107→G108; "overdamped, nothing travels" G110→G111; the general "transport
+closed" framing G112). So the substrate has TWO communication modes: a fast CO-LOCATED codec (G104) and a
+slow driven-MATTER transmission line (G112). Transport is OPEN, bounded by speed not possibility.
 
 **End-to-end demonstration achieved (G104), with scope set by G105:** a text string is written into the
 substrate as localized excitations and read back verbatim on both seeds, no LLM/transformer/embedding —

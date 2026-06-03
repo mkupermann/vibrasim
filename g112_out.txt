@@ -1,0 +1,17 @@
+=== G112: driven-matter transport (drive 4 atoms +x for 260 ticks, far x>20.0) ===
+  seed 42:
+     x0=  0.1 alive=True xf=   4.1 arrived_tick=199 ydrift=0.37
+     x0=  0.1 alive=True xf=   4.1 arrived_tick=199 ydrift=0.35
+     x0=  0.2 alive=True xf=   4.2 arrived_tick=198 ydrift=0.38
+     x0=  0.8 alive=True xf=   4.8 arrived_tick=192 ydrift=0.18
+  seed 7:
+     x0=  0.2 alive=True xf=   4.2 arrived_tick=199 ydrift=0.3
+     x0=  0.5 alive=True xf=   4.5 arrived_tick=196 ydrift=0.14
+     x0=  0.5 alive=True xf=   4.5 arrived_tick=195 ydrift=0.26
+     x0=  0.6 alive=True xf=   4.6 arrived_tick=195 ydrift=0.26
+
+--- VERDICT ---
+G112a any driven atom reached far side alive: True
+G112b y (symbol) preserved on arrivals (<3) : True
+G112: PASS - slow driven MATTER transports across distance with y/symbol preserved (the open avenue is real)
+DONE
