@@ -14,6 +14,13 @@ transduction, not storage.
 | G99 | can it carry a message WITH a per-symbol reset?         | PASS | alphabet K=16 (4 bits/symbol), acc 0.94–1.00 both seeds |
 | G100| how few ticks per symbol (bit rate)?                    | PASS | WIN=1 tick/symbol @ 1.00 → 3–4 bits per injection tick |
 | G101| robust to interference?                                 | PASS | 1.00 up to interferer=signal (random-location noise; not adversarial) |
+| G102| transmit a real ASCII string?                           | PARTIAL | seed 7 verbatim, seed 42 garbled — K=16 violates the pitch |
+| G103| fix it with a repetition code?                          | NULL | fixes random errors only; seed 7 errors are systematic |
+| G104| transmit text VERBATIM by respecting the pitch (K=4)?   | PASS | `EQMOD SUBSTRATE SPEAKS` recovered exactly, both seeds, no ECC |
+
+**End-to-end demonstration achieved (G104):** a text string is written into the substrate physics and
+read back verbatim on both seeds, no LLM/transformer/embedding — using K=4 to stay within G97's pitch.
+G102/G103 are the instructive failures (operating past the pitch; coding can't fix systematic confusion).
 
 Channel spec (quiet substrate + active reset): ~10 parallel spatial channels × up to 4 bits/symbol ×
 1 tick/symbol. Bounded everywhere by the reset requirement, never by integration time.
