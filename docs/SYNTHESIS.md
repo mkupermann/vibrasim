@@ -115,4 +115,4 @@ parallel_spatial_channel · driven_matter_transport · 01-which-constraint-binds
 
 ## Sub-summaries
 MEMORY_PROGRAMME_SUMMARY (+G88–G96 addendum) · PROTOCELL_SUMMARY · ANALOG_COMPUTER_SUMMARY ·
-COMMUNICATION_SUMMARY (G97–G104) · FINDINGS_SUMMARY (+4 addenda).
+COMMUNICATION_SUMMARY (G97–G108) · MATTER_MEMORY_SUMMARY (G110–G121) · FINDINGS_SUMMARY (+4 addenda).
