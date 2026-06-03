@@ -23,4 +23,25 @@ If G105a holds → "transmission" language is justified. If only G105b holds →
 wording to "co-located spatial readout," not transmission over distance. Chance = 0.25.
 
 ## Result
-_(pending run)_
+| seed | far-end (x>16) | co-located (full box) |
+|------|----------------|-----------------------|
+| 42   | 0.24 (chance)  | 1.00 |
+| 7    | 0.29 (chance)  | 1.00 |
+(K=4, chance 0.25, n=240)
+
+G105a (transmission over distance): **False** · G105b (co-located sanity): **True** → **VERDICT: PARTIAL**
+
+## Finding — it is CO-LOCATED spatial readout, NOT transmission over distance (correcting my own wording)
+The symbol is perfectly encoded and recovered at the injection site (co-located 1.00) but the far region
+decodes at CHANCE (0.24, 0.29). Even with a +x launch velocity, the free vibrations do not arrive
+downstream carrying the symbol — they are absorbed into atoms / damped locally within a few ticks rather
+than propagating ballistically across the box. The substrate does NOT transport a signal across distance.
+
+**Honest correction to the communication claim.** The G97–G104 "channel" is a SPATIALLY-MULTIPLEXED,
+CO-LOCATED input/output interface: a symbol written as a localized excitation is recoverable in the same
+tick at the SAME site by a linear decoder. The verbatim-text result (G104) stands — you can encode text
+as substrate states and read it back exactly — but it is encode-and-read-back at one place, NOT
+transmission/transport over a distance. Wording like "transmitted through / transported by the substrate"
+overclaims and is corrected to "co-located spatial codec / addressable spatial I/O" in g104,
+COMMUNICATION_SUMMARY, SYNTHESIS, and the pattern. This is the kind of claim the honesty discipline exists
+to catch: the demonstration is real but smaller than "transmission" implied.

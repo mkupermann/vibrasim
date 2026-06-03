@@ -1,11 +1,13 @@
-# Pattern — Parallel spatial channel (quiet-substrate real-time MIMO line)
+# Pattern — Parallel spatial codec (quiet-substrate co-located MIMO readout)
 
 ## What it is
 The quiet substrate (free-vibration background culled, `lambda_gen=0`) acts as a clean, high-resolution
-PARALLEL communication line: multiple spatially-separated input sites each carry an independent
-information stream, and a linear ridge decoder per site recovers each stream crosstalk-free, in the
-same tick, with no persistence. Established concept (linear MIMO channel); this is its in-substrate
-realization and measured pitch.
+PARALLEL spatial codec: multiple spatially-separated input sites each carry an independent information
+stream, and a linear ridge decoder per site recovers each stream crosstalk-free, in the same tick, with
+no persistence. Established concept (linear MIMO readout); this is its in-substrate realization and
+measured pitch. NOTE (G105): this is CO-LOCATED encode/decode (same site, same tick) — NOT transmission
+over distance; free vibrations are absorbed locally and do not carry a symbol downstream. Use it as an
+addressable spatial I/O interface, not a transport line.
 
 ## When to use
 Any real-time transduction task that needs to move multiple independent signals through the substrate

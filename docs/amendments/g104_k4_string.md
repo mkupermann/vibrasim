@@ -32,8 +32,13 @@ not a fundamental limit. Operating within the measured spatial capacity removes 
 that repetition coding could not.
 
 This is the capstone of the communication arc (G97–G104): a message is written into the substrate's
-physics as spatial-channel symbols, transported by the substrate, and read back exactly — no LLM,
-transformer, embedding, or tokenizer; only the engineered injection/readout and a linear decoder
-calibrated on random traffic. The cost of K=4 is rate (2 bits/symbol → 4 symbols/byte), the honest
-trade for reliability. The whole arc holds together: G97's pitch is the design rule that G104 obeys to
-get verbatim text.
+physics as spatial-channel symbols and read back exactly — no LLM, transformer, embedding, or tokenizer;
+only the engineered injection/readout and a linear decoder calibrated on random traffic. The cost of K=4
+is rate (2 bits/symbol → 4 symbols/byte), the honest trade for reliability. The whole arc holds together:
+G97's pitch is the design rule that G104 obeys to get verbatim text.
+
+**Scope correction (per G105):** this is CO-LOCATED encode/decode — symbols are written and read back at
+the SAME site in the same tick. It is NOT transmission/transport across distance (G105 shows free
+vibrations are absorbed locally and do not carry the symbol downstream). The verbatim-text demonstration
+stands as an addressable spatial codec; earlier "transported by the substrate" wording overclaimed and is
+retracted here.
