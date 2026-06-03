@@ -22,3 +22,16 @@ replicate across seeds before any claim. NULL = even quiet + local, control latc
 inherently reaches control, or local emission starves the co-firing write) → the deadlock is truly
 fundamental: the write is inseparable from contamination at any locality/quietness. Honest either way.
 No post-hoc tuning.
+
+## RESULT (2026-06-03): NULL — control latches via BRIDGE-GRAPH PERCOLATION (not emission transit)
+
+emit_speed {3,6,12} all stim-frac 0.00. Trajectory (emit_speed=3): STIM stim=5.90 ctrl=**5.79** —
+control STILL latches even with local emission AND a quiet background. So the contamination is NOT
+free-vibration/emission transit (culled + local) — it is CHARGE PERCOLATING ATOM-TO-ATOM ALONG THE
+CONNECTED BRIDGE LATTICE (BET-102/BET-105). The substrate's lattice is a connected graph, so activity
+flows stim->control along bridges regardless of quietness or emission locality.
+
+**Deepest causal form of the deadlock:** memory needs a CONNECTED lattice (to write), and a connected
+lattice PERCOLATES (contaminating control). Quiet/local fixes can't help — the route is the lattice
+graph itself. The one untested fix this implies: true DISCONNECTION — cut the bridges between stim and
+control (engineered modularity at the bridge level). G86 tests quiet + local + bridge-cut.
