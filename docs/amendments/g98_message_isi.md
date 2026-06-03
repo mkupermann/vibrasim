@@ -24,4 +24,33 @@ PASS (as a demonstrated primitive) = G98a. NULL if even GAP=12 fails (substrate 
 without explicit re-quieting between every symbol).
 
 ## Result
-_(pending run)_
+| seed | gap=12 | gap=6 | gap=2 | gap=0 |
+|------|--------|-------|-------|-------|
+| 42   | 0.17 (n=79) | 0.21 (n=111) | — (aborted) | — (aborted) |
+| 7    | — (aborted) | — | — | — |
+
+G98a (gap=12 acc>=0.90 both seeds): **False** (0.17) → **VERDICT: NULL**
+
+[Sweep cut short — see below. The pre-registered bar is already decided: gap=12 is the MOST settling
+condition and it failed at 0.17 (below chance 0.25); shorter gaps have strictly less decay and can only
+be worse. Remaining cells were aborted because the no-reset runs blow up computationally, which is part
+of the finding.]
+
+## Finding — the substrate is NOT a memoryless channel; messaging requires active reset
+Without re-quieting between symbols, decode accuracy is at or BELOW chance (0.17, 0.21 vs 0.25) even at
+the longest gap (12 ticks). Two coupled effects, both pointing the same way:
+1. **Decode failure.** Natural decay over 12 ticks does not clear the previous symbol's residual; symbols
+   superimpose in the readout grid and the multiclass decoder cannot separate them.
+2. **Computational blowup.** With no cull, free vibrations ACCUMULATE unboundedly (each symbol injects
+   14·WIN); only 79–111 of 200 symbols completed before the wall budget, and ticks slowed to a crawl as
+   the vibration population grew. The substrate physically piles up un-cleared signal.
+
+This is the SAME accumulation that defeated selective memory (G88–G96), now seen as inter-symbol
+interference in the communication channel: the substrate has strong "memory" in the wrong sense — it
+RETAINS and superimposes rather than storing-and-recalling. A usable channel therefore needs an active
+reset between symbols (a cull), exactly the reset G97 used between trials to reach 1.00. G99 tests that
+constructive path directly (message transmission WITH per-symbol reset, alphabet-size sweep).
+
+Honest note: G98 establishes the NEGATIVE (no free-running memoryless channel). It does NOT show
+messaging is impossible — only that it requires the active-reset operation, which is cheap and already
+proven in G97. The positive demonstration is G99.
