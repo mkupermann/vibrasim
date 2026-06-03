@@ -1,0 +1,9 @@
+=== G120: matter memory WITHOUT POST band-scaffold (pattern=[1, 0, 1]) ===
+  seed 42: WRITE readout=[1, 1, 1] target=[1, 0, 1] | CONTROL readout=[1, 1, 1]
+  seed 7: WRITE readout=[1, 1, 0] target=[1, 0, 1] | CONTROL readout=[1, 1, 1]
+
+--- VERDICT ---
+G120a write recovers pattern without POST scaffold (both seeds): False
+G120b control stays empty (both seeds)                          : False
+G120: NULL/PARTIAL - pattern degrades without the POST scaffold (band is load-bearing for the hold)
+DONE
