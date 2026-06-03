@@ -88,7 +88,7 @@ co-located codec is the constructive complement. Both are the charter's delivera
 
 ## Reusable mechanisms (docs/patterns/)
 atom_proximity_reflector · engineered_port_wall · protocell_homeostasis · protocell_controller ·
-parallel_spatial_channel · 01-which-constraint-binds · 02-write-contaminate-tension.
+parallel_spatial_channel · driven_matter_transport · 01-which-constraint-binds · 02-write-contaminate-tension.
 
 ## Sub-summaries
 MEMORY_PROGRAMME_SUMMARY (+G88–G96 addendum) · PROTOCELL_SUMMARY · ANALOG_COMPUTER_SUMMARY ·
