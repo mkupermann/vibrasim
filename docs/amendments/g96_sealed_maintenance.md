@@ -23,4 +23,31 @@ PASS = G96a AND G96b AND G96c -> contained maintenance gives selective persisten
 deadlock's persistence horn is broken by physical isolation. Else NULL/PARTIAL.
 
 ## Result
-_(pending run)_
+| arm     | seed | atoms→persist | atom_persist | bridges→persist | bridge_persist | ctrl_persist |
+|---------|------|---------------|--------------|-----------------|----------------|--------------|
+| SEAL    | 42   | 12 → 3        | 0.25         | 0 → 0           | 0.00           | 0            |
+| SEAL    | 7    | 31 → 10       | 0.32         | 9 → 3           | 0.33           | 4            |
+| NOSEAL  | 42   | 12 → 3        | 0.25         | 0 → 0           | 0.00           | 0            |
+| NOSEAL  | 7    | 31 → 10       | 0.32         | 9 → 3           | 0.33           | 4            |
+
+G96a False · G96b False · G96c False → **VERDICT: NULL**
+
+## Finding — the vibration seal is INERT; contamination is not a vibration channel
+The decisive observation is that **SEAL and NOSEAL are byte-identical for both seeds** — the seal
+changed nothing. Two mechanisms explain this and re-confirm earlier results:
+1. `inject_tight` creates FROZEN vibrations (vel=0). `_reflect_at_sphere` reflects vibrations by their
+   outbound radial VELOCITY; a frozen vibration never moves outward, so the seal never acts on it. The
+   maintenance flux is positional, not ballistic — the vibration wall has nothing to reflect.
+2. The contamination that does reach control (seed 7, ctrl=4, present WITH and WITHOUT the seal) cannot
+   be a free-vibration channel — a vibration seal would have blocked it. It travels by the charge field
+   / bridge graph, exactly the close-range coupling channel identified in G42. A vibration wall is the
+   wrong tool for it.
+
+Independently, the write is seed-unstable: seed 42 forms NO strong bridges (engram never consolidates),
+seed 7 forms 9. This is intrinsic write variance, not a seal effect.
+
+So contained maintenance via a vibration seal cannot give selective persistent memory: the isolation
+tool is inert against the actual (charge/bridge) coupling, and the write itself is unreliable. Combined
+with G94 (non-selective by count) and G95 (no exploitable topology), the bridge-memory persistence horn
+is closed on every tool tried — culling, refractory, consolidation, maintenance, topology, and physical
+sealing. The next valuable move is NOT a 10th memory variant but a different frontier (see LOGBOOK).

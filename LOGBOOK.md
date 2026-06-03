@@ -4973,3 +4973,29 @@ All experiments done or 3x NULL on feedback.
 
 All experiments done or 3x NULL on feedback.
 
+
+## 2026-06-03 16:30 — G88–G96 memory reopening CLOSED (sharper) + pivot to real-time computation
+
+Reopened the memory deadlock after G88 found a perfect zero-input blank state. Nine pre-registered
+experiments (G88–G96), all committed:
+- G89 low stim keeps control region-mean-blank; G91 strong selective write (0.83) but recall 0.44.
+- G92 set readout REFUTES the dilution hypothesis: engram bridges genuinely decay in POST.
+- G93 ROOT: atom erosion (engram atoms persist 0.26; bridges die with them).
+- G94 localized maintenance NULL: consolidation persists non-selectively (control 2–18 in every arm).
+- G95 structural readout NULL: no exploitable engram topology (largest component 2–3 = scattered pairs).
+- G96 sealed maintenance NULL: vibration seal INERT (SEAL==NOSEAL byte-identical) — frozen vibrations
+  aren't reflected and contamination travels by charge/bridge (re-confirms G42), not free vibration.
+
+Sharper close: persistence and selectivity are coupled on BOTH horns — active substrate sustains the
+engram but contaminates control; quiet substrate keeps control blank but erodes the engram atoms
+("maintenance = contamination"). Every tool (cull, refractory, consolidation, maintenance, topology,
+physical seal) fails. Selective + persistent content memory does not emerge. This matches and deepens
+the original G86 close; documented in docs/amendments/MEMORY_PROGRAMME_SUMMARY.md addendum.
+
+PIVOT: the substrate's robust POSITIVES are real-time COMPUTATION, not storage — the quiet substrate
+reads input perfectly (G83, 1.00) and the proto-cell is a tunable analog signal processor (filter/
+demodulator, PASS). The deep goal (communicate/transduce without an LLM) is reachable through real-time
+input→output transduction that needs NO persistence, sidestepping the memory deadlock. Next: G97 —
+can the quiet substrate perform a real-time, multi-channel spatial DEMULTIPLEX (route distinct input
+locations to distinct, separable output readouts in the same tick)? A communication primitive that
+lives entirely in the substrate's working regime.
