@@ -4999,3 +4999,9 @@ input→output transduction that needs NO persistence, sidestepping the memory d
 can the quiet substrate perform a real-time, multi-channel spatial DEMULTIPLEX (route distinct input
 locations to distinct, separable output readouts in the same tick)? A communication primitive that
 lives entirely in the substrate's working regime.
+
+
+## 2026-06-03 18:52 — Autopilot idle
+
+All experiments done or 3x NULL on feedback.
+
