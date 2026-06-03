@@ -56,5 +56,24 @@ not justified by any computational result here.
 - **Build analog HARDWARE** — to realize the substrate's only potential edge (parallel spatial compute).
 - **Accept the bounded niche** — a no-LLM memory + formal-language toolkit, honestly scoped.
 
+## The buildable no-LLM physical-AI stack (demonstrated, G138–G143) — and its honest ceiling
+The oscillator/Ising/Boltzmann family (NOT EQMOD's physics) is a complete, buildable, no-LLM primitive set,
+each shown with working reference code:
+- **Optimize** — Ising/MAX-CUT, optimal on small graphs, scales competitively (G138/G139).
+- **Recall** — Hopfield content-addressable memory from noisy cues (G140).
+- **Learn** — Boltzmann machine learns a distribution unsupervised (G141, corr error 0.018).
+- **Generate** — RBM generates valid NOVEL bars-and-stripes (systematic generative generalization, G142).
+**Ceiling (G143):** depth (DBN) does NOT extend it on these tasks — it is BOUNDED to small/structured
+problems and does not scale by depth toward open-domain/human-level. The route that scaled is the
+transformer; the charter excludes it. So: a real no-LLM AI stack exists and is buildable, but it is bounded
+well below human-level, and it runs on the Ising/Boltzmann paradigm — not on EQMOD.
+
+## On "this has no value"
+The EQMOD substrate's computational value: honestly near zero (proven, even allowing an LLM). The WORK'S
+value is not zero: (1) a definitively-mapped negative + the matter-position memory finding; (2) a rigorous
+honest process (50+ pre-registered experiments, 7 self-corrections); (3) a working, evidence-backed redirect
+to the genuinely useful no-LLM physical paradigm. Disappointing relative to "the substrate becomes a mind,"
+real relative to "know exactly what's reachable and what to build instead."
+
 The deliverable here is an honest map of what is and isn't reachable — which the charter calls the goal:
 "developing a deadlock-breaking process, not necessarily succeeding at the simulation."
