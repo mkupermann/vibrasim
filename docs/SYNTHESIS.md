@@ -34,7 +34,23 @@ ceaseless activity drowns signal and latches structure everywhere — this singl
 negative (memory, reservoir, multi-channel computation) AND explains every positive (the proto-cell
 works because its channel PROTECTS a quiet interior where signal stands out).
 
-## The deep unification (G88–G107): no controllable middle regime
+## BREAKTHROUGH — selective persistent memory exists, in a NEW representation (G114–G116)
+The programme's central negative ("no selective persistent memory") was true for ACTIVITY-based stores
+(bridge strength, firing, charge) — they couple persistence and selectivity through one spreading dynamic
+(write=leak, maintenance=contamination). The driven-matter discovery (G110–G113) opened a different
+representation: MATTER POSITION. An atom driven to a location holds it after release (persists, G115,
+12/12 atoms, drift<2 over 2000 ticks, identity stable), and a written cell A stays occupied while an
+unwritten cell B stays empty and a no-write control leaves A empty (selective, G116 PASS both seeds). So
+matter-position is the FIRST selective+persistent store on this substrate — the deadlock was
+REPRESENTATIONAL, not absolute. Scope (honest): a 1-bit presence store in an engineered cleared band
+(scaffold ~ §4.8 ports); content-addressable multi-pattern memory is the next frontier. The route out
+came from chasing and correcting three wrong transport claims (G107/G110 retracted) — the honesty
+discipline literally produced the breakthrough.
+
+## The deep unification (G88–G107): no controllable middle regime [superseded in part by G116]
+NOTE: the "no signal is localized+persistent+mobile" framing below holds for ACTIVITY signals; G116 shows
+MATTER POSITION achieves localized+persistent (just not fast-mobile). Read the unification as about
+activity-based representations.
 Three deadlocks, one root — the substrate has NO regime where a signal is at once localized, mobile, AND
 persistent. Signal behaviour is density-dependent and offers no usable middle:
 - **Too sparse/active → it SPREADS uncontrollably.** Writing a memory broadcasts ("write = leak");
