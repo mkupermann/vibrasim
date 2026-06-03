@@ -1,0 +1,8 @@
+=== G135: substrate as a PHYSICAL OPTIMIZER (relax clustered atoms -> even spacing?) ===
+  seed 42: atoms 6->3 | gap-var 0.0->0.049 | spread 2.0->0.5
+  seed 7: atoms 6->6 | gap-var 0.0->0.044 | spread 2.0->2.8
+
+--- VERDICT ---
+physics relaxes cluster toward even spacing (spread grows, gap-var<0.5, both): False
+G135: NULL - the dynamics do not relax to an even-spacing optimum; the substrate is not a usable physical optimizer here
+DONE
