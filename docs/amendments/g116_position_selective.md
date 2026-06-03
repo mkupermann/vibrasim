@@ -22,4 +22,36 @@ PASS = G116a AND G116b AND G116c → SELECTIVE + PERSISTENT store via matter pos
 substrate. PARTIAL = A written + control-clean but B contaminated. NULL otherwise.
 
 ## Result
-_(pending run)_
+| arm     | seed | cell A | cell B |
+|---------|------|--------|--------|
+| WRITE   | 42   | 4      | 0      |
+| WRITE   | 7    | 4      | 0      |
+| CONTROL | 42   | 0      | 0      |
+| CONTROL | 7    | 0      | 0      |
+
+G116a (A occupied) True · G116b (B empty) True · G116c (control A empty) True → **VERDICT: PASS**
+
+## Finding — SELECTIVE + PERSISTENT memory via matter position (first on this substrate)
+A bit written by driving carrier atoms to cell A persists there over 1500 POST ticks; cell B stays empty
+(the write does not spread); and the no-write control leaves A empty (the occupancy is caused by the
+write, not background). All three hold on both seeds. This is the FIRST selective + persistent store the
+programme has produced — and it works precisely because it uses a NON-activity representation:
+- ACTIVITY stores (bridge strength / firing / charge) couple persistence and selectivity through the
+  same spreading dynamics → write=leak, maintenance=contamination → every one failed (G88–G96).
+- MATTER POSITION decouples them: a localized atom does not spread (selectivity for free), needs no
+  sustaining activity (persists once released, G115), and holds with stable identity. Writing A leaves B
+  untouched — the exact contrast the activity stores could never produce.
+
+## Honest scope (claimed cautiously, multi-seed per G37→G38)
+- This is a 1-BIT presence store (A occupied vs empty), with 4 redundant carrier atoms. It is NOT yet a
+  content-addressable, multi-pattern memory — that is the next frontier (encode N independent bits at N
+  cells; read each; low cross-talk).
+- It uses an ENGINEERED scaffold: a maintained cleared band (background atoms cleared each tick except
+  the carriers), comparable to the charter's engineered §4.8 port topology. The non-trivial PHYSICS
+  result is not the scaffold but that matter, unlike activity, does not leak/spread/erode — so within a
+  clean region a written position is a stable, selective bit. The carrier persistence itself needs no
+  scaffold (G115 showed position holds without band-clearing); the band only keeps the READOUT clean.
+- Reframes the programme's central negative honestly: "no selective persistent memory" was true for
+  ACTIVITY-based representations; MATTER-POSITION provides one. The deadlock was representational, not
+  absolute — and the way out came from the driven-matter discovery (G110–G113), which itself came from
+  chasing and correcting three wrong claims. Logged as a milestone with bounded scope.

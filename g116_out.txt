@@ -1,0 +1,12 @@
+=== G116: selective persistent memory via matter position ===
+  seed 42 WRITE  : cell A=4 cell B=0
+  seed 7 WRITE  : cell A=4 cell B=0
+  seed 42 CONTROL: cell A=0 cell B=0
+  seed 7 CONTROL: cell A=0 cell B=0
+
+--- VERDICT ---
+G116a written cell A occupied (>=1 both)   : True
+G116b unwritten cell B empty (0 both)      : True
+G116c no-write control A empty (0 both)    : True
+G116: PASS - SELECTIVE + PERSISTENT memory via matter position (write A, B empty, control empty) — FIRST on this substrate
+DONE

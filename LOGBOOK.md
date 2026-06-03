@@ -5005,3 +5005,18 @@ lives entirely in the substrate's working regime.
 
 All experiments done or 3x NULL on feedback.
 
+
+## 2026-06-03 19:30 — BREAKTHROUGH: selective persistent memory via matter position (G114–G116)
+
+The driven-matter discovery (G110–G113) opened a new memory representation. Matter POSITION:
+- G115 PASS: a written position persists — atom driven 7 units holds it over 2000 POST ticks, k_birth
+  identity stable, 12/12 atoms both seeds (drift<2). First persistent store in the programme.
+- G116 PASS: SELECTIVE + persistent — write cell A (A=4) / unwritten cell B empty (B=0) / no-write control
+  A empty (A=0), both seeds. First selective+persistent store on the substrate.
+
+This reframes the programme's central negative: "no selective persistent memory" was true for ACTIVITY
+stores (bridge/firing/charge — write=leak, maintenance=contamination). MATTER POSITION decouples
+persistence from selectivity (localized matter doesn't spread, persists once released). The deadlock was
+REPRESENTATIONAL, not absolute. Honest scope: 1-bit presence store in an engineered cleared band;
+content-addressable multi-pattern memory is the next frontier (G117). The route out came from chasing and
+correcting THREE wrong transport claims (G107/G110 retracted) — the honesty discipline produced the win.
