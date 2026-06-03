@@ -1,0 +1,15 @@
+=== G108: density dose-response (propagate vs freeze) ===
+  seed 42 n= 2: far_energy=0.00 | atoms_formed=0.03
+  seed 42 n= 6: far_energy=0.00 | atoms_formed=0.03
+  seed 42 n=14: far_energy=0.00 | atoms_formed=0.03
+  seed 42 n=28: far_energy=0.00 | atoms_formed=0.03
+  seed 7 n= 2: far_energy=0.00 | atoms_formed=0.00
+  seed 7 n= 6: far_energy=0.00 | atoms_formed=0.00
+  seed 7 n=14: far_energy=0.00 | atoms_formed=0.00
+  seed 7 n=28: far_energy=0.00 | atoms_formed=0.00
+
+--- VERDICT ---
+G108a far(n=2) > far(n=28) both seeds : False
+G108b atoms(n=28) > atoms(n=2) both    : False
+G108: NULL - dose-response does not support the binding mechanism
+DONE
