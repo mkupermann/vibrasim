@@ -12,3 +12,18 @@ the quiet + disconnected substrate with NO injection at all during STIM. Compare
 
 Honest diagnostic; either outcome sharpens the causal model. No PASS/NULL — it determines whether the
 memory close is final or whether a fixable isolation route remains.
+
+## RESULT (2026-06-03): INPUT-DEPENDENT — there IS a stable blank state (corrects G86)
+
+| arm | peak stim-region bridge | peak ctrl-region bridge | firings during STIM |
+|-----|-------------------------|-------------------------|---------------------|
+| ZERO-INPUT | 1.00 | 1.00 | 0 |
+| STIM | 5.89 | 5.79 | 77,850 |
+
+**Zero input -> perfectly BLANK (1.00, zero firing).** The substrate HAS a stable blank state. This
+REFUTES the G86 conclusion that latching is intrinsic. With stim, BOTH regions latch AND there are
+77,850 firings = a RUNAWAY SELF-IGNITION cascade (BET-105 phenomenon) that reaches control despite
+disconnection (emit_speed=6 + cull + bridge-cut don't contain a cascade of this magnitude). So
+control latching is STIM-COUPLED RUNAWAY, not fundamental. **The memory question is REOPENED:** the
+fix is to write WITHOUT triggering the runaway — drive LOCAL stim co-firing with low intensity so the
+cascade never ignites and control stays blank. G89 sweeps stim intensity low.
