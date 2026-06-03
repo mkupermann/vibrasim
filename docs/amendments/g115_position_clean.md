@@ -17,4 +17,29 @@ is trusted only if k_birth is unchanged (same atom).
 NULL/PARTIAL if the position is not held (drift) or identity is lost.
 
 ## Result
-_(pending run)_
+All 12 atoms (6 per seed): driven exactly 7.0 units (no wrap), same_atom=True (k_birth identity stable),
+and held position over the 2000-tick POST:
+```
+seed 42 drifts: 0.83, 0.95, 1.03, 0.59, 0.53, 0.47   (all < 2)
+seed 7  drifts: 0.52, 0.41, 1.34, 0.07, 0.07, 0.60   (all < 2)
+```
+sanity (drive moved atoms): True · G115 (position held, both seeds): **True** → **VERDICT: PASS**
+
+## Finding — matter POSITION is a persistent store (the first in the programme)
+Every driven atom holds its written position to within ~1 unit over 2000 ticks after the drive is
+released, with its identity (k_birth) intact. This is a clean, two-seed positive and the FIRST persistent
+store the substrate has yielded. It is fundamentally different from the failed activity-based memory:
+- ACTIVITY stores (bridge strength, firing, charge) FAIL — they spread and leak on write
+  ("write=leak"), and quieting erodes them ("maintenance=contamination"); persistence and selectivity are
+  coupled and both go wrong (G88–G96).
+- A POSITION store does not spread (localized matter), does not need sustaining activity (a released atom
+  is quasi-stationary, G110/G111), and persists with stable identity (G115).
+
+**Scope / honesty:** G115 demonstrates the PERSISTENCE horn only — a written position holds. It does NOT
+yet demonstrate a full content-addressable, SELECTIVE memory (write location A, leave B empty, read back
+A≠B after a delay, low cross-talk). That is the natural next test (G116): localized matter should give
+selectivity for free (an atom at A does not affect B), which is exactly what the activity stores could
+never achieve. If G116 confirms selectivity, matter-position would be the first selective+persistent store
+on this substrate — a genuine breakthrough on the memory deadlock via a NEW representation (position, not
+activity), enabled by the driven-matter discovery (G110–G113). Claimed cautiously and multi-seed
+(G37→G38 discipline): persistence is solid; selectivity is pre-registered but unproven.
