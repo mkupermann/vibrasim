@@ -1,1 +1,8 @@
-=== G117: multi-bit content memory via matter position (K=4 cells, 6 random patterns) ===
+=== G117: multi-bit content memory via matter position (K=4 cells, 4 random patterns) ===
+  seed 42: per-bit accuracy = 0.88 (chance 0.50)
+  seed 7: per-bit accuracy = 0.88 (chance 0.50)
+
+--- VERDICT ---
+G117 multi-bit memory (per-bit acc>=0.90 both seeds): False
+G117: NULL/PARTIAL - multi-bit recovery below bar (see accuracy)
+DONE
