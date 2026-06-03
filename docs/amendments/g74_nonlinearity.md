@@ -22,3 +22,19 @@ nonlinearity (complements the linear filter — together they enable thresholdin
 linear across the full range (no nonlinearity found this way → the analog element is purely linear,
 and a nonlinearity must come from a different mechanism, e.g. the bistable bridge). Honest either
 way. No post-hoc threshold tuning.
+
+## RESULT (2026-06-03): PASS — the controller SATURATES (a clamped-linear nonlinearity)
+
+| influx | seed 42 ss | seed 7 ss |
+|--------|-----------|-----------|
+| 4 / 8 / 16 | 0.24 / 0.47 / 0.98 | 0.23 / 0.46 / 0.93 |
+| 32 / 64 / 128 | 1.56 / 1.56 / 1.56 | 1.46 / 1.46 / 1.46 |
+
+Incremental gain ss/influx: 0.060 → 0.012 (seed 42), 0.059 → 0.011 (seed 7) — an ~80% drop. G74a ✓
+→ **PASS.** The interior concentration scales LINEARLY up to influx ~16 then HARD-SATURATES at a
+ceiling (~1.5, identical for influx 32/64/128). The proto-cell is a CLAMPED-LINEAR unit: linear for
+small inputs, saturating for large — the upper half of a neuron-like activation function. This is
+the substrate's first computing NONLINEARITY (clearance saturates: a natural limiter). Combined with
+the tunable low-pass (linear), the substrate now has both a linear filter and a nonlinear limiter —
+the building blocks for analog computation beyond filtering. Next: the lower threshold (bistable
+bridge) to complete a full sigmoid/comparator activation.
