@@ -38,6 +38,12 @@ is exactly what activity could never do, so it became a memory representation.
   presence-by-cell. Established-method framing: this is a position-coded register with refresh, not a new
   algorithm — the contribution is that THIS substrate supports it where activity could not.
 
+## Retention (honest bound, G124)
+The memory is FINITE-RETENTION: stable through ~1500-2000 ticks (G116/G119c PASS @1500; G115 carriers hold
+to 2000), but by ~2500 a carrier drifts out of its cell and is lost (G124 NULL) — even though full
+maintenance keeps the empty cells clean. So it is a volatile store with a finite retention window bounded
+by slow carrier drift; a longer-retention variant would need to PIN the carriers (anchoring).
+
 ## What is NOT yet shown (honest open frontiers)
 - A fully PASSIVE/static variant: a structural y-barrier blocks only the drift-in half of repopulation
   (G121), not the formation churn — so some active suppression remains needed.
