@@ -46,6 +46,11 @@ REPRESENTATIONAL, not absolute. And it SCALES: with wide spacing (the G118-diagn
 spatial error: G117 0.88/bit → G118 redundancy-immune → G119 spacing), a CLEAN multi-bit
 content-addressable matter memory recovers random patterns at 1.000/bit on both seeds (G119c, 5 patterns ×
 3 bits). Scope (honest): in an engineered cleared band (scaffold ~ §4.8 ports), read by presence-by-cell.
+IMPORTANT BOUND (G120): the memory is MAINTAINED, not static — WRITTEN bits persist intrinsically
+(carrier holds position, no upkeep, G115), but EMPTY bits need active spatially-selective clearing or
+background repopulates them. The decisive contrast with the activity deadlock is that this maintenance is
+SELECTIVE and NON-DESTRUCTIVE (it refreshes the 0s without disturbing the 1s) — "maintenance=contamination"
+does NOT apply to matter, so a maintained selective memory is possible where an activity one was not.
 The route out came from chasing and correcting three wrong transport claims (G107/G110 retracted) — the
 honesty discipline literally produced the breakthrough.
 
