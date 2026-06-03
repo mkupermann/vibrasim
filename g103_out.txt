@@ -1,0 +1,10 @@
+=== G103: reliable verbatim text via REP=3 repetition code ===
+  original : 'EQMOD SUBSTRATE SPEAKS'
+  seed 42: uncoded CER=0.14 -> coded CER=0.00 | coded='EQMOD SUBSTRATE SPEAKS' exact=True
+  seed 7: uncoded CER=0.09 -> coded CER=0.09 | coded='EQMOD SUBTTRATE SPEA;S' exact=False
+
+--- VERDICT ---
+G103a verbatim (coded CER=0 both seeds): False
+G103b code helps (coded CER <= uncoded): True
+G103: NULL/PARTIAL - repetition code did not yield verbatim on both seeds
+DONE
