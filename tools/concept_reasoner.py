@@ -23,10 +23,14 @@ class ConceptReasoner:
         for p, cs in tax.items():
             nodes.add(p); nodes.update(cs)
         self.nodes = sorted(nodes); self.ID = {n: i for i, n in enumerate(self.nodes)}; self.N = len(self.nodes)
-        self.adj = {i: set() for i in range(self.N)}; self.parent = {}
+        self.adj = {i: set() for i in range(self.N)}; self.parent = {}; self.parents = {i: [] for i in range(self.N)}
         for p, cs in tax.items():
             for c in cs:
-                self.adj[self.ID[p]].add(self.ID[c]); self.adj[self.ID[c]].add(self.ID[p]); self.parent[self.ID[c]] = self.ID[p]
+                self.adj[self.ID[p]].add(self.ID[c]); self.adj[self.ID[c]].add(self.ID[p])
+                self.parents[self.ID[c]].append(self.ID[p])
+                if self.ID[c] not in self.parent:
+                    self.parent[self.ID[c]] = self.ID[p]  # first parent (back-compat for single-parent users)
+        self.is_dag = any(len(ps) > 1 for ps in self.parents.values())
         self.GD = self._graphdist()
 
     def _graphdist(self):
@@ -43,10 +47,13 @@ class ConceptReasoner:
         return D
 
     def _ancestors(self, v):
-        a = []; p = self.parent.get(v)
-        while p is not None:
-            a.append(p); p = self.parent.get(p)
-        return a
+        # transitive closure over ALL parents (handles multi-parent DAGs, not just single-parent trees)
+        seen = set(); stack = list(self.parents.get(v, []))
+        while stack:
+            p = stack.pop()
+            if p not in seen:
+                seen.add(p); stack.extend(self.parents.get(p, []))
+        return list(seen)
 
     def fit(self, euc_dim=4, hyp_dim=2, iters=3000, holdout_pairs=None, anchor=0.5, isa_method="poincare"):
         # isa_method: "poincare" (default, calibrated hyperbolic - cross-branch correct, sibling residual, ~0.78 at
