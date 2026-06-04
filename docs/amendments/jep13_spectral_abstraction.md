@@ -31,3 +31,14 @@ a small reusable basis that COMPOSES to novel goals. BUT greedy 1-step planning 
 reaches only 0.30: the classic value-approximation-vs-control gap - a ~2% reconstruction error creates local
 maxima that trap greedy control (true-SR is monotone -> 1.00). The fix is MPC LOOKAHEAD (multi-step), robust to
 approximate value -> JEP-13b. Bars locked, not tuned.
+
+## JEP-13b — MPC lookahead — PARTIAL (helps, doesn't close it)
+MPC lookahead (depth 6) on the PVF-approx value reached 0.47 (vs greedy 0.30, random-basis 0.26, true-SR 1.00).
+Lookahead helps but the compact basis's residual error creates value local-maxima wider than depth-6 search.
+Not forcing higher by tuning depth/k. The real story is a COMPRESSION-vs-CONTROL tradeoff -> JEP-13c maps it.
+
+## JEP-13c (pre-reg) — characterize the compression-vs-control tradeoff
+- Sweep basis size k in {S/8, S/4, S/2, 3S/4, S}. For each: PVF reconstruction R^2 + greedy-planning reach on
+  novel goals. Expect R^2 high even at small k; reach to increase with k toward 1.00 at k=S.
+- Report the curve (no single PASS bar - this is characterization). Finding = WHERE control becomes reliable
+  (reach>=0.9) and whether that k still gives meaningful compression (k<S).
