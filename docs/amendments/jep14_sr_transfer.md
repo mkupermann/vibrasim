@@ -32,3 +32,18 @@ rather than creating a detour. That is why relearned SR scored 0.00 - the affect
 UNREACHABLE (cross-component), not detoured. So B did not test transition-REVALUATION at all; it tested
 disconnection. Honest fix: a maze WITH LOOPS (spanning tree + extra edges), where blocking a cycle edge keeps
 connectivity and forces a real detour -> JEP-14b. Caught by the 0.00 anomaly. Bars locked, not tuned.
+
+## JEP-14b — looped maze (real detours) — PASS
+| test | result |
+|------|--------|
+| (A) REWARD revaluation (V=M@r, zero relearning) | 1.00 |
+| (B-i) STALE SR after blocking a cycle edge (detour) | 0.63 |
+| (B-ii) RELEARNED SR | 1.00 |
+
+**VERDICT: PASS (characterization).** With a looped maze (blocking a cycle edge keeps connectivity, forces a
+real detour), the SR boundary is clean: REWARD changes transfer INSTANTLY (V=M@r -> 1.00, zero relearning) but a
+TRANSITION change makes the cached SR STALE (0.63 - it still routes toward the now-blocked passage) until
+RELEARNED by local TD (1.00). Exactly the established SR property (Momennejad et al. 2017): reward-general,
+transition-specific. This points to the next step: an explicit, locally-editable transition MODEL + MPC
+replanning recovers from transition changes WITHOUT full SR relearning - the model-based (JEPA/MPC) advantage
+over the cached SR. SR (Dayan 1993) established, named as such.

@@ -1,0 +1,13 @@
+=== JEP-14b: SR transition-revaluation on LOOPED maze (real detours), S=144 ===
+  (A) REWARD revaluation: reach=1.00
+  (B) blocked a CYCLE edge (connectivity kept), affected goals=10:
+      (i) STALE SR    = 0.63
+      (ii) RELEARNED  = 1.00
+
+--- VERDICT ---
+JEP-14b: PASS (characterization) - the SR transfers across REWARD changes instantly (V=M@r, 1.00,
+zero relearning) but a TRANSITION change (blocked passage forcing a detour) makes the cached SR STALE
+(0.63 on detoured goals - it still routes toward the now-blocked path) until RELEARNED by local
+TD (1.00). This is the established SR boundary (Momennejad et al. 2017): reward-general,
+transition-specific. Honest map of the abstraction. SR (Dayan 1993) established, named as such.
+DONE
