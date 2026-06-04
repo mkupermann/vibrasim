@@ -1,0 +1,11 @@
+=== JEP-21: structural transfer to NEW entities (grid 9x6) ===
+  transferred-coord corr (new entities): x=0.975  y=0.976
+  zero-shot relational inference on NEW entities:  east=0.957  north=0.972  (baseline ~0.5)
+
+--- VERDICT ---
+JEP-21: PASS - the learned STRUCTURAL code transfers to NEW entities: with only 8 anchor
+bindings + local adjacency, the new entities' positions are inferred (corr x=0.98,
+y=0.98) and zero-shot relational queries on non-adjacent NEW pairs reach
+east=0.96, north=0.97 (baseline 0.5). Structure factorized from content and transferred -
+the relational-abstraction hallmark. TEM / structure-content factorization (Whittington 2020), named.
+DONE
