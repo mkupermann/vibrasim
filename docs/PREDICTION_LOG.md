@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 6 / predictions 9 (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
+Running tally: hits 7 / predictions 10 (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
 
 | id | prediction (🔮 before) | outcome | hit? | lesson (don't repeat) |
 |----|------------------------|---------|------|------------------------|
@@ -16,3 +16,4 @@ Running tally: hits 6 / predictions 9 (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). Th
 | JEP-95 | 🔮 100%; most-likely miss = a/an agreement in GENERATION ('a animal') | 5/5 = 100% | HIT | Applied the surface-form meta-lesson PROACTIVELY: article agreement in one _art() helper used everywhere, before any miss. |
 | JEP-96 | 🔮 100%; most-likely miss = negation parse in tell() (_ISA grabs 'not') | 8/8 = 100% | HIT | Dedicated _NEG_ISA regex before _ISA, surface-form lesson applied proactively; correction retracts edge + neg overrides closure. |
 | JEP-97 | 🔮 held-out>=0.9, existing>=0.95, grounded comprehension=100%; risk = off-center few-shot mean | bird 1.00 / existing 1.00 / comp 1.00 | HIT | Perception easy at this separation (caveat noted); concept-from-examples mode works + integrates. |
+| JEP-98 | 🔮 multi-word _norm_phrase fixes demo + keeps 9 tests + tiers 92/93/94 green; risk = greedy capture/SVO mis-fire | 9/9 tests, tiers 100%, demo fixed | HIT | The DEMO caught a bug controlled tests missed (tests used 'living_thing', real input 'living thing'). LESSON: exercise on natural input, not the test-friendly encoding. |
