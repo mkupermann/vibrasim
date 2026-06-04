@@ -29,6 +29,20 @@ except Exception as e:  # pragma: no cover
     SentenceTransformer = None
 
 
+import re as _re_sanitize
+_INJ_PAT = _re_sanitize.compile(r"(ignore|disregard|forget|system\s*:|#{2,}|new instruction|must now|only say|regardless of input|reply only|respond with|output\s*:|always answer).*", _re_sanitize.I)
+
+
+def sanitize_text(text):
+    """Strip instruction-like spans from untrusted content before it enters an LLM prompt (GEO-98:
+    neutralizes prompt injection 0.17->0.00 while preserving legitimate facts). Use when ingesting untrusted
+    store content. NOT exhaustive (regex over known patterns) — combine with extractive answers for untrusted
+    sources; a trusted private KB needs no sanitization."""
+    parts = _re_sanitize.split(r"(?<=[.!?])\s+", text)
+    kept = [p for p in parts if not _INJ_PAT.search(p)]
+    return " ".join(kept).strip() or "[redacted]"
+
+
 class GeometricReasoner:
     def __init__(self, model_name: str = "all-MiniLM-L6-v2", abstain_tau: float = 0.45,
                  rerank_k: int = 0, rerank_model: str = "cross-encoder/ms-marco-MiniLM-L-6-v2"):
