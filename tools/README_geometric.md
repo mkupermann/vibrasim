@@ -62,6 +62,10 @@ resolves entities, and applies the right SYMBOLIC operator — one agent for mix
 mixed workload). The operators are schema-specific (person/team/city demo); the route->resolve->operate pattern
 generalizes.
 
+## Performance (GEO-63, CPU)
+Interactive: ~7ms/query (~150 q/s), ~24ms with re-ranking — flat from 10 to 1000 facts (query embedding
+dominates). Index build ~1ms/fact (one-time). Real-time at PC scale; beyond ~100k facts add an ANN index.
+
 ## What it gives you that a raw LLM doesn't
 Grounded (abstains instead of confabulating), updatable (edit one fact, no retraining), auditable (you see
 the supporting fact), and able to reason over YOUR private facts the LLM never saw — validated end-to-end
