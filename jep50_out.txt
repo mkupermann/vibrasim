@@ -1,0 +1,4 @@
+=== JEP-50: order vs poincare on BALANCED vs IRREGULAR trees ===
+  BALANCED  N=255: poincare=0.910  order=0.859  gap(order-poincare)=-0.051
+  IRREGULAR N=251: poincare=0.902  order=0.892  gap(order-poincare)=-0.010
+DONE
