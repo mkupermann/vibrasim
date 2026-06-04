@@ -40,7 +40,9 @@ qa.answer("What is the capital of Atlantis?", focus="Atlantis") # -> "I don't kn
 `focus=` enables the answerability check (GEO-33) that abstains on in-domain-but-unanswerable questions.
 
 ## Recommended settings (from the experiments)
-- Embedding model: `all-mpnet-base-v2` for quality (GEO-36: cleaner), `all-MiniLM-L6-v2` for speed.
+- Embedding model: `all-mpnet-base-v2` for quality (GEO-36), `all-MiniLM-L6-v2` for speed,
+  `paraphrase-multilingual-MiniLM-L12-v2` for CROSS-LINGUAL (GEO-46: German queries -> English facts, 1.00
+  for named queries, 0.67 for pure-semantic descriptions; pass via `model_name=`).
 - Always `calibrate_abstention()` on a small labelled dev set — a guessed threshold is unreliable (GEO-32).
 - Generation needs the faithfulness instruction (built into GroundedQA) or the small model invents details
   (GEO-38) and can revert to its prior (GEO-34); larger instruct models follow context more robustly.

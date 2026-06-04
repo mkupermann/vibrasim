@@ -28,3 +28,13 @@ decisively beats English-only (0.67 vs 0.25, gap 0.42) — but the absolute 0.67
 cross-lingual semantic matching. Typical cross-lingual queries carry the entity NAME as a shared cross-
 lingual anchor and should score higher (tested in GEO-46b). Takeaway for the German-speaking user: use a
 multilingual embedding model and German questions retrieve English facts; the capability is real.
+
+## GEO-46b — realistic cross-lingual (named queries): PASS
+German NAMED query ("Was ist die Hauptstadt von Frankreich?") -> English fact: hits@1 = **1.00** (chance
+0.08). With the entity name as a cross-lingual anchor, German questions reliably retrieve English facts.
+
+**Combined cross-lingual verdict:** the geometric layer is cross-lingual via a multilingual embedding model
+(paraphrase-multilingual-MiniLM-L12-v2): 1.00 for named queries (typical case), 0.67 for the hardest pure-
+semantic descriptive queries (vs English-only 0.25). Directly useful for the German-speaking user — ask in
+German, ground in an English (or mixed-language) store. Set
+`GeometricReasoner(model_name="paraphrase-multilingual-MiniLM-L12-v2")`.
