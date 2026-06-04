@@ -1,4 +1,4 @@
-# Pattern: grounding concepts in perception — what the EQMOD-4 grounding thread learned (JEP-54..61)
+# Pattern: grounding concepts in perception — what the EQMOD-4 grounding thread learned (JEP-54..62)
 
 How to form concepts from experience and use them to reason and act, and where it breaks. Each insight is from a
 specific rung; methods are established (clustering, SR/TD, Poincare embeddings), the discipline is the point.
@@ -36,6 +36,13 @@ Grounded planning success slightly EXCEEDS concept-formation purity at every noi
 nearest grounded entity reaches a majority-(correct-)branch member even when a discovered category is impure. So
 MINORITY-NOISE in the formed concepts gets ABSORBED downstream (contrast JEP-46, where CONFIDENT-WRONG errors got
 amplified - see honest_evaluation.md #8).
+
+## 6. Appearance-independent functions come from INTERACTION/AFFORDANCES (JEP-62)
+When function is UNCORRELATED with appearance, clustering on AFFORDANCE outcomes (what interacting reveals: a
+container holds, a tool breaks, food is consumed) recovers the functional categories perfectly (1.00) where
+appearance is at chance. The agent must ACT to discover function it cannot see. So FUNCTIONAL concepts come from
+EITHER the right visual invariance (when function correlates with appearance, #3) OR interaction/affordances
+(when it does not, this) - a complete account.
 
 ## The honest frontier (mapped, not waved at)
 Unsupervised perceptual concept formation reaches FUNCTIONAL categories WHEN function correlates with a capturable
