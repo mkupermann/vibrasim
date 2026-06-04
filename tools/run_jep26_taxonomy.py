@@ -57,6 +57,9 @@ def euc_d(X,i,j): return ((X[i]-X[j])**2).sum(-1).clamp(min=1e-9).sqrt()
 def poin_d(X,i,j):
     diff=((X[i]-X[j])**2).sum(-1); nx=(X[i]**2).sum(-1); ny=(X[j]**2).sum(-1)
     return torch.acosh(torch.clamp(1+2*diff/((1-nx)*(1-ny)+1e-9),min=1+1e-7))
+def poin_dc(a,b):
+    diff=((a-b)**2).sum(-1); na=(a**2).sum(-1); nb=(b**2).sum(-1)
+    return torch.acosh(torch.clamp(1+2*diff/((1-na)*(1-nb)+1e-9),min=1+1e-7))
 def fit_euclid(iters=3000):
     X=torch.randn(N,4)*0.1; X.requires_grad_(True); s=torch.tensor(1.0,requires_grad=True)
     opt=torch.optim.Adam([X,s],lr=0.02)
@@ -69,7 +72,7 @@ def fit_hyper(iters=4000):
     for it in range(iters):
         X.requires_grad_(True)
         u=POS[:,0]; v=POS[:,1]; negs=torch.randint(0,N,(len(POS),15))
-        du=poin_d(X,u,v); dn=poin_d(X.unsqueeze(1).expand(-1,15,-1).reshape(-1,2).reshape(N,1,2) if False else X[u].unsqueeze(1).expand(-1,15,-1), X[negs])
+        du=poin_dc(X[u],X[v]); dn=poin_dc(X[u].unsqueeze(1).expand(-1,15,-1), X[negs])
         logits=torch.cat([(-du).unsqueeze(1),-dn],dim=1)
         loss=torch.nn.functional.cross_entropy(logits,torch.zeros(len(POS),dtype=torch.long))
         loss.backward()
