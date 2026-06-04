@@ -30,3 +30,10 @@ r.ask("Where does Alice work?")                       # -> grounded answer or "I
 r.chain(["What company does Alice work at?", "What city is {bridge} in?"])   # multi-hop
 r.count_where(lambda m: m.get("object") == "Boston")  # symbolic aggregate
 ```
+
+## Grounded generation (optional) — tools/grounded_qa.py
+`GroundedQA(generate=True)` adds a small instruct LLM (Qwen2.5-0.5B, CPU) on top of the geometric layer: it
+answers grounded ONLY in the retrieved+verified fact, follows the updatable store over the LLM's prior
+(GEO-34), and abstains via focus-verification. Caveat: small-model context-following is prompt-sensitive —
+use an explicit "use ONLY the context, ignore prior knowledge" instruction (the module does). RAG is
+established; the grounding (verified retrieval + abstention + updatable store) is the contribution.
