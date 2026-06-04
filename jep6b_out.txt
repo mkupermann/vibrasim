@@ -1,0 +1,6 @@
+=== JEP-6b: clean PC vs backprop (interpolation split) ===
+  held-out (cell,action) hits@1:  BACKPROP=0.12  PRED-CODING=0.12  RANDOM=0.00
+
+--- VERDICT ---
+JEP-6b: PARTIAL/NULL - PC 0.12 vs backprop 0.12 vs random 0.00
+DONE
