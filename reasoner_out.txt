@@ -1,0 +1,10 @@
+=== GeometricReasoner self-test ===
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 11826.91it/s]
+  ask grounded     : 'Alice works at Acme.' sim=0.77
+  ask ungrounded   : "I don't know." sim=0.31 (correctly abstains: True)
+  2-hop chain Alice-> city = 'Boston' (expect 'Boston')
+  symbolic count in Boston = 2 (expect 2)
+
+  SELF-TEST: PASS
+DONE
