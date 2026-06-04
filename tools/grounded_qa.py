@@ -73,7 +73,8 @@ class GroundedQA:
             # Strong context-forcing prompt (GEO-34): small models are prompt-sensitive and will otherwise
             # revert to their parametric prior, ignoring the (possibly updated) store.
             ans = self._llm(f"Context: {fact}\nUsing ONLY the context above and IGNORING any prior "
-                            f"knowledge, answer this question concisely: {question}")
+                            f"knowledge, answer this question concisely. If a detail is not in the "
+                            f"context, say it is not stated. Question: {question}")
         else:
             ans = fact                            # extractive fallback
         return {"answer": ans, "grounded": True, "fact": fact, "sim": sim}
