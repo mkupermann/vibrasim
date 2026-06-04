@@ -10,13 +10,13 @@ from geometric_reasoner import GeometricReasoner
 class UnifiedReasoner:
     def __init__(self, **kw):
         self.r = GeometricReasoner(**kw)
-        self.people = {}          # person -> {team}
+        self.people = {}          # person -> {team, city, salary}
         self.team_city = {}       # team -> city
         self.time_facts = []      # {subject, year, value}
 
     # ---- build ----
-    def add_person(self, name, team):
-        self.people[name] = {"team": team}
+    def add_person(self, name, team, salary=None):
+        self.people[name] = {"team": team, "salary": salary}
         self.r.add_fact(f"{name} is on the {team} team.", subject=name, object=team, kind="person")
 
     def add_team_city(self, team, city):
@@ -66,6 +66,20 @@ class UnifiedReasoner:
             myteam = self.people.get(subj, {}).get("team")
             peers = {p for p in self.people if p != subj and self.people[p]["team"] == myteam}
             return {"intent": intent, "answer": peers}
+        if intent == "NEGATE":
+            team = next((t for t in set(self.people[p]["team"] for p in self.people) if t.lower() in q.lower()), None)
+            if team:
+                return {"intent": intent, "answer": {p for p in self.people if self.people[p]["team"] != team}}
+            city = next((c for c in set(self.team_city.values()) if c.lower() in q.lower()), None)
+            return {"intent": intent, "answer": {p for p in self.people if self._city_of(p) != city}}
+        if intent == "COMPARE":
+            names = [t for t in re.findall(r"[A-Z][a-z]+", q) if t in self.people]
+            if len(names) >= 2:
+                x, y = names[0], names[1]
+                sx, sy = self.people[x].get("salary"), self.people[y].get("salary")
+                if sx is not None and sy is not None:
+                    return {"intent": intent, "answer": x if sx > sy else y}
+            return {"intent": intent, "answer": None}
         # FACTOID: city (chain) or team (direct)
         subj = self._entity(q)
         if subj and re.search(r"\b(city|live|based|located)\b", q.lower()):
