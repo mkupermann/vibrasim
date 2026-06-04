@@ -80,3 +80,13 @@ def test_add_document_sentence_split():
     n = r.add_document("Paris is the capital of France. The Louvre is a famous museum there.")
     assert n == 2
     assert "Louvre" in r.ask("What is a famous museum in Paris?")["text"]
+
+
+def test_values_for_conflict_surfacing():
+    from geometric_reasoner import GeometricReasoner
+    r = GeometricReasoner()
+    r.add_fact("Grace is on the Design team.", subject="Grace", object="Design", kind="person")
+    r.add_fact("Grace is on the Platform team.", subject="Grace", object="Platform", kind="person")
+    r.add_fact("Alice is on the Analytics team.", subject="Alice", object="Analytics", kind="person")
+    assert r.values_for("Grace", kind="person")[0] == "CONFLICT"
+    assert r.values_for("Alice", kind="person")[0] == "OK"
