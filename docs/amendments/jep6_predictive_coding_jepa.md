@@ -15,3 +15,17 @@ local-learning path to "predict in representation space" is demonstrated.
 - Bars: PC hits@1 >= backprop - 0.10 (matches within tolerance) AND both >> random AND PC >= 0.7 absolute.
   PASS = local predictive-coding learning trains the JEPA predictor comparably to backprop (substrate path
   validated). NULL if PC fails to match backprop. Predictive coding is an established method - named as such.
+
+## Result — PARTIAL (PC matches backprop, but the held-out-CELL split tests extrapolation neither does)
+| predictor | held-out-cell hits@1 |
+|-----------|----------------------|
+| backprop | 0.19 |
+| predictive coding (local, no backprop) | 0.19 |
+| random init | 0.10 |
+
+**VERDICT: PARTIAL.** PC and backprop score IDENTICALLY (0.19), so the core claim "local PC learning matches
+backprop" is supported. But BOTH fail the absolute 0.7 bar because the split holds out whole CELLS — predicting
+transitions for positions never seen in training is EXTRAPOLATION, which backprop fails too (0.19). So it is NOT
+a PC weakness; my pre-registered absolute bar conflated "PC≈backprop" with "extrapolate to unseen cells." Bars
+were locked, not retuned. Cleanly isolating PC vs backprop needs a split both can learn (interpolation) ->
+JEP-6b: hold out (cell,action) PAIRS so every cell is seen.

@@ -1,0 +1,6 @@
+=== JEP-6: predictive coding (local) vs backprop for JEPA predictor ===
+  held-out next-cell hits@1:  BACKPROP=0.19   PRED-CODING=0.19   RANDOM=0.10
+
+--- VERDICT ---
+JEP-6: PARTIAL/NULL - PC 0.19 vs backprop 0.19 vs random 0.10
+DONE
