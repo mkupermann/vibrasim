@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 42 / predictions 61 (JEP-147 HIT — integrated diagnosis composes inference modes) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
+Running tally: hits 43 / predictions 62 (JEP-148 HIT — causal/means-ends planning) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
 
 | id | prediction (🔮 before) | outcome | hit? | lesson (don't repeat) |
 |----|------------------------|---------|------|------------------------|
@@ -68,3 +68,4 @@ Running tally: hits 42 / predictions 61 (JEP-147 HIT — integrated diagnosis co
 | JEP-145 | 🔮 100%; risk = which path is the justification | 7/7 | HIT | Provenance chain + retraction invalidates single-path dependents; redundant paths survive (TMS + JEP-138 redundancy). |
 | JEP-146 | 🔮 100%; risk = ranking ties | 4/4 | HIT | Abduction (effect->cause, most direct first) completes Peirce's triad: deduction+induction+abduction. |
 | JEP-147 | 🔮 100%; risk = coverage-vs-overprediction scoring | 4/4 | HIT | Diagnosis COMPOSES abduction+deduction+covering; symptoms -> best-explaining cause (anosmia distinguishes covid). Faculties combine, not just coexist. |
+| JEP-148 | 🔮 100%; risk = multi-step/multiple actions | 4/4 | HIT | Causal planning: achieve(effect) -> actionable root causes (handles multi-step chains; sprinkler excluded as non-root). Completes the causal toolkit. |

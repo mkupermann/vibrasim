@@ -401,3 +401,12 @@ def test_abduction():
     assert e.abduce("slippery") == ["wetgrass", "rain", "sprinkler"]   # most direct cause first
     assert e.abduce("slippery")[0] == "wetgrass"                       # best (parsimonious) explanation
     assert e.abduce("rain") == []                                      # root has no causes
+
+
+def test_causal_planning():
+    e = UnderstandingEngine(seed=148)
+    for x, y in [("rain", "wetgrass"), ("sprinkler", "wetgrass"), ("wetgrass", "slippery"),
+                 ("press_button", "sprinkler")]:
+        e.tell_cause(x, y)
+    assert e.achieve("slippery") == ["press_button", "rain"]   # actionable root causes (sprinkler not a root)
+    assert e.achieve("rain") == []                             # already a root, nothing causes it

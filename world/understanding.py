@@ -519,6 +519,27 @@ class UnderstandingEngine:
             self.causes = {}
         self.causes.setdefault(self._norm(x), set()).add(self._norm(y))
 
+    def achieve(self, goal: str):
+        """Causal/means-ends planning: to bring about the goal EFFECT, return the ACTIONS (root causes, i.e. nodes
+        with no incoming causal edge) whose causal consequences include the goal. The plan to do is any of these."""
+        causes = getattr(self, "causes", {})
+        g = self._norm(goal)
+        has_incoming = set()
+        for ys in causes.values():
+            has_incoming |= ys
+        roots = [n for n in causes if n not in has_incoming]   # actionable root causes
+        def reaches(x):
+            seen, st = {x}, [x]
+            while st:
+                c = st.pop()
+                for d in causes.get(c, ()):
+                    if d == g:
+                        return True
+                    if d not in seen:
+                        seen.add(d); st.append(d)
+            return False
+        return sorted(r for r in roots if reaches(r))
+
     def abduce(self, effect: str):
         """Abduction (inference to the best explanation, Peirce): given an observed EFFECT, return the candidate
         CAUSES that could produce it (reverse causal closure), ranked by causal DISTANCE — the most DIRECT cause
