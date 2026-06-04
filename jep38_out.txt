@@ -1,0 +1,7 @@
+=== JEP-38: radial-depth anchor pins generality sign (WordNet carnivore 366) ===
+  [anchor OFF] raw norm-direction per seed: ['0.81', '0.82', '0.79']  held-out calibrated is_a: ['0.76', '0.70', '0.67']
+  [anchor ON] raw norm-direction per seed: ['0.87', '0.86', '0.84']  held-out calibrated is_a: ['0.75', '0.70', '0.68']
+
+--- VERDICT ---
+JEP-38: PARTIAL/NULL - anchor-ON raw 0.84, held 0.68
+DONE
