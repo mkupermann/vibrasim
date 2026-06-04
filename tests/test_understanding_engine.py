@@ -221,3 +221,11 @@ def test_quantified_questions():
     assert e.respond("is every poodle an animal?") == "Yes."   # multi-hop universal
     assert e.respond("can all birds fly?").startswith("No")    # penguin counterexample
     assert e.respond("do all robins fly?").startswith("Yes")
+
+
+def test_why_followup():
+    e = _engine()
+    e.respond("is a poodle a living_thing?")
+    assert e.respond("why?").startswith("Because a poodle is a dog")
+    e.respond("is a poodle a vegetable?")
+    assert e.respond("why?").startswith("Because I was never told")
