@@ -9,7 +9,7 @@ def main():
     cases=[
         ("is a poodle a living_thing", "Yes. A poodle is a dog, a dog is an animal, an animal is a living thing."),
         ("is a poodle an animal", "Yes. A poodle is a dog, a dog is an animal."),
-        ("is a poodle a fish", "No. I was not told anything that makes a poodle a fish."),
+        ("is a poodle a fish", "No. A poodle is not a fish as far as I know."),
         ("does the dog chase the cat", "Yes, the dog chases the cat."),
         ("does the cat chase the dog", "No, I was not told that the cat chases the dog."),
     ]

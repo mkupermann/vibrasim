@@ -169,6 +169,23 @@ class UnderstandingEngine:
             out.add(x)
         return out
 
+    def _known_concepts(self) -> set:
+        """Every concept the engine has heard of (as child, parent, negative fact, or prototype)."""
+        ks = set(self.parents) | set(self.parents.values()) | set(self.prototypes)
+        for a, b in self.neg_isa:
+            ks.add(a); ks.add(b)
+        return ks
+
+    def assess(self, x: str, c: str) -> str:
+        """Three-valued IS-A: 'yes' (path), 'no' (explicit negative, or category KNOWN but no path -
+        closed-world over known concepts), or 'unknown' (category never heard of - epistemic humility)."""
+        x, c = self._norm_phrase(x), self._norm_phrase(c)
+        if (x, c) in self.neg_isa:
+            return "no"
+        if c in self.ancestors(x):
+            return "yes"
+        return "no" if c in self._known_concepts() else "unknown"
+
     def is_a(self, x: str, c: str) -> bool:
         """Multi-hop IS-A by transitive closure; an explicit negative fact (correction) overrides."""
         x, c = self._norm_phrase(x), self._norm_phrase(c)
@@ -240,14 +257,18 @@ class UnderstandingEngine:
         sc = self._parse_isa_q(q)
         if sc:
             x, c = self._norm_phrase(sc[0]), self._norm_phrase(sc[1])
-            chain = self._isa_chain(x, c)
-            if chain:
+            verdict = self.assess(x, c)
+            if verdict == "unknown":
+                return f"I don't know whether {self._art(x)} is {self._art(c)}."
+            if verdict == "yes":
+                chain = self._isa_chain(x, c)
                 disp = lambda w: w.replace("_", " ")
                 steps = ", ".join(f"{self._art(disp(chain[i]))} is {self._art(disp(chain[i+1]))}"
                                   for i in range(len(chain) - 1))
                 steps = steps[0].upper() + steps[1:] if steps else steps
                 return f"Yes. {steps}."
-            return f"No. I was not told anything that makes {self._art(x.replace('_',' '))} {self._art(c.replace('_',' '))}."
+            rest = f"{self._art(x)} is not {self._art(c)} as far as I know."
+            return "No. " + rest[0].upper() + rest[1:]
         m = re.match(r"does\s+the\s+(\w+)\s+(\w+)\s+(?:(?:the|an|a)\s+|in\s+the\s+)?(\w+)", q)
         if m:
             s, r, o = m.group(1), m.group(2), m.group(3)
