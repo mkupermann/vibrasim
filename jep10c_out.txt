@@ -1,0 +1,17 @@
+=== JEP-10c: GPU inference via DirectML (AMD RX 7700S) ===
+  numpy reference test acc = 0.9652
+Traceback (most recent call last):
+  File "C:\Users\nicet\Documents\GitHub\vibrasim\tools\run_jep10c_gpu_inference.py", line 20, in <module>
+    torch.onnx.export(net,torch.zeros(1,784),onnx_path,input_names=["x"],output_names=["logits"],
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                      dynamic_axes={"x":{0:"n"},"logits":{0:"n"}},opset_version=13)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nicet\Documents\GitHub\vibrasim\.venv\Lib\site-packages\torch\onnx\__init__.py", line 286, in export
+    from torch.onnx._internal.exporter import _compat
+  File "C:\Users\nicet\Documents\GitHub\vibrasim\.venv\Lib\site-packages\torch\onnx\_internal\exporter\_compat.py", line 16, in <module>
+    from torch.onnx._internal.exporter import (
+    ...<6 lines>...
+    )
+  File "C:\Users\nicet\Documents\GitHub\vibrasim\.venv\Lib\site-packages\torch\onnx\_internal\exporter\_core.py", line 19, in <module>
+    import onnxscript
+ModuleNotFoundError: No module named 'onnxscript'
