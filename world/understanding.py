@@ -357,6 +357,33 @@ class UnderstandingEngine:
             return total
         return npaths(x)
 
+    def tell_prob(self, child: str, parent: str, p: float) -> None:
+        """Record a PROBABILISTIC IS-A edge child->parent with probability p (also installs the hard edge)."""
+        if not hasattr(self, "edge_prob"):
+            self.edge_prob = {}
+        c, pa = self._norm_phrase(child), self._norm_phrase(parent)
+        self.edge_prob[(c, pa)] = float(p)
+        self.parents.setdefault(c, set()).add(pa)
+
+    def is_a_prob(self, x: str, c: str) -> float:
+        """P(x is-a c): noisy-OR over derivation PATHS, each path's prob = product of its edge probs. Chains
+        MULTIPLY (compounding decay, JEP-137); multiple paths noisy-OR (aggregation, JEP-138). Quantifies the
+        compounding/aggregation insight. HONEST: assumes paths are INDEPENDENT (shared edges -> over-counts)."""
+        x, c = self._norm_phrase(x), self._norm_phrase(c)
+        ep = getattr(self, "edge_prob", {})
+        paths = []
+        def dfs(u, prob, seen):
+            if u == c:
+                paths.append(prob); return
+            for par in self.parents.get(u, ()):
+                if par not in seen:
+                    dfs(par, prob * ep.get((u, par), 1.0), seen | {par})
+        dfs(x, 1.0, {x})
+        no = 1.0
+        for pp in paths:
+            no *= (1.0 - pp)
+        return 1.0 - no
+
     def is_a(self, x: str, c: str) -> bool:
         """Multi-hop IS-A by transitive closure; an explicit negative fact (correction) overrides."""
         x, c = self._norm_phrase(x), self._norm_phrase(c)

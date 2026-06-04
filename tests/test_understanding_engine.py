@@ -354,3 +354,14 @@ def test_causal_reasoning_intervention():
     assert not e.causes_effect("slippery", "rain")                   # asymmetric
     assert not e.causes_effect("rain", "slippery", intervene="wetgrass")  # do(wetgrass) cuts incoming edges
     assert e.causes_effect("rain", "slippery", intervene="sprinkler")     # unrelated intervention
+
+
+def test_probabilistic_reasoning():
+    e = UnderstandingEngine(seed=142)
+    for x, y in [("a", "b"), ("b", "c"), ("c", "d")]:
+        e.tell_prob(x, y, 0.9)
+    assert abs(e.is_a_prob("a", "d") - 0.729) < 0.02      # chain compounds: 0.9^3
+    e2 = UnderstandingEngine(seed=2)
+    for x, y in [("s", "m1"), ("m1", "t"), ("s", "m2"), ("m2", "t")]:
+        e2.tell_prob(x, y, 0.9)
+    assert e2.is_a_prob("s", "t") > 0.81                  # two paths noisy-OR > single path (aggregation)
