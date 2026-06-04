@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 18 / predictions 28 (JEP-116 HIT) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
+Running tally: hits 19 / predictions 29 (JEP-117 HIT; streak 116-117) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
 
 | id | prediction (🔮 before) | outcome | hit? | lesson (don't repeat) |
 |----|------------------------|---------|------|------------------------|
@@ -35,3 +35,4 @@ Running tally: hits 18 / predictions 28 (JEP-116 HIT) (JEP-92 x3, JEP-93, JEP-94
 | JEP-114 | 🔮 >=0.9 with 1 label/cluster | 1.00 (20 unlabeled) | HIT | One label per pure cluster propagates the name; engine reasons with real words. Honest: needs a labeling signal + pure clusters. |
 | JEP-115 | 🔮 100%; risk = dedup/ordering | 1/6 then 6/6 after 2 fixes | MISS | describe() found (1) _norm_phrase didn't strip leading article; (2) DEEPER: induction over-generalized 'fly' to ANIMAL so a poodle 'could fly' — fixed to induce at the MOST-SPECIFIC common ancestor. Integration/generation finds what unit tests assume away. |
 | JEP-116 | 🔮 >=0.8 cross-situational naming despite ambiguity | 1.00 (5/5) | HIT | 600 scenes of noisy co-occurrence aligned word<->cluster; grounded a perceived instance, reasoned. Honest: needs scenes>ambiguity; easy perception. |
+| JEP-117 | 🔮 >=0.8 self-taught is-a, super-naming the weak point | 1.00 (sub 1.00, super 1.00) | HIT | Full self-supervised pipeline (cluster+cross-situational) wired a named taxonomy with NO told facts; engine reasons + describes ('A dog is a mammal'). |
