@@ -100,3 +100,12 @@ def test_multiword_concepts():
     assert e.explain("is a poodle a living thing?") == \
         "Yes. A poodle is a dog, a dog is an animal, an animal is a living thing."
     assert e.is_a("poodle", "living_thing")           # underscore form still works (regression)
+
+
+def test_natural_input_adjectival_and_plural():
+    e = UnderstandingEngine(seed=99)
+    assert e.tell("A big dog is an animal.")[0] == "isa"      # adjectival/multi-word subject
+    assert e.is_a("big dog", "animal")
+    assert e.ask("is a big dog an animal?") is True           # multi-word subject in the QUESTION too
+    assert e.tell("Poodles chase cats.")[0] == "rel"          # plural SVO, no "the"
+    assert e.relation_true("poodle", "chase", "cat")

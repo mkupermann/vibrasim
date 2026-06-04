@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 6 / predictions 10 (JEP-98 corrected HIT->MISS after honest review) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
+Running tally: hits 7 / predictions 11 (JEP-98 corrected HIT->MISS; JEP-99 per-item HIT) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
 
 | id | prediction (🔮 before) | outcome | hit? | lesson (don't repeat) |
 |----|------------------------|---------|------|------------------------|
@@ -17,3 +17,4 @@ Running tally: hits 6 / predictions 10 (JEP-98 corrected HIT->MISS after honest 
 | JEP-96 | 🔮 100%; most-likely miss = negation parse in tell() (_ISA grabs 'not') | 8/8 = 100% | HIT | Dedicated _NEG_ISA regex before _ISA, surface-form lesson applied proactively; correction retracts edge + neg overrides closure. |
 | JEP-97 | 🔮 held-out>=0.9, existing>=0.95, grounded comprehension=100%; risk = off-center few-shot mean | bird 1.00 / existing 1.00 / comp 1.00 | HIT | Perception easy at this separation (caveat noted); concept-from-examples mode works + integrates. |
 | JEP-98 | 🔮 multi-word _norm_phrase fixes demo + keeps tests/tiers green | demo fixed BUT the NEW multi-word test FAILED (asserted underscore=space equivalence that didn't hold), and I committed it FAILING; the underscore->space unification fix then broke JEP-94's literal expectations | **MISS** | TWO lessons: (1) underscore and space were different keys -> unified them in _norm_phrase (space canonical); a refactor's canonical-form change cascades to literal expectations - update them. (2) PROCESS: I chained `git commit` after `pytest` unconditionally and committed a failing test. NEVER commit without gating on a green test run. |
+| JEP-99 | 🔮 per-item: PASS plurals/multi-word; FAIL adjectival subjects + plural SVO | exactly that — both failed to parse, then fixed | HIT | Fixes needed propagation to the QUERY parser too (shared _parse_isa_q) — the 'fix every parser' lesson again; applied. One runner 'miss' was my own wrong expected value (engine correct). |

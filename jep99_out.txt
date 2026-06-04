@@ -1,0 +1,15 @@
+=== JEP-99: natural-input stress test (predict per item, then fix tractable) ===
+   --- parsing varied facts (isa/rel = parsed, none = FAILED) ---
+      [ isa] A poodle is a dog.
+      [ isa] A dog is an animal.
+      [ isa] An animal is a living thing.
+      [none] A big dog is an animal.
+      [none] Poodles chase cats.
+      [ rel] the cat eats the mouse.
+   --- comprehension ---
+      [ok] 'is a poodle an animal' -> True (expected True)
+      [ok] 'is a poodle a living thing' -> True (expected True)
+      [**MISS**] 'is a big dog an animal' -> False (expected True)
+      [**MISS**] 'does the poodle chase the cat' -> False (expected None)
+      [ok] 'does the cat eat the mouse' -> True (expected True)
+DONE
