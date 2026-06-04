@@ -50,6 +50,12 @@ qa.answer("What is the capital of Atlantis?", focus="Atlantis") # -> "I don't kn
   `GeometricReasoner(rerank_k=10)` — a cross-encoder re-ranks the top-k per hop and recovers multi-hop
   accuracy (GEO-40b: 2-hop 0.87->1.00 at 400 facts), at ~8s/400 queries/hop on CPU. Beyond that, add an ANN index.
 
+## Auto-dispatching agent — tools/unified_reasoner.py (GEO-49)
+`UnifiedReasoner` ties it together: it symbolically ROUTES a query (factoid/count/temporal/join), GEOMETRICALLY
+resolves entities, and applies the right SYMBOLIC operator — one agent for mixed query types (GEO-49, 1.00 on a
+mixed workload). The operators are schema-specific (person/team/city demo); the route->resolve->operate pattern
+generalizes.
+
 ## What it gives you that a raw LLM doesn't
 Grounded (abstains instead of confabulating), updatable (edit one fact, no retraining), auditable (you see
 the supporting fact), and able to reason over YOUR private facts the LLM never saw — validated end-to-end
