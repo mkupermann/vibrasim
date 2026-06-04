@@ -21,6 +21,12 @@ composition/retrieval/inference. ML/LLM allowed, PC-scale. (EQMOD physics abando
 | **3-hop robust to 100 distractors + paraphrase** | **GEO-17** | **PASS 1.00** |
 | **Aggregation via retrieval + symbolic layer** | **GEO-18** | **PASS 1.00 (pure geometry 0.00)** |
 
+## CRITICAL lexical caveat (GEO-25/25b)
+Named-entity retrieval/QA/grounding headline 1.00s are LEXICALLY solvable (a token-overlap baseline ties
+geometry, because entity names are shared unique keys) — they show the pipeline runs, not that geometry is
+necessary. The geometry's genuine value appears only without a lexical shortcut: descriptive/semantic
+retrieval (GEO-25b 0.80 vs lexical 0.10), analogy (GEO-5), offsets/few-shot (GEO-6), LLM-prior (GEO-24).
+
 ## Honest BOUNDARIES
 - Antonyms weak (GEO-9, 0.54). Arbitrary unstructured new facts: geometry can't generalize (GEO-10) -> need MEMORY.
 - Composition depth decays gracefully (GEO-2); linear chains degenerate for normalized TransE (GEO-13 inconclusive).
