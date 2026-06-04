@@ -1,0 +1,15 @@
+=== JEP-83: substrate LEARNS FROM A SOURCE (world.knowledge VSA/HDC, no transformer) ===
+   ingested 9 passages from the source; vocab df=47 words
+   (a) distributional: within-topic sim 0.359 vs cross-topic 0.163 (gap +0.196); related>unrelated 4/4
+   (b) retrieval QA: top passage contains the answer for 3/4 questions (0.75)
+   (c) online learning: target passage rank 1 -> 0 after local feedback updates
+
+--- VERDICT ---
+JEP-83: PASS - the substrate LEARNS FROM A SOURCE with no transformer: distributional co-occurrence
+gives related words similar vectors (within 0.36 > cross 0.16); it retrieves answers (0.75);
+and it improves from local feedback (rank 1->0). This is step ONE of 'learn from
+sources and communicate' - established VSA/HDC + Random Indexing (Kanerva/Sahlgren), named; no novelty.
+HONEST CEILING: this RETRIEVES and RE-RANKS passages from the source. It does NOT (yet) GENERATE novel
+fluent English, do multi-hop INFERENCE, or demonstrate grounded UNDERSTANDING. That gap - learned,
+generative, grounded language without a transformer - is the open multi-year frontier, not today's result.
+DONE
