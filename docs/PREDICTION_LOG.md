@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 35 / predictions 54 (JEP-140 HIT — induction aggregates, robust vs deduction's chaining) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
+Running tally: hits 36 / predictions 55 (JEP-141 HIT — causal reasoning + intervention) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
 
 | id | prediction (🔮 before) | outcome | hit? | lesson (don't repeat) |
 |----|------------------------|---------|------|------------------------|
@@ -61,3 +61,4 @@ Running tally: hits 35 / predictions 54 (JEP-140 HIT — induction aggregates, r
 | JEP-138 | 🔮 DAG degrades slower than chain; risk = spurious-path false-positives | DAG TPR 0.89 vs chain 0.73 @noise0.2, but DAG FPR 0.14 vs 0.08 | HIT | Redundant paths error-correct (recall gain) at a precision cost. Closes the compounding arc: robust inference = many independent paths + aggregation, not one deep chain. |
 | JEP-139 | 🔮 conf>=2 threshold improves precision | negligible precision gain (+0.00/+0.02) + catastrophic recall loss (0.89->0.36) | MISS | Mis-applied: JEP-138 redundancy is a RECALL tool (survive broken edges), NOT precision-via-path-count. Boolean precision already high; many true conclusions have 1 path -> over-filtered. Honest NULL. |
 | JEP-140 | 🔮 induction more noise-robust than deduction (plateau to ~50%) | induction 0.91@30% vs deduction 0.20; robust to ~45% | HIT | Aggregation averages noise; chaining compounds it. Completes the inference-robustness picture. |
+| JEP-141 | 🔮 100%; risk = intervention edge-cutting | 7/7 | HIT | Causal transitive + do-operator (cut incoming edges). A distinct human faculty (Pearl do-calculus, qualitative). |
