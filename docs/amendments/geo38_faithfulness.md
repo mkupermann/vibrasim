@@ -16,3 +16,17 @@ omits the unsupported part; an unfaithful one invents the missing detail.
 - Bars: (a) team mentioned correctly >= 0.7; (b) WITHOUT the faithfulness instruction, salary-invention >=
   0.3 (shows the risk); WITH a "say 'not stated' if absent" instruction, salary-invention drops by >= 0.3
   (shows it is mitigable). Report both. Honest characterization rung.
+
+## Result — characterization (real but modest risk, fully mitigable)
+| metric | value |
+|--------|-------|
+| team mentioned correctly (plain) | 1.00 |
+| salary INVENTED (plain prompt) | 0.25 |
+| salary INVENTED (faithfulness prompt) | **0.00** |
+
+**VERDICT: characterization** (did not clear the pre-registered 0.3 invention/drop bars — invent-plain 0.25,
+drop 0.25 — NOT retuned). The substantive finding is clear regardless: grounded generation confabulates
+unsupported details a quarter of the time with a NAIVE prompt, and an explicit "if a detail is not in the
+context, say 'not stated'" instruction ELIMINATES it (0.25 -> 0.00) while keeping the supported answer
+correct (1.00). **Practical guideline:** the grounded generator needs an explicit faithfulness instruction;
+with it, the 0.5B model stays within context on this test. Applied to the GroundedQA module's prompt.
