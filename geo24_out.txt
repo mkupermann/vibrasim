@@ -1,0 +1,17 @@
+=== GEO-24: LLM-prior for data-efficient structure learning ===
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 11429.83it/s]
+  relation A semantic-size:
+    k= 4  LLM-init=0.74  random-init=0.62  delta=+0.12
+    k= 8  LLM-init=0.84  random-init=0.71  delta=+0.12
+    k=16  LLM-init=0.86  random-init=0.78  delta=+0.09
+    k=32  LLM-init=0.89  random-init=0.81  delta=+0.09
+  relation B arbitrary:
+    k= 4  LLM-init=0.59  random-init=0.66  delta=-0.07
+    k= 8  LLM-init=0.65  random-init=0.71  delta=-0.06
+    k=16  LLM-init=0.73  random-init=0.80  delta=-0.07
+    k=32  LLM-init=0.74  random-init=0.80  delta=-0.05
+
+--- VERDICT ---
+GEO-24: characterization — compare delta(LLM-random) for semantic A vs arbitrary B (curves above).
+DONE
