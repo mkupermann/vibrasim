@@ -14,3 +14,17 @@ JEP-23/24: Euclidean fits metric structure, hyperbolic fits hierarchy. Real conc
 - Bars: MIXED Spearman >= max(Euclidean, Hyperbolic) + 0.05 AND mixed >= 0.85. PASS = mixed-curvature handles
   the combined structure better than either pure geometry - the synthesis the geometry thread pointed to. NULL
   otherwise. Product manifolds (Gu et al. 2019), Poincare (Nickel-Kiela 2017) established - named as such.
+
+## Result — NULL (metric-dominated structure; mixed capacity-starved)
+| embedding | Spearman |
+|-----------|----------|
+| pure Euclidean (4D) | 0.933 |
+| MIXED (2D x 2D) | 0.833 |
+| pure Hyperbolic (4D) | 0.502 |
+
+**VERDICT: NULL (informative).** Pure Euclidean WON - hypothesis refuted on this structure, for a clear reason:
+the graph is METRIC-DOMINATED (96/112 nodes are SHALLOW depth-2 trees that barely distort Euclidean; the grid
+dominates distances), and the mixed model's 2D Euclidean component was CAPACITY-STARVED vs pure 4D Euclidean for
+that dominant grid. Mixed-curvature only helps when BOTH geometries are genuinely needed and balanced. Fair test
+= a true GRID x TREE Cartesian product (distance = grid_dist + tree_dist) where pure Euclidean fails the tree
+factor AND pure hyperbolic fails the grid factor -> JEP-25b. Bars locked, not tuned.
