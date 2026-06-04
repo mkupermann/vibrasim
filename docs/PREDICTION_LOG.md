@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 31 / predictions 49 (JEP-135 HIT main claim — active querying solves sparse limit) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
+Running tally: hits 32 / predictions 50 (JEP-136 HIT — predicted active advantage + compounding failure) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
 
 | id | prediction (🔮 before) | outcome | hit? | lesson (don't repeat) |
 |----|------------------------|---------|------|------------------------|
@@ -56,3 +56,4 @@ Running tally: hits 31 / predictions 49 (JEP-135 HIT main claim — active query
 | JEP-133 | 🔮 noise-tolerant robust to 20-30% noise | collapses to chance by 10-20% (tolerant 0.65 at 10%, 0.53 at 20%) | MISS | Over-optimistic: noise corrupts the CLOSURE itself, tolerance can't fix it. META: miscalibrated on structure-learning BOTH ways — over-predict clean difficulty, under-predict noisy difficulty. Noisy-structure frontier is genuinely HARD. |
 | JEP-134 | 🔮 redundancy rescues at k~5-10 | recovers but needs k~25 (0.89) at 30% noise | MISS | Under-predicted AGAIN. INSIGHT: closures COMPOUND errors — need MANY facts all-correct, so per-fact denoising must be near-perfect -> high redundancy. The fundamental reason noisy structure learning is hard. |
 | JEP-135 | 🔮 active ~n log n << passive, solves sparse; risk = cycle detection | active n log n (12x speedup at n=64), 1.00 correct; cycle-detection sub-test inadequate (flagged) | HIT (main) | Active querying solves the sparse-data limit (choose informative comparisons). Honest: noiseless oracle; single-long-cycle detection needs path-tracing, not demonstrated. |
+| JEP-136 | 🔮 active<<passive queries; risk = mis-vote corrupts sort, needs higher k | active strictly beats passive (0.60 vs 0.03 @n=16,k=11) BUT correctness degrades with n (sort compounds errors) | HIT | Both halves held. Noisy structure learning: active+redundant is the efficient route but redundancy must scale with structure SIZE (k~log n) — compounding. |
