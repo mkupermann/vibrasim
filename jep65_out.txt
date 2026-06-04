@@ -1,0 +1,12 @@
+=== JEP-65: compositional generalization to 2^5 goals from 5 primitives ===
+  zero-shot compositional grounding F1 (arbitrary primitive-subset goals) = 1.000
+  grounded-planning to compositional goals success = 1.000
+
+--- VERDICT ---
+JEP-65: PASS - compositionality BUILT IN: from 5 learned primitives the agent grounds and plans to
+ARBITRARY primitive-subset goals (2^5=32 possible, incl. novel combinations) zero-shot - grounding
+F1 1.00, planning 1.00. Systematic generalization to combinatorially-many goals from few
+primitives - a genuine hallmark of human-like understanding, now demonstrated (toy). The categorize-
+not-compose gap (JEP-64) is closed by an explicit compositional code. Established (decomposition,
+set logic, SR/TD), named as such.
+DONE
