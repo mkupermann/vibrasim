@@ -61,3 +61,14 @@ def test_abstention_calibration_runs(reasoner):
         ["What is the weather?", "Who won the game?"],
     )
     assert 0.0 < tau < 1.0
+
+
+def test_contradiction_detection(reasoner):
+    # same subject (Alice), different object -> flagged; consistent -> not flagged (GEO-41)
+    assert reasoner.check_contradiction("Alice works at Globex.", subject="Alice", object="Globex") is not None
+    assert reasoner.check_contradiction("Alice works at Acme.", subject="Alice", object="Acme") is None
+
+
+def test_entity_resolution_is_typo_robust(reasoner):
+    # near-duplicate / typo'd name resolves to the stored subject (GEO-44)
+    assert reasoner.resolve_entity("Alic", candidates=["Alice", "Bob", "Carol"]) == "Alice"
