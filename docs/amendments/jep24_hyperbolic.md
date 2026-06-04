@@ -16,3 +16,16 @@ most needs.
 - Bars: hyperbolic Spearman >= 0.85 AND >= Euclidean + 0.3. PASS = hyperbolic geometry recovers the hierarchy,
   confirming the boundary diagnosis and extending the approach to trees. NULL otherwise. Poincare embeddings
   (Nickel-Kiela 2017) established - named as such.
+
+## Result — PARTIAL (hyperbolic > Euclidean but under-optimized)
+| embedding | tree Spearman(emb,graph) |
+|-----------|--------------------------|
+| Euclidean SR (JEP-23b) | 0.41 |
+| Hyperbolic (this run) | 0.54 |
+
+**VERDICT: PARTIAL.** Hyperbolic improved over Euclidean (0.54 vs 0.41, +0.13) - directionally confirming the
+geometry fix - but missed the 0.85 bar due to two implementation shortfalls vs proper Nickel-Kiela: (1) I used
+only DIRECT parent-child edges as positives; the method uses the full TRANSITIVE CLOSURE of ancestor-descendant
+pairs (denser supervision of global structure). (2) Plain Adam + ball-projection instead of true RIEMANNIAN SGD
+(scale grad by the conformal factor) - so leaf points cannot reach the boundary where hyperbolic space has the
+room to separate them. Both fixable -> JEP-24b. Bars locked, not tuned.

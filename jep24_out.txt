@@ -1,0 +1,6 @@
+=== JEP-24: Poincare embedding of a tree (N=63) ===
+  hyperbolic Spearman(emb-dist, graph-dist) = 0.540  (Euclidean baseline from JEP-23b = 0.41)
+
+--- VERDICT ---
+JEP-24: PARTIAL/NULL - hyperbolic Spearman 0.54
+DONE
