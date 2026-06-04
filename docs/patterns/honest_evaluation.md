@@ -8,7 +8,11 @@ A method with higher benchmark accuracy can make a DOWNSTREAM TASK worse. Order 
 classification (0.91 vs 0.78) but made an integrated agent WORSE (0.50 vs 0.79) - because grounding needs
 precision against CROSS-BRANCH confusions, which was exactly order embeddings' error type, while the better-on-
 benchmark method's errors (siblings) never arose in that task. **Evaluate methods on the actual downstream task,
-and look at WHICH errors they make - not just a scalar benchmark.**
+and look at WHICH errors they make - not just a scalar benchmark.** SHARPENED (JEP-47): even a PRECISION
+metric must be measured on the TASK's pair distribution, not random pairs. Entailment cones had the best
+random-pair precision (TNR 0.98) but the WORST grounding (0.24), because the task checks leaf-vs-general-category
+pairs where general concepts' wide cones produce cross-branch false-positives that random-pair metrics never
+surfaced. Two wrong predictions (JEP-46/47) both reduced to: measure on your task's actual input distribution.
 
 ## 2. Quantify a claim before repeating it (JEP-40/41)
 I asserted "real-scale under-convergence is just compute" across several rungs. When finally measured: accuracy
