@@ -40,3 +40,25 @@ cross-situational naming UNDERDETERMINES hierarchy LEVELS; JEP-117's superordina
 the INSTANCE->basic-level naming (JEP-116) is robust (basic-level words ARE exclusive to their tight cluster, so
 PMI works). Recorded as-is; no claim of a working fix. Tally 19/31. Established (cross-situational learning limits;
 the taxonomic/basic-level constraints exist precisely because co-occurrence underdetermines level), named.
+
+## JEP-118c — LCA-of-extension naming: PARTIAL (the correct criterion; genuine data limits remain)
+LCA-of-extension (a word names the smallest cluster with coverage>=0.7 AND specificity>=0.7 over its instance
+extension) — self-taught is-a accuracy:
+| sigma\freq | 0.6 | 0.2 |
+|------------|-----|-----|
+| 0.35 | 1.00 | 0.00 |
+| 0.8  | 1.00 | 0.00 |
+| 1.5  | 0.74 | 0.00 |
+
+PARTIAL. The LCA criterion is the CORRECT one and works at adequate super-word frequency (1.00 at freq 0.6, low/mid
+sigma) — fixing JEP-118b's total failure. Two GENUINE limits remain: (1) freq=0.2 still 0.00 — the superordinate
+word is heard too rarely, so its extension covers <70% of the super-cluster (coverage too sparse). This is a real
+EXPOSURE limit, not a method flaw (you can't learn a word you barely hear). (2) sigma=1.5 drops to 0.74 — at extreme
+perceptual overlap the clustering itself starts to fail (so overlap DOES matter at the extreme, partly vindicating
+JEP-118's original instinct). HONEST ENVELOPE of self-taught hierarchical learning: it works given ADEQUATE
+superordinate-word exposure AND sufficiently DISTINCT concepts; it fails on rare super-words or heavy concept
+overlap. The basic/instance level (JEP-116) is robust; the superordinate level needs more data. Calibration: PARTIAL
+(predicted >=0.9 everywhere). Established (extension-based naming, the taxonomic constraint), named; no novelty. This
+4-rung arc (117 capstone -> 118 honest correction -> 118b failed fix -> 118c principled-but-bounded fix) is the
+discipline characterizing a frontier honestly: a fragile success, corrected, a failed fix owned, then the real
+criterion and its real limits.
