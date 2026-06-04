@@ -29,3 +29,10 @@ false-positive (TNR 0.92) - siblings have small distance AND near-zero norm gap,
 decision boundary. So: the major flaw (any-general-concept-in-any-branch) is fixed and is_a is now a proper
 calibrated is-a classifier (0.96), with a known weakness on same-depth siblings. Real improvement, honestly
 bounded - NOT claiming perfect. Deliverable + README updated with the sibling caveat. Bars locked, not tuned.
+
+## Follow-up — test correction (and a real finding about calibration data)
+I initially committed a cross-branch test on a TINY 8-node taxonomy; it FAILED (the calibrated classifier could
+not reliably reject oak/mammal there) and I pushed a red test - caught and fixed immediately. The honest finding:
+the calibrated is_a needs ENOUGH ancestor/non-ancestor pairs to calibrate; on a tiny tree there is too little
+data, so cross-branch rejection is unreliable. On an adequately-sized taxonomy (>= ~25 nodes) it works (0.96).
+Test corrected to use an adequately-sized taxonomy; 5/5 pass. Lesson logged: the containment fix is data-dependent.
