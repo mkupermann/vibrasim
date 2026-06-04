@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 44 / predictions 63 (JEP-149 HIT — spatial reasoning + perspective) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
+Running tally: hits 45 / predictions 64 (JEP-150 HIT — mereology distinct from is-a) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
 
 | id | prediction (🔮 before) | outcome | hit? | lesson (don't repeat) |
 |----|------------------------|---------|------|------------------------|
@@ -70,3 +70,4 @@ Running tally: hits 44 / predictions 63 (JEP-149 HIT — spatial reasoning + per
 | JEP-147 | 🔮 100%; risk = coverage-vs-overprediction scoring | 4/4 | HIT | Diagnosis COMPOSES abduction+deduction+covering; symptoms -> best-explaining cause (anosmia distinguishes covid). Faculties combine, not just coexist. |
 | JEP-148 | 🔮 100%; risk = multi-step/multiple actions | 4/4 | HIT | Causal planning: achieve(effect) -> actionable root causes (handles multi-step chains; sprinkler excluded as non-root). Completes the causal toolkit. |
 | JEP-149 | 🔮 100%; risk = perspective flip vs invariance | 9/9 | HIT | Spatial transitive + inverse + perspective transform (left/right flip from opposite view, above/below invariant). |
+| JEP-150 | 🔮 100%; risk = part-of/is-a graph leakage | 8/8 | HIT | part-of transitive + asymmetric + DISTINCT from is-a (finger part-of body, not a body); graphs don't leak. |

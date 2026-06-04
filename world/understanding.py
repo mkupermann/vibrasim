@@ -513,6 +513,27 @@ class UnderstandingEngine:
                 val = sets[fluent]       # most recent change persists
         return val
 
+    def tell_part(self, part: str, whole: str) -> None:
+        """Mereology: record 'part is part-of whole' (e.g. finger part-of hand). Kept SEPARATE from IS-A —
+        part-of is NOT type-of (a finger is part of a hand but is NOT a hand)."""
+        if not hasattr(self, "part_of_g"):
+            self.part_of_g = {}
+        self.part_of_g.setdefault(self._norm(part), set()).add(self._norm(whole))
+
+    def part_of(self, x: str, z: str) -> bool:
+        """Is x part of z (transitively)? Part-of is transitive (finger->hand->body) but distinct from is_a."""
+        g = getattr(self, "part_of_g", {})
+        x, z = self._norm(x), self._norm(z)
+        stack, seen = [x], {x}
+        while stack:
+            cur = stack.pop()
+            for w in g.get(cur, ()):
+                if w == z:
+                    return True
+                if w not in seen:
+                    seen.add(w); stack.append(w)
+        return False
+
     def tell_cause(self, x: str, y: str) -> None:
         """Record a causal edge x -> y (x causes y). Stored separately from IS-A (causation is not taxonomy)."""
         if not hasattr(self, "causes"):
