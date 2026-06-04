@@ -69,7 +69,7 @@ def train_pc(Xtr,Ytr,dims,epochs,lr,bs=128,infer=25,beta=0.1):
     return Ws
 def main():
     print("=== JEP-19b: clean PC vs backprop, MATCHED (MSE+tanh+plain SGD) ===",flush=True)
-    for name,npz,epochs,lr in [("MNIST","data/mnist.npz",20,0.3),("Fashion-MNIST","data/fashion_mnist.npz",25,0.3)]:
+    for name,npz,epochs,lr in [("MNIST","data/mnist.npz",20,0.05),("Fashion-MNIST","data/fashion_mnist.npz",25,0.05)]:
         Xtr,Ytr,ytr,Xte,yte=load(npz)
         print(f"\n  [{name}]",flush=True)
         for hid,lbl in [([512],"1-hidden"),([512,512],"2-hidden")]:
