@@ -48,8 +48,9 @@ Validated, with limits, across EQMOD-4 (see `docs/amendments/jep28*.md`, `jep29*
 
 **Held-out generalization needs SCALE (JEP-51):** the reasoner answers is_a for relations IN its fitted
 taxonomy reliably (in-sample recall ~1.0). But generalizing to UNSEEN is_a relations (held-out link prediction)
-is WEAK on small taxonomies (~0.4 calibrated recall on ~30 concepts) and needs a larger taxonomy (77+) to
-generalize. The "0.91 generalization" figure (JEP-28b) was the norm-DIRECTION metric (which-is-more-general,
+is WEAK only on VERY SMALL taxonomies (<~50 concepts: ~0.4 recall); at >=50 concepts it generalizes reasonably
+(balanced ~0.85, recall ~0.73, JEP-52). The calibrated is_a is conservative (high precision, ~0.73 recall) - good
+for grounding. The "0.91 generalization" figure (JEP-28b) was the norm-DIRECTION metric (which-is-more-general,
 given a known pair) on a larger taxonomy, not calibrated is_a recall on a small one. Use it as a lookup over a
 KNOWN taxonomy; do not expect strong unseen-relation prediction on small inputs.
 
