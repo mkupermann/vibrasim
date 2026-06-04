@@ -1,0 +1,9 @@
+=== JEP-9: Successor Representation on a random maze (M=12, S=144 states, 16 threads) ===
+  closed-form SR done
+  TD-learned SR vs closed-form: corr=1.00
+  Spearman geodesic/euclid:  SR=0.54/0.39   contrastive=0.29/0.23   euclid-emb=0.40/0.97
+  navigate reached:  SR=0.12  SR-TD=0.14  contrastive=0.24  euclid=0.07  random=0.31
+
+--- VERDICT ---
+JEP-9: PARTIAL/NULL - ok1=False ok2=False ok3=False ok4=True (SR geo 0.54, nav 0.12, con geo 0.29/nav 0.24, td 1.00)
+DONE
