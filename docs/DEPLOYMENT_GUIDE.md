@@ -50,6 +50,13 @@ Grounding amplifies retrieval BOTH ways:
 - **Noise:** character typos x near-duplicate entities are the main failure (GEO-43); fix with entity
   resolution. Paraphrase is handled fine; near-duplicates with clean text are fine.
 
+## The irreducible residual risk (GEO-82)
+Most GIGO is mitigable: coverage gaps -> abstention; conflicting facts -> conflict detection; wrong PUBLIC-
+knowledge facts -> optional LLM-prior fact-check (`gen` the question, compare to stored answer; catches errors
+1.00 but FALSE-FLAGS private/updated facts 0.80, so use ONLY for public-knowledge stores). The ONE irreducible
+residual: a single wrong PRIVATE fact with no conflicting fact — no automatic check can catch it (the LLM has
+no prior to check against). Mitigation = data provenance/curation. Keep your store clean.
+
 ## The honest bottom line
 This makes a small model trustworthy on YOUR facts — IF you keep retrieval clean and abstain when unsure.
 It is a deployable engineering synthesis, not human-level AI and not a new method. Its biggest strength
