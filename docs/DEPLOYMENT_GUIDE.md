@@ -67,6 +67,12 @@ knowledge facts -> optional LLM-prior fact-check (`gen` the question, compare to
 residual: a single wrong PRIVATE fact with no conflicting fact — no automatic check can catch it (the LLM has
 no prior to check against). Mitigation = data provenance/curation. Keep your store clean.
 
+## Improving retrieval quality (GEO-91/92)
+Retrieval quality is the accuracy ceiling. To improve it: use a better base model (mpnet) and re-ranking and
+entity-resolution (all shipped). Do NOT fine-tune the embedder on a handful of examples — both a linear adapter
+(GEO-91) and proper contrastive fine-tuning (GEO-92) failed on ~10 pairs (data-limited; a pretrained embedder
+is already strong). Fine-tuning helps only with SUBSTANTIAL labelled query-fact pairs (hundreds+).
+
 ## Bilingual / multilingual use (GEO-89)
 For a mixed-language KB (e.g. German + English notes/contacts), use the multilingual model
 (`model_name="paraphrase-multilingual-MiniLM-L12-v2"`): mixed German+English store + cross-language queries
