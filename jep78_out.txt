@@ -1,0 +1,12 @@
+=== JEP-78: regularized JEPA (VICReg) + latent MPC, with collapse negative control ===
+   REGULARIZED (VICReg)       emb-std=0.982  state-R2=0.983  MPC-dist=0.078  (random=1.084)
+   CONTROL (no regularizer)   emb-std=0.010  state-R2=0.016  MPC-dist=1.301  (random=1.073)
+
+--- VERDICT ---
+JEP-78: PASS - regularized JEPA gives a non-collapsed, state-decodable embedding (std=0.98,
+R2=0.98) and supports latent MPC to goals (dist=0.08 < random 1.08). The UNregularized
+control COLLAPSES (std=0.01, R2=0.02) - VICReg regularization is what prevents collapse.
+All four pillars together: joint-embedding + energy(prediction) + REGULARIZED + MPC. Established, named.
+HONEST SCOPE: encoder trained by gradient descent (torch), not substrate plasticity here; substrate-native
+predictor training shown separately (predictive coding, JEP-19). VICReg/JEPA/MPC established; no novelty.
+DONE
