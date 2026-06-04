@@ -519,6 +519,28 @@ class UnderstandingEngine:
             self.causes = {}
         self.causes.setdefault(self._norm(x), set()).add(self._norm(y))
 
+    def abduce(self, effect: str):
+        """Abduction (inference to the best explanation, Peirce): given an observed EFFECT, return the candidate
+        CAUSES that could produce it (reverse causal closure), ranked by causal DISTANCE — the most DIRECT cause
+        first (parsimony: fewest causal steps = simplest explanation)."""
+        causes = getattr(self, "causes", {})
+        z = self._norm(effect)
+        # reverse edges
+        rev = {}
+        for a, ys in causes.items():
+            for y in ys:
+                rev.setdefault(y, set()).add(a)
+        dist, frontier, seen = {}, [z], {z}
+        d = 0
+        while frontier:
+            nxt = []
+            for node in frontier:
+                for cause in rev.get(node, ()):
+                    if cause not in seen:
+                        seen.add(cause); dist[cause] = d + 1; nxt.append(cause)
+            frontier = nxt; d += 1
+        return sorted(dist, key=lambda c: (dist[c], c))   # nearest cause first
+
     def causes_effect(self, x: str, z: str, intervene: str = None) -> bool:
         """Does x causally affect z (transitively)? Under do(intervene), the intervened node's INCOMING causal
         edges are cut (Pearl's do-operator): its value is set externally, so its usual causes no longer reach
