@@ -1,6 +1,6 @@
 # Pattern: honest evaluation — lessons the EQMOD-4 NULLs earned
 
-Reusable methodological patterns, each from a specific NULL/self-correction in the JEPA programme (JEP-1..46).
+Reusable methodological patterns, each from a specific NULL/self-correction in the JEPA programme (JEP-1..56).
 These are about HOW to evaluate, not what to build — and each cost a wrong claim before it was learned.
 
 ## 1. Error PATTERN beats aggregate accuracy for downstream utility (JEP-46)
@@ -43,6 +43,21 @@ Bars were locked before running and never tuned post-hoc. **Pre-register, then r
 Most rungs that "failed" produced the insight that drove the next step: JEP-2 NULL (random encoder) -> JEP-5
 fix; JEP-37 (integration degrades) -> the error-pattern finding; JEP-40/41 (method ceiling) -> JEP-42 the right
 method. **Chase the diagnosis, not the green checkmark.**
+
+
+## 8. Error propagation through a pipeline depends on error TYPE: amplify vs absorb (JEP-46 vs JEP-56)
+The same downstream stage (grounding + nearest-target planning) AMPLIFIED upstream errors in one case and
+ABSORBED them in another:
+- AMPLIFY (JEP-46): a CONFIDENT-WRONG upstream output (is-a cross-branch false-positive grounded a canine as a
+  feline) -> the selection step picked it -> a genuinely wrong action. Confident wrong items get selected and
+  amplified.
+- ABSORB (JEP-56): MINORITY-NOISE within a mostly-correct set (an impure discovered category with a correct
+  majority) -> nearest-target selection usually picked a correct member -> the error washed out. Minority noise
+  in a robust-aggregate downstream gets absorbed.
+**Predicting whether a pipeline tolerates upstream errors requires knowing the error TYPE (confident-wrong vs
+minority-noise) and the downstream's selection rule, not just the upstream accuracy.** A high-precision-but-low-
+recall component (misses things but rarely confidently wrong) is SAFER downstream than a high-accuracy-but-
+confidently-wrong one. This is why a CONSERVATIVE is-a (high TNR) is best for grounding (JEP-46/52).
 
 These patterns are the deadlock-breaking process the project is actually about ("developing a deadlock-breaking
 process, not necessarily succeeding at the simulation" - CLAUDE.md). The methods studied are all established
