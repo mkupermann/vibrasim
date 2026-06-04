@@ -10,7 +10,18 @@ structured *building blocks* of understanding - perception, world models, planni
 all from established methods (named throughout), validated on real data. It is NOT human-level understanding;
 the frontier is left open and honestly drawn.
 
-## The two usable deliverables
+## The usable deliverables
+
+### 0. The Understanding Engine — `world/understanding.py` (the headline deliverable)
+A 100%-working, substrate-legal (NO transformer) conversational engine that does all three of Michael's verbs —
+human-like LEARNING, UNDERSTANDING, and COMMUNICATING — on simple-to-natural language. Built bottom-up across
+JEP-92..108b, 20 gated regression tests, the predict-calibrate discipline. Capabilities: 4 learning modes (told
+facts, correction, examples, induction), multi-hop deduction + multi-parent DAG, Boolean AND/OR/NOT, three-valued
+Yes/No/I-don't-know, WH-questions, explanations in English, LEARNING THROUGH DIALOGUE (it identifies its own
+knowledge gap, is taught, then knows), conjunction + pronoun coreference, and clean rejection of out-of-domain
+prose. Full guide: `docs/UNDERSTANDING_ENGINE.md`; demo: `python tools/demo_full_conversation.py`. HONEST scope:
+simple controlled/natural language + given prototypes — the foundation to scale FROM; real-prose parse (~2% of
+Boole, JEP-108b), unsupervised structure (JEP-69/70), open generation, and rich grounding are the named frontier.
 
 ### 1. Concept reasoner — `tools/concept_reasoner.py`
 A mixed-curvature reasoner over any taxonomy (parent->children dict): Euclidean for RELATEDNESS, hyperbolic /
