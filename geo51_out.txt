@@ -1,0 +1,9 @@
+=== GEO-51: symbolic numeric comparison ===
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 11653.67it/s]
+  symbolic comparison accuracy   = 1.00
+  pure-geometric baseline (earns)= 0.42  (GEO-20 found ~0.29)
+
+--- VERDICT ---
+GEO-51: PASS - the SYMBOLIC comparison operator answers numeric comparisons (1.00) where pure geometry fails (0.42). Closes the GEO-20 gap; comparison is the symbolic layer's job, geometry resolves the entities. Last routed operator validated.
+DONE
