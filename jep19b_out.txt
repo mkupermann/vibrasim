@@ -1,0 +1,16 @@
+=== JEP-19b: clean PC vs backprop, MATCHED (MSE+tanh+plain SGD) ===
+
+  [MNIST]
+    1-hidden:  backprop=0.9483   pred-coding=0.9330
+    2-hidden:  backprop=0.9619   pred-coding=0.9277
+
+  [Fashion-MNIST]
+C:\Users\nicet\Documents\GitHub\vibrasim\tools\run_jep19b_clean_pc.py:36: RuntimeWarning: overflow encountered in matmul
+  delta=g@Ws[-1].T
+C:\Users\nicet\Documents\GitHub\vibrasim\tools\run_jep19b_clean_pc.py:38: RuntimeWarning: invalid value encountered in multiply
+  delta=delta*dact(zs[l]); grads[l]=acts[l].T@delta; delta=delta@Ws[l].T
+C:\Users\nicet\Documents\GitHub\vibrasim\tools\run_jep19b_clean_pc.py:62: RuntimeWarning: overflow encountered in matmul
+  fb=(e_lp1@Ws[l].T)*dact(a[l])
+C:\Users\nicet\Documents\GitHub\vibrasim\tools\run_jep19b_clean_pc.py:62: RuntimeWarning: invalid value encountered in multiply
+  fb=(e_lp1@Ws[l].T)*dact(a[l])
+    1-hidden:  backprop=0.1000   pred-coding=0.1000
