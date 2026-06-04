@@ -78,6 +78,12 @@ the STORED answer 100% (overriding the prior) and a runtime edit flips the answe
 editing one entry, no retraining. Grounding + abstention + updatability are the concrete practical edges over
 using a frozen LLM's parametric knowledge directly.
 
+**Grounding's honest limit (GEO-32b):** similarity-threshold abstention reliably rejects OUT-OF-DOMAIN
+questions (low similarity) but NOT in-domain-but-unanswerable ones (e.g. "Who is the CEO?" when no CEO is
+stored sits at sim 0.43, close to the role facts). Calibration can't separate these without rejecting valid
+in-domain queries — that needs answer VERIFICATION (does the retrieved fact entail an answer?), not just a
+retrieval threshold. Geometry filters relevance, not answerability.
+
 ## How to build it on your machine
 CPU is enough (sentence-transformers + numpy). Pipeline: embed your facts once → store with symbolic labels
 → at query time do geometric retrieval/chaining for "what/which/where", drop to the symbolic layer for

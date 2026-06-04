@@ -49,6 +49,19 @@ class GeometricReasoner:
             self._F = self._embed(self.fact_texts) if self.fact_texts else np.zeros((0, 384))
         return self._F
 
+    # ---- calibrate the abstention threshold (GEO-23, GEO-32) -------------
+    def calibrate_abstention(self, answerable_qs, unanswerable_qs, margin: float = 0.5):
+        """Set abstain_tau from labelled dev questions (GEO-23). A guessed constant is unreliable
+        (GEO-32 caught only 2/3 out-of-KB); calibrated on a dev split it reaches ~1.0. tau = the
+        margin-weighted midpoint between answerable and unanswerable max-similarities."""
+        def maxsim(q):
+            return float(np.max(self.F @ self._embed([q])[0])) if self.fact_texts else 0.0
+        a = np.array([maxsim(q) for q in answerable_qs])
+        u = np.array([maxsim(q) for q in unanswerable_qs])
+        # weighted toward the unanswerable side by `margin` to favour precision (fewer false answers)
+        self.abstain_tau = float(margin * a.mean() + (1 - margin) * u.mean())
+        return self.abstain_tau
+
     # ---- core: grounded retrieval (GEO-15, GEO-23) -----------------------
     def retrieve(self, query: str):
         """Return (best_index, similarity) or (None, sim) if below the abstention threshold."""
