@@ -31,3 +31,16 @@ meaningful. A random representation breaks both the world model's usefulness and
 JEP-3: (a) make energy informative — either learn a metric representation (distance=task-distance) or use the
 model as a SIMULATOR (roll forward, check if the predicted state decodes to the goal cell); (b) ensure the
 JEPA model's next-state prediction is accurate enough to plan with.
+
+## JEP-3 Result — PARTIAL (root cause: backprop-free manual predictor + random encoder both weak)
+| metric | value |
+|--------|-------|
+| JEPA model next-cell accuracy | 0.30 |
+| simulation-MPC goals reached | 0.17 |
+
+**VERDICT: PARTIAL.** Even the diagnostic shows the learned model predicts the correct next-cell only 0.30 of
+the time — too inaccurate to plan with. Two compounding causes: (1) the fixed RANDOM encoder gives no smooth
+structure for the predictor to exploit; (2) a hand-rolled regression-to-embedding predictor is weak. The
+digital lesson is clear (use a learned encoder + real optimizer). But this also surfaced the deeper question
+Michael asked: **what is the SUBSTRATE'S genuine benefit here?** Answered in docs/SUBSTRATE_FOR_JEPA.md and
+tested in JEP-4 (substrate-native energy-based inference: local Hebbian learning + relaxation = EBM argmin).
