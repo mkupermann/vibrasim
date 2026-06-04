@@ -85,8 +85,8 @@ retrieve at 1.00 (vs English-only 0.60). Query in either language; both map to t
 ## Security — prompt injection from untrusted store content (GEO-97)
 The system puts retrieved store text into the LLM prompt, so a malicious stored "fact" can be a prompt
 injection (modest risk, 0.17 hijack on the 0.5B model). Naive prompt-based defenses BACKFIRED (0.17->0.33) on
-the small model — don't rely on them. If your store contains UNTRUSTED content: sanitize/escape instruction-
-like text on ingestion, and prefer EXTRACTIVE answers (return the fact, no generation). For a TRUSTED private
+the small model — don't rely on them. If your store contains UNTRUSTED content: sanitize on ingestion (sanitize_text(), GEO-98: strips instruction-like spans, hijack 0.17->0.00, facts
+preserved 1.00) and prefer EXTRACTIVE answers. Do NOT use prompt-based defenses (GEO-97: they backfired). For a TRUSTED private
 personal KB (the main use case), injection is a non-issue.
 
 ## The honest bottom line
