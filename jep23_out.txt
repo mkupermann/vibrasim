@@ -1,0 +1,10 @@
+=== JEP-23: embedding distortion by structure (boundary of Euclidean cognitive maps) ===
+   structure   Spearman(emb,graph)   rel-distortion
+   ring         0.578              0.459
+   grid         0.866              0.313
+   tree         0.355              0.496
+   random       0.570              0.392
+
+--- VERDICT ---
+JEP-23: PARTIAL/NULL - ring 0.58 grid 0.87 tree 0.36 (expected tree<0.8<ring,grid)
+DONE
