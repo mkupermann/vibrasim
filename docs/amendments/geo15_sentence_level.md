@@ -18,3 +18,15 @@ understanding.
 - Both deterministic (one model); report raw numbers.
 
 PASS if (a)>=0.75 AND (b)>=0.6 — relational geometry lifts to sentences. PARTIAL/NULL otherwise (record which).
+
+## Result
+| metric | value |
+|--------|-------|
+| (a) retrieval question->fact hits@1 | **1.00** (chance 0.08) |
+| shuffled control | 0.00 |
+| (b) sentence analogy via offset hits@1 | **1.00** |
+
+**VERDICT: PASS** — relational geometry lifts cleanly to the SENTENCE level on real LLM embeddings. Both
+geometric retrieval (question lands nearest its answer fact) and the offset-analogy structure (relation is
+a consistent translation across sentences) hold at 1.00, control at chance. The words->sentences lift works;
+the geometric method operates on full natural-language sentences, not just words.
