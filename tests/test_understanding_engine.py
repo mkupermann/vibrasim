@@ -161,3 +161,16 @@ def test_multi_parent_dag():
     assert e.is_a("poodle", "dog") and e.is_a("poodle", "pet")
     assert e.is_a("poodle", "animal") and e.is_a("poodle", "owned")  # both lineages
     assert e.respond("what is a poodle?") == "A poodle is a dog and a pet."
+
+
+def test_inductive_generalization_defeasible():
+    e = UnderstandingEngine(seed=105)
+    for f in ["A robin is a bird.", "A sparrow is a bird.", "An eagle is a bird.",
+              "A penguin is a bird.", "A wren is a bird.",
+              "A robin can fly.", "A sparrow can fly.", "An eagle can fly.", "A penguin cannot fly."]:
+        e.tell(f)
+    e.induce()
+    assert "fly" in e._induced.get("bird", set())
+    assert e.has_property("wren", "fly")        # induced, never observed
+    assert not e.has_property("penguin", "fly") # explicit exception overrides (defeasible)
+    assert not e.has_property("robin", "swim")  # not induced

@@ -34,6 +34,9 @@ class UnderstandingEngine:
         self.facts: list[tuple[str, str, str]] = []  # stored relational facts (s, r, o)
         self._fact_vecs: list[np.ndarray] = []
         self.prototypes: dict[str, np.ndarray] = {}  # concept -> perceptual feature prototype
+        self.properties: dict[str, set] = {}         # concept -> properties it HAS ("a robin can fly")
+        self.not_properties: dict[str, set] = {}     # concept -> properties it explicitly LACKS
+        self._induced: dict[str, set] = {}           # category -> inductively generalized properties
 
     # --- vector primitives --------------------------------------------------
     def _rand(self) -> np.ndarray:
@@ -141,6 +144,17 @@ class UnderstandingEngine:
         Supports learning-by-correction: 'X is not a Y' retracts the belief X->Y and records a negative
         fact; a later 'X is a Z' installs the corrected parent."""
         pre = self._preprocess_isa(sentence)
+        # properties: "X cannot/can't/can not VERB" (negative) before "X can VERB" (positive)
+        mpn = re.match(r"^\s*(?:(?:an|a|the)\s+)?(\w+)\s+(?:cannot|can't|can\s+not)\s+(\w+)\s*\.?\s*$", pre, re.I)
+        if mpn:
+            x, p = self._norm_phrase(mpn.group(1)), mpn.group(2).lower()
+            self.not_properties.setdefault(x, set()).add(p)
+            return ("neg_prop", x, p)
+        mpp = re.match(r"^\s*(?:(?:an|a|the)\s+)?(\w+)\s+can\s+(\w+)\s*\.?\s*$", pre, re.I)
+        if mpp:
+            x, p = self._norm_phrase(mpp.group(1)), mpp.group(2).lower()
+            self.properties.setdefault(x, set()).add(p)
+            return ("prop", x, p)
         mneg = self._NEG_ISA.match(pre)
         if mneg:
             child, parent = self._norm_phrase(mneg.group(1)), self._norm_phrase(mneg.group(2))
@@ -221,6 +235,39 @@ class UnderstandingEngine:
             return f"I don't know anything about {self._art(x)} yet."
         return (f"I know {self._art(x)} is {self._art(top)}, "
                 f"but I don't know whether {self._art(top)} is {self._art(c)}.")
+
+    def induce(self):
+        """Inductive generalization: a property shared by >=2 instances of a category, with NO known
+        counterexample, is generalized to the category. Defeasible (a later counterexample/correction wins)."""
+        self._induced = {}
+        categories = set()
+        for ps in self.parents.values():
+            categories |= ps
+        for c in categories:
+            instances = [x for x in self.parents if c in self.ancestors(x)]
+            from collections import Counter
+            cnt = Counter()
+            for i in instances:
+                cnt.update(self.properties.get(i, set()))
+            for p, k in cnt.items():
+                # defeasible: generalize when the property holds for >=2 instances and the positives
+                # outnumber explicit counterexamples; exceptions (e.g. penguin) override per-instance below.
+                neg = sum(1 for i in instances if p in self.not_properties.get(i, set()))
+                if k >= 2 and k > neg:
+                    self._induced.setdefault(c, set()).add(p)
+        return self._induced
+
+    def has_property(self, x: str, p: str) -> bool:
+        """Does x have property p? Explicit fact wins; else INDUCED from a category x belongs to (defeasible)."""
+        x, p = self._norm_phrase(x), p.lower()
+        if p in self.not_properties.get(x, set()):
+            return False
+        if p in self.properties.get(x, set()):
+            return True
+        for c in self.ancestors(x):
+            if p in self._induced.get(c, set()):
+                return True
+        return False
 
     def is_a(self, x: str, c: str) -> bool:
         """Multi-hop IS-A by transitive closure; an explicit negative fact (correction) overrides."""
