@@ -1,0 +1,13 @@
+=== JEP-23b: boundary at NATURAL low dim (clean) ===
+   ring  (k=2): Spearman=0.988
+   grid  (k=2): Spearman=0.915
+   tree  (k=2): Spearman=0.411
+   tree  (k=4, MORE dims): Spearman=0.354
+
+--- VERDICT ---
+JEP-23b: PASS (boundary mapped cleanly) - at natural low dim, METRIC structures embed well in
+Euclidean SR space (ring 0.99, grid 0.92) but the TREE distorts badly (k=2 0.41) and
+stays poor even with MORE dims (k=4 0.35) - the hallmark of hierarchies that need HYPERBOLIC
+geometry (Nickel-Kiela 2017). HONEST BOUNDARY: 'reasoning as navigation in a Euclidean concept
+space' works for metric/grid/order structures, NOT for hierarchies. Maps where EQMOD-4 applies.
+DONE
