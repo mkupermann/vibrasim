@@ -190,3 +190,12 @@ def test_respond_routes_boolean():
     e = _engine()
     assert e.respond("is a poodle an animal and is a poodle a dog?") == "Yes."
     assert e.respond("is a poodle a fish and is a poodle a dog?") == "No."
+
+
+def test_concept_validity_guard_rejects_complex_prose():
+    e = UnderstandingEngine(seed=108)
+    # a long clausal sentence must be REJECTED, not parsed into a clause-as-concept
+    assert e.tell("The design of the following treatise is to investigate the fundamental laws of reasoning.")[0] == "none"
+    # a simple definitional sentence still parses
+    assert e.tell("A poodle is a dog.")[0] == "isa"
+    assert e.is_a("poodle", "dog")

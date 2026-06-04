@@ -124,6 +124,16 @@ class UnderstandingEngine:
 
     # words that are not concepts when they land in object position of a copula
     _COPULA_STOP = {"is", "are", "was", "were", "not", "the", "a", "an"}
+
+    @staticmethod
+    def _valid_concept(p: str) -> bool:
+        """A concept must be a short noun phrase (<=4 words, no internal punctuation) — so the engine
+        REJECTS complex/clausal sentences cleanly instead of grabbing whole clauses as 'concepts'."""
+        if not p:
+            return False
+        if len(p.split()) > 4:
+            return False
+        return not re.search(r"[,;:()‘’“”]", p)
     # pronouns can't be concepts without coreference resolution (a later tier) — reject, don't guess
     _PRONOUNS = {"it", "he", "she", "they", "this", "that", "these", "those",
                  "we", "you", "i", "him", "her", "them", "its"}
@@ -160,7 +170,7 @@ class UnderstandingEngine:
             self._last_subject = x
             return ("prop", x, p)
         mneg = self._NEG_ISA.match(pre)
-        if mneg:
+        if mneg and self._valid_concept(self._norm_phrase(mneg.group(1))) and self._valid_concept(self._norm_phrase(mneg.group(2))):
             child, parent = self._norm_phrase(mneg.group(1)), self._norm_phrase(mneg.group(2))
             self.neg_isa.add((child, parent))
             self.parents.get(child, set()).discard(parent)   # retract the corrected belief (one edge)
@@ -169,13 +179,13 @@ class UnderstandingEngine:
         m = self._ISA.match(pre)
         if m:
             subj_phrase, parent = m.group(1), self._norm_phrase(m.group(2))
-            if parent not in self._COPULA_STOP:
+            if parent not in self._COPULA_STOP and self._valid_concept(parent):
                 # conjoined subjects: "Robins and sparrows are birds" -> robin->bird, sparrow->bird
                 raw = [self._norm_phrase(s) for s in re.split(r"\s+and\s+", subj_phrase)]
                 children = [c for c in raw if c and c != parent]
                 if children and all(c in self._PRONOUNS for c in children):
                     return ("none",)                       # unresolved pronoun subject — reject, don't guess
-                children = [c for c in children if c not in self._PRONOUNS]
+                children = [c for c in children if c not in self._PRONOUNS and self._valid_concept(c)]
                 if children:
                     for c in children:
                         self.parents.setdefault(c, set()).add(parent)   # DAG: a concept may have many parents
@@ -194,9 +204,10 @@ class UnderstandingEngine:
     def _resolve_pronoun(self, sentence: str) -> str:
         """Simple discourse coreference: if the sentence's subject is a pronoun, substitute the most
         recently mentioned subject. Honest limit: assumes topic continuity (subject antecedent)."""
-        m = re.match(r"^\s*(\w+)\b", sentence)
-        if m and m.group(1).lower() in self._PRONOUNS and self._last_subject:
-            return re.sub(r"^\s*\w+", self._last_subject, sentence, count=1)
+        m = re.match(r"^(\s*)(\w+)\b(.*)$", sentence, re.S)
+        if m and m.group(2).lower() in self._PRONOUNS and self._last_subject:
+            # plain string splice — NEVER use a data-derived value as a regex replacement template
+            return m.group(1) + self._last_subject + m.group(3)
         return sentence
 
     # --- inference / comprehension -----------------------------------------
