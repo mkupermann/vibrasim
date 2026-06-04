@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 27 / predictions 42 (JEP-128 HIT — learns relational structure, data-limited) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
+Running tally: hits 28 / predictions 43 (JEP-129 HIT — robust composition discovery, over-predicted difficulty) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
 
 | id | prediction (🔮 before) | outcome | hit? | lesson (don't repeat) |
 |----|------------------------|---------|------|------------------------|
@@ -49,3 +49,4 @@ Running tally: hits 27 / predictions 42 (JEP-128 HIT — learns relational struc
 | JEP-126 | 🔮 correct + fast at 1000 concepts | 0 mismatches, 0.05 ms/query | HIT | Core reasoning scales (correct + sub-ms). Engine now SOUND+ROBUST+SCALABLE. |
 | JEP-127 | 🔮 comparison+Boolean match reference OR a bug | both 1.00000 | HIT | Full reasoning engine sound under property testing (is_a + comparison + Boolean). |
 | JEP-128 | 🔮 PASS dense (>=0.85), degrade sparse | 0.98/0.95 dense, 0.61 at density 0.3 | HIT | Learns transitivity from observation via closure-consistency; sparse-observation = fundamental data limit (unseen violation). A frontier step. |
+| JEP-129 | 🔮 PARTIAL/PASS; risk = spurious matches | 1.00 robust to 15 distractors + 20% noise | HIT | Composition-rule discovery ROBUST (signal dominates); over-predicted difficulty (spurious matches didn't fool it, like JEP-76/107). Bounds: 2-relation compositions over given relations. |
