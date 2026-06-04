@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 21 / predictions 36 (JEP-122 HIT — programme capstone) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
+Running tally: hits 22 / predictions 37 (JEP-123 HIT — engine reaches real simple prose 94%) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
 
 | id | prediction (🔮 before) | outcome | hit? | lesson (don't repeat) |
 |----|------------------------|---------|------|------------------------|
@@ -43,3 +43,4 @@ Running tally: hits 21 / predictions 36 (JEP-122 HIT — programme capstone) (JE
 | JEP-120 | 🔮 100%; risk = analogy parse | 4/4 | HIT | Find relation A->B, apply to C; 'dog is to puppy as cat is to?' -> Kitten. |
 | JEP-121 | 🔮 100%; risks = parse/pronoun/retraction | 2/5 then 5/5 | MISS | All 3 named risks materialized ('would it be'->'be' residue; empty-key residue on retract). LESSON: naming a risk isn't preventing it — build the guards before running. |
 | JEP-122 | 🔮 PASS; risk = integration interface | 1.00 across conceptual+compositional goals vs random 0.2-0.7 | HIT | Engine grounds conceptual goals via is_a/properties; agent plans to the target. The two threads unified. |
+| JEP-123 | 🔮 quality high + coverage >> Boole; risk = adjectival/intransitive forms | 94% coverage, reasoning correct, adjectival 'Dogs are loyal' mis-parsed as IS-A (flagged) | HIT | Developmental claim holds at the simple end (94% vs Boole 2%); honest caveat: 'X are Y' ambiguous category-vs-property, defaults to IS-A. No fragile fix. |
