@@ -21,7 +21,7 @@ def main():
     r=GeometricReasoner(abstain_tau=0.0, rerank_k=5)
     for n,role,co in CONTACTS: r.add_fact(f"{n} is a {role} at {co}.", subject=n, role=role, object=co, kind="contact")
     for d,yr,owner in TASKS: r.add_fact(f"Task: {d}, due {yr}, owned by {owner}.", subject=d, year=yr, owner=owner, kind="task")
-    for topic,txt in NOTES: r.add_fact(f"Note about {topic}: {txt}.", subject=topic, kind="note", text=txt)
+    for topic,txt in NOTES: r.add_fact(f"Note about {topic}: {txt}.", subject=topic, kind="note", body=txt)
     r.calibrate_abstention(["What company is Sarah Chen at?","Who owns the tax return task?"],
                            ["What is the stock market doing?","Who won the election?"])
     checks=[]

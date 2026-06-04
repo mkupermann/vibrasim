@@ -12,3 +12,17 @@ factoid, temporal, semantic, and aggregation, to confirm the toolkit serves the 
   (out-of-KB).
 - Metric: per-type accuracy + overall. Bar: overall >= 0.8 with abstain correct on out-of-KB. PASS validates
   the personal-use scenario.
+
+## Result — PASS (the personal-use scenario works)
+overall = 9/10 = **0.90**. Passed: factoid (contact->company), semantic (note about budget/car via meaning,
+no topic word), temporal (tasks due 2025/2026), aggregation (tasks owned by X), out-of-KB abstention.
+One miss: "Who can fix plumbing?" retrieved the TASK "fix the kitchen sink" over the plumber CONTACT (shared
+"fix") — cross-type retrieval confusion.
+
+**VERDICT: PASS.** The toolkit handles a realistic MIXED personal KB (contacts/tasks/notes) at 0.90 across all
+query types — validating the actual personal-use scenario ("learning+understanding on my PC"). **Honest note:**
+the one miss is cross-type retrieval confusion (a query matched the wrong fact TYPE); fix with type-scoped
+retrieval (restrict to the relevant `kind`), the same route-then-resolve pattern as the operators. For a
+personal assistant over your own contacts/tasks/notes, the system works well with type-aware queries +
+abstention + (for proprietary facts) clean data. This is the concrete deliverable for the user's mandate: a
+fast, private, grounded personal-knowledge assistant on the PC.
