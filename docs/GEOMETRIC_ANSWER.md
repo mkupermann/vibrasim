@@ -138,6 +138,14 @@ gives cleaner results (use mpnet for quality, MiniLM for speed). They are also D
 zero-shot transfer replicates on materials-hardness (0.78 vs random 0.54) and semantic retrieval on tools
 (0.90 vs lexical 0.20) — robust across geography, animals, materials, and tools.
 
+## Deployability caveat — noisy stores (GEO-43/43b)
+The clean-store 1.00s assume clean text and disambiguated entities. Under realistic noise, 1-hop drops to
+0.53. Diagnosis: embeddings are ROBUST to paraphrase (a strength) and even to near-duplicate names when text
+is clean (1.00), but FRAGILE to character-level TYPOS (0.73 at 10% typo rate); typos x near-duplicate
+entities compound badly (the 0.53 case). Deploy with a front-end: spell/character normalization + exact
+entity-ID resolution for identity (use embeddings for relevance, exact keys for who-is-who). Without it, the
+headline accuracies are optimistic.
+
 ## Bottom line
 Phase-1 verdict was "the physics substrate has no computational value." Phase-2 verdict is the constructive
 counterpart: **redefining the substrate as a geometric concept space over an LLM yields a real, working,

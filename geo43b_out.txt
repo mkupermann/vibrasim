@@ -1,0 +1,9 @@
+=== GEO-43b: noise-source split ===
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 11720.06it/s]
+  A) paraphrase+typos only      1-hop = 0.73
+  B) near-duplicates only       1-hop = 1.00  (confusion 0.00)
+
+--- VERDICT ---
+GEO-43b: paraphrase/typos cause 0.27 loss; near-duplicates cause 0.00 loss (confusion 0.00). Dominant cause: paraphrase/typos.
+DONE
