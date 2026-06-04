@@ -1,0 +1,6 @@
+=== JEP-69: learn a relation from observation (TransE) ===
+  held-out tail prediction: hits@1=0.083  hits@3=0.375
+
+--- VERDICT ---
+JEP-69: PARTIAL/NULL - hits@1 0.08, hits@3 0.38
+DONE
