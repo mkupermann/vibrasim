@@ -98,3 +98,30 @@ So "can't learn arbitrary structure" was wrong for clean data and a partial trut
 genuine residual: human-level learning combines compositional REUSE + ACTIVE querying + the RIGHT (meta-learned)
 prior SIMULTANEOUSLY, from noisy sparse one-shot data — no single ingredient suffices. Established methods
 throughout (consistency inference, ILP, active learning, Occam/MDL, hierarchical Bayes); named; no novelty.
+
+## THE FULL RECIPE + the universal unification (JEP-153/154/154b) — capstone
+Combining the ingredients on the genuinely-hard regime (deep target + 15% noise + minimal data) gives the complete,
+measured recipe for human-like EFFICIENT structure learning — and a universal insight.
+
+### The recipe (each ingredient fixes a distinct binding constraint)
+1. **Compositional REUSE** fixes the SEARCH constraint: searching over already-learned SUB-RULES instead of base
+   relations collapses |R|^depth -> |subrules|^2 (scratch 0.00 -> reuse 0.54 from one noisy example; JEP-153 ~5x
+   sample-complexity cut). This is the DOMINANT ingredient.
+2. **Few-shot REDUNDANCY** (active querying that also buys repeats) beats NOISE: accuracy -> 0.99 as k grows.
+3. **NOISE-TOLERANT SOFT aggregation** is the CRITICAL ENABLER of (2): with SOFT best-overlap scoring, more data
+   helps (0.55->0.99 as k:1->20); with STRICT consistency (obs subset of candidate), more noisy data is ACTIVELY
+   HARMFUL (0.55->0.06) because one bad observation falsely eliminates the true hypothesis.
+4. The right **PRIOR** (Occam/meta-learned) adds a little more (JEP-151/152).
+
+### The universal unification
+This is the SAME CHAINING-vs-AGGREGATION lesson (JEP-137/138/140) — now shown to govern LEARNING as well as
+REASONING. Hard consistency (a strict deductive chain, or a strict subset test) is FRAGILE under noise: one broken
+step/observation breaks the whole result. SOFT aggregation (voting over paths, overlap counts, majority denoising)
+is ROBUST: it averages noise out. The compounding insight is UNIVERSAL across multi-step inference AND structure
+learning. Human-like robust cognition under noise = soft redundant aggregation everywhere, never brittle hard chains.
+
+### A calibration lesson recorded honestly
+I MISSED JEP-154 by not applying my OWN prior finding (JEP-134): I used strict consistency under noise and predicted
+few-shot would help, when it hurt. The discipline is to CARRY FORWARD lessons, not re-learn them — the predict-
+calibrate value isn't just per-experiment accuracy, it's accumulating a model that doesn't repeat known mistakes.
+Established throughout (robust estimation, M-estimators, compositional/transfer learning, majority denoising); named.
