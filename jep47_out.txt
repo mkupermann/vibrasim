@@ -1,0 +1,8 @@
+=== JEP-47: integration with entailment-CONE is-a (highest cross-branch precision) ===
+  grounded trials=98 (of 150 goals; fewer = cone low-recall skips some)
+  reached-correct-category (over grounded) = 0.245
+  comparison: poincare 0.79 (JEP-37), order 0.50 (JEP-46)
+
+--- VERDICT ---
+JEP-47: PARTIAL/NULL - cone integration 0.24 over 98 grounded goals
+DONE
