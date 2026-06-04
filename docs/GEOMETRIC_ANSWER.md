@@ -1,6 +1,6 @@
 # A proper LEARNING + UNDERSTANDING method on the PC, with geometric ML/LLM — the answer
 
-Written after the autonomous EQMOD-3 run (GEO-1 → GEO-75), every claim a pre-registered experiment with
+Written after the autonomous EQMOD-3 run (GEO-1 → GEO-80), every claim a pre-registered experiment with
 controls. Honest verdicts; established methods named as such. This is the Phase-2 deliverable, replacing the
 abandoned EQMOD physics substrate (which Phase-1 proved computationally empty — see STRATEGIC_ANSWER.md).
 
