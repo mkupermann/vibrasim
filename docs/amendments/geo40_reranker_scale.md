@@ -24,3 +24,15 @@ tests whether re-ranking recovers accuracy at scale, extending the practical env
 (1-hop 0.98 -> 1.00) but I only re-ranked HOP-1; the 2-hop number is capped by the un-re-ranked HOP-2
 retrieval, so it barely moved. Not a failure of re-ranking — an incomplete application. Re-ranking every hop
 should recover 2-hop. Tested in GEO-40b. (Cross-encoder: ~8s for 400 queries x top-10 on CPU — modest.)
+
+## GEO-40b result — PASS (re-rank EVERY hop -> scale limit mitigated)
+| method | 2-hop @ N=400 |
+|--------|---------------|
+| bi-encoder | 0.87 |
+| re-ranked BOTH hops | **1.00** |
+
+**VERDICT: PASS.** Applying the cross-encoder re-ranker at EVERY hop recovers 2-hop accuracy from 0.87 to
+1.00 at 400 facts. The GEO-22 scale degradation is MITIGABLE: bi-encoder retrieve top-k (fast) + cross-
+encoder re-rank per hop (accurate) keeps multi-hop accuracy high as the store grows, at modest CPU latency
+(~8s/400 queries/hop). Practical envelope extended beyond the bi-encoder-only few-hundred-fact limit.
+Recommended for deployment when accuracy at scale matters (the earlier GEO-40 NULL was just hop-1-only).
