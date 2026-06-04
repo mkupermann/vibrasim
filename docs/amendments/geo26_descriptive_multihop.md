@@ -15,3 +15,13 @@ overlap.
   geometry fails too, multi-hop's headline was lexical — a valid deflation.
 
 PASS if descriptive multi-hop holds for geometry and lexical collapses (the chain is semantic, not lexical).
+
+## Result — INCONCLUSIVE (same lexical-overlap flaw)
+geometric 2-hop = 1.00, lexical at descriptive hop = 1.00. Flaw: the description string was reused VERBATIM
+inside the persona fact ("<desc> is Alice."), so the cue shares all its tokens with the fact and lexical
+wins trivially — exactly the GEO-25 issue, not fixed here. A clean non-lexical multi-hop test needs cues the
+LLM can resolve from REAL-WORLD knowledge (not restated in a fact), which is hard to construct for invented
+people. **The clean non-lexical evidence therefore stands at GEO-25b (geometry 0.80 vs lexical 0.10 on real
+entities).** Honest conclusion: the multi-hop CHAINING + symbolic-bridge machinery works regardless; whether
+each hop needs geometry or is lexically trivial depends on the data — with genuine semantic cues geometry
+adds value (GEO-25b), with shared-token cues lexical suffices. GEO-26 recorded as inconclusive, no claim.
