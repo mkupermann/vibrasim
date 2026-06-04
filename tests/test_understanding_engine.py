@@ -421,3 +421,14 @@ def test_spatial_perspective():
     assert e.spatial_holds("cup", "right", "plate", viewpoint="opposite")    # perspective flip
     assert not e.spatial_holds("cup", "left", "plate", viewpoint="opposite")
     assert e.spatial_holds("lamp", "above", "table", viewpoint="opposite")   # above/below invariant
+
+
+def test_mereology_distinct_from_isa():
+    e = UnderstandingEngine(seed=150)
+    e.tell_part("finger", "hand"); e.tell_part("hand", "arm"); e.tell_part("arm", "body")
+    e.tell("A finger is a body_part.")
+    assert e.part_of("finger", "body")          # transitive part-of
+    assert not e.part_of("body", "finger")      # asymmetric
+    assert not e.is_a("finger", "body")         # part-of is NOT is-a
+    assert not e.is_a("finger", "hand")
+    assert e.is_a("finger", "body_part")        # separate is-a graph still works
