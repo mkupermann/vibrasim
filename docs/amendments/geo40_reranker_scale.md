@@ -13,3 +13,14 @@ tests whether re-ranking recovers accuracy at scale, extending the practical env
 - Metric: 1-hop and 2-hop accuracy, baseline vs re-ranked.
 - Bar: re-ranked 2-hop >= baseline 2-hop + 0.05 (re-ranking helps) OR both already ~1.0 (no headroom).
   Report latency note. NULL if re-ranking does not help.
+
+## Result — NULL/PARTIAL (incomplete application; clean diagnosis)
+| method | 1-hop | 2-hop |
+|--------|-------|-------|
+| bi-encoder | 0.98 | 0.87 |
+| re-ranked (hop-1 only) | **1.00** | 0.89 (+0.02) |
+
+**VERDICT: NULL/PARTIAL** by the +0.05 2-hop bar. Diagnosis: re-ranking FIXED the hop it was applied to
+(1-hop 0.98 -> 1.00) but I only re-ranked HOP-1; the 2-hop number is capped by the un-re-ranked HOP-2
+retrieval, so it barely moved. Not a failure of re-ranking — an incomplete application. Re-ranking every hop
+should recover 2-hop. Tested in GEO-40b. (Cross-encoder: ~8s for 400 queries x top-10 on CPU — modest.)
