@@ -1,0 +1,9 @@
+=== GEO-27: zero-shot transfer to UNSEEN entities ===
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 11019.90it/s]
+  LLM-init     seen-vs-seen=0.98  >=1-unseen(zero-shot)=0.90  unseen-vs-unseen=1.00
+  random-init  seen-vs-seen=0.99  >=1-unseen(zero-shot)=0.77  unseen-vs-unseen=0.73
+
+--- VERDICT ---
+GEO-27: NULL/PARTIAL - LLM zero-shot 0.90, random 0.77
+DONE
