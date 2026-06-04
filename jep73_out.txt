@@ -1,0 +1,7 @@
+=== JEP-73: unified grounded+structured system on real Fashion-MNIST concepts ===
+  relational query ('what is above Y') on LEARNED concepts = 1.000
+  one-shot analogy (A:B::C:?) on LEARNED concepts = 0.470
+
+--- VERDICT ---
+JEP-73: PARTIAL/NULL - relational 1.00, analogy 0.47
+DONE
