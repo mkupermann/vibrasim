@@ -1,0 +1,9 @@
+=== GEO-52: robust contradiction (same-subject filter) ===
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 11796.23it/s]
+  (a) embedding-nearest  bal-acc = 0.94  (TPR 0.88, TNR 1.00)
+  (b) same-subject filter bal-acc = 1.00  (TPR 1.00, TNR 1.00)
+
+--- VERDICT ---
+GEO-52: PASS - same-subject pre-filter is robust on mixed stores (1.00 vs embedding-nearest 0.94); avoids token-collision misses. Hardening confirmed - adopt same-subject filtering for contradiction detection.
+DONE

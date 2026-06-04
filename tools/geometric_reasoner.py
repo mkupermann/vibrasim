@@ -138,18 +138,16 @@ class GeometricReasoner:
             return len(A & B) / len(A | B) if A | B else 0.0
         return max(candidates, key=lambda c: sim(name, c))
 
-    # ---- contradiction detection (GEO-41) --------------------------------
-    def check_contradiction(self, text: str, subject: str, object: str):
-        """Return the conflicting stored fact index if `text` contradicts an existing same-subject fact
-        (same subject, different object — a functional relation), else None. Geometric retrieve + symbolic
-        object compare (GEO-41, balanced-acc 0.94)."""
-        if not self.fact_texts:
-            return None
-        v = self._embed([text])[0]
-        j = int(np.argmax(self.F @ v))
-        m = self.fact_meta[j]
-        if m.get("subject") == subject and m.get("object") not in (None, object):
-            return j
+    # ---- contradiction detection (GEO-41, hardened GEO-52) ---------------
+    def check_contradiction(self, subject: str, object: str, kind=None, text: str = None):
+        """Return the index of a stored fact that contradicts (same subject, different object — a functional
+        relation), else None. Over a STRUCTURED store this is purely SYMBOLIC (scan same-subject facts);
+        the same-subject pre-filter is robust to token collisions that fooled the embedding-nearest version
+        (GEO-52: 0.94 -> 1.00). Pass `kind` to restrict to one fact type (e.g. 'person'). `text` is accepted
+        for backward compatibility and ignored."""
+        for j, m in enumerate(self.fact_meta):
+            if m.get("subject") == subject and (kind is None or m.get("kind") == kind)                     and m.get("object") not in (None, object):
+                return j
         return None
 
 

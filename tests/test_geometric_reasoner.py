@@ -65,8 +65,8 @@ def test_abstention_calibration_runs(reasoner):
 
 def test_contradiction_detection(reasoner):
     # same subject (Alice), different object -> flagged; consistent -> not flagged (GEO-41)
-    assert reasoner.check_contradiction("Alice works at Globex.", subject="Alice", object="Globex") is not None
-    assert reasoner.check_contradiction("Alice works at Acme.", subject="Alice", object="Acme") is None
+    assert reasoner.check_contradiction(subject="Alice", object="Globex") is not None
+    assert reasoner.check_contradiction(subject="Alice", object="Acme") is None
 
 
 def test_entity_resolution_is_typo_robust(reasoner):
