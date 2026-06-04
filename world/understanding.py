@@ -489,6 +489,15 @@ class UnderstandingEngine:
         """Conversational answer: quantified ('is every dog an animal?', 'can all birds fly?'), WH-questions
         ('what is a poodle?'), and yes/no explanation for is-a / relation questions."""
         q = question.strip().rstrip("?").lower()
+        # analogy: "dog is to puppy as cat is to ?" -> find the relation A->B, apply it to C
+        ma = re.match(r"(?:what is |)(\w+) is to (\w+) as (\w+) is to", q)
+        if ma:
+            a, b, c = self._norm(ma.group(1)), self._norm(ma.group(2)), self._norm(ma.group(3))
+            rels = {fr for fs, fr, fo in self.facts if fs == a and fo == b}        # relations linking A->B
+            for gs, gr, go in self.facts:
+                if gs == c and self._norm_rel(gr) in {self._norm_rel(r) for r in rels}:
+                    return go.capitalize() + "."
+            return "I can't complete that analogy."
         # compositional query: "is what the dog chases an animal" -> resolve relation, then taxonomy
         mcomp = re.match(r"is what (?:the\s+)?(\w+)\s+(\w+)\s+(?:(?:an|a|the)\s+)?(.+)", q)
         if mcomp:

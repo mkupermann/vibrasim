@@ -269,3 +269,12 @@ def test_compositional_relation_taxonomy():
     assert e.respond("is what the dog chases an animal?") == "Yes."   # compose relation + taxonomy
     assert e.respond("is what the dog chases a vehicle?") == "No."
     assert e.respond("is what the bird chases an animal?").startswith("I don't know")
+
+
+def test_relational_analogy():
+    e = UnderstandingEngine(seed=120)
+    for f in ["the dog has the puppy.", "the cat has the kitten.", "the cow has the calf."]:
+        e.tell(f)
+    assert e.respond("dog is to puppy as cat is to?") == "Kitten."
+    assert e.respond("dog is to puppy as cow is to?") == "Calf."
+    assert e.respond("dog is to puppy as fish is to?").startswith("I can't")
