@@ -58,6 +58,7 @@ vibrasim SUBSTRATE is a genuine benefit for this.
 | JEP-45 | **PASS** | Integrated order embeddings as isa_method='order' (siblings fixed, 0.91 at scale); poincare default unchanged. Tests 6/6, README method-guide. Ships JEP-42. |
 | JEP-46 | NULL (key finding) | Better-AGGREGATE is-a (order 0.91) gave WORSE integration (0.50) than poincare (0.79): grounding needs CROSS-BRANCH precision, which is order's weakness; poincare's errors (siblings) don't arise in entity-vs-category grounding. ERROR PATTERN, not aggregate accuracy, predicts downstream utility. Best method is USE-CASE-dependent. |
 | JEP-47 | NULL (deepens) | Predicted cones (highest random-pair precision TNR 0.98) -> best grounding; they gave WORST (0.24). Aggregate precision on RANDOM pairs doesn't predict precision on the TASK distribution (leaf-vs-general-category: wide cones -> cross-branch FPs). Lesson sharpened: measure on YOUR task's input distribution. Poincare confirmed grounding default. |
+| JEP-48 | **PASS** | CROSS-DOMAIN replication: on vehicles (520, artifacts not animals) order embeddings (0.92) beat Poincare (0.86) on held-out IS-A, same as carnivores. The order>Poincare-at-scale finding is DOMAIN-GENERAL. Strengthens shipped method guidance. |
 | JEP-7 | **PASS** | END-TO-END: contrastive-learned encoder + PC-learned predictor + energy-MPC reaches 0.97 of goals (untrained-predictor ablation 0.05, random 0.25). Nuance: exact prediction only 0.23 — planning needs correct ACTION RANKING, not exact prediction; world model accurate ENOUGH to plan. |
 
 ## The honest bottom line
