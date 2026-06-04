@@ -19,3 +19,24 @@ from in-domain-unanswerable cleanly.
 
 PASS if focus-verification cleanly rejects absent-role questions while accepting stored-role ones (>=0.8).
 NULL if absent roles (CEO/CTO) are too close to stored roles to separate — an honest boundary.
+
+## Result — PASS (closes the grounding gap)
+| group | focus maxsim vs stored roles |
+|-------|------------------------------|
+| stored roles (answerable) | all 1.00 |
+| absent roles (unanswerable) | CEO 0.41, CTO 0.25, janitor 0.30, lawyer 0.34, chef 0.32 |
+| calibrated tau_focus | 0.66 |
+| **balanced acc (answerable vs unanswerable)** | **1.00** |
+
+**VERDICT: PASS.** Focus-term verification cleanly separates answerable from in-domain-unanswerable: a stored
+role matches at 1.00 (it is in the store), absent roles sit far below (<=0.41). So "Who is the CEO?" abstains
+(focus "CEO" not a stored value) while "Who is the data scientist?" answers.
+
+## Complete grounding story (GEO-23 + GEO-32b + GEO-33)
+Robust answerability needs TWO checks, both cheap:
+1. **Relevance** — retrieval-similarity threshold rejects OUT-OF-DOMAIN questions (GEO-23).
+2. **Answerability** — focus-term existence verification against the STRUCTURED store rejects IN-DOMAIN-but-
+   unanswerable questions (GEO-33).
+Geometry filters relevance; the structured store verifies the focus exists. Together they give grounded,
+hallucination-free QA that abstains correctly in both failure modes — a clean hybrid geometric+symbolic
+grounding, and a concrete edge over a generative LLM (which confabulates in both cases).

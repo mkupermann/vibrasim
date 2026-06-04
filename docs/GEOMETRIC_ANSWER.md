@@ -84,6 +84,12 @@ stored sits at sim 0.43, close to the role facts). Calibration can't separate th
 in-domain queries — that needs answer VERIFICATION (does the retrieved fact entail an answer?), not just a
 retrieval threshold. Geometry filters relevance, not answerability.
 
+**Resolved (GEO-33):** robust grounding needs TWO cheap checks — (1) retrieval-similarity rejects out-of-
+domain questions; (2) FOCUS-TERM existence verification against the structured store rejects in-domain-but-
+unanswerable ones ("CEO" is not a stored role -> abstain), balanced accuracy 1.00. Geometry filters
+relevance; the structured store verifies the focus exists. Together: hallucination-free QA that abstains
+correctly in both failure modes.
+
 ## How to build it on your machine
 CPU is enough (sentence-transformers + numpy). Pipeline: embed your facts once → store with symbolic labels
 → at query time do geometric retrieval/chaining for "what/which/where", drop to the symbolic layer for
