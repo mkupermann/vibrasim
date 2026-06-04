@@ -42,6 +42,14 @@ boundary is mapped precisely.
 | counting / aggregation | FAILS (0.00) | symbolic count → 1.00 |
 | open-domain NLU, generation | OUT OF SCOPE | needs a generator (LLM) |
 
+## When does the LLM geometry HELP learning? (GEO-24)
+The LLM prior is not universally good. For learning a NEW relation that correlates with semantics (a size
+ordering over animals), LLM-init is a data-efficient prior: +0.12 accuracy over random-init at 4 examples,
+the gain largest when data is scarce. For an ARBITRARY relation (random permutation), LLM-init is WORSE than
+random (-0.06): the semantic geometry misleads. Design rule: LLM-init for semantically-aligned structure;
+random init (or the orthogonal struct-subspace, GEO-21) for arbitrary structure. This is the mechanism
+behind why geometry can read known relations but not arbitrary new ones.
+
 ## Honest caveats
 - GEO-15–19 saturate at 1.00 because they use small, clean, well-known entities where MiniLM is excellent.
   They prove the method is **sound and integrates**, not that NLU is solved. Real degradation is expected
