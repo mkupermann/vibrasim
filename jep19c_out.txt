@@ -1,0 +1,10 @@
+=== JEP-19c: PC vs backprop on Fashion-MNIST (standardized inputs, lr=0.02) ===
+  1-hidden:  backprop=0.8654   pred-coding=0.8463
+  2-hidden:  backprop=0.8691   pred-coding=0.8556
+
+--- VERDICT ---
+JEP-19c: PASS - with standardized inputs (fixing JEP-19b's divergence), local PC matches backprop on
+harder Fashion-MNIST at BOTH depths: 1-hidden 0.846 vs 0.865,
+2-hidden 0.856 vs 0.869 (within 0.04). Local predictive coding
+scales with depth AND to harder data. Whittington-Bogacz (2017) established, named as such.
+DONE
