@@ -1,0 +1,7 @@
+=== JEP-94: engine tier 3 - parse robustness on varied phrasings (target 100%) ===
+
+   parse-robustness battery: 16/16 = 100.0%
+--- VERDICT ---
+JEP-94: PASS - engine tier 3 holds 100%: varied phrasings of the same facts all yield the correct
+structure and comprehension. The parse boundary scaled outward one controlled tier.
+DONE

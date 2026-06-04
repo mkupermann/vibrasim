@@ -78,7 +78,9 @@ class UnderstandingEngine:
         return min(self.prototypes, key=lambda c: np.linalg.norm(feats - self.prototypes[c]))
 
     # --- parsing / telling --------------------------------------------------
-    _ISA = re.compile(r"^\s*(?:a|an|the)?\s*(\w+)\s+(?:is|are)\s+(?:a|an|the)?\s*(\w+)\s*\.?\s*$", re.I)
+    # articles require a trailing space and are longest-first, so a noun's leading "a"/"an" (e.g. "animals")
+    # is never mistaken for an article (the JEP-92/94 surface-form lesson, applied to EVERY parser).
+    _ISA = re.compile(r"^\s*(?:(?:an|a|the)\s+)?(\w+)\s+(?:is|are)\s+(?:(?:an|a|the)\s+)?(\w+)\s*\.?\s*$", re.I)
     _SVO = re.compile(r"^\s*the\s+(\w+)\s+(\w+)\s+(?:the\s+|a\s+|an\s+|in\s+the\s+|on\s+the\s+)?(\w+)\s*\.?\s*$", re.I)
 
     @staticmethod
@@ -96,9 +98,18 @@ class UnderstandingEngine:
     # words that are not concepts when they land in object position of a copula
     _COPULA_STOP = {"is", "are", "was", "were", "not", "the", "a", "an"}
 
+    @staticmethod
+    def _preprocess_isa(sentence: str) -> str:
+        """Normalize IS-A phrasings to the canonical 'X is/are Y' before regex parse:
+        strip universal quantifiers (every/all/each), and collapse 'a kind/type/sort of'."""
+        s = sentence
+        s = re.sub(r"^\s*(?:every|all|each)\s+", "", s, flags=re.I)
+        s = re.sub(r"\b(?:a\s+|an\s+)?(?:kind|type|sort)s?\s+of\s+", "", s, flags=re.I)
+        return s
+
     def tell(self, sentence: str) -> tuple:
         """Parse one simple fact. Returns ('isa', child, parent) or ('rel', s, r, o) or ('none',)."""
-        m = self._ISA.match(sentence)
+        m = self._ISA.match(self._preprocess_isa(sentence))
         if m:
             child, parent = self._norm(m.group(1)), self._norm(m.group(2))
             if child != parent and parent not in self._COPULA_STOP:

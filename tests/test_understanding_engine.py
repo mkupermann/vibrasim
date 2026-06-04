@@ -46,3 +46,13 @@ def test_boolean_composition():
     assert e.ask_bool("is a poodle a fish or is a poodle an animal") is True
     assert e.ask_bool("does the dog not chase the cat") is False
     assert e.ask_bool("is a poodle not a fish") is True
+
+
+def test_parse_robustness_varied_phrasings():
+    e = UnderstandingEngine(seed=94)
+    for v in ["Poodles are dogs.", "A dog is an animal.", "Dogs are animals.",
+              "An animal is a living_thing.", "Every poodle is a dog.", "Dogs are a type of animal."]:
+        assert e.tell(v)[0] == "isa", f"failed: {v}"
+    assert e.parents.get("dog") == "animal"      # not "nimal" — article must not eat the noun
+    assert e.parents.get("animal") == "living_thing"
+    assert e.is_a("poodle", "living_thing")      # multi-hop across varied phrasings
