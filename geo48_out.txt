@@ -1,0 +1,9 @@
+=== GEO-48: query intent routing ===
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 12143.73it/s]
+  held-out intent accuracy = 0.56  (chance 0.17, n=18)
+  misclassified: [('FACTOID', 'JOIN'), ('FACTOID', 'JOIN'), ('FACTOID', 'JOIN'), ('COUNT', 'JOIN'), ('COMPARE', 'JOIN'), ('COMPARE', 'JOIN'), ('JOIN', 'COUNT'), ('EXISTS', 'COUNT')]
+
+--- VERDICT ---
+GEO-48: PARTIAL/NULL - intent routing 0.56
+DONE
