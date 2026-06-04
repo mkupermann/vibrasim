@@ -67,3 +67,5 @@ notify_config.json
 unsent_mail_*.txt
 eqmod_full.tar.gz
 autopilot_output.txt
+.venv-dml/
+.venv-dml311/
