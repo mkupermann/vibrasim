@@ -1,0 +1,13 @@
+=== JEP-37: integration STRESS-TEST on real WordNet carnivore (is_a ~0.86, not 1.0) ===
+  taxonomy: 366 concepts, 282 leaf species, 43 usable categories
+  component is_a generality-direction acc = 0.126
+  trials=82
+  reached a CORRECT-category entity = 0.793
+
+--- FINDING ---
+On REAL WordNet (is_a less reliable than the toy), abstract-goal planning reached the correct category
+0.79 of the time - vs 1.00 on the curated toy (JEP-34). This CONFIRMS the honest caveat: the
+integration INHERITS its components' reliability - grounding errors from imperfect is_a propagate to
+wrong navigation targets. The composition is not more robust than its parts; in the toy it was 1.00
+because is_a there is ~perfect, here it degrades with is_a. Honest boundary demonstrated, not just claimed.
+DONE
