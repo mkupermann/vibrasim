@@ -22,3 +22,23 @@ the genuinely useful combination (RAG with verified retrieval + abstention), all
   AND ungrounded answers >= 0.5 (shows grounding prevents confabulation the bare LLM commits).
 
 PASS if (a) grounding overrides prior AND (b) grounding prevents confabulation. NULL/PARTIAL otherwise.
+
+## Result — PASS (capstone: grounded generation on the PC)
+| test | result |
+|------|--------|
+| (a) PARAMETRIC matches counterfactual store | 0.00 (model says real-world prior) |
+| (a) GROUNDED matches counterfactual store | **1.00** (follows the store) |
+| (b) UNGROUNDED generator answers unanswerable | 1.00 (confabulates) |
+| (b) GROUNDED system abstains | **1.00** (focus-verification) |
+
+**VERDICT: PASS.** The geometric retrieve+verify layer makes a small instruct LLM (Qwen2.5-0.5B, CPU)
+GROUNDED: (a) it follows the updatable/counterfactual STORE over its parametric prior (1.00 vs the bare
+model's 0.00), and (b) it ABSTAINS on unanswerable questions (1.00) where the bare generator confabulates
+100% of the time. This is grounded generation = verified RAG + abstention, running entirely on the PC.
+
+**Honest framing:** RAG (context-conditioned generation) is an ESTABLISHED method; the contribution is the
+integration with the programme's geometric retrieve + updatable store (GEO-30) + focus-verification
+abstention (GEO-33), giving a generator that is correct-by-store, updatable without retraining, and
+hallucination-suppressed. The generator's fluency/coverage is bounded by the 0.5B model; the GROUNDING
+behaviour is what the geometric layer adds. Generation is no longer out-of-scope: the full system is a
+grounded QA assistant on the PC.

@@ -42,7 +42,8 @@ boundary is mapped precisely.
 | negation ("not in Europe") | WEAK (F1 0.50) | symbolic filter → 1.00 |
 | comparison ("larger population") | BELOW CHANCE (0.29) | symbolic compare |
 | counting / aggregation | FAILS (0.00) | symbolic count → 1.00 |
-| open-domain NLU, generation | OUT OF SCOPE | needs a generator (LLM) |
+| open-domain NLU | OUT OF SCOPE | needs a large LLM |
+| grounded GENERATION (follow store, abstain) | DONE via small LLM (GEO-34) | geometric retrieve+verify + Qwen-0.5B |
 
 ## When does the LLM geometry HELP learning? (GEO-24)
 The LLM prior is not universally good. For learning a NEW relation that correlates with semantics (a size

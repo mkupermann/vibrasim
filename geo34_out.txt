@@ -1,0 +1,10 @@
+=== GEO-34: grounded generation (geometric layer + 0.5B LLM) ===
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|##########| 290/290 [00:00<00:00, 9788.97it/s]
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 10336.24it/s]
+  (a) counterfactual capital: PARAMETRIC matches store=0.00  GROUNDED matches store=1.00
+  (b) unanswerable: UNGROUNDED generator answers=1.00  GROUNDED abstains=1.00
+
+--- VERDICT ---
+GEO-34: PASS - the geometric layer makes the LLM generator GROUNDED: it follows the (counterfactual/updatable) store over its parametric prior, and abstains on unanswerable questions where the bare LLM confabulates. Grounded generation on the PC.
+DONE
