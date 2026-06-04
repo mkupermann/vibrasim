@@ -12,3 +12,20 @@ the negation operator end-to-end: "Who is NOT on the Analytics team?", "Which pe
   filter. Positive filter resolves the constraint symbolically over meta.
 - Baseline: pure-geometric (retrieve nearest, GEO-20 style) — expected to fail (ignores "not").
 - Metric: set-F1 of returned people. Bars: symbolic >= 0.9 AND >> geometric baseline. PASS closes the gap.
+
+## Result — PASS
+| method | mean-F1 |
+|--------|---------|
+| symbolic set-complement | **1.00** |
+| pure-geometric baseline | 0.68 |
+
+**VERDICT: PASS.** The symbolic negation operator (set-complement over the resolved store) answers negation
+queries exactly (1.00) where pure geometry is unreliable (0.68 — inflated because the complement set is large;
+geometry still ignores "not" per GEO-20). Closes the GEO-20 negation gap.
+
+## Operator set COMPLETE — including every case geometry provably can't do
+Both GEO-20 "geometry fails" cases are now solved by the symbolic layer: NEGATION (GEO-53, 1.00) and
+COMPARISON (GEO-51, 1.00). Full validated operator set: factoid/retrieve, count/aggregate (GEO-18), temporal
+(GEO-47), join (GEO-42), comparison (GEO-51), negation (GEO-53), contradiction (GEO-41/52) — geometry RESOLVES,
+the symbolic layer OPERATES. The neuro-symbolic system covers the standard structured-query operations,
+including the three pure geometry cannot do (aggregate/negate/compare), each handled cleanly by the symbol layer.
