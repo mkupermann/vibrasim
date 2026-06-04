@@ -69,8 +69,10 @@ resolver feeding a thin symbolic operator layer.
 6. **Ground** = abstain when unsupported (GEO-23, calibrate the threshold) + update by editing the store (GEO-30).
 
 All primitives are ESTABLISHED methods (TransE/MDS/word-analogy/RAG-style retrieval/key-value memory/neuro-
-symbolic split) named as such; the contribution is the honest synthesis + a precise boundary map + the
-isolation of geometry's irreducible value (semantic matching, zero-shot transfer, aligned-structure learning).
+symbolic split/linear probe) named as such; the contribution is the honest synthesis + a precise boundary map
++ the isolation of geometry's IRREDUCIBLE value = TRAINING-FREE vector arithmetic (semantic retrieval,
+analogy-by-offset, multi-hop composition). The LEARNED-relation parts are ordinary linear ML on the embeddings
+(GEO-66: a logistic probe does identically) — real but not geometrically special.
 A genuine, working, PC-scale learning+understanding system — real, but NOT human-level AI and NOT a new method:
 it reads an existing LLM's understanding, bounded. GROUNDED generation is DONE (GEO-34/35: a 0.5B LLM
 follows the store over its prior 1.00 vs 0.00, abstains vs confabulates, incl. multi-hop over private facts);
