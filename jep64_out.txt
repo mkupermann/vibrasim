@@ -1,0 +1,12 @@
+=== JEP-64: does concept formation COMPOSE or only CATEGORIZE? ===
+  CATEGORIZE (nearest-prototype) recall on novel 2-combos = 0.500
+  COMPOSE (additive decomposition) recall on novel 2-combos = 1.000
+
+--- VERDICT ---
+JEP-64: characterization confirmed - the grounded approach CATEGORIZES, it does NOT COMPOSE on its
+own. Nearest-prototype concept formation gets only 0.50 of a novel combination's affordances (it
+assigns to ONE category). An EXPLICITLY COMPOSITIONAL model (additive decomposition) recovers 1.00.
+So composition is NOT emergent from clustering - it must be BUILT IN. This BOUNDS the approach: it
+does categorization, not compositional understanding - consistent with 'synthesis, not innovation'.
+Established (clustering, linear decomposition), named as such.
+DONE
