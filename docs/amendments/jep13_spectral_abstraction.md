@@ -42,3 +42,28 @@ Not forcing higher by tuning depth/k. The real story is a COMPRESSION-vs-CONTROL
   novel goals. Expect R^2 high even at small k; reach to increase with k toward 1.00 at k=S.
 - Report the curve (no single PASS bar - this is characterization). Finding = WHERE control becomes reliable
   (reach>=0.9) and whether that k still gives meaningful compression (k<S).
+
+## JEP-13c — compression-vs-control tradeoff — characterized
+| k | k/S | recon R^2 | greedy reach |
+|---|-----|-----------|--------------|
+| 18 | S/8 | 0.902 | 0.20 |
+| 36 | S/4 | 0.981 | 0.24 |
+| 72 | S/2 | 0.996 | 0.31 |
+| 108 | 3S/4 | 0.999 | 0.47 |
+| 144 | S | 1.000 | 1.00 |
+
+**FINDING (honest, no pass/fail).** Reconstruction R^2 is high even at k=S/8 (0.90) -> strong REPRESENTATION-level
+abstraction. But greedy CONTROL stays <=0.47 until FULL rank (k=S -> 1.00). Greedy control needs ORDER-PRESERVATION
+/ monotonicity along paths, which spectral compression destroys even at R^2=0.999 - so a high-R^2 value
+approximation can still have a poor greedy policy (the value-approximation-vs-policy gap, quantified). Bottom
+line for abstraction: a compact eigenbasis abstracts and TRANSFERS value structure well, but does NOT yield
+controllable greedy policies under compression. The established correct use of proto-value functions is as
+FEATURES for value-iteration/RL (accelerate LEARNING), not one-shot reconstruction-then-greedy. This honestly
+bounds "abstraction = compression" for control. Methods (proto-value functions / spectral RL, Mahadevan 2007)
+established - named as such.
+
+## JEP-13 synthesis
+Abstraction via spectral compression: PASS for representation/transfer (compact task-agnostic basis, R^2 0.90+
+at 1/8 size, >> random basis), NULL for greedy control under compression (needs full rank or a proper
+basis-features RL learner). An honest, quantified boundary on how far "compress the structure" carries you
+toward usable abstraction.
