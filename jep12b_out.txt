@@ -1,0 +1,7 @@
+=== JEP-12b: grounded loop, SEPARATED perception (raw-obs prototypes) + SR-value (M=12,S=144,noise=0.6) ===
+  perceptual state-ID accuracy (raw-obs prototype) = 0.993
+  navigation (PERCEIVED):  SR-VALUE=0.59  Euclid=0.06  random=0.28
+
+--- VERDICT ---
+JEP-12b: PARTIAL/NULL - percept 0.99, SR-nav 0.59, euclid 0.06, random 0.28
+DONE
