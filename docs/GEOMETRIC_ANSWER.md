@@ -183,6 +183,16 @@ can't do these). Honest refined description: the system is "LLM embeddings + lin
 operators"; the embedding geometry genuinely powers training-free retrieval/analogy/composition, while the
 learned-relation parts are ordinary linear ML — no geometric magic there.
 
+## Maximally-sharpened honest core (GEO-66 + GEO-68)
+Two rigorous deflations narrowed the geometric contribution precisely: relation LEARNING = a logistic probe
+(GEO-66), and multi-hop COMPOSITION on structured data = a database JOIN (GEO-68; geometry only resolves the
+entry entity). What remains IRREDUCIBLY geometric is SEMANTIC MATCHING — resolving meaning (descriptions,
+epithets, paraphrases) to entities, and analogy-by-offset — which exact lookup, lexical match, a DB join, and
+a linear probe all cannot do. Honest one-liner: **the system = LLM semantic matching + classical
+symbolic/database reasoning + RAG grounding + a thin generator.** The LLM's irreducible job is mapping meaning
+to the right entry; the reasoning on top is classical. Real, useful, entirely established methods, precisely
+scoped — not new-as-method, not human-level AI.
+
 ## Bottom line
 Phase-1 verdict was "the physics substrate has no computational value." Phase-2 verdict is the constructive
 counterpart: **redefining the substrate as a geometric concept space over an LLM yields a real, working,
