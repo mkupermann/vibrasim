@@ -1,0 +1,10 @@
+=== GEO-31: clean non-lexical (epithet) multi-hop ===
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 10642.56it/s]
+  hop-0 geometric (epithet->person) = 1.00
+  hop-0 lexical  (epithet->person)  = 0.10
+  end-to-end geometric continent    = 1.00  (chance ~1/3)
+
+--- VERDICT ---
+GEO-31: PASS - genuine NON-LEXICAL multi-hop: the epithet is resolved by semantic geometry (lexical fails at hop-0), and the chain completes. Multi-hop reasoning rests on the LLM geometry, not string overlap. Closes the GEO-26 gap.
+DONE

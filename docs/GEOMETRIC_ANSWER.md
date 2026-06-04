@@ -35,6 +35,7 @@ boundary is mapped precisely.
 |------|----------------|------------|
 | named-entity retrieval / multi-hop chaining | STRONG (≈1.0) but LEXICALLY solvable (GEO-25) | — |
 | semantic retrieval (descriptions), analogy | STRONG, NOT lexical (GEO-25b 0.80 vs 0.10) | — |
+| semantic MULTI-HOP (epithets, real knowledge) | STRONG, NOT lexical (GEO-31 1.00 vs lexical 0.10) | — |
 | relations linear in embedding space | STRONG (few-shot) | — |
 | arbitrary unstructured new facts | FAILS (random offsets) | key-value MEMORY |
 | antonyms / fine sense distinctions | WEAK (0.54) | — |
@@ -100,8 +101,9 @@ The cleanest evidence that the geometric view has irreducible value: a size-orde
 some animals transfers to animals NEVER seen in any training pair at 0.81, while the same method with random
 initial vectors is at chance 0.51. The LLM's semantic geometry positions unseen entities so a learned
 relation orders them with zero examples of them — genuine zero-shot generalization (understanding, not
-memorization), and irreducible (random init cannot do it). This, plus semantic resolution of descriptions
-(GEO-25b) and data-efficient structure learning (GEO-24), is where "geometric" genuinely earns its name.
+memorization), and irreducible (random init cannot do it). This, plus semantic resolution of descriptions (GEO-25b), genuinely SEMANTIC multi-hop reasoning over
+real-world epithets (GEO-31, 1.00 vs lexical 0.10), and data-efficient structure learning (GEO-24), is where
+"geometric" genuinely earns its name — distinct from the lexically-solvable named-entity numbers.
 
 ## Honest limit of the irreducible edge: composition of zero-shot attributes (GEO-28)
 Single-relation zero-shot transfer is reliable (GEO-27b), but composing TWO zero-shot-transferred attributes
