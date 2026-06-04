@@ -29,6 +29,10 @@ boundary is mapped precisely.
    `>`), because pure geometry cannot do these. (GEO-18,20)
 6. **End-to-end** — learn a relation few-shot → apply to unseen entities → chain by retrieval → symbolic
    aggregate, all on held-out data. (GEO-19, milestone)
+7. **Auto-dispatching agent** — one agent symbolically ROUTES a query (factoid/count/temporal/join),
+   GEOMETRICALLY resolves entities, applies the SYMBOLIC operator; schema-general via field-parameterized
+   operators (GEO-49/50, 1.00 on mixed workloads across two schemas). Three usable modules:
+   `geometric_reasoner` (primitives), `grounded_qa` (grounded generation), `unified_reasoner` (the agent).
 
 ## The precise BOUNDARY (what geometry does vs what needs symbols/memory/training)
 | task | geometry alone | resolution |
