@@ -46,6 +46,8 @@ class UnifiedReasoner:
         ql = q.lower()
         if re.search(r"\b(how many|count|number of|headcount)\b", ql): return "COUNT"
         if re.search(r"\bin (19|20)\d\d\b", ql): return "TEMPORAL"
+        if re.search(r"\b(not|n't|don't|doesn't|never)\b", ql): return "NEGATE"
+        if re.search(r"\b(more|less|older|younger|bigger)\b", ql) and re.search(r"\bor\b|\bthan\b", ql): return "COMPARE"
         if re.search(r"\b(same .* as|who else|teammates|works? with|share[sd]?)\b", ql): return "JOIN"
         return "FACTOID"
 
