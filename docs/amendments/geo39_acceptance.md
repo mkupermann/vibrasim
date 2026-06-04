@@ -14,3 +14,18 @@ the acceptance/regression test for the deliverable: does the whole system work a
   4. FAITHFUL: question asking for an absent detail (salary) -> does NOT invent a number.
   5. UPDATABLE: edit a team's city, re-query -> answer reflects the edit.
 - Bar: >= 4 of 5 checks PASS (the hardened system works end-to-end). Report each.
+
+## Result — PASS (5/5)
+| check | result |
+|-------|--------|
+| 1 semantic-grounded | PASS |
+| 2 multi-hop | PASS |
+| 3 abstain (out-of-KB) | PASS |
+| 4 faithful (no invented salary) | PASS |
+| 5 updatable (edit reflected) | PASS |
+
+**VERDICT: PASS (5/5).** The fully-hardened GroundedQA system works end-to-end through the shipped module:
+grounded semantic answering, multi-hop reasoning, abstention via focus-verification, faithfulness (no
+invented details), and runtime updatability all hold together. The deliverable is validated end-to-end — a
+working, honestly-bounded grounded reasoning+QA assistant on the PC. This is the acceptance milestone closing
+the EQMOD-3 geometric programme (GEO-1..39).
