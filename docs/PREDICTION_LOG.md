@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 4 / predictions 7 (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
+Running tally: hits 5 / predictions 8 (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
 
 | id | prediction (🔮 before) | outcome | hit? | lesson (don't repeat) |
 |----|------------------------|---------|------|------------------------|
@@ -14,3 +14,4 @@ Running tally: hits 4 / predictions 7 (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). Th
 | JEP-94 #1 | 🔮 100%; most-likely miss = 'kind of'/quantifier surface form | 87.5%; 'Dogs are animals' -> object 'nimal' (article ate noun's leading 'a') | MISS (REPEAT) | This is JEP-92 #1's bug AGAIN — fixed in ask() but NOT propagated to _ISA. CARDINAL failure (mistake twice). META-LESSON: fix a surface-form bug in EVERY parser/regex in the module + grep to confirm; one-path fix is not a fix. |
 | JEP-94 #2 | 🔮 100% after propagating the article fix to _ISA + auditing _SVO and grepping | 16/16 = 100% | HIT | Propagation lesson applied; audit (grep) confirmed no unsafe article patterns remain. |
 | JEP-95 | 🔮 100%; most-likely miss = a/an agreement in GENERATION ('a animal') | 5/5 = 100% | HIT | Applied the surface-form meta-lesson PROACTIVELY: article agreement in one _art() helper used everywhere, before any miss. |
+| JEP-96 | 🔮 100%; most-likely miss = negation parse in tell() (_ISA grabs 'not') | 8/8 = 100% | HIT | Dedicated _NEG_ISA regex before _ISA, surface-form lesson applied proactively; correction retracts edge + neg overrides closure. |

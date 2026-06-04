@@ -65,3 +65,15 @@ def test_communication_explains_in_english():
     assert e.explain("is a poodle a fish?").startswith("No.")
     assert e.explain("does the dog chase the cat?") == "Yes, the dog chases the cat."
     assert e.explain("does the cat chase the dog?").startswith("No,")
+
+
+def test_learning_by_correction():
+    e = UnderstandingEngine(seed=96)
+    e.tell("A fish is an animal."); e.tell("A mammal is an animal.")
+    e.tell("A whale is a fish.")
+    assert e.is_a("whale", "fish")
+    assert e.tell("A whale is not a fish.")[0] == "neg_isa"
+    e.tell("A whale is a mammal.")
+    assert not e.is_a("whale", "fish")          # belief retracted
+    assert e.is_a("whale", "mammal") and e.is_a("whale", "animal")
+    assert e.explain("is a whale an animal?").startswith("Yes. A whale is a mammal")

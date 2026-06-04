@@ -30,6 +30,7 @@ class UnderstandingEngine:
         self.REL = self._rand()
         self.OBJ = self._rand()
         self.parents: dict[str, str] = {}          # IS-A graph (child -> parent)
+        self.neg_isa: set[tuple[str, str]] = set()  # explicit negative facts: child is NOT parent
         self.facts: list[tuple[str, str, str]] = []  # stored relational facts (s, r, o)
         self._fact_vecs: list[np.ndarray] = []
         self.prototypes: dict[str, np.ndarray] = {}  # concept -> perceptual feature prototype
@@ -107,9 +108,22 @@ class UnderstandingEngine:
         s = re.sub(r"\b(?:a\s+|an\s+)?(?:kind|type|sort)s?\s+of\s+", "", s, flags=re.I)
         return s
 
+    _NEG_ISA = re.compile(r"^\s*(?:(?:an|a|the)\s+)?(\w+)\s+(?:is|are)\s+not\s+(?:(?:an|a|the)\s+)?(\w+)\s*\.?\s*$", re.I)
+
     def tell(self, sentence: str) -> tuple:
-        """Parse one simple fact. Returns ('isa', child, parent) or ('rel', s, r, o) or ('none',)."""
-        m = self._ISA.match(self._preprocess_isa(sentence))
+        """Parse one simple fact. Returns ('isa',c,p) / ('neg_isa',c,p) / ('rel',s,r,o) / ('none',).
+
+        Supports learning-by-correction: 'X is not a Y' retracts the belief X->Y and records a negative
+        fact; a later 'X is a Z' installs the corrected parent."""
+        pre = self._preprocess_isa(sentence)
+        mneg = self._NEG_ISA.match(pre)
+        if mneg:
+            child, parent = self._norm(mneg.group(1)), self._norm(mneg.group(2))
+            self.neg_isa.add((child, parent))
+            if self.parents.get(child) == parent:
+                del self.parents[child]          # retract the corrected belief
+            return ("neg_isa", child, parent)
+        m = self._ISA.match(pre)
         if m:
             child, parent = self._norm(m.group(1)), self._norm(m.group(2))
             if child != parent and parent not in self._COPULA_STOP:
@@ -134,8 +148,11 @@ class UnderstandingEngine:
         return out
 
     def is_a(self, x: str, c: str) -> bool:
-        """Multi-hop IS-A by transitive closure (works for chains never stated)."""
-        return self._norm(c) in self.ancestors(x)
+        """Multi-hop IS-A by transitive closure; an explicit negative fact (correction) overrides."""
+        x, c = self._norm(x), self._norm(c)
+        if (x, c) in self.neg_isa:
+            return False
+        return c in self.ancestors(x)
 
     def relation_true(self, s: str, r: str, o: str, thresh: float = 0.9) -> bool:
         """Is (s, r, o) asserted? Role-binding makes this order-sensitive (same-bag discrimination).
