@@ -1,0 +1,10 @@
+=== JEP-82b: horizon planning THROUGH the substrate world-model (proper MPC) ===
+   plans found: 56/56; EXACT goal-pattern reach (execute plan on substrate) = 1.000
+
+--- VERDICT ---
+JEP-82b: PASS - planning THROUGH the substrate world-model (BFS over substrate predict_step transitions)
+reaches the EXACT goal pattern 1.00 of the time, executing the plan on the substrate's own
+dynamics. The MPC pillar realized on world.energy.EnergyNet - the substrate is the world-model a proper
+planner rolls forward. Confirms JEP-82's diagnosis: the substrate was fine, greedy control was the flaw.
+Established (attractor dynamics + planning), named; no novelty.
+DONE
