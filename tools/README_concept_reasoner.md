@@ -58,6 +58,19 @@ easy queries can pass while the aggregate degrades (JEP-29 lesson).
 **Compositional queries** (lowest common ancestor / "what category includes both X and Y") work *partially*
 (~0.6–0.8, JEP-30c) and improve with embedding dimension — a genuine but bounded step beyond pairwise IS-A.
 
+
+## Choosing the IS-A method (JEP-39..45)
+`fit(isa_method=...)` selects how IS-A is computed - no single method is best (mapped tradeoffs):
+- `"poincare"` (default): calibrated hyperbolic. Cross-branch correct; SIBLING residual (`is_a(cat,dog)` can be
+  wrong); ~0.78 ceiling on deep real WordNet (the limit is the METHOD, not compute/dimension - JEP-40/41).
+- `"order"` (recommended for LARGE REAL hierarchies): order embeddings (Vendrov 2016). Fixes siblings AND scales
+  to ~0.91 held-out IS-A on WordNet (366 concepts); small cross-branch residual (a specific concept can dominate
+  an unrelated general one). 
+- Entailment cones (Ganea 2018, `tools/run_jep39*`): fix BOTH residuals on small/clean taxonomies (1.00) but do
+  NOT scale (TPR 0.42 at 366). Best for small clean trees.
+
+For real-world use on a sizeable taxonomy, prefer `isa_method="order"`.
+
 ## What it is and isn't
 It is a faithful, honestly-bounded demonstration that **mixed-curvature cognitive maps** capture both metric and
 taxonomic concept structure, shipped as a usable tool. All methods are established (Poincaré embeddings —

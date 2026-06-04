@@ -48,7 +48,11 @@ class ConceptReasoner:
             a.append(p); p = self.parent.get(p)
         return a
 
-    def fit(self, euc_dim=4, hyp_dim=2, iters=3000, holdout_pairs=None, anchor=0.5):
+    def fit(self, euc_dim=4, hyp_dim=2, iters=3000, holdout_pairs=None, anchor=0.5, isa_method="poincare"):
+        # isa_method: "poincare" (default, calibrated hyperbolic - cross-branch correct, sibling residual, ~0.78 at
+        # real scale) or "order" (Vendrov 2016 order embeddings - siblings fixed + scales to 0.91 on real WordNet,
+        # small cross-branch residual). See docs/amendments/jep42/43, JEP method-landscape.
+        self.isa_method = isa_method
         N = self.N; iu = np.triu_indices(N, 1); gd = torch.tensor(self.GD[iu], dtype=torch.float32)
         I = torch.tensor(iu[0]); J = torch.tensor(iu[1])
         Xe = torch.randn(N, euc_dim) * 0.1; Xe.requires_grad_(True); s = torch.tensor(1.0, requires_grad=True)
@@ -56,6 +60,9 @@ class ConceptReasoner:
         for _ in range(iters):
             opt.zero_grad(); (((_euc_dc(Xe[I], Xe[J]) - s * gd) ** 2).mean()).backward(); opt.step()
         self.Xe = Xe.detach()
+        if isa_method == "order":
+            self._fit_order(iters, holdout_pairs); self.hnorm = np.zeros(N); self.Xh_np = np.zeros((N, 2)); self._isa_w = None
+            return self
         POS = []
         for v in range(N):
             for u in self._ancestors(v):
@@ -121,6 +128,36 @@ class ConceptReasoner:
             w -= lr * (Xs.T @ g) / len(y); b0 -= lr * g.mean()
         self._isa_w, self._isa_b, self._isa_mu, self._isa_sd = w, b0, mu, sd
 
+    def _fit_order(self, iters, holdout_pairs, dim=40):
+        # order embeddings (Vendrov 2016): non-neg coords; a is-a b iff a dominates b coord-wise (relu(b-a)==0)
+        N = self.N
+        pos = []
+        for v in range(N):
+            for u in self._ancestors(v):
+                if holdout_pairs is not None and (u, v) in holdout_pairs:
+                    continue
+                pos.append((v, u))  # child v, ancestor u
+        Xo = torch.rand(N, dim) * 0.1; Xo.requires_grad_(True); opt = torch.optim.Adam([Xo], lr=0.05)
+        pc = torch.tensor([p[0] for p in pos]); pa = torch.tensor([p[1] for p in pos])
+
+        def oe(child, av, X):
+            return torch.relu(X[av] - X[child]).pow(2).sum(-1)
+        for _ in range(max(iters, 5000)):
+            opt.zero_grad()
+            ep = oe(pc, pa, Xo).mean()
+            nc = torch.randint(0, N, (len(pos),)); na = torch.randint(0, N, (len(pos),))
+            en = torch.relu(1.0 - oe(nc, na, Xo)).mean()
+            (ep + en).backward(); opt.step()
+            with torch.no_grad():
+                Xo.clamp_(min=0.0)
+        self.Xo = Xo.detach()
+        with torch.no_grad():
+            pe = oe(pc, pa, self.Xo).numpy()
+            rng = np.random.default_rng(0); nc = rng.integers(0, N, len(pos)); na = rng.integers(0, N, len(pos))
+            ne = oe(torch.tensor(nc), torch.tensor(na), self.Xo).numpy()
+            self._order_t = float(max(np.percentile(np.concatenate([pe, ne]), np.linspace(1, 99, 99)),
+                                      key=lambda tt: (np.mean(pe <= tt) + np.mean(ne > tt)) / 2))
+
     def relatedness(self, a, b):
         i, j = self.ID[a], self.ID[b]; return float(-_euc_dc(self.Xe[i:i + 1], self.Xe[j:j + 1]))
 
@@ -130,6 +167,9 @@ class ConceptReasoner:
     def is_a_score(self, a, b):
         """P(a is-a b) = a is a kind of b (b is a hypernym/ancestor of a). Calibrated."""
         i, j = self.ID[a], self.ID[b]
+        if getattr(self, "isa_method", "poincare") == "order":
+            e = float(torch.relu(self.Xo[j] - self.Xo[i]).pow(2).sum())  # i dominates j?
+            return 1.0 if e <= self._order_t else 0.0
         if getattr(self, "_isa_w", None) is None:
             return float(self.hnorm[j] < self.hnorm[i])
         f = (np.array([self._hd(i, j), self.hnorm[i] - self.hnorm[j]]) - self._isa_mu) / self._isa_sd
