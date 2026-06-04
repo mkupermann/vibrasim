@@ -1,0 +1,9 @@
+=== JEP-96: engine tier 5 - learning by correction in dialogue (target 100%) ===
+   [correction] 'A whale is not a fish.'  then  'A whale is a mammal.'
+   explain after correction: 'is a whale an animal?' -> Yes. A whale is a mammal, a mammal is an animal.
+
+   correction battery: 8/8 = 100.0%
+--- VERDICT ---
+JEP-96: PASS - the engine LEARNS BY CORRECTION: a 'not' retracts a wrong belief, a new fact installs
+the correction, and its answers + explanations flip accordingly - human-like learning from a teacher.
+DONE
