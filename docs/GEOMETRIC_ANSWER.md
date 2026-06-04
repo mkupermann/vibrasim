@@ -188,8 +188,10 @@ Two rigorous deflations narrowed the geometric contribution precisely: relation 
 (GEO-66), and multi-hop COMPOSITION on structured data = a database JOIN (GEO-68; geometry only resolves the
 entry entity). What remains is SEMANTIC MATCHING — resolving meaning (descriptions, epithets, paraphrases) to entities —
 but even THAT is mostly DISTRIBUTIONAL semantics: static word vectors do ~0.70, the transformer adds only
-+0.10 (GEO-69). So the genuine ingredient is decades-old distributional semantic matching, modestly LLM-
-enhanced, not a novel LLM capability. Honest one-liner: **the system = LLM semantic matching + classical
++0.10 (GEO-69). So keyword semantic matching is decades-old distributional semantics, modestly LLM-enhanced. BUT the
+transformer DOES add one irreducible thing static vectors can't (GEO-70b): COMPOSITIONAL/word-order encoding
+(roles, who-did-what-to-whom; 0.75 vs static 0.38). So the LLM's genuine value = modest distributional boost +
+real compositional/syntactic understanding — composed with classical machinery for all the reasoning. Honest one-liner: **the system = LLM semantic matching + classical
 symbolic/database reasoning + RAG grounding + a thin generator.** The LLM's irreducible job is mapping meaning
 to the right entry; the reasoning on top is classical. Real, useful, entirely established methods, precisely
 scoped — not new-as-method, not human-level AI.
