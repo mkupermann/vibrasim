@@ -1,0 +1,9 @@
+=== GEO-64: scale ceiling (retrieval matmul latency) ===
+  N=  1000  retrieval-scan=  0.02ms  total(+embed)=   6.0ms  INTERACTIVE
+  N= 10000  retrieval-scan=  0.18ms  total(+embed)=   6.2ms  INTERACTIVE
+  N= 50000  retrieval-scan=  1.45ms  total(+embed)=   7.4ms  INTERACTIVE
+  N=200000  retrieval-scan=  6.05ms  total(+embed)=  12.0ms  INTERACTIVE
+
+--- VERDICT ---
+GEO-64: characterization — the N where total > 100ms (or scan >> 6ms embed) is the brute-force ceiling; beyond it use an ANN index.
+DONE

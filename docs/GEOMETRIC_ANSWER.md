@@ -166,6 +166,12 @@ intent poorly at 0.56 because embeddings cluster by content not operation) -> GE
 optional grounded GENERATOR. The recurring principle at every layer: geometry for semantics, symbols for
 structure.
 
+## Performance and scale (GEO-63/64)
+Interactive on CPU: ~7ms/query (~150 q/s), ~24ms with re-ranking. Brute-force retrieval stays interactive to
+~200,000 facts (12ms/query) — speed is NOT the scale limiter; retrieval PRECISION is (multi-hop degrades by a
+few hundred facts, GEO-22, fixed by re-ranking GEO-40b). So: hold 100k+ facts and query in real time; invest
+in re-ranking/better embeddings for accuracy, and an ANN index only beyond ~1M facts.
+
 ## Bottom line
 Phase-1 verdict was "the physics substrate has no computational value." Phase-2 verdict is the constructive
 counterpart: **redefining the substrate as a geometric concept space over an LLM yields a real, working,
