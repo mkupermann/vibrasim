@@ -1,0 +1,16 @@
+# JEP-10 — does substrate-compatible local learning (predictive coding) scale to REAL data? (MNIST, full CPU)
+
+## Motivation (Michael's scaling directive)
+Hardware reality: AMD GPUs (no CUDA; ROCm Linux-only; torch-directml unsupported on Py3.13) -> no PyTorch GPU
+TRAINING path. Practical max for training = Ryzen 9 (16 threads) + 62GB RAM with multithreaded BLAS. GPU usable
+only for INFERENCE via onnxruntime-directml (JEP-10b). So: scale the SCIENCE on CPU. JEP-6d showed predictive
+coding (local, no backprop) matches backprop on toy two-moons; this asks the real question - does it scale to
+REAL data (MNIST, 60k x 784) with a large network?
+
+## Pre-registration (locked BEFORE run)
+- MNIST 60k train / 10k test, pixels/255. Network 784 -> 1024 -> 10, tanh hidden, softmax out. Minibatch SGD.
+- Two learners, SAME arch: BACKPROP and PREDICTIVE CODING (local error nodes + hidden relaxation, no backprop).
+  16-thread BLAS (OMP/OPENBLAS=16). Equal epochs/lr.
+- Bars: backprop test acc >= 0.95 (confirms scale+task), PC test acc >= backprop - 0.03 (PC matches at scale),
+  both >> 0.10. PASS = substrate-compatible local learning SCALES to real data matching backprop. NULL if PC
+  fails to scale. Predictive coding (Rao-Ballard; Whittington-Bogacz 2017) established - named as such.
