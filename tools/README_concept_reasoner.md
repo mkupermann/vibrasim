@@ -6,7 +6,8 @@ question about concepts:
 - **relatedness** ("how related are X and Y?") — from a **Euclidean** embedding
 - **IS-A / hypernymy** ("is X a kind of Y?", "which is more general?") — from a **hyperbolic** (Poincaré) embedding
 
-No pretrained models, no transformer — just two geometry fits over a taxonomy graph. Built from the EQMOD-4
+Handles multi-parent (DAG) taxonomies (JEP-51: `_ancestors` is the transitive closure over all
+parents). No pretrained models, no transformer — just two geometry fits over a taxonomy graph. Built from the EQMOD-4
 geometry findings (different relation types want different curvature: metric→Euclidean, taxonomic→hyperbolic).
 
 ## Why two geometries?
@@ -44,6 +45,13 @@ Validated, with limits, across EQMOD-4 (see `docs/amendments/jep28*.md`, `jep29*
 | 77 concepts (curated) | 0.91 | reliable at `hyp_dim >= 5`; **2D is NOT reliable** per-query |
 | 366 concepts (WordNet carnivore) | 0.86 | needs ~`hyp_dim=20`, ~12k full-batch iters |
 | 1170 concepts (WordNet mammal) | 0.53 → 0.65 | **under-converged** at the budget tried; not reliable |
+
+**Held-out generalization needs SCALE (JEP-51):** the reasoner answers is_a for relations IN its fitted
+taxonomy reliably (in-sample recall ~1.0). But generalizing to UNSEEN is_a relations (held-out link prediction)
+is WEAK on small taxonomies (~0.4 calibrated recall on ~30 concepts) and needs a larger taxonomy (77+) to
+generalize. The "0.91 generalization" figure (JEP-28b) was the norm-DIRECTION metric (which-is-more-general,
+given a known pair) on a larger taxonomy, not calibrated is_a recall on a small one. Use it as a lookup over a
+KNOWN taxonomy; do not expect strong unseen-relation prediction on small inputs.
 
 **Compute scales super-linearly with hierarchy size/depth.** For larger/deeper taxonomies, raise `hyp_dim` and
 `iters` substantially (a GPU helps — see `docs/AMD_GPU_COMPUTE.md`). The norm-based IS-A readout degrades on very
