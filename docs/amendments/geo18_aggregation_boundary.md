@@ -18,3 +18,15 @@ maps this boundary honestly AND tests the honest fix: retrieval to FILTER + a ti
   finding, not a failure.
 
 PASS-as-designed if (A) fails AND (B) succeeds (delineates the boundary + the fix). Report both.
+
+## Result
+true counts: Boston 6, Austin 6, Denver 4, Seattle 4
+| method | exact-count acc |
+|--------|-----------------|
+| (A) pure geometric retrieval | **0.00** |
+| (B) retrieval + symbolic count | **1.00** |
+
+**VERDICT: PASS-as-designed** — the boundary is confirmed: pure nearest-neighbour geometry CANNOT produce a
+count/aggregate (no single fact holds it), but geometric retrieval to RESOLVE each person->city + a tiny
+symbolic COUNT solves it exactly. The honest architecture: **geometry for filter/retrieve/chain, a symbolic
+layer for aggregate/synthesize.** This is exactly the division of labour real RAG+tools systems use.
