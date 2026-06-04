@@ -1,0 +1,10 @@
+=== JEP-54: concept formation - discover hierarchy from noisy features ===
+   sigma   cophenetic-corr   category-purity(level-1)
+   0.3     0.742            0.750
+   0.8     0.555            0.750
+   1.5     0.105            0.625
+   3.0     0.244            0.688
+
+--- VERDICT ---
+JEP-54: PARTIAL/NULL - low-noise cophenetic 0.74, purity 0.75
+DONE
