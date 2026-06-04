@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 46 / predictions 65 (JEP-151 HIT — Occam prior helps simple one-shot, hurts complex) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
+Running tally: hits 47 / predictions 66 (JEP-152 HIT — meta-learning the prior helps relatively, closes the thread) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
 
 | id | prediction (🔮 before) | outcome | hit? | lesson (don't repeat) |
 |----|------------------------|---------|------|------------------------|
@@ -72,3 +72,4 @@ Running tally: hits 46 / predictions 65 (JEP-151 HIT — Occam prior helps simpl
 | JEP-149 | 🔮 100%; risk = perspective flip vs invariance | 9/9 | HIT | Spatial transitive + inverse + perspective transform (left/right flip from opposite view, above/below invariant). |
 | JEP-150 | 🔮 100%; risk = part-of/is-a graph leakage | 8/8 | HIT | part-of transitive + asymmetric + DISTINCT from is-a (finger part-of body, not a body); graphs don't leak. |
 | JEP-151 | 🔮 Occam helps simple-true one-shot, hurts complex-true | depth1 0.87 vs 0.17; depth3 0.06 vs 0.18 | HIT | No-free-lunch: priors enable one-shot learning only when world matches prior. Completes the structure-learning frontier characterization. |
+| JEP-152 | 🔮 meta-prior helps consistent domains, uninformative heterogeneous | deep 0.18 vs 0.05; simple 0.86/0.86; hetero 0.28/0.28 | HIT | Meta-learning the prior helps relatively (3.6x on deep) but doesn't solve deep one-shot (data under-determined). Exhaustively closes the structure-learning frontier. |
