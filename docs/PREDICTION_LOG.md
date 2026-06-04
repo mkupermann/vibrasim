@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 37 / predictions 56 (JEP-142 HIT — probabilistic reasoning quantifies the insight) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
+Running tally: hits 38 / predictions 57 (JEP-143 HIT — temporal persistence / frame problem) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
 
 | id | prediction (🔮 before) | outcome | hit? | lesson (don't repeat) |
 |----|------------------------|---------|------|------------------------|
@@ -63,3 +63,4 @@ Running tally: hits 37 / predictions 56 (JEP-142 HIT — probabilistic reasoning
 | JEP-140 | 🔮 induction more noise-robust than deduction (plateau to ~50%) | induction 0.91@30% vs deduction 0.20; robust to ~45% | HIT | Aggregation averages noise; chaining compounds it. Completes the inference-robustness picture. |
 | JEP-141 | 🔮 100%; risk = intervention edge-cutting | 7/7 | HIT | Causal transitive + do-operator (cut incoming edges). A distinct human faculty (Pearl do-calculus, qualitative). |
 | JEP-142 | 🔮 chain compounds multiplicatively, DAG noisy-OR aggregates | 0.9->0.81->0.729 chain; 0.964 DAG | HIT | Probabilistic reasoning QUANTIFIES compounding (multiply) vs aggregation (noisy-OR). Honest: independent-paths assumption. |
+| JEP-143 | 🔮 100%; risk = persistence vs change boundary | 9/9 | HIT | Frame axiom: fluents persist until changed; state-at-time correct across events. A distinct classic faculty (situation calculus). |

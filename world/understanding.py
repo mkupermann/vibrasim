@@ -478,6 +478,24 @@ class UnderstandingEngine:
             return f"No, I was not told that the {s} {self._norm_rel(r)}s the {o}."
         return "I cannot parse that question."
 
+    def event(self, name: str, sets: dict = None) -> None:
+        """Record a timed EVENT that sets fluents (states), e.g. event('open the door', {'door_open': True}).
+        Events append to a timeline; fluents PERSIST until a later event changes them (the frame axiom)."""
+        if not hasattr(self, "timeline"):
+            self.timeline = []
+        self.timeline.append((name, dict(sets or {})))
+
+    def fluent_at(self, fluent: str, t: int = None):
+        """Value of a fluent (state) at time t (= index in the event timeline; None = now/latest), by
+        PERSISTENCE: the value set by the most recent event up to t that touched it (frame problem)."""
+        tl = getattr(self, "timeline", [])
+        end = len(tl) if t is None else min(t + 1, len(tl))
+        val = None
+        for name, sets in tl[:end]:
+            if fluent in sets:
+                val = sets[fluent]       # most recent change persists
+        return val
+
     def tell_cause(self, x: str, y: str) -> None:
         """Record a causal edge x -> y (x causes y). Stored separately from IS-A (causation is not taxonomy)."""
         if not hasattr(self, "causes"):
