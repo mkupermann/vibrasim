@@ -365,3 +365,14 @@ def test_probabilistic_reasoning():
     for x, y in [("s", "m1"), ("m1", "t"), ("s", "m2"), ("m2", "t")]:
         e2.tell_prob(x, y, 0.9)
     assert e2.is_a_prob("s", "t") > 0.81                  # two paths noisy-OR > single path (aggregation)
+
+
+def test_temporal_persistence_frame():
+    e = UnderstandingEngine(seed=143)
+    e.event("open door", {"door_open": True})
+    e.event("turn on light", {"light_on": True})
+    e.event("close door", {"door_open": False})
+    assert e.fluent_at("door_open", 1) is True      # persists through the unrelated light event (frame axiom)
+    assert e.fluent_at("door_open") is False        # changed by close
+    assert e.fluent_at("light_on") is True          # persists, never turned off
+    assert e.fluent_at("light_on", 0) is None       # not yet set at t0
