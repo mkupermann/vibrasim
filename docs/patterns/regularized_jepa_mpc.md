@@ -25,3 +25,11 @@ regularizer's contribution.
 Toy 2D system; encoder trained by gradient descent (substrate-native predictor training is separate - predictive
 coding, JEP-19, matches backprop at depth). All methods established and named; the transferable output is the
 assembled recipe + the discipline of proving collapse in the control.
+
+## When latent-prediction actually beats generative (JEP-79/79b)
+The JEPA selling point — "predict in latent space to ignore unpredictable detail" — is NOT automatic. Measured:
+with AMPLE capacity a generative (obs-predicting) model encodes controllable state AND unpredictable distractors
+at no measurable cost (state-R^2 0.99 either way; JEPA no edge). The advantage appears ONLY under a CAPACITY
+BOTTLENECK where modeling noise competes with modeling state: 4-d latent + 96-d dominant unpredictable distractor
+-> JEPA 0.98 vs generative 0.49. So reach for latent-prediction when capacity is the binding constraint against
+irreducible unpredictability; otherwise a generative model is fine. Locate the regime, don't assume the win.
