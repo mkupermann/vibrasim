@@ -31,3 +31,17 @@ because mixed seen/unseen pairs are partly carried by the correctly-placed SEEN 
 scores 0.77), and a tiny 5-entity unseen set makes random-init noisily high (not true chance). NOT
 retuning the bar (forbidden). The signal is real but the test was under-powered. Re-run clean in GEO-27b:
 more entities, larger unseen split, unseen-vs-unseen as the PRIMARY pre-registered metric.
+
+## GEO-27b result — PASS (clean, the irreducible edge)
+| init | unseen-vs-unseen (PRIMARY, 24 entities / 8 unseen, 5 splits) |
+|------|--------------------------------------------------------------|
+| LLM-init | **0.81 ± 0.03** |
+| random-init | 0.51 ± 0.11 (chance) |
+
+**VERDICT: PASS.** Properly powered (8 fully-unseen of 24, unseen-vs-unseen primary), the LLM prior transfers
+a learned ordering relation to entities NEVER in any training pair at 0.81, while random-init is at chance.
+**This is geometry's irreducible edge, measured cleanly:** the semantic prior places new entities so a
+relation learned on others orders them with ZERO examples — genuine zero-shot generalization (a hallmark of
+understanding, not memorization), and irreducible because random-init cannot do it. This is the strongest
+honest support for "the geometric view has real value": not a new kind of AI, but a measurable capability —
+zero-shot relational transfer via semantic geometry — that string matching and random embeddings lack.

@@ -87,6 +87,14 @@ paraphrases, analogies, relation offsets, and a data-efficient prior for semanti
 (GEO-5/6/24/25b) — not the templated retrieval numbers. Stated plainly so the deliverable is not read as
 overclaiming.
 
+## The single strongest honest result: zero-shot relational transfer (GEO-27b)
+The cleanest evidence that the geometric view has irreducible value: a size-ordering relation trained on
+some animals transfers to animals NEVER seen in any training pair at 0.81, while the same method with random
+initial vectors is at chance 0.51. The LLM's semantic geometry positions unseen entities so a learned
+relation orders them with zero examples of them — genuine zero-shot generalization (understanding, not
+memorization), and irreducible (random init cannot do it). This, plus semantic resolution of descriptions
+(GEO-25b) and data-efficient structure learning (GEO-24), is where "geometric" genuinely earns its name.
+
 ## Bottom line
 Phase-1 verdict was "the physics substrate has no computational value." Phase-2 verdict is the constructive
 counterpart: **redefining the substrate as a geometric concept space over an LLM yields a real, working,
