@@ -17,3 +17,17 @@ GEO-16/31), supplies the chain's facts to the generator, which produces the grou
   Report a couple of example generations.
 
 PASS if grounded multi-hop generation works and the bare LLM cannot. NULL/PARTIAL otherwise.
+
+## Result — PASS (full reasoning+generation stack)
+| | result |
+|--|--------|
+| bare-LLM city accuracy | 0.00 (guesses "New York City" — no private knowledge) |
+| grounded multi-hop accuracy | **1.00** |
+| examples | bare "New York City" -> grounded "Alice works in Zogby." / "Bob works in Quenville." |
+
+**VERDICT: PASS.** The geometric layer chains private facts (person->team->city) and supplies them to the
+0.5B generator, which answers correctly (1.00), while the bare LLM — lacking the private knowledge —
+confabulates a generic city (0.00). The complete stack works on the PC: geometric multi-hop reasoning over a
+private, updatable store -> grounded generation, producing correct answers the LLM alone cannot, without
+hallucination. This is the programme's capstone: a grounded reasoning+QA assistant (tools/grounded_qa.py)
+that reasons over your own facts and grounds an LLM's generation in them.
