@@ -1,0 +1,10 @@
+=== GEO-56b: re-ranked unstructured QA ===
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 9369.80it/s]
+Loading weights:   0%|          | 0/105 [00:00<?, ?it/s]Loading weights: 100%|##########| 105/105 [00:00<00:00, 10752.00it/s]
+  bi-encoder hits@1  = 0.67
+  + cross-encoder rerank = 0.83
+
+--- VERDICT ---
+GEO-56b: PASS - re-ranking lifts unstructured-prose QA (0.67->0.83); the system works on real documents with the re-ranker. Same fix as structured scale (GEO-40b).
+DONE
