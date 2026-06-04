@@ -12,3 +12,21 @@ the whole snake). This is the genuine test of whether the LOCAL contrastive rule
   (2) energy-MPC LEARNED >= 0.7 AND >= EUCLIDEAN-control + 0.2 AND >> random. Here the Euclidean control SHOULD
   fail badly (it tries to go straight through walls).
 - PASS = local learning captures geodesic structure where Euclidean is deceptive. NULL = even here it cannot.
+
+## Result — NULL (a genuine limit of the simple contrastive rule)
+| measure | value |
+|---------|-------|
+| Spearman(emb-dist, GEODESIC) | 0.50 |
+| Spearman(emb-dist, EUCLIDEAN) | 0.58 |
+| Spearman(GEODESIC, EUCLIDEAN) ref | 0.72 |
+| energy-MPC LEARNED | 0.34 |
+| energy-MPC EUCLIDEAN control | 0.28 |
+| random | 0.19 |
+
+**VERDICT: NULL — a genuine limit.** Even in a serpentine where Euclidean is deceptive, the simple contrastive
+temporal-coherence rule's embedding tracks EUCLIDEAN (0.58) over geodesic (0.50) and barely beats the Euclidean
+control (0.34 vs 0.28). So the pairwise attract-neighbours/repel-randoms rule converges to a positional metric,
+NOT the maze topology. This bounds the JEP-5/7 representation: it is metric/positional, not geodesic. The
+established fix is the SUCCESSOR REPRESENTATION (Dayan 1993) — captures multi-step diffusion/connectivity and is
+learnable by a LOCAL TD rule (still substrate-compatible). That is the right next direction (JEP-9). NULL is a
+finding; bars locked, not tuned.
