@@ -19,3 +19,20 @@ the LLM geometry's real contribution is paraphrase/semantic robustness, not the 
 
 PASS-as-designed if it isolates the real contribution (lexical competitive on templated, geometry wins
 paraphrase). This is a deflation/honesty rung, not a victory lap.
+
+## Result — an honest DEFLATION
+| query set | geometric | lexical |
+|-----------|-----------|---------|
+| templated | 1.00 | 1.00 |
+| "paraphrased" | 1.00 | **1.00** |
+
+**VERDICT: DEFLATION (honest self-correction).** Lexical token-overlap also scores 1.00 on BOTH sets —
+because my "paraphrase" still contained the country NAME (e.g. "France"), a unique token shared with the
+target fact. So the capital/named-entity retrieval task is LEXICALLY DETERMINED: a dumb string matcher
+solves it via the shared unique key. **Consequence:** the named-entity retrieval / QA / grounding headline
+numbers (GEO-15 retrieval, GEO-16/17 hop-1, GEO-23) are substantially solvable WITHOUT the LLM geometry —
+they do not, by themselves, prove "geometric understanding." What DOES genuinely require the geometry (no
+lexical shortcut, no shared token between cue and answer): the ANALOGY / relation-OFFSET / few-shot results
+(GEO-5 0.88, GEO-6 0.94–1.00) and the LLM-prior learning effect (GEO-24). The proper paraphrase test must
+REMOVE the shared identifying token — done in GEO-25b (descriptive queries). This is the negative control
+doing its job: a chunk of the programme's headline retrieval numbers is lexical, now stated plainly.
