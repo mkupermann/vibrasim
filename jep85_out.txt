@@ -1,0 +1,12 @@
+=== JEP-85: Hearst-pattern extraction (no transformer) -> structure -> multi-hop inference ===
+   extracted 12 pairs; precision=0.92 recall=0.79 F1=0.85
+   missed: [('animal', 'living_thing'), ('plant', 'living_thing'), ('tree', 'plant')]
+   spurious: [('colly', 'dog')]
+   end-to-end multi-hop IS-A accuracy on AUTO-extracted graph = 0.650 (20 true/20 false)
+
+--- VERDICT ---
+JEP-85: NULL/PARTIAL - extraction F1=0.85, inference acc=0.65 vs bars 0.80/0.85. The parse gap
+is the honest finding: pattern coverage is brittle to phrasing - exactly the known Hearst ceiling.
+HONEST BOUND: Hearst patterns capture only EXPLICIT lexical-pattern hypernymy; implicit/contextual
+hypernymy is missed (why modern systems learn extractors). Toy corpus. Established, named; no novelty.
+DONE
