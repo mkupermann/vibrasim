@@ -1,0 +1,9 @@
+=== GEO-42: relational join queries ===
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 10361.52it/s]
+  (A) same-city join mean F1   = 1.00
+  (B) same-team comparison acc = 1.00  (n=12)
+
+--- VERDICT ---
+GEO-42: PASS - relational JOIN queries work: geometric entity resolution + symbolic join/compare answers same-city sets (F1 1.00) and same-team comparisons (1.00). Richer-than-chaining relational reasoning over the store.
+DONE
