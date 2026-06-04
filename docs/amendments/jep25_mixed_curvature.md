@@ -28,3 +28,26 @@ dominates distances), and the mixed model's 2D Euclidean component was CAPACITY-
 that dominant grid. Mixed-curvature only helps when BOTH geometries are genuinely needed and balanced. Fair test
 = a true GRID x TREE Cartesian product (distance = grid_dist + tree_dist) where pure Euclidean fails the tree
 factor AND pure hyperbolic fails the grid factor -> JEP-25b. Bars locked, not tuned.
+
+## JEP-25b — true grid x tree product — NULL (and an honest reason my demo couldn't isolate it)
+| embedding | Spearman |
+|-----------|----------|
+| pure Euclidean (4D) | 0.947 |
+| MIXED (2D x 2D) | 0.725 |
+| pure Hyperbolic (4D) | 0.481 |
+
+**VERDICT: NULL - I could NOT cleanly demonstrate the mixed-curvature advantage.** Pure Euclidean won again.
+Honest diagnosis of MY demo's flaw (not a refutation of the established result): (1) the Cartesian GRAPH product
+has ADDITIVE (L1) distance grid_dist+tree_dist, but the Riemannian MANIFOLD product uses L2 sqrt(d_E^2+d_H^2) -
+a metric mismatch that handicaps the mixed model while free 4D Euclidean approximates the additive structure
+better; (2) Spearman (rank) is forgiving of a SMALL tree's absolute distortion, so Euclidean's tree distortion
+barely hurts the rank metric. The mixed-curvature benefit (Gu et al. 2019) is established on REAL graph data with
+proper objectives, but my synthetic toys did not isolate it. NOT overclaiming a synthesis I couldn't show.
+
+## Geometry thread (JEP-23/24/25) - honest conclusion
+CLEAN results: Euclidean cognitive maps fit METRIC structures (JEP-23b: ring 0.99, grid 0.92), DISTORT
+hierarchies (tree 0.41); HYPERBOLIC recovers hierarchies (JEP-24b: 0.83). These are solid and reproduced. The
+MIXED-curvature synthesis (JEP-25) is an established idea (Gu et al. 2019) that my clean toy demos did NOT
+reproduce - honest limitation. Net honest signpost toward conceptual understanding: different relation types want
+different geometries (metric->Euclidean, taxonomic->hyperbolic); combining them is a real, established, but
+non-trivial engineering problem I did not solve here. Named as established; not overclaimed.
