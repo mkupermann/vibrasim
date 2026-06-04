@@ -14,11 +14,11 @@ class MLP(nn.Module):
     def __init__(s):
         super().__init__(); s.l1=nn.Linear(784,W1.shape[1],bias=False); s.l2=nn.Linear(W1.shape[1],10,bias=False)
         s.l1.weight.data=torch.tensor(W1.T); s.l2.weight.data=torch.tensor(W2.T)
-    def forward(s,x): return torch.tanh(s.l1(x))@0+s.l2(torch.tanh(s.l1(x)))
+    def forward(s,x): return s.l2(torch.tanh(s.l1(x)))
 net=MLP().eval()
 onnx_path="data/jep10_mlp.onnx"
 torch.onnx.export(net,torch.zeros(1,784),onnx_path,input_names=["x"],output_names=["logits"],
-                  dynamic_axes={"x":{0:"n"},"logits":{0:"n"}},opset_version=13)
+                  dynamic_axes={"x":{0:"n"},"logits":{0:"n"}},opset_version=13,dynamo=False)
 print(f"  exported ONNX -> {onnx_path}",flush=True)
 import onnxruntime as ort
 def run(provider,Xb,reps=5):
