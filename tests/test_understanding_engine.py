@@ -289,3 +289,30 @@ def test_hypothetical_reasoning():
     assert e.respond("if a rock were a bird, would it be an animal?").startswith("Yes")
     assert {k: set(v) for k, v in e.parents.items()} == before     # KB unchanged (clean retraction)
     assert e.is_a("whale", "animal") and not e.is_a("whale", "fish")
+
+
+def test_is_a_property_based_vs_reference():
+    import numpy as np
+    rng = np.random.default_rng(0)
+    for t in range(40):
+        nC = int(rng.integers(5, 11)); concepts = [f"kx{i}" for i in range(nC)]
+        ref = {c: set() for c in concepts}
+        for i, c in enumerate(concepts):
+            for _ in range(int(rng.integers(0, 3))):
+                if i + 1 < nC:
+                    ref[c].add(concepts[int(rng.integers(i + 1, nC))])
+        def anc(x, seen=None):
+            seen = set() if seen is None else seen
+            for p in ref.get(x, ()):
+                if p not in seen:
+                    seen.add(p); anc(p, seen)
+            return seen
+        e = UnderstandingEngine(seed=t)
+        for c in concepts:
+            for p in ref[c]:
+                e.tell(f"A {c} is a {p}.")
+        for x in concepts:
+            ra = anc(x)
+            for c in concepts:
+                if x != c:
+                    assert e.is_a(x, c) == (c in ra), f"is_a({x},{c}) mismatch"
