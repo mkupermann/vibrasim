@@ -1,0 +1,6 @@
+=== JEP-30c: compositional LCA, better embedding (20D, 9000 iters) ===
+  pairs=481  exact-LCA=0.630  common-ancestor=0.807
+
+--- VERDICT ---
+JEP-30c: PARTIAL/NULL - exact 0.63, common-anc 0.81 (better embedding helped but bars not met)
+DONE

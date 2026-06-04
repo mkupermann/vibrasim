@@ -1,0 +1,14 @@
+=== JEP-30: compositional LCA query from hyperbolic embedding (77-concept toy) ===
+  pairs tested: 395
+  exact-LCA accuracy        = 0.099
+  predicted-is-common-ancestor = 0.099
+  examples (A, B -> true LCA / predicted):
+    tick, raptor -> animal / raptor
+    mammal, duck -> vertebrate / mammal
+    finch, bamboo -> living_thing / finch
+    beetle, ant -> insect / beetle
+    clam, spider -> invertebrate / clam
+
+--- VERDICT ---
+JEP-30: PARTIAL/NULL - exact-LCA 0.10, common-ancestor 0.10
+DONE
