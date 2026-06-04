@@ -29,3 +29,21 @@ Demonstrate substrate-native energy-based inference with NO backprop and NO glob
 - Bars: relaxation recall >= 0.9 bits correct at K <= 0.1*Nunits AND >> cue/random AND energy monotonically
   non-increasing. PASS = substrate-native (local-learn + relax) energy inference works. Report capacity curve
   honestly (Hopfield capacity ~0.14N; recall degrades past it - expected, reported not hidden).
+
+## Result — PASS
+| K patterns | load K/N | relax-recall | cue (no relax) | energy monotone |
+|-----------|----------|--------------|----------------|-----------------|
+| 3 | 0.03 | 1.000 | 0.700 | True |
+| 5 | 0.05 | 0.995 | 0.700 | True |
+| 8 | 0.08 | 0.970 | 0.700 | True |
+| 10 | 0.10 | 0.905 | 0.700 | True |
+| 14 | 0.14 | 0.811 | 0.700 | True |
+| 20 | 0.20 | 0.711 | 0.700 | True |
+| 30 | 0.30 | 0.649 | 0.700 | True |
+
+**VERDICT: PASS.** Local Hebbian learning (no backprop) + relaxation inference (no optimizer) recall >= 0.905
+at load <= 0.1N, >> 0.70 corrupted cue, energy monotonically non-increasing every trial. Degrades past ~0.14N
+exactly as Hopfield capacity theory predicts (reported, not hidden). This concretely demonstrates the
+substrate's benefit: EBM argmin == physical relaxation; learning == local plasticity. Hopfield (1982) is an
+established EBM - named as such, no novelty claimed. The benefit is the backprop-free, relaxation-based
+REALIZATION, not a speed/accuracy win over digital JEPA.
