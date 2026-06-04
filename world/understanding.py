@@ -383,6 +383,11 @@ class UnderstandingEngine:
                 if fs == s and self._norm_rel(fr) == r:
                     return f"The {s} {r}s the {fo}."
             return f"I don't know what the {s} {r}s."
+        # Boolean-composed questions route through ask_bool (otherwise explain can't see the connective)
+        if (" and " in q or " or " in q) and re.match(r"(is|are|does)\b", q):
+            r = self.ask_bool(question)
+            if r is not None:
+                return "Yes." if r else "No."
         return self.explain(question)
 
     def _eval_clause(self, clause: str):

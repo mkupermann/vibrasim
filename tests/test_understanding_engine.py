@@ -174,3 +174,9 @@ def test_inductive_generalization_defeasible():
     assert e.has_property("wren", "fly")        # induced, never observed
     assert not e.has_property("penguin", "fly") # explicit exception overrides (defeasible)
     assert not e.has_property("robin", "swim")  # not induced
+
+
+def test_respond_routes_boolean():
+    e = _engine()
+    assert e.respond("is a poodle an animal and is a poodle a dog?") == "Yes."
+    assert e.respond("is a poodle a fish and is a poodle a dog?") == "No."
