@@ -1,0 +1,11 @@
+=== JEP-36: sequential abstract goals ('visit a <A> THEN a <B>') ===
+  trials=150
+  visited A THEN B correctly (in order) = 1.000
+  (chance of a random 2-entity sequence matching both categories ~ 0.046)
+
+--- VERDICT ---
+JEP-36: PASS - the agent executes SEQUENTIAL conceptual tasks: 'visit a <A> THEN a <B>' grounded via
+IS-A and navigated in ORDER, reaching the right category at each step 1.00 of the time (random
+~0.05). Temporal composition of grounded subgoals - a step beyond logical composition (JEP-35) toward
+multi-step task understanding. Established methods (SR/TD, Poincare, sequential planning), named.
+DONE

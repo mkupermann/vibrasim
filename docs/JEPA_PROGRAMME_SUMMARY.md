@@ -47,6 +47,7 @@ vibrasim SUBSTRATE is a genuine benefit for this.
 | JEP-32/33 | PASS/NULL | is_a HARDENED: calibrated classifier (generality+containment) fixes cross-branch flaw (0.96 acc); JEP-33 lateral-feature did NOT fix sibling residual (reverted, honest - needs entailment cones). Caught+fixed a shipped bug AND a pushed-red test. |
 | JEP-34 | **PASS** | INTEGRATION: abstract-goal agent - concept reasoner GROUNDS a conceptual goal ('reach a carnivore') via IS-A, world-model SR planner navigates to it (reaches correct-category entity 1.00 vs random 0.38). Conceptual knowledge + planning compose into understanding-informed behaviour. |
 | JEP-35 | **PASS** | COMPOSITIONAL goals: set logic (AND/OR/NOT) + relatedness over IS-A ground the goal, world-model navigates - 1.00 across all 4 types (random 0.27). AND_NOT depends on the JEP-32 cross-branch fix. Symbolic operators + concept geometry + planning compose. |
+| JEP-36 | **PASS** | SEQUENTIAL goals: 'visit a <A> THEN a <B>' grounded + navigated in order, 1.00 (random ~0.05). Temporal composition. Integration trio (34/35/36) complete - composes in the RELIABLE regime, inherits component limits at scale (honest). |
 | JEP-7 | **PASS** | END-TO-END: contrastive-learned encoder + PC-learned predictor + energy-MPC reaches 0.97 of goals (untrained-predictor ablation 0.05, random 0.25). Nuance: exact prediction only 0.23 — planning needs correct ACTION RANKING, not exact prediction; world model accurate ENOUGH to plan. |
 
 ## The honest bottom line
