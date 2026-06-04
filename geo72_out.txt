@@ -1,0 +1,10 @@
+=== GEO-72: cross-encoder on word-order pairs ===
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 9707.29it/s]
+Loading weights:   0%|          | 0/105 [00:00<?, ?it/s]Loading weights: 100%|##########| 105/105 [00:00<00:00, 10320.63it/s]
+  bi-encoder   word-order acc = 0.75
+  cross-encoder word-order acc = 0.88
+
+--- VERDICT ---
+GEO-72: PASS - the cross-encoder FIXES word-order/role matching (0.75->0.88): joint query+fact encoding sees word order, where the pooled bi-encoder cannot. Validates the design rule: cross-encoder for role-sensitive matching.
+DONE
