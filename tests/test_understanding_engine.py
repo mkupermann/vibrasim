@@ -260,3 +260,12 @@ def test_describe_generation():
     d = e.describe("a poodle")                        # leading article must be handled
     assert "is a dog and a pet" in d and "animal" in d and "chases the cat" in d
     assert e.describe("a quark").startswith("I don't know")
+
+
+def test_compositional_relation_taxonomy():
+    e = UnderstandingEngine(seed=119)
+    for f in ["A cat is an animal.", "A mouse is an animal.", "the dog chases the cat.", "A car is a vehicle."]:
+        e.tell(f)
+    assert e.respond("is what the dog chases an animal?") == "Yes."   # compose relation + taxonomy
+    assert e.respond("is what the dog chases a vehicle?") == "No."
+    assert e.respond("is what the bird chases an animal?").startswith("I don't know")
