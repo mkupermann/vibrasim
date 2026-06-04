@@ -29,7 +29,7 @@ class UnderstandingEngine:
         self.SUBJ = self._rand()
         self.REL = self._rand()
         self.OBJ = self._rand()
-        self.parents: dict[str, str] = {}          # IS-A graph (child -> parent)
+        self.parents: dict[str, set] = {}           # IS-A DAG (child -> set of parents)
         self.neg_isa: set[tuple[str, str]] = set()  # explicit negative facts: child is NOT parent
         self.facts: list[tuple[str, str, str]] = []  # stored relational facts (s, r, o)
         self._fact_vecs: list[np.ndarray] = []
@@ -145,8 +145,7 @@ class UnderstandingEngine:
         if mneg:
             child, parent = self._norm_phrase(mneg.group(1)), self._norm_phrase(mneg.group(2))
             self.neg_isa.add((child, parent))
-            if self.parents.get(child) == parent:
-                del self.parents[child]          # retract the corrected belief
+            self.parents.get(child, set()).discard(parent)   # retract the corrected belief (one edge)
             return ("neg_isa", child, parent)
         m = self._ISA.match(pre)
         if m:
@@ -160,7 +159,8 @@ class UnderstandingEngine:
                 children = [c for c in children if c not in self._PRONOUNS]
                 if children:
                     for c in children:
-                        self.parents[c] = parent
+                        self.parents.setdefault(c, set()).add(parent)   # DAG: a concept may have many parents
+                        self.neg_isa.discard((c, parent))               # asserting overrides a prior negative
                     return ("isa", children if len(children) > 1 else children[0], parent)
         m = self._SVO.match(sentence)
         if m:
@@ -172,17 +172,21 @@ class UnderstandingEngine:
 
     # --- inference / comprehension -----------------------------------------
     def ancestors(self, x: str) -> set[str]:
+        """All ancestors of x over the IS-A DAG (transitive closure across multiple parents)."""
         x = self._norm_phrase(x)
-        out, seen = set(), set()
-        while x in self.parents and x not in seen:
-            seen.add(x)
-            x = self.parents[x]
-            out.add(x)
+        out, stack, seen = set(), [x], {x}
+        while stack:
+            cur = stack.pop()
+            for p in self.parents.get(cur, ()):
+                if p not in seen:
+                    seen.add(p); out.add(p); stack.append(p)
         return out
 
     def _known_concepts(self) -> set:
         """Every concept the engine has heard of (as child, parent, negative fact, or prototype)."""
-        ks = set(self.parents) | set(self.parents.values()) | set(self.prototypes)
+        ks = set(self.parents) | set(self.prototypes)
+        for ps in self.parents.values():
+            ks |= ps
         for a, b in self.neg_isa:
             ks.add(a); ks.add(b)
         return ks
@@ -198,12 +202,12 @@ class UnderstandingEngine:
         return "no" if c in self._known_concepts() else "unknown"
 
     def frontier(self, x: str) -> str:
-        """The topmost ancestor of x the engine currently knows (where x's IS-A chain ends)."""
+        """A topmost ancestor of x the engine currently knows (follow one parent chain to a root)."""
         x = self._norm_phrase(x)
         cur, seen = x, set()
-        while cur in self.parents and cur not in seen:
+        while self.parents.get(cur) and cur not in seen:
             seen.add(cur)
-            cur = self.parents[cur]
+            cur = next(iter(self.parents[cur]))   # follow one parent up to a root
         return cur
 
     def inquire(self, x: str, c: str):
@@ -270,17 +274,19 @@ class UnderstandingEngine:
         return None
 
     def _isa_chain(self, x: str, c: str):
-        """The path x -> ... -> c through the IS-A graph, or None if no path."""
+        """A shortest path x -> ... -> c through the IS-A DAG (BFS), or None if no path."""
+        from collections import deque
         x, c = self._norm_phrase(x), self._norm_phrase(c)
-        path = [x]
-        cur = x
-        seen = set()
-        while cur in self.parents and cur not in seen:
-            seen.add(cur)
-            cur = self.parents[cur]
-            path.append(cur)
-            if cur == c:
+        q, seen = deque([[x]]), {x}
+        while q:
+            path = q.popleft()
+            node = path[-1]
+            if node == c:
                 return path
+            for p in self.parents.get(node, ()):
+                if p not in seen:
+                    seen.add(p)
+                    q.append(path + [p])
         return None
 
     def explain(self, question: str) -> str:
@@ -316,9 +322,11 @@ class UnderstandingEngine:
         m = re.match(r"what\s+(?:is|are)\s+(?:(?:an|a|the)\s+)?(.+)", q)
         if m:
             x = self._norm_phrase(m.group(1))
-            p = self.parents.get(x)
-            if p:
-                ans = f"{self._art(x)} is {self._art(p)}."
+            ps = self.parents.get(x)
+            if ps:
+                parts = [self._art(p) for p in sorted(ps)]
+                joined = parts[0] if len(parts) == 1 else ", ".join(parts[:-1]) + " and " + parts[-1]
+                ans = f"{self._art(x)} is {joined}."
                 return ans[0].upper() + ans[1:]
             return f"I don't know what {self._art(x)} is."
         m = re.match(r"what\s+does\s+(?:the\s+)?(\w+)\s+(\w+)", q)

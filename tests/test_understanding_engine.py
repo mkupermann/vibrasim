@@ -53,8 +53,8 @@ def test_parse_robustness_varied_phrasings():
     for v in ["Poodles are dogs.", "A dog is an animal.", "Dogs are animals.",
               "An animal is a living_thing.", "Every poodle is a dog.", "Dogs are a type of animal."]:
         assert e.tell(v)[0] == "isa", f"failed: {v}"
-    assert e.parents.get("dog") == "animal"      # not "nimal" — article must not eat the noun
-    assert e.parents.get("animal") == "living thing"
+    assert "animal" in e.parents.get("dog", set())      # not "nimal" — article must not eat the noun
+    assert "living thing" in e.parents.get("animal", set())
     assert e.is_a("poodle", "living_thing")      # multi-hop across varied phrasings
 
 
@@ -151,3 +151,13 @@ def test_conjunction_and_pronoun_rejection():
     assert e.is_a("robin", "animal")                  # multi-hop through the split fact
     assert e.tell("It is an animal.")[0] == "none"    # pronoun rejected, not guessed
     assert "it" not in e.parents
+
+
+def test_multi_parent_dag():
+    e = UnderstandingEngine(seed=104)
+    e.tell("A poodle is a dog."); e.tell("A poodle is a pet.")
+    e.tell("A dog is an animal."); e.tell("A pet is owned.")
+    assert e.parents.get("poodle") == {"dog", "pet"}      # two parents kept (no overwrite)
+    assert e.is_a("poodle", "dog") and e.is_a("poodle", "pet")
+    assert e.is_a("poodle", "animal") and e.is_a("poodle", "owned")  # both lineages
+    assert e.respond("what is a poodle?") == "A poodle is a dog and a pet."
