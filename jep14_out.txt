@@ -1,0 +1,9 @@
+=== JEP-14: SR transfer (reward vs transition revaluation), S=144 ===
+  (A) REWARD revaluation (V=M@r, ZERO relearning): reach=1.00
+  (B) TRANSITION change (blocked 1 passage), goals on far side (30):
+      (i) STALE SR planning in changed maze   = 0.41
+      (ii) RELEARNED SR planning              = 0.00
+
+--- VERDICT ---
+JEP-14: PARTIAL/NULL - A 1.00, B-stale 0.41, B-relearned 0.00
+DONE
