@@ -42,3 +42,15 @@ abstention (GEO-33), giving a generator that is correct-by-store, updatable with
 hallucination-suppressed. The generator's fluency/coverage is bounded by the 0.5B model; the GROUNDING
 behaviour is what the geometric layer adds. Generation is no longer out-of-scope: the full system is a
 grounded QA assistant on the PC.
+
+## Usable artifact + honest prompt-sensitivity finding
+Packaged as tools/grounded_qa.py (GroundedQA): wraps the geometric layer (retrieval + GEO-33 focus
+verification + GEO-30 updatable store) with an OPTIONAL 0.5B generator. Self-test PASS in both extractive
+and generative modes (follows counterfactual store -> "Lyon"; abstains on "Atlantis").
+
+**Honest finding (prompt sensitivity):** the 0.5B model's context-following is FRAGILE to prompt phrasing.
+A weak prompt ("answer concisely: <q>") let it revert to its parametric prior (answered "Paris" not the
+stored "Lyon"); the strong context-forcing prompt from GEO-34 ("Using ONLY the context and IGNORING prior
+knowledge ...") reliably follows the store. So grounding-via-context is real but, on small models, depends on
+explicit instruction to ignore priors — a deployment caveat. Larger instruct models follow context more
+robustly. The module uses the validated strong prompt.
