@@ -37,6 +37,10 @@ GPU compute on AMD. Ranked by practicality for THIS machine (Windows 11, was Pyt
   ROCm wheels are LINUX-ONLY. Route: dual-boot or WSL2 + ROCm. Best performance, biggest setup cost. Not done
   here (staying on Windows), logged as the upgrade path if GPU training becomes a bottleneck.
 
+## Measured GPU-win regime (JEP-18b)
+RX 7700S via torch-directml vs 16-thread CPU: matmul x2.1 (1k) -> x6.0 (8k);
+large-MLP training x2.56. Small MLP: GPU slower (overhead). Use GPU for big nets/batches.
+
 ## Bottom line
 For "CUDA-like PyTorch training on your AMD GPU on Windows now": torch-directml on Python 3.11 (option 1).
 Demonstrated in JEP-18. For max performance later: WSL2 + ROCm (option 5).

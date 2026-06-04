@@ -25,3 +25,19 @@ the GPU did the training. HONEST CAVEAT: for THIS small MLP the GPU (37s) was SL
 strong. GPUs pay off at LARGER model/batch sizes -> JEP-18b finds that regime. So the answer to Michael is YES
 (CUDA-like PyTorch on AMD works), with the honest note that DirectML is slower than CUDA-on-NVIDIA and only
 beats this CPU on bigger workloads.
+
+## JEP-18b — the GPU-win regime (honest benchmark)
+| workload | GPU RX 7700S | CPU 16-thread | speedup |
+|----------|--------------|---------------|---------|
+| matmul 1024^3 | 838 GFLOP/s | 394 | x2.13 |
+| matmul 2048^3 | 1701 GFLOP/s | 504 | x3.37 |
+| matmul 4096^3 | 2317 GFLOP/s | 488 | x4.75 |
+| matmul 8192^3 | 2805 GFLOP/s | 470 | x5.96 |
+| large MLP (3x4096) training, 3 epochs | 15.1s | 38.6s | x2.56 |
+
+**FINDING.** The AMD RX 7700S via torch-directml BEATS the 16-thread CPU on large compute-bound work: up to
+x5.96 on big matmuls and x2.56 training a large MLP. It LOSES on small models (JEP-18: small MLP 37s vs 7s) due
+to per-op launch overhead. Practical rule: GPU for big nets / big batches / big matmuls; CPU for small models
+(the Ryzen 9 is strong). Complete answer to Michael: YES - CUDA-like PyTorch training on your AMD GPU works
+(torch-directml, Python 3.11, `.venv-dml311`), it accelerates large workloads 2.5-6x, with honest caveats
+(slower than CUDA-on-NVIDIA, partial op coverage, small-model overhead). Full option map: docs/AMD_GPU_COMPUTE.md.
