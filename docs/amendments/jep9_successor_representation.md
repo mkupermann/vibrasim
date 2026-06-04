@@ -20,3 +20,20 @@ deceptive.
   (4) TD-learned M correlates with closed-form M >= 0.9 (local learnability).
 - PASS = SR (local TD) captures geodesic structure + enables maze planning where contrastive failed. Methods
   (successor representation, TD, diffusion maps, EBM/MPC) established - named as such.
+
+## Result — PARTIAL/NULL (right trend; navigation metric flawed for mazes)
+| measure | SR | SR-TD | contrastive | euclid-emb | random |
+|---------|----|----|-------------|-----------|--------|
+| Spearman geodesic | 0.54 | — | 0.29 | 0.40 | — |
+| Spearman euclidean | 0.39 | — | 0.23 | 0.97 | — |
+| navigate reached | 0.12 | 0.14 | 0.24 | 0.07 | 0.31 |
+| TD-vs-closed-form corr | — | 1.00 | — | — | — |
+
+**VERDICT: PARTIAL/NULL.** Two honest takeaways: (1) SR IS locally learnable — TD-learned M matched the closed
+form exactly (corr 1.00); and SR tracked geodesic OVER euclidean (0.54 vs 0.39), beating contrastive
+(0.29/0.23) — the RIGHT trend, partially rescuing JEP-8. BUT absolute geodesic corr (0.54) missed the 0.7 bar.
+(2) The navigation metric is INVALID for mazes: greedy 1-step energy-descent cannot traverse a spanning tree
+(dead-ends -> the seen-set break kills it), so even random (0.31) "won" — an artifact, not a finding. Proper
+maze planning needs MPC with multi-step model rollouts / search (A*-like on the embedding), not 1-step greedy.
+The greedy planner was a latent flaw from JEP-7/8 that only mazes exposed. Bars locked, not tuned. Logged as a
+methodological correction. (Michael's scaling directive takes priority next -> JEP-10 on GPU.)
