@@ -16,3 +16,18 @@ acts. Test: does the agent REACH goals using its learned latent world model + en
   step budget. Baselines: random actions; greedy on TRUE coords (oracle upper bound).
 - Bars: MPC-with-learned-JEPA reaches >= 0.7 of goals AND >> random. PASS = JEPA world model + EBM + MPC plans
   successfully (the integrated paradigm works at PC scale). NULL if the learned model is too inaccurate to plan.
+
+## Result — NULL (informative): random representation breaks energy-based planning
+| planner | goals reached |
+|---------|---------------|
+| MPC w/ learned JEPA model + embedding-distance energy | 0.07 |
+| random actions | 0.05 |
+
+**VERDICT: NULL — but it reveals the KEY JEPA insight.** With a FIXED RANDOM encoder, embedding-distance does
+NOT correlate with grid-distance, so the energy E(state,goal)=embedding-distance is UNINFORMATIVE — minimizing
+it doesn't guide toward the goal, and MPC ~ random (0.07 vs 0.05). This is exactly why JEPA must LEARN
+representations: the whole point is a learned representation where prediction AND distance/energy are
+meaningful. A random representation breaks both the world model's usefulness and the energy landscape. Fix in
+JEP-3: (a) make energy informative — either learn a metric representation (distance=task-distance) or use the
+model as a SIMULATOR (roll forward, check if the predicted state decodes to the goal cell); (b) ensure the
+JEPA model's next-state prediction is accurate enough to plan with.
