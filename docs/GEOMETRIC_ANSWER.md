@@ -133,7 +133,9 @@ zero-shot transfer.
 The genuinely-geometric core (semantic descriptive retrieval, zero-shot transfer) REPLICATES on a different,
 architecturally-distinct embedding model (all-mpnet-base-v2): semantic retrieval improves to 1.00 (vs lexical
 0.10), zero-shot transfer to 0.88. The findings are model-robust, not MiniLM artifacts; a stronger model
-gives cleaner results (use mpnet for quality, MiniLM for speed).
+gives cleaner results (use mpnet for quality, MiniLM for speed). They are also DOMAIN-robust (GEO-37/37b):
+zero-shot transfer replicates on materials-hardness (0.78 vs random 0.54) and semantic retrieval on tools
+(0.90 vs lexical 0.20) — robust across geography, animals, materials, and tools.
 
 ## Bottom line
 Phase-1 verdict was "the physics substrate has no computational value." Phase-2 verdict is the constructive

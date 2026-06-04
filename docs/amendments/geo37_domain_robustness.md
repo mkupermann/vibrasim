@@ -25,3 +25,14 @@ hold, the core claims generalize across domains; if not, they were geography/ani
 test was confounded: descriptions ("for driving nails") restate the fact's action ("used to drive nails"),
 so lexical scored 0.80 (the GEO-25/26 leak again); geometric still won (1.00) but not by the 0.30 margin. A
 clean test needs SYNONYM descriptions sharing no token with the action — run in GEO-37b below.
+
+## GEO-37b result — PASS (clean, confirms domain-robustness)
+With SYNONYM descriptions sharing no token with the facts ("the thing carpenters pound fasteners into wood
+with" -> "A hammer is used to drive nails."): geometric **0.90** vs lexical **0.20** (chance 0.10). Clean
+semantic retrieval beats lexical decisively.
+
+**Combined GEO-37/37b verdict: both core findings are DOMAIN-robust.** Zero-shot relational transfer
+replicates on materials-hardness (0.78 vs 0.54); semantic descriptive retrieval replicates on tools (0.90 vs
+0.20). Together with GEO-36 (model-robust on MPNet), the programme's genuinely-geometric core
+(semantic matching + zero-shot transfer) is confirmed robust across BOTH embedding models AND domains
+(geography, animals, materials, tools) — not artifacts of one model or one domain.
