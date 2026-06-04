@@ -16,3 +16,15 @@ transition revaluation. Honest framing: SR (cached) wins for reward changes (ins
 - Bars: model-based reach >= 0.9 AND >= stale-SR + 0.2 (instant transition recovery via local edit + MPC). PASS
   = explicit world model + MPC gives instant transition-revaluation the cached SR cannot. Methods (model-based
   planning / value iteration / MPC) established - named as such.
+
+## Result — PARTIAL (model-based perfect; single-edge variance left the gap short of the bar)
+| agent | reach on detoured goals |
+|-------|-------------------------|
+| MODEL-BASED (local edit + MPC/DP) | 1.00 |
+| cached SR (stale) | 0.89 |
+
+**VERDICT: PARTIAL.** Model-based MPC achieved PERFECT instant transition-recovery (1.00, zero relearning) - the
+core claim. But this single blocked edge degraded the stale SR only to 0.89 (vs 0.63 in JEP-14b), so the gap
+(0.11) missed the pre-registered 0.2 margin. Single-edge variance is high: in a looped maze, many blocks barely
+disrupt (alternative paths remain). Bars locked, not retuned. JEP-15b averages over many blocked edges for a
+robust estimate of the model-based advantage.
