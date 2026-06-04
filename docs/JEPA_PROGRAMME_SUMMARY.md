@@ -43,6 +43,7 @@ vibrasim SUBSTRATE is a genuine benefit for this.
 | JEP-28/28b | PASS (28b) | CONCEPT REASONER (tools/concept_reasoner.py): generalizes IS-A to held-out hypernym pairs (0.91 on 77-concept toy at >=5D); per-query reliable at >=5D (JEP-28's 2D demo failures fixed). |
 | JEP-29/29b | PASS (29b) | SCALES to REAL WordNet (366-concept carnivore subtree): held-out IS-A 0.86 with adequate compute (20D/12k iters). JEP-29 NULL (0.68) was under-training, not a limit - honest scaling caveat: real scale needs more compute (GPU). |
 | JEP-30/30b/30c | PARTIAL | COMPOSITIONAL LCA query ('what category includes both X and Y') from hyperbolic geometry: exact-LCA 0.63 (meets bar), common-ancestor 0.81 (just under 0.85); improves with embedding dim. Genuine but bounded step beyond pairwise IS-A. (JEP-30 NULL was a readout bug, fixed.) |
+| JEP-31 | NULL | FULL mammal subtree (1170 concepts) GPU-trained: held-out IS-A 0.53 (~chance), trained 0.575 = UNDER-TRAINED (6k minibatched iters insufficient at 16x scale/depth-12). GPU itself worked (170s on AMD RX 7700S). Honest boundary: result needs compute scaled to hierarchy size; not pushed to convergence. |
 | JEP-7 | **PASS** | END-TO-END: contrastive-learned encoder + PC-learned predictor + energy-MPC reaches 0.97 of goals (untrained-predictor ablation 0.05, random 0.25). Nuance: exact prediction only 0.23 — planning needs correct ACTION RANKING, not exact prediction; world model accurate ENOUGH to plan. |
 
 ## The honest bottom line
