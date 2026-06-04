@@ -186,6 +186,27 @@ class UnderstandingEngine:
             return "yes"
         return "no" if c in self._known_concepts() else "unknown"
 
+    def frontier(self, x: str) -> str:
+        """The topmost ancestor of x the engine currently knows (where x's IS-A chain ends)."""
+        x = self._norm_phrase(x)
+        cur, seen = x, set()
+        while cur in self.parents and cur not in seen:
+            seen.add(cur)
+            cur = self.parents[cur]
+        return cur
+
+    def inquire(self, x: str, c: str):
+        """Learning-through-dialogue: for an is-a question the engine can't answer YES, identify the
+        precise knowledge GAP to be taught (the boundary of what it knows). None if it already knows."""
+        x, c = self._norm_phrase(x), self._norm_phrase(c)
+        if self.assess(x, c) == "yes":
+            return None
+        top = self.frontier(x)
+        if top == x:
+            return f"I don't know anything about {self._art(x)} yet."
+        return (f"I know {self._art(x)} is {self._art(top)}, "
+                f"but I don't know whether {self._art(top)} is {self._art(c)}.")
+
     def is_a(self, x: str, c: str) -> bool:
         """Multi-hop IS-A by transitive closure; an explicit negative fact (correction) overrides."""
         x, c = self._norm_phrase(x), self._norm_phrase(c)
