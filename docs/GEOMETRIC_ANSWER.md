@@ -44,6 +44,7 @@ boundary is mapped precisely.
 | counting / aggregation | FAILS (0.00) | symbolic count → 1.00 |
 | open-domain NLU | OUT OF SCOPE | needs a large LLM |
 | grounded GENERATION (follow store, abstain) | DONE via small LLM (GEO-34) | geometric retrieve+verify + Qwen-0.5B |
+| MULTI-HOP grounded generation (private facts) | DONE (GEO-35 1.00 vs bare LLM 0.00) | geometric chain feeds generator |
 
 ## When does the LLM geometry HELP learning? (GEO-24)
 The LLM prior is not universally good. For learning a NEW relation that correlates with semantics (a size
