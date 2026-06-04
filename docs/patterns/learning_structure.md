@@ -42,3 +42,16 @@ data (closures compound errors - 2x under JEP-133/134). Lesson: clean-data struc
 intuition says (strong identifiability); noisy-data structure inference is harder (compounding). Don't trust the
 intuition either way - measure. Established methods throughout (consistency inference, ILP/rule-discovery, majority-
 vote denoising); named; no novelty.
+
+## THE deep cross-cutting insight: COMPOUNDING and its cure (JEP-134/136/137/138)
+Both LEARNING structure and REASONING over it are MULTI-STEP inference, and multi-step inference COMPOUNDS errors:
+a k-step derivation (a transitive closure, an insertion sort, a k-hop is_a chain) is correct only if ALL k steps
+are, so under per-step noise p, reliability decays ~(1-p)^k — EXPONENTIALLY with inferential DEPTH.
+- Measured: noisy structure LEARNING needs redundancy growing with structure size (JEP-134/136); the engine's
+  multi-hop REASONING degrades faster at greater depth (JEP-137, depth1 0.90 -> depth4 0.52 @noise0.1).
+- THE CURE: REDUNDANT independent paths + aggregation. A DAG (many paths to a conclusion) error-corrects broken
+  edges — a true conclusion survives if ANY path does (JEP-138, recall 0.89 vs a chain's 0.73 @20% noise) — at a
+  precision cost (spurious paths -> more false positives).
+- LESSON: human-like robust inference under noise is NOT a single deep clean chain; it is MANY independent
+  derivation paths + voting, with redundancy/error-correction scaling with inferential depth. This is why brittle
+  long chains fail and why brains/robust systems use massively redundant, re-derived, cross-checked inference.
