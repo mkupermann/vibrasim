@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 30 / predictions 46 (JEP-132 HIT — grand integration capstone) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
+Running tally: hits 30 / predictions 47 (JEP-133 MISS — noisy structure learning harder than predicted) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
 
 | id | prediction (🔮 before) | outcome | hit? | lesson (don't repeat) |
 |----|------------------------|---------|------|------------------------|
@@ -53,3 +53,4 @@ Running tally: hits 30 / predictions 46 (JEP-132 HIT — grand integration capst
 | JEP-130 | 🔮 100%; risk = derivation interface | 7/7 | HIT | Learned composition rule installed; engine derives the relation for new entities (Datalog over learned rules). Structure-learning + reasoning unified. |
 | JEP-131 | 🔮 depth-3 + large vocab degrades | 1.00 everywhere (depth 2-3 x vocab 3-10) | MISS | NO degradation — exact-match makes the rule uniquely identifiable; real limit is SEARCH COST (combinatorial), not accuracy. META: 3rd over-prediction of structure-learning difficulty; I systematically over-estimate it. |
 | JEP-132 | 🔮 PASS; risk = integration interface bug | 4/4 stages end-to-end | HIT | Complete system: learn taxonomy+rule from observation -> reason over both -> act on grounded goal. The grand capstone. |
+| JEP-133 | 🔮 noise-tolerant robust to 20-30% noise | collapses to chance by 10-20% (tolerant 0.65 at 10%, 0.53 at 20%) | MISS | Over-optimistic: noise corrupts the CLOSURE itself, tolerance can't fix it. META: miscalibrated on structure-learning BOTH ways — over-predict clean difficulty, under-predict noisy difficulty. Noisy-structure frontier is genuinely HARD. |
