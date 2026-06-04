@@ -19,6 +19,7 @@ vibrasim SUBSTRATE is a genuine benefit for this.
 | JEP-5 | **PASS** | a LOCALLY-LEARNED rep (contrastive temporal-coherence, no backprop) makes energy meaningful (Spearman 0.88) -> energy-based MPC 0.08 -> 0.90. Confirms JEP-2 diagnosis. |
 | JEP-6/6b/6c | PARTIAL/NULL | PC tracks backprop on easy regression (0.19/0.19, 0.12/0.12) but grid task confounds (extrapolation; classification=memorization, held-out 0.00; PC lags on hard softmax). |
 | JEP-6d | **PASS** | on a well-posed iid task (two-moons), local predictive coding MATCHES backprop (test 0.97 vs 0.98). The substrate-compatible local-learning path for the JEPA predictor is validated. |
+| JEP-7 | **PASS** | END-TO-END: contrastive-learned encoder + PC-learned predictor + energy-MPC reaches 0.97 of goals (untrained-predictor ablation 0.05, random 0.25). Nuance: exact prediction only 0.23 — planning needs correct ACTION RANKING, not exact prediction; world model accurate ENOUGH to plan. |
 
 ## The honest bottom line
 - The SUBSTRATE'S genuine benefit is ARCHITECTURAL: its native primitives are the backprop-free versions of
