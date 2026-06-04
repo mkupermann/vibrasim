@@ -23,10 +23,17 @@ where structure learning is easy, where it is genuinely hard, and WHY.
 - **SPARSE data**: a violation you never observe can't be detected (JEP-128) — sparse data is fundamentally
   ambiguous between transitive and non-transitive; a prior just sets the default (no free lunch).
 
+## Sparse is SOLVED by ACTIVE querying (JEP-135)
+The sparse-PASSIVE limit dissolves if the learner can CHOOSE what to observe: active querying (binary-insertion
+sort = choosing the informative comparisons) determines a transitive order in ~n log n queries (1.00), vs the ~n^2
+passive budget — 12x speedup at n=64, growing with n. Lesson: "not enough data" is often really "not enough of the
+RIGHT data" — choose informative queries instead of waiting for them. (Caveat: noiseless oracle; under noise you
+repeat queries per JEP-134; detecting a single long cycle needs path-tracing, not random triples.)
+
 ## The genuine open problem
-Structure learning from NOISY + SPARSE + ONE-SHOT data (as humans do) — needs more than data: structural PRIORS,
-ACTIVE QUERYING, and incremental HIGH-CONFIDENCE bootstrapping. Plus LEARNING the base relations themselves (here
-given), which needs perceiving INTERACTIONS, not just objects.
+Structure learning from NOISY + SPARSE + ONE-SHOT data simultaneously (as humans do) — needs structural PRIORS +
+ACTIVE QUERYING + incremental HIGH-CONFIDENCE bootstrapping TOGETHER. Plus LEARNING the base relations themselves
+(here given), which needs perceiving INTERACTIONS, not just objects.
 
 ## A calibration lesson about predicting difficulty
 Measured against my own predictions, I was miscalibrated on structure learning in BOTH directions: I OVER-predicted
