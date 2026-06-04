@@ -410,3 +410,14 @@ def test_causal_planning():
         e.tell_cause(x, y)
     assert e.achieve("slippery") == ["press_button", "rain"]   # actionable root causes (sprinkler not a root)
     assert e.achieve("rain") == []                             # already a root, nothing causes it
+
+
+def test_spatial_perspective():
+    e = UnderstandingEngine(seed=149)
+    e.tell_spatial("cup", "left", "plate"); e.tell_spatial("plate", "left", "fork")
+    e.tell_spatial("lamp", "above", "table")
+    assert e.spatial_holds("cup", "left", "fork")                            # transitive
+    assert e.spatial_holds("plate", "right", "cup")                          # inverse
+    assert e.spatial_holds("cup", "right", "plate", viewpoint="opposite")    # perspective flip
+    assert not e.spatial_holds("cup", "left", "plate", viewpoint="opposite")
+    assert e.spatial_holds("lamp", "above", "table", viewpoint="opposite")   # above/below invariant
