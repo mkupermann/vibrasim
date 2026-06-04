@@ -31,3 +31,18 @@ structure, JEP-5/11) directly CONFLICTS with state DISCRIMINATION (needed for pe
 do both does neither well. The fix is architectural: SEPARATE perception (discriminate states from raw obs -
 averaging denoises a 64-dim signature easily) from VALUE (SR smoothness over identified states). JEP-12b. Bars
 locked, not tuned.
+
+## JEP-12b — separated perception — PARTIAL (perception solved; noise compounds over horizon)
+| measure | value |
+|---------|-------|
+| perceptual state-ID (raw-obs prototype) | 0.993 |
+| SR-value nav on perceived states | 0.59 |
+| Euclid / random | 0.06 / 0.28 |
+
+**VERDICT: PARTIAL.** The architectural fix WORKS: separating perception (raw-obs prototypes) from value gives
+near-perfect state-ID (0.993) under heavy noise. Grounded planning works well ABOVE baselines (0.59 vs 0.06
+Euclid, 0.28 random) - real planning from perception, no privileged indices. But 0.59 < 0.85 bar because
+perceptual noise COMPOUNDS: the agent re-perceives noisily every step (incl. the goal), so ~0.7% per-perception
+error accumulates over long horizons. Not a fundamental failure - a denoising/horizon issue. JEP-12c: multi-
+glance denoising (average k observations per perception; cache goal) - a real agent can look more than once.
+Bars locked, not tuned.
