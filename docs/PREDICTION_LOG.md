@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 20 / predictions 34 (JEP-120 HIT) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
+Running tally: hits 20 / predictions 35 (JEP-121 MISS — named 3 risks, didn't prevent them) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
 
 | id | prediction (🔮 before) | outcome | hit? | lesson (don't repeat) |
 |----|------------------------|---------|------|------------------------|
@@ -41,3 +41,4 @@ Running tally: hits 20 / predictions 34 (JEP-120 HIT) (JEP-92 x3, JEP-93, JEP-94
 | JEP-118c | 🔮 LCA-of-extension robust >=0.9 everywhere | 1.00 at freq0.6 (low/mid sigma), 0.00 at freq0.2, 0.74 at sigma1.5 | PARTIAL | Correct criterion, fixes 118b at adequate freq; rare super-words (freq0.2) = real EXPOSURE limit (coverage sparse); extreme overlap breaks clustering. Honest envelope: needs adequate exposure + distinct concepts. |
 | JEP-119 | 🔮 100%; risk = nested parse | 2/4 then 4/4 | MISS | The a/an alternation bug AGAIN, in a fresh regex I hand-wrote. Fixed 5+ times yet recurred. ESCALATED lesson: never hand-write a bare optional-article regex; `(?:(?:an|a|the)\s+)?` must be the ONLY form. |
 | JEP-120 | 🔮 100%; risk = analogy parse | 4/4 | HIT | Find relation A->B, apply to C; 'dog is to puppy as cat is to?' -> Kitten. |
+| JEP-121 | 🔮 100%; risks = parse/pronoun/retraction | 2/5 then 5/5 | MISS | All 3 named risks materialized ('would it be'->'be' residue; empty-key residue on retract). LESSON: naming a risk isn't preventing it — build the guards before running. |

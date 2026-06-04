@@ -278,3 +278,14 @@ def test_relational_analogy():
     assert e.respond("dog is to puppy as cat is to?") == "Kitten."
     assert e.respond("dog is to puppy as cow is to?") == "Calf."
     assert e.respond("dog is to puppy as fish is to?").startswith("I can't")
+
+
+def test_hypothetical_reasoning():
+    e = UnderstandingEngine(seed=121)
+    for f in ["A fish is an animal.", "A bird is an animal.", "A whale is a mammal.", "A mammal is an animal."]:
+        e.tell(f)
+    before = {k: set(v) for k, v in e.parents.items()}
+    assert e.respond("if a whale were a fish, would it be an animal?").startswith("Yes")
+    assert e.respond("if a rock were a bird, would it be an animal?").startswith("Yes")
+    assert {k: set(v) for k, v in e.parents.items()} == before     # KB unchanged (clean retraction)
+    assert e.is_a("whale", "animal") and not e.is_a("whale", "fish")
