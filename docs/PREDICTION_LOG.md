@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 8 / predictions 13 (JEP-101 HIT; gate caught a wording regression) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
+Running tally: hits 9 / predictions 14 (JEP-102 HIT — learning-through-dialogue) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
 
 | id | prediction (🔮 before) | outcome | hit? | lesson (don't repeat) |
 |----|------------------------|---------|------|------------------------|
@@ -20,3 +20,4 @@ Running tally: hits 8 / predictions 13 (JEP-101 HIT; gate caught a wording regre
 | JEP-99 | 🔮 per-item: PASS plurals/multi-word; FAIL adjectival subjects + plural SVO | exactly that — both failed to parse, then fixed | HIT | Fixes needed propagation to the QUERY parser too (shared _parse_isa_q) — the 'fix every parser' lesson again; applied. One runner 'miss' was my own wrong expected value (engine correct). |
 | JEP-100 | 🔮 100%; most-likely miss = verb agreement chase/chases | 5/6; verb agreement WORKED, miss was 'an unicorn' (a/an is phonetic: unicorn=/juː/ takes 'a') | MISS | Wrong location again. a/an is PHONETIC not orthographic - a letter rule can't capture it (3rd sub-form of the a/an class: alternation, generation, now phonetics). Fix = letter rule + exception set; documented PARTIAL (full needs pronunciation dict). |
 | JEP-101 | 🔮 100%; risk = no/unknown boundary (when a category counts as KNOWN) | 6/6 | HIT | _known_concepts() over child/parent/negative/prototype roles handled the boundary; the GATE caught a separate wording regression (improved 'No' message broke JEP-95's hard-coded string) - fixed, capability intact. |
+| JEP-102 | 🔮 100%; risk = frontier when gap-child IS the frontier / a/an in message | 5/5 | HIT | inquire()/frontier() identify the precise missing link; teach it -> assess flips to yes + full chain. The fusion of all three verbs. |

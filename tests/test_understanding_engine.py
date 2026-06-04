@@ -128,3 +128,16 @@ def test_three_valued_epistemic():
     assert e.assess("whale", "fish") == "no"            # explicit negative
     assert e.assess("poodle", "vegetable") == "unknown" # never heard of
     assert e.explain("is a poodle a vegetable?").startswith("I don't know")
+
+
+def test_learning_through_dialogue():
+    e = UnderstandingEngine(seed=102)
+    e.tell("A poodle is a dog."); e.tell("A dog is an animal.")   # animal->living thing NOT known
+    assert e.assess("poodle", "living thing") == "unknown"
+    assert e.inquire("poodle", "living thing") == \
+        "I know a poodle is an animal, but I don't know whether an animal is a living thing."
+    e.tell("An animal is a living thing.")                         # taught the identified gap
+    assert e.assess("poodle", "living thing") == "yes"
+    assert e.inquire("poodle", "living thing") is None
+    assert e.explain("is a poodle a living thing?") == \
+        "Yes. A poodle is a dog, a dog is an animal, an animal is a living thing."
