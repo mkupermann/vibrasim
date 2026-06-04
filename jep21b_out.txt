@@ -1,0 +1,9 @@
+=== JEP-21b: low-dim structural prior vs transitive closure on sparse relations (N=60) ===
+  total comparisons available: 6316
+  p=0.05 (334 obs): 2D-prior acc on unobserved=0.919   transitive-closure baseline=0.636
+  p=0.10 (599 obs): 2D-prior acc on unobserved=0.971   transitive-closure baseline=0.773
+  p=0.20 (1252 obs): 2D-prior acc on unobserved=0.984   transitive-closure baseline=0.884
+
+--- VERDICT ---
+JEP-21b: PARTIAL/NULL - p=0.10 prior 0.97 vs transitive 0.77
+DONE
