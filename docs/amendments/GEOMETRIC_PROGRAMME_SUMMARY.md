@@ -1,4 +1,4 @@
-# EQMOD-3 Geometric programme — summary (GEO-1 → GEO-50)
+# EQMOD-3 Geometric programme — summary (GEO-1 → GEO-66)
 
 ## The new approach
 Substrate redefined as a learnable GEOMETRIC concept space over a real LLM: relations = transformations,
@@ -6,16 +6,23 @@ understanding = composition/retrieval/inference. ML/LLM allowed, PC/CPU. (EQMOD 
 computationally empty, see STRATEGIC_ANSWER.md.) Top-level deliverable: docs/GEOMETRIC_ANSWER.md. Usable
 module: tools/geometric_reasoner.py (+ docs/patterns/geometric_reasoner.md).
 
-## The GENUINELY-geometric core (no lexical shortcut — where geometry earns its name)
+## The IRREDUCIBLY-geometric core (training-FREE vector arithmetic; a linear probe CANNOT do these)
+These use the LLM embedding geometry directly, no training — distinct from supervised ML (GEO-66):
 | capability | rung | result |
 |------------|------|--------|
-| Analogy on REAL LLM word embeddings | GEO-5 | PASS 0.88 |
-| Few-shot relation learning (geometry = inductive bias) | GEO-6 | PASS 0.94–1.00 (linear-map 0.00) |
-| LLM-prior = data-efficient for SEMANTIC-aligned structure (harmful for arbitrary) | GEO-24 | PASS +0.12@k4 / -0.06 arb |
+| Analogy on REAL LLM word embeddings (offset) | GEO-5 | PASS 0.88 |
 | Semantic retrieval of DESCRIPTIONS (no shared token) | GEO-25b | PASS 0.80 vs lexical 0.10 |
-| **Zero-shot relational transfer to UNSEEN entities** | **GEO-27b** | **PASS 0.81 vs random 0.51** |
 | **Semantic MULTI-HOP over real-world epithets (non-lexical)** | **GEO-31** | **PASS 1.00 vs lexical 0.10** |
-| Compose relations / learned relations (grid, LLM) | GEO-1/4/7 | PASS |
+| Compose relations by chaining (grid, LLM), grounding/abstention | GEO-1/4/7/15/23 | PASS |
+
+## Learned-relation results — REAL but NOT geometrically special (GEO-66 deflation)
+A plain logistic probe on the same embeddings does IDENTICALLY — the value is embeddings + a linear readout,
+not the "geometric" framing:
+| capability | rung | result | note |
+|------------|------|--------|------|
+| Few-shot relation learning | GEO-6 | PASS 0.94–1.00 | = logistic probe (GEO-66) |
+| LLM-prior data-efficient for aligned structure | GEO-24 | +0.12@k4 / -0.06 arb | property of embeddings |
+| Zero-shot relational transfer to unseen entities | GEO-27b | 0.81 vs random 0.51 | = logistic probe 0.82 (GEO-66) |
 
 ## The pipeline WORKS (but named-entity numbers are LEXICALLY solvable — GEO-25)
 | capability | rung | result | caveat |
