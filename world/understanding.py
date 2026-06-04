@@ -384,6 +384,23 @@ class UnderstandingEngine:
             no *= (1.0 - pp)
         return 1.0 - no
 
+    def provenance(self, x: str, c: str):
+        """Truth maintenance: the list of supporting IS-A facts (child->parent edges) along a derivation of
+        'x is-a c' — the JUSTIFICATION. Returns [] if not derivable. (Returns ONE shortest justification.)"""
+        chain = self._isa_chain(x, c)
+        if not chain:
+            return []
+        return [(chain[i], chain[i + 1]) for i in range(len(chain) - 1)]
+
+    def retract(self, child: str, parent: str) -> bool:
+        """Retract a told IS-A fact (remove the edge). Conclusions depending ONLY on it become underivable;
+        those with a redundant path survive — the truth-maintenance property."""
+        ch, pa = self._norm_phrase(child), self._norm_phrase(parent)
+        if pa in self.parents.get(ch, set()):
+            self.parents[ch].discard(pa)
+            return True
+        return False
+
     def is_a(self, x: str, c: str) -> bool:
         """Multi-hop IS-A by transitive closure; an explicit negative fact (correction) overrides."""
         x, c = self._norm_phrase(x), self._norm_phrase(c)
