@@ -43,6 +43,14 @@ e.is_a(e.perceive(new_bird_features), "animal")          # True
 | 8 | conversational WH-questions ("what is X?", "what does X do?") | JEP-100 |
 | 9 | three-valued comprehension Yes/No/**I-don't-know** (epistemic humility) | JEP-101 |
 | 10 | **LEARNING THROUGH DIALOGUE** — identify the gap, get taught, then know | JEP-102 |
+| 11 | multi-parent DAG, induction (defeasible), generation (describe) | JEP-104/105/115 |
+| 12 | conjunction, coreference, contradiction detection, quantifiers (every/all) | JEP-103/107/109/110 |
+| 13 | compositional queries, **analogy**, **hypothetical/counterfactual** | JEP-119/120/121 |
+| 14 | learn from OBSERVATION -> self-taught taxonomy; cross-situational naming | JEP-113/116/117 |
+| 15 | learn relational composition RULES from data, reason with them | JEP-128/129/130 |
+| 16 | **causal reasoning + intervention** (do-operator); **probabilistic** (noisy-OR) | JEP-141/142 |
+| -- | VALIDATED: property-based SOUND (124/127), fuzz ROBUST (125), SCALABLE to 1000 (126) | JEP-124-127 |
+| -- | UNIFIED: perceive->understand->plan->ACT on conceptual goals | JEP-122/132 |
 
 ```python
 # learning through dialogue (the capstone):
