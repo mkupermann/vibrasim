@@ -5084,3 +5084,13 @@ All experiments done or 3x NULL on feedback.
 
 All experiments done or 3x NULL on feedback.
 
+
+## EQMOD-3 Geometric programme (Phase 2, 2026-06) — GEO-1..22
+Substrate redefined as a geometric concept space over a real LLM (MiniLM), ML/LLM allowed, PC/CPU. Delivered
+a working neuro-symbolic learning+understanding method: composition/analogy/few-shot/multi-hop retrieval
+(generator-free), trained new structure, key-value memory, orthogonal-subspace LLM+structure integration,
+thin symbolic layer for aggregate/negate/compare. Boundary mapped precisely; scale curve measured (GEO-22:
+1-hop 0.98, 2-hop 0.87 at 400 facts). Deliverable docs/GEOMETRIC_ANSWER.md; summary
+docs/amendments/GEOMETRIC_PROGRAMME_SUMMARY.md. Honest: numbers saturate on clean small entities — proves
+soundness+integration, not solved NLU; all primitives established, contribution is the honest synthesis +
+boundary map. Inconclusive rungs (GEO-13 chain degeneracy; GEO-14 resolved by GEO-21) recorded honestly.
