@@ -67,6 +67,11 @@ knowledge facts -> optional LLM-prior fact-check (`gen` the question, compare to
 residual: a single wrong PRIVATE fact with no conflicting fact — no automatic check can catch it (the LLM has
 no prior to check against). Mitigation = data provenance/curation. Keep your store clean.
 
+## Bilingual / multilingual use (GEO-89)
+For a mixed-language KB (e.g. German + English notes/contacts), use the multilingual model
+(`model_name="paraphrase-multilingual-MiniLM-L12-v2"`): mixed German+English store + cross-language queries
+retrieve at 1.00 (vs English-only 0.60). Query in either language; both map to the same semantic space.
+
 ## The honest bottom line
 This makes a small model trustworthy on YOUR facts — IF you keep retrieval clean and abstain when unsure.
 It is a deployable engineering synthesis, not human-level AI and not a new method. Its biggest strength
