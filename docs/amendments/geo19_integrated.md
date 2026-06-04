@@ -19,3 +19,19 @@ GEO-6/11/12/15-18 each proved ONE piece. GEO-19 runs them as ONE system on held-
   exact-count >= 0.6 end-to-end. Report all stages; honest about error propagation.
 
 PASS if all three bars met (integrated method works on held-out data). PARTIAL otherwise with stage diagnosis.
+
+## Result — MILESTONE
+| stage | acc |
+|-------|-----|
+| (1)+(2) learned relation generalizes to held-out cities | **1.00** |
+| (3) chain country->continent (predicted / oracle) | **1.00 / 1.00** |
+| (4) end-to-end symbolic aggregate (count per continent) | **1.00** |
+
+true {Africa 2, Asia 1, Europe 2, SouthAmerica 1} == chained — exact.
+
+**VERDICT: PASS (MILESTONE)** — the whole learning+understanding method runs as ONE integrated system on
+HELD-OUT data: few-shot learn a relation -> apply to unseen entities -> chain by retrieval -> symbolic
+aggregate, all 1.00. **Honest caveat:** GEO-15–19 use small, clean, well-known entities where MiniLM's
+embeddings are excellent, so the numbers are saturated at 1.00. This demonstrates the method is SOUND and
+INTEGRATES end-to-end at PC scale — NOT that open-domain NLU is solved. Real degradation appears with
+scale, noisy text, ambiguous entities, and linguistically hard queries (negation/comparison) — probed next.
