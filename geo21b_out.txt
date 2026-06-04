@@ -1,0 +1,10 @@
+=== GEO-21b: subspace integration on a BRANCHING tree ===
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 9304.22it/s]
+  (a) parent learned (held-out leaves) hits@1 = 0.00
+  (b) grandparent via 2r composition   hits@1 = 0.40  (chance 0.08)
+  (c) semantic-block drift                    = 0.00e+00
+
+--- VERDICT ---
+GEO-21b: PARTIAL - parent 0.00, gp 0.40, drift 0.0e+00
+DONE
