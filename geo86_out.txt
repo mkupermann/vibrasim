@@ -1,0 +1,9 @@
+=== GEO-86: trained kind-router ===
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 10917.42it/s]
+  keyword-router kind-acc = 0.88
+  trained-router kind-acc = 1.00
+
+--- VERDICT ---
+GEO-86: PASS - a TRAINED logistic kind-router (1.00) beats/matches keywords (0.88) on held-out incl. the ambiguous cases ('when's the tax thing'->task). The cross-type limitation IS fixable with a small trained classifier on query embeddings. Routing is just another linear-probe task (GEO-66).
+DONE

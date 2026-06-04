@@ -35,6 +35,9 @@ Grounding amplifies retrieval BOTH ways:
    word-order/role matching (GEO-72); use it for prose and large stores.
 3. **Entity resolution** — `resolve_entity()` (GEO-44) fixes typo'd/near-duplicate names that otherwise
    retrieve the wrong entity (noisy store 0.53 -> 1.00, GEO-43/44/45).
+3b. **Mixed-type KBs (contacts+tasks+notes):** cross-type retrieval confusion is real on vague queries; fix
+   with kind-scoped retrieval (`retrieve(kind=)`). Auto-detect the kind with a small TRAINED logistic router
+   on query embeddings (GEO-86, ~8 examples/kind -> 1.00, beats keyword routing 0.88), not keyword heuristics.
 4. **Prefer extractive** — return the supporting fact (and let the user verify) over a generated answer when
    correctness matters; generation can amplify a wrong retrieval.
 5. **Verify answerability** — focus-existence check (GEO-33) + question-type guard (GEO-76) reject in-domain-
