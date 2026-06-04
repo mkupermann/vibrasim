@@ -48,7 +48,7 @@ class ConceptReasoner:
             a.append(p); p = self.parent.get(p)
         return a
 
-    def fit(self, euc_dim=4, hyp_dim=2, iters=3000, holdout_pairs=None):
+    def fit(self, euc_dim=4, hyp_dim=2, iters=3000, holdout_pairs=None, anchor=0.5):
         N = self.N; iu = np.triu_indices(N, 1); gd = torch.tensor(self.GD[iu], dtype=torch.float32)
         I = torch.tensor(iu[0]); J = torch.tensor(iu[1])
         Xe = torch.randn(N, euc_dim) * 0.1; Xe.requires_grad_(True); s = torch.tensor(1.0, requires_grad=True)
@@ -63,10 +63,18 @@ class ConceptReasoner:
                     continue
                 POS.append((u, v)); POS.append((v, u))
         POS = torch.tensor(POS); Xh = torch.randn(N, hyp_dim) * 0.001
+        # radial-depth anchor (JEP-38): pin general concepts near origin so generality SIGN is stable
+        # (without it the Poincare ranking loss leaves the sign unpinned -> can invert run-to-run, JEP-37).
+        depth = np.array([len(self._ancestors(i)) for i in range(N)], dtype=np.float32)
+        r_target = torch.tensor(np.tanh(depth / (depth.max() + 1e-9) * 2.0) * 0.95)  # root->0, leaves->~boundary
+        lam = float(anchor)  # anchor weight (0 disables)
         for _ in range(iters + 1000):
             Xh.requires_grad_(True); u = POS[:, 0]; v = POS[:, 1]; negs = torch.randint(0, N, (len(POS), 15))
             du = _poin_dc(Xh[u], Xh[v]); dn = _poin_dc(Xh[u].unsqueeze(1).expand(-1, 15, -1), Xh[negs])
-            torch.nn.functional.cross_entropy(torch.cat([(-du).unsqueeze(1), -dn], 1), torch.zeros(len(POS), dtype=torch.long)).backward()
+            loss = torch.nn.functional.cross_entropy(torch.cat([(-du).unsqueeze(1), -dn], 1), torch.zeros(len(POS), dtype=torch.long))
+            if lam > 0:
+                loss = loss + lam * ((Xh.norm(dim=1) - r_target) ** 2).mean()
+            loss.backward()
             with torch.no_grad():
                 g = Xh.grad; sc = ((1 - (Xh ** 2).sum(1, keepdim=True)).clamp(min=1e-4) ** 2) / 4.0
                 Xh = Xh - 0.3 * sc * g; nrm = Xh.norm(dim=1, keepdim=True); Xh = torch.where(nrm >= 0.999, Xh / nrm * 0.999, Xh)
