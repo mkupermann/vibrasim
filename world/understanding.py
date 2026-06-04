@@ -489,6 +489,26 @@ class UnderstandingEngine:
         """Conversational answer: quantified ('is every dog an animal?', 'can all birds fly?'), WH-questions
         ('what is a poodle?'), and yes/no explanation for is-a / relation questions."""
         q = question.strip().rstrip("?").lower()
+        # hypothetical: "if a whale is/were a fish, is a whale an animal" -> assume, answer, RETRACT
+        if q.startswith("if "):
+            parts = q[3:].split(",", 1)
+            if len(parts) == 2:
+                ma = re.match(r"(?:(?:an|a|the)\s+)?(\w+)\s+(?:is|are|were|was)\s+(?:(?:an|a|the)\s+)?(.+)", parts[0].strip())
+                if ma:
+                    x, y = self._norm_phrase(ma.group(1)), self._norm_phrase(ma.group(2))
+                    x_existed = x in self.parents
+                    had = y in self.parents.get(x, set())
+                    self.parents.setdefault(x, set()).add(y)          # temporarily assume
+                    sub = parts[1].strip()
+                    sub = re.sub(r"\b(?:would|could)\s+(\w+)\s+be\b", r"is \1", sub)   # 'would it be' -> 'is it'
+                    sub = re.sub(r"\b(?:would|could)\b", "is", sub)
+                    sub = re.sub(r"\bit\b", x, sub)                    # resolve 'it' to the hypothetical subject
+                    ans = self.respond(sub)
+                    if not had:                                       # RETRACT (leave KB unchanged)
+                        self.parents[x].discard(y)
+                        if not self.parents[x] and not x_existed:
+                            del self.parents[x]
+                    return ans
         # analogy: "dog is to puppy as cat is to ?" -> find the relation A->B, apply it to C
         ma = re.match(r"(?:what is |)(\w+) is to (\w+) as (\w+) is to", q)
         if ma:
