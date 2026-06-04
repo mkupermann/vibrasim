@@ -1,4 +1,4 @@
-# Pattern: grounding concepts in perception — what the EQMOD-4 grounding thread learned (JEP-54..62)
+# Pattern: grounding concepts in perception — what the EQMOD-4 grounding thread learned (JEP-54..63)
 
 How to form concepts from experience and use them to reason and act, and where it breaks. Each insight is from a
 specific rung; methods are established (clustering, SR/TD, Poincare embeddings), the discipline is the point.
@@ -42,7 +42,8 @@ When function is UNCORRELATED with appearance, clustering on AFFORDANCE outcomes
 container holds, a tool breaks, food is consumed) recovers the functional categories perfectly (1.00) where
 appearance is at chance. The agent must ACT to discover function it cannot see. So FUNCTIONAL concepts come from
 EITHER the right visual invariance (when function correlates with appearance, #3) OR interaction/affordances
-(when it does not, this) - a complete account.
+(when it does not, this) - a complete account. The FULL loop with functional concepts (act-to-learn-function ->
+form categories -> recall to plan on functional goals) works end-to-end (JEP-63, 1.00) - learning by DOING.
 
 ## The honest frontier (mapped, not waved at)
 Unsupervised perceptual concept formation reaches FUNCTIONAL categories WHEN function correlates with a capturable

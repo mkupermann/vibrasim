@@ -1,0 +1,11 @@
+=== JEP-63: complete loop with FUNCTIONAL concepts (act-to-learn -> reason -> act) ===
+  Phase 1 (interaction): learned 4 functional categories, true-purity=1.000
+  Phase 2 (planning): reached a correct-FUNCTION entity = 1.000
+
+--- VERDICT ---
+JEP-63: PASS - the COMPLETE functional loop works: the agent ACTS to learn each entity's function
+from affordances (function NOT visible), forms functional categories (purity 1.00), and plans to
+a functional goal - reaching a correct-function entity 1.00 of the time by RECALLING what it
+learned through interaction. Action-grounded FUNCTIONAL concepts drive goal-directed behaviour - the
+most understanding-relevant demo (function from interaction, not appearance). Established methods, named.
+DONE
