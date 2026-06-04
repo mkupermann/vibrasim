@@ -52,6 +52,17 @@ def test_is_a_rejects_cross_branch():
     # NOTE: siblings (is_a('cat','dog')) are a known residual weakness (JEP-32), not asserted here.
 
 
+def test_order_method_rejects_siblings():
+    # JEP-45: isa_method="order" (Vendrov order embeddings) fixes the sibling residual that the
+    # default poincare method has (JEP-33), and is the recommended method for large real hierarchies.
+    cr = ConceptReasoner(TAX); cr.fit(euc_dim=4, hyp_dim=8, iters=4000, isa_method="order")
+    assert cr.is_a("cat", "mammal")        # true ancestor
+    assert cr.is_a("cat", "carnivore")     # true ancestor
+    assert not cr.is_a("cat", "dog")       # SIBLING - order embeddings reject (poincare does not)
+    assert not cr.is_a("mammal", "cat")    # reversed
+    assert not cr.is_a("eagle", "sparrow")  # sibling
+
+
 def test_more_general_direction():
     cr = _fit()
     assert cr.more_general("cat", "mammal") == "mammal"
