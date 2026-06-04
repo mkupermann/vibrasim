@@ -117,3 +117,14 @@ def test_wh_questions():
     assert e.respond("what does the dog chase?") == "The dog chases the cat."
     assert e.respond("what is a unicorn?") == "I don't know what a unicorn is."   # 'a', not 'an'
     assert e.respond("what does the cat chase?").startswith("I don't know")
+
+
+def test_three_valued_epistemic():
+    e = UnderstandingEngine(seed=101)
+    for f in ["A poodle is a dog.", "A dog is an animal.", "A salmon is a fish.", "A whale is not a fish."]:
+        e.tell(f)
+    assert e.assess("poodle", "animal") == "yes"
+    assert e.assess("poodle", "fish") == "no"           # fish known, no path
+    assert e.assess("whale", "fish") == "no"            # explicit negative
+    assert e.assess("poodle", "vegetable") == "unknown" # never heard of
+    assert e.explain("is a poodle a vegetable?").startswith("I don't know")
