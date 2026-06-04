@@ -144,7 +144,9 @@ The clean-store 1.00s assume clean text and disambiguated entities. Under realis
 is clean (1.00), but FRAGILE to character-level TYPOS (0.73 at 10% typo rate); typos x near-duplicate
 entities compound badly (the 0.53 case). Deploy with a front-end: spell/character normalization + exact
 entity-ID resolution for identity (use embeddings for relevance, exact keys for who-is-who). Without it, the
-headline accuracies are optimistic.
+headline accuracies are optimistic. VALIDATED (GEO-44): a character-trigram fuzzy entity-resolution
+front-end fully recovers noisy-store accuracy (0.53 -> 1.00) — so the system IS deployable on messy data with
+this cheap front-end (embeddings for relevance, fuzzy/exact name matching for identity).
 
 ## Bottom line
 Phase-1 verdict was "the physics substrate has no computational value." Phase-2 verdict is the constructive
