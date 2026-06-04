@@ -24,14 +24,18 @@ except Exception as e:  # pragma: no cover
 
 
 class GeometricReasoner:
-    def __init__(self, model_name: str = "all-MiniLM-L6-v2", abstain_tau: float = 0.45):
+    def __init__(self, model_name: str = "all-MiniLM-L6-v2", abstain_tau: float = 0.45,
+                 rerank_k: int = 0, rerank_model: str = "cross-encoder/ms-marco-MiniLM-L-6-v2"):
         if SentenceTransformer is None:
             raise RuntimeError("pip install sentence-transformers")
+        self._rerank_model = rerank_model
         self.model = SentenceTransformer(model_name)
         self.abstain_tau = abstain_tau          # similarity floor below which we say "unknown" (GEO-23)
         self.fact_texts: list[str] = []
         self.fact_meta: list[dict] = []          # arbitrary structured payload per fact (the symbolic side)
         self._F = None                           # cached embeddings
+        self.rerank_k = rerank_k                 # if >0, re-rank top-k with a cross-encoder (GEO-40b)
+        self._ce = None                          # lazy-loaded cross-encoder
 
     # ---- build the store -------------------------------------------------
     def add_fact(self, text: str, **meta):
@@ -62,9 +66,12 @@ class GeometricReasoner:
         self.abstain_tau = float(margin * a.mean() + (1 - margin) * u.mean())
         return self.abstain_tau
 
-    # ---- core: grounded retrieval (GEO-15, GEO-23) -----------------------
+    # ---- core: grounded retrieval (GEO-15, GEO-23) + optional re-rank (GEO-40b)
     def retrieve(self, query: str):
-        """Return (best_index, similarity) or (None, sim) if below the abstention threshold."""
+        """Return (best_index, similarity) or (None, sim) if below the abstention threshold.
+        If rerank_k>0, the top-k bi-encoder candidates are re-scored by a cross-encoder (GEO-40b:
+        recovers multi-hop accuracy at scale, 2-hop 0.87->1.00 at 400 facts). Abstention still uses the
+        bi-encoder similarity (calibrated tau)."""
         if not self.fact_texts:
             return None, 0.0
         q = self._embed([query])[0]
@@ -72,6 +79,13 @@ class GeometricReasoner:
         j = int(np.argmax(sims))
         if sims[j] < self.abstain_tau:
             return None, float(sims[j])         # ABSTAIN — grounded, no confabulation
+        if self.rerank_k and len(self.fact_texts) > 1:
+            if self._ce is None:
+                from sentence_transformers import CrossEncoder
+                self._ce = CrossEncoder(self._rerank_model)
+            topk = np.argsort(-sims)[:self.rerank_k]
+            ce_scores = self._ce.predict([(query, self.fact_texts[t]) for t in topk])
+            j = int(topk[int(np.argmax(ce_scores))])
         return j, float(sims[j])
 
     def ask(self, query: str):
