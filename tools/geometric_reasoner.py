@@ -153,6 +153,15 @@ class GeometricReasoner:
             return len(A & B) / len(A | B) if A | B else 0.0
         return max(candidates, key=lambda c: sim(name, c))
 
+    # ---- query-time conflict surfacing (GEO-62) --------------------------
+    def values_for(self, subject, field="object", kind=None):
+        """Return (status, values) for an entity's field: status is 'CONFLICT' if the store holds >1 distinct
+        value (a data inconsistency), else 'OK'. Surfaces conflicts at query time instead of silently picking
+        one (GEO-62). Purely symbolic over same-subject facts."""
+        vals = {m.get(field) for m in self.fact_meta
+                if m.get("subject") == subject and (kind is None or m.get("kind") == kind) and m.get(field) is not None}
+        return ("CONFLICT" if len(vals) > 1 else "OK"), vals
+
     # ---- contradiction detection (GEO-41, hardened GEO-52) ---------------
     def check_contradiction(self, subject: str, object: str, kind=None, text: str = None):
         """Return the index of a stored fact that contradicts (same subject, different object — a functional
