@@ -17,7 +17,7 @@ def main():
     # the extracted edges must be the intended ones
     ck("poodle->dog", eng.parents.get("poodle"), "dog")
     ck("dog->animal", eng.parents.get("dog"), "animal")
-    ck("animal->living_thing", eng.parents.get("animal"), "living_thing")
+    ck("animal->living thing", eng.parents.get("animal"), "living thing")
     # comprehension incl multi-hop holds
     ck("poodle is animal (2-hop)", eng.is_a("poodle","animal"), True)
     ck("poodle is living_thing (3-hop)", eng.is_a("poodle","living_thing"), True)

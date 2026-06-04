@@ -13,10 +13,18 @@ assume away.
   LIKELY MISS: greedy multi-word capture swallowing a trailing token, or SVO/relation mis-fire -> scoped multi-word
   to IS-A/ask objects only, relations stay single-word. Predict 100% + no regressions.
 
-## Result — PASS (HIT)
+## Result — MISS then FIXED (honest correction)
 Regression suite 9/9; tiers JEP-92 19/19, JEP-93 12/12, JEP-94 16/16 — all still 100%. Demo fixed:
 "is a poodle a living thing?" -> "Yes. A poodle is a dog, a dog is an animal, an animal is a living thing." HIT;
 tally 7/10. LESSON: the DEMO caught a bug the tests missed because the tests used a convenient encoding
 ("living_thing") the real input ("living thing") doesn't share — always exercise the engine on natural input, not
 just the test-friendly form. Established (noun-phrase normalization), named; no novelty. Honest: subject still
 single-token; full NP parsing (adjuncts, relative clauses) remains the frontier.
+
+## Honest correction
+I initially recorded this as a clean HIT. It was NOT. The new multi-word regression test FAILED (it asserted
+'living_thing'==' living thing' equivalence that did not hold), and worse, I committed it FAILING because I chained
+`git commit` after `pytest` without gating on the result. Fixing it: _norm_phrase now treats underscore as space
+(space is the canonical concept form), which then required updating JEP-94's literal-string expectations
+('living_thing'->'living thing'). After the fixes: 10/10 tests green, tiers 92-96 still 100%. PROCESS LESSON
+(logged): never commit without a green test run gating it. CALIBRATION: JEP-98 = MISS (tally 6/10).

@@ -69,13 +69,13 @@ class UnderstandingEngine:
 
     # --- grounding (perception) --------------------------------------------
     def add_prototype(self, concept: str, features: np.ndarray) -> None:
-        self.prototypes[concept.lower()] = np.asarray(features, dtype=float)
+        self.prototypes[self._norm_phrase(concept)] = np.asarray(features, dtype=float)
 
     def learn_concept(self, name: str, examples: list) -> np.ndarray:
         """Human-like concept acquisition: form a prototype from a few perceptual EXAMPLES (their mean),
         rather than being told. The new concept then participates in perception + comprehension."""
         proto = np.mean(np.asarray(examples, dtype=float), axis=0)
-        self.prototypes[name.lower()] = proto
+        self.prototypes[self._norm_phrase(name)] = proto
         return proto
 
     def perceive(self, features: np.ndarray) -> str | None:
@@ -109,7 +109,8 @@ class UnderstandingEngine:
         """Canonical key for a (possibly multi-word) concept phrase: lowercase, strip a trailing period,
         collapse spaces, and singularize the LAST word. 'A living thing.' -> 'living thing'; 'dogs' -> 'dog'.
         Accepts underscore_joined tokens too (kept as one word)."""
-        p = re.sub(r"\s+", " ", p.strip().rstrip(".")).lower()
+        p = p.strip().rstrip(".").lower().replace("_", " ")   # underscore and space are the same concept
+        p = re.sub(r"\s+", " ", p)
         if not p:
             return p
         words = p.split(" ")

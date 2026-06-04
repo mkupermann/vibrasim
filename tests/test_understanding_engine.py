@@ -54,7 +54,7 @@ def test_parse_robustness_varied_phrasings():
               "An animal is a living_thing.", "Every poodle is a dog.", "Dogs are a type of animal."]:
         assert e.tell(v)[0] == "isa", f"failed: {v}"
     assert e.parents.get("dog") == "animal"      # not "nimal" — article must not eat the noun
-    assert e.parents.get("animal") == "living_thing"
+    assert e.parents.get("animal") == "living thing"
     assert e.is_a("poodle", "living_thing")      # multi-hop across varied phrasings
 
 
