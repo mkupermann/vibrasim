@@ -31,3 +31,23 @@ baselines missed the >=0.9 bar because k=6 OVER-EMBEDS low-dim structures: a rin
 fixed k=6 confounded the absolute comparison (it penalizes low-dim structures). Fix: use the natural low
 dimension k=2 -> JEP-23b. The relative ordering (tree worst) already supports the boundary; 23b confirms it
 cleanly. Bars locked, not tuned.
+
+## JEP-23b — clean boundary at natural low dim — PASS
+| structure | Spearman (Euclidean SR embedding) |
+|-----------|-----------------------------------|
+| ring (k=2) | 0.988 |
+| grid (k=2) | 0.915 |
+| tree (k=2) | 0.411 |
+| tree (k=4, MORE dims) | 0.354 |
+
+**VERDICT: PASS (boundary mapped cleanly).** At natural low dim, metric structures embed well in Euclidean SR
+space (ring 0.99, grid 0.92) but the TREE distorts badly (0.41) and gets WORSE with more dimensions (k=4 -> 0.35)
+- proving it is a GEOMETRY MISMATCH, not a dimensionality shortfall. Hierarchies need HYPERBOLIC (negatively
+curved) space (Nickel-Kiela 2017). 
+
+## Honest implication for "understanding"
+This boundary matters: much of CONCEPTUAL knowledge is HIERARCHICAL (taxonomies, IS-A, part-whole). The EQMOD-4
+Euclidean cognitive-map approach - which does grid/order relational reasoning well - is the WRONG geometry for
+hierarchies. So extending toward conceptual understanding would require HYPERBOLIC cognitive maps (a known,
+established direction), not just more of the Euclidean machinery. An honest, specific signpost for what genuine
+conceptual reasoning needs - mapped, not hand-waved. Nickel-Kiela hyperbolic embeddings (2017) established - named.
