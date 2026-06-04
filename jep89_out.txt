@@ -1,0 +1,30 @@
+=== JEP-89: relation extraction from REAL Boole prose (the parse gate) ===
+   sentences scanned: 5447; raw triples: 66; unique: 46
+   2-hop chains (a->b->c): 3
+   most frequent extracted triples:
+      matter -> necessary   (x13)
+      cause -> intelligent   (x5)
+      sign -> arbitrary   (x3)
+      numerator -> number   (x2)
+      virtue -> habit   (x2)
+      language -> instrument   (x1)
+      operations -> things   (x1)
+      signs -> things   (x1)
+      water -> fluid   (x1)
+      operations -> thing   (x1)
+      expressed -> equation   (x1)
+      snow -> white   (x1)
+      speak -> secondary   (x1)
+      cases -> difference   (x1)
+      usually -> chapter   (x1)
+   sample chains:
+      expressed -> equation -> necessary
+      logic -> conversion -> particular
+      employed -> matter -> necessary
+
+--- VERDICT ---
+JEP-89: NULL/PARTIAL - 46 unique triples, 3 chains. Boole's argumentative/
+mathematical prose yields SPARSE definitional structure - the parse gate is real on dense text. Honest
+measure of distance to real-text understanding: the mechanisms (JEP-88) work, but feeding them from
+this prose with classic extraction does not. Robust extraction / learned structure is the open frontier.
+DONE
