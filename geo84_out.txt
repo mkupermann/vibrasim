@@ -1,0 +1,11 @@
+=== GEO-84: vague query robustness ===
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 10424.78it/s]
+Loading weights:   0%|          | 0/105 [00:00<?, ?it/s]Loading weights: 100%|##########| 105/105 [00:00<00:00, 10630.28it/s]
+  clean-query hits@1 = 1.00
+  vague-query hits@1 = 0.88
+    vague miss: 'the pipe fixing person' -> 'fix the kitchen sink' (want 'Raj Patel')
+
+--- VERDICT ---
+GEO-84: PASS - semantic matching handles VAGUE/colloquial queries (0.88 vs clean 1.00): 'the teeth doctor' -> dentist, 'that money cap thing' -> budget note. Robust to real-user vagueness, not just well-formed queries.
+DONE
