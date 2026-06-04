@@ -210,3 +210,14 @@ def test_contradiction_detection():
     assert e.would_contradict("A whale is a fish.") is not None          # explicit negative
     e.tell("A whale is a fish.")                                         # correction still works (non-blocking)
     assert e.is_a("whale", "fish")
+
+
+def test_quantified_questions():
+    e = UnderstandingEngine(seed=110)
+    for f in ["A poodle is a dog.", "A dog is an animal.", "A robin is a bird.", "A penguin is a bird.",
+              "A robin can fly.", "A sparrow is a bird.", "A sparrow can fly.", "A penguin cannot fly."]:
+        e.tell(f)
+    e.induce()
+    assert e.respond("is every poodle an animal?") == "Yes."   # multi-hop universal
+    assert e.respond("can all birds fly?").startswith("No")    # penguin counterexample
+    assert e.respond("do all robins fly?").startswith("Yes")

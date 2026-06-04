@@ -406,10 +406,36 @@ class UnderstandingEngine:
             return f"No, I was not told that the {s} {self._norm_rel(r)}s the {o}."
         return "I cannot parse that question."
 
+    def _all_have_property(self, cat: str, prop: str):
+        """Universal over instances: do ALL known instances of `cat` have property `prop`?
+        Returns (verdict, counterexample-or-None)."""
+        cat, prop = self._norm_phrase(cat), prop.lower()
+        instances = [x for x in self.parents if cat in self.ancestors(x)] + [cat]
+        lacking = [i for i in instances if prop in self.not_properties.get(i, set())]
+        if lacking:
+            return False, lacking[0]
+        has = [i for i in instances if self.has_property(i, prop)]
+        return (len(has) > 0), None
+
     def respond(self, question: str) -> str:
-        """Conversational answer: handles WH-questions ('what is a poodle?', 'what does the dog chase?')
-        and falls back to yes/no explanation for is-a / relation questions."""
+        """Conversational answer: quantified ('is every dog an animal?', 'can all birds fly?'), WH-questions
+        ('what is a poodle?'), and yes/no explanation for is-a / relation questions."""
         q = question.strip().rstrip("?").lower()
+        # universal IS-A: "is every X (a) Y" / "are all X Y" -> taxonomy is_a (a category subsumes another)
+        mq = re.match(r"(?:is every|are all|is each)\s+(\w+)\s+(?:an?\s+|the\s+)?(.+)", q)
+        if mq:
+            x, c = self._norm_phrase(mq.group(1)), self._norm_phrase(mq.group(2))
+            return "Yes." if self.is_a(x, c) else f"Not necessarily — I can't derive that every {x} is {self._art(c)}."
+        # universal property: "can/do all X VERB"
+        mqp = re.match(r"(?:can|do|does)\s+(?:all|every|each)\s+(\w+)\s+(\w+)", q)
+        if mqp:
+            cat, prop = mqp.group(1), self._norm_rel(mqp.group(2))
+            ok, ex = self._all_have_property(cat, prop)
+            if ok:
+                return f"Yes, all {self._norm_phrase(cat)}s can {prop}."
+            if ex:
+                return f"No — not all. For example, {self._art(ex)} cannot {prop}."
+            return f"I don't know whether all {self._norm_phrase(cat)}s can {prop}."
         m = re.match(r"what\s+(?:is|are)\s+(?:(?:an|a|the)\s+)?(.+)", q)
         if m:
             x = self._norm_phrase(m.group(1))
