@@ -183,12 +183,13 @@ can't do these). Honest refined description: the system is "LLM embeddings + lin
 operators"; the embedding geometry genuinely powers training-free retrieval/analogy/composition, while the
 learned-relation parts are ordinary linear ML — no geometric magic there.
 
-## Maximally-sharpened honest core (GEO-66 + GEO-68)
+## Maximally-sharpened honest core (GEO-66 + GEO-68 + GEO-69)
 Two rigorous deflations narrowed the geometric contribution precisely: relation LEARNING = a logistic probe
 (GEO-66), and multi-hop COMPOSITION on structured data = a database JOIN (GEO-68; geometry only resolves the
-entry entity). What remains IRREDUCIBLY geometric is SEMANTIC MATCHING — resolving meaning (descriptions,
-epithets, paraphrases) to entities, and analogy-by-offset — which exact lookup, lexical match, a DB join, and
-a linear probe all cannot do. Honest one-liner: **the system = LLM semantic matching + classical
+entry entity). What remains is SEMANTIC MATCHING — resolving meaning (descriptions, epithets, paraphrases) to entities —
+but even THAT is mostly DISTRIBUTIONAL semantics: static word vectors do ~0.70, the transformer adds only
++0.10 (GEO-69). So the genuine ingredient is decades-old distributional semantic matching, modestly LLM-
+enhanced, not a novel LLM capability. Honest one-liner: **the system = LLM semantic matching + classical
 symbolic/database reasoning + RAG grounding + a thin generator.** The LLM's irreducible job is mapping meaning
 to the right entry; the reasoning on top is classical. Real, useful, entirely established methods, precisely
 scoped — not new-as-method, not human-level AI.
