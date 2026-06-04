@@ -75,3 +75,22 @@ without clean labels, Yu-Smith 2007, JEP-116) -> wire IS-A from the cluster hier
 ### The methodological lesson
 A fragile success (117) was corrected by stress-testing (118), a proposed fix FAILED and was owned (118b), and the
 principled criterion (118c) was found AND bounded. Stress-test your successes; a 1.00 in one regime is not a law.
+
+## 8. Learning relational STRUCTURE from observation (JEP-128..130) — advancing the JEP-69/70 frontier
+Beyond learning FACTS, the engine can learn the STRUCTURE relations have, from observation:
+- **Transitivity** (JEP-128): infer a relation is transitive iff its transitive-closure CONTRADICTS no observed-
+  false pair (a total order is transitive; a cyclic tournament's closure over-predicts -> not). Reliable when
+  observation is DENSE; a violating triple you never observe can't be detected (a fundamental DATA limit, not a
+  method flaw). Same shape as the JEP-118c exposure limit.
+- **Composition rules** (JEP-129): DISCOVER 'uncle = parent o sibling' by searching candidate compositions R1 o R2
+  and picking the one whose result best matches observed target facts (F1). ROBUST: the correct composition's F1
+  dominates spurious ones even with 15 distractor relations + 20% label noise. (I over-predicted the difficulty —
+  spurious matches don't fool it when the signal is real; cf. JEP-76/107 non-materializing boundaries.)
+- **Reason with learned structure** (JEP-130): install the learned rule (add_rule) and DERIVE new facts (Datalog-
+  style relation_holds) — structure-learning + reasoning unified.
+
+The honest open frontier: deeper/longer rules (3+ relations -> combinatorial), LEARNING the base relations
+themselves (here given), and large relation vocabularies. But within 2-relation composition over given relations,
+structure is LEARNABLE from observation, robustly — a genuine step past the JEP-69/70 NULL. Lesson: "can't learn
+arbitrary structure" was too pessimistic; CONSISTENCY and RULE-MATCH signals make a lot of structure learnable when
+the data is adequate. Established (consistency-based inference, ILP/rule-discovery simplest form), named.
