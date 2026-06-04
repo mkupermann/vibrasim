@@ -1,0 +1,11 @@
+=== GEO-85: type-aware agent ===
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 11735.35it/s]
+Loading weights:   0%|          | 0/105 [00:00<?, ?it/s]Loading weights: 100%|##########| 105/105 [00:00<00:00, 10330.56it/s]
+    still miss: "when's the tax thing" (kind=note) -> 'vacation' (want 'file the tax return')
+  without kind-routing = 0.90
+  with auto-kind-routing = 0.90
+
+--- VERDICT ---
+GEO-85: PARTIAL - scoped 0.90 vs unscoped 0.90
+DONE
