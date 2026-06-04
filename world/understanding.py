@@ -603,6 +603,36 @@ class UnderstandingEngine:
                         return True
         return False
 
+    _SPATIAL_OPP = {"left": "right", "right": "left", "above": "below", "below": "above",
+                    "front": "behind", "behind": "front"}
+
+    def tell_spatial(self, a: str, rel: str, b: str) -> None:
+        """Record a spatial relation 'a rel b' (e.g. a left b). Also records the inverse (b opp(rel) a)."""
+        if not hasattr(self, "spatial"):
+            self.spatial = {}
+        a, b, rel = self._norm(a), self._norm(b), rel.lower()
+        self.spatial.setdefault(rel, {}).setdefault(a, set()).add(b)
+        if rel in self._SPATIAL_OPP:
+            self.spatial.setdefault(self._SPATIAL_OPP[rel], {}).setdefault(b, set()).add(a)
+
+    def spatial_holds(self, a: str, rel: str, b: str, viewpoint: str = "default") -> bool:
+        """Does 'a rel b' hold (transitively)? From the OPPOSITE viewpoint, left<->right (and front<->behind) FLIP
+        (allocentric perspective transform); above/below are viewpoint-invariant."""
+        rel = rel.lower()
+        if viewpoint == "opposite" and rel in ("left", "right", "front", "behind"):
+            rel = self._SPATIAL_OPP[rel]
+        g = getattr(self, "spatial", {}).get(rel, {})
+        a, b = self._norm(a), self._norm(b)
+        stack, seen = [a], {a}
+        while stack:
+            cur = stack.pop()
+            for nxt in g.get(cur, ()):
+                if nxt == b:
+                    return True
+                if nxt not in seen:
+                    seen.add(nxt); stack.append(nxt)
+        return False
+
     def _order_holds(self, comp: str, x: str, z: str) -> bool:
         """Transitive closure over a comparison relation: is x `comp`-than z (directly or transitively)?"""
         g = self._orders.get(comp, {})
