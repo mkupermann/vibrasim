@@ -19,6 +19,10 @@ vibrasim SUBSTRATE is a genuine benefit for this.
 | JEP-5 | **PASS** | a LOCALLY-LEARNED rep (contrastive temporal-coherence, no backprop) makes energy meaningful (Spearman 0.88) -> energy-based MPC 0.08 -> 0.90. Confirms JEP-2 diagnosis. |
 | JEP-6/6b/6c | PARTIAL/NULL | PC tracks backprop on easy regression (0.19/0.19, 0.12/0.12) but grid task confounds (extrapolation; classification=memorization, held-out 0.00; PC lags on hard softmax). |
 | JEP-6d | **PASS** | on a well-posed iid task (two-moons), local predictive coding MATCHES backprop (test 0.97 vs 0.98). The substrate-compatible local-learning path for the JEPA predictor is validated. |
+| JEP-8/8b | NULL | simple contrastive rule learns POSITIONAL not geodesic structure (tracks Euclidean>geodesic even in serpentine); greedy 1-step nav also invalid for mazes. |
+| JEP-9 | PARTIAL | Successor Representation is locally learnable (TD vs closed-form corr 1.00) + tracks geodesic>euclidean>contrastive (right trend), but greedy maze nav metric invalid. |
+| JEP-10/10b | **PASS** | SCALING: predictive coding (local, no backprop) matches backprop on full MNIST (PC 0.947 vs bp 0.968, within 0.03) on 16 CPU threads. Local learning is not toy-only. |
+| JEP-10c | **PASS** | AMD GPU usable for INFERENCE via DirectML (x3.51 @200k batch, exact-match acc). Training stays CPU (no AMD PyTorch-train path on Win/Py3.13). |
 | JEP-7 | **PASS** | END-TO-END: contrastive-learned encoder + PC-learned predictor + energy-MPC reaches 0.97 of goals (untrained-predictor ablation 0.05, random 0.25). Nuance: exact prediction only 0.23 — planning needs correct ACTION RANKING, not exact prediction; world model accurate ENOUGH to plan. |
 
 ## The honest bottom line
