@@ -8,6 +8,12 @@ See `docs/GEOMETRIC_ANSWER.md` for what it is, what it can't do, and the evidenc
 semantic matching / zero-shot transfer (model- and domain-robust), grounded abstention, multi-hop, and
 grounded generation — NOT open-domain NLU, and named-entity retrieval alone is lexically solvable.
 
+## Quickstart — see it all
+```
+python tools/demo_geometric.py          # core showcase (auto-dispatch, abstention, contradiction, entity-res)
+python tools/demo_geometric.py --gen     # also grounded generation (downloads a 0.5B model)
+```
+
 ## Install
 ```
 pip install sentence-transformers numpy          # core (extractive, retrieval, reasoning)
