@@ -44,12 +44,7 @@ def main():
     print(f"  'capital of France?' (off-topic)-> grounded={out['grounded']} ('{out['text']}')", flush=True)
 
     line("Contradiction detection (same-subject fact, symbolic object compare)")
-    def contradicts(subject, new_object):
-        for j, mm in enumerate(r.fact_meta):
-            if mm.get("subject") == subject and mm.get("kind") == "person" and mm.get("object") not in (None, new_object):
-                return j
-        return None
-    hit = contradicts("Alice", "Design")
+    hit = r.check_contradiction(subject="Alice", object="Design", kind="person")
     msg = f"conflict at fact #{hit}: '{r.fact_texts[hit]}'" if hit is not None else "no conflict"
     print(f"  new 'Alice on Design' vs stored -> {msg}", flush=True)
 

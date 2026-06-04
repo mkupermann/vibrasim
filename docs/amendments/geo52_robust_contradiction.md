@@ -13,3 +13,15 @@ improvement on a MIXED store (person facts + team-city facts that cause collisio
   facts, then symbolic object compare).
 - Metric: balanced accuracy. Bar: (b) >= 0.9 AND (b) > (a) (same-subject filter is more robust on mixed
   stores). If (a) already >= 0.9 (no collisions hit), report that honestly.
+
+## Result — PASS
+| method | bal-acc | TPR | TNR |
+|--------|---------|-----|-----|
+| embedding-nearest (GEO-41) | 0.94 | 0.88 | 1.00 |
+| same-subject pre-filter | **1.00** | 1.00 | 1.00 |
+
+**VERDICT: PASS.** The same-subject pre-filter reaches 1.00 (vs 0.94), catching the token-collision misses
+(where "Alice on Design" matched the "Design team is based in Austin" fact). **Honest insight:** over a
+STRUCTURED store with subject keys, contradiction detection is purely SYMBOLIC (scan facts about the same
+subject, compare objects) — geometry is needed only to RESOLVE the subject from unstructured text. Adopted in
+GeometricReasoner.check_contradiction(). Refines the GEO-41 claim (0.94 -> 1.00 with the structural filter).
