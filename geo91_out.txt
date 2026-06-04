@@ -1,0 +1,9 @@
+=== GEO-91: linear adapter for domain retrieval ===
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 10905.30it/s]
+  frozen   held-out hits@1 = 0.83
+  adapted  held-out hits@1 = 0.83
+
+--- VERDICT ---
+GEO-91: NULL/neutral - adapter matches frozen (0.83 vs 0.83); the frozen space is already near-optimal here, or too few examples. No cheap improvement.
+DONE
