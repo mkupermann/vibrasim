@@ -1,0 +1,9 @@
+=== GEO-78: abstract concept resolution ===
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 10656.21it/s]
+  abstract concept geometric hits@1 = 0.83  (concrete entity GEO-25b: 0.80)
+  lexical baseline                  = 0.08  (chance 0.08)
+
+--- VERDICT ---
+GEO-78: PASS - semantic matching extends to ABSTRACT concepts (0.83 vs lexical 0.08): descriptions of emotions/ideas resolve to the concept word. The distributional semantic capability is not limited to concrete entities.
+DONE
