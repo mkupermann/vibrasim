@@ -1,0 +1,10 @@
+=== GEO-50: schema-general auto-dispatch ===
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 9426.64it/s]
+  schema A people: 4/4 = 1.00
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 10782.00it/s]
+  schema B products: 4/4 = 1.00
+
+--- VERDICT ---
+GEO-50: PASS - the SAME schema-general agent (field-parameterized operators) works on two different schemas (people 1.00, products 1.00). The auto-dispatch pattern is schema-general, a usable tool for arbitrary data.
+DONE

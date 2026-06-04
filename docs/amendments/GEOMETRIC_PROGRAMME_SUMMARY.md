@@ -1,4 +1,4 @@
-# EQMOD-3 Geometric programme — summary (GEO-1 → GEO-47)
+# EQMOD-3 Geometric programme — summary (GEO-1 → GEO-50)
 
 ## The new approach
 Substrate redefined as a learnable GEOMETRIC concept space over a real LLM: relations = transformations,
@@ -70,4 +70,4 @@ follows the store over its prior 1.00 vs 0.00, abstains vs confabulates, incl. m
 scale limit MITIGATED (GEO-40b: per-hop re-ranking, 2-hop 0.87->1.00 at 400); validated MODEL- and DOMAIN-
 robust (GEO-36/37). Usable artifacts: tools/geometric_reasoner.py + tools/grounded_qa.py + README + pytest.
 Open (need bigger infra): open-domain coverage (larger LLM), robust multi-attribute composition, very-large
-scale (ANN). Extra capabilities: contradiction detection (GEO-41), relational joins (GEO-42), temporal/versioned-fact reasoning (GEO-47), cross-lingual retrieval (GEO-46, German->English via multilingual model). Deployable on noisy data via resolve_entity (GEO-43/44/45).
+scale (ANN). Extra capabilities: contradiction detection (GEO-41), relational joins (GEO-42), temporal/versioned-fact reasoning (GEO-47), cross-lingual retrieval (GEO-46, German->English via multilingual model). Deployable on noisy data via resolve_entity (GEO-43/44/45). Assembled into an auto-dispatching agent (GEO-49) that is SCHEMA-GENERAL via field-parameterized operators (GEO-50, works on people & products schemas). Three usable modules: geometric_reasoner / grounded_qa / unified_reasoner; 11/11 pytest.
