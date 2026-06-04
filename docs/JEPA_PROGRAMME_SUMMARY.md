@@ -115,3 +115,38 @@ Toward conceptual understanding, the concrete next needs (each established, none
 cognitive maps (metric + taxonomic relations); grounding the structural machinery in real perceptual/linguistic
 data at scale (now feasible on the GPU); and language as the interface to compositional concepts. These are
 genuine research directions, not a finished path - stated honestly rather than overclaimed.
+
+## ASSESSMENT UPDATE — JEP-26 .. JEP-38 (reasoning, integration, hardening)
+
+After the JEP-25 assessment, the programme extended into real-data reasoning, integration, and deliverable
+hardening. Honest additions:
+
+### New genuine results
+- **A working concept reasoner on REAL data** (JEP-26/28/29): mixed-curvature (Euclidean relatedness + hyperbolic
+  IS-A) over WordNet; generalizes IS-A to held-out hypernym pairs (0.86 on 366 concepts with adequate compute);
+  shipped + tested + documented (tools/concept_reasoner.py, +README, +pytest).
+- **The two threads COMPOSE** (JEP-34/35/36): an agent acts on conceptual goals - single ("reach a carnivore"),
+  logical ("mammal AND NOT carnivore"), and sequential ("a carnivore THEN a plant") - grounding via IS-A and
+  navigating with the world model. Knowledge informs action.
+- **The honest boundary is demonstrated, not just claimed** (JEP-37): on real WordNet the integration degrades
+  1.00 -> 0.79, inheriting the component's is_a reliability.
+
+### New honest limits / corrections
+- **Scaling needs compute proportional to hierarchy size/depth** (JEP-29/31): 0.91 (77) -> 0.86 (366) -> 0.53-0.65
+  (1170, under-converged). The GPU enables it; I did not push the full mammal tree to convergence.
+- **is_a had a real correctness bug** (cross-branch false-positives) found by stress-testing my OWN deliverable,
+  fixed with a calibrated classifier (JEP-32, 0.96); a residual remains on SIBLINGS (JEP-33 NULL - the distance-
+  feature fix failed; needs entailment cones).
+- **The hyperbolic generality SIGN is unpinned** and can rarely invert (JEP-37/38); a radial-depth anchor stabilizes
+  it modestly (kept as default) but does not improve the calibrated accuracy.
+- Caught and fixed a pushed-RED test (JEP-32 follow-up); reverted a fix that did not work (JEP-33); corrected my own
+  over-strong framing of an anomaly (JEP-38 vs JEP-37).
+
+### Net honest bottom line (unchanged in spirit, sharper in detail)
+The EQMOD-4 programme builds and COMPOSES the structured building blocks of understanding - perception, world
+models, planning, relational/conceptual reasoning, and goal-directed action over concepts - validated on real
+data, shipped as usable tested tools, with every limit (scale, siblings, sign-stability, the toy regime) drawn
+honestly. It is NOT human-level understanding and claims NO novelty (every method named as established: SR/grid-
+cells, predictive coding, Poincare embeddings, product manifolds, set logic, MPC). The frontier (entailment-
+geometry for fine relations, convergent-scale grounding, language) is open and named as such. ~38 rungs, NULLs as
+findings, ~13 self-corrections including catching a shipped bug, a red test, and an over-claimed anomaly.
