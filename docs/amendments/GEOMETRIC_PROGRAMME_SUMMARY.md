@@ -1,4 +1,4 @@
-# EQMOD-3 Geometric programme — summary (GEO-1 → GEO-42)
+# EQMOD-3 Geometric programme — summary (GEO-1 → GEO-47)
 
 ## The new approach
 Substrate redefined as a learnable GEOMETRIC concept space over a real LLM: relations = transformations,
