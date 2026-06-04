@@ -1,0 +1,10 @@
+=== GEO-22: scale sweep ===
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 10520.49it/s]
+  N=  25  1-hop=1.00  2-hop=1.00  (chance 0.040)
+  N= 100  1-hop=0.99  2-hop=0.99  (chance 0.010)
+  N= 400  1-hop=0.98  2-hop=0.87  (chance 0.003)
+
+--- VERDICT ---
+GEO-22: characterization (curve above is the finding).
+DONE
