@@ -32,3 +32,17 @@ CALIBRATION (GEO-23 calibrated tau on a held-out split and got 1.00); a guessed 
 retuned post-hoc. **Honest takeaway:** the system integrates and is usable; deploying it means calibrating
 the abstention threshold on a small dev set (answerable vs out-of-KB), exactly as GEO-23 prescribes. Caveat
 added to the module docs.
+
+## GEO-32b — calibration did NOT fix abstention; an honest grounding refinement
+Calibrating tau on a labelled dev set (GEO-23 method) gave tau=0.41 (~ the guessed 0.40) and abstention
+stayed 0.67. Diagnosis: the failing question "Who is the CEO?" has maxsim 0.434 (nearest "Frank is a product
+manager...") — it is DOMAIN-ADJACENT (CEO ~ manager/role) though no CEO is stored; the genuinely out-of-
+domain questions abstain fine (capital of France 0.14, stock price 0.18).
+
+**Honest refinement of the grounding claim (GEO-23):** similarity-threshold abstention reliably rejects
+OUT-OF-DOMAIN questions (low similarity) but NOT IN-DOMAIN-but-unanswerable ones (a question that looks like
+the stored facts but has no actual answer). GEO-23 scored 1.00 because its unanswerable questions (other
+countries) were genuinely dissimilar; the harder in-domain-unanswerable case needs ANSWER VERIFICATION (does
+the retrieved fact entail an answer to the question?), which a retrieval threshold alone cannot do. The
+calibrate_abstention() helper (added to the module) is still the right tool for the out-of-domain case, but
+its limit is now documented. This bounds grounding honestly: geometry filters relevance, not answerability.
