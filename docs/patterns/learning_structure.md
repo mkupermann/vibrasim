@@ -55,3 +55,15 @@ are, so under per-step noise p, reliability decays ~(1-p)^k — EXPONENTIALLY wi
 - LESSON: human-like robust inference under noise is NOT a single deep clean chain; it is MANY independent
   derivation paths + voting, with redundancy/error-correction scaling with inferential depth. This is why brittle
   long chains fail and why brains/robust systems use massively redundant, re-derived, cross-checked inference.
+
+## The complete inference-robustness picture: CHAINING vs AGGREGATION (JEP-137/138/140)
+- **CHAINING compounds** (deduction multi-hop, transitive closures, insertion sorts): a k-step result needs ALL k
+  steps correct -> reliability ~(1-p)^k, fragile, decays exponentially with DEPTH (JEP-137).
+- **AGGREGATION averages** (induction = majority over instances; redundant DAG paths = vote over derivations):
+  tolerates noise up to ~50% where the majority flips (JEP-140: induction 0.91 @30% noise vs deduction depth-4
+  0.20).
+- **The cure for chaining fragility IS aggregation**: many independent derivation paths + voting (JEP-138) makes
+  brittle deduction robust (recall), at a precision cost. Confidence-via-path-count, however, does NOT improve
+  precision (JEP-139 NULL) — redundancy helps RECALL, not precision.
+- LESSON: human-like robust inference under noise = AGGREGATION + REDUNDANCY, not deep clean chains. Match the
+  inference SHAPE to the noise: if data is noisy, prefer wide aggregation over deep chaining.
