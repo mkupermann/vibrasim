@@ -337,3 +337,10 @@ def test_learned_composition_rule():
     e.add_rule("uncle", "parent", "sibling")          # a learned (JEP-129) composition rule
     assert e.relation_holds("alice", "uncle", "tom")  # derived, never stored
     assert not e.relation_holds("alice", "uncle", "carol")
+
+
+def test_is_a_confidence_is_graded():
+    e = UnderstandingEngine(seed=1)
+    e.tell("A poodle is a dog."); e.tell("A dog is an animal."); e.tell("A poodle is a pet.")
+    assert e.is_a_confidence("poodle", "animal") >= 1   # at least one derivation path
+    assert e.is_a_confidence("poodle", "fish") == 0      # no path
