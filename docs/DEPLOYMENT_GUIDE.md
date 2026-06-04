@@ -71,7 +71,9 @@ no prior to check against). Mitigation = data provenance/curation. Keep your sto
 Retrieval quality is the accuracy ceiling. To improve it: use a better base model (mpnet) and re-ranking and
 entity-resolution (all shipped). Do NOT fine-tune the embedder on a handful of examples — both a linear adapter
 (GEO-91) and proper contrastive fine-tuning (GEO-92) failed on ~10 pairs (data-limited; a pretrained embedder
-is already strong). Fine-tuning helps only with SUBSTANTIAL labelled query-fact pairs (hundreds+).
+is already strong). Fine-tuning embedders on labelled pairs is a STANDARD method in the literature, but this programme did NOT
+demonstrate it (GEO-91/92 data-limited; GEO-93 had no headroom) — treat it as plausible-but-unshown here, and
+rely on the DEMONSTRATED levers (better model, re-ranking, entity-resolution).
 
 ## Bilingual / multilingual use (GEO-89)
 For a mixed-language KB (e.g. German + English notes/contacts), use the multilingual model
