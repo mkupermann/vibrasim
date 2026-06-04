@@ -1,6 +1,6 @@
 # A proper LEARNING + UNDERSTANDING method on the PC, with geometric ML/LLM — the answer
 
-Written after the autonomous EQMOD-3 run (GEO-1 → GEO-21), every claim a pre-registered experiment with
+Written after the autonomous EQMOD-3 run (GEO-1 → GEO-30), every claim a pre-registered experiment with
 controls. Honest verdicts; established methods named as such. This is the Phase-2 deliverable, replacing the
 abandoned EQMOD physics substrate (which Phase-1 proved computationally empty — see STRATEGIC_ANSWER.md).
 
@@ -33,7 +33,8 @@ boundary is mapped precisely.
 ## The precise BOUNDARY (what geometry does vs what needs symbols/memory/training)
 | task | geometry alone | resolution |
 |------|----------------|------------|
-| retrieval, analogy, multi-hop chaining | STRONG (≈1.0 on clean data) | — |
+| named-entity retrieval / multi-hop chaining | STRONG (≈1.0) but LEXICALLY solvable (GEO-25) | — |
+| semantic retrieval (descriptions), analogy | STRONG, NOT lexical (GEO-25b 0.80 vs 0.10) | — |
 | relations linear in embedding space | STRONG (few-shot) | — |
 | arbitrary unstructured new facts | FAILS (random offsets) | key-value MEMORY |
 | antonyms / fine sense distinctions | WEAK (0.54) | — |
@@ -52,8 +53,10 @@ behind why geometry can read known relations but not arbitrary new ones.
 
 ## Honest caveats
 - GEO-15–19 saturate at 1.00 because they use small, clean, well-known entities where MiniLM is excellent.
-  They prove the method is **sound and integrates**, not that NLU is solved. Real degradation is expected
-  at scale, with noisy text and ambiguous entities (probed next).
+  They prove the method is **sound and integrates**, not that NLU is solved. Scale was measured (GEO-22):
+  1-hop holds (0.98 at 400 facts) but 2-hop falls to 0.87 as the pool grows and error compounds across hops.
+  Usable to a few hundred facts / 2-3 hops on CPU; beyond that, re-rank or add a symbolic index. Real
+  ambiguous entities (not synthetic names) would degrade further.
 - Every reasoning primitive here (TransE, MDS, word-vector analogy, RAG-style retrieval, key-value memory,
   neuro-symbolic split) is an ESTABLISHED method. The contribution is the honest synthesis on a PC + a
   precise boundary map, NOT a new algorithm.
@@ -104,8 +107,11 @@ memorization), and irreducible (random init cannot do it). This, plus semantic r
 Single-relation zero-shot transfer is reliable (GEO-27b), but composing TWO zero-shot-transferred attributes
 ("large AND predator" on unseen animals) collapses to chance (0.53) even though each attribute alone is
 0.75-0.78: noisy zero-shot scores compound under conjunction. So geometric zero-shot is per-relation, not
-robustly compositional — a concrete gap from human-level understanding. Clean composition needs trained
-structure (GEO-7/12), not noisy transfer.
+robustly compositional — a concrete gap from human-level understanding. This is NOT fundamental, though
+(GEO-29): with more entities and a cleanly-encoded attribute, composition recovers to 0.69 (vs random 0.52)
+— the conjunction is bounded by the WEAKEST per-attribute accuracy, so it rises as each attribute is encoded
+more cleanly. Clean composition needs trained structure (GEO-7/12) or well-encoded attributes, not noisy
+zero-shot transfer.
 
 ## Bottom line
 Phase-1 verdict was "the physics substrate has no computational value." Phase-2 verdict is the constructive
