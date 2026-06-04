@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 10 / predictions 17 (JEP-105 MISS: non-defeasible induce semantics) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
+Running tally: hits 10 / predictions 18 (JEP-107 MISS: predicted failures that don't occur in-scope) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
 
 | id | prediction (🔮 before) | outcome | hit? | lesson (don't repeat) |
 |----|------------------------|---------|------|------------------------|
@@ -24,3 +24,4 @@ Running tally: hits 10 / predictions 17 (JEP-105 MISS: non-defeasible induce sem
 | JEP-103 | 🔮 ~60-75%; conjunction + pronouns fail, locating boundary | 3/4 exactly that, then fixed to 4/4 | HIT | Conjunction split + pronoun rejection fixed; pronoun COREFERENCE documented as the next boundary (rejected not resolved). |
 | JEP-104 | 🔮 multi-parent works + 15 tests stay green; risk = explain/WH | capability 7/7 PASS, but tests broke (2 rounds): runners/tests read parents.get() as a string, now a set | MISS | predicted risks (explain/WH) were fine; the real break was EVERY reader of the changed structure. LESSON: a type change breaks all readers - grep tests+runners+logic before predicting green. |
 | JEP-105 | 🔮 100%; risk = cannot/can't parse | 3/5; the parse WORKED, miss was induce() blocking 'birds fly' on ANY counterexample (penguin) | MISS | Predicted wrong risk again. DEFEASIBLE reasoning: the general rule must SURVIVE exceptions (override per-instance), not be blocked by them - I coded the inverse. Fix: positives>=2 and positives>counterexamples. |
+| JEP-107 | 🔮 PARTIAL ~75-85%, object-antecedent FAILS | 4/4 in-scope; the predicted object-antecedent failure needs richer syntax the engine doesn't parse, so it's OUT OF SCOPE not a live failure | MISS | Like JEP-76: predicted a boundary that doesn't materialize in-scope. In simple declarative grammar the SUBJECT is the topic, so recency coreference works. Gate caught the behavior change (resolve-with-antecedent vs always-reject); test updated. |

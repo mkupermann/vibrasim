@@ -37,6 +37,7 @@ class UnderstandingEngine:
         self.properties: dict[str, set] = {}         # concept -> properties it HAS ("a robin can fly")
         self.not_properties: dict[str, set] = {}     # concept -> properties it explicitly LACKS
         self._induced: dict[str, set] = {}           # category -> inductively generalized properties
+        self._last_subject: str | None = None        # for simple pronoun coreference ("it"/"they")
 
     # --- vector primitives --------------------------------------------------
     def _rand(self) -> np.ndarray:
@@ -143,23 +144,27 @@ class UnderstandingEngine:
 
         Supports learning-by-correction: 'X is not a Y' retracts the belief X->Y and records a negative
         fact; a later 'X is a Z' installs the corrected parent."""
+        sentence = self._resolve_pronoun(sentence)
         pre = self._preprocess_isa(sentence)
         # properties: "X cannot/can't/can not VERB" (negative) before "X can VERB" (positive)
         mpn = re.match(r"^\s*(?:(?:an|a|the)\s+)?(\w+)\s+(?:cannot|can't|can\s+not)\s+(\w+)\s*\.?\s*$", pre, re.I)
         if mpn:
             x, p = self._norm_phrase(mpn.group(1)), mpn.group(2).lower()
             self.not_properties.setdefault(x, set()).add(p)
+            self._last_subject = x
             return ("neg_prop", x, p)
         mpp = re.match(r"^\s*(?:(?:an|a|the)\s+)?(\w+)\s+can\s+(\w+)\s*\.?\s*$", pre, re.I)
         if mpp:
             x, p = self._norm_phrase(mpp.group(1)), mpp.group(2).lower()
             self.properties.setdefault(x, set()).add(p)
+            self._last_subject = x
             return ("prop", x, p)
         mneg = self._NEG_ISA.match(pre)
         if mneg:
             child, parent = self._norm_phrase(mneg.group(1)), self._norm_phrase(mneg.group(2))
             self.neg_isa.add((child, parent))
             self.parents.get(child, set()).discard(parent)   # retract the corrected belief (one edge)
+            self._last_subject = child
             return ("neg_isa", child, parent)
         m = self._ISA.match(pre)
         if m:
@@ -175,14 +180,24 @@ class UnderstandingEngine:
                     for c in children:
                         self.parents.setdefault(c, set()).add(parent)   # DAG: a concept may have many parents
                         self.neg_isa.discard((c, parent))               # asserting overrides a prior negative
+                    self._last_subject = children[0]
                     return ("isa", children if len(children) > 1 else children[0], parent)
         m = self._SVO.match(sentence)
         if m:
             s, r, o = self._norm(m.group(1)), m.group(2).lower(), self._norm(m.group(3))
             self.facts.append((s, r, o))
             self._fact_vecs.append(self._bind(s, r, o))
+            self._last_subject = s
             return ("rel", s, r, o)
         return ("none",)
+
+    def _resolve_pronoun(self, sentence: str) -> str:
+        """Simple discourse coreference: if the sentence's subject is a pronoun, substitute the most
+        recently mentioned subject. Honest limit: assumes topic continuity (subject antecedent)."""
+        m = re.match(r"^\s*(\w+)\b", sentence)
+        if m and m.group(1).lower() in self._PRONOUNS and self._last_subject:
+            return re.sub(r"^\s*\w+", self._last_subject, sentence, count=1)
+        return sentence
 
     # --- inference / comprehension -----------------------------------------
     def ancestors(self, x: str) -> set[str]:

@@ -149,8 +149,18 @@ def test_conjunction_and_pronoun_rejection():
     e.tell("Robins and sparrows are birds.")          # conjoined subjects -> two facts
     assert e.is_a("robin", "bird") and e.is_a("sparrow", "bird")
     assert e.is_a("robin", "animal")                  # multi-hop through the split fact
-    assert e.tell("It is an animal.")[0] == "none"    # pronoun rejected, not guessed
-    assert "it" not in e.parents
+    # pronoun with NO antecedent is rejected (fresh engine, no prior subject)
+    e2 = UnderstandingEngine(seed=200)
+    assert e2.tell("It is an animal.")[0] == "none"
+    assert "it" not in e2.parents
+
+
+def test_pronoun_coreference_with_antecedent():
+    e = UnderstandingEngine(seed=107)
+    e.tell("A robin is a bird.")
+    assert e.tell("It is an animal.") == ("isa", "robin", "animal")   # it -> robin (recency)
+    e.tell("An animal is a living thing.")
+    assert e.is_a("robin", "living thing")
 
 
 def test_multi_parent_dag():
