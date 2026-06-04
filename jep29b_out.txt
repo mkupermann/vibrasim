@@ -1,0 +1,9 @@
+=== JEP-29b: more compute on WordNet carnivore (366 concepts) ===
+  held-out IS-A direction acc = 0.862  (was 0.68 at 10D/4000 iters)
+  nearest(dog.n.01) = ['basenji.n.01', 'bear.n.01', 'bitch.n.04', 'boxer.n.04', 'brabancon_griffon.n.01', 'bull_mastiff.n.01']
+
+--- VERDICT ---
+JEP-29b: PASS - more compute (20D, 12000 iters) RECOVERS scaling: held-out IS-A 0.86 on 366 real
+concepts. The JEP-29 failure was UNDER-TRAINING, not a fundamental limit - the reasoning result holds
+at real scale given adequate embedding dim + iterations. Nickel-Kiela (2017) established - named.
+DONE

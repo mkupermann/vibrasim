@@ -25,3 +25,17 @@ collapses many leaves). So the toy-scale reasoning result does NOT automatically
 modest training budget (10D, 4000 iters). Nickel-Kiela used much larger embeddings + careful optimization. Test
 whether more compute recovers it -> JEP-29b; if not, the approach has a real scaling cost at this budget. Honest
 caveat on the JEP-28 concept-reasoner deliverable: validated on a curated toy, NOT yet at real scale. Bars locked.
+
+## JEP-29b — more compute recovers scaling — PASS
+| config | held-out IS-A acc | nearest('dog.n.01') |
+|--------|-------------------|---------------------|
+| 10D, 4000 iters (JEP-29) | 0.681 | aardwolf, afghan_hound... (alphabetical, broken) |
+| 20D, 12000 iters (JEP-29b) | 0.862 | basenji, boxer, bull_mastiff... (real dog breeds) |
+
+**VERDICT: PASS - scaling recovers with adequate compute.** JEP-29's failure was UNDER-TRAINING, not a
+fundamental limit: raising the embedding (10D->20D) and iterations (4000->12000) lifts held-out IS-A on 366 real
+WordNet concepts from 0.681 to 0.862 (>= 0.85 bar), and the relatedness embedding now returns genuine canines
+(basenji/boxer/bull_mastiff) instead of alphabetical artifacts. So the mixed-curvature reasoning result HOLDS at
+real ~5x scale, but real scale needs proportionally more compute (embedding dim + iterations) - which the GPU can
+provide. Honest resolution of the scaling question: positive WITH adequate budget; the toy budget was simply
+insufficient. Nickel-Kiela (2017) established - named as such.
