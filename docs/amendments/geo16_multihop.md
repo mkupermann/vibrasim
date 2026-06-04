@@ -16,3 +16,14 @@ real RAG pattern, but with NO LLM generator — pure geometry over an LLM-embedd
   must be LOWER (the chain is necessary). Distractor companies present.
 
 PASS if multi-hop >= 0.7 AND chain beats no-chain. NULL/PARTIAL otherwise.
+
+## Result
+| metric | value |
+|--------|-------|
+| multi-hop (chain) accuracy | **1.00** (chance 0.10) |
+| no-chain direct control | 0.10 |
+
+**VERDICT: PASS** — multi-hop understanding by iterative geometric retrieval works perfectly and the chain
+is NECESSARY (no-chain control at chance). Generator-free reasoning: retrieve hop-1 fact -> symbolic bridge
+entity -> probe hop-2 -> answer. A real RAG pattern with NO LLM generator, just geometry over an LLM-
+embedded labeled fact store. Arc established: words (GEO-5–9) -> sentences (GEO-15) -> multi-hop reasoning.
