@@ -77,3 +77,24 @@ COMPLETE structure-learning picture: clean=easy (search-cost), noisy=hard (closu
 sparse-passive=ambiguous, sparse=ACTIVE-querying solves (n log n), one-shot=PRIORS help (Occam) with a bias cost.
 The genuine open problem (all of noisy+sparse+one-shot+unknown-prior at once, as humans handle) remains — it needs
 the RIGHT prior, which itself must be learned/meta-learned. Established (Occam/MDL, Bayesian Occam, no-free-lunch).
+
+## Meta-learning the prior (JEP-152) — and the exhaustive close
+The deepest piece ("learn the prior itself"): meta-learning a domain's complexity prior from a few structures HELPS
+one-shot inference of a new structure RELATIVELY (beats fixed-Occam 3.6x on a consistently-deep domain) but doesn't
+SOLVE it absolutely (0.18 — one example of a deep structure is under-determined even with the right prior), and is
+uninformative on heterogeneous domains (no regularity to learn).
+
+### THE EXHAUSTIVE STRUCTURE-LEARNING MAP (JEP-128..152), reframing the JEP-69/70 NULL
+| regime | learnable? | how / why |
+|--------|-----------|-----------|
+| clean | YES, easily | uniquely identifiable (exact match); limit is SEARCH COST (|R|^depth) |
+| noisy | HARD | closures COMPOUND errors; redundancy rescues at cost (k~size) |
+| sparse, passive | ambiguous | a violation never observed can't be detected |
+| sparse, ACTIVE | YES | choose informative queries (sort = n log n) |
+| one-shot | priors help | Occam helps simple-true, hurts complex-true (no free lunch) |
+| meta-prior | partial | learn the prior from a consistent domain; doesn't solve deep one-shot |
+
+So "can't learn arbitrary structure" was wrong for clean data and a partial truth for noisy/sparse/one-shot. The
+genuine residual: human-level learning combines compositional REUSE + ACTIVE querying + the RIGHT (meta-learned)
+prior SIMULTANEOUSLY, from noisy sparse one-shot data — no single ingredient suffices. Established methods
+throughout (consistency inference, ILP, active learning, Occam/MDL, hierarchical Bayes); named; no novelty.
