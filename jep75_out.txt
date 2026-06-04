@@ -1,0 +1,19 @@
+=== JEP-75: LEARN relations from data (TransE) vs hand-specifying them ===
+   control (random init): Hits@10=0.146  MRR=0.058  (chance~0.167)
+   epoch  50: held-out Hits@10=0.833  MRR=0.437
+   epoch 150: held-out Hits@10=0.854  MRR=0.465
+   epoch 300: held-out Hits@10=0.854  MRR=0.568
+   per-relation held-out Hits@10:
+      R0: 0.900 (n=20)
+      R1: 0.818 (n=11)
+      R2: 1.000 (n=7)
+      R3: 0.700 (n=10)
+
+--- VERDICT ---
+JEP-75: PASS - relations LEARNED from triples (TransE) generalize to UNSEEN facts: held-out
+Hits@10=0.854 (>=0.80), MRR=0.568 (>=0.50), vs random control 0.146. The relational
+structure the system composes over need NOT be hand-specified - it can be LEARNED from relational
+data and predict new facts. Closes gap #5 in the toy regime. Established (TransE, Bordes 2013), named.
+HONEST BOUND: this is the learnable regime (relations w/ consistent offset). TransE's known weakness is
+symmetric / 1-to-N / N-to-N relations; toy scale; supervised triples still required. No novelty.
+DONE
