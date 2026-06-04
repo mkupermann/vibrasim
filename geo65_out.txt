@@ -1,0 +1,10 @@
+=== GEO-65: ambiguous reference handling ===
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 10615.88it/s]
+  ambiguity detection balanced-acc = 1.00  (TPR 1.00, TNR 1.00)
+  'Smith' -> ('AMBIGUOUS', ['John Smith', 'Mary Smith', 'Peter Smith'])
+  'Khan'  -> ('OK', ['Carol Khan'])
+
+--- VERDICT ---
+GEO-65: PASS - ambiguous reference handling surfaces candidates (1.00): a surname matching >1 entity is flagged AMBIGUOUS with the candidate set, instead of silently answering for one. Trustworthy disambiguation.
+DONE
