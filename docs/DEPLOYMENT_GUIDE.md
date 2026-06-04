@@ -53,6 +53,13 @@ Grounding amplifies retrieval BOTH ways:
 - **Noise:** character typos x near-duplicate entities are the main failure (GEO-43); fix with entity
   resolution. Paraphrase is handled fine; near-duplicates with clean text are fine.
 
+## Don't over-engineer — simpler is often more robust (GEO-87)
+Stacking a trained router + HARD kind-scoping made the agent WORSE (0.67) than plain unscoped retrieve + rerank
++ abstain (0.90): router mis-routes + hard scoping amplifies the error into an IDK. Use kind-scoping only when
+you KNOW the kind (explicit) or as a SOFT prior (boost, don't filter); confidence-gate the router. The simple
+robust pipeline (unscoped retrieve -> rerank -> abstain) is a strong default; add components only when they
+measurably help on YOUR data.
+
 ## The irreducible residual risk (GEO-82)
 Most GIGO is mitigable: coverage gaps -> abstention; conflicting facts -> conflict detection; wrong PUBLIC-
 knowledge facts -> optional LLM-prior fact-check (`gen` the question, compare to stored answer; catches errors
