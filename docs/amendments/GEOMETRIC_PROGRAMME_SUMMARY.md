@@ -29,8 +29,8 @@ module: tools/geometric_reasoner.py (+ docs/patterns/geometric_reasoner.md).
 | Integrated learn->apply->chain->aggregate (held-out) | GEO-19 | PASS MILESTONE 1.00 | clean entities |
 
 ## Unifying principle (GEO-18/20/41/42)
-Every operation beyond pure retrieval = geometry RESOLVES (relevance/entities/relations) + symbolic layer
-OPERATES (count/negate/compare/join/contradiction-detect). Pure geometry is at/below chance on the symbolic
+Every operation beyond pure retrieval = geometry RESOLVES/GATHERS (relevance/entities/relations) + symbolic
+layer OPERATES (count/negate/compare/join/contradiction-detect/time-filter). Pure geometry is at/below chance on the symbolic
 part each time; the hybrid solves it (aggregation 0->1.00, contradiction 0.50->0.94, joins 1.00). A geometric
 resolver feeding a thin symbolic operator layer.
 
@@ -70,4 +70,4 @@ follows the store over its prior 1.00 vs 0.00, abstains vs confabulates, incl. m
 scale limit MITIGATED (GEO-40b: per-hop re-ranking, 2-hop 0.87->1.00 at 400); validated MODEL- and DOMAIN-
 robust (GEO-36/37). Usable artifacts: tools/geometric_reasoner.py + tools/grounded_qa.py + README + pytest.
 Open (need bigger infra): open-domain coverage (larger LLM), robust multi-attribute composition, very-large
-scale (ANN). Extra capabilities: contradiction detection (GEO-41), relational joins (GEO-42).
+scale (ANN). Extra capabilities: contradiction detection (GEO-41), relational joins (GEO-42), temporal/versioned-fact reasoning (GEO-47), cross-lingual retrieval (GEO-46, German->English via multilingual model). Deployable on noisy data via resolve_entity (GEO-43/44/45).
