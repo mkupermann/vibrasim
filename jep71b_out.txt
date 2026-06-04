@@ -1,0 +1,9 @@
+=== JEP-71b: analogy via VSA with UNITARY vectors ===
+  analogy completion (A:B::C:?) hits@1 = 1.000
+
+--- VERDICT ---
+JEP-71b: PASS - structural ANALOGY works via VSA with unitary vectors: from a SINGLE (A,B) example
+the transformation is inferred and transferred to a NEW C (1.00) - one-shot analogical transfer,
+a hallmark of human understanding, demonstrated structurally. JEP-71 NULL was non-unitary vectors
+(noisy unbinding). Established (VSA/HRR analogy with unitary HRR, Plate), named as such.
+DONE
