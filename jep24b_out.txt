@@ -1,0 +1,6 @@
+=== JEP-24b: Poincare via transitive-closure + Riemannian SGD (N=63) ===
+  hyperbolic Spearman = 0.831   (Euclidean 0.41, JEP-24 plain 0.54)
+
+--- VERDICT ---
+JEP-24b: PARTIAL/NULL - hyperbolic Spearman 0.83
+DONE
