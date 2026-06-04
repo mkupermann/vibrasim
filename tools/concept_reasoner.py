@@ -100,6 +100,9 @@ class ConceptReasoner:
                 neg.append((a, b))
 
         def feat(a, b):
+            # [hyperbolic distance, norm gap]. NOTE (JEP-33): a lateral-displacement 3rd feature did NOT
+            # help reject siblings (the ancestor-ranking loss pulls siblings close); siblings remain a
+            # residual weakness that would need entailment cones (angular containment), not distance features.
             return [self._hd(a, b), self.hnorm[a] - self.hnorm[b]]
         X = np.array([feat(*p) for p in pos] + [feat(*n) for n in neg], dtype=np.float64)
         y = np.array([1.0] * len(pos) + [0.0] * len(neg))
