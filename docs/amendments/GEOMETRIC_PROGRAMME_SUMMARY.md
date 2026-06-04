@@ -28,6 +28,12 @@ module: tools/geometric_reasoner.py (+ docs/patterns/geometric_reasoner.md).
 | Aggregation via retrieval + symbolic layer | GEO-18 | PASS 1.00 (pure geometry 0.00) | architecture |
 | Integrated learn->apply->chain->aggregate (held-out) | GEO-19 | PASS MILESTONE 1.00 | clean entities |
 
+## Unifying principle (GEO-18/20/41/42)
+Every operation beyond pure retrieval = geometry RESOLVES (relevance/entities/relations) + symbolic layer
+OPERATES (count/negate/compare/join/contradiction-detect). Pure geometry is at/below chance on the symbolic
+part each time; the hybrid solves it (aggregation 0->1.00, contradiction 0.50->0.94, joins 1.00). A geometric
+resolver feeding a thin symbolic operator layer.
+
 ## Practical EDGES over a frozen LLM
 - **Grounded abstention** (knows what it doesn't know): GEO-23 PASS (decision 1.00 calibrated; control confabulates 100%).
 - **Updatability**: GEO-30 PASS — stored counterfactuals override prior 1.00, runtime edit flips answer; no retraining.
