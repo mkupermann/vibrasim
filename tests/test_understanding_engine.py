@@ -37,3 +37,12 @@ def test_grounding_recognition():
     ok = [e.perceive(e.prototypes[c] + rng.normal(0, 0.6, e.feat_dim)) == c
           for c in e.prototypes for _ in range(20)]
     assert np.mean(ok) >= 0.95
+
+
+def test_boolean_composition():
+    e = _engine()
+    assert e.ask_bool("is a poodle an animal and is a poodle not a fish") is True
+    assert e.ask_bool("is a poodle a fish and is a poodle an animal") is False
+    assert e.ask_bool("is a poodle a fish or is a poodle an animal") is True
+    assert e.ask_bool("does the dog not chase the cat") is False
+    assert e.ask_bool("is a poodle not a fish") is True

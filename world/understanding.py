@@ -138,6 +138,38 @@ class UnderstandingEngine:
         q = self._bind(self._norm(s), r.lower(), self._norm(o))
         return max(self._cos(q, fv) for fv in self._fact_vecs) >= thresh
 
+    def _eval_clause(self, clause: str):
+        """Evaluate one atomic clause (is-a or relation), honouring a leading/embedded 'not'."""
+        c = clause.strip().rstrip("?").lower()
+        negate = False
+        # detect negation: "is not a", "does not", "not"
+        if re.search(r"\bnot\b", c):
+            negate = True
+            c = re.sub(r"\bnot\b", " ", c)
+            c = re.sub(r"\s+", " ", c).strip()
+        val = self.ask(c)
+        if val is None:
+            return None
+        return (not val) if negate else val
+
+    def ask_bool(self, question: str):
+        """Boolean-composed comprehension over atomic clauses: AND / OR / NOT (single connective + negation).
+
+        e.g. 'is a poodle an animal and is a poodle not a fish' -> True.
+        Mixed and/or precedence is deliberately out of contract (a later tier).
+        """
+        q = question.strip().rstrip("?").lower()
+        if " or " in q and " and " not in q:
+            clauses, op = re.split(r"\s+or\s+", q), "or"
+        elif " and " in q and " or " not in q:
+            clauses, op = re.split(r"\s+and\s+", q), "and"
+        else:
+            return self._eval_clause(q)  # single atomic clause (possibly negated)
+        vals = [self._eval_clause(cl) for cl in clauses]
+        if any(v is None for v in vals):
+            return None
+        return all(vals) if op == "and" else any(vals)
+
     def ask(self, question: str):
         """Route a simple question. 'is a poodle an animal' -> is_a; 'does the dog chase the cat' -> relation."""
         q = question.strip().rstrip("?").lower()
