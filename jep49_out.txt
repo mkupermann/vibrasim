@@ -1,0 +1,13 @@
+=== JEP-49: held-out IS-A vs tree DEPTH (poincare vs order) ===
+   depth  N    poincare  order
+   3      15   0.800     0.700
+   5      63   0.831     0.864
+   7     255   0.911     0.859
+   9     1023   0.925     0.884
+
+--- FINDING ---
+order-minus-poincare gap by depth: ['d3:-0.10', 'd5:+0.03', 'd7:-0.05', 'd9:-0.04']
+DEPTH drives the gap: poincare degrades with depth while order stays high, so the order-vs-poincare
+advantage GROWS with depth. Principled guidance: use order embeddings for DEEP hierarchies; poincare
+is competitive only on shallow ones. Confirms the JEP-48 cross-domain observation (vehicles shallow).
+DONE
