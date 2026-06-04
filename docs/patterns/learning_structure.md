@@ -67,3 +67,13 @@ are, so under per-step noise p, reliability decays ~(1-p)^k — EXPONENTIALLY wi
   precision (JEP-139 NULL) — redundancy helps RECALL, not precision.
 - LESSON: human-like robust inference under noise = AGGREGATION + REDUNDANCY, not deep clean chains. Match the
   inference SHAPE to the noise: if data is noisy, prefer wide aggregation over deep chaining.
+
+## One-shot / minimal data: PRIORS help, with a bias cost (JEP-151)
+The "needs priors" piece of the noisy/sparse/one-shot frontier, measured: an Occam (simplicity) prior on minimal
+ambiguous data picks the true structure FAR better than random-among-consistent WHEN the true structure is SIMPLE
+(depth-1: 0.87 vs 0.17 from ONE example) but WORSE when it is genuinely COMPLEX (depth-3: 0.06 vs 0.18, under-fits).
+NO FREE LUNCH: priors buy one-shot generalization ONLY when the world matches the prior; bias is the price. So the
+COMPLETE structure-learning picture: clean=easy (search-cost), noisy=hard (closures compound; redundancy at cost),
+sparse-passive=ambiguous, sparse=ACTIVE-querying solves (n log n), one-shot=PRIORS help (Occam) with a bias cost.
+The genuine open problem (all of noisy+sparse+one-shot+unknown-prior at once, as humans handle) remains — it needs
+the RIGHT prior, which itself must be learned/meta-learned. Established (Occam/MDL, Bayesian Occam, no-free-lunch).
