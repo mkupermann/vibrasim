@@ -1,0 +1,13 @@
+=== JEP-41: dimension-scaling curve, held-out IS-A vs hyp_dim (WordNet carnivore 366, 16k iters) ===
+   hyp_dim   held-out IS-A (calibrated)
+      10     0.784
+      20     0.778
+      40     0.771
+      80     0.771
+
+--- FINDING ---
+Held-out IS-A vs dimension: ['10:0.78', '20:0.78', '40:0.77', '80:0.77'], gain +-0.01.
+DIMENSION does NOT help (0.78->0.77): the ~0.78 ceiling is the METHOD/readout, not
+capacity. The calibrated-Poincare reasoner has a fundamental accuracy limit on deep real hierarchies
+- needs a different approach (e.g. entailment cones tuned for depth, or order embeddings). Honest.
+DONE
