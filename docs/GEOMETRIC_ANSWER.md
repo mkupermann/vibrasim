@@ -58,8 +58,9 @@ behind why geometry can read known relations but not arbitrary new ones.
 - GEO-15–19 saturate at 1.00 because they use small, clean, well-known entities where MiniLM is excellent.
   They prove the method is **sound and integrates**, not that NLU is solved. Scale was measured (GEO-22):
   1-hop holds (0.98 at 400 facts) but 2-hop falls to 0.87 as the pool grows and error compounds across hops.
-  Usable to a few hundred facts / 2-3 hops on CPU; beyond that, re-rank or add a symbolic index. Real
-  ambiguous entities (not synthetic names) would degrade further.
+  Usable to a few hundred facts / 2-3 hops on CPU. The degradation is MITIGABLE (GEO-40b): a cross-encoder
+  re-ranker applied PER HOP recovers 2-hop accuracy from 0.87 to 1.00 at 400 facts, extending the envelope at
+  modest latency. Real ambiguous entities (not synthetic names) would still degrade further.
 - Every reasoning primitive here (TransE, MDS, word-vector analogy, RAG-style retrieval, key-value memory,
   neuro-symbolic split) is an ESTABLISHED method. The contribution is the honest synthesis on a PC + a
   precise boundary map, NOT a new algorithm.
