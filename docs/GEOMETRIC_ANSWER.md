@@ -213,6 +213,14 @@ why/what-if, and similarity-grounding does NOT flag this as unanswerable (releva
 GEO-32b limit). So "understanding" here = look up and compute over stored facts, not reason about why/what-if.
 A fix needs answer-TYPE verification beyond a similarity threshold. Precisely bounds the understanding claim.
 
+## Grounding is double-edged — the honest deployment caveat (GEO-79/80)
+Grounding amplifies retrieval BOTH ways: with a CORRECT fact it makes a weak 0.5B model reliable (0.17->1.00,
+GEO-79); with a WRONG fact it makes a correct model confidently wrong (0.90->0.00, follows the bad context
+100%, GEO-80). So the system's value is entirely contingent on RETRIEVAL QUALITY, and abstention is the
+essential safety net. Deployment: invest in retrieval (re-rank, entity-resolution, better embeddings), abstain
+on low confidence, and prefer extractive answers the user can verify. Grounding is the biggest strength AND
+the biggest risk — retrieval quality + abstention are what make it trustworthy.
+
 ## Bottom line
 Phase-1 verdict was "the physics substrate has no computational value." Phase-2 verdict is the constructive
 counterpart: **redefining the substrate as a geometric concept space over an LLM yields a real, working,
