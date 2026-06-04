@@ -23,6 +23,17 @@ building blocks, each via established methods (named), with their honest limits.
 4. **Honest depth/capacity limits are real and cognitively plausible** - VSA recursion fails past depth ~4-5,
    like humans on deep center-embedding.
 
+
+## 5. Bridging GROUNDING and STRUCTURE: unitarize learned concepts (JEP-72/73)
+Grounded learning produces CORRELATED, similarity-structured concept vectors (real concepts look alike: cosine
+0.77 on Fashion-MNIST); VSA structured composition needs quasi-ORTHOGONAL, often UNITARY vectors. Raw learned
+concepts BREAK VSA (relational query 0.13, below chance). The bridge: WHITENING fixes relational composition
+(1.00) but NOT analogy (0.47, which uses the concept as an unbinding key needing unitarity); UNITARIZING (unit-
+magnitude FFT, identity preserved in phase) fixes BOTH (1.00/1.00). So: to plug LEARNED concepts into symbolic
+composition, UNITARIZE them. Different structural operations have different representation requirements (relational
+-> decorrelated; analogy -> unitary) - match the representation to the operation. This resolves the connectionist-
+symbolic tension (continuous similarity reps vs discrete compositional symbols) with a concrete transform.
+
 ## The honest gap to human-level (mapped, not crossed)
 These are CAPABILITIES demonstrated in TOY isolation with HAND-BUILT structure (roles given, not learned), via
 ESTABLISHED methods (decomposition, VSA/HRR, SR) - NO novelty. A human-level system would (1) LEARN the
