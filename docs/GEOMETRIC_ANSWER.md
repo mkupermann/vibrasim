@@ -129,6 +129,12 @@ robustly compositional — a concrete gap from human-level understanding. This i
 more cleanly. Clean composition needs trained structure (GEO-7/12) or well-encoded attributes, not noisy
 zero-shot transfer.
 
+## Reproducibility (GEO-36)
+The genuinely-geometric core (semantic descriptive retrieval, zero-shot transfer) REPLICATES on a different,
+architecturally-distinct embedding model (all-mpnet-base-v2): semantic retrieval improves to 1.00 (vs lexical
+0.10), zero-shot transfer to 0.88. The findings are model-robust, not MiniLM artifacts; a stronger model
+gives cleaner results (use mpnet for quality, MiniLM for speed).
+
 ## Bottom line
 Phase-1 verdict was "the physics substrate has no computational value." Phase-2 verdict is the constructive
 counterpart: **redefining the substrate as a geometric concept space over an LLM yields a real, working,
