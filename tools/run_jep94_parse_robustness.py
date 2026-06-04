@@ -15,9 +15,9 @@ def main():
     # every variant must parse to an isa
     for v,t in parsed: ck(f"parse: {v}", t[0], "isa")
     # the extracted edges must be the intended ones
-    ck("poodle->dog", eng.parents.get("poodle"), "dog")
-    ck("dog->animal", eng.parents.get("dog"), "animal")
-    ck("animal->living thing", eng.parents.get("animal"), "living thing")
+    ck("poodle->dog", "dog" in eng.parents.get("poodle", set()), True)
+    ck("dog->animal", "animal" in eng.parents.get("dog", set()), True)
+    ck("animal->living thing", "living thing" in eng.parents.get("animal", set()), True)
     # comprehension incl multi-hop holds
     ck("poodle is animal (2-hop)", eng.is_a("poodle","animal"), True)
     ck("poodle is living_thing (3-hop)", eng.is_a("poodle","living_thing"), True)
