@@ -337,6 +337,26 @@ class UnderstandingEngine:
                 return f"Contradiction: I was told {self._art(x)} is NOT {self._art(c)}."
         return None
 
+    def is_a_confidence(self, x: str, c: str) -> int:
+        """Confidence-graded IS-A: the number of independent derivation PATHS from x to c in the IS-A DAG.
+        Under noisy knowledge a TRUE conclusion typically has MORE supporting paths than a spurious one, so a
+        path-count threshold improves precision over boolean is_a (operationalizes JEP-138's redundancy cure)."""
+        x, c = self._norm_phrase(x), self._norm_phrase(c)
+        if (x, c) in self.neg_isa:
+            return 0
+        # count paths via memoized DP over the DAG (polynomial; acyclic assumed)
+        memo = {}
+        def npaths(u):
+            if u == c:
+                return 1
+            if u in memo:
+                return memo[u]
+            memo[u] = 0  # guard against cycles
+            total = sum(npaths(p) for p in self.parents.get(u, ()))
+            memo[u] = total
+            return total
+        return npaths(x)
+
     def is_a(self, x: str, c: str) -> bool:
         """Multi-hop IS-A by transitive closure; an explicit negative fact (correction) overrides."""
         x, c = self._norm_phrase(x), self._norm_phrase(c)
