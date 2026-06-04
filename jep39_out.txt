@@ -1,0 +1,20 @@
+=== JEP-39: hyperbolic entailment cones for IS-A (sibling fix) ===
+  sanity:
+    is_a(cat,mammal)=True exp=True OK
+    is_a(cat,animal)=True exp=True OK
+    is_a(cat,carnivore)=True exp=True OK
+    is_a(cat,dog)=False exp=False OK
+    is_a(dog,cat)=False exp=False OK
+    is_a(eagle,sparrow)=False exp=False OK
+    is_a(oak,pine)=False exp=False OK
+    is_a(rose,animal)=False exp=False OK
+    is_a(oak,mammal)=False exp=False OK
+    is_a(mammal,cat)=False exp=False OK
+  is-a classification: TPR=1.000 TNR=1.000 acc=1.000
+
+--- VERDICT ---
+JEP-39: PASS - hyperbolic ENTAILMENT CONES fix the sibling residual: ALL sanity cases correct incl.
+siblings (cat/dog, eagle/sparrow rejected) AND cross-branch AND ancestors, classification acc 1.00.
+Angular containment (a in b's cone) succeeds where distance/norm features failed (JEP-33) - siblings
+are angularly OUTSIDE each other's cones. Ganea et al. 2018 established - named as such.
+DONE
