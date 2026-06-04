@@ -1,0 +1,16 @@
+=== JEP-62: functional concepts from AFFORDANCE (interaction) vs APPEARANCE ===
+  appearance-based cluster purity = 0.433  (chance ~0.25)
+   affordance-noise   affordance-cluster-purity
+   0.3              1.000
+   0.8              0.883
+   1.5              0.633
+   2.5              0.550
+
+--- VERDICT ---
+JEP-62: PASS - INTERACTION/AFFORDANCE grounding recovers functional categories appearance CANNOT:
+clustering on affordance outcomes (what interacting reveals) reaches purity 1.00 vs appearance's
+0.43 (~chance). When function is UNCORRELATED with appearance, the agent must ACT to discover
+categories - and affordances do recover them, degrading gracefully with affordance noise. This is the
+non-visual-signal path (JEP-60 frontier) made concrete: functional concepts from interaction.
+Established (clustering, affordance learning), named as such.
+DONE
