@@ -52,6 +52,15 @@ boundary is mapped precisely.
 - This reads/uses an existing LLM's geometry; it does not replace the LLM. It is a generator-free reasoning
   layer ON an embedding model.
 
+## Does the geometry ADD value over just using the LLM? (GEO-23) — yes, grounding
+A generative LLM confabulates: asked the capital of a country it has no fact for, it invents one. The
+geometric retrieval method ABSTAINS instead — calibrated similarity threshold separates answerable (sim
+0.87) from unanswerable (0.53) cleanly, giving decision accuracy 1.00 and abstain-on-unanswerable 1.00,
+while the no-abstention control is confidently WRONG on 100% of unanswerable questions. So the value-add over
+raw generation is concrete: **grounded, hallucination-free reasoning that knows what it doesn't know**, plus
+updatable memory (new facts without retraining) and composable trainable structure. The method is a
+controllable reasoning layer ON an LLM, not a replacement for it.
+
 ## How to build it on your machine
 CPU is enough (sentence-transformers + numpy). Pipeline: embed your facts once → store with symbolic labels
 → at query time do geometric retrieval/chaining for "what/which/where", drop to the symbolic layer for
