@@ -206,6 +206,13 @@ symbolic operators fix count/compare, grounded abstention fixes unanswerables â€
 So the value is real at the SYSTEM level even though no single component is novel. THAT is the honest
 contribution: a rigorous, deployable synthesis of established methods, 3x naive RAG, precisely scoped.
 
+## Honest limit of "understanding" (GEO-75)
+The system does RETRIEVAL + SET-LOGIC, not CAUSAL/COUNTERFACTUAL/inferential reasoning. On "why is X on team
+Y?" or "if X moved to Z, who...?" it returns the related FACT (high entity similarity) without answering the
+why/what-if, and similarity-grounding does NOT flag this as unanswerable (relevance != answerability, the
+GEO-32b limit). So "understanding" here = look up and compute over stored facts, not reason about why/what-if.
+A fix needs answer-TYPE verification beyond a similarity threshold. Precisely bounds the understanding claim.
+
 ## Bottom line
 Phase-1 verdict was "the physics substrate has no computational value." Phase-2 verdict is the constructive
 counterpart: **redefining the substrate as a geometric concept space over an LLM yields a real, working,
