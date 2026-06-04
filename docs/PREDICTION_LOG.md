@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 33 / predictions 51 (JEP-137 HIT — reasoning compounds errors like learning) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
+Running tally: hits 34 / predictions 52 (JEP-138 HIT — redundant paths cure compounding, with tradeoff) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
 
 | id | prediction (🔮 before) | outcome | hit? | lesson (don't repeat) |
 |----|------------------------|---------|------|------------------------|
@@ -58,3 +58,4 @@ Running tally: hits 33 / predictions 51 (JEP-137 HIT — reasoning compounds err
 | JEP-135 | 🔮 active ~n log n << passive, solves sparse; risk = cycle detection | active n log n (12x speedup at n=64), 1.00 correct; cycle-detection sub-test inadequate (flagged) | HIT (main) | Active querying solves the sparse-data limit (choose informative comparisons). Honest: noiseless oracle; single-long-cycle detection needs path-tracing, not demonstrated. |
 | JEP-136 | 🔮 active<<passive queries; risk = mis-vote corrupts sort, needs higher k | active strictly beats passive (0.60 vs 0.03 @n=16,k=11) BUT correctness degrades with n (sort compounds errors) | HIT | Both halves held. Noisy structure learning: active+redundant is the efficient route but redundancy must scale with structure SIZE (k~log n) — compounding. |
 | JEP-137 | 🔮 deeper chains degrade faster ~(1-p)^depth | depth1 0.90 -> depth4 0.52 @noise0.1; clean 1.00 | HIT | Reasoning COMPOUNDS errors like structure learning (134/136) — unified insight: any multi-step inference needs every step correct, reliability decays exponentially with depth under noise. |
+| JEP-138 | 🔮 DAG degrades slower than chain; risk = spurious-path false-positives | DAG TPR 0.89 vs chain 0.73 @noise0.2, but DAG FPR 0.14 vs 0.08 | HIT | Redundant paths error-correct (recall gain) at a precision cost. Closes the compounding arc: robust inference = many independent paths + aggregation, not one deep chain. |
