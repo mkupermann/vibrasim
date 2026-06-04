@@ -28,3 +28,16 @@ core claim. But this single blocked edge degraded the stale SR only to 0.89 (vs 
 (0.11) missed the pre-registered 0.2 margin. Single-edge variance is high: in a looped maze, many blocks barely
 disrupt (alternative paths remain). Bars locked, not retuned. JEP-15b averages over many blocked edges for a
 robust estimate of the model-based advantage.
+
+## JEP-15b — averaged over 25 transition changes — PASS
+| agent | mean reach | min |
+|-------|-----------|-----|
+| MODEL-BASED + MPC (local edit + replan) | 1.00 | 1.00 |
+| cached SR (stale) | 0.81 | 0.42 |
+
+**VERDICT: PASS.** Averaged over 25 blocked edges, model-based MPC recovers PERFECTLY (1.00, zero relearning)
+vs the cached SR's stale 0.81 (min 0.42). The explicit-world-model + MPC advantage for TRANSITION changes is
+robust. Honest complementarity: SR = instant REWARD revaluation (JEP-14b); explicit model + MPC = instant
+TRANSITION revaluation (JEP-15b). This is the concrete payoff of the model-based (JEPA/MPC) half of Michael's
+directive: an explicit, locally-editable world model + planning adapts to environment changes a cached value
+function cannot. Model-based planning / value iteration / MPC = established methods, named as such.
