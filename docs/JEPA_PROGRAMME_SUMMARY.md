@@ -92,7 +92,7 @@ goal-reaching; plus Hebbian+relaxation EBM (JEP-4) and predictive coding (JEP-6d
 NOT claimed: human-level understanding (open), GPU training on this AMD/Win machine (unavailable), or any
 novelty (all established methods, named as such).
 
-## FINAL HONEST ASSESSMENT (JEP-1 .. JEP-25b)
+## (EARLIER) HONEST ASSESSMENT (JEP-1 .. JEP-25b) — superseded by the FINAL ASSESSMENT at end of file
 
 ### What was genuinely achieved
 1. **A substrate-native realization of JEPA/EBM/MPC.** The full world-model agent - perception -> world model
@@ -163,3 +163,49 @@ honestly. It is NOT human-level understanding and claims NO novelty (every metho
 cells, predictive coding, Poincare embeddings, product manifolds, set logic, MPC). The frontier (entailment-
 geometry for fine relations, convergent-scale grounding, language) is open and named as such. ~38 rungs, NULLs as
 findings, ~13 self-corrections including catching a shipped bug, a red test, and an over-claimed anomaly.
+
+---
+
+## FINAL HONEST ASSESSMENT (whole programme, JEP-1 .. JEP-118c)
+
+### What was actually built
+1. **The substrate's primitives ARE backprop-free JEPA/EBM/MPC** (JEP-1..18): energy-based inference = relaxation,
+   learning = local plasticity (predictive coding matches backprop on MNIST/Fashion at depth); the full perception
+   -> world-model(SR/BTSP) -> MPC-planning loop runs backprop-free. The four-pillar capstone (JEP-78) shows
+   regularized JEPA (VICReg) + latent MPC with a collapse negative control; JEP-79/79b locate WHEN latent-
+   prediction beats generative (only under a capacity bottleneck, not automatically).
+2. **The substrate is IN the chain** (JEP-81/82): after an honest audit (0 of 108 prior runs imported it), the
+   EBM + predictor + MPC pillars were run on world.energy.EnergyNet itself.
+3. **The Understanding Engine** (world/understanding.py, JEP-92..115, 26 gated tests): a 100%-working,
+   substrate-legal (NO transformer) conversational system spanning all three of Michael's verbs — LEARN (told,
+   correction, examples, induction, observation, self-taught), REASON (multi-hop DAG, Boolean, three-valued,
+   contradiction, quantification, comparison), COMMUNICATE (Q&A with reasoning, WH, why, dialogue-teaching,
+   generation/describe).
+4. **A mostly-unsupervised grounding pipeline** (JEP-113..118c): perceive -> cluster (structure) -> cross-
+   situational word learning (meaning, no clean labels) -> wire taxonomy -> reason/describe, self-taught with
+   ZERO told facts in the favorable regime ('A dog is a mammal', learned not told).
+
+### The honest frontier (named, not crossed)
+- **Real-prose parsing**: classic/grammar extraction recovers ~2% of Boole's actual sentences (JEP-89/108b); a
+  permissive grammar's high parse rate is SPURIOUS (clauses-as-concepts). The no-transformer rule forbids the
+  learned extractors modern NLP uses for exactly this. This is the hard gate.
+- **Superordinate/abstract word learning**: cross-situational PMI underdetermines hierarchy LEVELS (JEP-118);
+  basic-level is robust, superordinate needs LCA-of-extension + adequate exposure (JEP-118c).
+- **Arbitrary unsupervised structure** (relations beyond IS-A, non-hierarchical features): JEP-69/70 NULL.
+- **Open-ended generation, polysemy/synonymy, rich embodied grounding, language at scale**: open.
+
+### Honest answers to Michael's recurring questions
+- **"Something innovative?"** NO. Every method is established and named (SR/grid-cells, predictive coding,
+  Poincare/order embeddings, VSA/HRR, TransE, VICReg, SCAN/Lake-Baroni, agglomerative clustering, cross-situational
+  learning, Hopfield, MPC). The transferable output is the working FOUNDATION + the DISCIPLINE.
+- **"Human-level understanding and communication?"** NO, and not pretended. A genuine, working, SMALL version of
+  human-like learning/understanding/communication on simple-to-natural language — the foundation to scale FROM,
+  with the hard, genuinely-open-under-no-transformer frontier honestly drawn. Boole is the final exam, not the primer.
+
+### The discipline (the real deliverable)
+~120 rungs, every acceptance bar pre-registered and never post-hoc tuned; predict-calibrate (19/32 hits, EVERY miss
+diagnosed into a durable lesson); ~25+ honest self-corrections including catching a SHIPPED bug, a RED test, an
+over-claimed anomaly, a committed-failing-test process error, a FRAGILE success (JEP-117 super-naming) corrected,
+and a FAILED fix (JEP-118b) owned. NULLs recorded as findings. Reusable wisdom surfaced as docs/patterns/. The
+deadlock-breaking PROCESS — measure before claiming, predict then diagnose, fail cleanly, name the established as
+established — is the genuine, transferable result.
