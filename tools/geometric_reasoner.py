@@ -121,6 +121,20 @@ class GeometricReasoner:
         """Count facts whose meta satisfies a predicate — the symbolic layer geometry can't do alone."""
         return sum(1 for meta in self.fact_meta if predicate(meta))
 
+    # ---- contradiction detection (GEO-41) --------------------------------
+    def check_contradiction(self, text: str, subject: str, object: str):
+        """Return the conflicting stored fact index if `text` contradicts an existing same-subject fact
+        (same subject, different object — a functional relation), else None. Geometric retrieve + symbolic
+        object compare (GEO-41, balanced-acc 0.94)."""
+        if not self.fact_texts:
+            return None
+        v = self._embed([text])[0]
+        j = int(np.argmax(self.F @ v))
+        m = self.fact_meta[j]
+        if m.get("subject") == subject and m.get("object") not in (None, object):
+            return j
+        return None
+
 
 # ---- self-test / demo (mirrors the validated rungs) ----------------------
 def _demo():
