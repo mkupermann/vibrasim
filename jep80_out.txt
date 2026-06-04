@@ -1,0 +1,12 @@
+=== JEP-80: direct K-step vs iterated 1-step latent prediction (H-JEPA building block) ===
+    K    iterated-1step R2    direct-Kstep R2     gap
+    1           0.967             0.931     -0.036
+    2           0.953             0.951     -0.002
+    4           0.925             0.916     -0.009
+    8           0.868             0.897     +0.029
+   12           0.810             0.893     +0.083
+
+--- VERDICT ---
+JEP-80: NULL/PARTIAL - K=12 gap +0.08 (direct 0.89, iter 0.81); bars 0.15/0.50.
+Compounding cost is smaller than the standard story at this scale - reported honestly.
+DONE
