@@ -1,0 +1,12 @@
+=== GEO-88: soft kind-scoping ===
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 9346.89it/s]
+  unscoped   = 1.00
+  hard-scope = 0.90
+  soft-scope boost=0.05 = 1.00
+  soft-scope boost=0.1 = 0.90
+  soft-scope boost=0.2 = 0.90
+
+--- VERDICT ---
+GEO-88: PASS - SOFT scoping (boost=0.05, acc=1.00) recovers robustness vs hard-scope (0.90) matching unscoped (1.00): boosting the routed kind degrades gracefully on mis-routes (the right fact can still win on raw similarity). Soft > hard for fallible routers — the right design.
+DONE
