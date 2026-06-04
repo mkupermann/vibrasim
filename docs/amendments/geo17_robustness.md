@@ -16,3 +16,18 @@ method is genuinely useful; if it degrades, that is an honest boundary.
 
 PASS if >=0.6 under the hard condition. PARTIAL if clean works but paraphrase/distractors degrade it. NULL
 if it breaks. ALL outcomes reported (this is a boundary-mapping rung).
+
+## Result
+| hop | acc |
+|-----|-----|
+| hop1 person->company | 1.00 |
+| hop2 company->city | 1.00 |
+| hop3 city->country | 1.00 |
+| **FULL 3-hop end-to-end** | **1.00** (chance 0.08, +100 distractors, paraphrased) |
+
+**VERDICT: PASS** — 3-hop geometric reasoning survives a large distractor store AND paraphrased (non-
+template) questions at 1.00. Each hop retrieves the correct fact from a pool of 12 same-relation candidates
++ 100 distractors. Honest caveat: distractors are semantically distinct and country tags synthetic; the
+hard part (picking the right entity among 12 same-relation peers) is genuine and passes. The method is a
+robust generator-free RAG: MiniLM retrieval + symbolic bridge chaining. Words->sentences->multi-hop->robust
+arc complete.
