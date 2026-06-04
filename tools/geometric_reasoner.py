@@ -1,18 +1,24 @@
 """
 GeometricReasoner — a usable, generator-free neuro-symbolic reasoning layer over an LLM embedding space.
 
-Packages the validated EQMOD-3 geometric programme (GEO-1..23) into one runnable module for the PC (CPU).
-It does NOT generate text and does NOT replace an LLM — it is a grounded reasoning layer ON one:
+Packages the validated EQMOD-3 geometric programme (GEO-1..52) into one runnable module for the PC (CPU).
+It does NOT generate text and does NOT replace an LLM — it is a grounded reasoning layer ON one. Methods:
 
-  * geometric RETRIEVAL with grounded ABSTENTION  (GEO-15, GEO-23 — knows what it doesn't know)
-  * multi-hop CHAINING by iterative retrieval       (GEO-16, GEO-17 — robust to distractors/paraphrase)
-  * symbolic AGGREGATION over geometric resolutions  (GEO-18 — count/filter, which geometry alone can't do)
+  * retrieve / ask     — grounded RETRIEVAL + ABSTENTION (GEO-15/23), optional cross-encoder re-rank (GEO-40b)
+  * chain              — multi-hop iterative retrieval (GEO-16/17, robust to distractors/paraphrase)
+  * count_where        — symbolic AGGREGATION over geometric resolutions (GEO-18)
+  * resolve_entity     — typo-robust character-trigram entity resolution (GEO-44, noisy 0.53->1.00)
+  * check_contradiction— same-subject conflict detection (GEO-41/52, 1.00)
+  * calibrate_abstention— set the abstention threshold from a labelled dev split (GEO-23/32)
 
-Honest scope (see docs/GEOMETRIC_ANSWER.md): sound + integrated on PC-scale (hundreds of facts, 2-3 hops);
-NOT open-domain NLU; negation/comparison/counting require the symbolic layer; every primitive is an
-established method (sentence-transformers retrieval + a similarity threshold + symbolic post-processing).
+Companion modules: grounded_qa.py (adds a small LLM generator), unified_reasoner.py (auto-dispatch agent).
+Principle: geometry for SEMANTICS (relevance/entities/relations), symbols for STRUCTURE (count/compare/join/
+time-filter/contradiction). Honest scope (see docs/GEOMETRIC_ANSWER.md): sound + integrated on PC-scale
+(hundreds of facts, 2-3 hops); NOT open-domain NLU; named-entity retrieval is partly lexical (GEO-25); every
+primitive is an established method named as such.
 
-Requires: sentence-transformers, numpy. Model: all-MiniLM-L6-v2 (downloads once, then CPU).
+Requires: sentence-transformers, numpy (+ transformers for re-rank/generation). Default model
+all-MiniLM-L6-v2 (use all-mpnet-base-v2 for quality, paraphrase-multilingual-MiniLM-L12-v2 for cross-lingual).
 """
 from __future__ import annotations
 import numpy as np
