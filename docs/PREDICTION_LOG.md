@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 13 / predictions 22 (JEP-110 HIT) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
+Running tally: hits 14 / predictions 23 (JEP-111 HIT) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
 
 | id | prediction (🔮 before) | outcome | hit? | lesson (don't repeat) |
 |----|------------------------|---------|------|------------------------|
@@ -29,3 +29,4 @@ Running tally: hits 13 / predictions 22 (JEP-110 HIT) (JEP-92 x3, JEP-93, JEP-94
 | JEP-108b | 🔮 guard drops Boole to a few % + 19 tests green | 2.1%, 19 green | HIT | Concept-validity guard (<=4 words, no punctuation) makes the engine fail cleanly on complex prose; honest parse gate ~2%. |
 | JEP-109 | 🔮 100%; risk = polarity parse / defeasible-vs-contradiction | 6/6 | HIT | would_contradict flags direct + via-closure conflicts, non-blocking so corrections still work. |
 | JEP-110 | 🔮 100%; risk = all/every parse forms | 5/5 | HIT | Universal IS-A reduces to is_a; universal property checks instances with defeasible exceptions (names the counterexample). |
+| JEP-111 | 🔮 100%; risk = tracking last query / chain phrasing | 4/4 | HIT | _last_query tracked across respond/explain; 'why?' reuses the chain. |

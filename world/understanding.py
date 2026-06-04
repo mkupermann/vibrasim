@@ -38,6 +38,7 @@ class UnderstandingEngine:
         self.not_properties: dict[str, set] = {}     # concept -> properties it explicitly LACKS
         self._induced: dict[str, set] = {}           # category -> inductively generalized properties
         self._last_subject: str | None = None        # for simple pronoun coreference ("it"/"they")
+        self._last_query: tuple | None = None         # last (x, c) is-a question, for "why?" follow-ups
 
     # --- vector primitives --------------------------------------------------
     def _rand(self) -> np.ndarray:
@@ -386,6 +387,7 @@ class UnderstandingEngine:
         sc = self._parse_isa_q(q)
         if sc:
             x, c = self._norm_phrase(sc[0]), self._norm_phrase(sc[1])
+            self._last_query = (x, c)
             verdict = self.assess(x, c)
             if verdict == "unknown":
                 return f"I don't know whether {self._art(x)} is {self._art(c)}."
@@ -421,6 +423,20 @@ class UnderstandingEngine:
         """Conversational answer: quantified ('is every dog an animal?', 'can all birds fly?'), WH-questions
         ('what is a poodle?'), and yes/no explanation for is-a / relation questions."""
         q = question.strip().rstrip("?").lower()
+        # "why?" follow-up: justify the last is-a answer using the reasoning chain
+        if re.fullmatch(r"why\b.*", q):
+            if not self._last_query:
+                return "You haven't asked me a question I can justify yet."
+            x, c = self._last_query
+            chain = self._isa_chain(x, c)
+            if chain:
+                disp = lambda w: w.replace("_", " ")
+                steps = ", and ".join(f"{self._art(disp(chain[i]))} is {self._art(disp(chain[i+1]))}"
+                                      for i in range(len(chain) - 1))
+                return f"Because {steps}."
+            if self.assess(x, c) == "unknown":
+                return f"Because I was never told whether {self._art(x)} is {self._art(c)}."
+            return f"Because nothing I was told makes {self._art(x)} {self._art(c)}."
         # universal IS-A: "is every X (a) Y" / "are all X Y" -> taxonomy is_a (a category subsumes another)
         mq = re.match(r"(?:is every|are all|is each)\s+(\w+)\s+(?:an?\s+|the\s+)?(.+)", q)
         if mq:
