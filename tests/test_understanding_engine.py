@@ -109,3 +109,11 @@ def test_natural_input_adjectival_and_plural():
     assert e.ask("is a big dog an animal?") is True           # multi-word subject in the QUESTION too
     assert e.tell("Poodles chase cats.")[0] == "rel"          # plural SVO, no "the"
     assert e.relation_true("poodle", "chase", "cat")
+
+
+def test_wh_questions():
+    e = _engine()
+    assert e.respond("what is a poodle?") == "A poodle is a dog."
+    assert e.respond("what does the dog chase?") == "The dog chases the cat."
+    assert e.respond("what is a unicorn?") == "I don't know what a unicorn is."   # 'a', not 'an'
+    assert e.respond("what does the cat chase?").startswith("I don't know")
