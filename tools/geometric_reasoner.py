@@ -50,6 +50,15 @@ class GeometricReasoner:
         self.fact_meta.append(meta)
         self._F = None
 
+    def add_document(self, text: str, source: str = None):
+        """Ingest UNSTRUCTURED prose: sentence-split and add each sentence as a fact (GEO-56). Use with
+        rerank_k>0 for best accuracy on prose (GEO-56b: 0.67 -> 0.83). Returns the number of sentences added."""
+        import re as _re
+        sents = [s.strip() for s in _re.split(r"(?<=[.!?])\s+", text) if s.strip()]
+        for s in sents:
+            self.add_fact(s, source=source)
+        return len(sents)
+
     def _embed(self, texts):
         return np.asarray(self.model.encode(texts, normalize_embeddings=True))
 
