@@ -149,6 +149,13 @@ front-end fully recovers noisy-store accuracy (0.53 -> 1.00) — so the system I
 this cheap front-end (embeddings for relevance, fuzzy/exact name matching for identity). End-to-end validated under noise:
 the full multi-hop stack with the front-end recovers from 0.50 to 1.00 on a noisy store (GEO-45).
 
+## Full auto-dispatch architecture (GEO-48/48b)
+The multi-capability system self-dispatches: query -> SYMBOLIC intent router (keywords, 0.90; geometry routes
+intent poorly at 0.56 because embeddings cluster by content not operation) -> GEOMETRIC resolver/gather
+(relevance, entities, relations) -> SYMBOLIC operator (count/compare/join/time-filter/contradiction) ->
+optional grounded GENERATOR. The recurring principle at every layer: geometry for semantics, symbols for
+structure.
+
 ## Bottom line
 Phase-1 verdict was "the physics substrate has no computational value." Phase-2 verdict is the constructive
 counterpart: **redefining the substrate as a geometric concept space over an LLM yields a real, working,
