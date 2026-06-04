@@ -91,3 +91,12 @@ def test_learn_concept_from_examples():
     e.tell("A bird is an animal.")
     seen = e.perceive(true_bird + rng.normal(0, 0.6, e.feat_dim))
     assert seen == "bird" and e.is_a(seen, "animal")
+
+
+def test_multiword_concepts():
+    e = UnderstandingEngine(seed=1)
+    e.tell("A poodle is a dog."); e.tell("A dog is an animal."); e.tell("An animal is a living thing.")
+    assert e.is_a("poodle", "living thing")           # multi-word category, 3-hop
+    assert e.explain("is a poodle a living thing?") == \
+        "Yes. A poodle is a dog, a dog is an animal, an animal is a living thing."
+    assert e.is_a("poodle", "living_thing")           # underscore form still works (regression)

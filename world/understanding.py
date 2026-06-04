@@ -88,7 +88,8 @@ class UnderstandingEngine:
     # --- parsing / telling --------------------------------------------------
     # articles require a trailing space and are longest-first, so a noun's leading "a"/"an" (e.g. "animals")
     # is never mistaken for an article (the JEP-92/94 surface-form lesson, applied to EVERY parser).
-    _ISA = re.compile(r"^\s*(?:(?:an|a|the)\s+)?(\w+)\s+(?:is|are)\s+(?:(?:an|a|the)\s+)?(\w+)\s*\.?\s*$", re.I)
+    # object may be a multi-word noun phrase ("a living thing"); subject stays a single token.
+    _ISA = re.compile(r"^\s*(?:(?:an|a|the)\s+)?(\w+)\s+(?:is|are)\s+(?:(?:an|a|the)\s+)?(.+?)\s*\.?\s*$", re.I)
     _SVO = re.compile(r"^\s*the\s+(\w+)\s+(\w+)\s+(?:the\s+|a\s+|an\s+|in\s+the\s+|on\s+the\s+)?(\w+)\s*\.?\s*$", re.I)
 
     @staticmethod
@@ -103,6 +104,18 @@ class UnderstandingEngine:
             return w[:-1]
         return w
 
+    @classmethod
+    def _norm_phrase(cls, p: str) -> str:
+        """Canonical key for a (possibly multi-word) concept phrase: lowercase, strip a trailing period,
+        collapse spaces, and singularize the LAST word. 'A living thing.' -> 'living thing'; 'dogs' -> 'dog'.
+        Accepts underscore_joined tokens too (kept as one word)."""
+        p = re.sub(r"\s+", " ", p.strip().rstrip(".")).lower()
+        if not p:
+            return p
+        words = p.split(" ")
+        words[-1] = cls._norm(words[-1])
+        return " ".join(words)
+
     # words that are not concepts when they land in object position of a copula
     _COPULA_STOP = {"is", "are", "was", "were", "not", "the", "a", "an"}
 
@@ -115,7 +128,7 @@ class UnderstandingEngine:
         s = re.sub(r"\b(?:a\s+|an\s+)?(?:kind|type|sort)s?\s+of\s+", "", s, flags=re.I)
         return s
 
-    _NEG_ISA = re.compile(r"^\s*(?:(?:an|a|the)\s+)?(\w+)\s+(?:is|are)\s+not\s+(?:(?:an|a|the)\s+)?(\w+)\s*\.?\s*$", re.I)
+    _NEG_ISA = re.compile(r"^\s*(?:(?:an|a|the)\s+)?(\w+)\s+(?:is|are)\s+not\s+(?:(?:an|a|the)\s+)?(.+?)\s*\.?\s*$", re.I)
 
     def tell(self, sentence: str) -> tuple:
         """Parse one simple fact. Returns ('isa',c,p) / ('neg_isa',c,p) / ('rel',s,r,o) / ('none',).
@@ -125,14 +138,14 @@ class UnderstandingEngine:
         pre = self._preprocess_isa(sentence)
         mneg = self._NEG_ISA.match(pre)
         if mneg:
-            child, parent = self._norm(mneg.group(1)), self._norm(mneg.group(2))
+            child, parent = self._norm_phrase(mneg.group(1)), self._norm_phrase(mneg.group(2))
             self.neg_isa.add((child, parent))
             if self.parents.get(child) == parent:
                 del self.parents[child]          # retract the corrected belief
             return ("neg_isa", child, parent)
         m = self._ISA.match(pre)
         if m:
-            child, parent = self._norm(m.group(1)), self._norm(m.group(2))
+            child, parent = self._norm_phrase(m.group(1)), self._norm_phrase(m.group(2))
             if child != parent and parent not in self._COPULA_STOP:
                 self.parents[child] = parent
                 return ("isa", child, parent)
@@ -146,7 +159,7 @@ class UnderstandingEngine:
 
     # --- inference / comprehension -----------------------------------------
     def ancestors(self, x: str) -> set[str]:
-        x = self._norm(x)
+        x = self._norm_phrase(x)
         out, seen = set(), set()
         while x in self.parents and x not in seen:
             seen.add(x)
@@ -156,7 +169,7 @@ class UnderstandingEngine:
 
     def is_a(self, x: str, c: str) -> bool:
         """Multi-hop IS-A by transitive closure; an explicit negative fact (correction) overrides."""
-        x, c = self._norm(x), self._norm(c)
+        x, c = self._norm_phrase(x), self._norm_phrase(c)
         if (x, c) in self.neg_isa:
             return False
         return c in self.ancestors(x)
@@ -181,7 +194,7 @@ class UnderstandingEngine:
 
     def _isa_chain(self, x: str, c: str):
         """The path x -> ... -> c through the IS-A graph, or None if no path."""
-        x, c = self._norm(x), self._norm(c)
+        x, c = self._norm_phrase(x), self._norm_phrase(c)
         path = [x]
         cur = x
         seen = set()
@@ -196,9 +209,9 @@ class UnderstandingEngine:
     def explain(self, question: str) -> str:
         """Answer a question in natural English, showing the reasoning (the inference chain)."""
         q = question.strip().rstrip("?").lower()
-        m = re.match(r"(?:is|are)\s+(?:(?:an|a|the)\s+)?(\w+)\s+(?:(?:an|a|the)\s+)?(\w+)", q)
+        m = re.match(r"(?:is|are)\s+(?:(?:an|a|the)\s+)?(\w+)\s+(?:(?:an|a|the)\s+)?(.+)", q)
         if m:
-            x, c = self._norm(m.group(1)), self._norm(m.group(2))
+            x, c = self._norm_phrase(m.group(1)), self._norm_phrase(m.group(2))
             chain = self._isa_chain(x, c)
             if chain:
                 disp = lambda w: w.replace("_", " ")
@@ -250,8 +263,9 @@ class UnderstandingEngine:
     def ask(self, question: str):
         """Route a simple question. 'is a poodle an animal' -> is_a; 'does the dog chase the cat' -> relation."""
         q = question.strip().rstrip("?").lower()
-        # articles longest-first (an|a|the) + required trailing space, so "a" can't match inside "an"
-        m = re.match(r"(?:is|are)\s+(?:(?:an|a|the)\s+)?(\w+)\s+(?:(?:an|a|the)\s+)?(\w+)", q)
+        # articles longest-first (an|a|the) + required trailing space, so "a" can't match inside "an";
+        # object may be a multi-word noun phrase.
+        m = re.match(r"(?:is|are)\s+(?:(?:an|a|the)\s+)?(\w+)\s+(?:(?:an|a|the)\s+)?(.+)", q)
         if m:
             return self.is_a(m.group(1), m.group(2))
         m = re.match(r"does\s+the\s+(\w+)\s+(\w+)\s+(?:(?:the|an|a)\s+|in\s+the\s+)?(\w+)", q)
