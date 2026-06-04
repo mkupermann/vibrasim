@@ -29,10 +29,16 @@ boundary is mapped precisely.
    `>`), because pure geometry cannot do these. (GEO-18,20)
 6. **End-to-end** — learn a relation few-shot → apply to unseen entities → chain by retrieval → symbolic
    aggregate, all on held-out data. (GEO-19, milestone)
-7. **Auto-dispatching agent** — one agent symbolically ROUTES a query (factoid/count/temporal/join),
-   GEOMETRICALLY resolves entities, applies the SYMBOLIC operator; schema-general via field-parameterized
-   operators (GEO-49/50, 1.00 on mixed workloads across two schemas). Three usable modules:
-   `geometric_reasoner` (primitives), `grounded_qa` (grounded generation), `unified_reasoner` (the agent).
+7. **Auto-dispatching agent** — one agent symbolically ROUTES a query (factoid/count/temporal/join/
+   negation/comparison), GEOMETRICALLY resolves entities, applies the SYMBOLIC operator; schema-general via
+   field-parameterized operators (GEO-49/50/54, 1.00 across schemas, operator-complete). Three usable
+   modules: `geometric_reasoner` (primitives), `grounded_qa` (grounded generation), `unified_reasoner`.
+8. **Unstructured DOCUMENTS too (not just structured KBs)** — `add_document()` sentence-splits raw prose;
+   the layer does retrieval, abstention, and single/multi-hop QA over free text (GEO-56/58/59), including
+   GENERIC entity-bridge extraction (no domain list). Honest envelope: prose retrieval is the limiter
+   (~0.67 bi-encoder), lifted by re-ranking (0.83) and multi-passage context (document generation 0.17->0.67,
+   GEO-56b/61); structured retrieval is EXACT so structured QA/generation (1.00) is far more reliable than
+   document QA (~0.7-0.8). Abstention keeps document QA honest (1.00 on unanswerable — no silent hallucination).
 
 ## The precise BOUNDARY (what geometry does vs what needs symbols/memory/training)
 | task | geometry alone | resolution |
