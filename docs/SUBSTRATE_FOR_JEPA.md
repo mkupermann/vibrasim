@@ -45,3 +45,14 @@ they give the substrate a PRINCIPLED job in the JEPA/EBM/MPC program — be the 
 energy engine — instead of bolting a backprop net onto it (which CLAUDE.md forbids and which would waste the
 substrate). The next rung (JEP-5) would test predictive coding with local learning as the JEPA predictor, the
 direct substrate-compatible path to "predict in representation space" without backprop.
+
+## Update — JEP-5 closes the representation-learning half (PASS)
+JEP-2 showed energy-based MPC fails with a random encoder (0.07). JEP-5 then showed a representation learned by
+a LOCAL contrastive temporal-coherence rule (no backprop, substrate-native) makes energy meaningful (Spearman
+0.88) and lifts energy-based MPC to 0.90 (vs 0.08 random). So BOTH substrate-native halves are now demonstrated:
+- EBM inference by relaxation + local Hebbian storage (JEP-4 PASS).
+- Representation learning by a local contrastive rule that makes energy/MPC work (JEP-5 PASS).
+Together: a backprop-free, local-learning, relaxation-based realization of the JEPA+EBM+MPC loop at toy scale.
+Honest limits unchanged: toy scale, CPU (no speed win), and the substrate's persistent-memory weakness
+(G88-96) still blocks "substrate as the long-term world-model store." The PARADIGM maps; scaling it with purely
+local learning on the real substrate is the open work (JEP-6+).

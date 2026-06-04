@@ -16,3 +16,16 @@ learning benefit for JEPA-style representation learning.
 - Sanity: learned-embedding distance must correlate with true grid (Manhattan) distance (Spearman > 0.7).
 - Bars: learned-embedding MPC >= 0.8 reached AND >> random-embedding. PASS = the JEP-2 diagnosis confirmed and
   local-rule representation learning enables energy-based planning. NULL if learned rep doesn't help.
+
+## Result — PASS
+| representation | Spearman (emb-dist vs grid-dist) | MPC goals reached |
+|----------------|----------------------------------|-------------------|
+| locally-learned (contrastive temporal-coherence, no backprop) | 0.88 | 0.90 |
+| random encoder (JEP-2 control) | — | 0.08 |
+
+**VERDICT: PASS.** A representation learned by a LOCAL contrastive rule (attract successive states, repel random
+pairs — substrate-native, no backprop) makes energy-distance correlate with grid-distance (Spearman 0.88), and
+energy-based MPC reaches 0.90 of goals vs 0.08 with the random encoder. CONFIRMS the JEP-2 diagnosis: the random
+encoder was the bug, the JEPA+EBM+MPC paradigm is sound once the representation is learned. DEMONSTRATES the
+substrate's local-learning benefit: a substrate-compatible local rule learns exactly the representation that
+makes EBM energy + MPC planning work. Slow-feature / contrastive learning = established methods, named as such.
