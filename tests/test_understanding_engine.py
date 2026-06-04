@@ -392,3 +392,12 @@ def test_provenance_truth_maintenance():
         e2.tell(f)
     e2.retract("dog", "animal")
     assert e2.is_a("poodle", "animal")                 # survives via mammal path
+
+
+def test_abduction():
+    e = UnderstandingEngine(seed=146)
+    for x, y in [("rain", "wetgrass"), ("sprinkler", "wetgrass"), ("wetgrass", "slippery")]:
+        e.tell_cause(x, y)
+    assert e.abduce("slippery") == ["wetgrass", "rain", "sprinkler"]   # most direct cause first
+    assert e.abduce("slippery")[0] == "wetgrass"                       # best (parsimonious) explanation
+    assert e.abduce("rain") == []                                      # root has no causes
