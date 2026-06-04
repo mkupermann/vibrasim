@@ -77,3 +77,17 @@ def test_learning_by_correction():
     assert not e.is_a("whale", "fish")          # belief retracted
     assert e.is_a("whale", "mammal") and e.is_a("whale", "animal")
     assert e.explain("is a whale an animal?").startswith("Yes. A whale is a mammal")
+
+
+def test_learn_concept_from_examples():
+    import numpy as np
+    rng = np.random.default_rng(97)
+    e = UnderstandingEngine(seed=97)
+    for c in ["dog", "fish", "animal"]:
+        e.add_prototype(c, rng.normal(0, 1, e.feat_dim))
+    e.tell("A dog is an animal."); e.tell("A fish is an animal.")
+    true_bird = rng.normal(0, 1, e.feat_dim)
+    e.learn_concept("bird", [true_bird + rng.normal(0, 0.6, e.feat_dim) for _ in range(5)])
+    e.tell("A bird is an animal.")
+    seen = e.perceive(true_bird + rng.normal(0, 0.6, e.feat_dim))
+    assert seen == "bird" and e.is_a(seen, "animal")

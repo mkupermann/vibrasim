@@ -71,6 +71,13 @@ class UnderstandingEngine:
     def add_prototype(self, concept: str, features: np.ndarray) -> None:
         self.prototypes[concept.lower()] = np.asarray(features, dtype=float)
 
+    def learn_concept(self, name: str, examples: list) -> np.ndarray:
+        """Human-like concept acquisition: form a prototype from a few perceptual EXAMPLES (their mean),
+        rather than being told. The new concept then participates in perception + comprehension."""
+        proto = np.mean(np.asarray(examples, dtype=float), axis=0)
+        self.prototypes[name.lower()] = proto
+        return proto
+
     def perceive(self, features: np.ndarray) -> str | None:
         """Ground noisy features to the nearest concept prototype."""
         if not self.prototypes:
