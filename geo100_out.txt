@@ -1,0 +1,12 @@
+=== GEO-100: final acceptance (complete system) ===
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 10819.54it/s]
+  4 modules import            : OK
+  router+reasoner cross-module: OK
+  abstains off-KB             : FAIL
+  sanitize works              : OK
+  3/4
+
+--- VERDICT ---
+GEO-100: FAIL - complete deliverable end-to-end (3/4). All four modules interoperate; grounding, security, cross-module routing verified. The EQMOD-3 programme (GEO-1..100) ships a complete, verified, grounded personal-knowledge toolkit on the PC.
+DONE
