@@ -117,7 +117,8 @@ class UnderstandingEngine:
         collapse spaces, and singularize the LAST word. 'A living thing.' -> 'living thing'; 'dogs' -> 'dog'.
         Accepts underscore_joined tokens too (kept as one word)."""
         p = p.strip().rstrip(".").lower().replace("_", " ")   # underscore and space are the same concept
-        p = re.sub(r"\s+", " ", p)
+        p = re.sub(r"^\s*(?:a|an|the)\s+", "", p)              # strip a leading article so callers can pass "a poodle"
+        p = re.sub(r"\s+", " ", p).strip()
         if not p:
             return p
         words = p.split(" ")
@@ -272,23 +273,35 @@ class UnderstandingEngine:
                 f"but I don't know whether {self._art(top)} is {self._art(c)}.")
 
     def induce(self):
-        """Inductive generalization: a property shared by >=2 instances of a category, with NO known
-        counterexample, is generalized to the category. Defeasible (a later counterexample/correction wins)."""
+        """Inductive generalization: a property shared by >=2 instances is generalized to the MOST-SPECIFIC
+        category common to those instances (their lowest common ancestor), NOT every ancestor — so 'robins and
+        sparrows fly' yields 'birds fly', not 'animals fly' (a poodle must not inherit flight). Defeasible: an
+        explicit counterexample overrides per-instance."""
+        from collections import defaultdict
         self._induced = {}
-        categories = set()
-        for ps in self.parents.values():
-            categories |= ps
-        for c in categories:
-            instances = [x for x in self.parents if c in self.ancestors(x)]
-            from collections import Counter
-            cnt = Counter()
-            for i in instances:
-                cnt.update(self.properties.get(i, set()))
-            for p, k in cnt.items():
-                # defeasible: generalize when the property holds for >=2 instances and the positives
-                # outnumber explicit counterexamples; exceptions (e.g. penguin) override per-instance below.
-                neg = sum(1 for i in instances if p in self.not_properties.get(i, set()))
-                if k >= 2 and k > neg:
+        prop_pos = defaultdict(set)
+        for x, ps in self.properties.items():
+            for p in ps:
+                prop_pos[p].add(x)
+        for p, pos in prop_pos.items():
+            if len(pos) < 2:
+                continue
+            # categories common to ALL positive instances
+            common = None
+            for i in pos:
+                anc_i = self.ancestors(i) | {i}
+                common = anc_i if common is None else (common & anc_i)
+            common = (common or set()) - pos
+            if not common:
+                continue
+            # most-specific common ancestor(s): no other common category sits below them
+            most_specific = {c for c in common
+                             if not any(c in self.ancestors(c2) for c2 in common if c2 != c)}
+            for c in most_specific:
+                insts = [x for x in self.parents if c in self.ancestors(x)]
+                posc = sum(1 for i in insts if p in self.properties.get(i, set()))
+                neg = sum(1 for i in insts if p in self.not_properties.get(i, set()))
+                if posc >= 2 and posc > neg:
                     self._induced.setdefault(c, set()).add(p)
         return self._induced
 
@@ -429,6 +442,35 @@ class UnderstandingEngine:
                 if y not in seen:
                     seen.add(y); stack.append(y)
         return False
+
+    def describe(self, concept: str) -> str:
+        """Generate a multi-sentence English description of a concept from everything known (categories,
+        inherited properties, relations). Generative communication from structure — no transformer."""
+        x = self._norm_phrase(concept)
+        sents = []
+        parents = sorted(self.parents.get(x, set()))
+        if parents:
+            joined = parents[0] if len(parents) == 1 else ", ".join(self._art(p) for p in parents[:-1]) + " and " + self._art(parents[-1])
+            sents.append(f"{self._art(x)} is {self._art(parents[0]) if len(parents)==1 else joined}.")
+        # inherited categories beyond direct parents
+        higher = sorted(self.ancestors(x) - set(parents))
+        if higher:
+            sents.append(f"That makes it also " + ", ".join(self._art(h) for h in higher) + ".")
+        # properties: own + inherited (induced), minus explicit exceptions
+        props = set(self.properties.get(x, set()))
+        for c in self.ancestors(x):
+            props |= self._induced.get(c, set())
+        props -= self.not_properties.get(x, set())
+        if props:
+            sents.append("It can " + ", ".join(sorted(props)) + ".")
+        # relations where x is the subject
+        rels = [f"{self._norm_rel(r)}s the {o}" for s, r, o in self.facts if s == self._norm(x)]
+        if rels:
+            sents.append("It " + ", and ".join(sorted(set(rels))) + ".")
+        if not sents:
+            return f"I don't know anything about {self._art(x)} yet."
+        sents[0] = sents[0][0].upper() + sents[0][1:]
+        return " ".join(sents)
 
     def _all_have_property(self, cat: str, prop: str):
         """Universal over instances: do ALL known instances of `cat` have property `prop`?

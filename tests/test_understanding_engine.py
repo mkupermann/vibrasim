@@ -239,3 +239,24 @@ def test_transitive_comparison():
     assert e.respond("is a mouse bigger than a dog?").startswith("Not")
     e.tell("A poodle is a dog.")
     assert e.is_a("poodle", "dog")                                      # IS-A not broken by comparatives
+
+
+def test_induction_most_specific_no_overgeneralization():
+    e = UnderstandingEngine(seed=115)
+    for f in ["A poodle is a dog.", "A dog is an animal.", "A robin is a bird.", "A bird is an animal.",
+              "A robin can fly.", "A sparrow is a bird.", "A sparrow can fly."]:
+        e.tell(f)
+    e.induce()
+    assert e.has_property("robin", "fly")            # bird-level induction
+    assert not e.has_property("poodle", "fly")       # an animal but NOT a bird -> must not inherit flight
+    assert "fly" in e._induced.get("bird", set())
+    assert "fly" not in e._induced.get("animal", set())   # NOT over-generalized to animal
+
+
+def test_describe_generation():
+    e = UnderstandingEngine(seed=115)
+    for f in ["A poodle is a dog.", "A poodle is a pet.", "A dog is an animal.", "the poodle chases the cat."]:
+        e.tell(f)
+    d = e.describe("a poodle")                        # leading article must be handled
+    assert "is a dog and a pet" in d and "animal" in d and "chases the cat" in d
+    assert e.describe("a quark").startswith("I don't know")
