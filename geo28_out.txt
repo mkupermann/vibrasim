@@ -1,0 +1,9 @@
+=== GEO-28: compositional zero-shot (size AND predator) ===
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 11259.14it/s]
+  LLM-init    composite-bal-acc=0.53  (size 0.75, predator 0.78) on unseen
+  random-init composite-bal-acc=0.51  (size 0.53, predator 0.57)
+
+--- VERDICT ---
+GEO-28: NULL/PARTIAL - LLM 0.53 vs random 0.51 (size 0.75/pred 0.78)
+DONE

@@ -16,3 +16,21 @@ attribute not cleanly encoded, or composition breaks).
 - Compare LLM-init vs random-init. 5 splits.
 - Bars: LLM compositional balanced-acc on unseen >= 0.70 AND >= random + 0.20. PASS = compositional zero-shot
   understanding; NULL = honest boundary. Report per-attribute unseen accuracy too (localize any failure).
+
+## Result — NULL/PARTIAL (honest boundary)
+| init | composite bal-acc (unseen) | size (unseen) | predator (unseen) |
+|------|----------------------------|---------------|-------------------|
+| LLM-init | **0.53** | 0.75 | 0.78 |
+| random-init | 0.51 | 0.53 | 0.57 |
+
+**VERDICT: NULL/PARTIAL.** The INDIVIDUAL attributes transfer zero-shot to unseen animals (LLM size 0.75,
+predator 0.78, vs random at chance — confirms GEO-27b for two attributes), but their CONJUNCTION ("large AND
+predator") collapses to 0.53 (~chance). Two ~0.77 noisy zero-shot classifiers AND-composed on a rare
+conjunction class compound their errors, and balanced accuracy on the rare positive degrades to chance.
+
+**Honest boundary:** geometric zero-shot transfer is reliable for a SINGLE learned relation (GEO-27b) but
+does NOT compose robustly — multi-attribute conjunctions over noisy zero-shot scores break down. This is a
+concrete gap from human-level understanding (which composes attributes reliably) and bounds the
+"compositional understanding" claim: composition works on CLEAN trained structure (GEO-7/12) but not on
+noisy zero-shot-transferred attributes. Add per-attribute calibration / more training entities to recover it
+(untested). Recorded as the limit, not retuned.

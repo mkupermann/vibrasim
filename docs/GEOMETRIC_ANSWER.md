@@ -95,6 +95,13 @@ relation orders them with zero examples of them — genuine zero-shot generaliza
 memorization), and irreducible (random init cannot do it). This, plus semantic resolution of descriptions
 (GEO-25b) and data-efficient structure learning (GEO-24), is where "geometric" genuinely earns its name.
 
+## Honest limit of the irreducible edge: composition of zero-shot attributes (GEO-28)
+Single-relation zero-shot transfer is reliable (GEO-27b), but composing TWO zero-shot-transferred attributes
+("large AND predator" on unseen animals) collapses to chance (0.53) even though each attribute alone is
+0.75-0.78: noisy zero-shot scores compound under conjunction. So geometric zero-shot is per-relation, not
+robustly compositional — a concrete gap from human-level understanding. Clean composition needs trained
+structure (GEO-7/12), not noisy transfer.
+
 ## Bottom line
 Phase-1 verdict was "the physics substrate has no computational value." Phase-2 verdict is the constructive
 counterpart: **redefining the substrate as a geometric concept space over an LLM yields a real, working,
