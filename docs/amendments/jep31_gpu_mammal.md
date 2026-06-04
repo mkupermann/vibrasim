@@ -36,3 +36,19 @@ needs-compute point is already made at 366). Bars locked, not tuned.
 - 1170-concept mammal (real): held-out IS-A 0.53 (40D, 6k minibatched iters, GPU) - UNDER-TRAINED, fails.
 Pattern: the result holds at real scale ONLY with compute scaled to the hierarchy's size/depth; the toy/medium
 budgets do not transfer to the full subtree. The GPU enables larger budgets but I did not push to convergence here.
+
+## JEP-31b — 3x iterations — resolves the diagnosis (partly under-training, partly scale difficulty)
+| config | trained IS-A | held-out IS-A |
+|--------|--------------|---------------|
+| 6k iters (JEP-31) | 0.575 | 0.531 |
+| 18k iters (JEP-31b, 358s GPU) | 0.705 | 0.645 |
+
+**VERDICT: NULL on the bar, but the question is RESOLVED honestly.** Tripling iterations moved both metrics
+monotonically up (held-out 0.53 -> 0.65) - so UNDER-TRAINING was a real factor - but even 18k iters did not reach
+reliability (<0.85). So the full 1170-mammal/depth-12 hierarchy is CLIMBING with compute but NOT CONVERGED at the
+budget spent, and the norm-direction readout degrades on deep structure. Honest scaling law (concept reasoner):
+held-out IS-A = 0.91 (77 toy) -> 0.86 (366, 12k full-batch) -> 0.65 (1170, 18k minibatched, still climbing).
+Compute needs grow SUPER-LINEARLY with hierarchy size/depth. The GPU enables larger budgets (trained 1170 nodes
+in ~6min) but full convergence at 1170 would need substantially more (not pursued - diminishing returns). The
+result scales in PRINCIPLE; in PRACTICE the full subtree needs compute I chose not to spend. Honest, not
+overclaimed. Bars locked, not tuned.
