@@ -28,3 +28,18 @@ are optimistic — messy real data with near-duplicate entities degrades badly.*
 NORMALIZATION / exact-key identity matching (not pure embedding retrieval) for entity resolution; embeddings
 for relevance, exact IDs for identity. Diagnostic split (paraphrase/typo vs near-dup) in GEO-43b to locate
 the dominant cause.
+
+## GEO-43b — noise-source split (refines the diagnosis)
+| noise source (isolated) | 1-hop |
+|-------------------------|-------|
+| paraphrase + typos only | 0.73 |
+| near-duplicates only (clean facts) | **1.00** (confusion 0.00) |
+
+**Refined honest diagnosis.** Near-duplicate entities with CLEAN text cause ZERO confusion — embeddings
+distinguish "John Smith lives in X" from "Jon Smith lives in Y" perfectly. Paraphrase the embeddings also
+handle (a STRENGTH, GEO-15). The real culprit is CHARACTER-LEVEL TYPOS (0.27 loss at 10% typo rate), and the
+SEVERE combined case (GEO-43, 0.53) is the INTERACTION: a typo'd name drifts toward a near-duplicate's clean
+fact. So the deployability lesson is precise: **embeddings are robust to paraphrase, fragile to typos, and
+typos x near-duplicate entities compound badly.** Mitigation: spell/character normalization + EXACT entity-ID
+resolution for identity (embeddings for relevance, exact keys for who-is-who). The clean-store 1.00s assume
+clean text + disambiguated entities — realistic deployments need a normalization/entity-resolution front-end.
