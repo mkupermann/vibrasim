@@ -5,11 +5,14 @@ controls. Honest verdicts; established methods named as such. This is the Phase-
 abandoned EQMOD physics substrate (which Phase-1 proved computationally empty — see STRATEGIC_ANSWER.md).
 
 ## Short answer
-**Yes — a working learning+understanding method runs on your PC, built from geometry over a real LLM's
-embedding space, no transformer generation required.** It is a *neuro-symbolic* method: an LLM gives the
-concept geometry, geometric operations do the reasoning, and a thin symbolic layer handles what geometry
-provably cannot. It is sound and integrates end-to-end; it is NOT a solution to open-domain NLU, and the
-boundary is mapped precisely.
+**Yes — a working, fast, deployable learning+understanding TOOLKIT runs on your PC.** Honest framing (after
+rigorous self-testing, GEO-66/68/69/70b/73): it is a *neuro-symbolic SYNTHESIS of established methods*. An LLM
+embedding does SEMANTIC MATCHING (resolving meaning to the right entry — mostly distributional, with a modest
+genuine compositional/word-order add from the transformer); everything built on top is classical — composition
+= database joins, learning = a linear probe, aggregation/negation/comparison = set logic, grounding = RAG with
+abstention, plus a thin small-LLM generator. No single piece is novel, but the SYNTHESIS genuinely matters
+(GEO-73: 3x naive RAG on a mixed workload). It is sound, integrates end-to-end, and is precisely bounded — NOT
+open-domain NLU, NOT human-level AI, NOT a new algorithm; a real, useful engineering synthesis, honestly scoped.
 
 ## What the method IS (one entity = one point in a learnable concept space)
 1. **Concept space** — a real sentence-embedding model (all-MiniLM-L6-v2, 384-dim) provides prior semantic
