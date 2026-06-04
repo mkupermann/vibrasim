@@ -5094,3 +5094,35 @@ thin symbolic layer for aggregate/negate/compare. Boundary mapped precisely; sca
 docs/amendments/GEOMETRIC_PROGRAMME_SUMMARY.md. Honest: numbers saturate on clean small entities — proves
 soundness+integration, not solved NLU; all primitives established, contribution is the honest synthesis +
 boundary map. Inconclusive rungs (GEO-13 chain degeneracy; GEO-14 resolved by GEO-21) recorded honestly.
+
+## EQMOD-3 Geometric programme COMPLETE (GEO-1..45) — validated, deployable system
+Extended from the GEO-1..22 entry above. Final state: a working, honestly-bounded, DEPLOYABLE grounded
+reasoning+QA assistant on the PC (CPU), built entirely from established methods named as such.
+
+Genuinely-geometric core (model- AND domain-robust, GEO-36/37): semantic descriptive retrieval (GEO-25b/31),
+zero-shot relational transfer to unseen entities (GEO-27b), LLM-prior data-efficient for semantic-aligned
+structure (GEO-24). Lexical caveat (GEO-25): named-entity retrieval headline 1.00s are string-matchable; the
+real value is the semantic core.
+
+Reasoning stack (unifying principle: geometry RESOLVES + symbolic layer OPERATES): retrieval, multi-hop
+(GEO-16/17/31), aggregation (GEO-18), negation/comparison (GEO-20, symbolic), contradiction detection
+(GEO-41), relational joins (GEO-42). Grounding: relevance + focus-answerability (GEO-23/33). Grounded
+GENERATION via Qwen2.5-0.5B on CPU: follows updatable store over prior, abstains vs confabulates, multi-hop
+over private facts (GEO-34/35); faithfulness needs explicit instruction (GEO-38). Scale limit mitigated by
+per-hop cross-encoder re-ranking (GEO-40b, 2-hop 0.87->1.00 @400).
+
+DEPLOYABILITY (the key real-world arc): clean stores give 1.00 but realistic noise breaks pure retrieval
+(GEO-43, 0.53; cause = character TYPOS x near-duplicate entities, GEO-43b); a character-trigram entity-
+resolution front-end fully recovers it (GEO-44, 1.00) and the full noisy multi-hop stack (GEO-45, 0.50->1.00).
+Acceptance: clean 5/5 (GEO-39), noisy recovered (GEO-45).
+
+Artifacts: tools/geometric_reasoner.py (retrieve+rerank, ask, chain, count_where, check_contradiction,
+resolve_entity, calibrate_abstention), tools/grounded_qa.py (GroundedQA, optional 0.5B generator),
+tools/README_geometric.md, tests/test_geometric_reasoner.py (7/7). Docs: docs/GEOMETRIC_ANSWER.md,
+docs/amendments/GEOMETRIC_PROGRAMME_SUMMARY.md, docs/patterns/geometric_reasoner.md, 45 GEO amendments.
+
+Honest verdict on "Geometric AI = Human AI": real, robust, useful, aligned with conceptual-spaces tradition,
+but it NAVIGATES an LLM's understanding rather than being a new species of human-level AI. Not new (all
+primitives established), not human-AI (reads borrowed understanding, bounded). ~10 honest self-corrections en
+route. Research exhausted at PC scale; open frontiers need bigger infra (larger LLM for open-domain, ANN for
+very-large scale). Charter goal met: a deadlock-breaking process + honest map of what's reachable.
