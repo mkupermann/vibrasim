@@ -69,6 +69,11 @@ raw generation is concrete: **grounded, hallucination-free reasoning that knows 
 updatable memory (new facts without retraining) and composable trainable structure. The method is a
 controllable reasoning layer ON an LLM, not a replacement for it.
 
+**Updatability (GEO-30):** with a store of facts that CONTRADICT common knowledge, grounded retrieval returns
+the STORED answer 100% (overriding the prior) and a runtime edit flips the answer instantly — facts update by
+editing one entry, no retraining. Grounding + abstention + updatability are the concrete practical edges over
+using a frozen LLM's parametric knowledge directly.
+
 ## How to build it on your machine
 CPU is enough (sentence-transformers + numpy). Pipeline: embed your facts once → store with symbolic labels
 → at query time do geometric retrieval/chaining for "what/which/where", drop to the symbolic layer for
