@@ -14,3 +14,21 @@ aggregation, and runtime update — end to end.
 - Metric: per-category accuracy + overall. Bars: semantic >=0.6, multi-hop >=0.6, abstain >=0.8, aggregate
   exact, update flips. PASS if all categories meet bars (the integrated agent works on a realistic task).
 - Honest: this reuses small clean entities; it demonstrates the system integrates + is usable, not scale.
+
+## Result — PARTIAL (integration works; abstention needs calibration)
+| category | result | bar |
+|----------|--------|-----|
+| (a) semantic role questions | **1.00** | >=0.6 PASS |
+| (b) multi-hop person->city | **1.00** | >=0.6 PASS |
+| (c) abstain on out-of-KB | 0.67 (2/3) | >=0.8 MISS |
+| (d) aggregation counts exact | yes (Boston 3/Denver 3/Austin 2/Seattle 2) | exact PASS |
+| (e) runtime update flips | yes (Alice -> Chicago) | flip PASS |
+
+**VERDICT: PARTIAL.** The integrated agent (running on the packaged GeometricReasoner) works end-to-end on
+4/5 categories at the bar — semantic non-lexical role resolution, multi-hop chaining, symbolic aggregation,
+and runtime update all perfect. The miss is abstention: at a FIXED, uncalibrated tau=0.40 it caught only 2
+of 3 out-of-KB questions. This confirms the GEO-23 lesson — grounded abstention requires per-KB threshold
+CALIBRATION (GEO-23 calibrated tau on a held-out split and got 1.00); a guessed constant is unreliable. NOT
+retuned post-hoc. **Honest takeaway:** the system integrates and is usable; deploying it means calibrating
+the abstention threshold on a small dev set (answerable vs out-of-KB), exactly as GEO-23 prescribes. Caveat
+added to the module docs.

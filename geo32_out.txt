@@ -1,0 +1,13 @@
+=== GEO-32: integrated grounded QA agent (mini-KB) ===
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 11364.88it/s]
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 10403.44it/s]
+  (a) semantic role questions  = 1.00
+  (b) multi-hop person->city   = 1.00
+  (c) abstain on out-of-KB     = 0.67
+  (d) aggregation counts exact = 1  ({'Boston': 3, 'Denver': 3, 'Austin': 2, 'Seattle': 2})
+  (e) runtime update flips     = True  (Alice's city -> Chicago)
+
+--- VERDICT ---
+GEO-32: PARTIAL - sem 1.00, mh 1.00, abstain 0.67, agg 1, update True
+DONE
