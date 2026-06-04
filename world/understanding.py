@@ -120,6 +120,9 @@ class UnderstandingEngine:
 
     # words that are not concepts when they land in object position of a copula
     _COPULA_STOP = {"is", "are", "was", "were", "not", "the", "a", "an"}
+    # pronouns can't be concepts without coreference resolution (a later tier) — reject, don't guess
+    _PRONOUNS = {"it", "he", "she", "they", "this", "that", "these", "those",
+                 "we", "you", "i", "him", "her", "them", "its"}
 
     @staticmethod
     def _preprocess_isa(sentence: str) -> str:
@@ -147,10 +150,18 @@ class UnderstandingEngine:
             return ("neg_isa", child, parent)
         m = self._ISA.match(pre)
         if m:
-            child, parent = self._norm_phrase(m.group(1)), self._norm_phrase(m.group(2))
-            if child != parent and parent not in self._COPULA_STOP:
-                self.parents[child] = parent
-                return ("isa", child, parent)
+            subj_phrase, parent = m.group(1), self._norm_phrase(m.group(2))
+            if parent not in self._COPULA_STOP:
+                # conjoined subjects: "Robins and sparrows are birds" -> robin->bird, sparrow->bird
+                raw = [self._norm_phrase(s) for s in re.split(r"\s+and\s+", subj_phrase)]
+                children = [c for c in raw if c and c != parent]
+                if children and all(c in self._PRONOUNS for c in children):
+                    return ("none",)                       # unresolved pronoun subject — reject, don't guess
+                children = [c for c in children if c not in self._PRONOUNS]
+                if children:
+                    for c in children:
+                        self.parents[c] = parent
+                    return ("isa", children if len(children) > 1 else children[0], parent)
         m = self._SVO.match(sentence)
         if m:
             s, r, o = self._norm(m.group(1)), m.group(2).lower(), self._norm(m.group(3))

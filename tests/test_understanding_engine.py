@@ -141,3 +141,13 @@ def test_learning_through_dialogue():
     assert e.inquire("poodle", "living thing") is None
     assert e.explain("is a poodle a living thing?") == \
         "Yes. A poodle is a dog, a dog is an animal, an animal is a living thing."
+
+
+def test_conjunction_and_pronoun_rejection():
+    e = UnderstandingEngine(seed=103)
+    e.tell("A bird is an animal.")
+    e.tell("Robins and sparrows are birds.")          # conjoined subjects -> two facts
+    assert e.is_a("robin", "bird") and e.is_a("sparrow", "bird")
+    assert e.is_a("robin", "animal")                  # multi-hop through the split fact
+    assert e.tell("It is an animal.")[0] == "none"    # pronoun rejected, not guessed
+    assert "it" not in e.parents
