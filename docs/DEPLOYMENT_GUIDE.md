@@ -26,6 +26,9 @@ Grounding amplifies retrieval BOTH ways:
 - retrieval RIGHT -> a weak model becomes reliable (0.17 -> 1.00).
 - retrieval WRONG -> a correct model becomes confidently wrong (0.90 -> 0.00; it follows the bad context 100%).
 **So retrieval quality IS the system's accuracy.** Mitigate:
+0. **The GIGO risk is narrow (GEO-81):** abstention catches COVERAGE gaps (queried entity absent -> low
+   similarity -> abstains, 1.00). The real residual GIGO is a WRONG fact for the RIGHT entity (a store data-
+   quality error) -> validate store correctness (conflict detection GEO-41/62, provenance). Then:
 1. **Abstain on low confidence** — calibrate `abstain_tau` on a labelled dev split (GEO-23/32); never ground a
    weak retrieval. This is the essential safety net.
 2. **Re-rank** — `rerank_k=10` (cross-encoder) recovers multi-hop accuracy at scale (GEO-40b) and fixes

@@ -1,0 +1,11 @@
+=== GEO-81: abstention on realistic GIGO (answer absent) ===
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 10870.45it/s]
+  calibrated tau = 0.516
+  threshold-abstention abstain-rate (absent answers) = 1.00
+    e.g. 'capital of Germany?' -> '(abstained)' sim=0.47 (grounded=False)
+  focus-verification abstain-rate (entity not in store) = 1.00
+
+--- VERDICT ---
+GEO-81: focus-verification CATCHES the realistic GIGO (1.00) where similarity-threshold may not (1.00): checking the query ENTITY exists in the store rejects answer-absent queries even when a similar-entity fact has high similarity. Threshold abstention alone is INSUFFICIENT for this case; the entity-existence check is the needed safeguard. Honest residual-risk finding.
+DONE

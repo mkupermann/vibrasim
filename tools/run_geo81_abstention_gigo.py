@@ -26,7 +26,8 @@ def main():
     # show what threshold-abstention retrieves for an absent query (the GIGO risk)
     j,sim=r.retrieve("What is the capital of Germany?")
     print(f"  threshold-abstention abstain-rate (absent answers) = {thr_abs:.2f}", flush=True)
-    print(f"    e.g. 'capital of Germany?' -> nearest {r.fact_texts[j]!r} sim={sim:.2f} (grounded={sim>=r.abstain_tau})", flush=True)
+    nearest = r.fact_texts[j] if j is not None else "(abstained)"
+    print(f"    e.g. 'capital of Germany?' -> {nearest!r} sim={sim:.2f} (grounded={j is not None})", flush=True)
     print(f"  focus-verification abstain-rate (entity not in store) = {foc_abs:.2f}", flush=True)
     print("\n--- VERDICT ---", flush=True)
     if foc_abs>=0.8:
