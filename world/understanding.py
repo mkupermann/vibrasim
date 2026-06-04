@@ -39,6 +39,7 @@ class UnderstandingEngine:
         self._induced: dict[str, set] = {}           # category -> inductively generalized properties
         self._last_subject: str | None = None        # for simple pronoun coreference ("it"/"they")
         self._last_query: tuple | None = None         # last (x, c) is-a question, for "why?" follow-ups
+        self._orders: dict[str, dict[str, set]] = {}   # comparative -> {x -> set(y)} for transitive comparison
 
     # --- vector primitives --------------------------------------------------
     def _rand(self) -> np.ndarray:
@@ -170,6 +171,13 @@ class UnderstandingEngine:
             self.properties.setdefault(x, set()).add(p)
             self._last_subject = x
             return ("prop", x, p)
+        # comparative/order relation: "X is bigger than Y" (BEFORE _ISA, which would read it as 'X is-a bigger')
+        mcmp = re.match(r"^\s*(?:(?:an|a|the)\s+)?(\w+)\s+(?:is|are)\s+(\w+)\s+than\s+(?:(?:an|a|the)\s+)?(\w+)\s*\.?\s*$", pre, re.I)
+        if mcmp:
+            x, comp, y = self._norm(mcmp.group(1)), mcmp.group(2).lower(), self._norm(mcmp.group(3))
+            self._orders.setdefault(comp, {}).setdefault(x, set()).add(y)
+            self._last_subject = x
+            return ("order", x, comp, y)
         mneg = self._NEG_ISA.match(pre)
         if mneg and self._valid_concept(self._norm_phrase(mneg.group(1))) and self._valid_concept(self._norm_phrase(mneg.group(2))):
             child, parent = self._norm_phrase(mneg.group(1)), self._norm_phrase(mneg.group(2))
@@ -408,6 +416,20 @@ class UnderstandingEngine:
             return f"No, I was not told that the {s} {self._norm_rel(r)}s the {o}."
         return "I cannot parse that question."
 
+    def _order_holds(self, comp: str, x: str, z: str) -> bool:
+        """Transitive closure over a comparison relation: is x `comp`-than z (directly or transitively)?"""
+        g = self._orders.get(comp, {})
+        x, z = self._norm(x), self._norm(z)
+        stack, seen = [x], {x}
+        while stack:
+            cur = stack.pop()
+            for y in g.get(cur, ()):
+                if y == z:
+                    return True
+                if y not in seen:
+                    seen.add(y); stack.append(y)
+        return False
+
     def _all_have_property(self, cat: str, prop: str):
         """Universal over instances: do ALL known instances of `cat` have property `prop`?
         Returns (verdict, counterexample-or-None)."""
@@ -423,6 +445,11 @@ class UnderstandingEngine:
         """Conversational answer: quantified ('is every dog an animal?', 'can all birds fly?'), WH-questions
         ('what is a poodle?'), and yes/no explanation for is-a / relation questions."""
         q = question.strip().rstrip("?").lower()
+        # comparative query: "is X bigger than Z" -> transitive closure over the order relation
+        mc = re.match(r"(?:is|are)\s+(?:(?:an|a|the)\s+)?(\w+)\s+(\w+)\s+than\s+(?:(?:an|a|the)\s+)?(\w+)", q)
+        if mc:
+            x, comp, z = self._norm(mc.group(1)), mc.group(2).lower(), self._norm(mc.group(3))
+            return "Yes." if self._order_holds(comp, x, z) else "Not that I can tell."
         # "why?" follow-up: justify the last is-a answer using the reasoning chain
         if re.fullmatch(r"why\b.*", q):
             if not self._last_query:

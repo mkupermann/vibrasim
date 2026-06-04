@@ -229,3 +229,13 @@ def test_why_followup():
     assert e.respond("why?").startswith("Because a poodle is a dog")
     e.respond("is a poodle a vegetable?")
     assert e.respond("why?").startswith("Because I was never told")
+
+
+def test_transitive_comparison():
+    e = UnderstandingEngine(seed=112)
+    for f in ["An elephant is bigger than a dog.", "A dog is bigger than a cat.", "A cat is bigger than a mouse."]:
+        assert e.tell(f)[0] == "order"
+    assert e.respond("is an elephant bigger than a mouse?") == "Yes."   # 3-hop transitive
+    assert e.respond("is a mouse bigger than a dog?").startswith("Not")
+    e.tell("A poodle is a dog.")
+    assert e.is_a("poodle", "dog")                                      # IS-A not broken by comparatives
