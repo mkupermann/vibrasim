@@ -196,6 +196,13 @@ symbolic/database reasoning + RAG grounding + a thin generator.** The LLM's irre
 to the right entry; the reasoning on top is classical. Real, useful, entirely established methods, precisely
 scoped — not new-as-method, not human-level AI.
 
+## The synthesis genuinely matters (GEO-73) — quantified
+Although every piece is established, the ENGINEERING SYNTHESIS triples accuracy over naive bi-encoder RAG on a
+realistic mixed workload (0.92 vs 0.33): entity-resolution fixes typos, multi-hop fixes chained questions,
+symbolic operators fix count/compare, grounded abstention fixes unanswerables — naive RAG fails all of these.
+So the value is real at the SYSTEM level even though no single component is novel. THAT is the honest
+contribution: a rigorous, deployable synthesis of established methods, 3x naive RAG, precisely scoped.
+
 ## Bottom line
 Phase-1 verdict was "the physics substrate has no computational value." Phase-2 verdict is the constructive
 counterpart: **redefining the substrate as a geometric concept space over an LLM yields a real, working,
