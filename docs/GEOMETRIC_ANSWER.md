@@ -75,6 +75,18 @@ CPU is enough (sentence-transformers + numpy). Pipeline: embed your facts once �
 "how many / not / bigger". Train a small structure block only when you have NEW structured relations to
 generalize. Your AMD GPU is unused (no CUDA / no torch-directml on Py3.13) but unnecessary at this scale.
 
+## CRITICAL honest caveat — what the geometry actually adds (GEO-25/25b)
+Adversarial self-review with a trivial lexical (token-overlap) baseline showed that the named-entity
+retrieval/QA/grounding tasks are LEXICALLY SOLVABLE: a dumb string matcher also scores 1.00, because each
+entity NAME is a unique token shared by question and fact. So those headline numbers demonstrate the
+pipeline runs, NOT that the LLM geometry is necessary for them. The geometry's genuine, irreducible
+contribution shows only when the lexical shortcut is removed: on DESCRIPTIVE queries sharing no token with
+the answer ("the country famous for the Eiffel Tower" -> "The capital of France is Paris"), geometry scores
+0.80 vs lexical 0.10 (chance). The real value of geometry-over-an-LLM is SEMANTIC matching — descriptions,
+paraphrases, analogies, relation offsets, and a data-efficient prior for semantically-aligned structure
+(GEO-5/6/24/25b) — not the templated retrieval numbers. Stated plainly so the deliverable is not read as
+overclaiming.
+
 ## Bottom line
 Phase-1 verdict was "the physics substrate has no computational value." Phase-2 verdict is the constructive
 counterpart: **redefining the substrate as a geometric concept space over an LLM yields a real, working,

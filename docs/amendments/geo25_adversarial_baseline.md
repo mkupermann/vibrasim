@@ -36,3 +36,23 @@ lexical shortcut, no shared token between cue and answer): the ANALOGY / relatio
 (GEO-5 0.88, GEO-6 0.94–1.00) and the LLM-prior learning effect (GEO-24). The proper paraphrase test must
 REMOVE the shared identifying token — done in GEO-25b (descriptive queries). This is the negative control
 doing its job: a chunk of the programme's headline retrieval numbers is lexical, now stated plainly.
+
+## GEO-25b result — the genuine contribution, isolated
+| query set | geometric | lexical | chance |
+|-----------|-----------|---------|--------|
+| descriptive, NO shared token | **0.80** | 0.10 | 0.10 |
+
+**VERDICT: PASS.** With the lexical shortcut removed (queries are DESCRIPTIONS — "the country famous for the
+Eiffel Tower" — sharing no identifying token with "The capital of France is Paris"), geometry scores 0.80
+while lexical collapses to chance 0.10. **This isolates the LLM geometry's real, irreducible value: SEMANTIC
+matching — resolving descriptions/paraphrases to entities, which string matching cannot do.**
+
+## Corrected honest framing for the whole programme
+- **Lexically inflated** (a dumb string matcher ties the geometry because entity NAMES are shared unique
+  keys): named-entity retrieval/QA/grounding headline 1.00s — GEO-15 retrieval, GEO-16/17 hop-1, GEO-23.
+  These demonstrate the PIPELINE works, not that geometry is necessary for them.
+- **Genuinely geometric** (no lexical shortcut — the irreducible contribution): semantic/descriptive
+  retrieval (GEO-25b 0.80 vs 0.10), analogy (GEO-5 0.88), relation-offset & few-shot (GEO-6 0.94–1.00),
+  composition (GEO-1/7), the LLM-prior learning effect (GEO-24). THESE are where the LLM geometry earns its
+  place. The symbolic-layer findings (GEO-18/20) and grounding/abstention (GEO-23) remain valid as
+  ARCHITECTURE properties regardless of the lexical caveat.
