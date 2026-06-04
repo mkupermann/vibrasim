@@ -14,3 +14,16 @@ transition structure, it predicts held-out targets' embeddings whose nearest ite
   (predict context cell's own embedding), MEAN (predict average embedding).
 - Bar: JEPA held-out hits@1 >= 0.7 AND >> baselines (it learned the transition structure in representation
   space, generalizing to unseen cells). NULL if it just memorizes / doesn't generalize.
+
+## Result — PARTIAL (learns some structure; standalone generalization weak)
+| method | held-out hits@1 |
+|--------|-----------------|
+| toy JEPA | 0.20 |
+| COPY baseline | 0.00 |
+| MEAN baseline | 0.02 |
+
+**VERDICT: PARTIAL.** The toy JEPA predicts masked representations above baselines (0.20 vs ~0) — it learned
+SOME transition structure — but generalizes weakly to held-out cells with the simple 2-layer predictor / small
+training set. The JEPA PRINCIPLE (predict in representation space) is demonstrated (beats copy/mean), but
+standalone next-element prediction is not the compelling use. The compelling use (and the user's full request)
+is JEPA as a WORLD MODEL for ENERGY-BASED MPC PLANNING — built in JEP-2.
