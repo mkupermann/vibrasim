@@ -17,11 +17,13 @@ boundary is mapped precisely.
 2. **Understand by geometry** — questions retrieve their answer facts; relations are consistent OFFSETS;
    multi-hop questions are answered by *iterative* retrieval + symbolic bridge chaining. Robust to 100
    distractor facts and to paraphrased (non-template) questions. (GEO-7,15,16,17)
-3. **Learn new knowledge** —
-   - *structured* knowledge: train embeddings (TransE) and generalize to derived facts by composition
-     (grandparent from parent). (GEO-12)
-   - *relations from few examples*: mean-offset few-shot beats a full linear map. (GEO-6)
-   - *arbitrary* facts: a key-value MEMORY (geometry cannot generalize these — GEO-10,11).
+3. **Learn new knowledge** (NB: this is ordinary linear ML on the embeddings, NOT geometrically special —
+   a logistic probe does identically, GEO-66) —
+   - *structured* knowledge: train a linear readout (offset/TransE ≈ logistic probe) and generalize to
+     derived facts by composition (grandparent from parent). (GEO-12)
+   - *relations from few examples*: few-shot linear readout (GEO-6); zero-shot transfers to unseen entities,
+     a property of the EMBEDDINGS not the framing (GEO-27b/66).
+   - *arbitrary* facts: a key-value MEMORY (no readout generalizes these — GEO-10,11).
 4. **Integrate prior + new knowledge without conflict** — per entity, concatenate a FROZEN LLM block
    (semantics) with a TRAINABLE structure block (new relations). Semantics preserved exactly (drift 0.00)
    while new structure trains. (GEO-21)
@@ -46,7 +48,7 @@ boundary is mapped precisely.
 | named-entity retrieval / multi-hop chaining | STRONG (≈1.0) but LEXICALLY solvable (GEO-25) | — |
 | semantic retrieval (descriptions), analogy | STRONG, NOT lexical (GEO-25b 0.80 vs 0.10) | — |
 | semantic MULTI-HOP (epithets, real knowledge) | STRONG, NOT lexical (GEO-31 1.00 vs lexical 0.10) | — |
-| relations linear in embedding space | STRONG (few-shot) | — |
+| relations linear in embedding space | STRONG (few-shot) — but = a logistic probe, not geometric (GEO-66) | — |
 | arbitrary unstructured new facts | FAILS (random offsets) | key-value MEMORY |
 | antonyms / fine sense distinctions | WEAK (0.54) | — |
 | negation ("not in Europe") | WEAK (F1 0.50) | symbolic filter → 1.00 |
