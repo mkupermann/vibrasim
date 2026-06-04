@@ -19,3 +19,18 @@ demonstrable benefit over using the LLM's knowledge directly.
 - Also: update ONE fact at runtime and confirm the answer changes (updatability demo).
 
 PASS if grounded retrieval returns stored answers >= 0.9 and a runtime edit flips the answer.
+
+## Result — PASS
+| metric | value |
+|--------|-------|
+| returns STORED (counterfactual) answer | **1.00** (n=12) |
+| real-world prior returned | 0.00 |
+| runtime edit France->Nice, re-query | 'Nice' |
+
+**VERDICT: PASS.** Grounded retrieval returns the STORED fact 100%, overriding the LLM/real-world prior, and
+a runtime store edit flips the answer. Concrete edge over a frozen LLM: facts are updated by editing one
+store entry — no retraining, no stale parametric memory. **Honest note:** this retrieval is lexically-aided
+(the country name is shared), but the demonstrated PROPERTY — the editable store is authoritative over the
+prior — is an architecture benefit independent of whether retrieval is lexical or semantic. Together with
+grounded abstention (GEO-23) and arbitrary-fact memory (GEO-11), this is the practical value of a grounded
+geometric layer: correct, current, auditable answers a frozen LLM cannot cheaply give.
