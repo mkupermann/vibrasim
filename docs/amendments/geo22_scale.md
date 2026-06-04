@@ -12,3 +12,17 @@ finding the real operating point, not a saturated toy number.
 - Report accuracy vs N. Bars (descriptive, not pass/fail tuning): record the curve; flag the N where 2-hop
   drops below 0.9 and below 0.7. Chance = 1/N.
 - This is a characterization rung: the curve IS the finding (where does PC-scale geometry stay usable).
+
+## Result
+| N | 1-hop | 2-hop | chance |
+|---|-------|-------|--------|
+| 25 | 1.00 | 1.00 | 0.040 |
+| 100 | 0.99 | 0.99 | 0.010 |
+| 400 | 0.98 | 0.87 | 0.003 |
+
+**FINDING (characterization):** graceful degradation. 1-hop retrieval stays high (0.98 at 400 same-relation
+candidates); 2-hop drops to 0.87 as error compounds across the growing pool. The method holds to PC-scale
+HUNDREDS of facts. **Honest caveat:** synthetic names carry numeric suffixes (e.g. "AcmeCorp7"), making
+them very distinctive — real ambiguous entities would degrade more, and deeper chains compound error
+faster. Operating point: comfortably usable to a few hundred facts / 2-3 hops on CPU; beyond that, expect
+sub-0.9 multi-hop and consider re-ranking or symbolic indexing.
