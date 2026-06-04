@@ -1,0 +1,16 @@
+=== JEP-35: compositional abstract goals (set logic + relatedness over IS-A) ===
+  trials=160
+  reached a goal-SATISFYING entity = 1.000
+  random-entity baseline           = 0.269
+  by goal type (accuracy / n):
+    AND_NOT: 1.00  (35)
+    OR: 1.00  (42)
+    NOT: 1.00  (39)
+    RELATED: 1.00  (44)
+
+--- VERDICT ---
+JEP-35: PASS - the agent handles COMPOSITIONAL conceptual goals: set logic (AND/OR/NOT) + relatedness
+over IS-A ground the goal, the world-model navigates - reaching a goal-satisfying entity 1.00 of the
+time (random 0.27). Symbolic operators + concept geometry + planning compose. A richer
+step toward understanding-informed behaviour than single-category goals (JEP-34). Established, named.
+DONE
