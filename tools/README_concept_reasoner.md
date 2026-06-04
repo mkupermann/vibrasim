@@ -69,7 +69,14 @@ easy queries can pass while the aggregate degrades (JEP-29 lesson).
 - Entailment cones (Ganea 2018, `tools/run_jep39*`): fix BOTH residuals on small/clean taxonomies (1.00) but do
   NOT scale (TPR 0.42 at 366). Best for small clean trees.
 
-For real-world use on a sizeable taxonomy, prefer `isa_method="order"`.
+**Choose by USE CASE, not just aggregate accuracy (JEP-46 - important):** higher benchmark accuracy can mean
+WORSE task performance when error types differ.
+- **Raw is-a classification / hypernym lookup** on a large hierarchy -> `"order"` (0.91 vs 0.78).
+- **GROUNDING / planning** ("which entities are-a category X") -> `"poincare"` (DEFAULT). Grounding needs
+  precision against CROSS-BRANCH confusions; order embeddings' cross-branch false-positives ground wrong
+  entities (a canine grounded as a feline), which made an integrated agent WORSE (0.50 vs poincare 0.79, JEP-46).
+  Poincare's errors are siblings, which don't arise in entity-vs-category grounding.
+The error PATTERN, not aggregate accuracy, predicts downstream utility - measure on YOUR task.
 
 ## What it is and isn't
 It is a faithful, honestly-bounded demonstration that **mixed-curvature cognitive maps** capture both metric and
