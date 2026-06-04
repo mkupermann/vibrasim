@@ -487,6 +487,14 @@ class UnderstandingEngine:
         """Conversational answer: quantified ('is every dog an animal?', 'can all birds fly?'), WH-questions
         ('what is a poodle?'), and yes/no explanation for is-a / relation questions."""
         q = question.strip().rstrip("?").lower()
+        # compositional query: "is what the dog chases an animal" -> resolve relation, then taxonomy
+        mcomp = re.match(r"is what (?:the\s+)?(\w+)\s+(\w+)\s+(?:(?:an|a|the)\s+)?(.+)", q)
+        if mcomp:
+            s, r, c = self._norm(mcomp.group(1)), self._norm_rel(mcomp.group(2)), self._norm_phrase(mcomp.group(3))
+            for fs, fr, fo in self.facts:
+                if fs == s and self._norm_rel(fr) == r:
+                    return "Yes." if self.is_a(fo, c) else "No."
+            return f"I don't know what the {s} {self._norm_rel(r)}s."
         # comparative query: "is X bigger than Z" -> transitive closure over the order relation
         mc = re.match(r"(?:is|are)\s+(?:(?:an|a|the)\s+)?(\w+)\s+(\w+)\s+than\s+(?:(?:an|a|the)\s+)?(\w+)", q)
         if mc:

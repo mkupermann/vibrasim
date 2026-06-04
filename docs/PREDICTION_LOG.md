@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 19 / predictions 32 (JEP-118c PARTIAL — correct criterion, genuine data limits) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
+Running tally: hits 19 / predictions 33 (JEP-119 MISS — the a/an bug recurred in a NEW regex) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
 
 | id | prediction (🔮 before) | outcome | hit? | lesson (don't repeat) |
 |----|------------------------|---------|------|------------------------|
@@ -39,3 +39,4 @@ Running tally: hits 19 / predictions 32 (JEP-118c PARTIAL — correct criterion,
 | JEP-118 | 🔮 perceptual overlap breaks self-taught learning | overlap ROBUST (1.00 even sigma=1.5); broke on super-word rarity, mechanism = PMI saturation underdetermines hierarchy LEVELS | MISS | Predicted wrong factor; the real one is PMI level-underdetermination. JEP-117 super-naming was fragile/lucky (tie-break), not robust. |
 | JEP-118b | 🔮 PMI-max-granularity fix separates levels | 0.00 (worse) — superordinate words tie across levels too, leaving super-clusters unnamed | MISS | My fix failed; recorded honestly. Correct criterion is LCA-of-extension (smallest cluster containing all the word's instances), not PMI-max. |
 | JEP-118c | 🔮 LCA-of-extension robust >=0.9 everywhere | 1.00 at freq0.6 (low/mid sigma), 0.00 at freq0.2, 0.74 at sigma1.5 | PARTIAL | Correct criterion, fixes 118b at adequate freq; rare super-words (freq0.2) = real EXPOSURE limit (coverage sparse); extreme overlap breaks clustering. Honest envelope: needs adequate exposure + distinct concepts. |
+| JEP-119 | 🔮 100%; risk = nested parse | 2/4 then 4/4 | MISS | The a/an alternation bug AGAIN, in a fresh regex I hand-wrote. Fixed 5+ times yet recurred. ESCALATED lesson: never hand-write a bare optional-article regex; `(?:(?:an|a|the)\s+)?` must be the ONLY form. |
