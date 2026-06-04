@@ -36,9 +36,22 @@ e.is_a(e.perceive(new_bird_features), "animal")          # True
 | 1 | parse -> ground -> bind -> infer (comprehension battery 19/19) | JEP-92 |
 | 2 | Boolean AND/OR/NOT comprehension | JEP-93 |
 | 3 | parse robustness (plurals, "kind of", "every/all") | JEP-94 |
-| 4 | COMMUNICATE reasoning in English | JEP-95 |
+| 4 | COMMUNICATE reasoning in English (explain) | JEP-95 |
 | 5 | LEARN by correction (belief revision) | JEP-96 |
 | 6 | LEARN a concept from examples shown | JEP-97 |
+| 7 | multi-word concepts + natural-input hardening (adjectival/plural subjects) | JEP-98/99 |
+| 8 | conversational WH-questions ("what is X?", "what does X do?") | JEP-100 |
+| 9 | three-valued comprehension Yes/No/**I-don't-know** (epistemic humility) | JEP-101 |
+| 10 | **LEARNING THROUGH DIALOGUE** — identify the gap, get taught, then know | JEP-102 |
+
+```python
+# learning through dialogue (the capstone):
+e.tell("A poodle is a dog."); e.tell("A dog is an animal.")
+e.explain("is a poodle a living thing?")   # "I don't know whether a poodle is a living thing."
+e.inquire("poodle", "living thing")        # "I know a poodle is an animal, but I don't know whether an animal is a living thing."
+e.tell("An animal is a living thing.")     # taught exactly the identified gap
+e.explain("is a poodle a living thing?")   # "Yes. A poodle is a dog, a dog is an animal, an animal is a living thing."
+```
 
 ## Honest scope and the frontier (not arrival)
 This is 100% on a **simple, controlled, parseable** language with **given/learned-from-features** prototypes. It is
