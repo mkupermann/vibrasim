@@ -14,3 +14,16 @@ REAL data (MNIST, 60k x 784) with a large network?
 - Bars: backprop test acc >= 0.95 (confirms scale+task), PC test acc >= backprop - 0.03 (PC matches at scale),
   both >> 0.10. PASS = substrate-compatible local learning SCALES to real data matching backprop. NULL if PC
   fails to scale. Predictive coding (Rao-Ballard; Whittington-Bogacz 2017) established - named as such.
+
+## Result — PARTIAL (PC strong at scale, but backprop baseline mistuned -> comparison confounded)
+| learner | MNIST test acc | wall-clock |
+|---------|----------------|------------|
+| backprop (lr=0.5) | 0.8893 | 16s |
+| predictive coding (lr=0.5) | 0.9652 | 58s |
+
+**VERDICT: PARTIAL.** Predictive coding scaled strongly to real MNIST (0.965 with a 1-hidden 1024 net, 16
+threads) — the substrate-compatible local-learning path is clearly NOT toy-only. BUT the backprop baseline
+underperformed (0.889): lr=0.5 (locked pre-run) is too aggressive for backprop here, so the comparison is
+CONFOUNDED — I will NOT claim "PC > backprop" from a mistuned baseline (that would be overclaiming). The locked
+soundness bar (backprop >= 0.95) correctly flagged this. Fair fix = equal lr sweep for BOTH learners (JEP-10b),
+standard practice, not post-hoc bar tuning. PC's 0.965 itself is a solid, honest scaling result.
