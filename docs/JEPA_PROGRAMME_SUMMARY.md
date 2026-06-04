@@ -209,3 +209,37 @@ over-claimed anomaly, a committed-failing-test process error, a FRAGILE success 
 and a FAILED fix (JEP-118b) owned. NULLs recorded as findings. Reusable wisdom surfaced as docs/patterns/. The
 deadlock-breaking PROCESS — measure before claiming, predict then diagnose, fail cleanly, name the established as
 established — is the genuine, transferable result.
+
+---
+
+## KEY CONCEPTUAL FINDINGS (post-JEP-118c: the structure-learning + inference-robustness work, JEP-128..140)
+
+These later rungs produced the programme's most transferable INTELLECTUAL contributions (all from established
+methods, no novelty claimed — the value is the honest characterization):
+
+1. **The JEP-69/70 "can't learn arbitrary structure" NULL was too pessimistic — for CLEAN data.** Relation
+   properties (transitivity) and composition rules ('uncle = parent o sibling') are LEARNABLE from clean
+   observation, UNIQUELY IDENTIFIABLE (exact-match dominates spurious candidates), and ROBUST to distractor
+   relations + moderate noise (JEP-128/129/130/131). The limit on clean data is SEARCH COST (|R|^depth), not
+   identifiability. Sparse-PASSIVE data is ambiguous, but ACTIVE querying solves it in ~n log n (JEP-135).
+
+2. **THE COMPOUNDING INSIGHT (the deepest finding).** Both LEARNING structure and REASONING over it are MULTI-STEP
+   inference, and multi-step inference COMPOUNDS errors: a k-step derivation is correct only if ALL k steps are, so
+   reliability decays ~(1-p)^k EXPONENTIALLY with inferential DEPTH under noise. Measured for noisy structure
+   learning (JEP-133/134/136, needs redundancy growing with structure SIZE) and for the engine's multi-hop
+   reasoning (JEP-137, depth1 0.90 -> depth4 0.52 @10% noise). This is WHY long brittle chains fail.
+
+3. **CHAINING vs AGGREGATION (the unifying picture).** CHAINING (deduction, closures, sorts) COMPOUNDS errors ->
+   fragile. AGGREGATION (induction = majority over instances; redundant DAG paths = vote over derivations) AVERAGES
+   errors -> robust to ~50% noise (JEP-140: induction 0.91 vs deduction 0.20 @30% noise). The CURE for chaining
+   fragility is REDUNDANT independent paths + voting (JEP-138, a recall tool — NOT a precision tool, JEP-139 NULL).
+   LESSON: human-like robust inference under noise = AGGREGATION + REDUNDANCY, not deep clean chains; match the
+   inference SHAPE to the noise.
+
+4. **My own predict-calibrate bias, measured.** I was systematically miscalibrated on structure learning in BOTH
+   directions: OVER-predicted difficulty on CLEAN data (exact-match is strong, 3x), UNDER-predicted it on NOISY data
+   (closures compound, 2x). The discipline surfaced a real bias in my intuition — measure, don't trust it.
+
+These are the genuine outputs: a frontier REFRAMED with honest bounds, a unifying INSIGHT about inference under
+noise, and a measured account of prediction bias. Established methods throughout; NOT human-level; the discipline
+(predict-calibrate 35/54, every miss diagnosed, ~35 self-corrections) is the transferable deliverable.
