@@ -19,3 +19,16 @@ and motivates the symbolic layer; if it survives, that is a surprising positive.
   near-chance (embeddings don't compute >).
 - Bars: this is an EDGE rung. PASS-as-designed if pure geometry is WEAK (negation F1 < 0.6 OR comparison <
   0.65) AND the symbolic layer fixes negation (F1 >= 0.9). Report raw numbers; NULL/positive both valid.
+
+## Result
+| query type | pure geometry | symbolic |
+|------------|---------------|----------|
+| (A) negation "not in Europe" (F1) | **0.50** | **1.00** |
+| (B) comparison "larger population" (acc) | **0.29** (chance 0.50) | — |
+
+**VERDICT: PASS-as-designed** — the expected edge is confirmed. Pure embedding similarity is WEAK on
+negation (F1 0.50, ignores "not") and BELOW CHANCE on numeric comparison (0.29 — it picks by semantic
+similarity to the question, not by magnitude, so it is actively misled). The symbolic continent-filter fixes
+negation at 1.00. **The neuro-symbolic boundary is now crisp:** geometry = retrieval / chaining / analogy /
+learned relations; a thin SYMBOLIC layer = negation / comparison / aggregation / arithmetic. This matches the
+well-known limitation of embedding models and validates the hybrid architecture the programme converged on.
