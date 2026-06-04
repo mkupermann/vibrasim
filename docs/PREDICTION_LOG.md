@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 24 / predictions 39 (JEP-125 HIT — parser robust, 0 crashes) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
+Running tally: hits 25 / predictions 40 (JEP-126 HIT — scales to 1000 concepts) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
 
 | id | prediction (🔮 before) | outcome | hit? | lesson (don't repeat) |
 |----|------------------------|---------|------|------------------------|
@@ -46,3 +46,4 @@ Running tally: hits 24 / predictions 39 (JEP-125 HIT — parser robust, 0 crashe
 | JEP-123 | 🔮 quality high + coverage >> Boole; risk = adjectival/intransitive forms | 94% coverage, reasoning correct, adjectival 'Dogs are loyal' mis-parsed as IS-A (flagged) | HIT | Developmental claim holds at the simple end (94% vs Boole 2%); honest caveat: 'X are Y' ambiguous category-vs-property, defaults to IS-A. No fragile fix. |
 | JEP-124 | 🔮 100% match vs reference OR a found bug | 1.00000 (0/23916 mismatches, 400 random DAGs) | HIT | Core multi-hop is_a sound under randomized property-based testing; compact version locked in the suite. |
 | JEP-125 | 🔮 0 crashes OR a found crash | 0 crashes / 8000 adversarial inputs | HIT | Parser robust incl backslash/regex-special inputs (confirms the JEP-108 data-as-regex-replacement crash is fixed); compact fuzz test in the suite. |
+| JEP-126 | 🔮 correct + fast at 1000 concepts | 0 mismatches, 0.05 ms/query | HIT | Core reasoning scales (correct + sub-ms). Engine now SOUND+ROBUST+SCALABLE. |
