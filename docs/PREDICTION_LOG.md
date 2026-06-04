@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 15 / predictions 24 (JEP-112 HIT; streak 109-112) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
+Running tally: hits 16 / predictions 25 (JEP-113 HIT; streak 109-113) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
 
 | id | prediction (🔮 before) | outcome | hit? | lesson (don't repeat) |
 |----|------------------------|---------|------|------------------------|
@@ -31,3 +31,4 @@ Running tally: hits 15 / predictions 24 (JEP-112 HIT; streak 109-112) (JEP-92 x3
 | JEP-110 | 🔮 100%; risk = all/every parse forms | 5/5 | HIT | Universal IS-A reduces to is_a; universal property checks instances with defeasible exceptions (names the counterexample). |
 | JEP-111 | 🔮 100%; risk = tracking last query / chain phrasing | 4/4 | HIT | _last_query tracked across respond/explain; 'why?' reuses the chain. |
 | JEP-112 | 🔮 100%; risk = comparative captured by _ISA first | 5/5 | HIT | Routed 'X is COMP than Y' BEFORE _ISA; transitive closure over the order relation; IS-A intact. |
+| JEP-113 | 🔮 PARTIAL/PASS >=0.8 when features hierarchical | purity 1.00/1.00, reasoning 1.00 | HIT | Clustering recovers structure in the coarse-distinctive regime; feeds the engine. Honest: structure not MEANING (nameless clusters), needs hierarchical features. |
