@@ -1,0 +1,12 @@
+=== GEO-66: geometric vs supervised baseline ===
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 11084.65it/s]
+  (a) few-shot ordinal:
+    k=4  geometric=0.65  supervised-logistic=0.65
+    k=8  geometric=0.70  supervised-logistic=0.71
+  (b) zero-shot transfer (unseen-vs-unseen):
+    geometric=0.82  supervised-logistic=0.82
+
+--- VERDICT ---
+GEO-66: HONEST COMPARISON — zero-shot geometric 0.82 vs logistic 0.82. Geometric framing is NOT necessary (plain supervised matches it) - honest deflation: the value is the EMBEDDINGS + a linear readout, geometric or logistic.
+DONE

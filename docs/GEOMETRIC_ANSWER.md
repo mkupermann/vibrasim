@@ -172,6 +172,15 @@ Interactive on CPU: ~7ms/query (~150 q/s), ~24ms with re-ranking. Brute-force re
 few hundred facts, GEO-22, fixed by re-ranking GEO-40b). So: hold 100k+ facts and query in real time; invest
 in re-ranking/better embeddings for accuracy, and an ANN index only beyond ~1M facts.
 
+## Honest deflation — what "geometric" genuinely means (GEO-66)
+Tested head-to-head: the geometric relation LEARNER (offset/ranking/TransE) is IDENTICAL to a plain logistic
+regression on the same embeddings (few-shot and zero-shot both equal). So the geometric framing adds nothing
+for LEARNING relations — the value is the LLM embeddings + a linear readout. What IS irreducibly geometric is
+the training-FREE vector arithmetic: retrieval, analogy-by-offset, and multi-hop composition (a linear probe
+can't do these). Honest refined description: the system is "LLM embeddings + linear readouts + symbolic
+operators"; the embedding geometry genuinely powers training-free retrieval/analogy/composition, while the
+learned-relation parts are ordinary linear ML — no geometric magic there.
+
 ## Bottom line
 Phase-1 verdict was "the physics substrate has no computational value." Phase-2 verdict is the constructive
 counterpart: **redefining the substrate as a geometric concept space over an LLM yields a real, working,
