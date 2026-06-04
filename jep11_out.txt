@@ -1,0 +1,11 @@
+=== JEP-11: SR-as-value maze navigation (M=16, S=256, local TD, 16 threads) ===
+  SR (TD) learned
+  reached:  SR-VALUE=1.00   EUCLID-greedy=0.03   random=0.32   (BFS-optimal=1.00)
+
+--- VERDICT ---
+JEP-11: PASS - the LOCALLY-LEARNED Successor Representation, used as a VALUE FUNCTION (greedy ascent
+on M[s',goal]), navigates the maze at 1.00 vs Euclidean-greedy 0.03 (stuck at walls) and
+random 0.32. This CLOSES JEP-8/9: the prior failure was the PLANNER (1-step greedy on embedding
+distance), not the representation. SR encodes geodesic reachability and a local TD rule learns it.
+Substrate-compatible (local TD) planning works. SR/TD (Dayan 1993) established, named as such.
+DONE
