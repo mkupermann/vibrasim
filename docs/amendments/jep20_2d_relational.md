@@ -16,3 +16,17 @@ never co-observed - 2D relational generalization from local structure.
   accuracy >= 0.9.
 - PASS = the cognitive map recovers 2D structure and infers global 2D relations from local observations. NULL
   otherwise. SR/grid-cell (Stachenfeld 2017), spectral embedding - established, named as such.
+
+## Result — PARTIAL (2D structure emerges; square-grid eigenvalue degeneracy caps it at ~0.90)
+| measure | value |
+|---------|-------|
+| recovered-coord corr x / y | 0.895 / 0.896 |
+| relational inference east / north | 0.881 / 0.889 |
+
+**VERDICT: PARTIAL.** The cognitive map recovers the latent 2D structure (corr ~0.90 both axes) and infers
+global 2D relations on NON-adjacent pairs (east 0.88, north 0.89, >> chance 0.5) - the 2D extension of JEP-17
+works. But it just misses the 0.9 bars because a SQUARE grid has EIGENVALUE DEGENERACY: the x-mode and y-mode
+(cos(pi x/K), cos(pi y/K)) share eigenvalues, so eigh returns an arbitrary ROTATION within the degenerate
+subspace -> recovered axes are slightly mixed (~0.90, not ~1.0). Known math degeneracy, not a failure of the
+representation. Principled fix (not bar-tuning): a RECTANGULAR grid (K1!=K2) breaks the degeneracy -> clean axis
+separation -> JEP-20b. Bars locked, not tuned.

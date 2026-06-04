@@ -1,0 +1,7 @@
+=== JEP-20: 2D relational inference from cognitive map (K=8 grid, S=64) ===
+  recovered-coord vs true correlation:  x-axis=0.895  y-axis=0.896
+  relational inference (non-adjacent):  east-of acc=0.881   north-of acc=0.889
+
+--- VERDICT ---
+JEP-20: PARTIAL/NULL - corr x0.90/y0.90, infer E0.88/N0.89
+DONE
