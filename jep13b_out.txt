@@ -1,0 +1,6 @@
+=== JEP-13b: MPC lookahead (depth 6) on PVF-approx value, S=144, k=36 ===
+  MPC-lookahead reached:  PVF-approx=0.47   random-basis=0.26   true-SR=1.00
+
+--- VERDICT ---
+JEP-13b: PARTIAL/NULL - PVF 0.47, random 0.26, true 1.00
+DONE
