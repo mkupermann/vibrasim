@@ -53,4 +53,4 @@ local TD = the substrate's BTSP) -> value/MPC planning -> adaptation. Robust to 
 Human-level / open conceptual understanding; any novelty (all methods established and named); a single best is-a
 method (use-case-dependent). The open frontier: language grounding, multi-parent (DAG) reasoning, convergent-
 scale learning. ~50 rungs, NULLs as findings, ~17 self-corrections - the discipline (measure before claiming) is
-the transferable output. See `docs/patterns/honest_evaluation.md`.
+the transferable output. See `docs/patterns/honest_evaluation.md` and `docs/patterns/grounding.md` (concept formation -> reason -> act, and where it breaks).
