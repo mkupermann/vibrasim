@@ -23,6 +23,7 @@ vibrasim SUBSTRATE is a genuine benefit for this.
 | JEP-9 | PARTIAL | Successor Representation is locally learnable (TD vs closed-form corr 1.00) + tracks geodesic>euclidean>contrastive (right trend), but greedy maze nav metric invalid. |
 | JEP-10/10b | **PASS** | SCALING: predictive coding (local, no backprop) matches backprop on full MNIST (PC 0.947 vs bp 0.968, within 0.03) on 16 CPU threads. Local learning is not toy-only. |
 | JEP-10c | **PASS** | AMD GPU usable for INFERENCE via DirectML (x3.51 @200k batch, exact-match acc). Training stays CPU (no AMD PyTorch-train path on Win/Py3.13). |
+| JEP-11 | **PASS** | SR-as-VALUE-function (local TD) navigates a maze PERFECTLY (1.00) vs Euclidean-greedy 0.03; closes JEP-8/9 (failure was the planner, not the rep). TD/eligibility-traces = substrate BTSP primitive. |
 | JEP-7 | **PASS** | END-TO-END: contrastive-learned encoder + PC-learned predictor + energy-MPC reaches 0.97 of goals (untrained-predictor ablation 0.05, random 0.25). Nuance: exact prediction only 0.23 — planning needs correct ACTION RANKING, not exact prediction; world model accurate ENOUGH to plan. |
 
 ## The honest bottom line
@@ -43,3 +44,12 @@ vibrasim SUBSTRATE is a genuine benefit for this.
 - Open next work (JEP-7+): scale the local-learning rep + PC predictor; couple them (learn rep AND transition
   with local rules jointly); test on the REAL substrate dynamics, contingent on progress on the persistent-
   memory blocker (substrate memory thread).
+
+
+## Substrate connection strengthened (JEP-11)
+The planning piece is now substrate-native too: SR is learned by LOCAL TD, and TD-with-eligibility-traces is
+exactly the substrate's BTSP primitive (CLAUDE.md). So the whole backprop-free loop maps onto the substrate's
+own toolkit: BTSP/TD -> Successor Representation (geodesic value) -> value-based planning (DP/MPC) -> optimal
+goal-reaching; plus Hebbian+relaxation EBM (JEP-4) and predictive coding (JEP-6d/10b, scales to MNIST). What is
+NOT claimed: human-level understanding (open), GPU training on this AMD/Win machine (unavailable), or any
+novelty (all established methods, named as such).
