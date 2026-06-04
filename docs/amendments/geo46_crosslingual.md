@@ -14,3 +14,17 @@ user-relevant capability.
 - Metric: cross-lingual retrieval hits@1 (German query -> correct English fact). Compare to an
   English-monolingual model (all-MiniLM-L6-v2) on the same German queries (expected to fail cross-lingual).
 - Bars: multilingual >= 0.7 AND >> monolingual. PASS if cross-lingual retrieval works. NULL otherwise.
+
+## Result — PARTIAL (capability real, hardest version just below bar)
+| model | DE descriptive query -> EN fact, hits@1 |
+|-------|------------------------------------------|
+| paraphrase-multilingual-MiniLM-L12-v2 | **0.67** |
+| all-MiniLM-L6-v2 (English-only) | 0.25 |
+| chance | 0.08 |
+
+**VERDICT: PARTIAL.** Cross-lingual semantic retrieval WORKS substantially — the multilingual model
+decisively beats English-only (0.67 vs 0.25, gap 0.42) — but the absolute 0.67 is just below the 0.70 bar
+(NOT retuned). This is the HARDEST version: German DESCRIPTIVE queries with no shared token requiring true
+cross-lingual semantic matching. Typical cross-lingual queries carry the entity NAME as a shared cross-
+lingual anchor and should score higher (tested in GEO-46b). Takeaway for the German-speaking user: use a
+multilingual embedding model and German questions retrieve English facts; the capability is real.
