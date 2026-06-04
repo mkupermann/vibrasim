@@ -1,4 +1,4 @@
-# EQMOD-3 Geometric programme — experiment index (GEO-1 → GEO-57)
+# EQMOD-3 Geometric programme — experiment index (GEO-1 → GEO-90)
 
 One line per rung. Verdict + the finding. Full write-up in each `geo*.md`. Authoritative narrative:
 `docs/GEOMETRIC_ANSWER.md`; structured summary: `GEOMETRIC_PROGRAMME_SUMMARY.md`.
