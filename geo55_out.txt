@@ -1,0 +1,8 @@
+=== GEO-55: conjunctive multi-constraint queries ===
+    [0.80] 'Who is on Platform and earns more than 110?' -> ['Bob', 'Eve'] (exp ['Bob', 'Eve', 'Nina'])
+    [0.80] 'Who works in Denver and earns more than 100?' -> ['Bob', 'Eve'] (exp ['Bob', 'Eve', 'Nina'])
+  conjunctive query mean-F1 = 0.95  (n=8)
+
+--- VERDICT ---
+GEO-55: PASS - the system composes CONJUNCTIVE constraints (0.95): extract multiple constraints (team/city/salary-threshold) + symbolic AND-filter. Multi-constraint queries work.
+DONE
