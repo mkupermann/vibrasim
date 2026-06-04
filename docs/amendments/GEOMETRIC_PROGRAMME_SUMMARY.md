@@ -1,4 +1,4 @@
-# EQMOD-3 Geometric programme — summary (GEO-1 → GEO-32)
+# EQMOD-3 Geometric programme — summary (GEO-1 → GEO-42)
 
 ## The new approach
 Substrate redefined as a learnable GEOMETRIC concept space over a real LLM: relations = transformations,
@@ -65,5 +65,9 @@ All primitives are ESTABLISHED methods (TransE/MDS/word-analogy/RAG-style retrie
 symbolic split) named as such; the contribution is the honest synthesis + a precise boundary map + the
 isolation of geometry's irreducible value (semantic matching, zero-shot transfer, aligned-structure learning).
 A genuine, working, PC-scale learning+understanding system — real, but NOT human-level AI and NOT a new method:
-it reads an existing LLM's understanding, generator-free, bounded. Open: generation (needs a generator),
-robust composition, scale beyond hundreds of facts.
+it reads an existing LLM's understanding, bounded. GROUNDED generation is DONE (GEO-34/35: a 0.5B LLM
+follows the store over its prior 1.00 vs 0.00, abstains vs confabulates, incl. multi-hop over private facts);
+scale limit MITIGATED (GEO-40b: per-hop re-ranking, 2-hop 0.87->1.00 at 400); validated MODEL- and DOMAIN-
+robust (GEO-36/37). Usable artifacts: tools/geometric_reasoner.py + tools/grounded_qa.py + README + pytest.
+Open (need bigger infra): open-domain coverage (larger LLM), robust multi-attribute composition, very-large
+scale (ANN). Extra capabilities: contradiction detection (GEO-41), relational joins (GEO-42).
