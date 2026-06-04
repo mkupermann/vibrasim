@@ -35,3 +35,21 @@ def test_routes_temporal(agent):
 def test_routes_join(agent):
     res = agent.answer("Who is on the same team as Alice?")
     assert res["intent"] == "JOIN" and res["answer"] == {"David"}
+
+
+def test_routes_negation():
+    from unified_reasoner import UnifiedReasoner
+    u = UnifiedReasoner(abstain_tau=0.30)
+    for p, t in [("Alice", "Analytics"), ("Bob", "Platform"), ("David", "Analytics")]:
+        u.add_person(p, t)
+    res = u.answer("Who is not on the Analytics team?")
+    assert res["intent"] == "NEGATE" and res["answer"] == {"Bob"}
+
+
+def test_routes_comparison():
+    from unified_reasoner import UnifiedReasoner
+    u = UnifiedReasoner(abstain_tau=0.30)
+    u.add_person("Alice", "Analytics", salary=95)
+    u.add_person("Bob", "Platform", salary=120)
+    res = u.answer("Who earns more, Alice or Bob?")
+    assert res["intent"] == "COMPARE" and res["answer"] == "Bob"
