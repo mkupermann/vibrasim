@@ -25,7 +25,8 @@ composition/retrieval/inference. ML/LLM allowed, PC-scale. (EQMOD physics abando
 - Antonyms weak (GEO-9, 0.54). Arbitrary unstructured new facts: geometry can't generalize (GEO-10) -> need MEMORY.
 - Composition depth decays gracefully (GEO-2); linear chains degenerate for normalized TransE (GEO-13 inconclusive).
 - Clean LLM-prior + new-arbitrary-structure integration is an open tension (GEO-14).
-- Pure geometry CANNOT aggregate/count/synthesize (GEO-18) -> needs a thin symbolic layer.
+- Pure geometry CANNOT aggregate/count/synthesize (GEO-18), is weak on NEGATION (F1 0.50) and BELOW chance on COMPARISON (0.29) (GEO-20) -> a thin symbolic layer handles negate/compare/aggregate/arithmetic.
+- GEO-15-19 saturate at 1.00 on CLEAN small entities: proves the method is sound + integrates, NOT that open-domain NLU is solved.
 
 ## The honest METHOD (a working learning+understanding system on a PC, no generator)
 1. **Concept space** = a real LLM's embeddings (MiniLM) — prior semantic knowledge, free.
