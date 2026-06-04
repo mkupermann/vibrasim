@@ -12,3 +12,17 @@ kept BOTH low, masking whether PC truly matches a SUCCESSFUL backprop run. JEP-6
 - Bars: backprop >= 0.7 (confirms the task is learnable) AND PC >= 0.7 AND |PC-backprop| <= 0.10 AND both >>
   random. PASS = local PC learning matches a SUCCESSFUL backprop predictor. NULL if backprop can't learn it
   (task/readout still wrong) or PC fails to match. Predictive coding = established, named as such.
+
+## Result — NULL (classification framing = memorization; PC lags backprop on harder optimization)
+| metric | backprop | predictive coding | random |
+|--------|----------|-------------------|--------|
+| TRAIN acc | 0.83 | 0.47 | — |
+| held-out acc | 0.00 | 0.00 | 0.02 |
+
+**VERDICT: NULL (informative).** Two findings: (1) held-out 0.00 for BOTH — a 64-way classification of next-cell
+is pure MEMORIZATION; held-out (cell,action) pairs map to classes the net never associated with that input, so
+no generalization (the embedding-regression of JEP-6b at least carried spatial structure -> 0.12). (2) On TRAIN
+fit, backprop (0.83) BEATS PC (0.47): with limited inference iterations PC only APPROXIMATES backprop and lags
+on harder softmax optimization (consistent with the literature - PC approximates backprop under conditions, not
+identically). The grid-transition task confounds the PC-vs-backprop question with a pathological generalization
+structure. Fair test = iid nonlinear classification (JEP-6d). Bars locked, not retuned.
