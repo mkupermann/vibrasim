@@ -189,10 +189,23 @@ class UnderstandingEngine:
         return max(self._cos(q, fv) for fv in self._fact_vecs) >= thresh
 
     # --- communication: explain the answer in English (template generation, no transformer) ----
-    @staticmethod
-    def _art(noun: str) -> str:
-        """Indefinite article agreement: 'an' before a vowel-initial noun, else 'a'."""
-        return ("an " if noun[:1].lower() in "aeiou" else "a ") + noun
+    # a/an is phonetic, not orthographic: a letter rule fails on consonant-sound vowels ("a unicorn")
+    # and vowel-sound consonants ("an hour"). Full correctness needs a pronunciation dictionary; this is
+    # the standard pragmatic partial — a letter rule plus an exception set for common words.
+    _ART_A = {"unicorn", "university", "unit", "united", "union", "unique", "european", "ewe",
+              "one", "once", "u", "use", "user", "useful", "utah"}
+    _ART_AN = {"hour", "honest", "honor", "honour", "heir", "honourable", "honorable"}
+
+    @classmethod
+    def _art(cls, noun: str) -> str:
+        head = noun.split()[0] if noun else noun
+        if head in cls._ART_A:
+            art = "a "
+        elif head in cls._ART_AN:
+            art = "an "
+        else:
+            art = "an " if head[:1].lower() in "aeiou" else "a "
+        return art + noun
 
     @staticmethod
     def _parse_isa_q(q: str):
@@ -242,6 +255,27 @@ class UnderstandingEngine:
                 return f"Yes, the {s} {self._norm_rel(r)}s the {o}."
             return f"No, I was not told that the {s} {self._norm_rel(r)}s the {o}."
         return "I cannot parse that question."
+
+    def respond(self, question: str) -> str:
+        """Conversational answer: handles WH-questions ('what is a poodle?', 'what does the dog chase?')
+        and falls back to yes/no explanation for is-a / relation questions."""
+        q = question.strip().rstrip("?").lower()
+        m = re.match(r"what\s+(?:is|are)\s+(?:(?:an|a|the)\s+)?(.+)", q)
+        if m:
+            x = self._norm_phrase(m.group(1))
+            p = self.parents.get(x)
+            if p:
+                ans = f"{self._art(x)} is {self._art(p)}."
+                return ans[0].upper() + ans[1:]
+            return f"I don't know what {self._art(x)} is."
+        m = re.match(r"what\s+does\s+(?:the\s+)?(\w+)\s+(\w+)", q)
+        if m:
+            s, r = self._norm(m.group(1)), self._norm_rel(m.group(2))
+            for fs, fr, fo in self.facts:
+                if fs == s and self._norm_rel(fr) == r:
+                    return f"The {s} {r}s the {fo}."
+            return f"I don't know what the {s} {r}s."
+        return self.explain(question)
 
     def _eval_clause(self, clause: str):
         """Evaluate one atomic clause (is-a or relation), honouring a leading/embedded 'not'."""
