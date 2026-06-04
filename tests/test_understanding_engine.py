@@ -329,3 +329,11 @@ def test_parser_fuzz_no_crash():
             rnd.choice(vocab) if rnd.random() < 0.7 else ''.join(rnd.choice(string.printable) for _ in range(rnd.randint(0, 6)))
             for _ in range(rnd.randint(0, 10)))
         e.tell(s); e.respond(s); e.describe(s)   # must never raise
+
+
+def test_learned_composition_rule():
+    e = UnderstandingEngine(seed=130)
+    e.tell("the alice parents the carol."); e.tell("the carol siblings the tom.")
+    e.add_rule("uncle", "parent", "sibling")          # a learned (JEP-129) composition rule
+    assert e.relation_holds("alice", "uncle", "tom")  # derived, never stored
+    assert not e.relation_holds("alice", "uncle", "carol")
