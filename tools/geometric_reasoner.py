@@ -81,16 +81,23 @@ class GeometricReasoner:
         self.abstain_tau = float(margin * a.mean() + (1 - margin) * u.mean())
         return self.abstain_tau
 
-    # ---- core: grounded retrieval (GEO-15, GEO-23) + optional re-rank (GEO-40b)
-    def retrieve(self, query: str):
+    # ---- core: grounded retrieval (GEO-15, GEO-23) + optional re-rank (GEO-40b) + kind scope (GEO-83)
+    def retrieve(self, query: str, kind=None):
         """Return (best_index, similarity) or (None, sim) if below the abstention threshold.
         If rerank_k>0, the top-k bi-encoder candidates are re-scored by a cross-encoder (GEO-40b:
         recovers multi-hop accuracy at scale, 2-hop 0.87->1.00 at 400 facts). Abstention still uses the
-        bi-encoder similarity (calibrated tau)."""
+        bi-encoder similarity (calibrated tau). Pass `kind` to SCOPE retrieval to facts of that meta kind —
+        avoids cross-type confusion (GEO-83: "who can fix plumbing" matching a 'fix' task over the plumber
+        contact)."""
         if not self.fact_texts:
             return None, 0.0
         q = self._embed([query])[0]
         sims = self.F @ q
+        if kind is not None:                    # mask out facts of other kinds
+            mask = np.array([m.get("kind") == kind for m in self.fact_meta])
+            if not mask.any():
+                return None, 0.0
+            sims = np.where(mask, sims, -np.inf)
         j = int(np.argmax(sims))
         if sims[j] < self.abstain_tau:
             return None, float(sims[j])         # ABSTAIN — grounded, no confabulation
@@ -98,9 +105,11 @@ class GeometricReasoner:
             if self._ce is None:
                 from sentence_transformers import CrossEncoder
                 self._ce = CrossEncoder(self._rerank_model)
-            topk = np.argsort(-sims)[:self.rerank_k]
-            ce_scores = self._ce.predict([(query, self.fact_texts[t]) for t in topk])
-            j = int(topk[int(np.argmax(ce_scores))])
+            order = np.argsort(-sims)
+            topk = [int(t) for t in order[:self.rerank_k] if np.isfinite(sims[t])]
+            if topk:
+                ce_scores = self._ce.predict([(query, self.fact_texts[t]) for t in topk])
+                j = int(topk[int(np.argmax(ce_scores))])
         return j, float(sims[j])
 
     def ask(self, query: str):
