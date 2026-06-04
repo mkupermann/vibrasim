@@ -451,6 +451,32 @@ class UnderstandingEngine:
             return f"No, I was not told that the {s} {self._norm_rel(r)}s the {o}."
         return "I cannot parse that question."
 
+    def tell_cause(self, x: str, y: str) -> None:
+        """Record a causal edge x -> y (x causes y). Stored separately from IS-A (causation is not taxonomy)."""
+        if not hasattr(self, "causes"):
+            self.causes = {}
+        self.causes.setdefault(self._norm(x), set()).add(self._norm(y))
+
+    def causes_effect(self, x: str, z: str, intervene: str = None) -> bool:
+        """Does x causally affect z (transitively)? Under do(intervene), the intervened node's INCOMING causal
+        edges are cut (Pearl's do-operator): its value is set externally, so its usual causes no longer reach
+        downstream THROUGH it from x."""
+        causes = getattr(self, "causes", {})
+        x, z = self._norm(x), self._norm(z)
+        iv = self._norm(intervene) if intervene else None
+        out, stack, seen = set(), [x], {x}
+        while stack:
+            cur = stack.pop()
+            for nxt in causes.get(cur, ()):
+                # do(iv) cuts edges INTO iv: a cause cur->iv no longer propagates (iv is set, not caused)
+                if nxt == iv:
+                    continue
+                if nxt == z:
+                    return True
+                if nxt not in seen:
+                    seen.add(nxt); stack.append(nxt)
+        return False
+
     def add_rule(self, target: str, r1: str, r2: str) -> None:
         """Install a (possibly LEARNED, JEP-129) composition rule: target(x,z) :- r1(x,y) AND r2(y,z)."""
         if not hasattr(self, "rules"):

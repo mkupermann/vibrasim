@@ -344,3 +344,13 @@ def test_is_a_confidence_is_graded():
     e.tell("A poodle is a dog."); e.tell("A dog is an animal."); e.tell("A poodle is a pet.")
     assert e.is_a_confidence("poodle", "animal") >= 1   # at least one derivation path
     assert e.is_a_confidence("poodle", "fish") == 0      # no path
+
+
+def test_causal_reasoning_intervention():
+    e = UnderstandingEngine(seed=141)
+    for x, y in [("rain", "wetgrass"), ("wetgrass", "slippery"), ("sprinkler", "wetgrass")]:
+        e.tell_cause(x, y)
+    assert e.causes_effect("rain", "slippery")                       # transitive causation
+    assert not e.causes_effect("slippery", "rain")                   # asymmetric
+    assert not e.causes_effect("rain", "slippery", intervene="wetgrass")  # do(wetgrass) cuts incoming edges
+    assert e.causes_effect("rain", "slippery", intervene="sprinkler")     # unrelated intervention
