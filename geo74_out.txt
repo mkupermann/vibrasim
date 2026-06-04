@@ -1,0 +1,11 @@
+=== GEO-74: real-world data (periodic table) ===
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 10606.50it/s]
+Loading weights:   0%|          | 0/105 [00:00<?, ?it/s]Loading weights: 100%|##########| 105/105 [00:00<00:00, 9811.13it/s]
+  factoid (symbol)   = 1.00
+  comparison (Z)     = 1.00
+  semantic (desc)    = 1.00
+
+--- VERDICT ---
+GEO-74: PASS - the full system works on REAL-WORLD data (periodic table): factoid 1.00, comparison 1.00, semantic 1.00. Validates on genuine (non-synthetic) data.
+DONE
