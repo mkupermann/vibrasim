@@ -44,8 +44,9 @@ qa.answer("What is the capital of Atlantis?", focus="Atlantis") # -> "I don't kn
 - Always `calibrate_abstention()` on a small labelled dev set — a guessed threshold is unreliable (GEO-32).
 - Generation needs the faithfulness instruction (built into GroundedQA) or the small model invents details
   (GEO-38) and can revert to its prior (GEO-34); larger instruct models follow context more robustly.
-- Operating envelope: a few hundred facts / 2-3 hops on CPU (GEO-22). Beyond that, add an ANN index + a
-  cross-encoder re-ranker.
+- Operating envelope: a few hundred facts / 2-3 hops on CPU (GEO-22). For accuracy at larger scale, pass
+  `GeometricReasoner(rerank_k=10)` — a cross-encoder re-ranks the top-k per hop and recovers multi-hop
+  accuracy (GEO-40b: 2-hop 0.87->1.00 at 400 facts), at ~8s/400 queries/hop on CPU. Beyond that, add an ANN index.
 
 ## What it gives you that a raw LLM doesn't
 Grounded (abstains instead of confabulating), updatable (edit one fact, no retraining), auditable (you see
