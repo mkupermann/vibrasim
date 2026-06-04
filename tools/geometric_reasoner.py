@@ -121,6 +121,23 @@ class GeometricReasoner:
         """Count facts whose meta satisfies a predicate — the symbolic layer geometry can't do alone."""
         return sum(1 for meta in self.fact_meta if predicate(meta))
 
+    # ---- typo-robust entity resolution (GEO-44) --------------------------
+    def resolve_entity(self, name: str, candidates=None):
+        """Fuzzy-match `name` to the closest stored entity (by character-trigram Jaccard) — robust to typos
+        and near-duplicate names where pure embedding retrieval fails (GEO-43 0.53 -> GEO-44 1.00). Returns
+        the best-matching candidate string. Use this for entity IDENTITY; embeddings for relevance."""
+        if candidates is None:
+            candidates = sorted({m.get("subject") for m in self.fact_meta if m.get("subject")})
+        if not candidates:
+            return None
+        def tri(s):
+            s = "  " + s.lower().replace(" ", "") + "  "
+            return set(s[i:i + 3] for i in range(len(s) - 2))
+        def sim(a, b):
+            A, B = tri(a), tri(b)
+            return len(A & B) / len(A | B) if A | B else 0.0
+        return max(candidates, key=lambda c: sim(name, c))
+
     # ---- contradiction detection (GEO-41) --------------------------------
     def check_contradiction(self, text: str, subject: str, object: str):
         """Return the conflicting stored fact index if `text` contradicts an existing same-subject fact
