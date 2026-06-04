@@ -67,3 +67,40 @@ own toolkit: BTSP/TD -> Successor Representation (geodesic value) -> value-based
 goal-reaching; plus Hebbian+relaxation EBM (JEP-4) and predictive coding (JEP-6d/10b, scales to MNIST). What is
 NOT claimed: human-level understanding (open), GPU training on this AMD/Win machine (unavailable), or any
 novelty (all established methods, named as such).
+
+## FINAL HONEST ASSESSMENT (JEP-1 .. JEP-25b)
+
+### What was genuinely achieved
+1. **A substrate-native realization of JEPA/EBM/MPC.** The full world-model agent - perception -> world model
+   (BTSP/TD Successor Representation) -> value/MPC planning -> reward & transition adaptation - runs entirely on
+   LOCAL learning + relaxation (no backprop), mapping onto the substrate's own primitives. Integrated end-to-end
+   from noisy perception with no privileged state (JEP-16), robust to stochastic transitions (JEP-22b).
+2. **Local learning scales.** Predictive coding (backprop-free) matches backprop on MNIST and Fashion-MNIST at
+   depth (JEP-19b/c).
+3. **The substrate's benefit is concrete and demonstrated**, not hand-waved: EBM inference = relaxation, learning
+   = local plasticity, predictor = predictive coding (JEP-4/5/6d).
+4. **GPU enabled** on AMD/Windows (torch-directml, Py3.11) - training + inference (JEP-18).
+5. **Bridge to relational reasoning**: cognitive maps do 1D transitive and 2D relational inference (JEP-17/20b);
+   low-dim structural priors generalize sparse relations (JEP-21b).
+6. **Honest geometric boundary**: Euclidean cognitive maps fit metric structure, need HYPERBOLIC for hierarchies
+   (JEP-23b/24b).
+
+### What was NOT achieved (honest)
+- **Human-level / conceptual understanding.** Everything is sensorimotor navigation + STRUCTURED relational
+  inference on small graphs. No language, no open concepts, no genuine semantic grounding beyond toy structure.
+- **Cross-content structural transfer** (TEM factorization): not cleanly demonstrated (JEP-21 downgraded).
+- **Mixed-curvature synthesis**: established (Gu 2019) but I could not reproduce it in toys (JEP-25 NULL).
+- **No novelty.** Every method is established and named (Hopfield, predictive coding, SR/grid-cells, TD, MPC,
+  proto-value functions, Poincare embeddings, product manifolds). The contribution is pre-registered, honestly-
+  bounded demonstration + a clean map of what works where - NOT new methods.
+
+### Integrity record
+~25 rungs, many NULLs treated as findings; multiple self-corrections (JEP-10 mistuned baseline retracted, JEP-17
+SDE retracted, JEP-19 impl-bug diagnosed, JEP-21 self-downgraded, JEP-22 budget-saturation caught, JEP-25 honest
+limitation). No post-hoc bar tuning; near-misses (JEP-21b 0.002, JEP-24b 0.019) reported as misses, not rounded up.
+
+### The honest signpost forward
+Toward conceptual understanding, the concrete next needs (each established, none trivial): MIXED-CURVATURE
+cognitive maps (metric + taxonomic relations); grounding the structural machinery in real perceptual/linguistic
+data at scale (now feasible on the GPU); and language as the interface to compositional concepts. These are
+genuine research directions, not a finished path - stated honestly rather than overclaimed.
