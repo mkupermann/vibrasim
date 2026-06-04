@@ -1,0 +1,9 @@
+=== JEP-79b: capacity bottleneck (latent=4, distractor 96-d dominant) - JEPA vs generative ===
+   JEPA state-R2 = 0.982   GENERATIVE state-R2 = 0.490   gap = +0.493
+
+--- VERDICT ---
+JEP-79b: PASS - in the BOTTLENECK regime (4-d latent, 96-d unpredictable distractor dominating recon
+loss) JEPA beats generative on state fidelity (R2 0.98 vs 0.49, gap +0.49). HERE latent
+prediction's feature-suppression pays off: the generative model spends scarce latent on noise. This
+LOCATES the JEPA advantage - it needs a capacity bottleneck, not just unpredictability. Established, named.
+DONE
