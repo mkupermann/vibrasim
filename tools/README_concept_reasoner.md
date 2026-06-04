@@ -49,10 +49,11 @@ Validated, with limits, across EQMOD-4 (see `docs/amendments/jep28*.md`, `jep29*
 `iters` substantially (a GPU helps — see `docs/AMD_GPU_COMPUTE.md`). The norm-based IS-A readout degrades on very
 deep hierarchies.
 
-**Also:** `is_a` checks only the necessary *generality* condition (b more general than a). Per-query accuracy is
-~0.86–0.91 on small/medium taxonomies, so a minority of queries are wrong — do NOT treat it as exact. Aggregate
-held-out accuracy is the honest metric; cherry-picked easy queries can pass while the aggregate degrades
-(JEP-29 lesson).
+**`is_a` is a calibrated classifier** (JEP-32): generality (norm gap) + containment (hyperbolic distance), so it
+correctly rejects general concepts in *other* branches (`is_a(oak, mammal)=False`). Classification accuracy ~0.96
+on small taxonomies. KNOWN residual: same-depth **siblings** (`is_a(cat, dog)`) can be false-positive (TNR ~0.92) —
+small distance + ~0 norm gap sit near the decision boundary. Aggregate accuracy is the honest metric; cherry-picked
+easy queries can pass while the aggregate degrades (JEP-29 lesson).
 
 **Compositional queries** (lowest common ancestor / "what category includes both X and Y") work *partially*
 (~0.6–0.8, JEP-30c) and improve with embedding dimension — a genuine but bounded step beyond pairwise IS-A.

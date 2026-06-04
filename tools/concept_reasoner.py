@@ -71,8 +71,44 @@ class ConceptReasoner:
                 g = Xh.grad; sc = ((1 - (Xh ** 2).sum(1, keepdim=True)).clamp(min=1e-4) ** 2) / 4.0
                 Xh = Xh - 0.3 * sc * g; nrm = Xh.norm(dim=1, keepdim=True); Xh = torch.where(nrm >= 0.999, Xh / nrm * 0.999, Xh)
             Xh = Xh.detach()
-        self.Xh = Xh; self.hnorm = (Xh ** 2).sum(1).numpy()
+        self.Xh = Xh; self.Xh_np = Xh.numpy(); self.hnorm = (Xh ** 2).sum(1).numpy()
+        self._calibrate_isa(holdout_pairs)
         return self
+
+    def _hd(self, i, j):
+        a = self.Xh_np[i]; b = self.Xh_np[j]
+        diff = ((a - b) ** 2).sum(); na = (a ** 2).sum(); nb = (b ** 2).sum()
+        return float(np.arccosh(max(1 + 2 * diff / ((1 - na) * (1 - nb) + 1e-9), 1 + 1e-7)))
+
+    def _calibrate_isa(self, holdout_pairs):
+        # is-a needs generality AND containment. Calibrate a logistic classifier on
+        # features [hyperbolic distance, norm gap] over ancestor (pos) vs non-ancestor (neg) pairs.
+        N = self.N
+        pos = []
+        for v in range(N):
+            for u in self._ancestors(v):  # u is ancestor of v -> v is_a u
+                if holdout_pairs is not None and (u, v) in holdout_pairs:
+                    continue
+                pos.append((v, u))
+        if not pos:
+            self._isa_w = None; return
+        anc_set = {(v, u) for v in range(N) for u in self._ancestors(v)}
+        rng = np.random.default_rng(0); neg = []
+        while len(neg) < len(pos) * 2:
+            a, b = int(rng.integers(N)), int(rng.integers(N))
+            if a != b and (a, b) not in anc_set:
+                neg.append((a, b))
+
+        def feat(a, b):
+            return [self._hd(a, b), self.hnorm[a] - self.hnorm[b]]
+        X = np.array([feat(*p) for p in pos] + [feat(*n) for n in neg], dtype=np.float64)
+        y = np.array([1.0] * len(pos) + [0.0] * len(neg))
+        mu = X.mean(0); sd = X.std(0) + 1e-9; Xs = (X - mu) / sd
+        w = np.zeros(2); b0 = 0.0; lr = 0.1
+        for _ in range(2000):
+            z = Xs @ w + b0; p = 1 / (1 + np.exp(-z)); g = (p - y)
+            w -= lr * (Xs.T @ g) / len(y); b0 -= lr * g.mean()
+        self._isa_w, self._isa_b, self._isa_mu, self._isa_sd = w, b0, mu, sd
 
     def relatedness(self, a, b):
         i, j = self.ID[a], self.ID[b]; return float(-_euc_dc(self.Xe[i:i + 1], self.Xe[j:j + 1]))
@@ -80,8 +116,16 @@ class ConceptReasoner:
     def more_general(self, a, b):
         i, j = self.ID[a], self.ID[b]; return a if self.hnorm[i] < self.hnorm[j] else b
 
+    def is_a_score(self, a, b):
+        """P(a is-a b) = a is a kind of b (b is a hypernym/ancestor of a). Calibrated."""
+        i, j = self.ID[a], self.ID[b]
+        if getattr(self, "_isa_w", None) is None:
+            return float(self.hnorm[j] < self.hnorm[i])
+        f = (np.array([self._hd(i, j), self.hnorm[i] - self.hnorm[j]]) - self._isa_mu) / self._isa_sd
+        return float(1 / (1 + np.exp(-(f @ self._isa_w + self._isa_b))))
+
     def is_a(self, a, b):
-        i, j = self.ID[a], self.ID[b]; return bool(self.hnorm[j] < self.hnorm[i])
+        return self.is_a_score(a, b) >= 0.5
 
     def nearest(self, a, k=5):
         i = self.ID[a]

@@ -1,0 +1,17 @@
+=== JEP-32: fixed is_a (calibrated containment) ===
+  sanity:
+    is_a(cat,mammal)=True exp=True OK
+    is_a(cat,animal)=True exp=True OK
+    is_a(cat,plant)=False exp=False OK
+    is_a(cat,bird)=False exp=False OK
+    is_a(rose,plant)=True exp=True OK
+    is_a(rose,animal)=False exp=False OK
+    is_a(oak,tree)=True exp=True OK
+    is_a(oak,mammal)=False exp=False OK
+    is_a(cat,dog)=True exp=False WRONG
+    is_a(mammal,cat)=False exp=False OK
+  is-a classification: TPR=1.000 TNR=0.921 acc=0.960
+
+--- VERDICT ---
+JEP-32: PARTIAL/NULL - acc 0.96, sanity wrong 1
+DONE
