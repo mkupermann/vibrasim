@@ -13,3 +13,18 @@ retrieval/reasoning degrades gracefully under realistic noise — a deployabilit
 - Also: near-duplicate confusion rate (does a query for "John Smith" wrongly return "Jon Smith"'s fact?).
 - Bars (characterization): report clean vs noisy accuracy + confusion rate. Flag if noisy drops > 0.2 below
   clean (fragile) or holds within 0.1 (robust). Honest either way; no pass/fail tuning.
+
+## Result — FRAGILE (major honest deployability caveat)
+| store | 1-hop accuracy |
+|-------|----------------|
+| clean | 1.00 |
+| noisy (paraphrase + typos + 5 near-dups) | **0.53** |
+| near-duplicate confusion rate | **0.33** |
+
+**VERDICT: FRAGILE.** Realistic noise drops accuracy from 1.00 to 0.53. A THIRD of queries return a NEAR-
+DUPLICATE entity's fact ("John Smith" -> "Jon Smith"ّs city), because embedding similarity cannot distinguish
+near-identical names. **This is the programme's most important deployability caveat: the clean-store 1.00s
+are optimistic — messy real data with near-duplicate entities degrades badly.** Mitigation: entity
+NORMALIZATION / exact-key identity matching (not pure embedding retrieval) for entity resolution; embeddings
+for relevance, exact IDs for identity. Diagnostic split (paraphrase/typo vs near-dup) in GEO-43b to locate
+the dominant cause.
