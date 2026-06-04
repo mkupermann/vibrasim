@@ -30,3 +30,17 @@ works. But it just misses the 0.9 bars because a SQUARE grid has EIGENVALUE DEGE
 subspace -> recovered axes are slightly mixed (~0.90, not ~1.0). Known math degeneracy, not a failure of the
 representation. Principled fix (not bar-tuning): a RECTANGULAR grid (K1!=K2) breaks the degeneracy -> clean axis
 separation -> JEP-20b. Bars locked, not tuned.
+
+## JEP-20b — rectangular grid (degeneracy broken) — PASS
+| measure | value |
+|---------|-------|
+| recovered-coord corr x / y | 0.976 / 0.977 |
+| relational inference east / north | 0.966 / 0.980 |
+
+**VERDICT: PASS.** On a rectangular grid (9x6, breaking the square-grid eigenvalue degeneracy), the cognitive
+map recovers the latent 2D structure cleanly (corr ~0.98 both axes - grid-cell-like codes) and infers global 2D
+relations (east 0.97, north 0.98) on NON-adjacent concept pairs never co-observed. Confirms JEP-20's shortfall
+was the eigen-degeneracy, not the representation. With JEP-17 (1D transitive inference) this establishes the
+SR/cognitive-map machinery as a relational-reasoning engine in 1D AND 2D concept spaces - reasoning as the same
+geometry that does spatial navigation. Honest scope: still STRUCTURED relational inference (orders, grids), not
+open conceptual/linguistic understanding. SR grid-cells (Stachenfeld 2017), spectral embedding established - named.
