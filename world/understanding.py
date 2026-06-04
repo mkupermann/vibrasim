@@ -295,6 +295,24 @@ class UnderstandingEngine:
                 return True
         return False
 
+    def would_contradict(self, sentence: str):
+        """Consistency check (non-blocking): does asserting `sentence` conflict with current beliefs?
+        Returns a message or None. ('X is not C' conflicts if C is currently derivable for X; 'X is C'
+        conflicts if X was explicitly told NOT to be C.) A correction via tell() still overrides."""
+        pre = self._preprocess_isa(self._resolve_pronoun(sentence))
+        mneg = self._NEG_ISA.match(pre)
+        if mneg:
+            x, c = self._norm_phrase(mneg.group(1)), self._norm_phrase(mneg.group(2))
+            if self._valid_concept(x) and self._valid_concept(c) and c in self.ancestors(x):
+                return f"Contradiction: I currently believe {self._art(x)} is {self._art(c)}."
+            return None
+        m = self._ISA.match(pre)
+        if m:
+            x, c = self._norm_phrase(m.group(1)), self._norm_phrase(m.group(2))
+            if self._valid_concept(x) and self._valid_concept(c) and (x, c) in self.neg_isa:
+                return f"Contradiction: I was told {self._art(x)} is NOT {self._art(c)}."
+        return None
+
     def is_a(self, x: str, c: str) -> bool:
         """Multi-hop IS-A by transitive closure; an explicit negative fact (correction) overrides."""
         x, c = self._norm_phrase(x), self._norm_phrase(c)

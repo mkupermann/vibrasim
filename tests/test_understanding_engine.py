@@ -199,3 +199,14 @@ def test_concept_validity_guard_rejects_complex_prose():
     # a simple definitional sentence still parses
     assert e.tell("A poodle is a dog.")[0] == "isa"
     assert e.is_a("poodle", "dog")
+
+
+def test_contradiction_detection():
+    e = UnderstandingEngine(seed=109)
+    e.tell("A whale is a mammal."); e.tell("A mammal is an animal.")
+    assert e.would_contradict("A whale is not an animal.") is not None   # via closure
+    assert e.would_contradict("A whale is a fish.") is None              # unknown, no conflict
+    e.tell("A whale is not a fish.")
+    assert e.would_contradict("A whale is a fish.") is not None          # explicit negative
+    e.tell("A whale is a fish.")                                         # correction still works (non-blocking)
+    assert e.is_a("whale", "fish")
