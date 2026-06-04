@@ -376,3 +376,19 @@ def test_temporal_persistence_frame():
     assert e.fluent_at("door_open") is False        # changed by close
     assert e.fluent_at("light_on") is True          # persists, never turned off
     assert e.fluent_at("light_on", 0) is None       # not yet set at t0
+
+
+def test_provenance_truth_maintenance():
+    e = UnderstandingEngine(seed=145)
+    for f in ["A poodle is a dog.", "A dog is an animal.", "An animal is a living thing."]:
+        e.tell(f)
+    assert e.provenance("poodle", "living thing") == [("poodle", "dog"), ("dog", "animal"), ("animal", "living thing")]
+    assert e.is_a("poodle", "living thing")
+    e.retract("dog", "animal")
+    assert not e.is_a("poodle", "living thing")        # justification removed
+    # redundancy survives retraction
+    e2 = UnderstandingEngine(seed=2)
+    for f in ["A poodle is a dog.", "A poodle is a mammal.", "A dog is an animal.", "A mammal is an animal."]:
+        e2.tell(f)
+    e2.retract("dog", "animal")
+    assert e2.is_a("poodle", "animal")                 # survives via mammal path
