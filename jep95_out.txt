@@ -1,0 +1,17 @@
+=== JEP-95: engine tier 4 - communicate reasoning in English (target 100%) ===
+   Q: is a poodle a living_thing
+   A: Yes. A poodle is a dog, a dog is an animal, an animal is a living thing.
+   Q: is a poodle an animal
+   A: Yes. A poodle is a dog, a dog is an animal.
+   Q: is a poodle a fish
+   A: No. I was not told anything that makes a poodle a fish.
+   Q: does the dog chase the cat
+   A: Yes, the dog chases the cat.
+   Q: does the cat chase the dog
+   A: No, I was not told that the cat chases the dog.
+
+   communication battery: 5/5 = 100.0%
+--- VERDICT ---
+JEP-95: PASS - the engine COMMUNICATES its reasoning in correct English (content + article + verb
+agreement). A step toward human-like communication: it explains WHY, not just yes/no. No transformer.
+DONE

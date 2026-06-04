@@ -149,6 +149,48 @@ class UnderstandingEngine:
         q = self._bind(self._norm(s), r.lower(), self._norm(o))
         return max(self._cos(q, fv) for fv in self._fact_vecs) >= thresh
 
+    # --- communication: explain the answer in English (template generation, no transformer) ----
+    @staticmethod
+    def _art(noun: str) -> str:
+        """Indefinite article agreement: 'an' before a vowel-initial noun, else 'a'."""
+        return ("an " if noun[:1].lower() in "aeiou" else "a ") + noun
+
+    def _isa_chain(self, x: str, c: str):
+        """The path x -> ... -> c through the IS-A graph, or None if no path."""
+        x, c = self._norm(x), self._norm(c)
+        path = [x]
+        cur = x
+        seen = set()
+        while cur in self.parents and cur not in seen:
+            seen.add(cur)
+            cur = self.parents[cur]
+            path.append(cur)
+            if cur == c:
+                return path
+        return None
+
+    def explain(self, question: str) -> str:
+        """Answer a question in natural English, showing the reasoning (the inference chain)."""
+        q = question.strip().rstrip("?").lower()
+        m = re.match(r"(?:is|are)\s+(?:(?:an|a|the)\s+)?(\w+)\s+(?:(?:an|a|the)\s+)?(\w+)", q)
+        if m:
+            x, c = self._norm(m.group(1)), self._norm(m.group(2))
+            chain = self._isa_chain(x, c)
+            if chain:
+                disp = lambda w: w.replace("_", " ")
+                steps = ", ".join(f"{self._art(disp(chain[i]))} is {self._art(disp(chain[i+1]))}"
+                                  for i in range(len(chain) - 1))
+                steps = steps[0].upper() + steps[1:] if steps else steps
+                return f"Yes. {steps}."
+            return f"No. I was not told anything that makes {self._art(x.replace('_',' '))} {self._art(c.replace('_',' '))}."
+        m = re.match(r"does\s+the\s+(\w+)\s+(\w+)\s+(?:(?:the|an|a)\s+|in\s+the\s+)?(\w+)", q)
+        if m:
+            s, r, o = m.group(1), m.group(2), m.group(3)
+            if self.relation_true(s, r, o):
+                return f"Yes, the {s} {self._norm_rel(r)}s the {o}."
+            return f"No, I was not told that the {s} {self._norm_rel(r)}s the {o}."
+        return "I cannot parse that question."
+
     def _eval_clause(self, clause: str):
         """Evaluate one atomic clause (is-a or relation), honouring a leading/embedded 'not'."""
         c = clause.strip().rstrip("?").lower()

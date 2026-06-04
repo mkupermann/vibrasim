@@ -56,3 +56,12 @@ def test_parse_robustness_varied_phrasings():
     assert e.parents.get("dog") == "animal"      # not "nimal" — article must not eat the noun
     assert e.parents.get("animal") == "living_thing"
     assert e.is_a("poodle", "living_thing")      # multi-hop across varied phrasings
+
+
+def test_communication_explains_in_english():
+    e = _engine()
+    assert e.explain("is a poodle a living_thing?") == \
+        "Yes. A poodle is a dog, a dog is an animal, an animal is a living thing."
+    assert e.explain("is a poodle a fish?").startswith("No.")
+    assert e.explain("does the dog chase the cat?") == "Yes, the dog chases the cat."
+    assert e.explain("does the cat chase the dog?").startswith("No,")

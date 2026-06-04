@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 3 / predictions 6 (JEP-92 x3, JEP-93 x1, JEP-94 x2). NOTE: JEP-94 #1 was a REPEATED mistake (article bug fixed in ask() but not _ISA) — the cardinal failure; meta-lesson logged (propagate surface-form fixes to EVERY parser).
+Running tally: hits 4 / predictions 7 (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
 
 | id | prediction (🔮 before) | outcome | hit? | lesson (don't repeat) |
 |----|------------------------|---------|------|------------------------|
@@ -13,3 +13,4 @@ Running tally: hits 3 / predictions 6 (JEP-92 x3, JEP-93 x1, JEP-94 x2). NOTE: J
 | JEP-93 | 🔮 100% on single-connective+negation Boolean battery; most-likely miss = NOT-parsing (bare IS-A regex would grab 'not' as object) | 12/12 = 100% | HIT | Applied JEP-92's surface-form lesson: handled negation BEFORE atomic parse and enumerated connective/negation/article forms. Prediction held because the lesson was applied, not re-learned. |
 | JEP-94 #1 | 🔮 100%; most-likely miss = 'kind of'/quantifier surface form | 87.5%; 'Dogs are animals' -> object 'nimal' (article ate noun's leading 'a') | MISS (REPEAT) | This is JEP-92 #1's bug AGAIN — fixed in ask() but NOT propagated to _ISA. CARDINAL failure (mistake twice). META-LESSON: fix a surface-form bug in EVERY parser/regex in the module + grep to confirm; one-path fix is not a fix. |
 | JEP-94 #2 | 🔮 100% after propagating the article fix to _ISA + auditing _SVO and grepping | 16/16 = 100% | HIT | Propagation lesson applied; audit (grep) confirmed no unsafe article patterns remain. |
+| JEP-95 | 🔮 100%; most-likely miss = a/an agreement in GENERATION ('a animal') | 5/5 = 100% | HIT | Applied the surface-form meta-lesson PROACTIVELY: article agreement in one _art() helper used everywhere, before any miss. |
