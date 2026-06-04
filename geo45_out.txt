@@ -1,0 +1,9 @@
+=== GEO-45: full hardened stack under realistic noise ===
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 10060.39it/s]
+  (a) pure embedding multi-hop (noisy)   = 0.50
+  (b) + entity-resolution front-end      = 1.00
+
+--- VERDICT ---
+GEO-45: PASS - the full hardened stack handles realistic noisy multi-hop: entity resolution recovers the chain (0.50->1.00). The deployable system works on messy data with the front-end.
+DONE

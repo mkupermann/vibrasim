@@ -146,7 +146,8 @@ entities compound badly (the 0.53 case). Deploy with a front-end: spell/characte
 entity-ID resolution for identity (use embeddings for relevance, exact keys for who-is-who). Without it, the
 headline accuracies are optimistic. VALIDATED (GEO-44): a character-trigram fuzzy entity-resolution
 front-end fully recovers noisy-store accuracy (0.53 -> 1.00) — so the system IS deployable on messy data with
-this cheap front-end (embeddings for relevance, fuzzy/exact name matching for identity).
+this cheap front-end (embeddings for relevance, fuzzy/exact name matching for identity). End-to-end validated under noise:
+the full multi-hop stack with the front-end recovers from 0.50 to 1.00 on a noisy store (GEO-45).
 
 ## Bottom line
 Phase-1 verdict was "the physics substrate has no computational value." Phase-2 verdict is the constructive
