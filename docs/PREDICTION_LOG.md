@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 41 / predictions 60 (JEP-146 HIT — abduction completes Peirce's triad) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
+Running tally: hits 42 / predictions 61 (JEP-147 HIT — integrated diagnosis composes inference modes) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
 
 | id | prediction (🔮 before) | outcome | hit? | lesson (don't repeat) |
 |----|------------------------|---------|------|------------------------|
@@ -67,3 +67,4 @@ Running tally: hits 41 / predictions 60 (JEP-146 HIT — abduction completes Pei
 | JEP-144 | 🔮 factual generation works, variety limited, creative blocked | factually-correct fact-listing with surface variety; no narrative/novelty | HIT | Maps the last frontier: factual/descriptive generation works without a transformer; open/creative generation is no-transformer-blocked. Engine can SAY what it knows, not INVENT. |
 | JEP-145 | 🔮 100%; risk = which path is the justification | 7/7 | HIT | Provenance chain + retraction invalidates single-path dependents; redundant paths survive (TMS + JEP-138 redundancy). |
 | JEP-146 | 🔮 100%; risk = ranking ties | 4/4 | HIT | Abduction (effect->cause, most direct first) completes Peirce's triad: deduction+induction+abduction. |
+| JEP-147 | 🔮 100%; risk = coverage-vs-overprediction scoring | 4/4 | HIT | Diagnosis COMPOSES abduction+deduction+covering; symptoms -> best-explaining cause (anosmia distinguishes covid). Faculties combine, not just coexist. |
