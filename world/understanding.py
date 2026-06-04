@@ -92,8 +92,10 @@ class UnderstandingEngine:
         return min(self.prototypes, key=lambda c: np.linalg.norm(feats - self.prototypes[c]))
 
     # --- parsing / telling --------------------------------------------------
-    # articles require a trailing space and are longest-first, so a noun's leading "a"/"an" (e.g. "animals")
-    # is never mistaken for an article (the JEP-92/94 surface-form lesson, applied to EVERY parser).
+    # MANDATORY article form for EVERY parser in this file: r"(?:(?:an|a|the)\s+)?"
+    # longest-first (an|a|the) + REQUIRED trailing space, so a noun's leading "a"/"an" (e.g. "animals", "an" in
+    # "animal") is never mistaken for an article. The bare form r"(?:a|an|the)?" is BUGGED (matches "a" inside
+    # "an") and recurred 6 times (JEP-92/94/95/100/119) — NEVER hand-write it; copy the form on this line.
     # subject and object may both be multi-word noun phrases ("a big dog is a living thing").
     _ISA = re.compile(r"^\s*(?:(?:an|a|the)\s+)?(.+?)\s+(?:is|are)\s+(?:(?:an|a|the)\s+)?(.+?)\s*\.?\s*$", re.I)
     # SVO: leading "the" optional so plural statements parse ("Poodles chase cats.")
