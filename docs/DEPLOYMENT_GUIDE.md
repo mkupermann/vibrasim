@@ -82,6 +82,13 @@ For a mixed-language KB (e.g. German + English notes/contacts), use the multilin
 (`model_name="paraphrase-multilingual-MiniLM-L12-v2"`): mixed German+English store + cross-language queries
 retrieve at 1.00 (vs English-only 0.60). Query in either language; both map to the same semantic space.
 
+## Security — prompt injection from untrusted store content (GEO-97)
+The system puts retrieved store text into the LLM prompt, so a malicious stored "fact" can be a prompt
+injection (modest risk, 0.17 hijack on the 0.5B model). Naive prompt-based defenses BACKFIRED (0.17->0.33) on
+the small model — don't rely on them. If your store contains UNTRUSTED content: sanitize/escape instruction-
+like text on ingestion, and prefer EXTRACTIVE answers (return the fact, no generation). For a TRUSTED private
+personal KB (the main use case), injection is a non-issue.
+
 ## The honest bottom line
 This makes a small model trustworthy on YOUR facts — IF you keep retrieval clean and abstain when unsure.
 It is a deployable engineering synthesis, not human-level AI and not a new method. Its biggest strength
