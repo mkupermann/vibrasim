@@ -1,0 +1,15 @@
+=== JEP-29: concept reasoner on REAL WordNet carnivore subtree ===
+  concepts=366, root=carnivore.n.01
+  ancestor pairs=1456
+  trained IS-A direction acc  = 0.712
+  HELD-OUT IS-A direction acc = 0.681  (random 0.5)
+  sanity (real synsets):
+    is_a(dog.n.01,carnivore.n.01) = True
+    is_a(domestic_cat.n.01,feline.n.01) = True
+    is_a(carnivore.n.01,dog.n.01) = False
+    is_a(wolf.n.01,canine.n.02) = True
+    nearest(dog.n.01) = ['aardwolf.n.01', 'afghan_hound.n.01', 'african_hunting_dog.n.01', 'airedale.n.01', 'american_black_bear.n.01']
+
+--- VERDICT ---
+JEP-29: PARTIAL/NULL - held-out 0.68, sanity_ok True
+DONE
