@@ -50,3 +50,28 @@ Unsupervised perceptual concept formation reaches FUNCTIONAL categories WHEN fun
 visual invariance (pick the right features). The residual - functions independent of appearance - needs
 non-visual signal: interaction/affordances, context, or language. That, plus grounding at scale and the real
 substrate, is the open work. Everything here is toy-environment + real-features; not human-level understanding.
+
+## 7. Self-taught grounding: observation -> structure -> meaning -> reasoning (JEP-113..118c)
+The engine can learn its ENTIRE named taxonomy from raw observation + ambient language with ZERO told facts:
+perceive (features) -> CLUSTER into a hierarchy (structure, JEP-113) -> CROSS-SITUATIONAL word learning (meaning
+without clean labels, Yu-Smith 2007, JEP-116) -> wire IS-A from the cluster hierarchy -> reason/describe (JEP-117,
+"A dog is a mammal" learned not told). It works END-TO-END in the favorable regime.
+
+### The honest boundary (hard-won across 117->118->118b->118c)
+- **Structure discovery is robust to perceptual overlap** but needs coarse-distinctive features (JEP-54 condition);
+  at extreme overlap (sigma~1.5) clustering itself degrades.
+- **Basic/instance-level naming is robust** (cross-situational PMI works: basic words are exclusive to a tight
+  cluster).
+- **Superordinate-level naming is the fragile part.** PMI SATURATES for any word exclusively associated with a
+  cluster (PMI=log(1/P(cl))), so 'bird' and 'robin' have IDENTICAL PMI for the bird-super-cluster -> co-occurrence
+  UNDERDETERMINES hierarchy LEVELS. (This is why child word-learning needs the taxonomic/basic-level constraints,
+  Rosch/Markman.) JEP-117's apparent super-naming success was partly TIE-BREAK LUCK.
+- **The correct criterion is LCA-of-extension**: a word names the SMALLEST cluster containing (almost) all its
+  instances (coverage AND specificity high). 'robin'->robin-sub; 'bird'->the super-cluster. Naive PMI-max FAILED
+  (JEP-118b, 0.00 - superordinate words tie across levels too). LCA fixes it AT ADEQUATE EXPOSURE.
+- **Residual real limits**: rare superordinate words (heard ~20% of scenes) can't be learned reliably (coverage too
+  sparse - a genuine EXPOSURE limit, not a method flaw); heavy concept overlap breaks the clustering.
+
+### The methodological lesson
+A fragile success (117) was corrected by stress-testing (118), a proposed fix FAILED and was owned (118b), and the
+principled criterion (118c) was found AND bounded. Stress-test your successes; a 1.00 in one regime is not a law.
