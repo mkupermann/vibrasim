@@ -1,0 +1,11 @@
+=== GEO-102: real technical document adaptation ===
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 10936.22it/s]
+  ingested 864 chunks from the article
+  retrieval hits@1 BEFORE adaptation = 0.33
+Computing widget examples:   0%|          | 0/1 [00:00<?, ?example/s]                                                                     {'train_runtime': '100.5', 'train_samples_per_second': '25.8', 'train_steps_per_second': '1.612', 'train_loss': '0.0004462', 'epoch': '3'}
+  retrieval hits@1 AFTER self-supervised adaptation = 0.17
+
+--- VERDICT ---
+GEO-102: adaptation hurt (0.33->0.17) — risk of overfitting; use ingestion alone or fewer epochs.
+DONE
