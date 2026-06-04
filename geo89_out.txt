@@ -1,0 +1,10 @@
+=== GEO-89: mixed-language KB ===
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|##########| 199/199 [00:00<00:00, 10435.81it/s]
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 10027.23it/s]
+  multilingual model hits@1 = 1.00
+  English-only model hits@1 = 0.60
+
+--- VERDICT ---
+GEO-89: PASS - the multilingual model handles a MIXED German+English KB with cross-language queries (1.00, vs English-only 0.60): German queries find German AND English facts and vice versa. The bilingual personal-use scenario works.
+DONE
