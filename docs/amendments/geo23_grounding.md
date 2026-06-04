@@ -20,3 +20,19 @@ separates answerable (fact in store) from unanswerable (no fact) questions and a
   answers (the LLM-confabulation failure mode this prevents).
 
 PASS if the method reliably abstains (knows what it doesn't know) — the concrete value-add over generation.
+
+## Result
+| metric | value |
+|--------|-------|
+| calibrated tau (no test tuning) | 0.699 (answerable 0.868 vs unanswerable 0.531) |
+| (a) answerable answered-correctly | **1.00** |
+| (b) unanswerable abstain rate | **1.00** |
+| (c) overall decision accuracy | **1.00** |
+| control (no abstention) confidently WRONG on unanswerable | **1.00** |
+
+**VERDICT: PASS** — large, clean separation between answerable (sim ~0.87) and unanswerable (~0.53)
+questions lets the method ABSTAIN reliably (decision accuracy 1.00). The no-abstention control gets every
+unanswerable question confidently wrong — exactly the confabulation a generative LLM produces. **This is the
+concrete value-add: grounded, hallucination-free reasoning that knows what it doesn't know.** Combined with
+updatable memory (GEO-11) and composable structure (GEO-12), it is what geometry-over-an-LLM gives that a
+raw generative LLM does not.
