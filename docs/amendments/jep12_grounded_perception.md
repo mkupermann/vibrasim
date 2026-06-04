@@ -46,3 +46,19 @@ perceptual noise COMPOUNDS: the agent re-perceives noisily every step (incl. the
 error accumulates over long horizons. Not a fundamental failure - a denoising/horizon issue. JEP-12c: multi-
 glance denoising (average k observations per perception; cache goal) - a real agent can look more than once.
 Bars locked, not tuned.
+
+## JEP-12c — multi-glance denoising — PASS
+| measure | value |
+|---------|-------|
+| perceptual state-ID (k=5 glances) | 1.000 |
+| SR-value planning (perceived states) | 1.00 |
+| Euclid / random | 0.07 / 0.28 |
+
+**VERDICT: PASS.** With multi-glance denoising (average k=5 observations per perception; perceive the goal once
+and cache it), state-ID is perfect (1.00) and SR-value planning from PERCEIVED states reaches goals OPTIMALLY
+(1.00) vs Euclid 0.07 / random 0.28. The complete substrate-native loop works FROM PERCEPTION with NO privileged
+state indices: perception (discriminate + denoise) -> world model (local TD SR = BTSP) -> value-based planning
+-> optimal goal-reaching, all local/backprop-free. The grounding chain JEP-12 (NULL) -> 12b (perception solved,
+noise compounds) -> 12c (denoise -> perfect) yields two honest lessons: (1) perception must DISCRIMINATE while
+value must be SMOOTH - separate modules; (2) denoise perception or noise compounds over planning horizons.
+Methods (online clustering, SR/TD, value planning) established - named as such.

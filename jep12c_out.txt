@@ -1,0 +1,11 @@
+=== JEP-12c: grounded loop + multi-glance denoising (k=5, noise=0.6, S=144) ===
+  perceptual state-ID (k-glance) = 1.000
+  navigation (PERCEIVED, k-glance+cached goal):  SR-VALUE=1.00  Euclid=0.07  random=0.28
+
+--- VERDICT ---
+JEP-12c: PASS - the substrate-native loop works FROM PERCEPTION with multi-glance denoising: state-ID
+1.00, SR-value planning 1.00 (Euclid 0.07, random 0.28). Perception (discriminate,
+denoise by averaging) + world model (local TD SR) + value planning - all local, no privileged indices.
+Grounded planning achieved. Lesson: separate DISCRIMINATION (perception) from SMOOTHNESS (value), and
+denoise to stop noise compounding over horizons. Methods established (clustering, SR/TD), named.
+DONE
