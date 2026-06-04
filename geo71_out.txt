@@ -1,0 +1,13 @@
+=== GEO-71: compositional understanding vs model size ===
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 10525.10it/s]
+  all-MiniLM-L6-v2         (22M  ) word-order 2-way acc = 0.75
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|##########| 199/199 [00:00<00:00, 10290.04it/s]
+  all-mpnet-base-v2        (110M ) word-order 2-way acc = 0.62
+  (static order-blind baseline: 0.38, chance 0.50)
+
+--- VERDICT ---
+Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 8550.82it/s]
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|##########| 199/199 [00:00<00:00, 10318.54it/s]
+GEO-71: MiniLM 0.75, mpnet 0.62 — see cells.
+DONE
