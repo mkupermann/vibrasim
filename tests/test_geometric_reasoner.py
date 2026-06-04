@@ -72,3 +72,11 @@ def test_contradiction_detection(reasoner):
 def test_entity_resolution_is_typo_robust(reasoner):
     # near-duplicate / typo'd name resolves to the stored subject (GEO-44)
     assert reasoner.resolve_entity("Alic", candidates=["Alice", "Bob", "Carol"]) == "Alice"
+
+
+def test_add_document_sentence_split():
+    from geometric_reasoner import GeometricReasoner
+    r = GeometricReasoner(abstain_tau=0.20)
+    n = r.add_document("Paris is the capital of France. The Louvre is a famous museum there.")
+    assert n == 2
+    assert "Louvre" in r.ask("What is a famous museum in Paris?")["text"]
