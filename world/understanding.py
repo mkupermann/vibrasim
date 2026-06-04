@@ -431,6 +431,27 @@ class UnderstandingEngine:
             return f"No, I was not told that the {s} {self._norm_rel(r)}s the {o}."
         return "I cannot parse that question."
 
+    def add_rule(self, target: str, r1: str, r2: str) -> None:
+        """Install a (possibly LEARNED, JEP-129) composition rule: target(x,z) :- r1(x,y) AND r2(y,z)."""
+        if not hasattr(self, "rules"):
+            self.rules = []
+        self.rules.append((self._norm_rel(target), self._norm_rel(r1), self._norm_rel(r2)))
+
+    def relation_holds(self, s: str, rel: str, o: str) -> bool:
+        """Does relation `rel` hold between s and o — by a stored fact OR derived via a composition rule?"""
+        s, rel, o = self._norm(s), self._norm_rel(rel), self._norm(o)
+        if any(self._norm(fs) == s and self._norm_rel(fr) == rel and self._norm(fo) == o
+               for fs, fr, fo in self.facts):
+            return True
+        for tgt, r1, r2 in getattr(self, "rules", []):
+            if tgt == rel:
+                mids = {self._norm(fo) for fs, fr, fo in self.facts
+                        if self._norm(fs) == s and self._norm_rel(fr) == r1}
+                for fs, fr, fo in self.facts:
+                    if self._norm_rel(fr) == r2 and self._norm(fs) in mids and self._norm(fo) == o:
+                        return True
+        return False
+
     def _order_holds(self, comp: str, x: str, z: str) -> bool:
         """Transitive closure over a comparison relation: is x `comp`-than z (directly or transitively)?"""
         g = self._orders.get(comp, {})
