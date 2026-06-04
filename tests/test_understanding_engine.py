@@ -316,3 +316,16 @@ def test_is_a_property_based_vs_reference():
             for c in concepts:
                 if x != c:
                     assert e.is_a(x, c) == (c in ra), f"is_a({x},{c}) mismatch"
+
+
+def test_parser_fuzz_no_crash():
+    import random, string
+    rnd = random.Random(0)
+    vocab = ["dog", "is", "a", "an", "the", "not", "can", "bigger", "than", "what", "if", "and", "or"]
+    nasty = ["", " ", ".", "?", r"\x", "((", "?" * 30, r"A \1 is a \2.", "\\", r"\g<0>", "a\nb\tc", "!@#$%^&*"]
+    e = UnderstandingEngine(seed=0)
+    for _ in range(500):
+        s = rnd.choice(nasty) if rnd.random() < 0.4 else " ".join(
+            rnd.choice(vocab) if rnd.random() < 0.7 else ''.join(rnd.choice(string.printable) for _ in range(rnd.randint(0, 6)))
+            for _ in range(rnd.randint(0, 10)))
+        e.tell(s); e.respond(s); e.describe(s)   # must never raise
