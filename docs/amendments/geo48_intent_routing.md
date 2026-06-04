@@ -21,3 +21,15 @@ the abstract OPERATION needed, so geometric centroid routing only reaches 0.56. 
 is a STRUCTURAL/syntactic property ("how many" -> count, "in <year>" -> temporal, "same X as" -> join), which
 geometry (a content-semantics tool) does not capture. Consistent with the programme's division: geometry =
 semantics, symbolic = structure. The right router is symbolic/keyword-based — tested in GEO-48b.
+
+## GEO-48b — symbolic keyword router: PASS (0.90)
+A simple keyword/regex router classifies intent at 0.90 (vs geometric 0.56), with the few misses being
+genuine ambiguities ("headcount in 2020" = count+temporal; "who works with Carol" reads factoid).
+
+**Complete routing finding + full architecture.** Intent is STRUCTURAL -> route it SYMBOLICALLY (0.90);
+content is SEMANTIC -> resolve it GEOMETRICALLY. The end-to-end auto-dispatch architecture of the whole
+system:
+  query -> [SYMBOLIC intent router] -> [GEOMETRIC resolver/gather] -> [SYMBOLIC operator] -> [optional grounded GENERATOR]
+i.e. symbolic for structure (routing + count/compare/join/time-filter), geometric for semantics (relevance,
+entities, relations), generator for fluent output. This is the meta-level statement of the unifying principle
+(GEO-18/20/41/42/47/48): every layer of the system is geometry-for-semantics + symbol-for-structure.
