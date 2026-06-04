@@ -25,6 +25,7 @@ vibrasim SUBSTRATE is a genuine benefit for this.
 | JEP-10c | **PASS** | AMD GPU usable for INFERENCE via DirectML (x3.51 @200k batch, exact-match acc). Training stays CPU (no AMD PyTorch-train path on Win/Py3.13). |
 | JEP-11 | **PASS** | SR-as-VALUE-function (local TD) navigates a maze PERFECTLY (1.00) vs Euclidean-greedy 0.03; closes JEP-8/9 (failure was the planner, not the rep). TD/eligibility-traces = substrate BTSP primitive. |
 | JEP-12/12b/12c | **PASS** (12c) | GROUNDING from noisy high-dim PERCEPTION (no privileged indices): perception (discriminate+denoise) + world model (local TD SR) + value planning -> optimal nav 1.00. Lesson: perception must DISCRIMINATE, value must be SMOOTH - separate modules; denoise or noise compounds. |
+| JEP-13/13b/13c | PARTIAL | ABSTRACTION via spectral basis: compact task-agnostic proto-value functions reconstruct novel-goal value at R^2 0.90 @1/8 size (>> random) = strong REPRESENTATION abstraction; but greedy CONTROL needs full rank (compression-vs-control tradeoff; high R^2 != good policy). |
 | JEP-7 | **PASS** | END-TO-END: contrastive-learned encoder + PC-learned predictor + energy-MPC reaches 0.97 of goals (untrained-predictor ablation 0.05, random 0.25). Nuance: exact prediction only 0.23 — planning needs correct ACTION RANKING, not exact prediction; world model accurate ENOUGH to plan. |
 
 ## The honest bottom line

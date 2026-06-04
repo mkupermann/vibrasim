@@ -1,0 +1,17 @@
+=== JEP-13c: compression-vs-control tradeoff (S=144) ===
+   k     k/S    recon_R2    greedy_reach
+   18    S/8    0.902       0.20
+   36    S/4    0.981       0.24
+   72    S/2    0.996       0.31
+  108   3S/4    0.999       0.47
+  144      S    1.000       1.00
+
+--- FINDING ---
+Honest characterization (no pass/fail bar): proto-value-function reconstruction R^2 is HIGH even at
+small k (strong representation-level abstraction), but GREEDY CONTROL needs larger k - a real
+COMPRESSION-vs-CONTROL tradeoff. Greedy reach first hits >=0.9 at k=(144, 1.0). So a compact basis
+abstracts the environment's structure for REPRESENTATION/transfer, but driving optimal control from it
+requires either more basis functions (less compression) or a better planner. This bounds 'abstraction
+= compression': useful for representing/transferring value, costly for greedy control. Established
+methods (proto-value functions / spectral RL, Mahadevan 2007), named as such.
+DONE
