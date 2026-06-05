@@ -1278,9 +1278,9 @@ class UnderstandingEngine:
             rq = getattr(self, "_last_rel_query", None)
             if rq and rq[0] == "order":          # reuse the last comparison: same first arg + comparative, new 2nd arg
                 _, rx, _, comp = rq
-                self._last_rel_query = ("order", rx, y, comp)
                 verb = f"{comp} than" if comp.endswith("er") else comp
                 if self._order_holds(comp, rx, y):
+                    self._last_rel_query = ("order", rx, y, comp)   # only update context on a TRUE answer
                     return f"Yes, {self._art(rx)} is {verb} {self._art(y)} too."
                 return f"Not that I can tell."
             if getattr(self, "_last_query", None):
