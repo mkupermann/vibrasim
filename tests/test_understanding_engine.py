@@ -1261,3 +1261,15 @@ def test_definitional_copulas():
     assert e.is_a("puppy", "dog")              # means, genus = dog
     assert e.is_a("dog", "canine")             # known-as
     assert e.is_a("puppy", "animal")           # transitive puppy->dog->mammal->animal
+
+
+def test_object_side_open_relation_wh():
+    # JEP-270: 'what does X VERB?' -> the OBJECT of a learned verb relation (object-side WH)
+    e = UnderstandingEngine(seed=270)
+    e.read("A carnivore eats meat. A herbivore eats plants. A robin builds a nest. A spider builds a web.")
+    assert "meat" in e.respond("what does a carnivore eat?")
+    assert "nest" in e.respond("what does a robin build?")
+    # subject-side WH still works (no regression)
+    e2 = UnderstandingEngine(seed=271)
+    e2.read("Paris is the capital of France. London is the capital of England.")
+    assert e2.respond("what is the capital of France?") == "Paris."
