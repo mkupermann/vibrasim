@@ -414,6 +414,16 @@ class Conversation:
             subj = self._singular(mco.group(1).lower()); obj = self._singular(mco.group(2).lower())
             art = "an" if obj[0] in "aeiou" else "a"
             t = f"A {subj} is {art} {obj}."
+        # ABILITY as a property (JEP-453): 'X can VERB' -> (X, hasprop, VERB); 'X cannot/can't/can not VERB' ->
+        # (X, not_hasprop, VERB). Using the SAME relation for both lets a defeasible exception override an inherited
+        # ability ('a penguin cannot fly' beats the inherited 'birds can fly'). Must precede the SVO fallback, which
+        # would otherwise store the modal itself as a bogus verb (penguin, cannot, fly).
+        mab = re.match(r"^(?:a\s+|an\s+|the\s+)?([a-z]+)\s+(cannot|can\s?not|can't|cant|can)\s+([a-z]+)\.?$",
+                       t, flags=re.I)
+        if mab and mab.group(3).lower() not in ("cause",):     # 'X can cause Y' is causal, handled earlier
+            neg = mab.group(2).lower() != "can"
+            rel = "not_hasprop" if neg else "hasprop"
+            return [], extra + [(self._singular(mab.group(1).lower()), rel, mab.group(3).lower())]
         # SVO action fact (LAST resort): 'X <verb> Y' -> (X, verb, Y) open relation (JEP-407). Exactly subject+verb+
         # object; verb must not be a copula/auxiliary; subject/object single clean words. Fallback so it never
         # overrides is-a/property/causal/etc.; tight to avoid wrong capture (miss > wrong).
