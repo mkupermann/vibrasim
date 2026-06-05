@@ -211,12 +211,21 @@ class UnderstandingEngine:
                         if self._bare_np(kid) and self._valid_concept(kid):
                             self.tell(f"a {kid} is a {parent}."); learned["is_a"] += 1
                 continue
+            # NEGATION / correction: 'X is not a/an Y' -> route to tell() (retracts the belief + records a negative
+            # fact), so a correcting passage from a source REVISES prior beliefs (belief revision from prose)
+            m = re.match(rf"^{np}\s+is\s+not\s+an?\s+([a-z]+)$", s)
+            if m:
+                a, b = self._norm_phrase(m.group(1)), self._norm_phrase(m.group(2))
+                if a not in self._PRONOUNS and self._bare_np(a) and self._bare_np(b):
+                    self.tell(f"a {a} is not a {b}."); learned["is_a"] += 1
+                    last_subject = a
+                continue
             # part-of: 'X is part of Y'
             m = re.search(rf"\b{np}\s+is\s+part\s+of\s+{np}$", s)
             if m:
                 a, b = self._norm_phrase(m.group(1)), self._norm_phrase(m.group(2))
                 if self._bare_np(a) and self._bare_np(b):
-                    self.tell_part(a, b); learned["part_of"] += 1
+                    self.tell_part(a, b); learned["part_of"] += 1; last_subject = a
                 continue
             # causal: 'X causes Y' / 'X leads to Y'
             m = re.search(rf"\b{np}\s+causes\s+{np}$", s) or re.search(rf"\b{np}\s+leads\s+to\s+{np}$", s)
