@@ -1021,3 +1021,13 @@ def test_followup_across_domains():
     assert e.respond("what about a mouse?") == "Yes, an elephant is bigger than a mouse too."   # comparison follow-up
     e.respond("is a dog an animal?")
     assert e.respond("what about a mammal?") == "Yes, a mammal is an animal too."                # is-a follow-up (context switched)
+
+
+def test_followup_numeric_and_context_switch():
+    # JEP-223: 'what about X?' reuses the last numeric comparison too; context switches cleanly between domains
+    e = UnderstandingEngine(seed=223)
+    e.read("A dog has 4 legs. A spider has eight legs. An ant has six legs. A dog is a mammal. A mammal is an animal.")
+    e.respond("does a spider have more legs than a dog?")
+    assert e.respond("what about an ant?") == "Yes."          # spider(8) > ant(6), numeric follow-up
+    e.respond("is a dog an animal?")
+    assert e.respond("what about a spider?").startswith("No") # context SWITCHED to is-a (no stale numeric)
