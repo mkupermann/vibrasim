@@ -5168,3 +5168,43 @@ each characterized): real embodied perception, real corpus at scale + the NL par
 
 All experiments done or 3x NULL on feedback.
 
+
+## 2026-06-05 — EQMOD-4: real-prose hardening + THE SUBSTRATE-RELATIONAL ARC (JEP-227..239)
+
+Two threads this session. (1) REAL-PROSE HARDENING (JEP-227..231, 95 gated tests): real-usage QA kept surfacing
+genuine bugs, each fixed — alphanumeric concept names ('covid19'/'mp3'); a multi-word is-a parent ('celestial body')
+leaking into open relations; numeric singular/plural + adjective-modified counts ('4 large moons') in capture AND
+comparison; a mass-noun article heuristic ('-ness' MOSTLY-but-not-reliably uncountable → needed a countable-exception
+set, a mid-rung self-correction). Sharpened calibration error-class 11: a morphological/heuristic rule needs its
+exception set enumerated AND tested against counter-examples IN-RUNG. Honest residue is NER-class (sentence-start
+proper nouns), blocked by the no-pretrained constraint.
+
+(2) THE SUBSTRATE-RELATIONAL ARC (JEP-232..239) — the concrete answer to Michael's recurring "where is the substrate
+in the chain?" for relational knowledge. The engine's facts had only ever lived in Python dicts; this arc puts them
+AND its reasoning IN the energy-based substrate (world.energy.EnergyNet, a modular Hopfield/contrastive-Hebbian EBM):
+- STORE (232 PARTIAL) is-a facts as content-addressable key→value attractors — recall 1.00, partial-cue-robust;
+  capacity SHARP: perfect to ~20/module then a catastrophic Hopfield blackout (calibration: I mis-applied the 0.14N
+  AUTOassoc bound to a HETEROassoc store — fully-clamped key buys ~3-4×, cliff at K≈21 not 12).
+- CHAIN (233 PASS) transitive multi-hop inference by iterated retrieval — 1.00 to 3 hops, raw or cleaned (the
+  attractor self-corrects each hop within capacity).
+- TYPE (234 PASS) multiple relation types in one net via VSA Hadamard role-binding — no crosstalk, every type served.
+- CAPSTONE (235 PASS) read() → store → answer multi-hop is_a by relaxation, matching the symbolic closure on a
+  44-query battery (tree 1.00/0.93); found the multi-parent DAG boundary.
+- DAG (236 NULL → 237 PASS) slot-binding stores multiple parents but a value-overlap threshold can't reject empty
+  slots (value always settles to an attractor); the FIX is an ENERGY GATE — a trained edge is a deep minimum (~-90),
+  a spurious slot is shallow (~-40) → 0 false-accept/reject, multi-parent closure 1.00. A clean NULL→diagnosis→fix.
+- INTERACT (238 PASS) the signature relation-INTERACTION matrix (part-of × is-a UP, leak guard included) runs by
+  composing two content-addressable retrievals — battery 1.00 vs control 0.33.
+- ONLINE (239 PARTIAL) the store is online-learnable one fact at a time with only MILD interference — my catastrophic-
+  forgetting prediction was WRONG (the additive-Hebb-robustness counter-possibility I flagged won); rehearsal holds
+  0.94-1.00. Positive for "learns from every interaction": the store accretes from a stream, no batch retrain needed.
+
+So the substrate is the engine's relational MEMORY and INFERENCE engine — store/chain/type/DAG/interaction, online-
+learnable, bounded by ~20 edges/module (linearly scalable). All ESTABLISHED methods (Hopfield CAM + iterated
+associative recall + VSA binding + Hopfield energy as a stored-vs-spurious detector), named; NO novelty — the value
+is the demonstrated end-to-end connection + its measured envelope. Pattern docs/patterns/substrate_relational_store.md;
+synthesis docs/EQMOD4_FINAL_STATE.md (new section + finding #6); harnesses tools/run_jep23{2..9}_*.py; amendments
+docs/amendments/jep23{2..9}_*.md. predict-calibrate 123/154 (80%, converged), two honest calibration misses (232
+capacity bound, 239 forgetting) both in directions I had flagged as live alternatives. The kill-switch
+.eqmod_autonomy_off is absent (autonomy reactivated per user at commit 53b650a); the substrate physics thread
+(G1..G145) remains exhausted/idle. NOT human-level, NOT novel; the connection + the discipline are the deliverables.
