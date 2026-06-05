@@ -4,11 +4,12 @@ Pre-registered bars in docs/amendments/jep467_signed_affect_propagation.md.
 """
 import json
 from pathlib import Path
+import tempfile
 from world.conversation import Conversation
 
 
 def run(seed):
-    c = Conversation(seed=seed)
+    c = Conversation(brain_dir=tempfile.mkdtemp(), seed=seed)  # clean-room (lesson #16)
     for s in ["Heroes are good.", "A villain is an enemy of a hero.",
               "A rebel is an enemy of a villain.", "A sidekick is a friend of a hero.",
               "A table is furniture."]:
