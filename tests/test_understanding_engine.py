@@ -616,3 +616,15 @@ def test_why_across_relation_types():
     assert e.respond("why?") == "Because a virus causes an infection, and an infection causes a fever."
     e.respond("is a dog an animal?")                       # recency: most recent question type wins
     assert "is a mammal" in e.respond("why?") and "part of" not in e.respond("why?")
+
+
+def test_rich_faculties_over_read_knowledge():
+    # JEP-174: the full faculty set (quantification/hypothetical/Boolean/three-valued/contradiction) composes with read()
+    e = UnderstandingEngine(seed=174)
+    e.read("A poodle is a dog. A dog is a mammal. A mammal is an animal. A salmon is a fish. A fish is an animal.")
+    assert e.respond("is every poodle an animal?") == "Yes."
+    assert e.respond("if a poodle were a fish, would it be an animal?").startswith("Yes")  # hypothetical, KB unchanged
+    assert "fish" not in e.parents.get("poodle", set())                                    # retracted cleanly
+    assert e.ask_bool("is a poodle an animal and is a poodle not a fish") is True
+    assert e.respond("is a poodle a vegetable?").startswith("I don't know")                # three-valued
+    assert e.would_contradict("A poodle is not a dog.")                                     # contradiction detection
