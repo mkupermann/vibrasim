@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 73 / predictions 100 (73%). Latest: JEP-184 HIT (comprehensive end-to-end integration test — the 100th prediction; whole matured pipeline composes cleanly).
+Running tally: hits 74 / predictions 101 (73%). Latest: JEP-185 HIT (read() extracts COMPARISON from prose — transitive 'elephant>mouse'; completes relation-type coverage).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 The OVERALL 73% is dominated by early-programme misses (surface-form bugs, structure-learning difficulty mis-estimates).
@@ -122,3 +122,4 @@ Predictions ARE converging WITHIN a settled domain, and the residual misses are 
 | JEP-182 | 🔮 abstract reasoning works (structural); only grounding blocked | justice/courage/tyranny reason multi-hop correctly; no prototype for justice | HIT | Refines the 'abstract words' frontier: symbolic abstract reasoning works, abstract grounding doesn't. 'X of Y' NP recall caveat surfaced. |
 | JEP-183 | 🔮 tight 'X of Y' nominals recovered, doc recall holds, Boole modest | democracy->political system chains; doc 0.93 unchanged, 0 spurious; Boole +4 (still ~0 genuine) | HIT | Real recall gain on a common encyclopedic construction at no precision cost on the target genre. |
 | JEP-184 | 🔮 full integration passes (everything composes) | whole pipeline (read+interactions+ground+develop+abstract+communicate) green | HIT | The 100th prediction; permanent regression guard; features compose because read/tell populate the same structures. |
+| JEP-185 | 🔮 read() comparison handler -> transitive comparison from prose, no copula overlap | comparison 3 extracted, elephant>mouse transitive Yes, no interference | HIT | Completes read()'s 5 relation types (is-a/part-of/causal/spatial/comparison). |
