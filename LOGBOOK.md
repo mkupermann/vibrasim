@@ -5416,3 +5416,18 @@ regardless of frequency mismatch — the 2 failing tests assert the opposite and
 deleted) without a false assertion. Broad cognition sweep now: 198 passed, 2 xfailed, 0 failed. The
 binding owner can later decide to update the spec or restore atom-level frequency gating; until then the
 suite is honestly green and the obsolescence is documented in the tests themselves.
+
+## 2026-06-05 — G49: fluidity (reduced rigidity) does NOT enable wound re-closure — NULL
+Tested G48's corrected diagnosis (membrane static from curvature/repulsion RIGIDITY). Formed the proto-cell
+identically (block=2), then scaled rigidity by f ∈ {1.0, 0.5, 0.25, 0.0} in the post-formation window;
+measured healing (wounded) + persistence (unwounded), seeds 42 & 7. Result: EVERY arm healed=0.00 and
+P=1.00 — including f=0.0 (curvature_k & atom_repulsion_k both zeroed). G49a✓ G49b✓ G49c✗ G49d✗ → NULL.
+Decisive: at f=0.0 the membrane STILL persists fully (1.00). So persistence is NOT from curvature/repulsion
+forces (falsifies G48's correction) and NOT from valence commitment (G48 already falsified that) — it is a
+property of the BOND GRAPH itself, immune to forces and to fusion_bond_block. Reducing rigidity does not heal
+because it is the bonds, not a force field, that lock atom positions. Triangulated across G46→G47→G48→G49
+(three falsified mechanisms): the proto-cell membrane is a covalent SOLID — a stable container, not a living
+self-renewing membrane. Self-repair would require bond turnover or spatially-targeted regeneration, neither
+present. Pre-registered G50: lower the bond-lifetime knobs (pair_decay_time/triad_decay_time) → does bond
+turnover fluidize the lattice and re-close the wound (at the cost of persistence)? If so, bond-rigidity ⊥
+self-repair is the real trade-off (the one G47 reached for at the wrong level).
