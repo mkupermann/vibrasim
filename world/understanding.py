@@ -101,15 +101,22 @@ class UnderstandingEngine:
     # SVO: leading "the" optional so plural statements parse ("Poodles chase cats.")
     _SVO = re.compile(r"^\s*(?:the\s+)?(\w+)\s+(\w+)\s+(?:the\s+|a\s+|an\s+|in\s+the\s+|on\s+the\s+)?(\w+)\s*\.?\s*$", re.I)
 
+    # singular nouns ending in -s that must NOT be de-pluralized (over-stripping bug: virus -> "viru")
+    _NOT_PLURAL = {"species", "series", "news", "lens", "bus", "gas", "atlas", "bias", "iris", "axis",
+                   "basis", "crisis", "analysis", "thesis", "virus", "census", "campus", "status", "focus"}
+
     @staticmethod
     def _norm(w: str) -> str:
         w = w.lower()
         # light, deterministic singularization so "animals"/"animal" unify
+        if w in UnderstandingEngine._NOT_PLURAL:
+            return w
         if w.endswith("ies") and len(w) > 4:
             return w[:-3] + "y"
         if w.endswith("ses") or w.endswith("shes") or w.endswith("ches"):
             return w[:-2]
-        if w.endswith("s") and not w.endswith("ss") and len(w) > 3:
+        # -us / -is / -ss endings are typically NOT plurals (virus, basis, glass) -> keep
+        if w.endswith("s") and not w.endswith(("ss", "us", "is")) and len(w) > 3:
             return w[:-1]
         return w
 
