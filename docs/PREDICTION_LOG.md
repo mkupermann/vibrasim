@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 140 / predictions 176 (79%). Latest: JEP-261 HIT (spatial containment 'X is in Y' -> part-of + question routing 'is X in/located-in Y?' -> part_of, incl transitive 'is Paris in Europe?'; excluded from redundant open induction; genuine open relations preserved; surfaced by the geography QA pass).
+Running tally: hits 141 / predictions 177 (80%). Latest: JEP-262 HIT (bare singular SUBJECTS take no article — 'a copper'/'a rust'/'a paris' fixed, _countable takes precedence for polysemes, plurals unaffected; also corrected 'A jupiter'->'Jupiter has 4 large moons'; residue = mid-sentence proper-noun capitalization, the NER wall).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 At JEP-221 the tally is 110/137 (80%) and has CONVERGED: the OVERALL rate is dragged down by early-programme misses
@@ -203,3 +203,4 @@ honestly informative:
 | JEP-259 | 🔮 preprocess embedded ', such as X,' -> example is-a subject + rebuild main clause; trailing form unaffected | PASS — cobra->snake + snake->reptile, 4-hop chain works, trailing such-as intact; 101 tests | HIT | A comma-bounded interjection broke both the such-as regex and the copula subject; strip+rebuild recovers both links. |
 | JEP-260 | 🔮 singular 'can a X VERB?' + read() property capture; risk: np swallows 'is a bird that cannot fly' | PASS — read captures properties, singular Yes/No works, universal works; risk MATERIALIZED (1 test failed) caught by gate + fixed | HIT | read() never captured ability facts (only tell did); guard the consuming `continue` on bare-NP so the relative-clause is-a survives. |
 | JEP-261 | 🔮 'is in' -> spatial part-of + question routing + exclude from open; transitive works | PASS — france/paris/italy part-of, spatial Qs Yes/No, transitive Paris->Europe, capital-of open kept; 103 tests | HIT | Spatial 'X is in Y' needed both extractor coverage (plain 'in') and question routing (was parsed as is-a). |
+| JEP-262 | 🔮 bare singular subjects -> no article (after _countable); fixes 'a copper/rust/paris', keeps countables/plurals | PASS — copper/rust/paris article-less, metal/dog countable, 'Oxygen causes rust', Jupiter corrected; 103 tests | HIT | Usage assigns article: article-led=countable, bare-singular-subject=no-article; mid-sentence proper-noun caps remain the NER wall. |
