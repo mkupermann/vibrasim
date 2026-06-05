@@ -29,3 +29,17 @@ EQMOD substrate's own dynamics.
 - BUT the oscillator/Ising/annealing paradigm has ONE genuine advantage — hard combinatorial optimization
   (G145) — plus the bounded recall/learn/generate primitives (G140-142). That is the real, buildable,
   honest niche.
+
+## ⚠️ CORRECTION (2026-06-05, G146–G148): this headline advantage does NOT survive scrutiny
+G145's "genuine advantage" was REFUTED then re-examined rigorously:
+- **G146**: G145's greedy baseline was SIGN-BUGGY (it descended toward MIN-cut, returning negative cuts). A
+  *correct* multi-restart greedy reaches the optimum on all 8 of G145's n=30 instances — they are not hard.
+  Oscillator-anneal merely ties correct greedy there; the "8/8 win" was a win over a backwards baseline.
+- **G147–G148**: scaling to n=200–360 (hard regime), **classical simulated annealing** genuinely beats a
+  strong correct greedy (~+2%, 14/15) — the real, textbook "annealing > local search on glassy landscapes."
+  But separating the *physical oscillator machine* from classical SA: the **oscillator TIES correct greedy
+  (6/15, gap ≈ 0) and loses to SA 15/15** at every scale.
+- **Corrected niche:** the genuine advantage belongs to the **classical SA algorithm (no substrate needed)**,
+  NOT to the physical/vibrations oscillator machine. So the honest final answer collapses to: the physics is
+  decorative *everywhere tested* — including hard combinatorial optimization. See
+  `g146_oscillator_vs_simulated_annealing.md`, `g147_advantage_at_scale.md`, `g148_advantage_larger_scale.md`.

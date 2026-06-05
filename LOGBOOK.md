@@ -5468,3 +5468,18 @@ strong correct greedy emerges as frustrated instances grow (local search degrade
 as expected) -- the programme's positive claim is neither refuted (G146) nor confirmed; it is emerging and
 scale-dependent. Pre-registered G148: rerun at n in {200,280,360}, classification ordering fixed -- ADVANTAGE
 if gap>=0.02 at largest n with anneal wins>=4/5, else NO_ADVANTAGE (plateau) or EMERGING-still (0.01-0.02).
+
+## 2026-06-05 — G148: the scale advantage is CLASSICAL SA's — the oscillator (physical) machine has NONE
+Scaled G147 to n in {200,280,360} (5 instances) with the classification ordering fixed AND, critically,
+SEPARATED the physical oscillator (OSC) from classical SA instead of reporting max(OSC,SA). Pre-registered
+max(OSC,SA) bar technically PASSES (gap +0.020/+0.020/+0.023, wins 4/5,5/5,5/5 -> ADVANTAGE). But the
+separation REVERSES the honest reading: SA-vs-greedy wins 4/5,5/5,5/5 (~+2%, 14/15 overall) -- classical
+annealing genuinely beats strong correct multi-restart greedy on hard frustrated MAX-CUT (textbook). OSC-vs-
+greedy wins only 2/5,1/5,3/5 with mean gap ~0.000 -- the oscillator-Ising "vibrations" machine TIES correct
+greedy and is beaten by SA 15/15 at every scale. So the genuine advantage belongs to the classical SA
+ALGORITHM (needs no substrate); the physical oscillator realization confers ZERO edge over a correctly-
+implemented greedy. This REVERSES G145's headline ("the one place vibrations-computing has a real edge")
+upon a correct baseline + OSC/SA separation. Clean close of G145->G146->G147->G148: the substrate's last
+candidate advantage is an advantage of a standard classical algorithm, not of the substrate -- consistent
+with the programme-wide "physics is decorative; standard methods carry every win" pattern. Gap vs greedy is
+flat ~0 across n=200-360 (not growing), so no further scale-up is warranted; the honest conclusion stands.
