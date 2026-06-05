@@ -234,6 +234,10 @@ class Conversation:
             agent = self._singular(mp.group(3).lower())
             if patient not in ("a", "an", "the") and agent not in ("a", "an", "the"):
                 return [], extra + [(agent, part, patient)]
+        # past tense -> present so the copular/is-a rules fire (JEP-405): 'Einstein was a physicist' -> 'is a',
+        # 'Dinosaurs were reptiles' -> 'are'. (The passive 'was/were VERBed by' is already consumed above.)
+        t = re.sub(r"\bwas\b", "is", t, flags=re.I)
+        t = re.sub(r"\bwere\b", "are", t, flags=re.I)
         # 'is a part of' -> 'is part of' (so the engine's part-of handler fires) (JEP-388)
         t = re.sub(r"\bis\s+an?\s+part\s+of\b", "is part of", t, flags=re.I)
         # causal: 'X causes/cause/can cause Y' -> (X, causes, Y) + inverse (handles plural & modal the engine misses)
@@ -342,6 +346,15 @@ class Conversation:
                 subj = self._singular(m2.group(1).lower()); obj = self._singular(m2.group(2).lower())
                 art = "an" if obj[0] in "aeiou" else "a"
                 t = f"A {subj} is {art} {obj}."
+        # copular adjective/predicate: SINGULAR 'X is <single-word>' with NO article -> treat the word as a class so
+        # it is queryable by both 'is X Y?' and 'are X Y?' (is_a OR has_property). 'The sun is hot' -> 'A sun is a hot'
+        # (JEP-405). The is-a forms ('a dog is a mammal') are multi-word after 'is' and were handled earlier.
+        _COP_STOP = {"in", "on", "at", "a", "an", "the", "not", "part", "here", "there", "of", "to", "from"}
+        mco = re.match(r"^(?:the\s+|a\s+|an\s+)?([a-z]+)\s+is\s+([a-z-]+)\.?$", t, flags=re.I)
+        if mco and mco.group(2).lower() not in _COP_STOP and mco.group(1).lower() not in ("it", "he", "she", "that"):
+            subj = self._singular(mco.group(1).lower()); obj = self._singular(mco.group(2).lower())
+            art = "an" if obj[0] in "aeiou" else "a"
+            t = f"A {subj} is {art} {obj}."
         return [t], extra
 
     def _learn_one(self, sentence):
