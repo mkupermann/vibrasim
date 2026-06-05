@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 162 / predictions 198 (82%). Latest: JEP-283 HIT (bare mass nouns as subjects AND connective-objects -> no article -- 'A rain causes flooding'->'Rain causes flooding'; article-led 'a fever' preserved; substantially closes the article long-tail for mass/abstract nouns).
+Running tally: hits 163 / predictions 199 (82%). Latest: JEP-284 HIT (cumulative re-validation after 281..283 -- comprehensive doc 10/10=1.00 + fuzz 0 crashes/2000; the engine stays comprehensive + robust across all newest constructions).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 At JEP-221 the tally is 110/137 (80%) and has CONVERGED: the OVERALL rate is dragged down by early-programme misses
@@ -225,3 +225,4 @@ honestly informative:
 | JEP-281 | 🔮 'X is the same as Y' -> mutual is-a; transitive through the cycle, not over-general | PASS — puma->cat/mammal, symmetric, cat NOT a puma, no loop; 118 tests | HIT | Equivalence = symmetric subsumption; the closure's visited-set makes it cycle-safe. |
 | JEP-282 | 🔮 'X because of/due to Y' -> Y causes X (swap) + exclude from open; active unaffected | PASS — rain->flooding, bacteria->disease, directional, active intact; 119 tests | HIT | Subordinate causal connectives put the effect as subject; completes active/passive/subordinate causal coverage. |
 | JEP-283 | 🔮 broaden bare-subject scan to any verb + bare connective-objects -> no article; article-led preserved | PASS — rain/flooding/disease/bacteria article-less, 'a fever' preserved; 120 tests | HIT | Usage assigns article: bare singular mention (subject or connective-object) = no-article; article-led overrides. |
+| JEP-284 | 🔮 newest additions (281..283) keep the engine comprehensive (~1.0 doc) + robust (0 crashes) | PASS — doc 10/10=1.00, fuzz 0/2000; 121 tests | HIT | Cumulative validation: 28 prose fixes leave the engine comprehensive + robust over the declarative construction space. |
