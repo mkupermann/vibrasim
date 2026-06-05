@@ -65,6 +65,8 @@ class SubstrateMemory:
         self.closed_relations = set()                # relations whose transitive closure is materialized (JEP-375):
         #                                              is-a over these is answered by direct single-hop membership.
         self.synonyms = {}                           # taught word->canonical English synonym map (JEP-418/419)
+        self.strength = {}                           # fact -> times reinforced by experience (Hebbian, JEP-425)
+        self.valence = {}                            # entity -> affective charge (+bright / -dark cloud, JEP-425)
 
     # ---- atom / vector helpers ----
     def _vec(self, name):
@@ -117,6 +119,15 @@ class SubstrateMemory:
             return
         if e.lower() in _JUNK_SUBJECTS:
             return
+        key = (e, role, v)
+        if key in self.strength:
+            # RE-experienced fact: strengthen the energy trace without duplicating it (Hebbian, JEP-425).
+            self.strength[key] += 1
+            val0 = np.roll(self._vec(value), 1) if self.directed else self._vec(value)
+            bnd = bind(bind(self._vec(entity), self._vec(role)), val0)
+            mi = (self._route(entity, role) or [len(self.modules) - 1])[0]
+            self.modules[mi] = self.modules[mi] + 0.5 * bnd                # add energy to the existing trace
+            return
         if self.module_counts[-1] >= self.module_cap:
             self.modules.append(np.zeros(self.D, dtype=np.float64))   # neurogenesis: a new module
             self.module_counts.append(0)
@@ -131,6 +142,7 @@ class SubstrateMemory:
         self.facts.append((entity, role, value))
         if value not in self.values:
             self.values.append(value)
+        self.strength[key] = 1                                                 # first experience (Hebbian, JEP-425)
 
     def query(self, entity: str, role: str):
         """Recover the value bound to (entity, role): (value_name, similarity). Searches ALL modules and returns the
@@ -282,7 +294,7 @@ class SubstrateMemory:
         new.learner = self.learner
         # the materialized closure edges are live facts, so they survive compaction -> keep the flag (JEP-375)
         new.closed_relations = set(self.closed_relations)
-        new.synonyms = dict(self.synonyms)
+        new.synonyms = dict(self.synonyms); new.valence = dict(self.valence); new.strength = dict(self.strength)
         return new
 
     def consolidate_closure(self, relations=("isa",), target_D=None, auto_scale=False, reinforce=1.0):
@@ -342,7 +354,7 @@ class SubstrateMemory:
         new.sentences = list(self.sentences)
         new.learner = self.learner
         new.closed_relations = set(self.closed_relations) | set(relations)   # is-a now answerable single-hop (JEP-375)
-        new.synonyms = dict(self.synonyms)
+        new.synonyms = dict(self.synonyms); new.valence = dict(self.valence); new.strength = dict(self.strength)
         return new
 
     # ---- persistence ----
@@ -362,6 +374,7 @@ class SubstrateMemory:
             "directed": self.directed, "facts": self.facts, "values": self.values,
             "sentences": self.sentences, "key_modules": self.key_modules,
             "closed_relations": sorted(self.closed_relations), "synonyms": self.synonyms,
+            "valence": self.valence, "strength": {"|".join(k): v for k, v in self.strength.items()},
             "learner": {"tau": self.learner.tau, "max_exemplars": self.learner.max_exemplars,
                         "n_asked": self.learner.n_asked, "n_seen": self.learner.n_seen,
                         "fit": {k: list(v) for k, v in self.learner._fit.items()}},
@@ -381,6 +394,8 @@ class SubstrateMemory:
         self.key_modules = {k: list(v) for k, v in meta.get("key_modules", {}).items()}
         self.closed_relations = set(meta.get("closed_relations", []))
         self.synonyms = dict(meta.get("synonyms", {}))
+        self.valence = {k: float(v) for k, v in meta.get("valence", {}).items()}
+        self.strength = {tuple(k.split("|")): int(v) for k, v in meta.get("strength", {}).items() if k.count("|") == 2}
         z = np.load(os.path.join(d, "vectors.npz"), allow_pickle=True)
         if "modules" in z:                            # growing multi-module store (JEP-296)
             self.modules = [row.astype(np.float64) for row in z["modules"]]
