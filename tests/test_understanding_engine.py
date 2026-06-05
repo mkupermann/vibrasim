@@ -898,3 +898,27 @@ def test_temporal_order_reasoning():
     assert e.respond("did the peace happen before the war?").startswith("Not")
     assert e.respond("is the famine after the war?") == "Yes."             # after = inverse before
     assert e.respond("is the war after the famine?").startswith("Not")
+
+
+def test_multidomain_integration():
+    # JEP-211: ALL domains compose in one engine — relational (fixed+open) + quantitative + temporal + grounding
+    import numpy as np
+    e = UnderstandingEngine(seed=211)
+    e.read("A dog is a mammal. A mammal is an animal. A heart is part of a dog. A virus causes a fever. "
+           "A dog has 4 legs. A spider has eight legs. "
+           "Paris is the capital of France. London is the capital of England. "
+           "The war started before the treaty. The treaty came before the peace.")
+    # relational (fixed)
+    assert e.is_a("dog", "animal") and e.part_of("heart", "dog") and e.causes_effect("virus", "fever")
+    # open relation (auto-induced)
+    assert e.relation_true("paris", "is capital of", "france")
+    assert e.respond("what is the capital of England?") == "London."
+    # quantitative
+    assert e.respond("how many legs does a dog have?") == "A dog has 4 legs."
+    assert e.respond("does a spider have more legs than a dog?") == "Yes."
+    # temporal
+    assert e.respond("did the war happen before the peace?") == "Yes."
+    # grounding composes with the relational structure
+    proto = np.random.default_rng(0).normal(0, 1, e.feat_dim)
+    e.add_prototype("dog", proto)
+    assert e.is_a(e.perceive(proto), "animal")
