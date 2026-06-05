@@ -27,5 +27,17 @@ un-consolidated walk would degrade; consolidation runs lazily (only before a que
 If lazy consolidation makes interactive deep reasoning unreliable or over-consolidates, report it. Predicted clean.
 Bars fixed; no retuning. No transformer.
 
-## Result
-(filled after the run)
+## Result (seeds 0, 7): **PASS** (prediction HIT)
+- **J403a (interactive deep reasoning): PASS** — teaching an 89-node depth-8 taxonomy via INDIVIDUAL `say()`
+  statements (479 consolidated facts), deep is-a questions answered at **1.0**. Both seeds.
+- **J403b (lazy, not per-statement): PASS** — after teaching-only (no question), the store is NOT consolidated
+  (`closed_relations` empty); it consolidates on the FIRST question (`closed_relations`={isa} after). Both seeds.
+- **J403c (no regression): PASS** — single "A poodle is a dog. A dog is a mammal." → "is a poodle a mammal?" → yes;
+  `tests/test_conversation.py` **10 passed**. Both seeds.
+
+## Verdict: **PASS — interactive (GUI) teaching now gets consolidation reliability automatically**
+A `_dirty` flag (set when a statement adds facts) triggers a single `consolidate()` before answering a question, so
+statement-by-statement teaching — the GUI/talk path — yields reliable deep multi-hop reasoning at scale without the
+user doing anything, while keeping teaching cheap (consolidation runs once per question, not per statement, and is
+skipped entirely if nothing new was taught). This composes the closure-consolidation reliability (JEP-370/378) into the
+interactive loop, complementing the bulk-`read_text` auto-consolidation (JEP-372). No transformer.
