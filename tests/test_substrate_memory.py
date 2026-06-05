@@ -123,6 +123,52 @@ def test_contradiction_detection_vs_exception():
     assert not any(c[0] == "penguin" for c in conflicts)    # exception NOT flagged
 
 
+def _bfs_reach(mem, x, y, rel, g, mx=40):
+    from collections import deque
+    q, seen, n = deque([x]), {x}, 0
+    while q and n < mx:
+        cur = q.popleft(); n += 1
+        for (p, _) in mem.query_all(cur, rel, g):
+            if p == y:
+                return True
+            if p not in seen:
+                seen.add(p); q.append(p)
+    return False
+
+
+def test_temporal_before_transitive_asymmetric():
+    mem = SubstrateMemory(D=4096, directed=True)
+    for a, b in [("protest", "election"), ("election", "war"), ("war", "treaty")]:
+        mem.add_fact(a, "before", b)
+    g = _gate(mem, "before")
+    assert _bfs_reach(mem, "protest", "treaty", "before", g)      # 3-hop transitive
+    assert not _bfs_reach(mem, "treaty", "protest", "before", g)  # asymmetric
+
+
+def test_induce_symmetry_and_transitivity():
+    mem = SubstrateMemory(D=4096, directed=True)
+    for a, b in [("a", "b"), ("a", "c"), ("b", "c")]:            # transitive closure pattern
+        mem.add_fact(a, "rel_t", b)
+    for a, b in [("x", "y"), ("p", "q")]:
+        mem.add_fact(a, "rel_s", b); mem.add_fact(b, "rel_s", a)  # symmetric
+    f_s = {(s, o) for (s, r, o) in mem.facts if r == "rel_s"}
+    f_t = {(s, o) for (s, r, o) in mem.facts if r == "rel_t"}
+    sym = np.mean([1.0 if (b, a) in f_s else 0.0 for (a, b) in f_s])
+    comps = [(a, c) for (a, b) in f_t for (b2, c) in f_t if b == b2 and a != c]
+    trans = np.mean([1.0 if (a, c) in f_t else 0.0 for (a, c) in comps]) if comps else 0.0
+    assert sym >= 0.7 and trans >= 0.7
+
+
+def test_discover_inverse_pair():
+    mem = SubstrateMemory(D=4096, directed=True)
+    for a, b in [("p1", "c1"), ("p2", "c2"), ("p3", "c3")]:
+        mem.add_fact(a, "parent_of", b); mem.add_fact(b, "child_of", a)
+    fp = {(s, o) for (s, r, o) in mem.facts if r == "parent_of"}
+    fc = {(s, o) for (s, r, o) in mem.facts if r == "child_of"}
+    inv = np.mean([1.0 if (b, a) in fc else 0.0 for (a, b) in fp])
+    assert inv >= 0.8
+
+
 def test_brain_query_interface_and_parser():
     from world.brain_query import BrainQuery
     mem = _taxonomy()
