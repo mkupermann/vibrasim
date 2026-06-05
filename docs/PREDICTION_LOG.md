@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 127 / predictions 162 (78%). Latest: JEP-247 HIT (capacity scales LINEARLY ~0.5 edges/value-unit — M=40/60/80 -> cap 20/30/~42, sharp cliff at every scale; the 'scalable linearly' claim VERIFIED, not just asserted).
+Running tally: hits 128 / predictions 163 (79%). Latest: JEP-248 HIT (the substrate has a native EBM ENERGY-QUERY — a single energy eval of concat(X,Y) scores DIRECT fact plausibility at AUC 1.00; transitive edges sit with the false set -> energy-query handles direct facts, chaining handles transitive; the JEP-245 memory boundary from the energy side).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 At JEP-221 the tally is 110/137 (80%) and has CONVERGED: the OVERALL rate is dragged down by early-programme misses
@@ -189,3 +189,4 @@ honestly informative:
 | JEP-245 | 🔮 substrate store = memory+deduction (a/b/c); compositional codes generalize by overlap (d) | a/b/c PASS (stored multi-hop works, held-out bridge/direct unrecoverable); d FAIL — naive bundling (sign AND analog) washes out deep ancestors | MISS(d) | Recursive VSA bundling dilutes depth (capacity); deep subsumption needs proper geometric embeddings (hyperbolic/order, JEP-23-27), not bundling. |
 | JEP-246 | 🔮 noisy perceptual cue cleans up + reasons multi-hop through substrate (clean 1.00, f=.1>=.85, graceful) | all PASS (f=0/.1 = 1.00, f=.2 ~.55, f=.3 ~.4, bitdiff ~7/40); one energy process, robust to ~10% noise | HIT | Perceive->clean->retrieve->reason in one relaxation dynamics; architectural integration (not an accuracy win), graceful degradation beyond basin radius. |
 | JEP-247 | 🔮 capacity scales ~linearly with value-slot size (cap/M ~0.5 const, M=40 ~20, sharp cliff at scale) | all PASS (M=40/60/80 -> 20/30/~42, cap/M 0.50, recall@cap+4 ~0.03) | HIT | Heteroassociative capacity scales linearly with value-slot size; the linear-scaling claim verified, not asserted. |
+| JEP-248 | 🔮 energy separates direct-true/false (AUC>=.90), transitive NOT low-energy (memory boundary) | all PASS (AUC 1.00, acc 1.00, energy direct -89 / false -39 / transitive -44, no FP transitive) | HIT | The EBM has two native query modes: single-shot energy-scoring for direct facts, iterated relaxation for transitive closure; doesn't generalize to unstated edges. |
