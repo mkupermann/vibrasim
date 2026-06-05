@@ -45,6 +45,13 @@ class Conversation:
         text = text.strip()
         if not text:
             return ""
+        if text.lower().rstrip("?.!").strip() in (
+                "draw what you know", "show me what you know", "draw what you have learned",
+                "show what you know", "draw your knowledge", "what do you know"):
+            from world.visualize import draw_knowledge
+            p = draw_knowledge(self.sm, title="What I know")
+            return (f"Here's a picture of what I know — saved to {p}" if p
+                    else "I don't have enough connected knowledge to draw yet — teach me a few facts first.")
         if self.is_question(text):
             from world.brain_query import BrainQuery
             text = self._resolve_pronoun(text)
