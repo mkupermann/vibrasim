@@ -213,6 +213,30 @@ class SubstrateMemory:
             frontier = nxt
         return None
 
+    _SIGN = {"enemy_of": -1.0, "friend_of": 1.0}
+
+    def _signed_valence(self, entity: str, max_hops: int = 6):
+        """JEP-467 (Heider balance): propagate valence through SIGNED relations (enemy_of=-1, friend_of=+1).
+        BFS to the nearest target that has a taught/inherited valence; the result is the product of edge signs times
+        that target's valence (so enemy-of-good=bad, enemy-of-enemy-of-good=good). Returns None if no signed path."""
+        from collections import deque
+        q = deque([(entity, 1.0, 0)]); seen = {entity}
+        while q:
+            e, sign, hops = q.popleft()
+            if hops >= max_hops:
+                continue
+            for (a, r, b) in self.facts:
+                if a == e and r in self._SIGN and b not in seen:
+                    ns = sign * self._SIGN[r]
+                    bv = self.valence.get(b)
+                    if bv is None:
+                        anc = self._valenced_ancestor(b)
+                        bv = anc[1] if anc is not None else None
+                    if bv is not None:
+                        return ns * bv
+                    seen.add(b); q.append((b, ns, hops + 1))
+        return None
+
     def predict_valence(self, entity: str):
         """Affect of an entity: own taught value, else INHERITED from the nearest valenced is-a ancestor (JEP-450),
         else the energy model's GENERALIZED prediction from the feature-cloud (JEP-436). None if nothing applies."""
@@ -221,6 +245,9 @@ class SubstrateMemory:
         anc = self._valenced_ancestor(entity)                     # JEP-450: affect inherits through the taxonomy
         if anc is not None:
             return anc[1]
+        sv = self._signed_valence(entity)                         # JEP-467: affect propagates through signed relations
+        if sv is not None:
+            return sv
         # JEP-451: only fall back to the STATISTICAL generalization when valence training is rich enough to be
         # trustworthy — otherwise a degenerate (e.g. single-example) model hallucinates affect for everything. Need
         # a handful of valenced concepts spanning BOTH polarities; else abstain (neutral).
