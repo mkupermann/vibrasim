@@ -69,7 +69,36 @@ class TeachApp:
         self.btns = tk.Frame(self.root); self.btns.pack(pady=8)
         self.next_btn = tk.Button(self.root, text="Show me a letter", command=self.next_item)
         self.next_btn.pack(pady=4)
+        # HEAR a sound (per Michael: hear 'A' <-> write 'A'). Record yourself (Windows Voice Recorder -> .wav),
+        # then load it here and say which letter -> it grounds the SOUND to the same symbol as the written letter.
+        self.sound_btn = tk.Button(self.root, text="I recorded a sound (load .wav)", command=self.load_sound)
+        self.sound_btn.pack(pady=2)
         self.next_item()
+
+    def load_sound(self):
+        from tkinter import filedialog
+        from world.audio_features import wav_to_feature
+        path = filedialog.askopenfilename(title="Pick a .wav you recorded", filetypes=[("WAV audio", "*.wav")])
+        if not path:
+            return
+        feat = wav_to_feature(path)
+        guess, conf = self.al.guess("sound", feat)
+        if guess is not None and conf >= self.al.tau:
+            self.msg.config(text=f"I think I HEARD '{guess}' (confidence {conf:.0%}). Type the letter if I'm wrong.")
+        else:
+            self.msg.config(text="I HEARD a new sound — which letter is it?")
+        for w in self.btns.winfo_children():
+            w.destroy()
+        ent = self.tk.Entry(self.btns, width=8); ent.pack(side="left", padx=4); ent.focus()
+        def submit():
+            ch = ent.get().strip().upper()[:1]
+            if ch:
+                self.al.teach("sound", ch, feat)               # ground the SOUND to the symbol (same 'A' as written)
+                self.msg.config(text=f"Thank you — I now link that SOUND to '{ch}' (and to the written '{ch}').")
+            for w in self.btns.winfo_children():
+                w.destroy()
+        self.tk.Button(self.btns, text="Teach (sound)", command=submit).pack(side="left", padx=4)
+        ent.bind("<Return>", lambda e: submit())
 
     def _draw(self, a):
         self.canvas.delete("all")
