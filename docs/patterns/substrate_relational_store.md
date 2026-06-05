@@ -29,6 +29,18 @@ ESTABLISHED methods (named as such — no novelty); the value is the demonstrate
 - **Type** (J234): is-a + part-of + causal in one net via the bind; recall 1.00, a wrong-relation query returns the
   right object only ~chance (the bind **discriminates**), every type equally served.
 
+## Multi-parent DAGs (JEP-235/236/237)
+A bare key→value store is a FUNCTION: one attractor per key, so a multi-parent node (`poodle→dog` AND `poodle→pet`)
+loses an edge (JEP-235d). Fix:
+5. **SLOT-BIND multiplicity**: store edge *i* of a child under a distinct key `child_code ⊙ slot_i_code` (a few fixed
+   role codes). Recover all parents by querying each slot.
+6. **GATE empty slots by ENERGY, not overlap**: an untrained slot still relaxes to *some* clean parent code (the value
+   slot's only attractors ARE parent codes), so value-overlap can't reject it — but a TRAINED (key,value) pair is a
+   DEEP minimum (≈ −90) while a spurious slot is shallow (≈ −40). Accept a slot iff settled `energy ≤ 0.7 × median(
+   stored-pattern energies)` (threshold from the training patterns only). This gives 0 false-accept / 0 false-reject
+   and DAG transitive closure = 1.00, matching the symbolic engine. BFS the multi-parent ancestor set over gated
+   retrieval. (Lesson: to detect "was this key trained?", measure the key→value BINDING energy, not value cleanliness.)
+
 ## When to reach for it / limits
 - Use when you want symbolic relational facts to be carried + queried by the substrate's own energy dynamics
   (content-addressable, partial-cue-robust, multi-hop) rather than a dict — the substrate-grounded relational store.
