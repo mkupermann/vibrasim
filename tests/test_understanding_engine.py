@@ -731,3 +731,15 @@ def test_read_mass_nouns():
     e2 = UnderstandingEngine(seed=2)
     e2.read("Dogs are loyal. A cat is friendly.")
     assert not e2.is_a("dog", "loyal") and not e2.is_a("cat", "friendly")   # adjectives still rejected
+
+
+def test_inherited_negative_contradiction():
+    # JEP-195: detect contradictions IMPLIED by the combination of facts (inherited negatives), not just explicit
+    e = UnderstandingEngine(seed=195)
+    e.read("A whale is a mammal. A mammal is not a fish. A mammal is an animal.")
+    assert e.would_contradict("A whale is a fish.")            # whale->mammal, mammal not fish => implied contradiction
+    assert e.would_contradict("A whale is an animal.") is None # consistent
+    assert e.would_contradict("A whale is a mammal.") is None  # already true
+    e2 = UnderstandingEngine(seed=2)
+    e2.read("A poodle is a dog. A dog is a mammal. A mammal is not a plant.")
+    assert e2.would_contradict("A poodle is a plant.")         # multi-hop inherited negative
