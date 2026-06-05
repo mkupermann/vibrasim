@@ -424,7 +424,7 @@ class UnderstandingEngine:
                         p = self._norm_phrase(item)
                         if self._bare_np(p) and self._valid_concept(p):
                             parents.append(p)
-                    elif re.fullmatch(r"[a-z]+(?:ous|less|ful|ive|ic|al|ent|ant|y)", item):
+                    elif re.fullmatch(r"[a-z]+(?:ous|less|ful|ive|ic|al|ent|ant|y)|[a-z]+-[a-z]+(?:ed|ing)", item):
                         props.append(item)                     # bare ADJECTIVE predicate ('venomous','friendly') -> a PROPERTY, not is-a
                 if subjects:
                     last_subject = subjects[0]                 # remember for the next sentence's pronoun
@@ -630,8 +630,10 @@ class UnderstandingEngine:
             return False
         if p in self.properties.get(x, set()):
             return True
+        # a category property of an ANCESTOR distributes to its subtypes, defeasibly ('every mammal is warm-blooded,
+        # a dog is a mammal' -> a dog is warm-blooded), unless x explicitly lacks it (checked above) (JEP-273)
         for c in self.ancestors(x):
-            if p in self._induced.get(c, set()):
+            if p in self.properties.get(c, set()) or p in self._induced.get(c, set()):
                 return True
         return False
 
@@ -1221,7 +1223,7 @@ class UnderstandingEngine:
         props -= self.not_properties.get(x, set())
         if props:
             # split ADJECTIVAL properties ('friendly','venomous' -> 'It is ...') from ABILITIES ('bark' -> 'It can ...')
-            adjs = sorted(p for p in props if re.fullmatch(r"[a-z]+(?:ous|less|ful|ive|ic|al|ent|ant|y)", p))
+            adjs = sorted(p for p in props if re.fullmatch(r"[a-z]+(?:ous|less|ful|ive|ic|al|ent|ant|y)|[a-z]+-[a-z]+(?:ed|ing)", p))
             verbs = sorted(p for p in props if p not in adjs)
             if verbs:
                 sents.append("It can " + ", ".join(verbs) + ".")

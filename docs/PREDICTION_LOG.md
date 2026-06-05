@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 151 / predictions 187 (81%). Latest: JEP-272 HIT (quantified subjects -- 'All/Every/Each X are Y' -> X is-a Y, 'No X is Y' -> X is-not-a Y; 'All dogs are mammals' now -> dog->mammal->animal, 'No fish is a mammal' -> negative; surfaced by a quantified/negated QA pass).
+Running tally: hits 152 / predictions 188 (81%). Latest: JEP-273 HIT (hyphenated participial adjectives 'warm-blooded' as properties + defeasible PROPERTY INHERITANCE -- 'is a dog warm-blooded?' Yes via mammal->dog, explicit exceptions override ('can a penguin fly?' No)).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 At JEP-221 the tally is 110/137 (80%) and has CONVERGED: the OVERALL rate is dragged down by early-programme misses
@@ -214,3 +214,4 @@ honestly informative:
 | JEP-270 | 🔮 'what does X VERB?' -> object of the learned verb relation; subject-side WH unaffected | PASS — carnivore eats meat, robin builds nest, capital-of still Paris; 110 tests | HIT | Open-relation WH needs BOTH argument positions (subject-side capital-of + object-side X-verb-?). |
 | JEP-271 | 🔮 fully-hardened engine handles a comprehensive all-construction document at >=0.9 | PASS — 16/16 = 1.00 across all 6 construction profiles + every relation type + multi-hop | HIT | The 254..270 hardening covers the common declarative construction space; bound is the NER/multi-word wall. |
 | JEP-272 | 🔮 strip all/every/each -> is-a; 'No X is Y' -> negative; regular is-a unaffected | PASS — All dogs->mammals (transitive to animal), No fish->not mammal, shark->fish intact; 111 tests | HIT | Universal-affirmative quantifiers strip to is-a; universal-negative 'No X' maps to the negative-fact path. |
+| JEP-273 | 🔮 hyphenated -ed adjectives as properties (both parsers) + ancestor-property inheritance w/ exception override | PASS — warm-blooded captured, dog/poodle inherit, penguin exception beats 'bird can fly'; 112 tests | HIT | Participial adjectives are properties; category properties distribute to subtypes defeasibly (the property x is-a interaction). |

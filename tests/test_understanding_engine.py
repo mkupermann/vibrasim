@@ -1284,3 +1284,14 @@ def test_quantified_subjects():
     assert not e.is_a("fish", "mammal")        # universal negative 'No fish is a mammal'
     assert e.respond("is a fish a mammal?").startswith("No")
     assert e.is_a("shark", "fish")             # regular is-a unaffected
+
+
+def test_hyphenated_adj_and_property_inheritance():
+    # JEP-273: hyphenated participial adjectives ('warm-blooded') as properties + ancestor-property inheritance (defeasible)
+    e = UnderstandingEngine(seed=273)
+    e.read("Every mammal is warm-blooded. A dog is a mammal. A poodle is a dog. "
+           "A bird can fly. A penguin is a bird. A penguin cannot fly.")
+    assert "warm-blooded" in e.properties.get("mammal", set())   # hyphenated -ed adjective captured
+    assert e.has_property("dog", "warm-blooded")                 # inherited mammal->dog
+    assert e.has_property("poodle", "warm-blooded")              # multi-hop poodle->dog->mammal
+    assert not e.has_property("penguin", "fly")                  # explicit exception overrides inherited 'bird can fly'
