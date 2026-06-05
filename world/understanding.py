@@ -237,6 +237,11 @@ class UnderstandingEngine:
             s = s.strip().rstrip(".")
             if not s:
                 continue
+            # CONDITIONAL RULE (JEP-285): 'If [something/an X] is a Y, [then] it <consequent>' is a UNIVERSAL RULE ->
+            # rewrite to 'a Y <consequent>' (the category Y gets the consequent property/is-a), feeding the handlers below
+            mif = re.match(r"^if\s+(?:something|it|an?\s+[a-z]+|the\s+[a-z]+)\s+is\s+(an?\s+[a-z][a-z\- ]*?)\s*,\s*(?:then\s+)?it\s+(.+)$", s)
+            if mif:
+                s = f"{mif.group(1)} {mif.group(2)}"
             # QUANTIFIED subjects (JEP-272): 'All/Every/Each X are Y' -> 'X are Y' (universal affirmative = is-a);
             # 'No X is Y' -> 'X is not a Y' (universal negative). 'Some' left as-is (existential, not universal).
             mneg = re.match(r"^no\s+([a-z][a-z0-9\- ]*?)\s+(?:is|are)\s+(?:an?\s+|the\s+)?([a-z][a-z0-9\- ]*)$", s)
