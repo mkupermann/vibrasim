@@ -140,6 +140,18 @@ engine*, *a handful of genuine insights*, and *the honest method*.
    the honest limits: each memory "module" holds a few hundred facts before it would blur, so to grow further it
    simply adds more modules — like a brain adding capacity.)
 
+5. **It now reasons *and* learns its own rules — durably.** Building on the memory above, the little brain now does
+   a wide range of reasoning entirely on its own machinery (no modern AI): it chains facts, inherits traits, handles
+   exceptions ("a penguin can't fly" even though birds do; a bat flies though mammals don't), tells genuine
+   contradictions from sensible exceptions, answers "**why?**" (what could cause this), handles family‑tree style
+   relationships, and even does simple **analogies** ("dollar is to the USA as ? is to Mexico → peso"). Most
+   striking: it has begun to **figure out the rules themselves from examples** — noticing that "married‑to" works
+   both ways, that "bigger‑than" is see‑through (if A>B>C then A>C), that "caused‑by" is just "causes" in reverse,
+   and that "grandparent" is simply "parent of a parent" — and then applying those discovered rules to questions it
+   was never directly taught. All of it survives closing and reopening the program, and we stress‑tested it holding
+   **several thousand facts** at once. (Still home‑made and small — but the whole loop *read → remember → reason →
+   discover rules*, with nothing borrowed from today's big AIs, now runs end to end and is locked down with tests.)
+
 **The goal** — the north star — is to move, step by careful step, toward something with **human-like learning,
 understanding, and communication**: a system that learns from what it reads and from experience, *actually*
 understands the relationships between things, and can talk with you about them — built the honest, transparent way,
