@@ -1120,6 +1120,12 @@ class UnderstandingEngine:
         triggers = sorted(c for c, ys in causes.items() if xn in ys)
         if triggers:
             sents.append("It is caused by " + ", ".join(self._art(t) for t in triggers) + ".")
+        # numeric attributes ('It has 4 legs')
+        nums = sorted((a, n) for (en, a), n in getattr(self, "num_attrs", {}).items() if en == xn)
+        if nums:
+            parts = [f"{n} {a if n == 1 else a + 's'}" for a, n in nums]
+            joined = parts[0] if len(parts) == 1 else ", ".join(parts[:-1]) + " and " + parts[-1]
+            sents.append("It has " + joined + ".")
         if not sents:
             return f"I don't know anything about {self._art(x)} yet."
         sents[0] = sents[0][0].upper() + sents[0][1:]

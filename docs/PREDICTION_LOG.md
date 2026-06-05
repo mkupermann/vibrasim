@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 96 / predictions 123 (78%). Latest: JEP-207 HIT (quantitative reasoning — numeric attributes from prose, 'how many' Q&A, numeric comparison).
+Running tally: hits 97 / predictions 124 (78%). Latest: JEP-208 HIT (describe() mentions numeric attributes — completes the quantitative-reasoning integration).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 The OVERALL 73% is dominated by early-programme misses (surface-form bugs, structure-learning difficulty mis-estimates).
@@ -145,3 +145,4 @@ Predictions ARE converging WITHIN a settled domain, and the residual misses are 
 | JEP-205 | 🔮 new capabilities (open relations, proper nouns, unified read) still robust | 0 crashes/6000 across read+read_open+learn_relation+describe+summarize+extract+audit | HIT | Extensive additions (195..204) preserve robustness; matured engine confirmed solid through 204. |
 | JEP-206 | 🔮 open-relation WH ('what is the capital of France?') -> subject; generic unaffected | 'Paris.'/'London.'/'Einstein.'; unknown handled; generic WH intact | HIT | Completes open-relation integration (learn->induce->query->WH-Q&A->communicate). |
 | JEP-207 | 🔮 extract 'X has N Y' numerics + answer how-many + numeric comparison | num_attrs extracted (digits+words), 'how many legs' -> 4, 'more legs than' -> Yes; not mis-parsed as part-of | HIT | New capability domain (quantitative understanding); limit = simple pattern + 0-20 lexicon. |
+| JEP-208 | 🔮 describe mentions numeric attributes, pluralized, no regression | 'It has 2 eyes and 4 legs' | HIT | Completes quantitative integration: extract -> how-many Q&A -> comparison -> describe. |

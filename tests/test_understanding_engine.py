@@ -868,3 +868,11 @@ def test_numeric_attribute_reasoning():
     assert e.respond("does a spider have more legs than a dog?") == "Yes."            # 8 > 4
     assert e.respond("does a dog have more legs than a spider?") == "No."
     assert e.respond("how many legs does a cat have?").startswith("I don't know")     # unknown
+
+
+def test_describe_numeric_attributes():
+    # JEP-208: describe() mentions an entity's numeric attributes ('It has 4 legs and 2 eyes')
+    e = UnderstandingEngine(seed=208)
+    e.read("A dog is a mammal. A dog has 4 legs. A dog has 2 eyes. A heart is part of a dog.")
+    d = e.describe("dog")
+    assert "4 legs" in d and "2 eyes" in d and "heart" in d
