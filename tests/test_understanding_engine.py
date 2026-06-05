@@ -1121,3 +1121,15 @@ def test_passive_causal_extraction():
     assert e.causes_effect("water", "erosion")     # 'results from' -> swapped
     assert e.causes_effect("virus", "fever")       # active still works
     assert not e.causes_effect("rust", "oxygen")   # the swap is directional, not symmetric
+
+
+def test_usage_learned_countability():
+    # JEP-256: a concept introduced with 'a/an' is countable here, overriding the static mass-noun lexicon (polysemy)
+    e = UnderstandingEngine(seed=256)
+    e.read("A metal is an element. Water is a liquid.")
+    assert e._art("metal") == "a metal"       # 'a metal is an element' -> countable, overrides _MASS_NOUNS
+    assert e._art("liquid") == "a liquid"      # 'a liquid' -> countable
+    assert e._art("water") == "water"          # never article-led -> stays mass
+    e2 = UnderstandingEngine(seed=257)
+    e2.read("Gravity causes a tide.")
+    assert e2._art("gravity") == "gravity"     # bare mass noun unaffected (counter-example)

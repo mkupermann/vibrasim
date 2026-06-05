@@ -203,6 +203,12 @@ class UnderstandingEngine:
         Works on encyclopedic/descriptive prose ('A dog is a mammal. A heart is part of a dog. A virus causes a
         fever.'); dense logic/argument prose (e.g. Boole) yields little — the gate is the GENRE, not the extractor."""
         self._detect_proper_nouns(passage)     # mid-sentence Capitalized words -> proper nouns (for correct generation)
+        # learn COUNTABILITY from usage: a concept the source introduces with 'a/an' is countable here (overrides the
+        # static mass-noun lexicon for polysemes like 'a metal is an element') — JEP-256
+        if not hasattr(self, "_countable"):
+            self._countable = set()
+        for w in re.findall(r"\b(?:a|an)\s+([a-z][a-z0-9\-]*)", passage.lower()):
+            self._countable.add(self._norm(w))
         art = r"(?:(?:an|a|the)\s+)?"
         np = rf"{art}([a-z][a-z0-9\- ]*?)"     # concept NP: letter-first, then alphanumeric ('covid19', 'mp3', 'h2o')
         learned = {"is_a": 0, "part_of": 0, "causal": 0}
@@ -719,9 +725,11 @@ class UnderstandingEngine:
         head = noun.split()[-1]
         # mass/uncountable head -> no article ('water', not 'a water'). '-ness' is MOSTLY an uncountable abstract
         # suffix ('kindness','darkness'), but with countable exceptions ('a business','a witness','an illness');
-        # '-ity'/'-tion' are NOT safe at all (a city/an entity/a function are countable).
-        if head in cls._MASS_NOUNS or (
-                head.endswith("ness") and len(head) > 5 and head not in cls._COUNTABLE_NESS):
+        # '-ity'/'-tion' are NOT safe at all (a city/an entity/a function are countable). USAGE OVERRIDES the static
+        # list: a concept the SOURCE introduced with 'a/an' ('a metal is an element') is countable here, even if the
+        # lexicon marks it mass — learn countability from the source (JEP-256).
+        if head not in getattr(self, "_countable", ()) and (
+                head in cls._MASS_NOUNS or (head.endswith("ness") and len(head) > 5 and head not in cls._COUNTABLE_NESS)):
             return noun
         head = noun.split()[0]
         if head in cls._ART_A:
