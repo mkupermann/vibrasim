@@ -272,6 +272,11 @@ class UnderstandingEngine:
                 if ent not in self._PRONOUNS and self._bare_np(ent) and num is not None:
                     if not hasattr(self, "num_attrs"):
                         self.num_attrs = {}
+                    if not hasattr(self, "num_conflicts"):
+                        self.num_conflicts = []
+                    prev = self.num_attrs.get((ent, attr))
+                    if prev is not None and prev != num:            # conflicting count for the same attribute
+                        self.num_conflicts.append((ent, attr, prev, num))
                     self.num_attrs[(ent, attr)] = num
                     learned["numeric"] = learned.get("numeric", 0) + 1
                     last_subject = ent
@@ -576,6 +581,8 @@ class UnderstandingEngine:
                         found.append((x, c, f"{self._art(x)} is {self._art(na)}, and {self._art(na)} is not "
                                             f"{self._art(nb)}, yet {self._art(x)} is asserted to be {self._art(c)}"))
                         break
+        for ent, attr, prev, num in getattr(self, "num_conflicts", []):
+            found.append((ent, attr, f"{self._art(ent)} is said to have both {prev} and {num} {attr}s"))
         return found
 
     def is_a_confidence(self, x: str, c: str) -> int:

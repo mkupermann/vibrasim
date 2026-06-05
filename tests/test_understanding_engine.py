@@ -876,3 +876,14 @@ def test_describe_numeric_attributes():
     e.read("A dog is a mammal. A dog has 4 legs. A dog has 2 eyes. A heart is part of a dog.")
     d = e.describe("dog")
     assert "4 legs" in d and "2 eyes" in d and "heart" in d
+
+
+def test_numeric_consistency():
+    # JEP-209: conflicting numeric attributes are detected as contradictions (consistency extends to quantities)
+    e = UnderstandingEngine(seed=209)
+    e.read("A dog has 4 legs. A dog has 6 legs.")
+    audit = e.consistency_audit()
+    assert any("4 and 6" in why for _, _, why in audit)
+    e2 = UnderstandingEngine(seed=2)
+    e2.read("A dog has 4 legs. A dog has 4 legs. A spider has 8 legs.")
+    assert e2.consistency_audit() == []                  # restating the same number is consistent
