@@ -925,8 +925,13 @@ class UnderstandingEngine:
         templates (learn_relation) and extract all their instances. Returns {relation: count}. NO transformer."""
         self._detect_proper_nouns(passage)
         def is_fixed(conn):
-            if conn in {"is", "are", "was", "were"} or conn.split()[0] in {"has", "have"}:
-                return True                                  # is-a copula / 'has ...' part-of or numeric
+            w0 = conn.split()[0] if conn else ""
+            if w0 in {"has", "have"}:
+                return True                                  # 'has ...' part-of or numeric
+            # a copula form ('is', 'is celestial', 'are warm-blooded') is IS-A (the parent is a multi-word NP),
+            # UNLESS a relational preposition makes it a genuine OPEN relation ('is capital of', 'is located in')
+            if w0 in {"is", "are", "was", "were"} and not re.search(r"\b(?:of|in|at|by|to|on|with|from)\b", conn):
+                return True
             return bool(re.search(r"\b(?:part of|causes|caused|leads to|located in|situated in|found in|before|after)\b", conn)
                         or conn.endswith("than"))            # part-of / causal / spatial / temporal / comparison
         triples = []
@@ -1341,7 +1346,9 @@ class UnderstandingEngine:
         if m:
             attr, ent = self._norm(m.group(1)), self._norm(m.group(2))
             if (ent, attr) in na:
-                return f"{self._art(ent).capitalize()} has {na[(ent, attr)]} {m.group(1)}."
+                n = na[(ent, attr)]
+                unit = attr if n == 1 else m.group(1)            # singular for exactly one ('1 moon', not '1 moons')
+                return f"{self._art(ent).capitalize()} has {n} {unit}."
             return f"I don't know how many {m.group(1)} {self._art(ent)} has."
         m = re.match(r"does\s+(?:(?:an|a|the)\s+)?(\w+)\s+have\s+more\s+(\w+)\s+than\s+(?:(?:an|a|the)\s+)?(\w+)", q)
         if m:
