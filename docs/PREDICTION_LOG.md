@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 88 / predictions 115 (77%). Latest: JEP-199 HIT (mass nouns take no article in generation — 'tiredness' not 'a tiredness'; improves communication grammaticality).
+Running tally: hits 89 / predictions 116 (77%). Latest: JEP-200 HIT (OPEN-RELATION learning — induce a NEW relation type from prose examples, extract + query; beyond the 5 fixed types).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 The OVERALL 73% is dominated by early-programme misses (surface-form bugs, structure-learning difficulty mis-estimates).
@@ -137,3 +137,4 @@ Predictions ARE converging WITHIN a settled domain, and the residual misses are 
 | JEP-197 | 🔮 summarize() gives a coherent overview of read knowledge | coherent multi-sentence summary (top categories + parts + causes); empty handled | HIT | Source summarization — whole-KB generative communication, complements per-concept describe(). |
 | JEP-198 | 🔮 summarize() flags internal contradictions, none if consistent | inconsistent source -> 'I noticed an inconsistency: ...'; consistent -> no note | HIT | Human-like honest source assessment: summarize AND flag self-contradiction (JEP-197 + 195/196). |
 | JEP-199 | 🔮 _art omits article for mass nouns, countable unaffected | 'tiredness'/'water' no article, 'a dog'/'an animal' preserved | HIT | Communication grammaticality; curated set not suffix rules (suffixes unreliable: city/-ity, organism/-ism countable). |
+| JEP-200 | 🔮 induce a new relation template from examples, extract + query new instances | 'is capital of' induced, 'Berlin...' extracted, queryable role-sensitively; inconsistent refused | HIT | Open-relation learning beyond the 5 fixed types (template induction). Limit: needs consistent surface pattern (no-transformer wall). |

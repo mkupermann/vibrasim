@@ -785,3 +785,16 @@ def test_mass_noun_article_generation():
     assert e._art("dog") == "a dog" and e._art("animal") == "an animal"   # countable unaffected
     e.read("A fever causes tiredness.")
     assert e.respond("what does a fever cause?") == "A fever causes tiredness."   # not 'a tiredness'
+
+
+def test_open_relation_learning():
+    # JEP-200: induce a NEW relation type from examples (template induction), extract + query new instances
+    e = UnderstandingEngine(seed=200)
+    rel = e.learn_relation(["Paris is the capital of France.", "London is the capital of England.",
+                            "Tokyo is the capital of Japan."])
+    assert rel == ("is capital of", 3)
+    assert e.extract_relation("Berlin is the capital of Germany.") == ("berlin", "is capital of", "germany")
+    assert e.relation_true("berlin", "is capital of", "germany")       # learned relation, new instance, queryable
+    assert not e.relation_true("berlin", "is capital of", "france")    # wrong object
+    assert not e.relation_true("germany", "is capital of", "berlin")   # order matters (role-binding)
+    assert e.learn_relation(["A is bigger than B.", "C is part of D."]) is None   # inconsistent -> no template
