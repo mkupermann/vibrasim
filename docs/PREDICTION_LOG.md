@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 166 / predictions 202 (82%). Latest: JEP-287 HIT (per Michael -- the 'train slowly, ASK me when unsure' TEACHER LOOP works: the engine grounds the alphabet from a teacher at 0.98 accuracy asking only ~20% of the time (vs passive 100%), confidence meaningful; live GUI tool tools/teach_gui.py built; cross-modal hear<->write hook ready).
+Running tally: hits 167 / predictions 203 (82%). Latest: JEP-288 HIT (per Michael -- CROSS-MODAL 'hear A' <-> 'write A': the engine hears letters (1.0, synthesized audio+FFT) and links them to the written letters via a SHARED symbol; cross-modal recall 0.96, ear->eye transfer; the hear<->write link demonstrated).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 At JEP-221 the tally is 110/137 (80%) and has CONVERGED: the OVERALL rate is dragged down by early-programme misses
@@ -229,3 +229,4 @@ honestly informative:
 | JEP-285 | 🔮 'If X is a Y, then it <consequent>' -> 'a Y <consequent>' (category rule, inherits) | PASS — mammal->warm-blooded (dogs inherit), bird->fly (robins inherit); 121 tests | HIT | Universal conditional rules are category predication; the structured edge of the if-then genre (full propositional conditionals remain the wall). |
 | JEP-286 | 🔮 engine perceives real images (>=.60) + reasons 'is this footwear?' coarse (>=.85) via read prose | PASS — perceive 0.75, reason 0.95 vs control 0.50, end-to-end; surfaced+fixed collective-noun bug | HIT | Real-sensory->symbolic-reasoning loop closes; coarse-beats-fine (JEP-189); perception is a real-usage check on prose too. |
 | JEP-287 | 🔮 ask-when-unsure teacher loop learns A-Z (>=.85), label-efficient (<=60% queries), confidence meaningful, GUI built | PASS — active 0.98 @ 20% queries vs passive 0.95 @ 100%, confident 0.98 > unsure 0.65, teach_gui.py | HIT (after 2 flagged fixes: novelty-gated confidence + centroid normalization) | Active learning needs a calibrated NOVELTY signal (not just margin) + translation-normalized features; then ask-when-unsure is 5x label-efficient. |
+| JEP-288 | 🔮 hear letters (>=.90) + shared symbol set + cross-modal recall (>=.90) + transfer | PASS — hear 1.0, 26/26 shared symbols, recall 0.96, ear<->eye transfer; FFT-binning fix | HIT | 'hear A' and 'write A' ground ONE symbol; cross-modal binding via (modality,symbol) store enables transfer. |
