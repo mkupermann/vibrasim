@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 78 / predictions 105 (74%). Latest: JEP-189 HIT (hierarchical concept discovery from images is partial; coarse super-categories MORE separable than fine classes — emergent).
+Running tally: hits 79 / predictions 106 (75%). Latest: JEP-190 HIT (vision+language complementarity at granularity: language fine 0.72 > vision-only fine 0.54; vision coarse 0.87).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 The OVERALL 73% is dominated by early-programme misses (surface-form bugs, structure-learning difficulty mis-estimates).
@@ -127,3 +127,4 @@ Predictions ARE converging WITHIN a settled domain, and the residual misses are 
 | JEP-187 | 🔮 loop composes on real images, purity lower than toy, perception the bottleneck | purity 0.93, discriminating perception+reasoning 0.93; loop composes on REAL data | HIT | Grounding advanced toy->real. SELF-CATCH: nearly reused a non-discriminating probe (JEP-180 family), caught it before recording. |
 | JEP-188 | 🔮 perceived geometry grounds spatial relations, composes with the spatial faculty | cup-above-plate grounded -> transitive/inverse/perspective all hold + prose taxonomy composes | HIT | Grounding extends from objects to RELATIONS; spatial has a geometric signature, non-geometric relations need interaction data. |
 | JEP-189 | 🔮 partial hierarchy from vision, sub ~0.8, super partially separates | super 0.87, sub 0.62 (over-predicted sub); EMERGENT: coarse MORE separable than fine | HIT (qual) | Visual clustering recovers COARSE taxonomy better than fine — visual~coarse-semantic but diverges fine (JEP-58/61 at hierarchy level). |
+| JEP-190 | 🔮 language-supervised fine > vision-only unsupervised fine | 0.72 vs 0.54 (language disambiguates fine) | HIT | Vision+language complementary at granularity: vision reliable COARSE, language sharpens FINE — the human developmental pattern. |
