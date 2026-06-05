@@ -173,9 +173,11 @@ class BrainQuery:
         m = re.match(r"is (\w+) part of (\w+)$", s)                 # 'a/an/the' already stripped above (JEP-388)
         if m:
             return self.part_of(self._sing(m.group(1)), self._sing(m.group(2)))
-        m = re.match(r"is (\w+) (?:kind of |type of )?(\w+)$", s)   # 'a/an/the' already stripped above
+        m = re.match(r"is (\w+) (?:kind of |type of )?([\w-]+)$", s)   # allow hyphenated property/class (JEP-394)
         if m:
-            return self.is_a(m.group(1), m.group(2))
+            x, y = m.group(1), m.group(2)
+            # 'is X Y?' is ambiguous between class membership and property -> yes if EITHER holds (JEP-394)
+            return bool(self.is_a(x, y) or self.has_property(x, y))
         m = re.match(r"can (\w+) (\w+)$", s)
         if m:
             return self.has_property(m.group(1), m.group(2))
