@@ -66,6 +66,20 @@ class BrainQuery:
                     return v
         return None
 
+    @staticmethod
+    def _vstem(w):
+        return w[:5] if len(w) >= 5 else w               # crude verb stem (domesticate ~ domesticated)
+
+    def who_did(self, verb, obj):
+        """Reverse open-relation: subjects of stored (subject, ~verb, obj)."""
+        vs = self._vstem(verb)
+        return sorted({s for (s, r, o) in self.mem.facts if o == obj and self._vstem(r) == vs})
+
+    def what_did(self, subj, verb):
+        """Forward open-relation: objects of stored (subj, ~verb, object)."""
+        vs = self._vstem(verb)
+        return sorted({o for (s, r, o) in self.mem.facts if s == subj and self._vstem(r) == vs})
+
     def part_of(self, y, x):
         for (p, _) in self.mem.query_all(y, "partof", self.gate):
             if p == x or p in self._ancestors(x, "isa"):
@@ -115,6 +129,17 @@ class BrainQuery:
         s = q.strip().lower().rstrip("?").strip()
         s = re.sub(r"\b(a|an|the)\b", " ", s)
         s = re.sub(r"\s+", " ", s).strip()
+        m = re.match(r"who (\w+) (\w+)$", s)             # "who domesticated the cat?" -> reverse open-relation
+        if m:
+            r = self.who_did(m.group(1), self._sing(m.group(2))) or self.who_did(m.group(1), m.group(2))
+            return r or None
+        m = re.match(r"what was (\w+) (\w+) by$", s)      # "what was the cat domesticated by?" -> reverse
+        if m:
+            r = self.who_did(m.group(2), self._sing(m.group(1))) or self.who_did(m.group(2), m.group(1))
+            return r or None
+        m = re.match(r"what did (\w+) (\w+)$", s)         # "what did humans domesticate?" -> forward open-relation
+        if m:
+            return self.what_did(m.group(1), m.group(2)) or None
         m = re.match(r"do (\w+) (\w+)$", s)              # "do poodles bark?" -> has_property(poodle, bark)
         if m:
             return self.has_property(self._sing(m.group(1)), m.group(2))
