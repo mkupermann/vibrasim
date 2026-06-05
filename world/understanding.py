@@ -177,6 +177,9 @@ class UnderstandingEngine:
         bad = {"and", "or", "but", "that", "which", "who", "whom", "whose", "if", "then", "than", "as",
                "of", "in", "on", "at", "by", "to", "for", "with", "from", "into", "is", "are", "was", "were"}
         toks = phrase.split()
+        # allow a tight nominal compound 'X of Y' (e.g. 'form of government', 'state of matter') — 3 bare-noun tokens
+        if len(toks) == 3 and toks[1] == "of" and toks[0] not in bad and toks[2] not in bad:
+            return True
         return bool(toks) and len(toks) <= 4 and not any(t in bad for t in toks)
 
     def read(self, passage: str) -> dict:

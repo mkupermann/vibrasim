@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 71 / predictions 98 (72%). Latest: JEP-182 HIT (abstract REASONING works symbolically; only abstract GROUNDING is blocked — refines the frontier).
+Running tally: hits 72 / predictions 99 (73%). Latest: JEP-183 HIT (tight 'X of Y' nominal compounds extractable; democracy->political system chains, no precision regression).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 The OVERALL 73% is dominated by early-programme misses (surface-form bugs, structure-learning difficulty mis-estimates).
@@ -120,3 +120,4 @@ Predictions ARE converging WITHIN a settled domain, and the residual misses are 
 | JEP-180 | 🔮 loop degrades SHARPLY as clusters merge, perception the bottleneck | downstream tracks purity (0.93@noise2.0); perception IS the bottleneck, but degradation GENTLE | HIT | Mechanism right; over-predicted sharpness (high-D clustering robust). Test-design lesson: use a DISCRIMINATING probe. |
 | JEP-181 | 🔮 matured read() extracts MORE than JEP-155's 326 from Boole, low precision | 52 facts (FEWER — stricter guards), ~0 genuine; genre gate conclusive | MISS | A more PRECISE extractor extracts FEWER on wrong-genre text, not more (precision/recall tradeoff). Core genre-gate claim confirmed. |
 | JEP-182 | 🔮 abstract reasoning works (structural); only grounding blocked | justice/courage/tyranny reason multi-hop correctly; no prototype for justice | HIT | Refines the 'abstract words' frontier: symbolic abstract reasoning works, abstract grounding doesn't. 'X of Y' NP recall caveat surfaced. |
+| JEP-183 | 🔮 tight 'X of Y' nominals recovered, doc recall holds, Boole modest | democracy->political system chains; doc 0.93 unchanged, 0 spurious; Boole +4 (still ~0 genuine) | HIT | Real recall gain on a common encyclopedic construction at no precision cost on the target genre. |
