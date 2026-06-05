@@ -5483,3 +5483,16 @@ upon a correct baseline + OSC/SA separation. Clean close of G145->G146->G147->G1
 candidate advantage is an advantage of a standard classical algorithm, not of the substrate -- consistent
 with the programme-wide "physics is decorative; standard methods carry every win" pattern. Gap vs greedy is
 flat ~0 across n=200-360 (not growing), so no further scale-up is warranted; the honest conclusion stands.
+
+## 2026-06-05 — G149: oscillator's weakness is FUNDAMENTAL, not compute — computation thread CLOSED
+Fairness check answering the obvious objection to G148 ("the oscillator was under-resourced"). Gave the
+oscillator ~10x compute (15 seeds x 5000 steps vs 5 x 1500; SAME dynamics/noise/schedule, only more of it --
+a budget control, not tuning), re-tested vs correct greedy (60 restarts) and SA at n in {200,360}, 5 inst.
+Result ROBUST-NEGATIVE: OSC_big helped marginally (mean 2517->2538 at n=360) but still only TIES correct
+greedy (wins 3/5 both n, gap +0.002/+0.007 < 0.01 SALVAGED bar) and LOSES to SA 0/5 at both scales (SA ahead
+by ~1.5-3% on every instance). The gap to SA did not close with 10x compute -> the oscillator's weakness is a
+property of the DYNAMICS, not the budget. (Robustness: these n=360 instances differ from G148's due to a
+different rng-consumption order, yet the conclusion is identical -- not instance-specific.) G148 bulletproof.
+COMPUTATION THREAD CLOSED: across G145->G149 the substrate's last candidate advantage is an advantage of the
+classical SA ALGORITHM alone; the physical/vibrations oscillator confers no edge over correct local search at
+any scale or budget tested. Physics decorative everywhere -- the programme's complete, honest endpoint.
