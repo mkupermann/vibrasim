@@ -1273,3 +1273,14 @@ def test_object_side_open_relation_wh():
     e2 = UnderstandingEngine(seed=271)
     e2.read("Paris is the capital of France. London is the capital of England.")
     assert e2.respond("what is the capital of France?") == "Paris."
+
+
+def test_quantified_subjects():
+    # JEP-272: 'All/Every/Each X are Y' -> X is-a Y; 'No X is Y' -> X is-not-a Y (universal negative)
+    e = UnderstandingEngine(seed=272)
+    e.read("All dogs are mammals. A mammal is an animal. No fish is a mammal. A shark is a fish.")
+    assert e.is_a("dog", "mammal")             # universal affirmative 'All dogs are mammals'
+    assert e.is_a("dog", "animal")             # transitive
+    assert not e.is_a("fish", "mammal")        # universal negative 'No fish is a mammal'
+    assert e.respond("is a fish a mammal?").startswith("No")
+    assert e.is_a("shark", "fish")             # regular is-a unaffected
