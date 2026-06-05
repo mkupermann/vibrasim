@@ -183,10 +183,14 @@ class BrainQuery:
     # ---- tiny natural-question parser ----
     def ask(self, q):
         s = q.strip().lower().rstrip("?").strip()
+        s = re.sub(r"\bwas\b", "is", s); s = re.sub(r"\bwere\b", "are", s)   # past tense -> present (JEP-405)
         # attribute questions FIRST (before articles are stripped, to keep 'your'): JEP-404
         m = re.match(r"^(?:who|what)\s+is\s+your\s+([a-z]+)$", s)
         if m:
             return self._attr("you", self._sing(m.group(1)))
+        m = re.match(r"^(?:who|what)\s+is\s+my\s+([a-z]+)$", s)            # first-person attribute (JEP-405)
+        if m:
+            return self._attr("user", self._sing(m.group(1)))
         m = re.match(r"^(?:who|what)\s+is\s+(?:the\s+)?([a-z]+)\s+of\s+(.+)$", s)   # 'what is the name of your creator'
         if m:
             ent = re.sub(r"^(?:your|the|a|an)\s+", "", m.group(2).strip())
@@ -228,6 +232,10 @@ class BrainQuery:
         m = re.match(r"can (\w+) (\w+)$", s)
         if m:
             return self.has_property(m.group(1), m.group(2))
+        m = re.match(r"are (\w+) ([\w-]+)$", s)         # "are dogs loyal?" -> is_a OR has_property (JEP-405)
+        if m:
+            x = self._sing(m.group(1))
+            return bool(self.is_a(x, m.group(2)) or self.has_property(x, m.group(2)))
         m = re.match(r"does (\w+) have (?:any )?(\w+)$", s) or re.match(r"do (\w+)s? have (?:any )?(\w+)$", s)
         if m:
             x, p = m.group(1), m.group(2)
