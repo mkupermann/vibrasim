@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 144 / predictions 180 (80%). Latest: JEP-265 HIT (re-validated the prose-hardened engine ROBUST after the 16 changes of JEP-254..264 -- 0 crashes / 4000 adversarial passages + 6 queries each; no fragility introduced, paralleling JEP-171/194/205).
+Running tally: hits 145 / predictions 181 (80%). Latest: JEP-266 HIT (document-scale validation of the cumulative prose hardening -- a fresh multi-domain document exercising all newly-handled constructions answered 15/16 = 0.94; the 1 miss is the >=2-occurrence open-relation rule, by design).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 At JEP-221 the tally is 110/137 (80%) and has CONVERGED: the OVERALL rate is dragged down by early-programme misses
@@ -207,3 +207,4 @@ honestly informative:
 | JEP-263 | 🔮 'X contains/consists of Y' -> Y part-of X + exclude from open; transitive | PASS — cell/nucleus/copper part-of, nucleus->body transitive, no open 'contains'; 104 tests | HIT | Mereological containment verbs are part-of, not generic open relations. |
 | JEP-264 | 🔮 'does X have Y?' -> part_of(Y,X) (inherits to subtypes) or numeric; no shadowing of 'more...than' | PASS — human/mammal have heart (inherited), dog has 4 legs, negatives No, comparison intact; 106 tests | HIT | Possession is mereology; the part-of x is-a interaction distributes the whole's parts to subtypes. |
 | JEP-265 | 🔮 the 16 prose-hardening changes (254..264) are guarded -> engine stays robust, 0 crashes | PASS — 0 crashes / 4000 adversarial passages + 6 queries each; 106 unit tests green | HIT | New extractors/handlers all guarded (bare_np/valid_concept/suffix); re-validate after major change (JEP-171/194/205). |
+| JEP-266 | 🔮 hardened engine handles a fresh multi-domain document at >=0.9 recall | PASS — 15/16 = 0.94 across all new constructions; 1 miss = single-occurrence open relation (by design) | HIT | The cumulative 254..264 hardening validated end-to-end at document scale; robust (265). |
