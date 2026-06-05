@@ -152,6 +152,19 @@ class SubstrateMemory:
         """Membership probe for a (possibly multi-valued) relation: is `value` bound to (entity, role)?"""
         return self.edge_sim(entity, role, value) >= gate
 
+    def detect_conflicts(self, gate, pairs=(("hasprop", "not_hasprop"), ("isa", "not_isa"))):
+        """Find genuine CONTRADICTIONS: a node holding both a positive and negative DIRECT edge for the same target.
+        Uses direct-edge contains(), so a defeasible exception (inherited positive + explicit negative) is NOT a
+        contradiction — only a direct double-assertion is. Returns [(entity, pos_role, value), ...]."""
+        out = []
+        for pos, neg in pairs:
+            pset = {(s, o) for (s, r, o) in self.facts if r == pos}
+            nset = {(s, o) for (s, r, o) in self.facts if r == neg}
+            for (x, v) in sorted(pset & nset):
+                if self.contains(x, pos, v, gate) and self.contains(x, neg, v, gate):
+                    out.append((x, pos, v))
+        return out
+
     # ---- taught prose -> durable knowledge (JEP-302) ----
     def ingest_engine(self, eng, roles=("parents:isa", "part_of_g:partof", "causes:causes", "properties:hasprop")):
         """Bridge an UnderstandingEngine's learned relation graphs into the directed substrate store."""
