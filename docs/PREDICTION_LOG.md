@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 57 / predictions 81 (JEP-165 recall MISS — aggregate read() on connected prose 0.60 recall/high precision; per-category overstated readiness) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
+Running tally: hits 58 / predictions 82 (JEP-166 HIT — tractable fixes raise read() aggregate recall 0.60 -> 0.90, precision perfect) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
 
 | id | prediction (🔮 before) | outcome | hit? | lesson (don't repeat) |
 |----|------------------------|---------|------|------------------------|
@@ -88,3 +88,4 @@ Running tally: hits 57 / predictions 81 (JEP-165 recall MISS — aggregate read(
 | JEP-163 | 🔮 recency coreference closes common pronoun case (8/8); fails on ambiguity | wolf->mammal via 'It' works; kennel-recency-error confirmed | HIT | Completes read() robustness arc; multi-entity coreference needs semantics (deferred). |
 | JEP-164 | 🔮 read() negation -> belief revision from correcting prose, no copula interference | whale fish->mammal revised; coexist + pronoun+neg all correct | HIT | Human-like learn-from-sources that handles corrections/conflicts; reuses JEP-96/145 faculties. |
 | JEP-165 | 🔮 precision >0.9, recall 0.7-0.8 on connected prose | precision perfect (0 spurious), recall 0.60 (over-predicted) | MISS (recall) | Aggregate test shows per-category 8/8 overstated readiness; misses mostly tractable (has-part, -ves, head-noun). |
+| JEP-166 | 🔮 has-part + -ves + head-noun raise recall 0.60 -> ~0.80, precision high | recall 0.90 (exceeded), 0 spurious; only ambiguous double-binding remains | HIT | read() now 0.90 recall / high precision on connected encyclopedic prose; residual is genuine NL ambiguity. |
