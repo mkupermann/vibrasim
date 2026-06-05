@@ -522,6 +522,21 @@ class UnderstandingEngine:
                                     f"and {self._art(a)} is not {self._art(nb)}.")
         return None
 
+    def consistency_audit(self) -> list:
+        """Audit the whole knowledge base for INTERNAL contradictions (e.g. from inconsistent prose a source asserts):
+        report every is-a belief X is-a C where X also INHERITS 'not C' (an ancestor of X is recorded NOT-a a class
+        that C is or descends from). Returns a list of (child, parent, explanation). Empty = internally consistent."""
+        found = []
+        for x, parents in self.parents.items():
+            ancs = {x} | self.ancestors(x)
+            for c in parents:
+                for na, nb in self.neg_isa:
+                    if na in ancs and (c == nb or self.is_a(c, nb)):
+                        found.append((x, c, f"{self._art(x)} is {self._art(na)}, and {self._art(na)} is not "
+                                            f"{self._art(nb)}, yet {self._art(x)} is asserted to be {self._art(c)}"))
+                        break
+        return found
+
     def is_a_confidence(self, x: str, c: str) -> int:
         """Confidence-graded IS-A: the number of independent derivation PATHS from x to c in the IS-A DAG.
         Under noisy knowledge a TRUE conclusion typically has MORE supporting paths than a spurious one, so a
