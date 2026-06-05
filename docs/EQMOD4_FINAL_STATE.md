@@ -45,10 +45,17 @@ a modular Hopfield/contrastive-Hebbian EBM):
   empty slot = shallow) rejects phantom parents with 0 false-accept/reject → multi-parent closure 1.00.
 - **Interact** (238) — the signature relation-INTERACTION matrix (part-of × is-a UP, leak guard included) runs by
   composing two content-addressable retrievals — 1.00 vs control 0.33.
-So the substrate is the engine's relational MEMORY and INFERENCE engine (store/chain/type/DAG/interaction), within
-the ~20-edge/module capacity, scalable linearly by modules. All established (Hopfield CAM + iterated associative
-recall + VSA binding + Hopfield energy as a stored-vs-spurious detector), named; NO novelty — the value is the
-demonstrated end-to-end connection + its measured envelope. Pattern: docs/patterns/substrate_relational_store.md.
+- **Online** (239 PARTIAL) — the store is online-learnable one fact at a time with only MILD interference (no
+  catastrophic forgetting within capacity; my forgetting prediction was wrong, the additive-Hebb direction I flagged).
+- **Noise → the cure** (240 NULL → 241 PASS) — under cue noise, multi-hop chaining COMPOUNDS; per-hop attractor
+  CLEANUP is NOT a reliable cure (it can lock in discrete decode errors — sharpens JEP-158); REDUNDANT AGGREGATION
+  (independent noisy retrievals + majority vote) IS the regime-independent cure (4-hop 1.00 vs single-path 0.0–0.33).
+So the substrate is the engine's relational MEMORY and INFERENCE engine (store/chain/type/DAG/interaction), online-
+learnable, within the ~20-edge/module capacity, scalable linearly by modules — and it inherits the programme's core
+robustness lesson NATIVELY: aggregation, not cleanup, cures multi-hop compounding under noise. All established
+(Hopfield CAM + iterated associative recall + VSA binding + Hopfield energy as a stored-vs-spurious detector +
+ensemble voting), named; NO novelty — the value is the demonstrated end-to-end connection + its measured envelope.
+Pattern: docs/patterns/substrate_relational_store.md.
 
 ## Genuine conceptual findings (the real intellectual output)
 1. **Compounding vs aggregation** is universal across structure-learning, reasoning, and learn-from-prose: chained
