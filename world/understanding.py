@@ -681,17 +681,27 @@ class UnderstandingEngine:
         self.part_of_g.setdefault(self._norm(part), set()).add(self._norm(whole))
 
     def part_of(self, x: str, z: str) -> bool:
-        """Is x part of z (transitively)? Part-of is transitive (finger->hand->body) but distinct from is_a."""
+        """Is x part of z? Part-of is transitive (finger->hand->body) and distinct from is_a, but the two INTERACT:
+        a part of a dog is part of an ANIMAL (the whole's supertype), and a part of a dog is a part of a POODLE
+        (the whole's subtype, since a poodle IS a dog). Both interactions are applied to each whole on the part-of
+        chain WITHOUT chaining up-then-down (that would wrongly make a dog's heart part of a cat)."""
         g = getattr(self, "part_of_g", {})
         x, z = self._norm(x), self._norm(z)
-        stack, seen = [x], {x}
+        # 1) collect the part-of closure of x (every whole x is a part of, directly or transitively)
+        wholes, stack = set(), [x]
         while stack:
             cur = stack.pop()
             for w in g.get(cur, ()):
-                if w == z:
-                    return True
-                if w not in seen:
-                    seen.add(w); stack.append(w)
+                if w not in wholes:
+                    wholes.add(w); stack.append(w)
+        if z in wholes:
+            return True
+        # 2) part-of / is-a interactions, per whole (never chained):
+        for w in wholes:
+            if self.is_a(w, z):     # whole is-a z  -> a part of the whole is part of z's category (heart->animal)
+                return True
+            if self.is_a(z, w):     # z is-a whole  -> z (a subtype) inherits the whole's parts (heart->poodle)
+                return True
         return False
 
     def tell_cause(self, x: str, y: str) -> None:
