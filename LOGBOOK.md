@@ -5535,3 +5535,15 @@ oscillator is weak (sign-bugged-baseline 8/8), but the textbook AHC-CIM is a leg
 beats local search and ~ties SA. Caveats unchanged: SA still marginally best & far simpler; CIM-AHC is
 established hardware (no novelty); and it is NOT EQMOD (own dynamics can't optimize, G135). One-liner: a correct
 physical Ising annealer is real and competitive with SA; EQMOD is not that machine.
+
+## 2026-06-05 — G152: the CIM-AHC ~ SA near-tie is SCALE-ROBUST (n up to 600)
+Scaling check of the G150/G151 scoped positive (frozen solver settings; only n grows). Gaussian spin-glass
+MAX-CUT, n in {450,600}, 4 inst. HOLDS: mean(CIM-SA)/REF = -0.000 at n=450, +0.005 at n=600 (|gap|<=0.015);
+CIM beats correct greedy 4/4 at both n. The near-tie is stable from n=360 to 600 -- the gap does not blow up.
+HONEST CAVEAT: the nominal "CIM>SA 4/4 at n=600" is likely budget-sensitive, not a real overtake -- SA's
+fixed budget (3x800 sweeps) scales less favorably than the 12-run CIM grid, so SA is mildly under-resourced
+at n=600 (0.992 vs CIM 0.997 of REF); a budget-matched SA would plausibly re-tie. Recorded as a NEAR-TIE
+(HOLDS), caveat explicit, not spun into "CIM beats SA." Net G150->G152: the scoped positive (AHC-CIM beats
+local search, ~ties SA) is now family-robust (Gaussian+/-1, G151) AND scale-robust (n<=600, G152). Caveats
+unchanged: established adjacent hardware (CIM-AHC), NOT EQMOD (own dynamics can't optimize, G135); classical
+SA remains the pragmatic choice (marginally best at matched budget, far simpler).
