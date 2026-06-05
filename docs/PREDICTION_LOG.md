@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 123 / predictions 153 (80%). Latest: JEP-238 HIT (the engine's signature relation-INTERACTION matrix runs through the substrate — part-of x is-a UP 'heart part of animal' True with the leak guard 'NOT part of cat' False; battery 1.00 vs control 0.33).
+Running tally: hits 123 / predictions 154 (80%). Latest: JEP-239 PARTIAL/CALIBRATION (the substrate relational store is ONLINE-learnable with only MILD interference — my 'catastrophic forgetting' prediction was WRONG, in the additive-Hebb-robustness direction I had flagged; rehearsal holds 0.94-1.00).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 At JEP-221 the tally is 110/137 (80%) and has CONVERGED: the OVERALL rate is dragged down by early-programme misses
@@ -180,3 +180,4 @@ honestly informative:
 | JEP-236 | 🔮 slot-binding closes the DAG boundary: recover both parents, closure>=.90, threshold drops empty slots | a) both parents recovered YES; b) closure only .64-.68; d) single-parent gains phantom parents -> empty-slot threshold FAILED | MISS | A value-overlap threshold can't detect an untrained key (value always settles to an attractor); detect the KEY->VALUE binding energy instead (error-class 3). |
 | JEP-237 | 🔮 energy gate (<=0.7*median stored energy) drops empty slots, 0/0 confusion, DAG closure>=.90 | all 4 bars PASS (poodle->{dog,pet}, cat->{pet}, closure 1.00, 0 false-accept/reject, cut -63 in the -90/-47 gap) | HIT | A NULL (236) diagnosed into a checkable mechanism (binding-energy discriminates) that 237 confirmed — predict-calibrate working as intended. |
 | JEP-238 | 🔮 part-of x is-a UP interaction composes through substrate (heart->animal True, leak guard cat False, >=.90) | all 4 bars PASS (UP True, leak guard True, battery 1.00, control 0.33) | HIT | Composing two content-addressable retrievals reproduces the interaction matrix; leak guard automatic (chain never reaches the sibling). |
+| JEP-239 | 🔮 pure online FORGETS (<0.7) + rehearsal beats it by >=.15; rehearsal maintains, online learns new | a/c PASS (learns new, rehearsal holds >=.85); b WRONG (only mild forgetting, final .78-.89) + d marginal (.11-.16) | MISS | Attractor-net Hebbian-family updates add capacity ~additively -> graceful not catastrophic forgetting; I flagged this counter-possibility. |
