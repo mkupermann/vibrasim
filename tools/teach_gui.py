@@ -29,6 +29,17 @@ SIZE = 28
 LETTERS = string.ascii_uppercase
 
 
+def answer_question(sm, q):
+    """Answer a natural question against the durable store (testable without Tk). Returns a display string."""
+    if sm is None:
+        return "(no durable brain — teach me some facts by sentence first)"
+    from world.brain_query import BrainQuery
+    ans = BrainQuery(sm).ask(q)
+    if ans is None:
+        return "I can't answer that yet. Try 'is a poodle an animal?', 'can a penguin fly?', 'what causes cancer?'."
+    return str(ans)
+
+
 def _norm_glyph(a):
     """Scale+translation normalize: crop to the ink bounding box and resize to SIZExSIZE. Makes a small 'D' and a
     large 'D' land on the same feature, so corrections STICK and round/stem letters (D,O,B,P) stop colliding by size.
@@ -97,7 +108,20 @@ class TeachApp:
         # then load it here and say which letter -> it grounds the SOUND to the same symbol as the written letter.
         self.sound_btn = tk.Button(self.root, text="I recorded a sound (load .wav)", command=self.load_sound)
         self.sound_btn.pack(pady=2)
+        # ASK THE BRAIN (JEP-324): after teaching facts by sentence, ask questions in the same window.
+        ask_frame = tk.Frame(self.root); ask_frame.pack(pady=4, fill="x", padx=10)
+        tk.Label(ask_frame, text="Ask:").pack(side="left")
+        self.ask_entry = tk.Entry(ask_frame, width=34); self.ask_entry.pack(side="left", padx=4)
+        tk.Button(ask_frame, text="Ask the brain", command=self.ask_brain).pack(side="left")
+        self.ask_entry.bind("<Return>", lambda e: self.ask_brain())
+        self.ask_lbl = tk.Label(self.root, text="", font=("Arial", 12), fg="#06c", wraplength=SIZE * 8)
+        self.ask_lbl.pack()
         self.next_item()
+
+    def ask_brain(self):
+        q = self.ask_entry.get().strip()
+        if q:
+            self.ask_lbl.config(text=f"Q: {q}\nA: {answer_question(self.sm, q)}")
 
     def _mem_text(self, n):
         where = "in memory only" if self.sm is None else "saved to disk — survives restart & grows"

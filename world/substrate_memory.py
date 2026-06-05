@@ -166,14 +166,25 @@ class SubstrateMemory:
         return out
 
     # ---- taught prose -> durable knowledge (JEP-302) ----
-    def ingest_engine(self, eng, roles=("parents:isa", "part_of_g:partof", "causes:causes", "properties:hasprop")):
-        """Bridge an UnderstandingEngine's learned relation graphs into the directed substrate store."""
-        for spec in roles:
-            attr, role = spec.split(":")
-            g = getattr(eng, attr, {})
-            for a, bs in dict(g).items():
+    def ingest_engine(self, eng):
+        """Bridge an UnderstandingEngine's learned relation graphs into the directed substrate store — including
+        NEGATIVE facts (exceptions, negative is-a) and the inverse causal edge (for abduction). Idempotent: skips
+        facts already present, so repeated calls (one per taught sentence) don't bloat the store."""
+        have = set(self.facts)
+
+        def _add(a, r, b):
+            if (a, r, b) not in have:
+                self.add_fact(a, r, b); have.add((a, r, b))
+
+        for attr, role in [("parents", "isa"), ("part_of_g", "partof"), ("causes", "causes"),
+                           ("properties", "hasprop"), ("not_properties", "not_hasprop")]:
+            for a, bs in dict(getattr(eng, attr, {}) or {}).items():
                 for b in bs:
-                    self.add_fact(a, role, b)
+                    _add(a, role, b)
+                    if role == "causes":
+                        _add(b, "caused_by", a)               # inverse, enables abduction (why?)
+        for (a, b) in (getattr(eng, "neg_isa", set()) or set()):
+            _add(a, "not_isa", b)
 
     def learn_sentence(self, sentence: str, eng):
         """Record taught prose AND bridge its facts into the substrate (the engine parses; we store both)."""
