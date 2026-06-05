@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 168 / predictions 204 (82%). Latest: JEP-289 HIT (the BRIDGE -- a GroundedMind (teacher-grounded perception + prose reasoning) PERCEIVES real images and REASONS 'is this footwear?' at 0.94-0.98 while the teacher answers only 8-58%; perception + understanding unified, capping the perception thread 286-289 per Michael).
+Running tally: hits 169 / predictions 205 (82%). Latest: JEP-290 HIT (per Michael 'words after letters' -- the engine READS written words from pixels (letters->word, lexicon cleanup recovers per-letter errors raw 0.75->cleaned 1.0) and UNDERSTANDS them via read prose; the developmental letters->words->meaning ladder).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 At JEP-221 the tally is 110/137 (80%) and has CONVERGED: the OVERALL rate is dragged down by early-programme misses
@@ -231,3 +231,4 @@ honestly informative:
 | JEP-287 | 🔮 ask-when-unsure teacher loop learns A-Z (>=.85), label-efficient (<=60% queries), confidence meaningful, GUI built | PASS — active 0.98 @ 20% queries vs passive 0.95 @ 100%, confident 0.98 > unsure 0.65, teach_gui.py | HIT (after 2 flagged fixes: novelty-gated confidence + centroid normalization) | Active learning needs a calibrated NOVELTY signal (not just margin) + translation-normalized features; then ask-when-unsure is 5x label-efficient. |
 | JEP-288 | 🔮 hear letters (>=.90) + shared symbol set + cross-modal recall (>=.90) + transfer | PASS — hear 1.0, 26/26 shared symbols, recall 0.96, ear<->eye transfer; FFT-binning fix | HIT | 'hear A' and 'write A' ground ONE symbol; cross-modal binding via (modality,symbol) store enables transfer. |
 | JEP-289 | 🔮 GroundedMind: teacher-grounded perception + prose reasoning -> perceive->reason >=.85, teacher <=70% | PASS — 'is this footwear?' 0.94-0.98, teacher asked 8-58%, end-to-end | HIT | Perception (active-learner prototypes) + understanding (prose is_a) compose into a perceive->understand loop with a teacher. |
+| JEP-290 | 🔮 read words from pixels (cleaned >=.90), cleanup recovers letter errors, read-then-reason | PASS — cleaned word acc 1.0 (raw 0.75), read+reason True, 'DOG'<-'OUG' | HIT | Letters->words via lexicon cleanup (the redundancy cure in reading); read words bridge to prose reasoning. |
