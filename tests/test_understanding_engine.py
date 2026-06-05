@@ -1103,3 +1103,11 @@ def test_modified_numeric_comparison():
     assert e.respond("does a spider have more legs than a dog?") == "Yes."             # plain, no regression
     assert e.respond("does a dog have more legs than a spider?") == "No."
     assert e.respond("does a dog have more interesting than a spider?") == "I don't have those numbers."  # non-count, graceful
+
+
+def test_multiword_how_many_question():
+    # JEP-254: 'how many X Y does Z have?' with a multi-word attribute, keyed by head noun (symmetric w/ JEP-229/231)
+    e = UnderstandingEngine(seed=254)
+    e.read("Water has 2 hydrogen atoms. A dog has 4 legs.")
+    assert e.respond("how many hydrogen atoms does water have?") == "Water has 2 hydrogen atoms."  # multi-word
+    assert e.respond("how many legs does a dog have?") == "A dog has 4 legs."                       # no regression
