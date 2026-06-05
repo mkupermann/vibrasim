@@ -511,8 +511,15 @@ class UnderstandingEngine:
         m = self._ISA.match(pre)
         if m:
             x, c = self._norm_phrase(m.group(1)), self._norm_phrase(m.group(2))
-            if self._valid_concept(x) and self._valid_concept(c) and (x, c) in self.neg_isa:
-                return f"Contradiction: I was told {self._art(x)} is NOT {self._art(c)}."
+            if self._valid_concept(x) and self._valid_concept(c):
+                if (x, c) in self.neg_isa:
+                    return f"Contradiction: I was told {self._art(x)} is NOT {self._art(c)}."
+                # INHERITED negative: X is-a A, A is NOT-a B, and C is (or is-a) B -> asserting X is-a C conflicts
+                for a in {x} | self.ancestors(x):
+                    for na, nb in self.neg_isa:
+                        if na == a and (c == nb or self.is_a(c, nb)):
+                            return (f"Contradiction: {self._art(x)} is {self._art(a)}, "
+                                    f"and {self._art(a)} is not {self._art(nb)}.")
         return None
 
     def is_a_confidence(self, x: str, c: str) -> int:
