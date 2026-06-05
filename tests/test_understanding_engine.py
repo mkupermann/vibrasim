@@ -887,3 +887,14 @@ def test_numeric_consistency():
     e2 = UnderstandingEngine(seed=2)
     e2.read("A dog has 4 legs. A dog has 4 legs. A spider has 8 legs.")
     assert e2.consistency_audit() == []                  # restating the same number is consistent
+
+
+def test_temporal_order_reasoning():
+    # JEP-210: temporal-order reasoning from prose ('X before/after Y') with transitive closure + before/after inverse
+    e = UnderstandingEngine(seed=210)
+    out = e.read("The war started before the treaty. The treaty came before the peace. The famine happened after the war.")
+    assert out.get("temporal") == 3
+    assert e.respond("did the war happen before the peace?") == "Yes."     # transitive war->treaty->peace
+    assert e.respond("did the peace happen before the war?").startswith("Not")
+    assert e.respond("is the famine after the war?") == "Yes."             # after = inverse before
+    assert e.respond("is the war after the famine?").startswith("Not")
