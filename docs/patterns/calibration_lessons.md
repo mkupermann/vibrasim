@@ -43,6 +43,13 @@ structurally guarded.)
 
 11. **Defeasible/general rules must SURVIVE exceptions** (JEP-105), and **redundancy is a RECALL tool, not a
     precision tool** (JEP-139). Know what a mechanism buys before predicting it fixes the other thing.
+    SHARPENED (JEP-230): a MORPHOLOGICAL/heuristic rule ("-ness ⇒ uncountable", "letter-first ⇒ concept",
+    "preposition ⇒ open relation") must have its EXCEPTION SET enumerated AND tested against counter-examples
+    IN THE SAME RUNG, not assumed. "-ness is reliably uncountable" was falsified mid-rung by business/witness/
+    illness (countable); the rule was only safe once `_COUNTABLE_NESS` was added and probed. The cheap insurance:
+    before locking a suffix/pattern rule, write the 3–5 nastiest counter-examples and run them — the rule that
+    survives them is the rule that ships. (Validated retroactively: the JEP-228 preposition-⇒-open rule passes
+    "is married to"/"is the author of"/"is made of" as open while "is huge mammal"/"is smaller than" stay is-a/cmp.)
 
 12. **PROCESS: never commit without gating on a green test run** (JEP-98). The one process error that committed a
     failing test; now every commit is `pytest ... && GREEN && { commit; push }`.
