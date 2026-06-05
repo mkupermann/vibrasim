@@ -5324,3 +5324,9 @@ first real chip at the symbol-grounding/senses frontier. The cross-modal (modali
 audio. predict-calibrate 169/205 (82%). Established methods (prototype perception, active learning/uncertainty
 sampling, FFT features, lexicon cleanup, symbolic reasoning), named; no novelty -- the value is the working ladder.
 Plain-language explainer for Michael: docs/FOR_EVERYONE.md (updated for the senses + teaching-tool direction).
+
+
+## 2026-06-05 08:52 — Autopilot idle
+
+All experiments done or 3x NULL on feedback.
+
