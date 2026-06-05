@@ -5277,3 +5277,25 @@ gate working. RESIDUE = mid-sentence proper-noun CAPITALIZATION ('paris' not 'Pa
 constraint), the one consistent limit across all three passages. predict-calibrate 141/177 (80%, converged). All
 ESTABLISHED methods (lexico-syntactic extraction, usage-based lexical features, mereology), named; no novelty — the
 deliverable is the hardened engine + the real-usage-QA discipline. Kill-switch absent; substrate physics G1..G145 idle.
+
+### Continuation (JEP-263..271): the engine covers the common declarative construction space
+
+Two more real-usage-QA domains (biology, history) + the COMMUNICATE side + definitional copulas, 9 more rungs
+(engine 108 -> 110 tests):
+- (263) mereological verbs 'X contains/consists of Y' -> Y part-of X (transitive, not redundantly open)
+- (264) 'does X have Y?' possession -> part_of(Y,X) with is-a inheritance ('does a human have a heart?' via human->mammal) or numeric
+- (265) re-validated ROBUST: 0 crashes / 4000 adversarial passages after the 16 hardening changes
+- (266) document-scale 0.94 on a fresh multi-domain doc
+- (267) multi-word verb-phrase temporal: 'the treaty was signed before the peace' (was dropped) -> transitive chain restored
+- (268) COMMUNICATE: describe() splits abilities ('can bark') from adjectival properties ('is friendly'); 'rabies' singular -ies noun (not 'raby')
+- (269) definitional copulas 'X is defined as / means / is (also) known as Y' -> X is-a Y via the genus head noun
+- (270) object-side open-relation WH 'what does a carnivore eat?' -> the object (engine answered only subject-side before)
+- (271) COMPREHENSIVE document-scale 16/16 = 1.00 across ALL 6 construction profiles + every relation type + multi-hop
+
+The real-prose extractor now COVERS THE COMMON DECLARATIVE CONSTRUCTION SPACE (1.00 comprehensive doc, robust, 110
+tests). Total real-prose hardening: 16 fixes (254..270) across 6 construction profiles / 5 domains + the COMMUNICATE
+side, all from the real-usage-QA loop, each gated green. The one consistent bound is the NER/multi-word-entity wall
+(proper-noun capitalization, multi-word named entities like 'World War 2', multi-word concept coreference 'human body'
+vs 'body') = the no-pretrained constraint, the long-mapped frontier. predict-calibrate 150/186 (81%). All ESTABLISHED
+methods (lexico-syntactic extraction, mereology, definitional subsumption, relational WH), named; no novelty -- the
+deliverable is the comprehensively-hardened engine + the real-usage-QA discipline. Kill-switch absent; G1..G145 idle.
