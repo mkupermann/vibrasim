@@ -1067,3 +1067,17 @@ def test_realprose_qa_fixes():
     # (3) a prepositional copula IS still a genuine open relation (kept, not over-excluded)
     assert "is capital of" in getattr(e, "learned_rels", set())
     assert e.respond("what is the capital of France?") == "Paris."
+
+
+def test_adjective_modified_counts():
+    # JEP-229: adjective-modified count nouns ('4 large moons', 'two small parts') -> captured by head noun, modifier kept
+    e = UnderstandingEngine(seed=229)
+    e.read("Jupiter has 4 large moons. A cell has two small parts. A dog has 4 legs. The Earth has 1 moon. "
+           "A spider has 8 legs and a tail.")
+    na = e.num_attrs
+    assert na[("jupiter", "moon")] == 4 and na[("cell", "part")] == 2     # modified counts captured, keyed by head
+    assert na[("dog", "leg")] == 4 and na[("earth", "moon")] == 1         # plain counts unchanged
+    assert ("spider", "tail") not in na                                   # list-guard: 'legs and a tail' is not a count
+    assert e.respond("how many moons does Jupiter have?") == "A jupiter has 4 large moons."   # modifier rendered
+    assert e.respond("how many parts does a cell have?") == "A cell has 2 small parts."
+    assert e.respond("how many legs does a dog have?") == "A dog has 4 legs."                  # no regression
