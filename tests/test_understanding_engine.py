@@ -1316,3 +1316,13 @@ def test_three_item_subject_list():
     e2 = UnderstandingEngine(seed=277)
     e2.read("Robins and sparrows are birds.")     # 2-item 'and' list still works
     assert e2.is_a("robin", "bird") and e2.is_a("sparrow", "bird")
+
+
+def test_material_mass_nouns():
+    # JEP-277: common metals/materials are mass nouns (no article); _countable (article-led) overrides for polysemy
+    e = UnderstandingEngine(seed=278)
+    e.read("Iron, copper, and gold are metals.")
+    assert e._art("iron") == "iron" and e._art("copper") == "copper" and e._art("gold") == "gold"
+    e2 = UnderstandingEngine(seed=279)
+    e2.read("An iron is an appliance.")           # the countable 'iron' (appliance) sense, introduced with 'an'
+    assert e2._art("iron") == "an iron"           # usage-led countability overrides the mass lexicon (JEP-256)
