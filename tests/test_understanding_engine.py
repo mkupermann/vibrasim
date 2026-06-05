@@ -954,3 +954,12 @@ def test_superlative_temporal():
     e.read("The famine happened before the war. The war started before the treaty. The treaty came before the peace.")
     assert e.respond("what happened first?") == "A famine happened first."
     assert e.respond("what happened last?") == "A peace happened last."
+
+
+def test_superlative_comparison():
+    # JEP-215: 'what is the biggest/oldest?' -> top of the corresponding comparison order
+    e = UnderstandingEngine(seed=215)
+    e.read("An elephant is bigger than a dog. A dog is bigger than a cat. "
+           "A grandfather is older than a father. A father is older than a son.")
+    assert e.respond("what is the biggest?") == "An elephant."
+    assert e.respond("what is the oldest?") == "A grandfather."
