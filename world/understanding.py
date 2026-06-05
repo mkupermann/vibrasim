@@ -352,6 +352,7 @@ class UnderstandingEngine:
                     if sub not in self._PRONOUNS and self._bare_np(sub) and self._valid_concept(sub):
                         subjects.append(sub)
                 parents = []
+                props = []
                 for item in re.split(r"\s+and\s+", mc.group(2)):
                     item = item.strip().rstrip(".")
                     # truncate a trailing relative clause: 'a bird that cannot fly' -> 'a bird'
@@ -368,9 +369,13 @@ class UnderstandingEngine:
                         p = self._norm_phrase(item)
                         if self._bare_np(p) and self._valid_concept(p):
                             parents.append(p)
-                    # bare non-plural predicate (adjective/property: 'common','friendly') -> skip, not is-a
+                    elif re.fullmatch(r"[a-z]+(?:ous|less|ful|ive|ic|al|ent|ant|y)", item):
+                        props.append(item)                     # bare ADJECTIVE predicate ('venomous','friendly') -> a PROPERTY, not is-a
                 if subjects:
                     last_subject = subjects[0]                 # remember for the next sentence's pronoun
+                for sub in subjects:                           # 'X is venomous' -> property (JEP-258)
+                    for pr in props:
+                        self.properties.setdefault(sub, set()).add(pr)
                 if subjects and parents:
                     for sub in subjects:
                         for par in parents:
@@ -792,6 +797,8 @@ class UnderstandingEngine:
             x, c = self._norm_phrase(sc[0]), self._norm_phrase(sc[1])
             self._last_query = (x, c); self._last_rel_query = None; self._last_num_query = None
             verdict = self.assess(x, c)
+            if verdict != "yes" and self.has_property(x, c):       # 'is a cobra venomous?' -> from PROPERTIES (JEP-258)
+                return f"Yes. {self._art(x).capitalize()} is {c}."
             if verdict == "unknown":
                 return f"I don't know whether {self._art(x)} is {self._art(c)}."
             if verdict == "yes":
