@@ -337,6 +337,10 @@ class UnderstandingEngine:
                         if head != par and self._valid_concept(head):
                             self.tell(f"a {par} is a {head}.")
                     continue
+        # also auto-induce OPEN relations from recurring non-fixed patterns in the same passage (one call learns both)
+        opened = self.read_open(passage)
+        if opened:
+            learned["open"] = opened
         return learned
 
     _PRONOUNS = {"it", "he", "she", "they", "this", "that", "these", "those", "i", "we", "you", "there", "which", "who"}
