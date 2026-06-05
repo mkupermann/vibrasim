@@ -274,19 +274,25 @@ class UnderstandingEngine:
                 if self._bare_np(a) and self._bare_np(b):
                     self.tell_part(a, b); learned["part_of"] += 1; last_subject = a
                 continue
-            # NUMERIC attribute: 'X has N Y' (N a number) -> a quantitative fact (NOT part-of)
-            m = re.match(rf"^{np}\s+(?:has|have)\s+(\d+|{'|'.join(self._NUM_WORDS)})\s+([a-z]+)$", s)
-            if m:
-                ent, num, attr = self._norm_phrase(m.group(1)), self._parse_num(m.group(2)), self._norm(m.group(3))
+            # NUMERIC attribute: 'X has N Y' / 'X has N <adj> Y' (N a number) -> a quantitative fact (NOT part-of).
+            # the attribute may carry modifiers ('4 large moons'); key by the HEAD noun (last word), keep the phrase.
+            m = re.match(rf"^{np}\s+(?:has|have)\s+(\d+|{'|'.join(self._NUM_WORDS)})\s+((?:[a-z]+\s+)*[a-z]+)$", s)
+            if m and not re.search(r"\b(?:and|or|of|with|that|which|but)\b", m.group(3)):  # a list/clause is NOT a simple count
+                ent, num = self._norm_phrase(m.group(1)), self._parse_num(m.group(2))
+                phrase = m.group(3).strip()
+                attr = self._norm(phrase.split()[-1])               # head noun, singularized
                 if ent not in self._PRONOUNS and self._bare_np(ent) and num is not None:
                     if not hasattr(self, "num_attrs"):
                         self.num_attrs = {}
+                    if not hasattr(self, "num_phrase"):
+                        self.num_phrase = {}                        # (ent, head) -> raw modifier phrase, for rendering
                     if not hasattr(self, "num_conflicts"):
                         self.num_conflicts = []
                     prev = self.num_attrs.get((ent, attr))
                     if prev is not None and prev != num:            # conflicting count for the same attribute
                         self.num_conflicts.append((ent, attr, prev, num))
                     self.num_attrs[(ent, attr)] = num
+                    self.num_phrase[(ent, attr)] = phrase
                     learned["numeric"] = learned.get("numeric", 0) + 1
                     last_subject = ent
                 continue
@@ -1347,7 +1353,10 @@ class UnderstandingEngine:
             attr, ent = self._norm(m.group(1)), self._norm(m.group(2))
             if (ent, attr) in na:
                 n = na[(ent, attr)]
-                unit = attr if n == 1 else m.group(1)            # singular for exactly one ('1 moon', not '1 moons')
+                phrase = getattr(self, "num_phrase", {}).get((ent, attr))   # may carry a modifier ('large moons')
+                if phrase and n == 1:                            # singularize the head for exactly one
+                    parts = phrase.split(); parts[-1] = attr; phrase = " ".join(parts)
+                unit = phrase or (attr if n == 1 else m.group(1))  # singular for exactly one ('1 moon', not '1 moons')
                 return f"{self._art(ent).capitalize()} has {n} {unit}."
             return f"I don't know how many {m.group(1)} {self._art(ent)} has."
         m = re.match(r"does\s+(?:(?:an|a|the)\s+)?(\w+)\s+have\s+more\s+(\w+)\s+than\s+(?:(?:an|a|the)\s+)?(\w+)", q)
