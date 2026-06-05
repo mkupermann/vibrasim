@@ -166,11 +166,22 @@ class SubstrateMemory:
             self.energy = ValenceReservoirLearner(n_inputs=self.D, n_features=600, seed=self.energy_seed)
         self.energy.experience(self.entity_cloud(entity), float(valence))
 
+    def _backfill_energy(self):
+        """JEP-440: if valence was taught before the energy model existed (e.g. a brain saved pre-JEP-436), train the
+        learner once from all stored (entity_cloud, valence) pairs so existing brains generalize without re-teaching."""
+        if self.energy is not None or not self.valence:
+            return
+        from world.valence_reservoir import ValenceReservoirLearner
+        self.energy = ValenceReservoirLearner(n_inputs=self.D, n_features=600, seed=self.energy_seed)
+        for e, v in self.valence.items():
+            self.energy.experience(self.entity_cloud(e), float(v))
+
     def predict_valence(self, entity: str):
         """Affect of an entity: the exact taught value if known, else the energy model's GENERALIZED prediction from
         the entity's feature-cloud (JEP-436). Returns None if nothing has been taught yet."""
         if entity in self.valence:
             return self.valence[entity]
+        self._backfill_energy()                                   # JEP-440: train from stored valence on first use
         if self.energy is None:
             return None
         return float(self.energy.feel(self.entity_cloud(entity)))
