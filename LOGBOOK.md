@@ -5330,3 +5330,9 @@ Plain-language explainer for Michael: docs/FOR_EVERYONE.md (updated for the sens
 
 All experiments done or 3x NULL on feedback.
 
+
+
+## 2026-06-05 14:52 — Autopilot idle
+
+All experiments done or 3x NULL on feedback.
+
