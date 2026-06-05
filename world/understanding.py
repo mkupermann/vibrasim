@@ -103,7 +103,8 @@ class UnderstandingEngine:
 
     # singular nouns ending in -s that must NOT be de-pluralized (over-stripping bug: virus -> "viru")
     _NOT_PLURAL = {"species", "series", "news", "lens", "bus", "gas", "atlas", "bias", "iris", "axis",
-                   "basis", "crisis", "analysis", "thesis", "virus", "census", "campus", "status", "focus"}
+                   "basis", "crisis", "analysis", "thesis", "virus", "census", "campus", "status", "focus",
+                   "rabies", "scabies", "measles", "diabetes", "herpes", "physics", "mathematics", "economics"}
 
     @staticmethod
     def _norm(w: str) -> str:
@@ -1202,7 +1203,13 @@ class UnderstandingEngine:
             props |= self._induced.get(c, set())
         props -= self.not_properties.get(x, set())
         if props:
-            sents.append("It can " + ", ".join(sorted(props)) + ".")
+            # split ADJECTIVAL properties ('friendly','venomous' -> 'It is ...') from ABILITIES ('bark' -> 'It can ...')
+            adjs = sorted(p for p in props if re.fullmatch(r"[a-z]+(?:ous|less|ful|ive|ic|al|ent|ant|y)", p))
+            verbs = sorted(p for p in props if p not in adjs)
+            if verbs:
+                sents.append("It can " + ", ".join(verbs) + ".")
+            if adjs:
+                sents.append("It is " + ", ".join(adjs) + ".")
         # relations where x is the subject
         # SVO + open relations: a single VERB renders 'chases the cat'; a multi-word/open relation ('is capital of')
         # renders verbatim ('is capital of france'), no added -s and no inserted 'the'

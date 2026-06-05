@@ -1238,3 +1238,15 @@ def test_multiword_verbphrase_temporal():
     assert e._order_holds("before", "treaty", "peace")     # 'was signed before' (2-word VP) captured
     assert e._order_holds("before", "war", "peace")        # transitive war->treaty->peace
     assert not e._order_holds("before", "peace", "war")
+
+
+def test_communicate_describe_split_and_rabies():
+    # JEP-268: describe() splits abilities ('can bark') from adjectival properties ('is friendly');
+    # 'rabies' is a singular -ies noun (not stripped to 'raby')
+    assert UnderstandingEngine._norm("rabies") == "rabies"
+    assert UnderstandingEngine._norm("berries") == "berry"        # real -ies plural still singularizes
+    e = UnderstandingEngine(seed=268)
+    e.read("A dog is a mammal. A dog can bark. A dog is friendly. Rabies is caused by a virus.")
+    d = e.describe("a dog")
+    assert "It can bark." in d and "It is friendly." in d         # split, not 'can bark, friendly'
+    assert "raby" not in e.summarize() and "rabies" in e.summarize()
