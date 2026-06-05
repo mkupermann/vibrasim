@@ -362,6 +362,17 @@ class Conversation:
             subj = self._singular(mco.group(1).lower()); obj = self._singular(mco.group(2).lower())
             art = "an" if obj[0] in "aeiou" else "a"
             t = f"A {subj} is {art} {obj}."
+        # SVO action fact (LAST resort): 'X <verb> Y' -> (X, verb, Y) open relation (JEP-407). Exactly subject+verb+
+        # object; verb must not be a copula/auxiliary; subject/object single clean words. Fallback so it never
+        # overrides is-a/property/causal/etc.; tight to avoid wrong capture (miss > wrong).
+        _AUX = {"is", "are", "was", "were", "has", "have", "had", "can", "could", "will", "would", "does", "do",
+                "did", "may", "might", "must", "should", "be", "been", "am"}
+        msvo = re.match(r"^(?:a\s+|an\s+|the\s+)?([a-z]+)\s+([a-z]+)\s+(?:a\s+|an\s+|the\s+)?([a-z]+)\.?$", t, flags=re.I)
+        if msvo and " is " not in t and " are " not in t:
+            subj, verb, obj = (msvo.group(1).lower(), msvo.group(2).lower(), msvo.group(3).lower())
+            if (verb not in _AUX and subj not in _AUX and obj not in _AUX
+                    and subj not in ("it", "he", "she", "they", "this", "that")):
+                return [], extra + [(self._singular(subj), verb, self._singular(obj))]
         return [t], extra
 
     def _learn_one(self, sentence):

@@ -79,16 +79,16 @@ def test_prose_forms_conjunction_relclause_locational():
 
 
 def test_interactive_construction_teaching():
-    # NOTE: passive 'X was VERBed by Y' is now parsed directly (JEP-385), so this uses an active SVO
-    # construction 'X chases Y' which is still unknown, to exercise the ask -> teach -> learn -> apply flow.
+    # NOTE: simple SVO 'X verbs Y' is now parsed directly (JEP-407), so this uses a COMPARATIVE construction
+    # 'X is faster than Y' which is still unknown, to exercise the ask -> teach -> learn -> apply flow.
     c = _conv()
-    assert "couldn't" not in c.say("A poodle is a dog.").lower()          # normal -> no ask
-    assert "couldn't" in c.say("The dog chases the cat.").lower()         # unparseable -> asks
-    c.say("dog chases cat")
-    c.say("The fox chases the rabbit.")
-    assert "pattern" in c.say("fox chases rabbit").lower()                # learns the construction
-    c.say("The wolf chases the deer.")
-    assert ("wolf", "chases", "deer") in c.sm.facts                       # reads held-out itself
+    assert "couldn't" not in c.say("A poodle is a dog.").lower()              # normal -> no ask
+    assert "couldn't" in c.say("A cheetah is faster than a dog.").lower()     # unparseable -> asks
+    c.say("cheetah faster dog")
+    c.say("A car is faster than a bike.")
+    assert "pattern" in c.say("car faster bike").lower()                      # learns the construction
+    c.say("A plane is faster than a jet.")
+    assert ("plane", "faster", "jet") in c.sm.facts                          # reads held-out itself
 
 
 def test_question_vs_statement_routing():
