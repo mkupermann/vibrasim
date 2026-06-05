@@ -5257,3 +5257,23 @@ confidence) beyond binary symbolic, all boundaries honestly mapped (memory-not-i
 NULL->fix/positive cycles + several honest calibrations; all ESTABLISHED methods named, no novelty. 95 engine tests
 green, 22 substrate harnesses clean. predict-calibrate 132/168 (79%). Kill-switch absent; substrate physics G1..G145
 exhausted/idle.
+
+### Continuation (JEP-254..262): real-prose hardening via real-usage QA (3 new domains)
+
+The productive real-usage-QA loop (run a realistic NEW-domain encyclopedic passage through the full engine, fix what
+breaks, gate green) hardened the engine across CHEMISTRY, DEFINITIONS/such-as, and GEOGRAPHY passages — each
+initially failed 3-5 questions and now answers ALL. 14 genuine gated fixes (engine 94 -> 104 regression tests):
+- (254) multi-word attribute in the 'how many X' QUESTION (completing capture/comparison/question — fix-in-every-parser)
+- (255) PASSIVE causal 'X is caused by Y' / 'X results from Y' -> Y causes X (the cause/effect swap)
+- (256) usage-learned mass/count COUNTABILITY: article-led 'a metal is an element' overrides the static _MASS_NOUNS
+- (257) '-ous/-less' adjectives end in -s but are NOT plural nouns -> no spurious is-a ('venomous')
+- (258) adjectival predicates 'X is venomous' captured as PROPERTIES, answerable ('is a cobra venomous?' -> Yes)
+- (259) embedded ', such as X,' exemplification -> example is-a subject + main clause preserved (4-hop chains work)
+- (260) read() now captures 'X can/cannot VERB' as (not_)properties (was tell()-only) + singular 'can a X VERB?'
+- (261) spatial containment 'X is in Y' -> part-of + question routing ('is X in/located-in Y?'), transitive
+- (262) bare singular SUBJECTS take no article ('Copper is'->'copper', 'Paris'->no article) — complement of 256
+Two gated-regression SELF-CATCHES (260 np-span, 262 corrected a prior test pinned to buggy 'A jupiter') — the commit
+gate working. RESIDUE = mid-sentence proper-noun CAPITALIZATION ('paris' not 'Paris') = the NER wall (no-pretrained
+constraint), the one consistent limit across all three passages. predict-calibrate 141/177 (80%, converged). All
+ESTABLISHED methods (lexico-syntactic extraction, usage-based lexical features, mereology), named; no novelty — the
+deliverable is the hardened engine + the real-usage-QA discipline. Kill-switch absent; substrate physics G1..G145 idle.
