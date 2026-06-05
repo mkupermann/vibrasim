@@ -233,6 +233,15 @@ class UnderstandingEngine:
                 s = f"{mneg.group(1)} is not a {mneg.group(2)}"
             else:
                 s = re.sub(r"^(?:all|every|each)\s+", "", s)
+            # POSSESSIVE mereology (JEP-279): "X's Y ..." -> Y is part-of X (a dog's heart -> heart part-of dog),
+            # then rewrite the sentence to start at Y so the rest parses ('... is part of its body' etc.)
+            mpos = re.match(r"^(?:an?\s+|the\s+)?([a-z][a-z0-9\-]*)'s\s+([a-z][a-z0-9\-]*)\s+(.*)$", s)
+            if mpos:
+                owner, part = self._norm(mpos.group(1)), self._norm(mpos.group(2))
+                if (owner not in self._PRONOUNS and self._valid_concept(owner) and self._valid_concept(part)
+                        and owner != part):
+                    self.tell_part(part, owner); learned["part_of"] += 1; last_subject = part
+                s = f"{mpos.group(2)} {mpos.group(3)}"
             # recency coreference: a sentence-initial pronoun ('It is a mammal') -> the last subject (heuristic)
             mp = re.match(r"^(it|they|this|these|he|she)\s+(is|are)\s+(.*)$", s)
             if mp and last_subject is not None:

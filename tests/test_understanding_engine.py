@@ -1335,3 +1335,13 @@ def test_what_are_X_plural_no_double_plural():
     assert e.respond("what are whales?") == "Whales are mammals."     # no subtypes -> the category
     assert "poodle" in e.respond("what are dogs?").lower()            # has a subtype -> enumerate
     assert e.respond("what are zebras?") == "I don't know any zebras."  # unknown, NOT 'zebrass'
+
+
+def test_possessive_mereology():
+    # JEP-279: possessive "X's Y ..." -> Y is part-of X
+    e = UnderstandingEngine(seed=281)
+    e.read("A dog's heart is large. The car's engine is powerful. A dog is a mammal.")
+    assert e.part_of("heart", "dog")
+    assert e.part_of("engine", "car")
+    assert e.respond("does a dog have a heart?").startswith("Yes")
+    assert e.is_a("dog", "mammal")             # regular is-a unaffected
