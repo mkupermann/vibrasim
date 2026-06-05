@@ -590,3 +590,16 @@ def test_causal_isa_interaction_asymmetry():
     assert not e.causes_effect("smoking", "lung_cancer")  # effect-SUBtype NOT entailed (the asymmetry vs part-of)
     assert not e.causes_effect("animal", "allergy")     # supertype does NOT inherit a subtype's causal power
     assert not e.causes_effect("disease", "smoking")    # asymmetric
+
+
+def test_novel_concept_learning_structural():
+    # JEP-172: understanding is STRUCTURAL not lexical — learns/reasons about entirely novel nonsense words
+    e = UnderstandingEngine(seed=172)
+    e.read("A blicket is a kind of zorp. A zorp is a feb. A florp is part of a blicket. "
+           "A glim causes a thrumble. A thrumble is a wibble.")
+    assert e.is_a("blicket", "feb")               # 2-hop is-a on novel words
+    assert e.part_of("florp", "blicket")          # part-of on novel words
+    assert e.part_of("florp", "feb")              # part-of/is-a interaction on novel words
+    assert e.causes_effect("glim", "wibble")      # causal+is-a interaction on novel words
+    assert not e.is_a("florp", "feb")             # part is not type (holds for novel words)
+    assert "zorp" in e.describe("a blicket")      # generates a profile for a never-seen concept
