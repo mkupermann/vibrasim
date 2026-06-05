@@ -276,6 +276,9 @@ class Conversation:
             if not self.is_question(s):
                 self._learn_one(s)
         grew = len(self.sm.facts) - before
+        # auto-consolidate so deep questions over the freshly-read taxonomy are reliable (JEP-370/371/372)
+        if grew and any(r == "isa" for (a, r, b) in self.sm.facts):
+            self.consolidate()
         concepts = len({a for (a, r, b) in self.sm.facts if r == "isa"} |
                        {b for (a, r, b) in self.sm.facts if r == "isa"})
         return {"sentences": len(sents), "facts_learned": grew, "total_facts": len(self.sm.facts),
@@ -352,6 +355,13 @@ class Conversation:
         if props:
             out.append(f"a {subject} can " + ", ".join(props[:3]))
         return out[:4]
+
+    def consolidate(self):
+        """Consolidate the durable store so DEEP questions are answered reliably (JEP-370/371): materialize the
+        transitive is-a closure -> multi-hop is-a becomes single-hop, removing per-hop compounding. Idempotent and
+        exception-safe. Called automatically after a bulk read_text; safe to call by hand too."""
+        self.sm = self.sm.consolidate_closure(("isa",))
+        return self
 
     def save(self):
         if self.sm.has_resolvable_corrections():
