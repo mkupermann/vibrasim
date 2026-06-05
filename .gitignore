@@ -69,3 +69,4 @@ eqmod_full.tar.gz
 autopilot_output.txt
 .venv-dml/
 .venv-dml311/
+jep*_out.txt

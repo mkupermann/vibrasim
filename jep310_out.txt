@@ -1,4 +1,0 @@
-JEP310 seed 0: symmetric acc=1.0 persists=True
-JEP310 seed 7: symmetric acc=1.0 persists=True
-JEP-310: PASS (J310a=True J310b=True)
-DONE
