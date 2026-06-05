@@ -69,7 +69,20 @@ work — order-k enumeration (O(C(P,k))) or LEARNED features. And learning the t
 NOT require non-local backprop: feedback alignment (no weight transport, JEP-444) and even a
 fully-local 3-factor rule (node perturbation, JEP-445) both discover the order-3 interaction. So the
 open problem is now sharper and POSITIVE-leaning: not "can a local rule do it" (it can) but **EFFICIENT
-local targeted discovery at scale** (node perturbation is high-variance; eligibility-trace e-prop is
+local targeted discovery at scale.
+
+**MAJOR CORRECTION (JEP-456/457).** The "high-order is costly / inefficient for local rules" theme that
+runs through 438→445 is OVERSTATED. Measured directly: a fully-local node-perturbation rule solves
+parity from order-2 to order-**5** at 1.000 with fixed modest compute (M=64, 5000 epochs, P=18),
+recovering the exact k-tuple each time, and order-3 needs ≤5000 epochs (not the 20 000 first used). So
+the combinatorial C(P,k) wall is specific to the NON-learning routes (enumeration / random features);
+a LEARNED local rule does not enumerate and does not pay it across orders. The genuinely open question
+is much narrower than stated: very-high-order / very-large-P landscapes, sample efficiency, and
+TEMPORAL high-order tasks (where eligibility traces / e-prop would matter). The earlier framing
+overstated the difficulty — recorded as a self-correction (honesty over consistency).
+
+(superseded note kept for provenance: "the open problem is efficient
+local targeted discovery at scale"; node perturbation is high-variance; eligibility-trace e-prop is
 the efficient-local direction). I located exactly where the remaining mathematics is needed — and
 showed the local primitives the substrate already has are, in principle, enough for the discovery
 itself. All established methods, named; not invented here.
