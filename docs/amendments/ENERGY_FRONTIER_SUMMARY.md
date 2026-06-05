@@ -47,6 +47,11 @@ The energy SIGNAL is not the wall; the wall is **unsupervised non-linear feature
   parity at 1.000 with M=64 ≪ C(18,3)=816 and its feature-importance lands exactly on the true triple;
   matched random features are at chance. So *learned* features escape cheaply — the gap is **non-local
   targeted learning**, not capacity or enumeration.
+- **JEP-443/444 (toward locality)** the escape does NOT need exact weight transport: **feedback
+  alignment** (fixed random feedback, Lillicrap 2016) also cracks order-3 at 1.000 and finds the true
+  triple (with a stable optimizer — 443 diverged at too-high LR, 444 fixed it). So the remaining gap
+  to a fully-LOCAL rule (e-prop / equilibrium-propagation, which also removes the global error
+  broadcast) is narrower than "needs full backprop."
 
 **Net frontier statement.** For an order-k rule with no lower-order signal, every cheap / backprop-
 free / non-enumerative route fails: greedy climbing (no gradient), flat random features (≳C(P,k),
