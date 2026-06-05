@@ -67,6 +67,15 @@ def main():
     print(f"    you> (apply it to a new sentence) \"Berlin is the capital of Germany.\"  -> {e3.extract_relation('Berlin is the capital of Germany.')}")
     print(f"    you> is Berlin the capital of Germany?  ->  {'Yes' if e3.relation_true('berlin','is capital of','germany') else 'No'}\n")
 
+    print("[7] It also reasons about QUANTITIES and TIME from prose:\n")
+    e4 = UnderstandingEngine(seed=8)
+    e4.read("A dog has 4 legs. A spider has eight legs. "
+            "The war started before the treaty. The treaty came before the peace.")
+    for q in ["how many legs does a dog have?", "does a spider have more legs than a dog?",
+              "did the war happen before the peace?"]:
+        print(f"    you> {q}\n    ai > {e4.respond(q)}")
+    print()
+
     print("=== All of the above used only substrate-legal symbolic machinery — no transformer, no pretrained model. ===")
     print("Honest scope: works on encyclopedic/descriptive prose (~0.9 recall, high precision); dense logic/argument")
     print("prose and the long tail of NL constructions remain the no-transformer frontier. See docs/UNDERSTANDING_ENGINE.md.")
