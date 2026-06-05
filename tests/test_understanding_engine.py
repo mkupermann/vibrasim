@@ -1179,3 +1179,18 @@ def test_read_ability_and_singular_question():
     assert e.respond("can an eagle fly?") == "Yes. An eagle can fly."
     assert e.is_a("penguin", "bird")                # relative-clause is-a NOT swallowed by the ability handler
     assert not e.is_a("penguin", "fly")
+
+
+def test_spatial_containment_in():
+    # JEP-261: 'X is in Y' -> spatial part-of; 'is X in Y?' / 'is X located in Y?' answered; transitive
+    e = UnderstandingEngine(seed=261)
+    o = e.read("France is in Europe. Paris is located in France. Italy is in Europe.")
+    assert e.part_of("france", "europe") and e.part_of("paris", "france")
+    assert e.part_of("paris", "europe")                       # transitive Paris->France->Europe
+    assert e.respond("is france in europe?").startswith("Yes")
+    assert e.respond("is paris located in france?").startswith("Yes")
+    assert "is in" not in o.get("open", {})                   # spatial is a FIXED relation, not redundantly open
+    # genuine open relation unaffected
+    e2 = UnderstandingEngine(seed=262)
+    o2 = e2.read("Paris is the capital of France. London is the capital of England.")
+    assert "is capital of" in o2.get("open", {})

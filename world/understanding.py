@@ -275,8 +275,8 @@ class UnderstandingEngine:
                     self.tell(f"a {a} is not a {b}."); learned["is_a"] += 1
                     last_subject = a
                 continue
-            # spatial containment: 'X is located in Y' / 'X is in Y' -> X part-of Y (geographic/spatial whole)
-            m = re.match(rf"^{np}\s+is\s+(?:located\s+in|situated\s+in|found\s+in)\s+{np}$", s)
+            # spatial containment: 'X is located/situated/found in Y' / 'X is in Y' -> X part-of Y (geographic whole)
+            m = re.match(rf"^{np}\s+is\s+(?:located\s+in|situated\s+in|found\s+in|in)\s+{np}$", s)
             if m:
                 a, b = self._norm_phrase(m.group(1)), self._norm_phrase(m.group(2))
                 if a not in self._PRONOUNS and self._bare_np(a) and self._bare_np(b):
@@ -986,6 +986,8 @@ class UnderstandingEngine:
             w0 = conn.split()[0] if conn else ""
             if w0 in {"has", "have"}:
                 return True                                  # 'has ...' part-of or numeric
+            if conn in {"is in", "is on", "is at", "are in", "are on", "are at"}:
+                return True                                  # spatial containment is a FIXED relation, not open (JEP-261)
             # a copula form ('is', 'is celestial', 'are warm-blooded') is IS-A (the parent is a multi-word NP),
             # UNLESS a relational preposition makes it a genuine OPEN relation ('is capital of', 'is located in')
             if w0 in {"is", "are", "was", "were"} and not re.search(r"\b(?:of|in|at|by|to|on|with|from)\b", conn):
@@ -1451,6 +1453,14 @@ class UnderstandingEngine:
             tail = (f"{self._art(a)} is part of {self._art(b)}." if self.part_of(a, b)
                     else f"{self._art(a)} is not part of {self._art(b)} as far as I know.")
             return ("Yes. " if self.part_of(a, b) else "No. ") + tail[0].upper() + tail[1:]
+        # SPATIAL containment question: 'is X in Y?' / 'is X located in Y?' -> part-of (spatial whole) (JEP-261)
+        m = re.match(rf"(?:is|are)\s+{art}(\w+)\s+(?:located\s+in|situated\s+in|found\s+in|in)\s+{art}(\w+)", q)
+        if m:
+            a, b = self._norm(m.group(1)), self._norm(m.group(2))
+            if self.part_of(a, b):
+                self._last_rel_query = ("part", a, b); self._last_query = None; self._last_num_query = None
+                return f"Yes. {self._art(a).capitalize()} is in {self._art(b)}."
+            return f"No. {self._art(a).capitalize()} is not in {self._art(b)} as far as I know."
         m = re.match(rf"what\s+(?:is|are)\s+(?:the\s+)?parts?\s+of\s+{art}(\w+)", q)  # 'what is part of a dog?'
         if m:
             x = self._norm(m.group(1))
