@@ -37,7 +37,12 @@ like a brain. Keep German politics and Hungarian politics distinct. Learn like a
 **Usable + locked-in**
 - 320 grand integration capstone (all 11 operations in one reloaded store).
 - 322 `world/brain_query.BrainQuery` + `tools/ask_brain.py` CLI — ask the durable brain questions
-  ("is a poodle an animal?", "what causes cancer?").
+  ("is a poodle an animal?", "what causes cancer?"). One auto-gate (325 added per-relation gating → 326 proved it
+  unnecessary, gap ≤0.03 → reverted; honest add→test→remove loop).
+- 324 the teaching GUI gains an "Ask:" box — teach by sentence then ask in the same window; `ingest_engine`
+  completed to bridge negatives + the causal inverse so exceptions and abduction work end-user.
+- 327 perceive a written WORD from pixels → recognize letters → reason about it from the durable store (see→read→
+  understand, 1.0); 328 PARTIAL characterizes the edit-distance cure's noise regime.
 - `tests/test_substrate_memory.py` (10 tests inc. BrainQuery) under the permanent gate; 133 tests green.
 - Teaching GUI persists both percepts (295) and taught facts (302) across sessions.
 
