@@ -257,8 +257,9 @@ class UnderstandingEngine:
                         if self._bare_np(kid) and self._valid_concept(kid):
                             self.tell(f"a {kid} is a {parent}."); learned["is_a"] += 1
                 continue
-            # TEMPORAL order: 'X (happened/was/came) before/after Y' -> the 'before' order relation (after = inverse)
-            m = re.match(rf"^{np}\s+(?:\w+\s+)?(before|after)\s+{np}$", s)
+            # TEMPORAL order: 'X <verb phrase> before/after Y' -> the 'before' order relation (after = inverse).
+            # allow a MULTI-word verb phrase before before/after ('was signed before', 'came before'), JEP-267
+            m = re.match(rf"^{np}\s+(?:\w+\s+)*(before|after)\s+{np}$", s)
             if m:
                 x, rel, y = self._norm(m.group(1)), m.group(2), self._norm(m.group(3))
                 if x not in self._PRONOUNS and len(x) > 1 and len(y) > 1:
