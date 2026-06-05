@@ -719,3 +719,15 @@ def test_comparison_isa_interaction():
     assert e.respond("is a poodle bigger than a cat?") == "Yes."         # bigger-side subtype (poodle is-a dog > cat)
     assert e.respond("is an elephant bigger than a cat?") == "Yes."      # direct transitive (regression)
     assert e.respond("is an elephant bigger than a lion?").startswith("Not")  # leak guard (lion is-a mammal, not dog)
+
+
+def test_read_mass_nouns():
+    # JEP-193: mass/uncountable nouns ('furniture', 'water') are extractable is-a parents (the JEP-192 caveat)
+    e = UnderstandingEngine(seed=193)
+    e.read("A seat is furniture. Furniture is an object. A stool is a seat. Ice is water.")
+    assert e.is_a("seat", "furniture")
+    assert e.is_a("stool", "object")          # chains stool -> seat -> furniture -> object
+    assert e.is_a("ice", "water")
+    e2 = UnderstandingEngine(seed=2)
+    e2.read("Dogs are loyal. A cat is friendly.")
+    assert not e2.is_a("dog", "loyal") and not e2.is_a("cat", "friendly")   # adjectives still rejected
