@@ -54,6 +54,20 @@ structurally guarded.)
 12. **PROCESS: never commit without gating on a green test run** (JEP-98). The one process error that committed a
     failing test; now every commit is `pytest ... && GREEN && { commit; push }`.
 
+13. **A SUPERPOSED store's noise tolerance is ~HALF the raw bit-correlation** (JEP-313/315). Predicted a
+    VSA bundle would shrug off 10% cue corruption (raw key-correlation stays (1−2f)≈0.8); it dropped below 0.90 at
+    f≈0.10. LESSON: each fact's signal in a K-fact bundle is already ~1/√K, so corruption eats the cleanup margin
+    first — effective tolerance ≈ half the (1−2f) intuition. The lever is DIMENSION (D=8192 ~doubles tolerated
+    corruption), NOT redundancy: redundant copies can't undo corruption on a SHARED cue (`e·e_corrupt` is identical
+    across copies) — redundancy is a recall/crosstalk tool, not a noise tool (cf. #11). Don't carry the
+    single-vector noise intuition into a superposed store (a #10 instance).
+
+14. **Multi-hop CHAINING is single-module-bounded unless you ROUTE** (JEP-306/307). Predicted modular growth (which
+    PASSED for single-step recall) would also carry multi-hop chains; it collapsed 1.0→0.5 at the 1→2 module
+    boundary. LESSON: a global-argmax search across modules lets a spurious match in a non-holding module hijack a
+    hop, and one bad hop breaks the chain; a per-key→module routing table fixes it. Don't assume a property
+    validated for one query shape (single-step) transfers to a compositional one (chains) — test the composition.
+
 ## The meta-lesson
 Calibration converges where the domain is understood; it CANNOT be 100% on genuinely novel experiments — that is
 where the information is, and a miss there is a DISCOVERY (each row above came from a miss that became a checkable
