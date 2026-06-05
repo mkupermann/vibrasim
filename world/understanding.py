@@ -765,6 +765,24 @@ class UnderstandingEngine:
         rels = [f"{self._norm_rel(r)}s the {o}" for s, r, o in self.facts if s == self._norm(x)]
         if rels:
             sents.append("It " + ", and ".join(sorted(set(rels))) + ".")
+        # mereology: parts that x HAS (things that are part-of x), and what x is part-of
+        part_of_g = getattr(self, "part_of_g", {})
+        xn = self._norm(x)
+        has_parts = sorted(p for p, wholes in part_of_g.items() if xn in wholes)
+        if has_parts:
+            sents.append(("Its parts include " if len(has_parts) > 1 else "It has ")
+                         + ", ".join(self._art(p) for p in has_parts) + ".")
+        wholes = sorted(self._part_ancestors(xn)) if hasattr(self, "_part_ancestors") else sorted(part_of_g.get(xn, set()))
+        if wholes:
+            sents.append("It is part of " + ", ".join(self._art(w) for w in wholes) + ".")
+        # causal: effects x brings about, and what causes x
+        causes = getattr(self, "causes", {})
+        effects = sorted(causes.get(xn, set()))
+        if effects:
+            sents.append("It causes " + ", ".join(self._art(e) for e in effects) + ".")
+        triggers = sorted(c for c, ys in causes.items() if xn in ys)
+        if triggers:
+            sents.append("It is caused by " + ", ".join(self._art(t) for t in triggers) + ".")
         if not sents:
             return f"I don't know anything about {self._art(x)} yet."
         sents[0] = sents[0][0].upper() + sents[0][1:]

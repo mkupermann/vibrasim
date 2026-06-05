@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 52 / predictions 75 (JEP-159 MISS on mechanism — clean prose has no ambiguity spread; precision loss was a singularization bug, now fixed) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
+Running tally: hits 53 / predictions 76 (JEP-160 HIT — multi-relation English profile closes the learn->understand->communicate loop) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
 
 | id | prediction (🔮 before) | outcome | hit? | lesson (don't repeat) |
 |----|------------------------|---------|------|------------------------|
@@ -82,3 +82,4 @@ Running tally: hits 52 / predictions 75 (JEP-159 MISS on mechanism — clean pro
 | JEP-157b | 🔮 (corrected) under extraction noise, multi-hop compounds + redundancy corrects | noise0.25 d1 0.79->d4 0.51; redundancy x3 -> 0.97 | HIT | Third manifestation of the universal compounding/aggregation insight (learn-from-prose pipeline). |
 | JEP-158 | 🔮 learned multi-hop compounds like symbolic; cleanup cures | OPPOSITE: continuous-independent errors CANCEL (sqrt k, 0.99@d16); shared bias compounds (linear, 0.49); cleanup cures both | MISS | Wrong in direction (twice) + a CARDINAL repeated bug (D-dim noise = sigma*sqrt(D); scale by 1/sqrt(D)). Refined insight: compounding exponent is representation-dependent. |
 | JEP-159 | 🔮 ambiguity-driven precision spread (is-a 0.85 / part-of 0.75 / causal 0.70) | uniform 1.00 after fixing a virus->viru singularization bug; cross-relation 8/8 | MISS | Clean prose has no ambiguity; predict BUGS not spreads. Headline (multi-relation learn-from-prose + cross-relation reasoning) WORKS. |
+| JEP-160 | 🔮 engine generates correct multi-relation profiles (surface-form the risk) | dog/heart/virus profiles correct, part-of kept distinct from is-a | HIT | Closes learn(read)->understand->communicate loop on prose-learned knowledge. |

@@ -458,3 +458,18 @@ def test_norm_not_plural_overstrip():
     for w in ("virus", "bus", "lens", "basis", "species", "glass"):
         assert e._norm(w) == w, f"{w} wrongly de-pluralized to {e._norm(w)}"
     assert e._norm("dogs") == "dog" and e._norm("animals") == "animal"   # real plurals still work
+
+
+def test_describe_multirelation_profile():
+    # COMMUNICATE what was learned: describe() composes is-a + part-of + causal into a coherent English profile (JEP-160)
+    e = UnderstandingEngine(seed=160)
+    e.read("A dog is a mammal. A mammal is an animal. A heart is part of a dog. A cell is part of a heart. "
+           "A virus causes an infection. An infection causes a fever.")
+    d_dog = e.describe("a dog")
+    assert "is a mammal" in d_dog and "animal" in d_dog and "heart" in d_dog   # is-a (multi-hop) + part
+    d_heart = e.describe("a heart")
+    assert "part of a dog" in d_heart and "cell" in d_heart                     # both part-of directions
+    assert "causes an infection" in e.describe("a virus")                       # causal effect
+    assert "caused by an infection" in e.describe("a fever")                    # reverse causal
+    # profile must NOT wrongly assert part-of as is-a
+    assert "heart is a" not in d_heart.lower().replace("heart is a body", "")
