@@ -1,4 +1,0 @@
-JEP314 seed 0: direct acc=1.0 analogy acc=1.0 (60 analogies)
-JEP314 seed 7: direct acc=1.0 analogy acc=1.0 (60 analogies)
-JEP-314: PASS (J314a=True J314b=True)
-DONE
