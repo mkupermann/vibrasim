@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 72 / predictions 99 (73%). Latest: JEP-183 HIT (tight 'X of Y' nominal compounds extractable; democracy->political system chains, no precision regression).
+Running tally: hits 73 / predictions 100 (73%). Latest: JEP-184 HIT (comprehensive end-to-end integration test — the 100th prediction; whole matured pipeline composes cleanly).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 The OVERALL 73% is dominated by early-programme misses (surface-form bugs, structure-learning difficulty mis-estimates).
@@ -121,3 +121,4 @@ Predictions ARE converging WITHIN a settled domain, and the residual misses are 
 | JEP-181 | 🔮 matured read() extracts MORE than JEP-155's 326 from Boole, low precision | 52 facts (FEWER — stricter guards), ~0 genuine; genre gate conclusive | MISS | A more PRECISE extractor extracts FEWER on wrong-genre text, not more (precision/recall tradeoff). Core genre-gate claim confirmed. |
 | JEP-182 | 🔮 abstract reasoning works (structural); only grounding blocked | justice/courage/tyranny reason multi-hop correctly; no prototype for justice | HIT | Refines the 'abstract words' frontier: symbolic abstract reasoning works, abstract grounding doesn't. 'X of Y' NP recall caveat surfaced. |
 | JEP-183 | 🔮 tight 'X of Y' nominals recovered, doc recall holds, Boole modest | democracy->political system chains; doc 0.93 unchanged, 0 spurious; Boole +4 (still ~0 genuine) | HIT | Real recall gain on a common encyclopedic construction at no precision cost on the target genre. |
+| JEP-184 | 🔮 full integration passes (everything composes) | whole pipeline (read+interactions+ground+develop+abstract+communicate) green | HIT | The 100th prediction; permanent regression guard; features compose because read/tell populate the same structures. |

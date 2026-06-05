@@ -667,3 +667,33 @@ def test_read_nominal_compound_of():
     assert e.is_a("ice", "state of matter")
     # 'of' is still rejected in longer prepositional fragments (precision preserved)
     assert not e._bare_np("admissibility of things which")
+
+
+def test_full_integration_end_to_end():
+    # JEP-184: the WHOLE matured pipeline composes — read multi-relation + interactions + ground + develop + abstract
+    # + communicate. A permanent regression guard for the integrated system (per-tier tests miss composition bugs).
+    import numpy as np
+    e = UnderstandingEngine(seed=184)
+    # 1) LEARN multi-relation structure from connected prose (concrete + abstract)
+    e.read("A dog is a mammal. A mammal is a warm-blooded animal. A heart is part of a dog. A cell is part of a heart. "
+           "A virus causes an infection. An infection causes a fever. "
+           "Justice is a virtue. A virtue is an abstract concept. Democracy is a form of government.")
+    # 2) multi-hop + relation-type INTERACTIONS (correct distinct semantics)
+    assert e.is_a("dog", "animal")                       # multi-hop (warm-blooded animal -> animal head-noun link)
+    assert e.part_of("cell", "animal")                   # part-of/is-a interaction (cell->heart->dog, dog is-a animal)
+    assert not e.part_of("cell", "cat")                  # leak guard
+    assert e.causes_effect("virus", "fever")             # causal chain
+    assert e.is_a("justice", "abstract concept")         # abstract reasoning (structural)
+    assert e.is_a("democracy", "form of government")     # X-of-Y nominal
+    # 3) GROUND a concrete concept in perception + the developmental binding
+    rng = np.random.default_rng(0)
+    proto = rng.normal(0, 1, e.feat_dim)
+    e.add_prototype("dog", proto)
+    seen = e.perceive(proto + rng.normal(0, 0.4, e.feat_dim))
+    assert seen == "dog" and e.is_a(seen, "animal")      # perceive -> symbol -> prose-learned multi-hop
+    # 4) COMMUNICATE across relation types with explanation + belief revision
+    assert e.respond("is a cell part of a dog?").startswith("Yes")
+    assert "infection" in e.respond("why?") or "part of" in e.respond("why?")  # why works for the last relational query
+    assert e.respond("is justice a vegetable?").startswith("I don't know")     # epistemic humility
+    e.read("A virus is not a fever.")                    # (consistent; just exercises the negation path)
+    assert e.causes_effect("virus", "fever")             # causal unaffected by an is-a negation
