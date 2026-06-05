@@ -42,8 +42,13 @@ class BrainQuery:
     def is_a(self, x, y):
         if self.mem.contains(x, "not_isa", y, self.gate):
             return False
-        return y in self._ancestors(x, "isa")[1:] or \
-            y in [p for (p, _) in self.mem.query_all(x, "isa", self.gate)]
+        direct = y in [p for (p, _) in self.mem.query_all(x, "isa", self.gate)]
+        # JEP-375: if the is-a closure is materialized (consolidation), every true ancestor is a DIRECT edge, so answer
+        # by single-hop membership and SKIP the recursive walk — the BFS over a consolidated store expands spurious
+        # borderline edges and inflates false-positives (neg 0.85 -> 1.0 once the walk is skipped).
+        if "isa" in getattr(self.mem, "closed_relations", ()):
+            return direct
+        return direct or y in self._ancestors(x, "isa")[1:]
 
     def has_property(self, x, p):
         for a in self._ancestors(x, "isa"):           # most specific first (BFS order ~ depth)
