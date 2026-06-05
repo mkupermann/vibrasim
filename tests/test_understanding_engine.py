@@ -1304,3 +1304,15 @@ def test_results_in_causal():
     assert e.causes_effect("cancer", "death")       # 'results in'
     assert e.causes_effect("smoking", "death")      # transitive smoking->cancer->death
     assert "results in" not in o.get("open", {})    # active causal verb is fixed, not open
+
+
+def test_three_item_subject_list():
+    # JEP-276: 'X, Y, and Z are W' (3+ comma list of subjects) -> all are W
+    e = UnderstandingEngine(seed=276)
+    e.read("Dogs, cats, and horses are mammals. A mammal is an animal. Iron, copper, and gold are metals.")
+    assert e.is_a("dog", "mammal") and e.is_a("cat", "mammal") and e.is_a("horse", "mammal")
+    assert e.is_a("cat", "animal")          # transitive
+    assert e.is_a("iron", "metal") and e.is_a("copper", "metal") and e.is_a("gold", "metal")
+    e2 = UnderstandingEngine(seed=277)
+    e2.read("Robins and sparrows are birds.")     # 2-item 'and' list still works
+    assert e2.is_a("robin", "bird") and e2.is_a("sparrow", "bird")

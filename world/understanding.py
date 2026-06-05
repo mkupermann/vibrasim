@@ -403,7 +403,7 @@ class UnderstandingEngine:
             mc = re.match(r"^(.*?)\s+(?:is|are)\s+(.*)$", s)
             if mc:
                 subjects = []
-                for sub in re.split(r"\s+and\s+", mc.group(1)):
+                for sub in re.split(r"\s*,\s*and\s+|\s*,\s*|\s+and\s+", mc.group(1)):   # 'Dogs, cats, and horses' (JEP-276)
                     sub = self._norm_phrase(sub)
                     if sub not in self._PRONOUNS and self._bare_np(sub) and self._valid_concept(sub):
                         subjects.append(sub)
