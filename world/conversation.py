@@ -251,7 +251,16 @@ class Conversation:
         m = re.match(r"^([A-Z][a-z]+)s\s+are\s+(?:a\s+)?(.+?)\.?$", t)
         if m and " " not in m.group(1):
             subj = self._singular(m.group(1).lower())
-            obj_head = self._singular(m.group(2).strip().rstrip(".").split()[-1].lower())
+            obj = m.group(2).strip().rstrip(".")
+            # strip a trailing relative clause so it doesn't hijack the head noun (JEP-382):
+            # 'animals that are warm-blooded' -> head 'animals' (+ capture 'that are <adj>' as a property)
+            rel = re.match(r"^(.+?)\s+(?:that|which)\s+(?:are|is)\s+([a-z-]+)$", obj, flags=re.I)
+            if rel:
+                obj = rel.group(1).strip()
+                extra.append((subj, "hasprop", rel.group(2).lower()))
+            else:
+                obj = re.split(r"\s+(?:that|which)\s+", obj, maxsplit=1)[0].strip()
+            obj_head = self._singular(obj.split()[-1].lower())
             art = "an" if obj_head[0] in "aeiou" else "a"
             t = f"A {subj} is {art} {obj_head}."
         else:
