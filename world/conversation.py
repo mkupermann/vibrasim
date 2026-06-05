@@ -77,7 +77,34 @@ class Conversation:
         conn = self._connections(getattr(self, "_last_subject", None)) if grew else []
         if conn:
             base += " And that connects: " + "; ".join(conn) + "."
+        oq = self._open_ended(text, getattr(self, "_last_subject", None)) if grew else None
+        if oq:
+            base += " " + oq
         return base
+
+    READY_FACTS = 6                                      # "once it is ready" (Michael rule #1): enough connected facts
+
+    def _open_ended(self, text, subject):
+        """Open-ended Socratic question back, gated on readiness (Michael rule #1). The brain POSES it (it does not
+        creatively answer it -- the JEP-332 wall)."""
+        if len(self.sm.facts) < self.READY_FACTS:
+            return None
+        low = text.lower()
+        m = re.search(r"(\w+) causes? (\w+)", low)
+        if m:
+            return f"Why do you think {m.group(1)} causes {m.group(2)}?"
+        m = re.search(r"(\w+) (?:happened |comes )?before (?:the )?(\w+)", low)
+        if m:
+            return f"And what do you think comes after {m.group(2)}?"
+        if subject:
+            from world.brain_query import BrainQuery
+            bq = BrainQuery(self.sm, seed=self.seed)
+            chain = bq._ancestors(subject, "isa")
+            top = chain[-1] if chain else subject
+            roots = {"animal", "organism", "thing", "object", "plant", "matter"}
+            if top not in roots and not [p for (p, _) in self.sm.query_all(top, "isa", bq.gate)]:
+                return f"What is {'an' if top[0] in 'aeiou' else 'a'} {top}?"
+        return None
 
     def _connections(self, subject):
         """Make connections (Michael's rule #2): the NEW entailments unlocked for `subject` by linking the new fact
