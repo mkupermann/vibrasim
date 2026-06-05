@@ -1377,3 +1377,13 @@ def test_subordinate_causal_because_due():
     assert e.causes_effect("bacteria", "disease")     # due to
     assert e.causes_effect("virus", "fever")          # active still works
     assert not e.causes_effect("flooding", "rain")    # directional, not symmetric
+
+
+def test_bare_mass_noun_articles_subjects_and_objects():
+    # JEP-283: bare (article-less) mass nouns as subjects AND objects of connectives -> no article; article-led preserved
+    e = UnderstandingEngine(seed=286)
+    e.read("Flooding happens because of rain. Disease spreads due to bacteria. A virus causes a fever.")
+    assert e._art("flooding") == "flooding" and e._art("rain") == "rain"        # subject + object, both bare mass
+    assert e._art("disease") == "disease" and e._art("bacteria") == "bacteria"
+    assert e._art("fever") == "a fever"      # 'a fever' was article-led -> stays countable (negative-lookahead skip)
+    assert e.respond("does rain cause flooding?") == "Yes. Rain causes flooding."

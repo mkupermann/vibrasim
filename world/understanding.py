@@ -214,9 +214,20 @@ class UnderstandingEngine:
             self._countable.add(self._norm(w))
         # a concept introduced as a BARE (article-less) SINGULAR subject is proper/mass -> no article (JEP-262);
         # the complement of the article-led countability rule. Plural subjects ('Dogs are') are excluded (not singular).
-        for w in re.findall(r"(?:^|\.\s+)([A-Z][a-z]+)\s+(?:is|are|has|have|causes|caused|flows|contains|results|leads)\b", passage):
+        # a capitalized sentence-start word followed by a lowercase VERB is a bare singular subject (JEP-283: any verb,
+        # not just a fixed list -- catches 'Flooding happens', 'Disease spreads', 'Erosion occurs')
+        for w in re.findall(r"(?:^|\.\s+)([A-Z][a-z]+)\s+[a-z]", passage):
+            if w in ("The", "A", "An", "All", "Every", "Each", "No", "Some", "This", "These", "It", "They"):
+                continue                                          # determiners/pronouns are not the subject noun
             wl = self._norm(w.lower())
             if not w.lower().endswith("s") or wl == w.lower():    # singular subject (not a bare plural)
+                self._no_article.add(wl)
+        # also: a bare (article-less) OBJECT of a causal/mereological connective is mass/proper -> no article
+        # ('because of rain', 'causes erosion', 'consists of water'); skip article-led objects ('causes a fever')
+        for w in re.findall(r"\b(?:because of|due to|caused by|results from|results in|leads to|causes|consists of|"
+                            r"contains|comprises)\s+(?!a\b|an\b|the\b)([a-z]+)\b", passage.lower()):
+            wl = self._norm(w)
+            if not w.endswith("s") or wl == w:
                 self._no_article.add(wl)
         art = r"(?:(?:an|a|the)\s+)?"
         np = rf"{art}([a-z][a-z0-9\- ]*?)"     # concept NP: letter-first, then alphanumeric ('covid19', 'mp3', 'h2o')
