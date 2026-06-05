@@ -66,7 +66,12 @@ class BrainQuery:
             y in self._ancestors(x, "isa")[1:]
 
     def has_property(self, x, p):
-        for a in self._ancestors(x, "isa"):           # most specific first (BFS order ~ depth)
+        # most-specific-first is REQUIRED for exceptions to win (penguin not_hasprop fly beats bird hasprop fly).
+        # After closure consolidation _ancestors is FLAT (arbitrary cleanup order), so sort by specificity = number of
+        # own ancestors (deeper = more specific) so the answer is provably correct, not cleanup-order-dependent (JEP-398).
+        anc = self._ancestors(x, "isa")
+        anc = sorted(anc, key=lambda a: len(self._ancestors(a, "isa")), reverse=True)
+        for a in anc:
             if self.mem.contains(a, "not_hasprop", p, self.gate):
                 return False
             if self.mem.contains(a, "hasprop", p, self.gate):
