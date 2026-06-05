@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 121 / predictions 151 (80%). Latest: JEP-236 PARTIAL (slot-binding STORES multiple parents — poodle->{dog,pet} ✓ — but the EMPTY-SLOT problem corrupts closure: an untrained slot still relaxes to a stored attractor, so value-overlap can't detect trained vs spurious keys; needs key->value BINDING energy, deferred to JEP-237).
+Running tally: hits 122 / predictions 152 (80%). Latest: JEP-237 HIT (energy gate CLOSES the DAG boundary — key->value BINDING energy detects trained vs spurious slots, 0 false-accept/reject; multi-parent DAG closure 1.00 vs control 0.50; substrate now holds the engine's actual multi-parent taxonomy).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 At JEP-221 the tally is 110/137 (80%) and has CONVERGED: the OVERALL rate is dragged down by early-programme misses
@@ -178,3 +178,4 @@ honestly informative:
 | JEP-234 | 🔮 subject(X)relation bind -> typed store works (>=.85), discriminates (<.20), all types served, control fails | all 4 bars PASS (recall 1.00, wrong-rel .00-.04, per-type 1.00, control .00) | HIT | VSA Hadamard role-binding + Hopfield CAM = typed relational memory, no crosstalk within capacity. |
 | JEP-235 | 🔮 engine reasons through substrate from prose (tree>=.90, control fails, deep chain resolves); DAG multi-parent loses one | all 4 bars PASS (tree 1.00/0.93, control 0.50, poodle->organism True, DAG recovers 1 of 2) | HIT | The substrate IS the relational memory + inference engine; bounded by ~20 facts/module + single-parent trees. |
 | JEP-236 | 🔮 slot-binding closes the DAG boundary: recover both parents, closure>=.90, threshold drops empty slots | a) both parents recovered YES; b) closure only .64-.68; d) single-parent gains phantom parents -> empty-slot threshold FAILED | MISS | A value-overlap threshold can't detect an untrained key (value always settles to an attractor); detect the KEY->VALUE binding energy instead (error-class 3). |
+| JEP-237 | 🔮 energy gate (<=0.7*median stored energy) drops empty slots, 0/0 confusion, DAG closure>=.90 | all 4 bars PASS (poodle->{dog,pet}, cat->{pet}, closure 1.00, 0 false-accept/reject, cut -63 in the -90/-47 gap) | HIT | A NULL (236) diagnosed into a checkable mechanism (binding-energy discriminates) that 237 confirmed — predict-calibrate working as intended. |
