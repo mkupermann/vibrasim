@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 50 / predictions 70 (JEP-155 HIT — Boole parse gate is the GENRE not the extractor; Hearst near-zero precision) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
+Running tally: hits 51 / predictions 71 (JEP-156 HIT — genre minimal-pair: encyclopedic 0.87 precision vs Boole ~0, same extractor) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
 
 | id | prediction (🔮 before) | outcome | hit? | lesson (don't repeat) |
 |----|------------------------|---------|------|------------------------|
@@ -77,3 +77,4 @@ Running tally: hits 50 / predictions 70 (JEP-155 HIT — Boole parse gate is the
 | JEP-154 | 🔮 few-shot redundancy closes the hard deep+noisy regime | strict-consistency few-shot got WORSE (k12 0.18) | MISS | Forgot JEP-134: strict consistency is harmed by noisy data; needs SOFT scoring. |
 | JEP-154b | 🔮 (corrected) redundancy closes it with NOISE-TOLERANT scoring | soft 0.99 vs strict 0.06 at k=20 | HIT | Same CHAINING-vs-AGGREGATION lesson governs learning AND reasoning. |
 | JEP-155 | 🔮 Hearst extracts few GENUINE is-a pairs from Boole (genre is the gate) | 326 candidates but near-zero precision (fragments/properties) | HIT | Correct on genre, but raw count deceptively high — the predict-QUALITY-not-RATE lesson (JEP-108) recurred. |
+| JEP-156 | 🔮 bare-NP guard: encyclopedic precision >0.7, Boole near-zero genuine | ency 0.87/0.93, Boole 62 all-fragments | HIT | GENRE isolated as the cause via controlled minimal pair; learn-from-sources works on the right genre. |
