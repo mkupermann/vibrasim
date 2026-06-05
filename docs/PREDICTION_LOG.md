@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 135 / predictions 171 (79%). Latest: JEP-256 HIT (learn COUNTABILITY from usage — a concept introduced with 'a/an' is countable, overriding the static mass-noun lexicon: 'a metal is an element' renders correctly, 'water' stays mass; residue = bare-subject materials like 'copper', the NL polysemy/NER wall).
+Running tally: hits 136 / predictions 172 (79%). Latest: JEP-257 HIT ('-ous/-less' adjectives end in -s but are NOT plural nouns -> no spurious is-a; 'is a cobra venomous?' no longer falsely 'Yes, a cobra is a venomous'; genuine plural-noun is-a unaffected; surfaced by the definitions/such-as QA pass).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 At JEP-221 the tally is 110/137 (80%) and has CONVERGED: the OVERALL rate is dragged down by early-programme misses
@@ -198,3 +198,4 @@ honestly informative:
 | JEP-254 | 🔮 multi-word 'how many X' question keyed by head noun fixes it, no regression (parallels 229/231) | PASS — 'hydrogen atoms' -> '2 hydrogen atoms', single-word unchanged; 96 tests green | HIT | The multi-word fix was missing from the 3rd parser (question); fix a surface pattern in EVERY parser (error-class 1/8). |
 | JEP-255 | 🔮 passive 'X is caused by Y' -> Y causes X (swap), no is-a/open leak, active unaffected | PASS — rust<-oxygen, erosion<-water, active intact, directional; 97 tests green | HIT | Passive-voice causal needs the cause/effect swap; the 'caused' keyword keeps it out of open relations, _bare_np out of is-a. |
 | JEP-256 | 🔮 article-led concepts -> countable, overrides _MASS_NOUNS; fixes 'a metal', keeps 'water' mass; residue=bare materials | PASS — metal/liquid countable, water/gravity/tiredness mass; 98 tests; copper residue as predicted | HIT | Mass/count is context-dependent polysemy; learn it from source article usage; bare-subject materials remain the NL/NER wall. |
+| JEP-257 | 🔮 exclude '-ous/-less' from the plural-noun is-a heuristic; stops false is-a, keeps real plurals | PASS — venomous/harmless not is-a, dogs->mammals/cats->felines intact; 99 tests green | HIT | Adjective suffixes ('-ous','-less') end in -s but aren't plurals; the plural-detection-by-trailing-s heuristic needs adjective-suffix exclusions. |

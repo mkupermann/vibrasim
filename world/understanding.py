@@ -363,7 +363,8 @@ class UnderstandingEngine:
                             p = p.split()[-1]                  # head-noun fallback: 'warm-blooded animal' -> 'animal'
                         if self._bare_np(p) and self._valid_concept(p):
                             parents.append(p)
-                    elif re.fullmatch(r"[a-z]+s", item) or item in self._MASS_NOUNS:   # bare PLURAL or MASS noun -> is-a
+                    elif (re.fullmatch(r"[a-z]+s", item) and not item.endswith(("ous", "less", "ss"))) \
+                            or item in self._MASS_NOUNS:   # bare PLURAL or MASS noun -> is-a; '-ous/-less' end in -s but are ADJECTIVES ('venomous','harmless')
                         p = self._norm_phrase(item)
                         if self._bare_np(p) and self._valid_concept(p):
                             parents.append(p)
