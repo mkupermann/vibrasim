@@ -69,3 +69,13 @@ the proto-cell is persistent and homeostatic but **not self-renewing**, and the 
 template-directed recruitment, not rigidity or valence. No more knob-twiddling (that would be
 post-hoc fishing); the finding stands. The structural ladder ends at: persistent ✓, selective ✓,
 homeostatic ✓, recovering-to-set-point ✓, reaction-chamber ✓, self-repairing ✗ (mechanism named).
+
+**Independent replication (2026-06-05, later session).** A separate run swept rigidity scale
+`f ∈ {1.0, 0.5, 0.25, 0.0}` (scaling curvature_k AND atom_repulsion_k by f) and reproduced this NULL
+exactly: every f gave healed=0.00 with the unwounded component persisting fully (P=1.00) — **including
+f=0.0 (zero shape-holding force).** That f=0.0 point sharpens the persistence attribution: the membrane
+holds together with NO curvature/repulsion force at all, so its persistence is a property of the **bond
+graph itself**, not of any force field (and not of fusion_bond_block, per G48). Reducing rigidity cannot
+heal because it is the *bonds*, not a force, that lock atom positions. This replication originally landed
+as a duplicate `g49_fluidity_wound_reclosure.md` (a re-derivation caught by a consistency audit); its one
+incremental observation is folded here and the duplicate removed.
