@@ -79,14 +79,16 @@ def test_prose_forms_conjunction_relclause_locational():
 
 
 def test_interactive_construction_teaching():
+    # NOTE: passive 'X was VERBed by Y' is now parsed directly (JEP-385), so this uses an active SVO
+    # construction 'X chases Y' which is still unknown, to exercise the ask -> teach -> learn -> apply flow.
     c = _conv()
     assert "couldn't" not in c.say("A poodle is a dog.").lower()          # normal -> no ask
-    assert "couldn't" in c.say("The dog was domesticated by humans.").lower()  # unparseable -> asks
-    c.say("humans domesticated dog")
-    c.say("The horse was domesticated by people.")
-    assert "pattern" in c.say("people domesticated horse").lower()        # learns the construction
-    c.say("A cat was domesticated by farmers.")
-    assert ("farmers", "domesticated", "cat") in c.sm.facts                # reads held-out itself
+    assert "couldn't" in c.say("The dog chases the cat.").lower()         # unparseable -> asks
+    c.say("dog chases cat")
+    c.say("The fox chases the rabbit.")
+    assert "pattern" in c.say("fox chases rabbit").lower()                # learns the construction
+    c.say("The wolf chases the deer.")
+    assert ("wolf", "chases", "deer") in c.sm.facts                       # reads held-out itself
 
 
 def test_question_vs_statement_routing():
