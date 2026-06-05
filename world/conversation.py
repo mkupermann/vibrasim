@@ -206,6 +206,9 @@ class Conversation:
         # 'Actually, a whale is not a fish' -> 'a whale is not a fish'.
         t = re.sub(r"^(?:actually|however|indeed|in fact|of course|moreover|furthermore|therefore|thus|"
                    r"note that)[,:]?\s+", "", t, flags=re.I)
+        # strip a leading SUBORDINATING conjunction so its clause doesn't become a junk subject (JEP-402):
+        # 'Because they are warm-blooded, whales...' -> 'they are warm-blooded, whales...' (then 'they' is rejected).
+        t = re.sub(r"^(?:because|although|though|while|since|if|when|unless|whereas|despite|as)\s+", "", t, flags=re.I)
         # conjunction of CLAUSES: 'X are Y, and Z are W' -> normalize each clause independently (JEP-380). Require the
         # comma so this does NOT catch the conjunction-SUBJECT form 'X and Y are Z' (handled separately below).
         m = re.match(r"^(.+?\s+(?:are|is)\s+.+?),\s+and\s+(.+?\s+(?:are|is)\s+.+?)\.?$", t, flags=re.I)
@@ -266,11 +269,17 @@ class Conversation:
         # appositive: 'The X, a Y, <rest>' -> 'A X is a <head-of-Y>.' + 'A X <rest>.' (no 'which is'). JEP-386.
         m = re.match(r"^(?:a|an|the)\s+([a-z]+),\s+an?\s+([a-z ]+?),\s+(.+?)\.?$", t, flags=re.I)
         if m:
-            x = m.group(1).lower()
-            y = self._singular(m.group(2).strip().split()[-1].lower())
-            rest = m.group(3).strip()
-            art = "an" if y[0] in "aeiou" else "a"
-            return [f"A {x} is {art} {y}.", f"A {x} {rest}."], extra
+            yphrase = m.group(2).strip().lower().split()
+            # GUARD (JEP-402): only trust the appositive head when Y is a short simple noun phrase. A long phrase or one
+            # with a preposition ('a muscular organ roughly the size of a fist') makes 'head = last word' wrong
+            # (heart->fist), so skip rather than capture a falsehood.
+            _PREP = {"of", "than", "by", "from", "with", "in", "on", "at", "to", "for", "as", "near", "the"}
+            if len(yphrase) <= 2 and not (set(yphrase) & _PREP):
+                x = m.group(1).lower()
+                y = self._singular(yphrase[-1])
+                rest = m.group(3).strip()
+                art = "an" if y[0] in "aeiou" else "a"
+                return [f"A {x} is {art} {y}.", f"A {x} {rest}."], extra
         # conjunction subject: 'Cats and dogs are mammals' / 'A cat and a dog are mammals' -> two sentences
         m = re.match(r"^(?:a\s+|an\s+)?([a-z]+)s?\s+and\s+(?:a\s+|an\s+)?([a-z]+)s?\s+are\s+(?:a\s+)?(.+?)\.?$",
                      t, flags=re.I)
