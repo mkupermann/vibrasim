@@ -109,13 +109,24 @@ engine*, *a handful of genuine insights*, and *the honest method*.
 
 ## What we're doing right now, and the goal
 
-**Right now** we're doing two things in parallel:
+**Right now** we're doing three things in parallel:
 
 1. **Toughening up the reading engine** by feeding it fresh passages from new subjects and fixing whatever trips it
    up — one honest, tested fix at a time. It now reads a comprehensive mixed-topic document with essentially perfect
    accuracy.
 2. **Deepening the connection to the little physics world**, so that the "understanding" genuinely runs on the
    bottom-up substrate rather than just on ordinary computer code.
+3. **Giving it SENSES, and teaching it slowly like a child — with you in the loop.** This is the newest direction.
+   We've started letting it *see* and *hear*: it now looks at real photos and recognizes them, and it links a *sound*
+   to a *written shape* (it can "hear" the letter A and connect it to the written "A"). Crucially, it learns the way a
+   child does — **slowly, and it asks when it isn't sure.** There's now a simple **teaching tool**: it shows you what
+   it's looking at, tells you its guess and how confident it is, and when it's *unsure* it asks you — you click
+   *Correct* or *Not correct* (and later you'll answer in full sentences). Because it only asks when genuinely
+   uncertain, you teach it the whole alphabet with a handful of answers instead of labelling everything. And it has
+   started **reading**: it sees a written word, recognizes the letters, puts them together, *and understands the word*
+   using what it read — so "seeing the world" and "understanding it" join up. (All of this is still simple, with
+   home-made senses and a tiny vocabulary — but the full loop *perceive → learn from you → read → understand* now
+   works end to end, with no modern AI.)
 
 **The goal** — the north star — is to move, step by careful step, toward something with **human-like learning,
 understanding, and communication**: a system that learns from what it reads and from experience, *actually*
@@ -125,9 +136,10 @@ the process and draw an honest map of what's reachable** under these strict, sel
 goes: *we don't stop.*
 
 The honest edges of the map — what would need either special data or relaxing our "no big AI" rule — are: reading
-genuinely messy real-world writing, perceiving the real world through senses, and freely *generating* new ideas
-rather than answering from what it was told. We know exactly where those walls are, and why. That clarity is the
-point.
+genuinely messy real-world writing, *richer* real-world senses (real microphones and cameras rather than our simple
+home-made ones), and freely *generating* new ideas rather than answering from what it was told. We know exactly where
+those walls are, and why. That clarity is the point — and the new "teach it slowly, with you in the loop" direction is
+how we start chipping at the senses wall.
 
 ---
 

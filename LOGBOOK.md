@@ -5299,3 +5299,28 @@ side, all from the real-usage-QA loop, each gated green. The one consistent boun
 vs 'body') = the no-pretrained constraint, the long-mapped frontier. predict-calibrate 150/186 (81%). All ESTABLISHED
 methods (lexico-syntactic extraction, mereology, definitional subsumption, relational WH), named; no novelty -- the
 deliverable is the comprehensively-hardened engine + the real-usage-QA discipline. Kill-switch absent; G1..G145 idle.
+
+### 2026-06-05 — PERCEPTION / GROUNDING-WITH-A-TEACHER thread (JEP-286..290), per Michael's steers
+
+Michael steered: "close the gap — perceive the world via senses as soon as the base works," then "train it slowly;
+when it hears 'A' it links to written 'A'; we need a tool — if the substrate is unsure it asks me (correct/not),
+later sentences." The base engine works comprehensively (124 tests), so we opened the perception thread:
+- (286) the engine PERCEIVES real Fashion-MNIST photos (raw pixels) and REASONS 'is this footwear?' at 0.95 via read
+  prose vs control 0.50 — symbol-grounding loop closed on real senses. Surfaced+fixed a collective-noun prose bug.
+- (287) the SLOW, ask-when-unsure TEACHER LOOP: world/active_learner.py grounds the alphabet from a teacher at 0.98
+  while asking only ~20% of the time (a NOVELTY-gated confidence + centroid-normalized letters made it work). Live
+  GUI tool tools/teach_gui.py (image + guess + how-sure + Correct/Not-correct; later sentences).
+- (288) CROSS-MODAL 'hear A' <-> 'write A': synthesized per-letter tones + FFT features -> hears letters at 1.0;
+  both senses ground the SAME 26 symbols; cross-modal recall 0.96 (hear A -> retrieve written A); ear<->eye transfer.
+- (289) the BRIDGE: a GroundedMind (teacher-grounded perception + prose reasoning) perceives + reasons at 0.94-0.98.
+- (290) LETTERS -> WORDS -> understanding: reads a written word from pixels (letters), lexicon cleanup recovers
+  per-letter errors (raw 0.75 -> cleaned 1.0 — the redundancy cure in reading), then reasons about the word via prose.
+
+So the developmental ladder works end to end: PERCEIVE the world via senses (sight + sound) -> GROUND symbols from a
+human teacher (querying only when unsure) -> READ written words -> UNDERSTAND them via what it read. No transformer,
+no pretrained model. HONEST scope: prototype/template perception is coarse, audio is synthesized (no mic yet),
+vocabulary tiny; the contribution is the demonstrated teacher-in-the-loop perceive->learn->read->understand loop, the
+first real chip at the symbol-grounding/senses frontier. The cross-modal (modality, symbol) store is ready for real
+audio. predict-calibrate 169/205 (82%). Established methods (prototype perception, active learning/uncertainty
+sampling, FFT features, lexicon cleanup, symbolic reasoning), named; no novelty -- the value is the working ladder.
+Plain-language explainer for Michael: docs/FOR_EVERYONE.md (updated for the senses + teaching-tool direction).
