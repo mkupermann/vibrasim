@@ -53,14 +53,23 @@ The energy SIGNAL is not the wall; the wall is **unsupervised non-linear feature
   to a fully-LOCAL rule (e-prop / equilibrium-propagation, which also removes the global error
   broadcast) is narrower than "needs full backprop."
 
-**Net frontier statement.** For an order-k rule with no lower-order signal, every cheap / backprop-
-free / non-enumerative route fails: greedy climbing (no gradient), flat random features (≳C(P,k),
-N-sensitive), random depth (untargeted). Only **targeted** routes work — order-k enumeration
-(O(C(P,k))) or **learned** features (backprop, NON-LOCAL). The open problem is sharply bounded:
-**tractable, LOCAL, targeted high-order feature discovery** — one of the five named open problems
-(generalization theory, sample-efficient abstraction, local credit assignment, grounding,
-compositionality). I located exactly where the new mathematics is needed; I did not invent it (and
-said so honestly throughout).
+- **JEP-445 (the local rung — POSITIVE)** a FULLY-LOCAL 3-factor Hebbian rule (node perturbation:
+  pre-synaptic activity × node perturbation × one global scalar modulator; no backprop, no weight
+  transport, no derivative) ALSO cracks order-3 parity at 1.000 with M=64 and finds the true triple.
+  So targeted high-order discovery is achievable with exactly the kind of rule the substrate has
+  primitives for (local plasticity + a global neuromodulator). **Honest caveat:** node perturbation is
+  high-variance and does not scale efficiently — a proof of principle, not an efficient solution.
+
+**Net frontier statement (updated by the locality ladder).** For an order-k rule with no lower-order
+signal: cheap NON-learning routes fail (greedy climbing, flat/deep random features); targeted routes
+work — order-k enumeration (O(C(P,k))) or LEARNED features. And learning the targeted feature does
+NOT require non-local backprop: feedback alignment (no weight transport, JEP-444) and even a
+fully-local 3-factor rule (node perturbation, JEP-445) both discover the order-3 interaction. So the
+open problem is now sharper and POSITIVE-leaning: not "can a local rule do it" (it can) but **EFFICIENT
+local targeted discovery at scale** (node perturbation is high-variance; eligibility-trace e-prop is
+the efficient-local direction). I located exactly where the remaining mathematics is needed — and
+showed the local primitives the substrate already has are, in principle, enough for the discovery
+itself. All established methods, named; not invented here.
 
 ## Honest scope
 Everything here is established method (VSA/HRR, reservoir/ELM, RLS, OMP/boosting, Hopfield energy
