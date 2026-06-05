@@ -1250,3 +1250,14 @@ def test_communicate_describe_split_and_rabies():
     d = e.describe("a dog")
     assert "It can bark." in d and "It is friendly." in d         # split, not 'can bark, friendly'
     assert "raby" not in e.summarize() and "rabies" in e.summarize()
+
+
+def test_definitional_copulas():
+    # JEP-269: 'X is defined as Y' / 'X means Y' / 'X is known as Y' -> X is-a (genus head of) Y
+    e = UnderstandingEngine(seed=269)
+    e.read("A mammal is defined as a warm-blooded animal. A puppy means a young dog. "
+           "A dog is also known as a canine. A dog is a mammal.")
+    assert e.is_a("mammal", "animal")          # defined-as, genus = animal
+    assert e.is_a("puppy", "dog")              # means, genus = dog
+    assert e.is_a("dog", "canine")             # known-as
+    assert e.is_a("puppy", "animal")           # transitive puppy->dog->mammal->animal
