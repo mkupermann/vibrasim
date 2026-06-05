@@ -81,3 +81,17 @@ shortest string and the explicit `s?` eats the final "s", so "foxes"→"foxe" an
 (which only strips a trailing "s") cannot recover them. Hit twice (passive agent in 385, causal subject in 388).
 **Rule:** capture the FULL word with greedy `([A-Za-z]+)` and let `_singular` do the pluralization (it already handles
 -s/-es/-ies/-xes/-ses correctly). Don't strip plural markers in the regex.
+
+## Lesson #16 (2026-06-05) — conversational runners share a PERSISTED brain (test-hygiene trap)
+
+`Conversation(seed=s)` with no `brain_dir` loads/saves the DEFAULT durable brain (`~/.eqmod/brain/talk`),
+so every test runner that constructs `Conversation(seed=s)` ACCUMULATES facts across runs into one shared
+store — and across a long session that store fills with unrelated test facts (villains, breakfast
+sequences, Mars, …). Symptom found in JEP-475: a "between X and Z" query briefly returned events from
+OTHER persisted chains. The features themselves are correct (verified clean-room with
+`Conversation(brain_dir=tempfile.mkdtemp())` — all signed-affect + temporal queries pass on a fresh
+brain), but the runner methodology is not clean-room and could mask or fabricate results.
+**Rule:** experiment runners that exercise `Conversation` MUST pass a fresh `brain_dir`
+(`tempfile.mkdtemp()`), like the JEP-462 audit does — never the default persisted brain. (Also note: the
+live GUI brain is a SEPARATE store, `~/.eqmod/brain/web`; HTTP verification adds correct-but-extra facts
+there, harmless and user-correctable.)
