@@ -23,6 +23,31 @@ class Conversation:
         else:
             self.sm = SubstrateMemory(tau=0.12, directed=True)
         self.eng = self.sm.rebuild_engine(seed=seed) if self.sm.sentences else UnderstandingEngine(seed=seed)
+        self._constr_examples = []        # (sentence, (s,r,o)) the teacher gave for unparseable forms
+        self._constr_templates = []       # induced templates -> self-extended reading (JEP-357)
+
+    def teach_construction(self, sentence, fact):
+        """Teach the brain one example of a construction it couldn't parse. After 2 aligned examples it induces the
+        template and can then read FUTURE sentences of that form by itself (breakthrough attack B)."""
+        from world.induce_construction import induce
+        fact = tuple(x.lower() for x in fact)
+        for (ps, pf) in self._constr_examples:
+            tpl = induce([(ps, pf), (sentence, fact)])
+            if tpl is not None and tpl not in self._constr_templates:
+                self._constr_templates.append(tpl)
+        self._constr_examples.append((sentence, fact))
+        # also store the fact itself
+        if fact not in set(self.sm.facts):
+            self.sm.add_fact(*fact)
+        return len(self._constr_templates)
+
+    def _apply_learned_constructions(self, sentence):
+        from world.induce_construction import apply_template
+        for tpl in self._constr_templates:
+            f = apply_template(tpl, sentence, flex_articles=True)
+            if f is not None:
+                return f
+        return None
 
     @staticmethod
     def is_question(text):
@@ -194,6 +219,7 @@ class Conversation:
         return [t], extra
 
     def _learn_one(self, sentence):
+        before = len(self.sm.facts)
         sents, extra = self._normalize_for_learning(sentence)
         for st in sents:
             self.sm.learn_sentence(st, self.eng)
@@ -201,6 +227,11 @@ class Conversation:
         for (a, r, b) in extra:
             if (a, r, b) not in have:
                 self.sm.add_fact(a, r, b); have.add((a, r, b))
+        # self-extended reading (JEP-357): if nothing was extracted, try a learned construction
+        if len(self.sm.facts) == before and self._constr_templates:
+            f = self._apply_learned_constructions(sentence)
+            if f and f not in have:
+                self.sm.add_fact(*f)
 
     ROOTS = {"animal", "organism", "thing", "object", "plant", "matter", "substance", "concept", "idea",
              "place", "person", "event", "process", "material"}
