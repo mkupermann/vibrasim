@@ -507,3 +507,18 @@ def test_read_recency_pronoun_resolution():
     e2 = UnderstandingEngine(seed=1)
     e2.read("A cat is a feline. It is independent.")
     assert not e2.is_a("cat", "independent")
+
+
+def test_read_belief_revision_from_prose():
+    # JEP-164: a correcting source revises beliefs read from an earlier source (belief revision from prose)
+    e = UnderstandingEngine(seed=164)
+    e.read("A whale is a fish. A fish is an animal.")
+    assert e.is_a("whale", "fish")
+    e.read("A whale is not a fish. A whale is a mammal. A mammal is an animal.")
+    assert not e.is_a("whale", "fish")     # retracted by the correction
+    assert e.is_a("whale", "mammal")       # corrected parent
+    assert e.is_a("whale", "animal")       # still an animal, now via mammal
+    # negation coexists with positive facts; pronoun+negation composes
+    e2 = UnderstandingEngine(seed=1)
+    e2.read("A dog is a mammal. A dog is not a reptile. A whale is a creature. It is not a fish.")
+    assert e2.is_a("dog", "mammal") and not e2.is_a("dog", "reptile") and not e2.is_a("whale", "fish")
