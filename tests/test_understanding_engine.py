@@ -1081,3 +1081,15 @@ def test_adjective_modified_counts():
     assert e.respond("how many moons does Jupiter have?") == "A jupiter has 4 large moons."   # modifier rendered
     assert e.respond("how many parts does a cell have?") == "A cell has 2 small parts."
     assert e.respond("how many legs does a dog have?") == "A dog has 4 legs."                  # no regression
+
+
+def test_mass_noun_article_heuristic():
+    # JEP-230: mass nouns (incl '-ness' abstracts + physics quantities) take no article; countable '-ness' exceptions keep it
+    e = UnderstandingEngine(seed=230)
+    for w in ["gravity", "friction", "kindness", "darkness", "happiness"]:
+        assert e._art(w) == w, f"{w} should be uncountable (no article)"
+    for w in ["business", "witness", "illness", "city", "entity", "dog"]:
+        assert e._art(w).startswith(("a ", "an ")), f"{w} should be countable (a/an)"
+    # in generation: 'Gravity causes tides' -> describing the cause reads 'gravity', not 'a gravity'
+    e.read("Gravity causes a tide.")
+    assert "a gravity" not in e.respond("what causes a tide?").lower()

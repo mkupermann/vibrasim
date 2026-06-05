@@ -381,7 +381,10 @@ class UnderstandingEngine:
                    "weather", "clothing", "machinery", "matter", "energy", "wood", "metal", "glass", "plastic",
                    "stone", "sand", "rice", "milk", "blood", "oxygen", "data", "software", "hardware",
                    "tiredness", "happiness", "sadness", "darkness", "health", "wealth", "evidence", "research",
-                   "traffic", "weather", "homework", "progress", "pain", "fun", "luck", "fame"}
+                   "traffic", "weather", "homework", "progress", "pain", "fun", "luck", "fame",
+                   "gravity", "friction", "electricity", "momentum", "radiation", "steam", "smoke",
+                   "dust", "air", "heat", "sunlight", "gravity", "magnetism", "humidity"}
+    _COUNTABLE_NESS = {"business", "witness", "illness", "likeness", "wilderness", "harness"}
     _NUM_WORDS = ("zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
                   "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen",
                   "nineteen", "twenty")
@@ -706,7 +709,12 @@ class UnderstandingEngine:
         if noun in getattr(self, "proper_nouns", ()):
             return " ".join(w[:1].upper() + w[1:] for w in noun.split())
         cls = type(self)
-        if noun.split()[-1] in cls._MASS_NOUNS:     # mass/uncountable head -> no article ('water', not 'a water')
+        head = noun.split()[-1]
+        # mass/uncountable head -> no article ('water', not 'a water'). '-ness' is MOSTLY an uncountable abstract
+        # suffix ('kindness','darkness'), but with countable exceptions ('a business','a witness','an illness');
+        # '-ity'/'-tion' are NOT safe at all (a city/an entity/a function are countable).
+        if head in cls._MASS_NOUNS or (
+                head.endswith("ness") and len(head) > 5 and head not in cls._COUNTABLE_NESS):
             return noun
         head = noun.split()[0]
         if head in cls._ART_A:

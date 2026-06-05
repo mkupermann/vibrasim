@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 117 / predictions 144 (81%). Latest: JEP-229 HIT (adjective-modified count nouns '4 large moons'/'two small parts' now captured by head noun, modifier rendered; connective-guarded).
+Running tally: hits 117 / predictions 145 (81%). Latest: JEP-230 PASS-with-CALIBRATION (mass-noun article: '-ness'+physics mass nouns fixed 'a gravity', but '-ness' is NOT reliably uncountable -> needed a countable-exception set; the 'reliably uncountable' claim was falsified mid-rung).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 At JEP-221 the tally is 110/137 (80%) and has CONVERGED: the OVERALL rate is dragged down by early-programme misses
@@ -171,3 +171,4 @@ honestly informative:
 | JEP-227 | 🔮 [a-z0-9] concept regex handles covid19/mp3, numbers stay numbers, no regression | covid19->microbe, mp3->format extracted; '4 legs' still numeric | HIT | Fixes the JEP-226 alphanumeric-name limitation (real prose has covid-19, mp3, h2o). |
 | JEP-228 | 🔮 realistic encyclopedic passage handled; surfaced issues are genuine real-prose bugs worth fixing | fixed is-a-parent open-relation leak + numeric 1-singular; capital-of open kept; scale 8/8 | HIT | Real-usage QA keeps surfacing real bugs unit tests miss. |
 | JEP-229 | 🔮 optional adjectives before head noun captures '4 large moons', no regression, list-guarded | (jupiter,moon)=4 renders '4 large moons'; '8 legs and a tail' guarded out; '4 legs' unchanged | HIT | Modified count nouns are ubiquitous in real prose; guard prevents list misfire. |
+| JEP-230 | 🔮 '-ness' reliably uncountable; suffix rule + physics mass nouns fixes 'a gravity' without breaking countables | mass+true-'-ness' no article; but 'business'/'witness'/'illness' ARE countable -> needed exception set | CALIB | A morphological suffix rule needs its exception set enumerated AND tested against counter-examples in-rung. |
