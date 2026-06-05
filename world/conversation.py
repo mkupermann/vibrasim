@@ -209,6 +209,9 @@ class Conversation:
             left, lex = self._normalize_for_learning(m.group(1))
             right, rex = self._normalize_for_learning(m.group(2))
             return left + right, extra + lex + rex
+        # strip a LEADING quantifier so it isn't absorbed into the subject name (JEP-384): 'Both frogs and toads...'
+        # -> 'frogs and toads...'; 'Most birds can fly' -> 'birds can fly'. ('a/an/the' are NOT quantifiers.)
+        t = re.sub(r"^(?:both|most|some|many|all|several|few|each|certain|every)\s+", "", t, flags=re.I)
         # 'is a kind/type/sort of' -> 'is a'
         t = re.sub(r"\bis\s+(an?)\s+(?:kind|type|sort)\s+of\b", r"is \1", t, flags=re.I)
         # numeric possession: 'A dog has four/4 legs' -> (dog, has_legs, N)
