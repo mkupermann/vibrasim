@@ -831,3 +831,14 @@ def test_proper_noun_generation():
     assert "france" in e.proper_nouns and "england" in e.proper_nouns
     assert e._art("france") == "France" and e._art("dog") == "a dog"   # proper capitalized/no-article; common unaffected
     assert "is capital of France" in e.describe("paris")
+
+
+def test_read_unified_fixed_and_open():
+    # JEP-204: a single read() call learns BOTH fixed relations AND auto-induced open relations
+    e = UnderstandingEngine(seed=204)
+    out = e.read("A dog is a mammal. A mammal is an animal. Paris is the capital of France. "
+                 "London is the capital of England. A heart is part of a dog.")
+    assert out["is_a"] >= 3 and out["part_of"] == 1
+    assert out.get("open", {}).get("is capital of") == 2
+    assert e.is_a("dog", "animal") and e.part_of("heart", "dog")
+    assert e.relation_true("paris", "is capital of", "france")

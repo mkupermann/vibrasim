@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 92 / predictions 119 (77%). Latest: JEP-203 HIT (proper-noun handling — mid-sentence capitals render as 'France' no-article-capitalized; sentence-start ones missed, as predicted).
+Running tally: hits 93 / predictions 120 (78%). Latest: JEP-204 HIT (unified read() learns BOTH fixed and open relations in one call).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 The OVERALL 73% is dominated by early-programme misses (surface-form bugs, structure-learning difficulty mis-estimates).
@@ -141,3 +141,4 @@ Predictions ARE converging WITHIN a settled domain, and the residual misses are 
 | JEP-201 | 🔮 read_open auto-induces recurring (>=2) open-relation patterns, excludes fixed | {'is capital of':3,'discovered':2} auto-induced, fixed-relations ignored, queryable; no-repetition -> {} | HIT | Engine self-extensible from prose (auto-discovers new relation types); limit = consistent recurring pattern (no-transformer wall). |
 | JEP-202 | 🔮 multi-word relations render verbatim, single-verb unaffected | 'It is capital of france' (was 'is capital ofs the france'); 'chases the cat' preserved | HIT | Completes open-relation integration into communication. Proper-noun article/capitalization a separate known limit. |
 | JEP-203 | 🔮 mid-sentence capitals -> proper nouns (no article, capitalized); sentence-start missed | france/england detected, _art('france')='France', describe shows 'France'; germany (sentence-start) missed | HIT | Communication quality for proper nouns; sentence-start ambiguity needs NER/gazetteer (no-transformer limit). |
+| JEP-204 | 🔮 read() also runs open-relation induction, one call learns both, no interference | {'is_a':4,'part_of':1,'open':{'is capital of':2}} from one read() | HIT | Unified reading pipeline (5 fixed + recurring open relations in a single read()). |
