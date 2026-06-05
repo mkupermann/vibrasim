@@ -1167,3 +1167,15 @@ def test_embedded_such_as():
     e2 = UnderstandingEngine(seed=260)
     e2.read("Reptiles such as snakes are cold-blooded.")
     assert e2.is_a("snake", "reptile")     # trailing such-as still works (no regression)
+
+
+def test_read_ability_and_singular_question():
+    # JEP-260: read() captures 'X can/cannot VERB' as properties; 'can a X VERB?' answered (singular ability)
+    e = UnderstandingEngine(seed=260)
+    e.read("A penguin cannot fly. An eagle can fly. A penguin is a bird that cannot fly. A fish can swim.")
+    assert "fly" in e.not_properties.get("penguin", set())
+    assert "fly" in e.properties.get("eagle", set())
+    assert e.respond("can a penguin fly?") == "No. A penguin cannot fly."
+    assert e.respond("can an eagle fly?") == "Yes. An eagle can fly."
+    assert e.is_a("penguin", "bird")                # relative-clause is-a NOT swallowed by the ability handler
+    assert not e.is_a("penguin", "fly")

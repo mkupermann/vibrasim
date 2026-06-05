@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 138 / predictions 174 (79%). Latest: JEP-259 HIT (embedded ', such as X,' interjection — 'Snakes, such as the cobra, are reptiles' -> cobra is-a snake AND snakes is-a reptiles (main clause survives); enables a 4-hop chain cobra->snake->reptile->animal; surfaced by the definitions QA pass).
+Running tally: hits 139 / predictions 175 (79%). Latest: JEP-260 HIT (read() now captures 'X can/cannot VERB' as properties (it captured NONE before -- only tell() did) + singular 'can a penguin fly?' -> 'No. A penguin cannot fly.'; a gated-regression self-catch (np swallowed the relative-clause sentence, caught by the test gate, fixed before commit)).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 At JEP-221 the tally is 110/137 (80%) and has CONVERGED: the OVERALL rate is dragged down by early-programme misses
@@ -201,3 +201,4 @@ honestly informative:
 | JEP-257 | 🔮 exclude '-ous/-less' from the plural-noun is-a heuristic; stops false is-a, keeps real plurals | PASS — venomous/harmless not is-a, dogs->mammals/cats->felines intact; 99 tests green | HIT | Adjective suffixes ('-ous','-less') end in -s but aren't plurals; the plural-detection-by-trailing-s heuristic needs adjective-suffix exclusions. |
 | JEP-258 | 🔮 'X is <adj>' -> property; 'is X <adj>?' answered from properties; is-a undisturbed | PASS — cobra/dog properties captured, venomous/friendly answered Yes, is-a intact; 100 tests | HIT | Copula adjectival predicates are properties not taxonomy; the 257->258 pair fully handles them. |
 | JEP-259 | 🔮 preprocess embedded ', such as X,' -> example is-a subject + rebuild main clause; trailing form unaffected | PASS — cobra->snake + snake->reptile, 4-hop chain works, trailing such-as intact; 101 tests | HIT | A comma-bounded interjection broke both the such-as regex and the copula subject; strip+rebuild recovers both links. |
+| JEP-260 | 🔮 singular 'can a X VERB?' + read() property capture; risk: np swallows 'is a bird that cannot fly' | PASS — read captures properties, singular Yes/No works, universal works; risk MATERIALIZED (1 test failed) caught by gate + fixed | HIT | read() never captured ability facts (only tell did); guard the consuming `continue` on bare-NP so the relative-clause is-a survives. |

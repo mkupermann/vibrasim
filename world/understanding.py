@@ -352,6 +352,18 @@ class UnderstandingEngine:
                 if self._bare_np(a) and self._bare_np(b) and a != b:
                     self.tell(f"a {a} is a {b}."); learned["is_a"] += 1
                 continue
+            # ABILITY/property predicate: 'X cannot VERB' (negative) / 'X can VERB' (positive) -> (not_)properties (JEP-260)
+            # only CONSUME when X is a valid bare NP (else 'a penguin is a bird that cannot fly' would be swallowed)
+            m = re.match(rf"^{np}\s+(?:cannot|can't|can\s+not)\s+(\w+)$", s)
+            if m and self._bare_np(self._norm_phrase(m.group(1))):
+                x = self._norm_phrase(m.group(1))
+                self.not_properties.setdefault(x, set()).add(m.group(2).lower()); last_subject = x
+                continue
+            m = re.match(rf"^{np}\s+can\s+(\w+)$", s)
+            if m and self._bare_np(self._norm_phrase(m.group(1))):
+                x = self._norm_phrase(m.group(1))
+                self.properties.setdefault(x, set()).add(m.group(2).lower()); last_subject = x
+                continue
             # general copula 'SUBJ(s) is/are PRED(s)' with CONJOINED subjects and MULTI-FACT predicates (shallow parse)
             mc = re.match(r"^(.*?)\s+(?:is|are)\s+(.*)$", s)
             if mc:
@@ -1315,6 +1327,15 @@ class UnderstandingEngine:
             if ex:
                 return f"No — not all. For example, {self._art(ex)} cannot {prop}."
             return f"I don't know whether all {self._norm_phrase(cat)}s can {prop}."
+        # SINGULAR ability: 'can a penguin fly?' -> from properties / not_properties (JEP-260)
+        mqs = re.match(r"can\s+(?:an|a|the)\s+(\w+)\s+(\w+)", q)
+        if mqs:
+            x, prop = self._norm_phrase(mqs.group(1)), self._norm_rel(mqs.group(2))
+            if prop in self.not_properties.get(x, set()):
+                return f"No. {self._art(x).capitalize()} cannot {prop}."
+            if self.has_property(x, prop):
+                return f"Yes. {self._art(x).capitalize()} can {prop}."
+            return f"I don't know whether {self._art(x)} can {prop}."
         # CONVERSATIONAL follow-up: 'what about X?' -> reuse the last question (is-a category, or order comparison)
         m = re.match(r"(?:what about|how about|and)\s+(?:(?:an|a|the)\s+)?(\w+)\s*\??$", q)
         if m:
