@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 107 / predictions 134 (80%). Latest: JEP-218 HIT ('why?' explains comparison + temporal chains too — full reasoning transparency across all transitive query types).
+Running tally: hits 108 / predictions 135 (80%). Latest: JEP-219 HIT (conversational follow-up — 'what about a cat?' reuses the last question's context).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 The OVERALL 73% is dominated by early-programme misses (surface-form bugs, structure-learning difficulty mis-estimates).
@@ -156,3 +156,4 @@ Predictions ARE converging WITHIN a settled domain, and the residual misses are 
 | JEP-216 | 🔮 newest capabilities (numeric/temporal/superlative/open-WH) still robust | 0 crashes/6000 across read+read_open+9 queries+audit+summarize+describe | HIT | Additions 206..215 preserve robustness; matured engine solid through 215; calibration crosses 80%. |
 | JEP-217 | 🔮 'what are all the X?' -> all concepts that is-a X (multi-hop) | 'A cat, a dog and a poodle' (poodle via multi-hop); all animals listed | HIT | Enumeration = inverse of the is_a closure; a common useful query type. |
 | JEP-218 | 🔮 'why?' explains comparison + temporal chains, recency-correct | full comparison/temporal chains explained; is-a recency intact | HIT | Full reasoning transparency across is-a/part-of/causal/comparison/temporal. |
+| JEP-219 | 🔮 'what about X?' reuses last is-a question's category (multi-turn context) | 'Yes, a cat is an animal too'; salmon/rock correctly No; chainable | HIT | Conversational ellipsis/context — multi-turn 'communicate WITH me'. |

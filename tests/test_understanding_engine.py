@@ -987,3 +987,12 @@ def test_why_across_orders():
     e.read("A dog is a mammal. A mammal is an animal.")
     e.respond("is a dog an animal?")
     assert "is a mammal" in e.respond("why?")          # is-a recency still works
+
+
+def test_conversational_followup():
+    # JEP-219: 'what about X?' reuses the last question's predicate (multi-turn conversational context)
+    e = UnderstandingEngine(seed=219)
+    e.read("A dog is a mammal. A mammal is an animal. A cat is a mammal. A salmon is a fish.")
+    e.respond("is a dog an animal?")
+    assert e.respond("what about a cat?") == "Yes, a cat is an animal too."     # reuses 'animal' with new subject
+    assert e.respond("and a salmon?").startswith("No")                          # salmon has no is-a path to animal
