@@ -28,10 +28,24 @@ whether a wall remains. PASS = the local-learning wall is compute-bound (movable
 "local rules are capable" picture. NULL if k=8 stays ≈ chance despite 4×M and 4× epochs (the wall is
 harder than compute alone fixes). Bars locked; no retuning. No transformer.
 
-## Result: ABORTED (not a result) — reprioritized per Michael's directive
+## CORRECTION + RESULT (2026-06-05): it actually COMPLETED — my abort attempt failed
 
-The scaled-compute run (M=192, 20000 ep) was still in progress when Michael redirected the work to a
-new-science hunt ("don't work with known"). JEP-459 is a known-methods scaling measurement, so it was
-stopped mid-run to free compute for the native-substrate exploration (NSH-01+). This is an honest
-ABORT, not a NULL/PASS — the high-M boundary question (does more compute push the order-6-8 wall of
-JEP-458 outward?) remains open and can be resumed later. No bars claimed either way.
+I tried to stop this run to reprioritize, but the kill did not take and it ran to completion. So the
+earlier "ABORTED" note was wrong — there IS a real result, recorded honestly here (honesty over the
+convenience of the abort story):
+
+| seed | k=6 | k=8 | k=10 |
+|------|-----|-----|------|
+| 0 | 1.00 (found) | 0.48 | 0.49 |
+| 7 | 1.00 (found) | 0.50 | 0.49 |
+
+J459a ✓ (k=6 → 1.00 both seeds — compute FIXES the soft edge), **J459b ✗ (k=8 still ≈ chance despite
+3×M and 4× epochs), J459c k=10 ≈ chance → NULL/partial.**
+
+**Finding — the boundary has TWO regimes.** The order-6 instability JEP-458 saw (0.52–0.97 at
+M=64/5000ep) was **variance/compute-limited** — 4× compute makes it solid (1.00). But the order-8 wall
+does NOT move with 4× compute (still chance). So the local-learning boundary is partly compute-bound
+(the soft edge near k=6) and partly a **harder limit** (k≥8) that more compute alone does not crack at
+this budget. This sharpens JEP-458: the wall is not a single soft edge — there is a genuine hard
+boundary beyond the compute-movable one. Established method (node perturbation); measurement, not new
+science.
