@@ -1,9 +1,0 @@
-=== GEO-96: conflicting context ===
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|##########| 290/290 [00:00<00:00, 9472.38it/s]
-  plain: picked a STORED value (no hallucinated 3rd) = 1.00
-  conflict-aware: FLAGGED the inconsistency          = 0.17
-
---- VERDICT ---
-GEO-96: PARTIAL - picks-stored 1.00, flags 0.17
-DONE

@@ -1,7 +1,0 @@
-=== JEP-3: model accuracy + simulation-based MPC ===
-  JEPA model next-cell accuracy = 0.30
-  simulation-MPC goals reached = 0.17
-
---- VERDICT ---
-JEP-3: PARTIAL - model acc 0.30, MPC 0.17
-DONE

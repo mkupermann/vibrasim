@@ -1,9 +1,0 @@
-=== GEO-7: compose learned relations (capital,language) on LLM embeddings ===
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 11280.02it/s]
-  direct  (country + r_language)            hits@1 = 1.00
-  COMPOSE (capital - r_capital + r_language) hits@1 = 1.00  <- multi-hop, never trained
-
---- VERDICT ---
-GEO-7: PASS - learned geometric relations COMPOSE on real LLM semantics: from a capital, infer the language via composition (never trained). Compositional understanding on real meaning.
-DONE

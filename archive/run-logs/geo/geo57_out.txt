@@ -1,11 +1,0 @@
-=== GEO-57: long-document QA ===
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 10936.22it/s]
-Loading weights:   0%|          | 0/105 [00:00<?, ?it/s]Loading weights: 100%|##########| 105/105 [00:00<00:00, 10099.57it/s]
-  document = 30 sentences
-  bi-encoder hits@1      = 0.86
-  + cross-encoder rerank = 0.86
-
---- VERDICT ---
-GEO-57: PASS - long-document QA holds at 30 sentences (0.86 bi-encoder, 0.86 re-ranked). Document QA scales with re-ranking.
-DONE

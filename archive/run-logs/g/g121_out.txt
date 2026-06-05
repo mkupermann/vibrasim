@@ -1,9 +1,0 @@
-=== G121: repopulation source trace (in-band non-carrier atoms: NEW vs DRIFTED-IN) ===
-  seed 42: (tick | inband_noncarrier | NEW | drifted-in-OLD)
-     t= 200 total= 11 new=  3 old=  8
-     t= 400 total= 22 new=  4 old= 18
-     t= 600 total= 33 new= 11 old= 22
-     t= 800 total= 57 new= 25 old= 32
-
-  NEW-dominated => churn/formation (fundamental); OLD-dominated => drift-in (a passive y-barrier could block it).
-DONE

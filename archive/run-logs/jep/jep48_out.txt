@@ -1,9 +1,0 @@
-=== JEP-48: is-a methods on vehicle.n.01 (cross-domain replication) ===
-  poincare (N=520): bal-acc=0.861 (TPR 0.75 TNR 0.98)
-  order:           bal-acc=0.917 (TPR 0.88 TNR 0.95)
-
---- VERDICT ---
-JEP-48: PASS - the finding REPLICATES cross-domain: on vehicles (520 concepts), order embeddings
-(0.92) beat calibrated-Poincare (0.86) on held-out IS-A, as on carnivores (JEP-42).
-The order>Poincare-at-scale result is DOMAIN-GENERAL, not carnivore-specific. Established, named.
-DONE

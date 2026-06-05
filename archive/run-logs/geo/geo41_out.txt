@@ -1,9 +1,0 @@
-=== GEO-41: contradiction detection ===
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 10950.63it/s]
-  hybrid (retrieve+symbolic-compare) balanced-acc = 0.94  (TPR 0.88, TNR 1.00)
-  pure-geometric (similarity band)   balanced-acc = 0.50
-
---- VERDICT ---
-GEO-41: PASS - the store DETECTS contradictions (0.94) via geometric retrieval of the same-subject fact + symbolic object comparison. Pure geometry alone is weaker (0.50) - the symbolic compare is needed.
-DONE

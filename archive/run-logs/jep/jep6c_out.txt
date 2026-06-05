@@ -1,7 +1,0 @@
-=== JEP-6c: PC vs backprop, 64-way softmax classification ===
-  TRAIN acc:    backprop=0.83  pred-coding=0.47
-  held-out acc: backprop=0.00  pred-coding=0.00  random=0.02
-
---- VERDICT ---
-JEP-6c: PARTIAL/NULL - backprop 0.00, PC 0.00, random 0.02 (train bp 0.83/pc 0.47)
-DONE

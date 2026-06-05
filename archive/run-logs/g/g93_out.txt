@@ -1,9 +1,0 @@
-=== G93: atom erosion vs bridge decay (quiet + refractory + consolidation, n=6) ===
-  seed 42: atoms |A|=23->6 (0.26) | bridges |B|=6->0 (0.00)
-  seed 7: atoms |A|=27->7 (0.26) | bridges |B|=10->2 (0.20)
-
---- VERDICT ---
-G93a engram atoms erode (<0.6 persist) : True
-G93b bridges die with atoms            : True
-G93: ROOT CONFIRMED — persistence blocked by ATOM EROSION in the quiet substrate; fix = localized maintenance
-DONE

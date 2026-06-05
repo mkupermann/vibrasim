@@ -1,9 +1,0 @@
-=== G128: store+recall ASCII chars in matter memory (2 rows = 2 nibbles/byte) ===
-  stored text: 'EQ'
-  seed 42: recalled='EQ' exact=True
-  seed 7: recalled='EQ' exact=True
-
---- VERDICT ---
-G128 chars recalled exactly (both seeds): True
-G128: PASS - the matter memory stores and recalls ASCII CHARACTERS (text in persistent matter, no LLM)
-DONE

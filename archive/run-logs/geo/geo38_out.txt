@@ -1,10 +1,0 @@
-=== GEO-38: grounded generation faithfulness ===
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|##########| 290/290 [00:00<00:00, 9959.94it/s]
-  team mentioned correctly (plain)     = 1.00
-  salary INVENTED (plain prompt)        = 0.25
-  salary INVENTED (faithfulness prompt) = 0.00
-
---- VERDICT ---
-GEO-38: characterization - team 1.00, invent plain 0.25, invent faithful 0.00 (drop 0.25)
-DONE

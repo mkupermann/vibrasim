@@ -1,9 +1,0 @@
-=== G102: end-to-end string through the substrate ===
-  original : 'EQMOD SUBSTRATE SPEAKS'
-  seed 42: recovered='EQM?D TUBSCRATE CPEAKS' | sym-acc=0.89 CER=0.18 exact=False
-  seed 7: recovered='EQMOD SUBSTRATE SPEAKS' | sym-acc=1.00 CER=0.00 exact=True
-
---- VERDICT ---
-G102a verbatim recovery (CER=0 both seeds): False
-G102: NULL/PARTIAL - string not recovered verbatim (see CER and garbled output above)
-DONE

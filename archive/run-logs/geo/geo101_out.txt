@@ -1,12 +1,0 @@
-=== GEO-101: document learning + self-supervised adaptation ===
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 11384.65it/s]
-  ingested 12 chunks
-  retrieval hits@1 BEFORE adaptation = 0.67
-Computing widget examples:   0%|          | 0/1 [00:00<?, ?example/s]                                                                     {'train_runtime': '0.9685', 'train_samples_per_second': '37.17', 'train_steps_per_second': '6.195', 'train_loss': '0.0006553', 'epoch': '3'}
-  retrieval hits@1 AFTER self-supervised adaptation = 0.75
-
---- VERDICT ---
-  INGESTION works: the document is queryable (grounded retrieval over 12 chunks).
-GEO-101: PASS - self-supervised adaptation IMPROVES retrieval on the document (0.67->0.75). Give it a link/doc -> ingest (queryable) + SimCSE-adapt (tunes to the content). Honest: not human understanding, grounded lookup.
-DONE

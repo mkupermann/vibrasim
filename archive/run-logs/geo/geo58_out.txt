@@ -1,9 +1,0 @@
-=== GEO-58: unstructured multi-hop (text bridge) ===
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 10317.72it/s]
-  multi-hop (text-bridge) end-to-end = 1.00
-  single-hop baseline (no chain)     = 0.00
-
---- VERDICT ---
-GEO-58: PASS - multi-hop over UNSTRUCTURED text works (1.00): bridge entity extracted from sentence text + iterative retrieval, where single-hop fails (0.00). Multi-hop reasoning extends to free text, not just structured stores.
-DONE

@@ -1,8 +1,0 @@
-=== JEP-1: toy JEPA ===
-  JEPA held-out hits@1 = 0.20
-  COPY baseline        = 0.00
-  MEAN baseline        = 0.02
-
---- VERDICT ---
-JEP-1: PARTIAL/NULL - JEPA 0.20, copy 0.00
-DONE

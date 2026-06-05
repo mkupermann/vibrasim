@@ -1,2 +1,0 @@
-=== G118: REDUNDANT multi-bit matter memory (K=4 cells, 4 patterns, 2 carriers/cell) ===
-  seed 42: per-bit accuracy = 0.88 (chance 0.50)

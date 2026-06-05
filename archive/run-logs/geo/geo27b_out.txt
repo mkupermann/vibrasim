@@ -1,9 +1,0 @@
-=== GEO-27b: clean zero-shot transfer (unseen-vs-unseen primary) ===
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 10148.54it/s]
-  LLM-init    unseen-vs-unseen = 0.81 +/- 0.03
-  random-init unseen-vs-unseen = 0.51 +/- 0.11
-
---- VERDICT ---
-GEO-27b: PASS - LLM prior enables genuine ZERO-SHOT transfer to fully-unseen entities (0.81) vs random near-chance (0.51). Geometry's irreducible edge confirmed: the semantic prior places new entities so a learned relation orders them with zero examples.
-DONE

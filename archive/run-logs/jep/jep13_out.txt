@@ -1,8 +1,0 @@
-=== JEP-13: spectral abstraction (proto-value functions), M=12 S=144, 16 threads ===
-  basis size k=36 (S/4)
-  reconstruction R^2:  PVF basis=0.979   random basis=0.176
-  planning reached:  PVF=0.30   random-basis=0.07   (true-SR ref=1.00)
-
---- VERDICT ---
-JEP-13: PARTIAL/NULL - R2 PVF 0.98/rand 0.18, plan PVF 0.30/rand 0.07/true 1.00
-DONE

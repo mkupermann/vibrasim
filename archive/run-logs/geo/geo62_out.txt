@@ -1,10 +1,0 @@
-=== GEO-62: query-time conflict handling ===
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 11270.89it/s]
-  conflict detection balanced-acc = 1.00  (TPR 1.00, TNR 1.00)
-  example: Grace -> ('CONFLICT', {'Platform', 'Design'})
-  example: Alice -> ('OK', {'Analytics'})
-
---- VERDICT ---
-GEO-62: PASS - query-time conflict handling SURFACES inconsistency (1.00): gather same-subject facts, flag if >1 distinct object. A trustworthy store reports data conflicts at query time instead of silently returning one answer.
-DONE

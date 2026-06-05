@@ -1,9 +1,0 @@
-=== GEO-68: geometric multi-hop vs DB-join ===
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 10209.70it/s]
-  NAMED queries:   geometric-chain=1.00  DB-join=1.00
-  SEMANTIC-entry:  geometric-chain=1.00  DB-join=0.00
-
---- VERDICT ---
-GEO-68: PASS-as-designed (honest) - on NAMED structured data, geometric multi-hop == DB-join (geometry adds NOTHING for the JOIN; the hops are symbolic lookups). Geometry's genuine multi-hop value is ONLY the SEMANTIC ENTRY (epithet resolution), where DB-join fails (no exact key) and geometric succeeds. 'Geometric composition' on structured data = entity-resolution + database join.
-DONE

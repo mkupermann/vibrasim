@@ -1,8 +1,0 @@
-=== G132: substrate-primitive learning A->B, proper eligibility readout ===
-  seed 42: trained A->B elig=17.84 (ctrl-region C=17.82) | untrained A->B=15.96
-  seed 7: trained A->B elig=7.31 (ctrl-region C=6.52) | untrained A->B=7.10
-
---- VERDICT ---
-G132 substrate learned A->B (trained>1.5x untrained AND >1.5x ctrl-region, both seeds): False
-G132: NULL - even with full plasticity + proper readout, the substrate does NOT learn A->B; charter-faithful confirmation that the substrate cannot form associations
-DONE

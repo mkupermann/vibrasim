@@ -1,11 +1,0 @@
-=== GEO-60: grounded generation over a document ===
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|##########| 290/290 [00:00<00:00, 10082.21it/s]
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 10061.56it/s]
-Loading weights:   0%|          | 0/105 [00:00<?, ?it/s]Loading weights: 100%|##########| 105/105 [00:00<00:00, 10666.84it/s]
-  (a) answerable generated-correct = 0.17
-  (b) unanswerable abstain         = 1.00
-
---- VERDICT ---
-GEO-60: PARTIAL - answerable 0.17, abstain 1.00
-DONE

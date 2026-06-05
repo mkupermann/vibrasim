@@ -1,8 +1,0 @@
-=== G119b: minimal spacing test, pattern=[1, 0, 1], cells=[7.0, 14.0, 21.0] r=1.5 ===
-  seed 42: readout=[1, 0, 1] target=[1, 0, 1] exact=True
-  seed 7: readout=[1, 0, 1] target=[1, 0, 1] exact=True
-
---- VERDICT ---
-G119b spacing recovers pattern exactly (both seeds): True
-G119b: PASS(preliminary) - wide spacing recovers the 3-bit pattern exactly -> spacing fixes the systematic error; clean multi-bit is reachable
-DONE

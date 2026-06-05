@@ -1,10 +1,0 @@
-=== GEO-61: multi-passage document generation ===
-Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|##########| 290/290 [00:00<00:00, 10168.94it/s]
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 8687.00it/s]
-  (a) answerable correct (multi-passage) = 0.67  (GEO-60 single: 0.17)
-  (b) unanswerable abstain               = 1.00
-
---- VERDICT ---
-GEO-61: PARTIAL - multi-passage 0.67, abstain 1.00
-DONE

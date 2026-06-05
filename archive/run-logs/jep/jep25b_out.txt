@@ -1,8 +1,0 @@
-=== JEP-25b: GRID x TREE product (N=135=9x15), each pure geometry fails half ===
-  pure Euclidean (4D):        Spearman=0.947
-  pure Hyperbolic (4D):       Spearman=0.481
-  MIXED (Euclid2D x Hyper2D): Spearman=0.725
-
---- VERDICT ---
-JEP-25b: PARTIAL/NULL - euclid 0.95, hyper 0.48, mixed 0.72
-DONE

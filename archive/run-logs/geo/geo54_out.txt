@@ -1,18 +1,0 @@
-=== GEO-54: operator-complete unified agent ===
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 11272.36it/s]
-    MISS [FACTOID] 'Who is not on the Analytics team?' -> 'Analytics' (exp {'Frank', 'Carol', 'Grace', 'Heidi', 'Bob', 'Eve'})
-    MISS [FACTOID] 'Who does not work in Boston?' -> 'Analytics' (exp {'Frank', 'Carol', 'Grace', 'Heidi', 'Bob', 'Eve'})
-    MISS [FACTOID] 'Who earns more, Alice or Bob?' -> 'Analytics' (exp 'Bob')
-    MISS [FACTOID] 'Who earns more, Eve or Frank?' -> 'Platform' (exp 'Eve')
-  end-to-end accuracy = 0.50  (n=8)
-    FACTOID : 1/1
-    COUNT   : 1/1
-    TEMPORAL: 1/1
-    JOIN    : 1/1
-    NEGATE  : 0/2
-    COMPARE : 0/2
-
---- VERDICT ---
-GEO-54: PARTIAL - 0.50, negation False, comparison False
-DONE

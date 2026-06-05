@@ -1,9 +1,0 @@
-=== GEO-8: few-shot relation learning + composition with DISTRACTORS ===
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 10398.93it/s]
-  vocab size = 109 (targets 40 + distractors 69)
-  country->capital 6-shot hits@1 (among 109 words) = 0.97
-
---- VERDICT ---
-GEO-8: PASS - few-shot geometric relation learning SURVIVES a large distractor vocabulary -> the method is real, not a small-vocab artifact
-DONE

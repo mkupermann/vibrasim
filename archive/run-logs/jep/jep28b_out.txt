@@ -1,9 +1,0 @@
-=== JEP-28b: higher-dim hyperbolic concept reasoner ===
-  [hyp_dim=5] held-out IS-A acc=0.911  norm-vs-depth corr=0.343  sanity_all_correct=True
-     {'is_a(cat,mammal)': True, 'is_a(mammal,cat)': False, 'is_a(dog,animal)': True, 'is_a(rose,plant)': True, 'is_a(animal,dog)': False}
-  [hyp_dim=10] held-out IS-A acc=0.911  norm-vs-depth corr=0.337  sanity_all_correct=True
-     {'is_a(cat,mammal)': True, 'is_a(mammal,cat)': False, 'is_a(dog,animal)': True, 'is_a(rose,plant)': True, 'is_a(animal,dog)': False}
-
---- VERDICT ---
-JEP-28b: PARTIAL/NULL - held-out 0.91, norm-depth 0.34, sanity True
-DONE

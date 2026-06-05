@@ -1,8 +1,0 @@
-=== JEP-15: model-based MPC vs cached SR under transition change, S=144 ===
-  blocked a cycle edge; detoured goals=24
-  cached SR (stale)                 reach=0.89
-  MODEL-BASED (local edit + MPC/DP) reach=1.00
-
---- VERDICT ---
-JEP-15: PARTIAL/NULL - model-based 1.00, stale SR 0.89
-DONE

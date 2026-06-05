@@ -1,11 +1,0 @@
-=== GEO-94: fine-tune English model for DE->EN (headroom) ===
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 10133.07it/s]
-Computing widget examples:   0%|          | 0/1 [00:00<?, ?example/s]                                                                     {'train_runtime': '4.476', 'train_samples_per_second': '53.61', 'train_steps_per_second': '7.149', 'train_loss': '0.8455', 'epoch': '8'}
-  train pairs=30, test pairs=10
-  frozen English model  DE->EN held-out = 0.20
-  fine-tuned            DE->EN held-out = 0.30
-
---- VERDICT ---
-GEO-94: PARTIAL - small gain (0.20->0.30); FT helps a bit but 30 pairs / 8 epochs is modest.
-DONE

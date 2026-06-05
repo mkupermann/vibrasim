@@ -1,6 +1,0 @@
-=== JEP-93: engine tier 2 - Boolean comprehension (AND/OR/NOT), target 100% ===
-
-   Boolean battery: 12/12 = 100.0%
---- VERDICT ---
-JEP-93: PASS - engine tier 2 holds 100% with Boolean AND/OR/NOT composition (Boole's connectives).
-DONE

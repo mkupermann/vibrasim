@@ -1,1 +1,0 @@
-=== G119: WIDE-SPACED multi-bit matter memory (K=3 cells, pitch 7, 3 patterns) ===

@@ -1,9 +1,0 @@
-=== G104: verbatim text at K=4 (respecting G97 pitch), no ECC ===
-  original : 'EQMOD SUBSTRATE SPEAKS'
-  seed 42: recovered='EQMOD SUBSTRATE SPEAKS' | sym-acc=1.00 CER=0.00 exact=True
-  seed 7: recovered='EQMOD SUBSTRATE SPEAKS' | sym-acc=1.00 CER=0.00 exact=True
-
---- VERDICT ---
-G104a verbatim (CER=0 both seeds, no ECC): True
-G104: PASS - respecting the channel pitch, the substrate transmits text VERBATIM on both seeds, no error-correcting code (communication in writing, no LLM)
-DONE

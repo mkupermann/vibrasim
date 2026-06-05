@@ -1,7 +1,0 @@
-=== JEP-12: grounded world model from NOISY obs (M=10,S=100,obs_d=64,noise=0.6) ===
-  perceptual state-ID accuracy under noise = 0.406
-  navigation (PERCEIVED states):  SR-VALUE=0.24  Euclid=0.09  random=0.34
-
---- VERDICT ---
-JEP-12: PARTIAL/NULL - percept-acc 0.41, SR-nav 0.24, euclid 0.09, random 0.34
-DONE

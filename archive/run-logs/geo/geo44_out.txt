@@ -1,9 +1,0 @@
-=== GEO-44: typo-robust entity resolution ===
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 10996.90it/s]
-  baseline pure embedding (noisy) = 0.53
-  + fuzzy entity resolution       = 1.00
-
---- VERDICT ---
-GEO-44: PASS - a character-trigram entity-resolution front-end recovers noisy-store accuracy (0.53->1.00). The GEO-43 fragility is solved: embeddings for relevance, fuzzy/exact name matching for entity identity.
-DONE

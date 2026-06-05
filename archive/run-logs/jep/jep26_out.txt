@@ -1,7 +1,0 @@
-=== JEP-26: real taxonomy (77 concepts), Euclidean vs hyperbolic IS-A inference ===
-  Spearman(emb,graph):   Euclidean=0.934   hyperbolic=0.755
-  IS-A ancestor-direction acc (smaller norm=more general):  Euclidean=0.394   hyperbolic=0.884
-
---- VERDICT ---
-JEP-26: PARTIAL/NULL - anc acc E0.39/H0.88, Spearman E0.93/H0.76
-DONE

@@ -1,9 +1,0 @@
-=== GEO-6: few-shot geometric relation LEARNING in LLM space ===
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 10199.10it/s]
-  capital : 4-shot offset hits@1 = 0.94 | linear-map hits@1 = 0.00
-  plural  : 4-shot offset hits@1 = 1.00 | linear-map hits@1 = 0.00
-  past    : 4-shot offset hits@1 = 0.94 | linear-map hits@1 = 0.00
-
-  (held-out pairs; learns the relation from 4 examples, applies to unseen sources)
-DONE

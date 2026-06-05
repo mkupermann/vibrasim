@@ -1,2 +1,0 @@
-FLUX_REF_RESULT {"n_samples": 8480, "mean": 8170.349410377358, "p50": 8096.0, "p90": 9785.0, "p99": 11312.0, "max": 13456.0, "flux_ref": 9785.0}
-PROBE DONE

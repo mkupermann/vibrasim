@@ -1,10 +1,0 @@
-=== GEO-18: aggregation boundary + symbolic fix ===
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 11278.25it/s]
-  true counts: {'Boston': 6, 'Austin': 6, 'Denver': 4, 'Seattle': 4}
-  (A) pure geometric retrieval  exact-count acc = 0.00
-  (B) retrieval + symbolic count exact-count acc = 1.00
-
---- VERDICT ---
-GEO-18: PASS-as-designed - pure geometry CANNOT aggregate (boundary confirmed); retrieval+symbolic count solves it. The honest architecture = geometric retrieval for FILTER/CHAIN + a symbolic layer for AGGREGATE.
-DONE

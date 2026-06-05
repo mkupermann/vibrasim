@@ -1,8 +1,0 @@
-=== JEP-82: substrate EnergyNet as the world-model predictor in an MPC loop ===
-   (i)  substrate predictor 1-step accuracy = 1.000
-   (ii) substrate-MPC goal-reach rate       = 0.375
-   (iii) random-action control reach rate    = 0.518
-
---- VERDICT ---
-JEP-82: PARTIAL/NULL - 1step=1.00, mpc=0.38, rand=0.52 vs bars 0.95/0.90/0.50.
-DONE

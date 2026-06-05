@@ -1,10 +1,0 @@
-=== GEO-92: proper contrastive fine-tuning ===
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 11109.45it/s]
-Computing widget examples:   0%|          | 0/1 [00:00<?, ?example/s]                                                                     {'train_runtime': '1.615', 'train_samples_per_second': '30.96', 'train_steps_per_second': '9.287', 'train_loss': '0.02025', 'epoch': '5'}
-  frozen     held-out hits@1 = 0.67
-  fine-tuned held-out hits@1 = 0.67
-
---- VERDICT ---
-GEO-92: NULL - fine-tuning doesn't help (0.67 vs 0.67): DATA-limited, not method-limited. 10 pairs is too few to improve a pretrained embedder; the frozen model is already strong. Confirms GEO-91 - cheap improvement needs MORE data.
-DONE
