@@ -1,0 +1,4 @@
+JEP311 seed 0: located-in acc=1.0 is-a acc=1.0 persists=True paris->earth=True
+JEP311 seed 7: located-in acc=1.0 is-a acc=1.0 persists=True paris->earth=True
+JEP-311: PASS (J311a=True J311b=True J311c=True)
+DONE

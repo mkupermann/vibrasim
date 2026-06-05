@@ -34,5 +34,33 @@ accuracy ≥0.90 over several (attr, source, target) triples both seeds; J314b d
 Predicted failure: bundle crosstalk with few attributes is low; if analogy misses, the role-binding/record
 construction is the cause (a representation finding), reported not tuned.
 
-## Results
-(filled after the parallel run)
+## Results (seeds 0, 7) — 4 PASS, 1 NULL/PARTIAL
+
+### JEP-310 Symmetric relations — **PASS**
+Symmetric recall = **1.0** both directions (query(a,rel)=b AND query(b,rel)=a), persists. Two directed edges
+cleanly give symmetry.
+
+### JEP-311 Second transitive relation (located-in) — **PASS**
+located-in multi-hop vs closure = **1.0**; is-a accuracy **1.0** (UNAFFECTED by the added relation); paris→earth
+True; persists. Distinct role vectors → zero cross-relation interference.
+
+### JEP-312 High-load ceiling — **PASS** (and then some)
+Integrated reasoning stays high far past JEP-307's ~900: N=500→0.99, 1000→0.98, 2000→0.95, **4000 (≈4600 facts,
+~46 modules)→0.93–0.95**. J312a (≥0.90 to N=2000) **True**; **N\* > 4000** — no ceiling found in range. Routing
+makes the durable store scale to thousands of facts; is-a declines only gently (0.98→0.90).
+
+### JEP-313 Noise robustness — **NULL / PARTIAL** (prediction missed)
+Recall vs key bit-flip fraction f: 0→1.0, 0.05→0.95/0.97, **0.10→0.88/0.92**, 0.15→0.84/0.85, 0.20→0.73/0.75,
+0.30→0.35, 0.40→0.09. **J313a (≥0.90 at f=0.10) FAIL** (seed 0 = 0.88). Decline is graceful/monotone (J313b
+characterized). **f\* ≈ 0.05–0.10**, NOT the 0.2–0.3 I predicted. Honest lesson: tolerance of a SUPERPOSED store is
+~half the raw `(1−2f)` bit-correlation, because each fact's signal is already ~1/√K and corruption eats that
+margin first. New calibration note for [[calibration_lessons]].
+
+### JEP-314 Analogical retrieval (Kanerva) — **PASS**
+Direct attribute retrieval **1.0**; analogy ("X's currency as dollar is to USA → peso") **1.0** over 60 analogies,
+both seeds. Classic VSA analogy via record-mapping `bind(rec_src, rec_tgt)` works cleanly with 3 attributes/record.
+
+## Batch verdict: 4/5 PASS; JEP-313 NULL/PARTIAL is a genuine finding (noise tolerance lower than predicted, fix =
+larger D or redundant encoding for noisy-cue use). Established methods throughout (VSA binding/analogy, modular
+capacity), named as such.
+
