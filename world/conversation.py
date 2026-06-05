@@ -232,6 +232,15 @@ class Conversation:
                      "torpedoes": "torpedo", "vetoes": "veto", "buffaloes": "buffalo", "cargoes": "cargo"}
 
     @staticmethod
+    def _proper_singular(token):
+        """JEP-424: in a SINGULAR-verb construction (X has…, X is a…), a Capitalized subject ending in 's' is a proper
+        noun (Mars, Wales) — keep it (just lowercase), do NOT strip the 's' to 'mar'. Plural common nouns use 'are' and
+        never reach these rules, so this is safe here. Otherwise singularize normally."""
+        if token[:1].isupper() and token.lower().endswith("s") and not token.lower().endswith("ss"):
+            return token.lower()
+        return Conversation._singular(token.lower())
+
+    @staticmethod
     def _singular(w):
         if w in Conversation._SINGULAR_KEEP:             # -s singular nouns: don't strip (gas -> gas, not 'ga') JEP-415
             return w
@@ -317,6 +326,11 @@ class Conversation:
         if ma and ma.group(2) not in ("largest", "longest", "biggest", "smallest", "tallest", "highest"):
             return [], extra + [(self._singular(ma.group(3).lower()), self._singular(ma.group(2).lower()),
                                  _av(ma.group(1)))]
+        # superlative (JEP-424): 'X is the <largest|…> Y' -> (Y_head, <sup>, X); queried by 'what is the <sup> Y?'
+        msup = re.match(r"^([A-Za-z]+)\s+is\s+the\s+(largest|longest|biggest|smallest|tallest|highest|fastest|"
+                        r"oldest|deepest|hottest|coldest|strongest|heaviest|brightest)\s+([A-Za-z]+)\.?$", t, flags=re.I)
+        if msup:
+            return [], extra + [(self._singular(msup.group(3).lower()), msup.group(2).lower(), _av(msup.group(1)))]
         # first/second-person is-a (JEP-406): 'I am a teacher' -> (user, isa, teacher); 'You are a substrate' -> (you,..)
         ma = re.match(r"^i\s+am\s+an?\s+([a-z]+)\.?$", t, flags=re.I)
         if ma:
@@ -329,7 +343,7 @@ class Conversation:
         # numeric possession: 'A dog has four/4 legs' -> (dog, has_legs, N)
         m = re.search(r"\b([A-Za-z]+)\s+has\s+(\w+)\s+([a-z]+s)\b", t, flags=re.I)
         if m:
-            subj = self._singular(m.group(1).lower()); cnt = m.group(2).lower()
+            subj = self._proper_singular(m.group(1)); cnt = m.group(2).lower()   # JEP-424: keep proper nouns (Mars)
             num = self._NUMW.get(cnt, cnt if cnt.isdigit() else None)
             if num is not None and subj not in ("a", "an", "the"):
                 extra.append((subj, f"has_{m.group(3).lower()}", str(num)))
@@ -413,7 +427,11 @@ class Conversation:
                            r"from|to|near|by|for)\s+", msi.group(2).strip(), maxsplit=1)[0]
             head = self._singular(obj.split()[-1].lower())
             if head and head not in ("of", "kind", "type", "sort"):
-                subj = self._singular(msi.group(1).lower())
+                subj = self._proper_singular(msi.group(1))           # JEP-424: keep proper nouns (Mars -> mars)
+                # If the subject is a PROPER noun (kept its trailing 's'), add the fact DIRECTLY so the engine does not
+                # re-singularize it ('mars' -> 'mar'); otherwise rewrite for the engine as before (JEP-424).
+                if subj != self._singular(msi.group(1).lower()):
+                    return [], extra + [(subj, "isa", head)]
                 art = "an" if head[0] in "aeiou" else "a"
                 t = f"A {subj} is {art} {head}."
         # copular adjective/predicate: SINGULAR 'X is <single-word>' with NO article -> treat the word as a class so

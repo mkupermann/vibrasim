@@ -24,6 +24,24 @@ topic and the substrate answers complex questions. No transformer.
 
 If a fix mis-fires, report it. Predicted clean. Bars fixed; no retuning. No transformer.
 
+## RESULT (2026-06-05): **PARTIAL → mostly PASS** (implemented J424a + the superlative half of J424b)
+
+Implemented and verified (regression: conversation 10/10 + substrate_memory 14/14 + understanding_engine green):
+- **J424a PASS — proper nouns preserved.** `_proper_singular`: in singular-verb rules (X has…, X is a…) a
+  Capitalized subject ending in 's' is kept (Mars → **mars**, not "mar"); plural common nouns use "are" so they
+  still singularize (Dogs → dog). Copular is-a for a proper noun adds the fact DIRECTLY (bypassing the engine's
+  re-singularization). "Mars has two moons" → "how many moons does Mars have?" → **2**; "Mars is a planet" → "is Mars
+  a planet?" → **Yes**. Regression intact (cheetah → cat, dog → mammal).
+- **J424b superlative PASS.** "X is the <largest|longest|…> Y" → `(Y_head, <sup>, X)`; query "what is the <sup> Y?" →
+  X. "Jupiter is the largest planet" → "what is the largest planet?" → **Jupiter**.
+- **J424b multi-word proper noun ("Milky Way") — DEFERRED (the one remaining piece).** A clean join needs BOTH the
+  teach side and the query side (the question parser in `brain_query`), with an article guard so "The Sun" is not
+  joined — higher regression risk; deliberately not rushed during the long-running JEP-459 compute experiment.
+  Honestly left open.
+
+Net: 5 of 6 pre-registered sub-cases pass; the proper-noun bug (Mars→mar) and superlatives are fixed and tested.
+Established rule-based normalization, named; no new science.
+
 ## Status (2026-06-05): NOT YET IMPLEMENTED — verified still-open gap (not superseded)
 
 Re-checked the pre-registered cases against current code; they genuinely still fail (so this is a real

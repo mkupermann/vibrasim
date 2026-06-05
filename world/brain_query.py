@@ -251,6 +251,14 @@ class BrainQuery:
                 tag = f" (inherited from {anc[0].replace('_', ' ')})" if anc is not None else " (generalized)"
             return ("bright (positive energy)" + tag if val > 0 else
                     "dark (negative energy)" + tag if val < 0 else "neutral")
+        # superlative (JEP-424): "what is the <largest|…> Y?" -> the stored (Y, <sup>, value)
+        m = re.match(r"^what\s+is\s+the\s+(largest|longest|biggest|smallest|tallest|highest|fastest|oldest|deepest|"
+                     r"hottest|coldest|strongest|heaviest|brightest)\s+(\w+)$", s)
+        if m:
+            v, sc = self.mem.query(self._sing(m.group(2)), m.group(1))
+            if v is not None and sc >= self.gate:
+                return " ".join(w.capitalize() for w in str(v).split("_"))
+            return "I don't know that yet — teach me and ask again."
         # JEP-450: explain INHERITED affect — "why is X <affect-word>?" -> the valenced is-a ancestor
         m = re.match(r"^why\s+(?:is|are)\s+(?:a\s+|an\s+|the\s+)?(\w+)\s+(\w+)$", s)
         if m and (m.group(2) in _AFFECT_QWORDS):
