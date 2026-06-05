@@ -1387,3 +1387,14 @@ def test_bare_mass_noun_articles_subjects_and_objects():
     assert e._art("disease") == "disease" and e._art("bacteria") == "bacteria"
     assert e._art("fever") == "a fever"      # 'a fever' was article-led -> stays countable (negative-lookahead skip)
     assert e.respond("does rain cause flooding?") == "Yes. Rain causes flooding."
+
+
+def test_conditional_rules():
+    # JEP-285: 'If [something] is a Y, then it <consequent>' -> the category Y gets the consequent (universal rule)
+    e = UnderstandingEngine(seed=287)
+    e.read("If an animal is a mammal, then it is warm-blooded. If something is a bird, it can fly. "
+           "A dog is a mammal. A robin is a bird.")
+    assert "warm-blooded" in e.properties.get("mammal", set())
+    assert "fly" in e.properties.get("bird", set())
+    assert e.has_property("dog", "warm-blooded")     # inherited dog->mammal
+    assert e.respond("can a robin fly?").startswith("Yes")   # inherited robin->bird
