@@ -1326,3 +1326,12 @@ def test_material_mass_nouns():
     e2 = UnderstandingEngine(seed=279)
     e2.read("An iron is an appliance.")           # the countable 'iron' (appliance) sense, introduced with 'an'
     assert e2._art("iron") == "an iron"           # usage-led countability overrides the mass lexicon (JEP-256)
+
+
+def test_what_are_X_plural_no_double_plural():
+    # JEP-278: 'what are X?' (plural) -> subtypes if any, else the category; no double-pluralization ('dogss')
+    e = UnderstandingEngine(seed=280)
+    e.read("A whale is a mammal. A mammal is an animal. A poodle is a dog. A dog is a mammal.")
+    assert e.respond("what are whales?") == "Whales are mammals."     # no subtypes -> the category
+    assert "poodle" in e.respond("what are dogs?").lower()            # has a subtype -> enumerate
+    assert e.respond("what are zebras?") == "I don't know any zebras."  # unknown, NOT 'zebrass'

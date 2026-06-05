@@ -1418,7 +1418,10 @@ class UnderstandingEngine:
             members = sorted(c for c in self.parents if c != cat and self.is_a(c, cat))
             if members:
                 return self._join_phrases(members).capitalize() + "."
-            return f"I don't know any {m.group(1)}s."
+            parents = sorted(self.parents.get(cat, set()))     # no subtypes -> answer the category ('what are dogs?' -> 'Dogs are mammals.')
+            if parents:
+                return f"{cat.capitalize()}s are " + ", ".join(p + "s" for p in parents) + "."
+            return f"I don't know any {cat}s."                 # singular cat + 's' (was 'dogss' from double-pluralizing 'dogs')
         # SUPERLATIVE comparison: 'what is the biggest?' -> the top of the corresponding order (nothing exceeds it)
         m = re.match(r"what\s+is\s+the\s+([a-z]+est)\b", q)
         if m:
