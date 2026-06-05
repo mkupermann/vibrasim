@@ -10,6 +10,8 @@ Examples to type:
   Is a poodle a mammal?     -> Yes.
   A dog can bark.
   Can a poodle bark?        -> Yes.
+  Tell me about a poodle    -> A poodle is a dog; it can bark.
+  Draw what you know        -> saves a picture of its taxonomy (visual aid)
 Type 'quit' (or empty line) to save and exit.
 """
 import os
