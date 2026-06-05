@@ -1252,6 +1252,18 @@ class UnderstandingEngine:
             if ex:
                 return f"No — not all. For example, {self._art(ex)} cannot {prop}."
             return f"I don't know whether all {self._norm_phrase(cat)}s can {prop}."
+        # SUPERLATIVE comparison: 'what is the biggest?' -> the top of the corresponding order (nothing exceeds it)
+        m = re.match(r"what\s+is\s+the\s+([a-z]+est)\b", q)
+        if m:
+            comp = m.group(1)[:-3] + "er"      # 'biggest' -> 'bigger' (the stored comparative; regular forms)
+            order = self._orders.get(comp, {})
+            items = set(order) | {b for bs in order.values() for b in bs}
+            if items:
+                top = [it for it in items if not any(self._order_holds(comp, o, it) for o in items if o != it)]
+                if len(top) == 1:
+                    return f"{self._art(top[0]).capitalize()}."
+                if len(top) > 1:
+                    return f"Possibly {self._join_phrases(sorted(top))}."
         # SUPERLATIVE temporal: 'what happened first/last?' -> the source/sink of the before-order
         m = re.match(r"what\s+happened\s+(first|last)", q)
         if m:
