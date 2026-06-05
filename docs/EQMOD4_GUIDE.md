@@ -13,15 +13,24 @@ the frontier is left open and honestly drawn.
 ## The usable deliverables
 
 ### 0. The Understanding Engine — `world/understanding.py` (the headline deliverable)
-A 100%-working, substrate-legal (NO transformer) conversational engine that does all three of Michael's verbs —
-human-like LEARNING, UNDERSTANDING, and COMMUNICATING — on simple-to-natural language. Built bottom-up across
-JEP-92..108b, 20 gated regression tests, the predict-calibrate discipline. Capabilities: 4 learning modes (told
-facts, correction, examples, induction), multi-hop deduction + multi-parent DAG, Boolean AND/OR/NOT, three-valued
-Yes/No/I-don't-know, WH-questions, explanations in English, LEARNING THROUGH DIALOGUE (it identifies its own
-knowledge gap, is taught, then knows), conjunction + pronoun coreference, and clean rejection of out-of-domain
-prose. Full guide: `docs/UNDERSTANDING_ENGINE.md`; demo: `python tools/demo_full_conversation.py`. HONEST scope:
-simple controlled/natural language + given prototypes — the foundation to scale FROM; real-prose parse (~2% of
-Boole, JEP-108b), unsupervised structure (JEP-69/70), open generation, and rich grounding are the named frontier.
+A 100%-working, substrate-legal (NO transformer, NO LLM, NO pretrained model) engine that does all three of
+Michael's verbs — human-like LEARNING, UNDERSTANDING, and COMMUNICATING — and now does them END TO END from PROSE.
+Built bottom-up across JEP-92..170, 53 gated regression tests, the predict-calibrate discipline (62/86, every miss
+diagnosed). The closed loop:
+- **LEARN FROM PROSE** — `e.read(passage)` extracts is-a + part-of + causal + spatial-containment from an
+  encyclopedic-register passage via classic Hearst-style patterns + a bare-NP guard + recency coreference + negation
+  (belief revision). ~0.90 recall / high precision on connected prose; domain-general (biology/geography/technology).
+- **UNDERSTAND** — multi-hop deduction over a multi-parent DAG, Boolean AND/OR/NOT, three-valued Yes/No/I-don't-know,
+  quantification, comparison, analogy, hypothetical, causal + intervention (do-operator), probabilistic, temporal,
+  provenance/TMS, spatial frames, mereology — and RELATION-TYPE INTERACTIONS with correct distinct semantics (a
+  dog's heart is part of an animal; smoking causes a disease; but a dog's heart is NOT part of a cat).
+- **COMMUNICATE** — conversational Q&A across is-a/part-of/causal, multi-relation English profiles (`describe`),
+  explanations of the reasoning chain, learning-through-dialogue, belief revision when a source corrects it.
+Full guide: `docs/UNDERSTANDING_ENGINE.md`; demos: `python tools/demo_learn_from_prose.py` and
+`tools/demo_full_conversation.py`. HONEST scope: works on encyclopedic/descriptive prose; the named frontier is
+DENSE logic/argument prose (Boole ~2%, the GENRE not the extractor — JEP-155/156), a real encyclopedic corpus at
+scale (needs the long tail of NL constructions, the no-transformer wall), abstract words, open generation, and rich
+grounding (symbol-grounding). The engine is the foundation to scale FROM, NOT human-level understanding.
 
 ### 1. Concept reasoner — `tools/concept_reasoner.py`
 A mixed-curvature reasoner over any taxonomy (parent->children dict): Euclidean for RELATEDNESS, hyperbolic /
@@ -59,6 +68,14 @@ local TD = the substrate's BTSP) -> value/MPC planning -> adaptation. Robust to 
   order embeddings (JEP-23/42).
 - Composition works in the reliable regime but INHERITS component error-patterns - higher benchmark accuracy can
   mean worse task performance (JEP-46). Measure on YOUR task's distribution.
+- LEARN-FROM-SOURCES: the real-prose parse gate is the GENRE, not the extractor (JEP-155/156) — encyclopedic prose
+  yields ~0.90-recall taxonomy with classic Hearst+NP-chunking; dense logic/argument prose (Boole) yields almost
+  none. The engine learns multi-relation structure from a passage and reasons multi-hop over it, no transformer.
+- THE COMPOUNDING / AGGREGATION INSIGHT (the deepest finding, JEP-134..158): multi-step inference COMPOUNDS errors;
+  the cure is REDUNDANT AGGREGATION, not deeper chains. The compounding EXPONENT is representation-dependent —
+  symbolic-independent edges decay exponentially, continuous-distributed reps AVERAGE independent noise (sqrt-k,
+  a concrete reason learned representations help), systematic bias accumulates linearly; substrate Hopfield cleanup
+  cures the continuous cases. One principle across structure-learning, reasoning, and learn-from-prose.
 
 ## What is NOT claimed
 Human-level / open conceptual understanding; any novelty (all methods established and named); a single best is-a
