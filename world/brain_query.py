@@ -83,6 +83,10 @@ class BrainQuery:
         m = re.match(r"what causes (\w+)$", s)
         if m:
             return self.why(m.group(1))
+        m = re.match(r"what is (\w+)$", s)               # "what is a poodle?" -> its (most specific) parent class
+        if m:
+            v, sc = self.mem.query(m.group(1), "isa")
+            return v if (v is not None and sc >= self.gate) else None
         m = re.match(r"what does (\w+) (\w+)$", s)
         if m:
             return self.what(m.group(1), m.group(2))
