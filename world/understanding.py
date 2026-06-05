@@ -285,6 +285,8 @@ class UnderstandingEngine:
                 parents = []
                 for item in re.split(r"\s+and\s+", mc.group(2)):
                     item = item.strip().rstrip(".")
+                    # truncate a trailing relative clause: 'a bird that cannot fly' -> 'a bird'
+                    item = re.split(r"\s+(?:that|which|who)\s+", item, maxsplit=1)[0].strip()
                     am = re.match(r"^(?:a\s+kind\s+of\s+|an?\s+|the\s+)([a-z][a-z\- ]*)$", item)
                     if am:                                     # article-led -> a noun parent
                         p = self._norm_phrase(am.group(1))
