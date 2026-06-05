@@ -432,3 +432,29 @@ def test_mereology_distinct_from_isa():
     assert not e.is_a("finger", "body")         # part-of is NOT is-a
     assert not e.is_a("finger", "hand")
     assert e.is_a("finger", "body_part")        # separate is-a graph still works
+
+
+def test_read_from_prose_multirelation():
+    # learn-from-prose: extract is-a + part-of + causal from an encyclopedic passage (JEP-155..159), no transformer
+    e = UnderstandingEngine(seed=159)
+    learned = e.read(
+        "A dog is a mammal. A mammal is an animal. A heart is part of a dog. A cell is part of a heart. "
+        "A virus causes an infection. An infection causes a fever. Mammals such as dogs and cats are common. "
+        "A car is a vehicle."
+    )
+    assert learned["is_a"] >= 4 and learned["part_of"] == 2 and learned["causal"] == 2
+    assert e.is_a("dog", "animal")              # multi-hop is-a, never stated in one sentence
+    assert e.is_a("cat", "animal")              # recovered from 'such as ... are common' (trailing-VP truncation)
+    assert e.part_of("cell", "dog")             # multi-hop part-of
+    assert e.causes_effect("virus", "fever")    # causal chain
+    assert not e.is_a("heart", "animal")        # correct NON-composition: part-of does not imply is-a
+    # 'virus' must NOT be mangled to 'viru' by singularization
+    assert e.is_a("virus", "microbe") is False  # not taught, but the term resolves cleanly (no crash/mangle)
+
+
+def test_norm_not_plural_overstrip():
+    # singularizer must not strip trailing -s from non-plural -us/-is/-ss nouns (JEP-159 bug fix)
+    e = UnderstandingEngine(seed=1)
+    for w in ("virus", "bus", "lens", "basis", "species", "glass"):
+        assert e._norm(w) == w, f"{w} wrongly de-pluralized to {e._norm(w)}"
+    assert e._norm("dogs") == "dog" and e._norm("animals") == "animal"   # real plurals still work
