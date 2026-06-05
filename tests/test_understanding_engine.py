@@ -922,3 +922,13 @@ def test_multidomain_integration():
     proto = np.random.default_rng(0).normal(0, 1, e.feat_dim)
     e.add_prototype("dog", proto)
     assert e.is_a(e.perceive(proto), "animal")
+
+
+def test_temporal_consistency():
+    # JEP-212: temporal cycle ('X before Y' and 'Y before X') is flagged as a contradiction
+    e = UnderstandingEngine(seed=212)
+    e.read("The war happened before the treaty. The treaty happened before the war.")
+    assert any("before" in why and "after" in why for _, _, why in e.consistency_audit())
+    e2 = UnderstandingEngine(seed=2)
+    e2.read("The war happened before the treaty. The treaty came before the peace.")
+    assert e2.consistency_audit() == []                  # a consistent timeline
