@@ -135,7 +135,11 @@ class SubstrateMemory:
             self.module_counts.append(0)
         val = np.roll(self._vec(value), 1) if self.directed else self._vec(value)
         bound = bind(bind(self._vec(entity), self._vec(role)), val)
-        self.modules[-1] = self.modules[-1] + weight * bound
+        # JEP-449: affective memory enhancement — a fact about a strongly-valenced entity is encoded
+        # more strongly (weight scaled by |valence|), so emotional memories resist interference.
+        # Neutral entities (valence 0 / absent) are unchanged, so all prior behaviour is preserved.
+        w_aff = weight * (1.0 + abs(self.valence.get(e, 0.0)))
+        self.modules[-1] = self.modules[-1] + w_aff * bound
         self.module_counts[-1] += 1
         m = len(self.modules) - 1
         ms = self.key_modules.setdefault(self._kk(entity, role), [])
@@ -165,6 +169,21 @@ class SubstrateMemory:
         if self.energy is None:
             self.energy = ValenceReservoirLearner(n_inputs=self.D, n_features=600, seed=self.energy_seed)
         self.energy.experience(self.entity_cloud(entity), float(valence))
+        self._reinforce_entity_facts(entity)             # JEP-449: strengthen already-stored facts of this entity
+
+    def _reinforce_entity_facts(self, entity: str, k: float = 1.0):
+        """JEP-449: add |valence|·binding energy to the entity's already-stored facts, so affect taught AFTER a fact
+        still makes it more memorable (emotional memory enhancement). No-op for weakly/un-valenced entities."""
+        boost = k * abs(self.valence.get(entity, 0.0))
+        if boost <= 0.0:
+            return
+        for (e, r, v) in self.facts:
+            if e != entity:
+                continue
+            v0 = np.roll(self._vec(v), 1) if self.directed else self._vec(v)
+            bnd = bind(bind(self._vec(e), self._vec(r)), v0)
+            mi = (list(self._route(e, r)) or [len(self.modules) - 1])[0]
+            self.modules[mi] = self.modules[mi] + boost * bnd
 
     def _backfill_energy(self):
         """JEP-440: if valence was taught before the energy model existed (e.g. a brain saved pre-JEP-436), train the
