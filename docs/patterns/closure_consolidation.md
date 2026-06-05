@@ -42,18 +42,22 @@ walk. The walk over a consolidated store expands spurious borderline edges and i
 0.85 → 1.0 once skipped). The BFS path is kept for un-consolidated stores (multi-hop still needed there).
 `Conversation.consolidate()` wires this end-to-end; `read_text` calls it automatically after a bulk read.
 
-## Honest residual (JEP-374/376)
+## Analog readout closes the deep floor (JEP-377/378)
 - **Dimension** (auto_scale to keep load ≤ D/4, ~D=8192) restores deep reasoning, but pushing D further does NOT
   reliably help negatives (non-monotonic) — those were a query-side issue, fixed by the BFS-skip above, not by D.
-- **Edge reinforcement does NOT work**: modules are read through `sign()` (binarized), which discards magnitude, so
-  weighting a binding has no effect on cleanup similarity (JEP-376 NULL).
-- A **residual ~3–7% deep-recall floor** remains for the very deepest nodes (those with ~10 materialized ancestors):
-  their heavily-loaded `(x,isa)` bundle dilutes per-value cleanup sim below the gate, and the true/false single-hop
-  similarity distributions genuinely overlap there. Closing it would require a magnitude-preserving / normalized
-  readout (a larger architectural change) — logged as future work.
+- **Edge reinforcement does NOT work** under the default readout: modules are read through `sign()` (binarized), which
+  discards magnitude (JEP-376 NULL).
+- **The faint-edge deep floor was a SIGN-QUANTIZATION artifact, not dilution** (JEP-377): the deepest nodes (~10
+  materialized ancestors) have faint true edges whose magnitude `sign()` throws away. A **magnitude-preserving (analog)
+  readout** — unbind against the L2-normalized raw module sum (`SubstrateMemory.edge_sim_analog`) with its OWN
+  calibrated gate — separates true from near-miss cleanly.
+- **Deployed (JEP-378):** `is_a` over a materialized closure uses the analog readout for closed relations only;
+  everything else stays on sign. Result: deep is-a **1.0** AND negatives **1.0** end-to-end via `Conversation.say()`,
+  persistent across save/load, exceptions respected, suite green.
 
-Net effect of the arc (JEP-370→376): adversarial composition 0.4 → 0.87+, deep is-a 0.85 → 0.93–0.97, negatives → 1.0,
-end-to-end and persistent in the live talk loop.
+Net effect of the arc (JEP-370→378): adversarial composition 0.4 → ~1.0, deep is-a 0.85 → **1.0**, negatives → **1.0**,
+end-to-end and persistent in the live talk loop. Within-domain deep reasoning is error-free at scale (hundreds of
+facts, depth 8).
 
 ## Boundary
 This makes *within-domain* deep reasoning reliable at scale; it does nothing for *open-domain* coverage (the untaught
