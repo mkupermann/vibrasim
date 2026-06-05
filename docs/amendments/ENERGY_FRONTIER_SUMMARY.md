@@ -57,8 +57,11 @@ The energy SIGNAL is not the wall; the wall is **unsupervised non-linear feature
   pre-synaptic activity × node perturbation × one global scalar modulator; no backprop, no weight
   transport, no derivative) ALSO cracks order-3 parity at 1.000 with M=64 and finds the true triple.
   So targeted high-order discovery is achievable with exactly the kind of rule the substrate has
-  primitives for (local plasticity + a global neuromodulator). **Honest caveat:** node perturbation is
-  high-variance and does not scale efficiently — a proof of principle, not an efficient solution.
+  primitives for (local plasticity + a global neuromodulator). **Honest caveat (corrected by JEP-456):**
+  node perturbation is high-variance, BUT at this scale (P=18/M=64) it solves in ≤5000 epochs — the
+  earlier "20 000 epochs / inefficient" framing was overstated, and variance reduction (antithetic)
+  gave no gain because the plain rule was not variance-limited here. Whether it scales to large M/order
+  is a theoretical expectation, not a measured one — the genuinely open part.
 
 **Net frontier statement (updated by the locality ladder).** For an order-k rule with no lower-order
 signal: cheap NON-learning routes fail (greedy climbing, flat/deep random features); targeted routes
