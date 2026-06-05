@@ -90,7 +90,20 @@ class BrainQuery:
                 return False
             if self.mem.contains(a, "hasprop", p, self.gate):
                 return True
+        # antonym reasoning (JEP-420): if x has a property that is the OPPOSITE of p, then x is NOT p.
+        antos = self._opposites(p)
+        if antos:
+            for a in anc:
+                for (q, _) in self.mem.query_all(a, "hasprop", self.gate):
+                    if q in antos:
+                        return False
         return False
+
+    def _opposites(self, w):
+        """Words taught as the opposite of w (symmetric 'opposite' relation), JEP-420."""
+        out = {o for (s, r, o) in self.mem.facts if r == "opposite" and s == w}
+        out |= {s for (s, r, o) in self.mem.facts if r == "opposite" and o == w}
+        return out
 
     def why(self, effect):
         # trace the causal chain transitively (immediate causes first, then their causes) — JEP-400.
@@ -217,6 +230,10 @@ class BrainQuery:
             return self._most_specific_parent("user")
         if s in ("what are you", "what are you?"):
             return self._most_specific_parent("you")
+        m = re.match(r"^what\s+is\s+the\s+opposite\s+of\s+([a-z]+)$", s)   # 'what is the opposite of big?' (JEP-420)
+        if m:
+            o = sorted(self._opposites(m.group(1)))
+            return o[0] if o else None
         m = re.match(r"^where\s+is\s+(?:the\s+)?([a-z]+)$", s)             # 'where is Paris?' -> located_in (JEP-406)
         if m:
             v, sc = self.mem.query(self._sing(m.group(1)), "located_in")
