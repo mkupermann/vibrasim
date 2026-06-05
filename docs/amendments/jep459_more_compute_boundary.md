@@ -28,5 +28,10 @@ whether a wall remains. PASS = the local-learning wall is compute-bound (movable
 "local rules are capable" picture. NULL if k=8 stays ≈ chance despite 4×M and 4× epochs (the wall is
 harder than compute alone fixes). Bars locked; no retuning. No transformer.
 
-## Result
-(filled after the run)
+## Result: ABORTED (not a result) — reprioritized per Michael's directive
+
+The scaled-compute run (M=192, 20000 ep) was still in progress when Michael redirected the work to a
+new-science hunt ("don't work with known"). JEP-459 is a known-methods scaling measurement, so it was
+stopped mid-run to free compute for the native-substrate exploration (NSH-01+). This is an honest
+ABORT, not a NULL/PASS — the high-M boundary question (does more compute push the order-6-8 wall of
+JEP-458 outward?) remains open and can be resumed later. No bars claimed either way.
