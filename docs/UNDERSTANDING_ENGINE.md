@@ -57,9 +57,13 @@ e.is_a(e.perceive(new_bird_features), "animal")          # True
 | 15 | learn relational composition RULES from data, reason with them | JEP-128/129/130 |
 | 16 | **causal reasoning + intervention** (do-operator); **probabilistic** (noisy-OR) | JEP-141/142 |
 | 17 | abduction, diagnosis, planning; temporal persistence; provenance/TMS; spatial frames; **mereology** | JEP-145..150 |
-| 18 | **LEARN FROM PROSE** — `read()` extracts is-a + part-of + causal from a passage (Hearst + bare-NP guard) | JEP-155..159 |
-| 19 | **COMMUNICATE what was learned** — `describe()` multi-relation English profile (closes the loop) | JEP-160 |
-| -- | VALIDATED: property-based SOUND (124/127), fuzz ROBUST (125), SCALABLE to 1000 (126) | JEP-124-127 |
+| 18 | **LEARN FROM PROSE** — `read()` extracts FIVE relation types (is-a, part-of, causal, spatial, comparison) from a passage; 8/8 sentence-variation types; document-scale ~0.93 recall; cross-domain; belief revision | JEP-155..168, 183/185 |
+| 19 | **COMMUNICATE what was learned** — `describe()` multi-relation profile; `respond()` Q&A across all relations; `why?` explanations; `summarize()` a source + flag its inconsistencies | JEP-160/168/173/197/198 |
+| 20 | **RELATION-TYPE INTERACTIONS** — taxonomy interacts correctly with part-of, causal, comparison (each with right semantics + leak guard) | JEP-169/170/186 |
+| 21 | **GROUNDING** — perceive an instance -> reason via prose-learned taxonomy; the developmental loop (perceive->discover->name->read->reason) on toy AND real images; functional grounding from observed interactions | JEP-178/179/187..192 |
+| 22 | **CONSISTENCY** — detect IMPLIED contradictions (inherited negatives); audit a whole source for internal inconsistency | JEP-195/196 |
+| 23 | **ABSTRACT concepts** reason symbolically (grounding is what's special); STRUCTURAL not lexical (novel nonsense-word concepts) | JEP-172/182 |
+| -- | VALIDATED: property-based SOUND, fuzz ROBUST (0 crashes/6000), SCALABLE to 1000, STRUCTURAL, full INTEGRATION test; matured engine re-validated | JEP-124-127, 171/184/194 |
 | -- | UNIFIED: perceive->understand->plan->ACT on conceptual goals; read->understand->communicate on prose | JEP-122/132/160 |
 
 ```python
