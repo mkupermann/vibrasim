@@ -226,6 +226,13 @@ class UnderstandingEngine:
             s = s.strip().rstrip(".")
             if not s:
                 continue
+            # QUANTIFIED subjects (JEP-272): 'All/Every/Each X are Y' -> 'X are Y' (universal affirmative = is-a);
+            # 'No X is Y' -> 'X is not a Y' (universal negative). 'Some' left as-is (existential, not universal).
+            mneg = re.match(r"^no\s+([a-z][a-z0-9\- ]*?)\s+(?:is|are)\s+(?:an?\s+|the\s+)?([a-z][a-z0-9\- ]*)$", s)
+            if mneg:
+                s = f"{mneg.group(1)} is not a {mneg.group(2)}"
+            else:
+                s = re.sub(r"^(?:all|every|each)\s+", "", s)
             # recency coreference: a sentence-initial pronoun ('It is a mammal') -> the last subject (heuristic)
             mp = re.match(r"^(it|they|this|these|he|she)\s+(is|are)\s+(.*)$", s)
             if mp and last_subject is not None:
