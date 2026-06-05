@@ -50,9 +50,17 @@ a modular Hopfield/contrastive-Hebbian EBM):
 - **Noise → the cure** (240 NULL → 241 PASS) — under cue noise, multi-hop chaining COMPOUNDS; per-hop attractor
   CLEANUP is NOT a reliable cure (it can lock in discrete decode errors — sharpens JEP-158); REDUNDANT AGGREGATION
   (independent noisy retrievals + majority vote) IS the regime-independent cure (4-hop 1.00 vs single-path 0.0–0.33).
-So the substrate is the engine's relational MEMORY and INFERENCE engine (store/chain/type/DAG/interaction), online-
-learnable, within the ~20-edge/module capacity, scalable linearly by modules — and it inherits the programme's core
-robustness lesson NATIVELY: aggregation, not cleanup, cures multi-hop compounding under noise. All established
+- **Full engine, robust** (242 PARTIAL → 243 NULL → 244 PASS) — the COMPLETE multi-relation engine (is-a, part-of,
+  causal, comparison, temporal, multi-hop each + the interaction) runs on ONE typed substrate net from one prose
+  passage, matching the symbolic engine 1.00 on both seeds. The fix arc is the discipline in action: a brittle
+  interaction (mis-diagnosed) → aggregation fails (the error was systematic, not random) → the right fix is the
+  ENERGY-GATED chain stop (a diagnosed-lesson recurrence: detect "stored vs untrained key" by energy, not value-
+  overlap, at EVERY such check — chain-root-stop as well as DAG slots).
+So the substrate is the engine's robust relational MEMORY and INFERENCE engine (store/chain/type/DAG/interaction/
+full-multi-relation-from-prose), online-learnable, within the ~20-edge/module capacity, scalable linearly by modules
+— and it inherits the programme's core robustness lesson NATIVELY, with a mapped cure hierarchy: ENERGY-GATE for
+untrained-key detection, AGGREGATION for independent noise, codes/capacity for systematic interference; aggregation,
+not cleanup, cures multi-hop compounding under noise. All established
 (Hopfield CAM + iterated associative recall + VSA binding + Hopfield energy as a stored-vs-spurious detector +
 ensemble voting), named; NO novelty — the value is the demonstrated end-to-end connection + its measured envelope.
 Pattern: docs/patterns/substrate_relational_store.md.

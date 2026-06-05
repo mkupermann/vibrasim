@@ -15,7 +15,12 @@ ESTABLISHED methods (named as such — no novelty); the value is the demonstrate
 3. **RETRIEVE** `(subject, relation)`: clamp KEY = `subject_code ⊙ relation_code`, `relax()` the VALUE slot, decode
    the settled value to the nearest concept code (argmax dot-product) = the object.
 4. **CHAIN (transitive closure)**: re-present the retrieved object as the next KEY and retrieve again. Works with
-   the raw settled bits (no clean-up) OR the decoded clean code — identical within capacity.
+   the raw settled bits (no clean-up) OR the decoded clean code — identical within capacity. **STOP at roots with the
+   ENERGY GATE, not value-overlap** (JEP-243/244): a leaf at the top of a chain has no outgoing edge, but `hop(root)`
+   still returns a clean spurious node — value-overlap can't tell (the value always settles to an attractor), so the
+   chain OVERRUNS into spurious nodes and breaks negatives/leak-guards. Continue a hop only if its settled energy ≤
+   `0.7 × median(stored-pattern energies)` (the same JEP-237 detector). This is the SAME "stored vs untrained key"
+   check as the DAG empty-slot gate — use the energy detector at EVERY such check, not just where it first surfaced.
 
 ## What holds (measured, seeds 42 & 7)
 - **Store** (J232): child→parent recall **1.00**, content-addressable from a **60% partial** cue, untrained control
