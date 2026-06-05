@@ -13,12 +13,22 @@ stable), so a separate program reading the folder reconstructs the identical vec
 pretrained model -- only the substrate's own VSA primitives (world/vsa).
 """
 import os
+import re
 import json
 import hashlib
 import functools
 import numpy as np
 
 from world.vsa import bind, unbind, sim, CleanupMemory
+
+# function words / discourse markers that narrative prose mis-parses into junk SUBJECTS (JEP-413)
+_JUNK_SUBJECTS = {
+    "rather", "so", "thus", "hence", "therefore", "however", "moreover", "furthermore", "indeed", "perhaps",
+    "maybe", "this", "that", "these", "those", "it", "he", "she", "they", "here", "there", "such",
+    "very", "more", "most", "then", "now", "also", "still", "yet", "but", "and", "or", "because", "although",
+    "while", "since", "when", "where", "which", "who", "what", "close", "far", "much", "many", "some", "any",
+    "no", "not", "all", "both", "each", "every", "either", "neither", "one", "two", "first", "second", "next",
+}
 from world.active_learner import ActiveLearner
 
 DEFAULT_D = 4096
@@ -91,7 +101,21 @@ class SubstrateMemory:
         """Store 'entity's role IS value' as bind(entity*role, value) superposed into the current module. When that
         module fills (module_cap), auto-add a fresh module so growth is unbounded (JEP-296). `weight` scales the
         binding's contribution: weight>1 REINFORCES the edge so its cleanup similarity rises (JEP-376) — used to lift
-        faint materialized-closure edges above the decision gate without touching unrelated (negative) probes."""
+        faint materialized-closure edges above the decision gate without touching unrelated (negative) probes.
+
+        JEP-413: universal junk guard at the single choke point through which ALL facts are stored — reject any fact
+        whose entity or value is multi-word (contains a space) or empty. Messy real-book prose mis-parses into junk
+        like ('fred alan wolf', isa, idea); legitimate multi-word values are stored underscore-joined, so this rejects
+        only junk. 'Never wrong capture' (miss > wrong), protecting the no-mistakes guarantee even on real books."""
+        e, v = str(entity).strip(), str(value).strip()
+        if (not e or not v or " " in e or " " in v):
+            return                                                    # reject multi-word/empty junk (JEP-413)
+        # also reject abbreviations/punctuation entities ('m.d', 'ph.d') and function-word subjects ('rather', 'so',
+        # 'this') that narrative prose mis-parses into is-a/part-of junk (JEP-413).
+        if not re.fullmatch(r"[a-z0-9_-]+", e.lower()) or not re.fullmatch(r"[a-z0-9_.-]+", v.lower()):
+            return
+        if e.lower() in _JUNK_SUBJECTS:
+            return
         if self.module_counts[-1] >= self.module_cap:
             self.modules.append(np.zeros(self.D, dtype=np.float64))   # neurogenesis: a new module
             self.module_counts.append(0)
