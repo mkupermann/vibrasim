@@ -6,8 +6,8 @@ diary; newest at the bottom), and the per-experiment `docs/amendments/g*.md`. Th
 of truth — if it disagrees with those, they win. Last updated: 2026-06-05.
 
 ## Highest experiment numbers (check before starting anything)
-- **Substrate physics thread `gNNN`:** completed through **G149**. `ls docs/amendments/g*.md | sort` and read the
-  highest few before proposing a "new" gNNN — much of G30–G149 is already done.
+- **Substrate physics thread `gNNN`:** completed through **G150**. `ls docs/amendments/g*.md | sort` and read the
+  highest few before proposing a "new" gNNN — much of G30–G150 is already done.
 - **Cognition/affect thread `JEP-NNN`:** completed through ~**JEP-476** (clean-room integration audit PASS).
 - Do NOT trust a stale start-of-session git snapshot for the frontier (it caused G47–G49 to be re-derived on
   2026-06-05). Trust `git log` + the highest `g*.md`/`jep*` docs.
@@ -19,7 +19,7 @@ of truth — if it disagrees with those, they win. Last updated: 2026-06-05.
 | Memory (MATTER position) | **POSITIVE, scoped** | Driven-matter position is a selective+persistent multi-bit store with wide spacing (G114–G119); MAINTAINED not static (G120). The one real memory positive. |
 | Communication | **POSITIVE, scoped** | Co-located real-time spatial codec; needs active reset between symbols; NOT transport over distance (G97–G105). |
 | Transport | **scoped** | Free carriers don't cross distance; continuously-driven matter does, slowly (G109–G112). |
-| Computation / optimization | **CLOSED NEGATIVE (2026-06-05)** | G145's lone "genuine physical advantage" REFUTED: greedy baseline was sign-buggy; at scale classical **SA** beats correct greedy, but the **oscillator/vibrations machine ties greedy and loses to SA** (G146–G149). Advantage is the classical algorithm's, not the substrate's. |
+| Computation / optimization | **EQMOD substrate NEGATIVE; adjacent CIM hardware competitive (2026-06-05)** | G145's "8/8" rested on a sign-bugged greedy; the NAIVE oscillator ties correct greedy & loses to SA (G146–G149). But the textbook AHC-CIM (Leleu 2019) BEATS correct greedy & comes within ~0.7% of SA (G150) — a real but *established, adjacent* physical-annealer result, NOT EQMOD. EQMOD's OWN dynamics still can't optimize (G135). SA stays marginally best & simpler. |
 
 ## Programme-wide honest conclusion
 The physics is **decorative everywhere tested**; standard classical methods carry every win. The deliverable was
