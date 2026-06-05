@@ -54,6 +54,9 @@ def main():
     print(f"  Q: is a cell part of a dog?  A: {'Yes' if e3.part_of('cell','dog') else 'No'}  (multi-hop part-of)")
     print(f"  Q: does a virus cause a fever?  A: {'Yes' if e3.causes_effect('virus','fever') else 'No'}  (causal chain)")
     print(f"  Q: is a heart an animal?  A: {'Yes' if e3.is_a('heart','animal') else 'No'}  (correct: part-of is NOT is-a)\n")
+    # conversational Q&A over what it READ — is-a, part-of, causal questions in English (JEP-168)
+    for q in ["is a cell part of a dog?","what causes a fever?","what does a virus cause?"]:
+        print(f"  you> {q}\n  ai > {e3.respond(q)}")
     # COMMUNICATE back what it learned — a coherent multi-relation profile in English (JEP-160)
     print("  you> describe a dog.")
     print(f"  ai > {e3.describe('a dog')}")
