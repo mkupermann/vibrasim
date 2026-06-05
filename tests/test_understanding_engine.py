@@ -1205,3 +1205,13 @@ def test_bare_subject_no_article():
     assert e._art("metal") == "a metal"        # article-led elsewhere -> _countable takes precedence
     assert e._art("dog") == "a dog"            # plural subject 'Dogs' does NOT mark 'dog' no-article
     assert e.respond("does oxygen cause rust?") == "Yes. Oxygen causes rust."   # no 'a rust'
+
+
+def test_mereological_verbs():
+    # JEP-263: 'X contains/consists of Y' -> Y part-of X (whole->part), transitive, not redundantly open
+    e = UnderstandingEngine(seed=263)
+    o = e.read("The body consists of cells. A cell contains a nucleus. Bronze contains copper.")
+    assert e.part_of("cell", "body") and e.part_of("nucleus", "cell")
+    assert e.part_of("nucleus", "body")            # transitive nucleus->cell->body
+    assert e.part_of("copper", "bronze")
+    assert "contains" not in o.get("open", {})     # mereological verb is a FIXED part-of relation, not open

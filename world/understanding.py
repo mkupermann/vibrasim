@@ -297,6 +297,13 @@ class UnderstandingEngine:
                 if self._bare_np(a) and self._bare_np(b):
                     self.tell_part(a, b); learned["part_of"] += 1; last_subject = a
                 continue
+            # mereological containment: 'X contains/consists of/comprises/includes Y' -> Y is part-of X (whole->part) (JEP-263)
+            m = re.match(rf"^{np}\s+(?:contains|consists\s+of|comprises|includes)\s+{np}$", s)
+            if m:
+                whole, part = self._norm_phrase(m.group(1)), self._norm_phrase(m.group(2))
+                if self._bare_np(whole) and self._bare_np(part) and whole not in self._PRONOUNS:
+                    self.tell_part(part, whole); learned["part_of"] += 1; last_subject = whole   # part part-of whole
+                continue
             # NUMERIC attribute: 'X has N Y' / 'X has N <adj> Y' (N a number) -> a quantitative fact (NOT part-of).
             # the attribute may carry modifiers ('4 large moons'); key by the HEAD noun (last word), keep the phrase.
             m = re.match(rf"^{np}\s+(?:has|have)\s+(\d+|{'|'.join(self._NUM_WORDS)})\s+((?:[a-z]+\s+)*[a-z]+)$", s)
@@ -1002,8 +1009,9 @@ class UnderstandingEngine:
             # UNLESS a relational preposition makes it a genuine OPEN relation ('is capital of', 'is located in')
             if w0 in {"is", "are", "was", "were"} and not re.search(r"\b(?:of|in|at|by|to|on|with|from)\b", conn):
                 return True
-            return bool(re.search(r"\b(?:part of|causes|caused|leads to|located in|situated in|found in|before|after)\b", conn)
-                        or conn.endswith("than"))            # part-of / causal / spatial / temporal / comparison
+            return bool(re.search(r"\b(?:part of|causes|caused|leads to|located in|situated in|found in|before|after"
+                                  r"|contains|consists of|comprises|includes)\b", conn)
+                        or conn.endswith("than"))            # part-of / causal / spatial / temporal / comparison / mereo-verbs
         triples = []
         for s in re.split(r"[.;:]\s+", passage.strip()):
             t = re.sub(r"\b(?:a|an|the)\b", " ", s.lower()).strip().rstrip(".")
