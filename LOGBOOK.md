@@ -5342,3 +5342,40 @@ All experiments done or 3x NULL on feedback.
 
 All experiments done or 3x NULL on feedback.
 
+
+## 2026-06-05 — Session arc: energy model delivered + frontier/SQ resolved + new-science hunt (honest NO)
+
+A long autonomous session (~118 pre-registered experiments, all committed/pushed). Three arcs:
+
+**1. Energy-cloud model — BUILT, INTEGRATED, DELIVERED, DURABLE, LIVE (JEP-425→451, 462).** Michael's
+affective "energy clouds with valence": predict valence (425) → learn non-linear affect via reservoir
++RLS (430) → transfers to REAL VSA clouds (433) → live in SubstrateMemory, generalizes to UNTAUGHT
+concepts (436) → durable across save/load (437) → backfills existing brains (440) → grounded in
+PERCEPTION incl. real audio, dissociated from identity (446/447) → affective MEMORY enhancement, live
+(448/449) → inherits through the taxonomy with honest "(inherited from X)" tags + why-explanation
+(450/451). Plus cognition hardening: ability-negation (453, penguin-can't-fly falsehood caught+fixed
+by an integration audit), -oes morphology (455), proper nouns + superlatives (424). Final audit
+(JEP-462): all 16 features compose 16/16, ZERO confident falsehoods, IDENTICAL across save/reload, both
+seeds; verified live in the GUI over HTTP. All established methods (VSA/HRR, reservoir/ELM, RLS,
+Damasio/Hebb/Cahill-McGaugh), named — contribution = substrate-native integration.
+
+**2. Discovery frontier — fully mapped + ATTRIBUTED, with many self-corrections (JEP-438→461).** For
+targeted high-order discovery of a no-low-order-signal rule: non-learning routes (enumeration/random
+features) wall at order-3; fully-LOCAL learned rules (node perturbation) discover to ~order-5-6 then a
+HARD wall by order-8 that is NOT compute (459), NOT width (460: M=512=2x 2^k still chance), but the
+SQ-hardness of parity (461 decisive: GF(2) cracks order-8/10/12 at N=40 where local fails at N=3000/
+M=512). Corrected my own overstatements repeatedly (439 "feature==search cost", 457 "high-order is
+costly", the mistaken JEP-459 "abort").
+
+**3. New-science hunt (Michael: "new math&science, don't work with known; use the research I gave you")
+— honest NO, rigorously earned.** Native-physics: only a MODEST characteristic ~140-atom size (NSH-02,
+explainable). Memory deadlock resisted 3 fresh attacks incl. his Neuron-2026 paced-reactivation paper
+(PR-01/ER-01/ER-02 all NULL; deadlock characterized deeper: the quiet/cull that keeps control blank IS
+what erodes the engram). Best "unexplained" candidate resolved to a known barrier (SQ-hardness). BUT a
+useful CONSTRUCTIVE payoff: energy learning + a bolt-on ALGEBRAIC structure-discovery module escapes
+the SQ wall (HYB-01), robustly decomposes MIXED rules via misclassified-residual mining (HYB-03), and
+tolerates ~10% label noise with a sharp breakdown at the clean-subset-probability threshold (HYB-04/05).
+
+NET: no new science — but the energy model is delivered+durable+live, the frontier is precisely
+attributed, and a working architecture past the fundamental boundary is in hand and characterized.
+The value is the rigorous, self-correcting PROCESS. Summary: docs/amendments/ENERGY_FRONTIER_SUMMARY.md.
