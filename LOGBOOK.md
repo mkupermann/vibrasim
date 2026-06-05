@@ -5138,3 +5138,27 @@ All experiments done or 3x NULL on feedback.
 
 All experiments done or 3x NULL on feedback.
 
+
+## 2026-06-05 — EQMOD-4 Understanding Engine: comprehensive culmination (JEP-152..222, ~71 rungs)
+
+A sustained autonomous arc realized the substrate-legal (NO transformer/LLM/pretrained) Understanding Engine
+(`world/understanding.py`, 88 gated regression tests) to comprehensive coverage of Michael's three verbs from
+prose + perception:
+- **LEARN** — `read()` extracts SEVEN relation types (is-a, part-of, causal, spatial, comparison, temporal,
+  quantitative) at ~0.9 recall / document-scale, revises beliefs, checks CONSISTENCY across taxonomy/numeric/
+  temporal, and is SELF-EXTENSIBLE (`read_open` auto-induces NEW relation types from recurring prose patterns).
+- **UNDERSTAND** — multi-hop over a multi-parent DAG; the full faculty set; the complete relation-interaction matrix
+  (taxonomy x part-of/causal/comparison, each with correct distinct semantics + leak guard); abstract + structural
+  (proven on novel nonsense-word concepts).
+- **COMMUNICATE** — Q&A across all domains (incl. enumeration, superlatives), `why?` across all chains, source
+  summarization with inconsistency-flagging, and MULTI-TURN conversational context ('what about X?').
+- **GROUND** — three complementary sources (appearance from vision on real Fashion-MNIST / names from language /
+  function from observed interactions); the full developmental loop on real images.
+VALIDATED robust (0 crashes/6000, multiple times) + sound + structural + multi-domain integration at document scale.
+Genuine CONCEPTUAL findings: compounding-vs-aggregation universal + representation-dependent exponent; redundancy
+unifies robustness AND generalization; the real-prose parse gate is the GENRE not the extractor; three-sourced
+grounding. predict-calibrate 111/138 (80%, CONVERGED — ~35 consecutive HITs after JEP-181; Michael's 'predictions
+correct eventually' achieved as calibrated uncertainty). Docs: UNDERSTANDING_ENGINE.md (tiers 1..25),
+EQMOD4_FINAL_STATE.md (synthesis), patterns/multidomain_learn_from_sources.md, 4 demos. NOT human-level, NOT novel;
+the working engine + the predict-calibrate discipline are the deliverables. Frontier (all data/constraint-blocked,
+each characterized): real embodied perception, real corpus at scale + the NL paraphrase/genre wall, open generation.
