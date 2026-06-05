@@ -74,3 +74,10 @@ where the information is, and a miss there is a DISCOVERY (each row above came f
 rule). The discipline's value is not perfection-on-novelty but CALIBRATED UNCERTAINTY plus the guarantee that no
 diagnosed lesson recurs. Established practice (forecasting calibration, post-mortems); named; the synthesis is the
 reusable artifact.
+
+## #15 — Never pair non-greedy `+?` with a trailing `s?` when capturing a plural noun (JEP-385/388)
+A regex like `([A-Za-z]+?)s?` to capture "and singularize" a plural noun is a TRAP: the non-greedy `+?` captures the
+shortest string and the explicit `s?` eats the final "s", so "foxes"→"foxe" and "viruses"→"viruse" — and `_singular`
+(which only strips a trailing "s") cannot recover them. Hit twice (passive agent in 385, causal subject in 388).
+**Rule:** capture the FULL word with greedy `([A-Za-z]+)` and let `_singular` do the pluralization (it already handles
+-s/-es/-ies/-xes/-ses correctly). Don't strip plural markers in the regex.
