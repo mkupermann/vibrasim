@@ -40,4 +40,4 @@ f=0.10 = 0.552.
 **BET-112: PASS.** The memory is a real error-correcting attractor with a basin
 radius of ~25 % flipped bits: it pulls a heavily corrupted input back to the clean
 stored pattern. This is content-addressable, robust associative recall — exactly
-the capability the spontaneous substrate could never hold. Plot: `bet112_noise.png`.
+the capability the spontaneous substrate could never hold. Plot: `docs/figures/bet112_noise.png`.

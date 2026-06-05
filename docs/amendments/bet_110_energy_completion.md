@@ -61,7 +61,7 @@ substrate could not: stable, selective, content-addressable recall.
 3D near-real-time viewer: `tools/viz3d_energy.py` (polls `~/.eqmod/energy/state.npz`
 written by `run_bet110_energy.py --demo`) shows the network relaxing into
 attractor valleys and the weights growing over training. Smoke frame:
-`bet110_frame.png`.
+`docs/figures/bet110_frame.png`.
 
 ### Next on this track
 

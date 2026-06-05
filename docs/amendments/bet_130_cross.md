@@ -43,4 +43,4 @@ compositions — more experience keeps helping. That falsifies the saturation gu
 (an honest mis-prediction) but strengthens the core claim: the substrate's
 systematic generalization is bounded by experience, not by a low structural ceiling.
 No re-run / no tuning. Across BET-129+130 (two independent setups, M=14 and M=20) the
-curriculum law replicates and crosses 0.90. See bet130_cross.png.
+curriculum law replicates and crosses 0.90. See docs/figures/bet130_cross.png.
