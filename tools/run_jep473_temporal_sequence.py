@@ -3,11 +3,12 @@ docs/amendments/jep473_temporal_sequence.md.
 """
 import json
 from pathlib import Path
+import tempfile
 from world.conversation import Conversation
 
 
 def run(seed):
-    c = Conversation(seed=seed)
+    c = Conversation(brain_dir=tempfile.mkdtemp(), seed=seed)  # clean-room (lesson #16)
     c.say("First sunrise, then noon, then sunset.")
     return dict(
         transitive=str(c.say("is sunrise before sunset?")),

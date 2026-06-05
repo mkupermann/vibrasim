@@ -4,11 +4,12 @@ docs/amendments/jep468_affective_tension.md.
 """
 import json
 from pathlib import Path
+import tempfile
 from world.conversation import Conversation
 
 
 def run(seed):
-    c = Conversation(seed=seed)
+    c = Conversation(brain_dir=tempfile.mkdtemp(), seed=seed)  # clean-room (lesson #16)
     for s in ["Heroes are good.", "Villains are evil.",
               "A spy is a friend of a hero.", "A spy is a friend of a villain.",
               "A sidekick is a friend of a hero.", "A villain is an enemy of a hero."]:

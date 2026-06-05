@@ -3,11 +3,12 @@ docs/amendments/jep472_temporal_ordering.md.
 """
 import json
 from pathlib import Path
+import tempfile
 from world.conversation import Conversation
 
 
 def run(seed):
-    c = Conversation(seed=seed)
+    c = Conversation(brain_dir=tempfile.mkdtemp(), seed=seed)  # clean-room (lesson #16)
     for s in ["Breakfast happens before lunch.", "Lunch happens before dinner.",
               "The egg comes before the chicken."]:
         c.say(s)
