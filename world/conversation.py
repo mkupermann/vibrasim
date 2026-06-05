@@ -469,6 +469,14 @@ class Conversation:
         if mt:
             a, b = self._singular(mt.group(1).lower()), self._singular(mt.group(3).lower())
             return [], extra + ([(a, "before", b)] if mt.group(2).lower() == "before" else [(b, "before", a)])
+        # temporal 'then' chain (JEP-473): 'First X, then Y, then Z' -> consecutive (·, before, ·) edges.
+        if re.search(r"\bthen\b", t, flags=re.I):
+            tt = re.sub(r"^first\s+", "", t.strip(), flags=re.I).rstrip(".")
+            parts = re.split(r"\s*,?\s*then\s+", tt, flags=re.I)
+            if len(parts) >= 2 and all(re.fullmatch(r"(?:the\s+|a\s+|an\s+)?[A-Za-z]+", p.strip(), flags=re.I)
+                                       for p in parts):
+                it = [self._singular(re.sub(r"^(?:the|a|an)\s+", "", p.strip(), flags=re.I).lower()) for p in parts]
+                return [], extra + [(it[i], "before", it[i + 1]) for i in range(len(it) - 1)]
         # SVO action fact (LAST resort): 'X <verb> Y' -> (X, verb, Y) open relation (JEP-407). Exactly subject+verb+
         # object; verb must not be a copula/auxiliary; subject/object single clean words. Fallback so it never
         # overrides is-a/property/causal/etc.; tight to avoid wrong capture (miss > wrong).
