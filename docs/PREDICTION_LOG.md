@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 154 / predictions 190 (81%). Latest: JEP-275 HIT (cumulative re-validation after 272..274 -- comprehensive doc 12/13=0.92 (the 1 miss is a by-design single-occurrence open relation, not a regression) + fuzz 0 crashes/2000; the engine stays comprehensive + robust).
+Running tally: hits 155 / predictions 191 (81%). Latest: JEP-276 HIT (3+ item comma list of SUBJECTS -- 'Dogs, cats, and horses are mammals' now captures all three (was only 'horses'); subjects split on comma AND 'and', matching the object-list handling; surfaced by a list QA pass).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 At JEP-221 the tally is 110/137 (80%) and has CONVERGED: the OVERALL rate is dragged down by early-programme misses
@@ -217,3 +217,4 @@ honestly informative:
 | JEP-273 | 🔮 hyphenated -ed adjectives as properties (both parsers) + ancestor-property inheritance w/ exception override | PASS — warm-blooded captured, dog/poodle inherit, penguin exception beats 'bird can fly'; 112 tests | HIT | Participial adjectives are properties; category properties distribute to subtypes defeasibly (the property x is-a interaction). |
 | JEP-274 | 🔮 'X results in Y' -> X causes Y + exclude from open; transitive | PASS — cancer->death, smoking->death transitive, no open 'results in'; 112 tests | HIT | 'results in' is an active causal verb (cf passive 'results from', JEP-255). |
 | JEP-275 | 🔮 latest additions (272..274) keep the engine comprehensive (~>=0.9 doc) + robust (0 crashes) | PASS — doc 12/13=0.92 (1 miss = by-design single-occ open relation), fuzz 0/2000; 113 tests | HIT | Cumulative validation: 20 prose fixes leave the engine comprehensive + robust; only by-design open-relation misses. |
+| JEP-276 | 🔮 split subjects on comma+and -> 'Dogs, cats, and horses' all captured; 2-item/single unaffected | PASS — dog/cat/horse->mammal, iron/copper/gold->metal, transitive; 114 tests | HIT | Subject lists needed comma splitting (object lists already had it) -- the fix-in-every-parser lesson for list handling. |
