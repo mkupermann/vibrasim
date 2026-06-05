@@ -5397,3 +5397,12 @@ ACTION: flagged for a future physics pass — either the lateral-inhibition/bind
 altered frequency gating (then these unit tests need updating to the new intended behaviour) or it is a
 real selectivity bug. Not fixed now: it is outside this session's cognition scope and needs the binding-
 change context to resolve correctly (no guessing). Surfaced honestly rather than silently ignored.
+
+### Refinement (same day) — the binding-test failures are LONG-STANDING, not a recent regression
+Bisected the 2 `test_phase2_binding` frequency-gating failures by swapping `world/physics.py` +
+`world/config.py` to older commits: they STILL FAIL before `global_wta_k` (df33b89), before G40
+(be1db30), and back at G35 (4fb27e4). So this is not a recent break -- the frequency-selective
+atom->molecule gating has diverged from these unit tests for MANY sessions. Likely either (a) the binding
+behaviour was intentionally changed long ago and these unit tests were never updated (stale tests), or
+(b) a long-standing selectivity gap. Resolution still needs the binding-logic owner's intent (test-update
+vs fix) -- deliberately not guessed. Tree restored to HEAD (clean); all cognition tests green.
