@@ -656,3 +656,14 @@ def test_grounded_prose_learned_concept():
     assert seen == "dog"
     assert e.is_a(seen, "mammal") and e.is_a(seen, "animal")   # grounded multi-hop through read structure
     assert not e.is_a(seen, "bird")
+
+
+def test_read_nominal_compound_of():
+    # JEP-183: tight 'X of Y' nominal compounds ('form of government') are extractable as concepts
+    e = UnderstandingEngine(seed=183)
+    e.read("Democracy is a form of government. A form of government is a political system. Ice is a state of matter.")
+    assert e.is_a("democracy", "form of government")
+    assert e.is_a("democracy", "political system")     # chains through the X-of-Y concept
+    assert e.is_a("ice", "state of matter")
+    # 'of' is still rejected in longer prepositional fragments (precision preserved)
+    assert not e._bare_np("admissibility of things which")
