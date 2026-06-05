@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 164 / predictions 200 (82%). Latest: JEP-285 HIT (conditional RULES 'If X is a Y, then it is/can Z' -> category Y gets the consequent (inherits to subtypes); 'If an animal is a mammal, then it is warm-blooded' -> dogs are warm-blooded; cracks the structured edge of the conditional genre).
+Running tally: hits 165 / predictions 201 (82%). Latest: JEP-286 HIT (CLOSING THE PERCEPTION GAP, per Michael -- the engine PERCEIVES real Fashion-MNIST images (raw pixels, 0.75 4-class) and REASONS 'is this footwear?' at 0.95 via read prose vs control 0.50; symbol-grounding loop closed on real senses; surfaced+fixed a collective-noun prose bug).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 At JEP-221 the tally is 110/137 (80%) and has CONVERGED: the OVERALL rate is dragged down by early-programme misses
@@ -227,3 +227,4 @@ honestly informative:
 | JEP-283 | 🔮 broaden bare-subject scan to any verb + bare connective-objects -> no article; article-led preserved | PASS — rain/flooding/disease/bacteria article-less, 'a fever' preserved; 120 tests | HIT | Usage assigns article: bare singular mention (subject or connective-object) = no-article; article-led overrides. |
 | JEP-284 | 🔮 newest additions (281..283) keep the engine comprehensive (~1.0 doc) + robust (0 crashes) | PASS — doc 10/10=1.00, fuzz 0/2000; 121 tests | HIT | Cumulative validation: 28 prose fixes leave the engine comprehensive + robust over the declarative construction space. |
 | JEP-285 | 🔮 'If X is a Y, then it <consequent>' -> 'a Y <consequent>' (category rule, inherits) | PASS — mammal->warm-blooded (dogs inherit), bird->fly (robins inherit); 121 tests | HIT | Universal conditional rules are category predication; the structured edge of the if-then genre (full propositional conditionals remain the wall). |
+| JEP-286 | 🔮 engine perceives real images (>=.60) + reasons 'is this footwear?' coarse (>=.85) via read prose | PASS — perceive 0.75, reason 0.95 vs control 0.50, end-to-end; surfaced+fixed collective-noun bug | HIT | Real-sensory->symbolic-reasoning loop closes; coarse-beats-fine (JEP-189); perception is a real-usage check on prose too. |

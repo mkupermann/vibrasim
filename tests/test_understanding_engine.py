@@ -1398,3 +1398,13 @@ def test_conditional_rules():
     assert "fly" in e.properties.get("bird", set())
     assert e.has_property("dog", "warm-blooded")     # inherited dog->mammal
     assert e.respond("can a robin fly?").startswith("Yes")   # inherited robin->bird
+
+
+def test_collective_nouns_isa():
+    # JEP-286: collective '-wear/-ware' nouns are valid is-a parents ('A sandal is footwear')
+    e = UnderstandingEngine(seed=288)
+    e.read("A sandal is footwear. A boot is footwear. A program is software. A shirt is clothing.")
+    assert e.is_a("sandal", "footwear") and e.is_a("boot", "footwear")
+    assert e.is_a("program", "software")        # -ware morphological rule
+    assert e.is_a("shirt", "clothing")
+    assert e._art("footwear") == "footwear"     # collective mass -> no article

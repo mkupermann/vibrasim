@@ -456,7 +456,7 @@ class UnderstandingEngine:
                         if self._bare_np(p) and self._valid_concept(p):
                             parents.append(p)
                     elif (re.fullmatch(r"[a-z]+s", item) and not item.endswith(("ous", "less", "ss"))) \
-                            or item in self._MASS_NOUNS:   # bare PLURAL or MASS noun -> is-a; '-ous/-less' end in -s but are ADJECTIVES ('venomous','harmless')
+                            or item in self._MASS_NOUNS or item.endswith(("wear", "ware")):   # bare PLURAL / MASS / collective '-wear,-ware' noun -> is-a ('footwear','software'); '-ous/-less' are ADJECTIVES
                         p = self._norm_phrase(item)
                         if self._bare_np(p) and self._valid_concept(p):
                             parents.append(p)
@@ -495,7 +495,8 @@ class UnderstandingEngine:
                    "gravity", "friction", "electricity", "momentum", "radiation", "steam", "smoke",
                    "dust", "air", "heat", "sunlight", "gravity", "magnetism", "humidity",
                    "iron", "copper", "gold", "silver", "steel", "aluminum", "aluminium", "bronze", "brass",
-                   "tin", "lead", "zinc", "nickel", "salt", "sugar", "oil", "coal", "rust", "concrete", "cement"}
+                   "tin", "lead", "zinc", "nickel", "salt", "sugar", "oil", "coal", "rust", "concrete", "cement",
+                   "footwear", "eyewear", "outerwear", "underwear", "silverware", "glassware", "tableware"}
     _COUNTABLE_NESS = {"business", "witness", "illness", "likeness", "wilderness", "harness"}
     _NUM_WORDS = ("zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
                   "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen",
