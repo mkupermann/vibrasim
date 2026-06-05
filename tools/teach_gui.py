@@ -59,19 +59,35 @@ def render_letter(ch, rng):
 
 class TeachApp:
     """Tkinter teaching loop. Kept in a class so the experiment can import this module without opening a window."""
-    def __init__(self, learner=None, seed=0):
+    def __init__(self, learner=None, seed=0, brain_dir=None):
         import tkinter as tk
         self.tk = tk
-        self.al = learner or ActiveLearner(tau=0.12)
+        # DURABLE memory (JEP-295): persist what Michael teaches to a folder so it survives close+reopen and GROWS
+        # across sessions. If a learner is injected (the experiment), stay in-memory and don't touch disk.
+        self.sm = None
+        if learner is not None:
+            self.al = learner
+        else:
+            from world.substrate_memory import SubstrateMemory
+            self.brain_dir = brain_dir or os.path.join(os.path.expanduser("~"), ".eqmod", "brain", "teach_gui")
+            if os.path.exists(os.path.join(self.brain_dir, "meta.json")):
+                self.sm = SubstrateMemory.load(self.brain_dir)
+            else:
+                self.sm = SubstrateMemory(tau=0.12)
+            self.al = self.sm.learner
         self.rng = np.random.default_rng(seed)
         self.cur_x = None
         self.cur_truth = None
         self.root = tk.Tk()
         self.root.title("Teach the substrate — letters")
+        self.root.protocol("WM_DELETE_WINDOW", self._on_close)
         self.canvas = tk.Canvas(self.root, width=SIZE * 8, height=SIZE * 8, bg="black")
         self.canvas.pack(padx=10, pady=10)
         self.msg = tk.Label(self.root, text="", font=("Arial", 14), wraplength=SIZE * 8)
         self.msg.pack()
+        taught = sum(len(v) for v in self.al.protos.values())
+        self.mem_lbl = tk.Label(self.root, text=self._mem_text(taught), font=("Arial", 10), fg="#0a7")
+        self.mem_lbl.pack()
         self.btns = tk.Frame(self.root); self.btns.pack(pady=8)
         self.next_btn = tk.Button(self.root, text="Show me a letter", command=self.next_item)
         self.next_btn.pack(pady=4)
@@ -80,6 +96,22 @@ class TeachApp:
         self.sound_btn = tk.Button(self.root, text="I recorded a sound (load .wav)", command=self.load_sound)
         self.sound_btn.pack(pady=2)
         self.next_item()
+
+    def _mem_text(self, n):
+        where = "in memory only" if self.sm is None else "saved to disk — survives restart & grows"
+        return f"Memory: {n} examples learned · {where}"
+
+    def _save(self):
+        """Persist the taught memory so it survives the program closing (JEP-295)."""
+        if self.sm is not None:
+            self.sm.save(self.brain_dir)
+        taught = sum(len(v) for v in self.al.protos.values())
+        if hasattr(self, "mem_lbl"):
+            self.mem_lbl.config(text=self._mem_text(taught))
+
+    def _on_close(self):
+        self._save()
+        self.root.destroy()
 
     def load_sound(self):
         from tkinter import filedialog
@@ -100,6 +132,7 @@ class TeachApp:
             ch = ent.get().strip().upper()[:1]
             if ch:
                 self.al.teach("sound", ch, feat)               # ground the SOUND to the symbol (same 'A' as written)
+                self._save()                                   # durable: survives restart (JEP-295)
                 self.msg.config(text=f"Thank you — I now link that SOUND to '{ch}' (and to the written '{ch}').")
             for w in self.btns.winfo_children():
                 w.destroy()
@@ -147,6 +180,7 @@ class TeachApp:
                 else:                                          # a single letter/symbol
                     self.al.teach("write", ans.upper()[:1], self.cur_x.ravel())
                     self.msg.config(text=f"Thank you — learned this as '{ans.upper()[:1]}'.")
+                self._save()                                   # durable: survives restart (JEP-295)
             self.next_item()
         self.tk.Button(self.btns, text="Teach", command=submit).pack(side="left", padx=4)
         ent.bind("<Return>", lambda e: submit())
@@ -169,6 +203,7 @@ class TeachApp:
 
     def _feedback(self, guessed, correct):
         self.al.confirm("write", self.cur_x.ravel(), guessed, correct)
+        self._save()                                           # durable: survives restart (JEP-295)
         self.msg.config(text=f"Thanks — confirmed '{guessed}'.")
         self.next_item()
 
