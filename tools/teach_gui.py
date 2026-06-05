@@ -29,12 +29,18 @@ SIZE = 28
 LETTERS = string.ascii_uppercase
 
 
-def _center(a):
+def _norm_glyph(a):
+    """Scale+translation normalize: crop to the ink bounding box and resize to SIZExSIZE. Makes a small 'D' and a
+    large 'D' land on the same feature, so corrections STICK and round/stem letters (D,O,B,P) stop colliding by size.
+    (The earlier _center only translated -> a small letter still collided with a large different letter.)"""
+    from PIL import Image
     ys, xs = np.nonzero(a > 0.3)
     if len(xs) == 0:
         return a
-    sy, sx = int(round(SIZE / 2 - ys.mean())), int(round(SIZE / 2 - xs.mean()))
-    return np.roll(np.roll(a, sy, axis=0), sx, axis=1)
+    y0, y1, x0, x1 = ys.min(), ys.max() + 1, xs.min(), xs.max() + 1
+    crop = a[y0:y1, x0:x1]
+    im = Image.fromarray((np.clip(crop, 0, 1) * 255).astype(np.uint8)).resize((SIZE, SIZE), Image.BILINEAR)
+    return np.asarray(im, dtype=np.float64) / 255.0
 
 
 def render_letter(ch, rng):
@@ -46,7 +52,7 @@ def render_letter(ch, rng):
     except Exception:
         font = ImageFont.load_default()
     d.text((int(rng.integers(3, 7)), int(rng.integers(2, 5))), ch, fill=255, font=font)
-    a = _center(np.asarray(img, dtype=np.float64) / 255.0)
+    a = _norm_glyph(np.asarray(img, dtype=np.float64) / 255.0)   # scale-invariant feature
     a += rng.normal(0, 0.06, a.shape)
     return np.clip(a, 0, 1)
 
@@ -118,12 +124,13 @@ class TeachApp:
         if sym is None:
             self.msg.config(text="I have never seen a letter yet. What is this?")
             self._ask_truth()
-        elif conf < self.al.tau:
-            self.msg.config(text=f"I'm UNSURE — is this the letter '{sym}'?  (confidence {conf:.0%})")
-            self.tk.Button(self.btns, text="Correct", command=lambda: self._feedback(sym, True)).pack(side="left", padx=6)
-            self.tk.Button(self.btns, text="Not correct", command=lambda: self._ask_truth(sym)).pack(side="left", padx=6)
         else:
-            self.msg.config(text=f"I'm confident this is '{sym}' (confidence {conf:.0%}).  [click 'Show me a letter']")
+            # ALWAYS offer correction -- even when 'confident'. A confidently-WRONG guess must be fixable,
+            # otherwise the tool can't be taught out of an early mistake (Michael's D-called-P bug).
+            sure = "UNSURE — is this" if conf < self.al.tau else "fairly sure this is"
+            self.msg.config(text=f"I'm {sure} the letter '{sym}'  (confidence {conf:.0%}).  Am I right?")
+            self.tk.Button(self.btns, text="Yes, correct", command=lambda: self._feedback(sym, True)).pack(side="left", padx=6)
+            self.tk.Button(self.btns, text="No — let me correct it", command=lambda: self._ask_truth(sym)).pack(side="left", padx=6)
 
     def _ask_truth(self, guessed=None):
         for w in self.btns.winfo_children():
