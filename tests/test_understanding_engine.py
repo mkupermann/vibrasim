@@ -798,3 +798,16 @@ def test_open_relation_learning():
     assert not e.relation_true("berlin", "is capital of", "france")    # wrong object
     assert not e.relation_true("germany", "is capital of", "berlin")   # order matters (role-binding)
     assert e.learn_relation(["A is bigger than B.", "C is part of D."]) is None   # inconsistent -> no template
+
+
+def test_read_open_auto_induction():
+    # JEP-201: read_open auto-induces NEW relations from repeated patterns in a passage (self-extensible)
+    e = UnderstandingEngine(seed=201)
+    learned = e.read_open("Paris is the capital of France. London is the capital of England. Rome is the capital of Italy. "
+                          "Einstein discovered relativity. Darwin discovered evolution. A dog is a mammal. A cat is a mammal.")
+    assert learned.get("is capital of") == 3 and learned.get("discovered") == 2
+    assert e.relation_true("rome", "is capital of", "italy")          # auto-learned, queryable
+    assert e.relation_true("darwin", "discovered", "evolution")
+    assert e.extract_relation("Berlin is the capital of Germany.") == ("berlin", "is capital of", "germany")
+    assert e.relation_true("berlin", "is capital of", "germany")      # new instance of an auto-learned relation
+    assert UnderstandingEngine(seed=2).read_open("Paris is the capital of France. A dog barks loudly.") == {}  # no repetition

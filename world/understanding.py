@@ -851,6 +851,34 @@ class UnderstandingEngine:
                 return fact
         return None
 
+    def read_open(self, passage: str) -> dict:
+        """Self-extensible reading: AUTO-INDUCE open relations from a passage — collect (subject, connective, object)
+        triples, find connectives recurring >=2 times that are NOT one of the 5 fixed relations, induce those
+        templates (learn_relation) and extract all their instances. Returns {relation: count}. NO transformer."""
+        def is_fixed(conn):
+            if conn in {"is", "are", "was", "were", "has", "have"}:
+                return True                                  # is-a copula / 'has' part-of
+            return bool(re.search(r"\b(?:part of|causes|caused|leads to|located in|situated in|found in)\b", conn)
+                        or conn.endswith("than"))            # part-of / causal / spatial / comparison
+        triples = []
+        for s in re.split(r"[.;:]\s+", passage.strip()):
+            t = re.sub(r"\b(?:a|an|the)\b", " ", s.lower()).strip().rstrip(".")
+            toks = t.split()
+            if len(toks) >= 3 and toks[0] not in self._PRONOUNS:
+                conn = " ".join(toks[1:-1])
+                if not is_fixed(conn):
+                    triples.append((toks[0], conn, toks[-1], s))
+        from collections import Counter
+        conn_counts = Counter(c for _, c, _, _ in triples)
+        learned = {}
+        for conn, n in conn_counts.items():
+            if n >= 2:                                       # a relation must recur to be inducible (not incidental)
+                sents = [orig for _, c, _, orig in triples if c == conn]
+                res = self.learn_relation(sents)
+                if res:
+                    learned[res[0]] = res[1]
+        return learned
+
     def summarize(self, max_items: int = 6) -> str:
         """Generate a coherent multi-sentence SUMMARY of what was learned (e.g. from a read source): the top
         categories, the main taxonomic groupings, and any part-of / causal structure. Generative communication of the
