@@ -1228,3 +1228,13 @@ def test_does_have_possession_question():
     e2 = UnderstandingEngine(seed=265)
     e2.read("A spider has 8 legs. A dog has 4 legs.")
     assert e2.respond("does a spider have more legs than a dog?") == "Yes."   # 'more...than' not shadowed
+
+
+def test_multiword_verbphrase_temporal():
+    # JEP-267: a multi-word verb phrase before 'before/after' ('was signed before') is captured; transitive
+    e = UnderstandingEngine(seed=267)
+    e.read("The war started before the treaty. The treaty was signed before the peace.")
+    assert e._order_holds("before", "war", "treaty")
+    assert e._order_holds("before", "treaty", "peace")     # 'was signed before' (2-word VP) captured
+    assert e._order_holds("before", "war", "peace")        # transitive war->treaty->peace
+    assert not e._order_holds("before", "peace", "war")
