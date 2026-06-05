@@ -1477,6 +1477,16 @@ class UnderstandingEngine:
             if (x, y) in na:                                       # 'does a dog have legs?' -> the numeric attribute
                 return f"Yes. {self._art(x).capitalize()} has {na[(x, y)]} {y if na[(x, y)] == 1 else y + 's'}."
             return f"No. Not that I was told."
+        # OPEN-RELATION object-side WH: 'what does a carnivore eat?' -> the OBJECT of a learned verb relation (JEP-270)
+        m = re.match(r"what\s+do(?:es)?\s+(?:(?:an|a|the)\s+)?(\w+)\s+(\w+)", q)
+        if m and getattr(self, "learned_rels", None):
+            subj, verb = self._norm(m.group(1)), m.group(2).lower()
+            rel = next((r for r in self.learned_rels if r in (verb, verb + "s", verb + "es")), None)
+            if rel:
+                objs = [o for s, r, o in self.facts if s == subj and r == rel]
+                if objs:
+                    return f"{self._art(subj).capitalize()} {rel} {self._art(objs[0])}."
+                return f"I don't know what {self._art(subj)} {rel}."
         # OPEN-RELATION WH question: 'what is the capital of France?' -> subject of a learned relation with that object
         mo = re.match(r"what\s+(.+)", q)
         if mo and getattr(self, "learned_rels", None):
