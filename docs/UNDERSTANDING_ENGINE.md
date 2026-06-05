@@ -56,8 +56,11 @@ e.is_a(e.perceive(new_bird_features), "animal")          # True
 | 14 | learn from OBSERVATION -> self-taught taxonomy; cross-situational naming | JEP-113/116/117 |
 | 15 | learn relational composition RULES from data, reason with them | JEP-128/129/130 |
 | 16 | **causal reasoning + intervention** (do-operator); **probabilistic** (noisy-OR) | JEP-141/142 |
+| 17 | abduction, diagnosis, planning; temporal persistence; provenance/TMS; spatial frames; **mereology** | JEP-145..150 |
+| 18 | **LEARN FROM PROSE** — `read()` extracts is-a + part-of + causal from a passage (Hearst + bare-NP guard) | JEP-155..159 |
+| 19 | **COMMUNICATE what was learned** — `describe()` multi-relation English profile (closes the loop) | JEP-160 |
 | -- | VALIDATED: property-based SOUND (124/127), fuzz ROBUST (125), SCALABLE to 1000 (126) | JEP-124-127 |
-| -- | UNIFIED: perceive->understand->plan->ACT on conceptual goals | JEP-122/132 |
+| -- | UNIFIED: perceive->understand->plan->ACT on conceptual goals; read->understand->communicate on prose | JEP-122/132/160 |
 
 ```python
 # learning through dialogue (the capstone):
@@ -72,8 +75,10 @@ e.explain("is a poodle a living thing?")   # "Yes. A poodle is a dog, a dog is a
 This is 100% on a **simple, controlled, parseable** language with **given/learned-from-features** prototypes. It is
 the **foundation to scale FROM**, not human-level understanding. The named open frontier (deliberately outside the
 engine's contract):
-- **Parse at scale** — dense real prose (Boole) yields almost no structure with classic extraction (JEP-89); the
-  no-transformer rule forbids learned extractors. This is the hard gate.
+- **Parse at scale** — the gate is the GENRE, not the extractor (JEP-155/156): encyclopedic/descriptive prose works
+  (`read()` ~0.87 precision with Hearst + bare-NP), but dense logic/argument prose (Boole) yields almost no structure
+  even with the same patterns. The remaining gate: a real encyclopedic CORPUS (needs authorization) + the no-
+  transformer rule forbidding learned extractors for messier registers.
 - **Unsupervised structure learning** — concepts/relations are still given/told, not discovered from raw experience
   (JEP-69/70 NULL).
 - **Open dialogue / free generation** — communication is template-based on the domain, not open-ended.
