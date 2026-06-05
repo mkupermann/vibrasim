@@ -1143,3 +1143,15 @@ def test_ous_adjective_not_isa():
     assert not e.is_a("snake", "harmless")     # '-less' likewise
     assert e.is_a("dog", "mammal")             # genuine plural-noun is-a unaffected (no regression)
     assert e.is_a("cat", "feline")
+
+
+def test_adjectival_property_capture():
+    # JEP-258: 'X is <adjective>' -> a PROPERTY (not is-a); 'is X <adj>?' answered from properties
+    e = UnderstandingEngine(seed=258)
+    e.read("The cobra is venomous. A dog is friendly. Dogs are mammals.")
+    assert "venomous" in e.properties.get("cobra", set())
+    assert "friendly" in e.properties.get("dog", set())
+    assert e.respond("is a cobra venomous?") == "Yes. A cobra is venomous."
+    assert e.respond("is a dog friendly?") == "Yes. A dog is friendly."
+    assert not e.is_a("cobra", "venomous")             # still NOT is-a
+    assert e.is_a("dog", "mammal")                      # genuine is-a unaffected
