@@ -226,6 +226,13 @@ class UnderstandingEngine:
                     self.tell(f"a {a} is not a {b}."); learned["is_a"] += 1
                     last_subject = a
                 continue
+            # spatial containment: 'X is located in Y' / 'X is in Y' -> X part-of Y (geographic/spatial whole)
+            m = re.match(rf"^{np}\s+is\s+(?:located\s+in|situated\s+in|found\s+in)\s+{np}$", s)
+            if m:
+                a, b = self._norm_phrase(m.group(1)), self._norm_phrase(m.group(2))
+                if a not in self._PRONOUNS and self._bare_np(a) and self._bare_np(b):
+                    self.tell_part(a, b); learned["part_of"] += 1; last_subject = a
+                continue
             # part-of: 'X is part of Y'
             m = re.search(rf"\b{np}\s+is\s+part\s+of\s+{np}$", s)
             if m:
@@ -240,7 +247,8 @@ class UnderstandingEngine:
                 if whole not in self._PRONOUNS and self._bare_np(whole) and self._valid_concept(whole):
                     added = False
                     for obj in re.split(r"\s+and\s+|,\s*", m.group(2)):
-                        part = self._norm_phrase(re.sub(r"^(?:a|an|the)\s+", "", obj.strip()))
+                        obj = re.sub(r"^(?:a|an|the|many|some|several|few|most|two|three|four|five)\s+", "", obj.strip())
+                        part = self._norm_phrase(obj)
                         if self._bare_np(part) and self._valid_concept(part) and part != whole:
                             self.tell_part(part, whole); learned["part_of"] += 1; added = True
                     if added:
