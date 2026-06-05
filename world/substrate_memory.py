@@ -99,6 +99,23 @@ class SubstrateMemory:
         flat = int(np.argmax(scores))
         return names[flat % len(names)], float(scores.flat[flat])
 
+    def edge_sim(self, entity: str, role: str, value: str):
+        """Similarity that (entity, role, value) is a stored edge — max over modules of the cleaned retrieval vs the
+        value vector. Works for MULTI-valued relations (causal/property) where several values share one key."""
+        key = bind(self._vec(entity), self._vec(role))
+        vv = self._vec(value)
+        best = -1e9
+        for m in range(len(self.modules)):
+            r = self._mem(m) * key
+            if self.directed:
+                r = np.roll(r, -1)
+            best = max(best, float(r @ vv / self.D))
+        return best
+
+    def contains(self, entity: str, role: str, value: str, gate: float):
+        """Membership probe for a (possibly multi-valued) relation: is `value` bound to (entity, role)?"""
+        return self.edge_sim(entity, role, value) >= gate
+
     # ---- perceptual facts (taught letters/sounds) ----
     def teach_percept(self, modality: str, symbol: str, x):
         self.learner.teach(modality, symbol, np.asarray(x, dtype=np.float64))
