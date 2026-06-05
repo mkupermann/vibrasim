@@ -207,6 +207,24 @@ class SubstrateMemory:
     def recognize(self, modality: str, x):
         return self.learner.guess(modality, np.asarray(x, dtype=np.float64))
 
+    def compact(self):
+        """Rebuild from LIVE facts only, reclaiming capacity from resolved corrections (JEP-334). A direct positive
+        fact that a negation overrides is dropped together with that now-moot negation; standalone negations
+        (exceptions over INHERITED facts) are kept. Returns a fresh compacted SubstrateMemory; answers are preserved."""
+        facts = set(self.facts)
+        dead = set()
+        for (pos, neg) in (("isa", "not_isa"), ("hasprop", "not_hasprop")):
+            for (s, r, o) in list(facts):
+                if r == neg and (s, pos, o) in facts:        # a resolved DIRECT correction -> both die
+                    dead.add((s, pos, o)); dead.add((s, neg, o))
+        live = [f for f in self.facts if f not in dead]
+        new = SubstrateMemory(D=self.D, tau=self.learner.tau, module_cap=self.module_cap, directed=self.directed)
+        for (a, r, b) in live:
+            new.add_fact(a, r, b)
+        new.sentences = list(self.sentences)
+        new.learner = self.learner
+        return new
+
     # ---- persistence ----
     def save(self, d: str):
         os.makedirs(d, exist_ok=True)
