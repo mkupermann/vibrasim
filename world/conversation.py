@@ -8,7 +8,8 @@ no transformer, no pretrained model.
 import os
 import re
 
-QUESTION_STARTS = ("is ", "are ", "can ", "does ", "do ", "what ", "why ", "who ", "how ", "where ", "which ")
+QUESTION_STARTS = ("is ", "are ", "can ", "does ", "do ", "what ", "why ", "who ", "how ", "where ", "which ",
+                   "tell me ", "describe ")          # treat 'tell me about X' / 'describe X' as questions to answer
 
 
 class Conversation:
