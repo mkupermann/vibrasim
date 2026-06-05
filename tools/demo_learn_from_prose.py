@@ -51,6 +51,14 @@ def main():
     print(f"    ai > (after)  is a salmon a fish? {e.respond('is a salmon a fish?')}")
     print(f"    ai > (after)  what is a salmon?  {e.respond('what is a salmon?')}\n")
 
+    print("[5] It SUMMARIZES what it learned, and FLAGS a source that contradicts itself:\n")
+    print("    you> summarize what you learned.")
+    print(f"    ai > {e.summarize()}\n")
+    bad = UnderstandingEngine(seed=99)
+    bad.read("A whale is a mammal. A mammal is not a fish. A whale is a fish.")   # an inconsistent source
+    print('    you> (read an inconsistent source) "A whale is a mammal. A mammal is not a fish. A whale is a fish."')
+    print(f"    ai > {bad.summarize()}\n")
+
     print("=== All of the above used only substrate-legal symbolic machinery — no transformer, no pretrained model. ===")
     print("Honest scope: works on encyclopedic/descriptive prose (~0.9 recall, high precision); dense logic/argument")
     print("prose and the long tail of NL constructions remain the no-transformer frontier. See docs/UNDERSTANDING_ENGINE.md.")
