@@ -125,6 +125,33 @@ The full conceptual case sits in [`docs/CONCEPT.md`](docs/CONCEPT.md). The first
 
 > *Phase 2 climax — t ≈ 5.5 s under the `session-3b` calibration. Multiple atoms (large white spheres) and the first di-atomic molecule.*
 
+### Gallery — recall and learning
+
+**Associative recall as energy descent (EQMOD-2 energy memory).** A stored pattern is cued with a
+corrupted input and the network relaxes into the matching attractor — a Hopfield-style energy
+descent on the substrate's own bridge graph (the G140 thread; established associative-memory
+dynamics, named as such).
+
+![energy memory — noisy cue](docs/figures/showcase_1_cue.png)
+
+> *Cue: 30 % of bits flipped, overlap with the target pattern 0.59 (t = 0). Red/blue = node activation.*
+
+![energy memory — settling](docs/figures/showcase_2_settling.png)
+
+> *Settling: the state slides downhill toward the nearest stored attractor.*
+
+![energy memory — recalled](docs/figures/showcase_3_recalled.png)
+
+> *Recalled: slid into the energy valley, overlap with the target 1.00 — clean content-addressable recall.*
+
+**Generalization is a curriculum law.** Systematic generalization to never-seen symbol combinations
+scales with the *number of compositions experienced*, not with dimension or normalization — "learns
+from every interaction" made literal and measured (BET-129/130; established VSA + online readout).
+
+![curriculum law](docs/figures/bet129_curriculum.png)
+
+> *Held-out accuracy on novel pairs vs. compositions seen online: 20 → 0.68, 140 → 0.88, asymptoting toward the 0.90 bar.*
+
 ---
 
 ## What this is
