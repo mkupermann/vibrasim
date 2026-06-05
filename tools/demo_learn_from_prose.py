@@ -59,6 +59,14 @@ def main():
     print('    you> (read an inconsistent source) "A whale is a mammal. A mammal is not a fish. A whale is a fish."')
     print(f"    ai > {bad.summarize()}\n")
 
+    print("[6] It is SELF-EXTENSIBLE — it learns a NEW relation type (beyond is-a/part-of/causal) from examples:\n")
+    e3 = UnderstandingEngine(seed=7)
+    rels = e3.read_open("Paris is the capital of France. London is the capital of England. Rome is the capital of Italy.")
+    print('    you> "Paris is the capital of France. London is the capital of England. Rome is the capital of Italy."')
+    print(f"    ai > (auto-induced a new relation: {rels})")
+    print(f"    you> (apply it to a new sentence) \"Berlin is the capital of Germany.\"  -> {e3.extract_relation('Berlin is the capital of Germany.')}")
+    print(f"    you> is Berlin the capital of Germany?  ->  {'Yes' if e3.relation_true('berlin','is capital of','germany') else 'No'}\n")
+
     print("=== All of the above used only substrate-legal symbolic machinery — no transformer, no pretrained model. ===")
     print("Honest scope: works on encyclopedic/descriptive prose (~0.9 recall, high precision); dense logic/argument")
     print("prose and the long tail of NL constructions remain the no-transformer frontier. See docs/UNDERSTANDING_ENGINE.md.")
