@@ -123,6 +123,26 @@ def test_contradiction_detection_vs_exception():
     assert not any(c[0] == "penguin" for c in conflicts)    # exception NOT flagged
 
 
+def test_brain_query_interface_and_parser():
+    from world.brain_query import BrainQuery
+    mem = _taxonomy()
+    mem.add_fact("bird", "hasprop", "fly")
+    mem.add_fact("penguin", "not_hasprop", "fly")
+    for c, e in [("smoking", "cancer")]:
+        mem.add_fact(c, "causes", e); mem.add_fact(e, "caused_by", c)
+    mem.add_fact("cat", "eats", "fish")
+    with tempfile.TemporaryDirectory() as d:
+        mem.save(d)
+        bq = BrainQuery(SubstrateMemory.load(d))
+    assert bq.is_a("poodle", "animal") is True
+    assert bq.is_a("poodle", "fish") is False
+    assert bq.has_property("penguin", "fly") is False     # exception
+    assert bq.why("cancer") == ["smoking"]
+    assert bq.ask("is a poodle an animal?") is True
+    assert bq.ask("can a penguin fly?") is False
+    assert bq.ask("what does a cat eat?") == ["fish"]     # verb-morphology (eat->eats)
+
+
 def test_noise_tolerance_improves_with_width():
     # JEP-315: wider D tolerates more cue corruption
     def recall(D, f, n=40):
