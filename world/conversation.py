@@ -140,6 +140,12 @@ class Conversation:
                     else "I don't have enough connected knowledge to draw yet — teach me a few facts first.")
         if self.is_question(text):
             from world.brain_query import BrainQuery
+            # lazy consolidation (JEP-403): if statements added facts since the last query, consolidate now so deep
+            # multi-hop is reliable for interactive (GUI) teaching — cheap because it runs once per question, not per
+            # statement. Only when there is is-a structure worth consolidating.
+            if getattr(self, "_dirty", False) and any(r == "isa" for (a, r, b) in self.sm.facts):
+                self.consolidate()
+            self._dirty = False
             text = self._resolve_pronoun(text)
             self._track_subject(text)
             self._last_question = text
@@ -340,6 +346,7 @@ class Conversation:
 
     def _learn_one(self, sentence):
         before = len(self.sm.facts)
+        self._dirty = True                            # mark store dirty -> lazy-consolidate before the next question
         sents, extra = self._normalize_for_learning(sentence)
         for st in sents:
             self.sm.learn_sentence(st, self.eng)
@@ -452,6 +459,7 @@ class Conversation:
         # reinforce=1.0: edge reinforcement is INEFFECTIVE here because modules are read through sign() (binarized),
         # which discards magnitude weighting (JEP-376 NULL). auto_scale (D) is the lever that helps.
         self.sm = self.sm.consolidate_closure(("isa",), auto_scale=True)
+        self._dirty = False                           # freshly consolidated (JEP-403)
         return self
 
     def save(self):
