@@ -819,6 +819,15 @@ def test_describe_open_relation_rendering():
     e.read_open("Paris is the capital of France. London is the capital of England.")
     e.read("Paris is a city.")
     d = e.describe("paris")
-    assert "is capital of france" in d and "is capital ofs" not in d   # multi-word relation rendered verbatim
+    assert "is capital of France" in d and "is capital ofs" not in d   # multi-word relation, France a proper noun (JEP-203)
     e2 = UnderstandingEngine(seed=2); e2.tell("the dog chases the cat.")
     assert "chases the cat" in e2.describe("dog")                       # single-verb relation unaffected
+
+
+def test_proper_noun_generation():
+    # JEP-203: proper nouns (mid-sentence capitals) render without article + capitalized ('France', not 'a france')
+    e = UnderstandingEngine(seed=203)
+    e.read_open("Paris is the capital of France. London is the capital of England.")
+    assert "france" in e.proper_nouns and "england" in e.proper_nouns
+    assert e._art("france") == "France" and e._art("dog") == "a dog"   # proper capitalized/no-article; common unaffected
+    assert "is capital of France" in e.describe("paris")
