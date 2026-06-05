@@ -46,19 +46,22 @@ def induce(examples):
 _ARTICLES = {"a", "an", "the"}
 
 
-def apply_template(tpl, sentence, flex_articles=False):
+def apply_template(tpl, sentence, flex_articles=False, synonyms=None):
     """Return the (s, r, o) fact extracted from `sentence` if it matches `tpl`, else None. With flex_articles, an
-    article (a/an/the) at a fixed position matches ANY article — function-word abstraction (JEP-355)."""
+    article matches ANY article (JEP-355). With `synonyms` (a taught word->canonical map, JEP-356), a fixed word
+    matches its synonyms — separately-learned equivalence knowledge that induction itself does not invent."""
     if tpl is None:
         return None
-    t = _toks(sentence)
+    syn = synonyms or {}
+    t = [syn.get(w, w) for w in _toks(sentence)]
     if len(t) != tpl["n"]:
         return None
     for pos, word in tpl["fixed"].items():
+        word = syn.get(word, word)
         if flex_articles and word in _ARTICLES:
             if t[pos] not in _ARTICLES:                       # must be SOME article
                 return None
-        elif t[pos] != word:                                  # fixed words must match in order
+        elif t[pos] != word:                                  # fixed words must match (after synonym normalisation)
             return None
     fact = []
     for kind, v in tpl["mapping"]:
