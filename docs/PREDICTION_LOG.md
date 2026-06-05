@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 129 / predictions 164 (79%). Latest: JEP-249 HIT (the substrate gives GRADED CONFIDENCE — fact support (restatement count) deepens the attractor monotonically (Spearman 1.0, 26-28% deeper s8 vs s1); a genuine capability beyond the binary symbolic engine, the EBM-native form of redundancy).
+Running tally: hits 129 / predictions 165 (78%). Latest: JEP-250 NULL (the substrate does NOT natively flag contradiction by energy frustration — a contradicted key gets 2x the training so it is DEEPER not shallower (the JEP-249 support effect confounds), and conflicting patterns interfere; negation/contradiction stay SYMBOLIC, the noted limit confirmed by test).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 At JEP-221 the tally is 110/137 (80%) and has CONVERGED: the OVERALL rate is dragged down by early-programme misses
@@ -191,3 +191,4 @@ honestly informative:
 | JEP-247 | 🔮 capacity scales ~linearly with value-slot size (cap/M ~0.5 const, M=40 ~20, sharp cliff at scale) | all PASS (M=40/60/80 -> 20/30/~42, cap/M 0.50, recall@cap+4 ~0.03) | HIT | Heteroassociative capacity scales linearly with value-slot size; the linear-scaling claim verified, not asserted. |
 | JEP-248 | 🔮 energy separates direct-true/false (AUC>=.90), transitive NOT low-energy (memory boundary) | all PASS (AUC 1.00, acc 1.00, energy direct -89 / false -39 / transitive -44, no FP transitive) | HIT | The EBM has two native query modes: single-shot energy-scoring for direct facts, iterated relaxation for transitive closure; doesn't generalize to unstated edges. |
 | JEP-249 | 🔮 fact support lowers energy monotonically (spearman>=.80, distinguishable extremes) -> graded confidence | all PASS (spearman 1.00, energy -93->-117 over support 1->8, 0 inversions, no saturation, all recalled) | HIT | The EBM gives evidence-calibrated graded confidence (more support->deeper minimum); a real benefit beyond binary symbolic, the EBM form of redundancy. |
+| JEP-250 | 🔮 contradiction (X->Y and X->notY) frustrates -> higher energy + lower confidence, energy-separable | NULL — contradicted is DEEPER (2x training confound, JEP-249), confidence only seed7, conflicting patterns interfere (J250d fail) | MISS | Didn't carry JEP-249 (support deepens energy) forward as a confound for unequal-pattern designs; negation/consistency stay symbolic, not native to the positive-edge store. |
