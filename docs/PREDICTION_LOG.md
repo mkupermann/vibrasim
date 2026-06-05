@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 104 / predictions 131 (79%). Latest: JEP-215 HIT (superlative comparison — 'what is the biggest/oldest?').
+Running tally: hits 105 / predictions 132 (80%). Latest: JEP-216 HIT (matured engine through 215 re-validated ROBUST — 0 crashes/6000 across newest capabilities; calibration crosses 80%).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 The OVERALL 73% is dominated by early-programme misses (surface-form bugs, structure-learning difficulty mis-estimates).
@@ -153,3 +153,4 @@ Predictions ARE converging WITHIN a settled domain, and the residual misses are 
 | JEP-213 | 🔮 large multi-domain document, high accuracy, no interference at scale | 12/12 across all domains, consistency clean; found+fixed 'has 2' spurious open induction | HIT | Full engine correct at document scale with clean domain separation. |
 | JEP-214 | 🔮 'what happened first/last?' -> source/sink of before-order | famine first, peace last; partial-order honestly reported | HIT | Extends temporal from yes/no to superlative ordering. |
 | JEP-215 | 🔮 'what is the biggest?' -> top of comparison order (superlative->comparative map) | elephant biggest, grandfather oldest | HIT | Superlative comparison (parallels superlative temporal); regular morphology only. |
+| JEP-216 | 🔮 newest capabilities (numeric/temporal/superlative/open-WH) still robust | 0 crashes/6000 across read+read_open+9 queries+audit+summarize+describe | HIT | Additions 206..215 preserve robustness; matured engine solid through 215; calibration crosses 80%. |
