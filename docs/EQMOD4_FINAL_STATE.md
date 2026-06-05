@@ -12,9 +12,11 @@ genuine outputs are the WORKING ENGINE, a handful of real CONCEPTUAL findings, a
   extracts, queries, and answers natural questions about them ('what is the capital of France?' -> 'Paris').
 - **UNDERSTAND** — multi-hop inference over a multi-parent DAG; the full faculty set (Boolean, three-valued,
   quantification, hypothetical, analogy, causal+intervention, probabilistic, temporal, provenance, mereology,
-  abduction, diagnosis, planning); and the COMPLETE relation-interaction matrix — taxonomy interacts correctly with
+  abduction, diagnosis, planning); the COMPLETE relation-interaction matrix — taxonomy interacts correctly with
   part-of, causal, and comparison, each with its right semantics (parts distribute to subtypes, effects don't) and a
-  leak guard.
+  leak guard; plus QUANTITATIVE understanding ('X has N Y' -> 'how many?'/numeric comparison) and TEMPORAL ordering
+  ('X before/after Y', transitive). All domains compose in one engine (a multi-domain integration guard), with
+  CONSISTENCY checking over both taxonomy and quantities.
 - **COMMUNICATE** — conversational Q&A across all relation types, multi-relation English profiles, "why?"
   explanations of the reasoning chain, learning-through-dialogue, belief revision.
 - **GROUND** — a concept's grounding draws on THREE complementary sources: APPEARANCE from vision (reliable coarse
