@@ -265,6 +265,10 @@ class BrainQuery:
             if v is not None and sc >= self.gate:
                 return " ".join(w.capitalize() for w in str(v).split("_"))
             return "I don't know that yet — teach me and ask again."
+        # JEP-468: affective ambivalence — "is/does X (feel) conflicted/ambivalent/torn?" -> Heider imbalance
+        m = re.match(r"^(?:is|does)\s+(?:a\s+|an\s+|the\s+)?(\w+)\s+(?:feel\s+)?(conflicted|ambivalent|torn)$", s)
+        if m:
+            return bool(getattr(self.mem, "is_ambivalent", lambda *_: False)(self._sing(m.group(1))))
         # JEP-450: explain INHERITED affect — "why is X <affect-word>?" -> the valenced is-a ancestor
         m = re.match(r"^why\s+(?:is|are)\s+(?:a\s+|an\s+|the\s+)?(\w+)\s+(\w+)$", s)
         if m and (m.group(2) in _AFFECT_QWORDS):
