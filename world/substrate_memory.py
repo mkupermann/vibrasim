@@ -237,6 +237,35 @@ class SubstrateMemory:
                     seen.add(b); q.append((b, ns, hops + 1))
         return None
 
+    def _signed_valence_set(self, entity: str, max_hops: int = 6):
+        """JEP-468: collect ALL propagated valences reachable through signed relations (sign-product x each valenced
+        target). Returns the set of signs ({-1.0}, {1.0}, {-1.0,1.0}=AMBIVALENT, or empty)."""
+        from collections import deque
+        out = set()
+        q = deque([(entity, 1.0, 0)]); seen = {entity}
+        while q:
+            e, sign, hops = q.popleft()
+            if hops >= max_hops:
+                continue
+            for (a, r, b) in self.facts:
+                if a == e and r in self._SIGN:
+                    ns = sign * self._SIGN[r]
+                    bv = self.valence.get(b)
+                    if bv is None:
+                        anc = self._valenced_ancestor(b)
+                        bv = anc[1] if anc is not None else None
+                    if bv is not None:
+                        out.add(1.0 if ns * bv > 0 else -1.0)
+                    if b not in seen:
+                        seen.add(b); q.append((b, ns, hops + 1))
+        return out
+
+    def is_ambivalent(self, entity: str):
+        """JEP-468: True iff the entity is reachable as BOTH positive and negative through signed relations
+        (Heider imbalance / conflicting energy)."""
+        s = self._signed_valence_set(entity)
+        return (1.0 in s) and (-1.0 in s)
+
     def predict_valence(self, entity: str):
         """Affect of an entity: own taught value, else INHERITED from the nearest valenced is-a ancestor (JEP-450),
         else the energy model's GENERALIZED prediction from the feature-cloud (JEP-436). None if nothing applies."""
