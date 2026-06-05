@@ -23,6 +23,26 @@ publishable, no-LLM result.
 - **D. The creativity wall (JEP-332):** revisit only if A–C succeed — whether learned structure ever yields genuine
   novelty, or recombination remains the ceiling (likely the latter; we'll prove it either way).
 
+## Results so far (all pre-registered, all predictions HIT)
+- **JEP-354 PASS** — construction induction: learn a sentence pattern from 2 examples, apply to unseen (1.0).
+- **JEP-355 PASS** — naive induction memorises literal words (0.0 on article change); function-word abstraction
+  generalises (1.0). A step from slots toward structure.
+- **JEP-356 PASS** — the synonym wall: pure induction canNOT invent equivalence (0.0 on "tamed" vs "domesticated");
+  separately-TAUGHT equivalence routes through (1.0). **Key finding: the route is COMPOSITIONAL.**
+- **JEP-357 PASS** — self-extending reading wired into the live Conversation; teach 2 examples → reads that form
+  by itself.
+- **JEP-358 PASS** — INTERACTIVE: when it can't parse, it ASKS the teacher and learns the form live (talk.py + web
+  GUI). Human-in-the-loop made real.
+- **JEP-359 PASS** — facts from taught constructions are fully queryable (who/what/by). Loop closed.
+
+### The honest synthesis (the real result)
+Closing the messy-text gap without an LLM is **compositional and teacher-coupled**, not a single mechanism: the
+system *learns constructions* from examples + *learns equivalences* from examples + *fills gaps by asking* — and
+where knowledge is fundamentally missing, a **human supplies it**. Michael's teaching-in-the-loop turns out to BE
+the mechanism. It genuinely self-extends (template-level + function-word abstraction); it does NOT reach human-level
+open-domain understanding or creativity (those walls, JEP-351/332, stand and are mapped). Open frontiers: deep
+structural generalisation across templates (word order, embedding) and self-directed gap-filling at scale.
+
 ## Rules (unchanged)
 No LLM / transformer / pretrained. Pre-register the prediction AND most-likely failure before each run. Record
 PASS/NULL/PARTIAL honestly; never move a bar. Name established methods (anti-unification, template induction,
