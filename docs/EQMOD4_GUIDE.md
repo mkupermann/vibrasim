@@ -71,6 +71,12 @@ local TD = the substrate's BTSP) -> value/MPC planning -> adaptation. Robust to 
 - LEARN-FROM-SOURCES: the real-prose parse gate is the GENRE, not the extractor (JEP-155/156) — encyclopedic prose
   yields ~0.90-recall taxonomy with classic Hearst+NP-chunking; dense logic/argument prose (Boole) yields almost
   none. The engine learns multi-relation structure from a passage and reasons multi-hop over it, no transformer.
+- GROUNDED CONCEPT LEARNING draws on THREE complementary sources at different levels (JEP-187..193): APPEARANCE from
+  vision gives reliable COARSE categories (real Fashion-MNIST, 0.87) but blurs fine ones; NAMES from language sharpen
+  the fine distinctions (0.72 vs vision-only 0.54); FUNCTION from observing INTERACTIONS recovers categories that
+  cross-cut appearance (usage-profile clustering 1.00 where appearance gives 0.50). The full developmental loop
+  (perceive -> discover -> name -> read structure -> reason) composes on real images. Functional grounding is
+  demonstrated from (synthetic) interaction observation; the residual is REAL embodied perception.
 - THE COMPOUNDING / AGGREGATION INSIGHT (the deepest finding, JEP-134..158): multi-step inference COMPOUNDS errors;
   the cure is REDUNDANT AGGREGATION, not deeper chains. The compounding EXPONENT is representation-dependent —
   symbolic-independent edges decay exponentially, continuous-distributed reps AVERAGE independent noise (sqrt-k,
