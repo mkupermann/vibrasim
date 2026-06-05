@@ -42,21 +42,3 @@ Implemented and verified (regression: conversation 10/10 + substrate_memory 14/1
 Net: 5 of 6 pre-registered sub-cases pass; the proper-noun bug (Mars→mar) and superlatives are fixed and tested.
 Established rule-based normalization, named; no new science.
 
-## Status (2026-06-05): NOT YET IMPLEMENTED — verified still-open gap (not superseded)
-
-Re-checked the pre-registered cases against current code; they genuinely still fail (so this is a real
-open gap, distinct from the JEP-414/415 head-extraction work which it predates):
-- "Mars has two moons" / "Mars is a planet" → stored as `(mar, has_moons, 2)` / `(mar, isa, planet)`
-  — the proper noun is over-singularized (Mars → **mar**); "is Mars a planet?" → No, "how many moons
-  does Mars have?" → don't-know. **J424a unmet.**
-- "Jupiter is the largest planet" → "what is the largest planet?" → don't-know. Superlatives are not
-  stored/queried. **J424b unmet.**
-- "The Milky Way is a galaxy" → "is the Milky Way a galaxy?" → don't-know. The multi-word proper noun
-  is not joined (rejected by the junk guard). **J424b unmet.**
-
-This is a real correctness/coverage gap. The clean fix is gated on verb agreement (proper-noun
-singular subjects appear with singular verbs: "Mars has/is …" → keep "Mars"; "Dogs are …" → singularize
-"dog"), plus a superlative rule and a multi-word-proper-noun join. Deferred to a focused
-implementation (low-risk, additive, tested against the full cognition suite) so it is not rushed
-during an unrelated long-running compute experiment (JEP-459). Recorded honestly as OPEN, not silently
-dropped.
