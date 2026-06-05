@@ -95,7 +95,36 @@ not new science. Three NULLs in the arc were my own design/instrument flaws (431
 imbalance, 434 noise-scale), each caught, diagnosed, corrected, never bar-tuned; two (435, 439) were
 genuine conceptual corrections recorded against consistency.
 
-## Where this could go (a real, hard direction — not a knob)
-The escape from C(P,k) without backprop is the e-prop / equilibrium-propagation frontier: a LOCAL
-credit-assignment rule that targets interaction terms. That is genuine open research, flagged here as
-the next-level problem, not attempted as a quick variant.
+## FINAL CONCLUSION — the new-science hunt + frontier, fully resolved (JEP-459→461 + NSH/PR/ER + HYB-01→05)
+(This supersedes the earlier "where this could go" note, which is now stale — the open direction WAS
+pursued.)
+
+**1. The frontier is fully and correctly attributed across all three axes.** For targeted high-order
+discovery of a rule with NO low-order signal:
+- non-learning routes (enumeration / random features) wall at **order 3** (C(P,k); JEP-438/439);
+- a fully-LOCAL learned rule (node perturbation — the substrate's own kind) discovers exactly through
+  **~order 5–6**, then hits a HARD wall by **order 8** that is NOT compute (JEP-459: 4× compute fixes the
+  order-6 soft edge but not order-8), NOT width (JEP-460: M=512 = 2× the 2^k width still chance), but the
+  **statistical-query hardness of parity** (JEP-461, decisive: GF(2) elimination cracks order-8/10/12 at
+  N=40 where node perturbation fails at N=3000/M=512). A famous KNOWN barrier — the parity is trivial for
+  the right (algebraic) algorithm, hard only for local/correlational ones.
+
+**2. The constructive escape architecture (the useful deliverable).** Energy/local learning + a bolt-on
+ALGEBRAIC structure-discovery module: it escapes the SQ wall (HYB-01), ROBUSTLY decomposes MIXED rules by
+mining the local learner's own misclassified residual (HYB-03), and tolerates label noise up to **~10%**
+with a sharp, interpretable breakdown governed by clean-subset probability (HYB-04/05). Actionable for the
+energy model: keep the local energy learning, add an algebraic module for the SQ-hard parts.
+
+**3. The new-science verdict — honest NO, rigorously earned.** Studying our own substrate as a novel
+system gave only a MODEST native regularity (characteristic ~140-atom structure size, explainable by
+valence-saturated shells — NSH-01/02); the memory deadlock resisted three fresh attacks including
+Michael's Neuron-2026 paced-reactivation paper (PR-01/ER-01/ER-02, all NULL, the deadlock characterized
+one level deeper); and the single best "unexplained" candidate resolved to a known barrier (SQ-hardness).
+So: **no new science** — but the energy model's fundamental boundary is precisely located and a working,
+fully-characterized architecture past it is in hand.
+
+**Honest meta.** Many self-corrections recorded over consistency (439, 445/456, 457, the JEP-459 mistaken
+"abort", HYB-02 fragile isolation, HYB-04 LPN over-pessimism). The value is the rigorous process — chase
+the anomaly, eliminate explanations, correct yourself with data — and the precise, defensible map it
+produced, not a manufactured breakthrough. Established methods throughout (VSA/HRR, reservoir/ELM, RLS,
+node perturbation / feedback alignment, GF(2) parity learning, SQ-hardness — Kearns, LPN), all named.
