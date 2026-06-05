@@ -220,6 +220,14 @@ class UnderstandingEngine:
                         if self._bare_np(kid) and self._valid_concept(kid):
                             self.tell(f"a {kid} is a {parent}."); learned["is_a"] += 1
                 continue
+            # COMPARISON / ordering: 'X is bigger/older/... than Y' -> the order relation (a 5th relation type)
+            m = re.match(rf"^{np}\s+(?:is|are)\s+(?:more\s+)?([a-z]+)\s+than\s+{np}$", s)
+            if m:
+                x, comp, y = self._norm(m.group(1)), m.group(2).lower(), self._norm(m.group(3))
+                if x not in self._PRONOUNS and len(x) > 1 and len(y) > 1:
+                    self.tell(f"a {x} is {comp} than a {y}."); learned["comparison"] = learned.get("comparison", 0) + 1
+                    last_subject = x
+                continue
             # NEGATION / correction: 'X is not a/an Y' -> route to tell() (retracts the belief + records a negative
             # fact), so a correcting passage from a source REVISES prior beliefs (belief revision from prose)
             m = re.match(rf"^{np}\s+is\s+not\s+an?\s+([a-z]+)$", s)

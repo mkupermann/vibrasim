@@ -697,3 +697,14 @@ def test_full_integration_end_to_end():
     assert e.respond("is justice a vegetable?").startswith("I don't know")     # epistemic humility
     e.read("A virus is not a fever.")                    # (consistent; just exercises the negation path)
     assert e.causes_effect("virus", "fever")             # causal unaffected by an is-a negation
+
+
+def test_read_comparison_relation():
+    # JEP-185: read() extracts comparison/ordering ('X is bigger than Y') — the 5th relation type
+    e = UnderstandingEngine(seed=185)
+    out = e.read("An elephant is bigger than a dog. A dog is bigger than a cat. A cat is bigger than a mouse. A dog is a mammal.")
+    assert out["comparison"] == 3
+    assert e.respond("is an elephant bigger than a dog?") == "Yes."
+    assert e.respond("is an elephant bigger than a mouse?") == "Yes."     # transitive (3-hop) from prose
+    assert e.respond("is a mouse bigger than an elephant?").startswith("Not")
+    assert e.is_a("dog", "mammal")                                        # is-a unaffected (no interference)
