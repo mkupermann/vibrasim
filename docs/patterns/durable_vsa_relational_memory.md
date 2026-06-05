@@ -37,6 +37,15 @@ substrate-native assembly + the measured limits, not new mathematics.
    similarity (derived from data, never tuned on the test). Multi-valued relations (causal, property) use
    `contains(entity, role, value, gate)` = max-over-modules edge similarity ≥ gate.
 
+## Reasoning operations supported (all over the persistent store, validated vs the engine / generated ground truth)
+Single-step recall, membership (`contains`), multi-hop transitive climb (is-a, part-of, located-in; routed,
+scales to ~4600 facts/46 modules @0.93–0.95), set-valued DAG climb (`query_all` + BFS), cross-relation INHERITANCE
+(is-a climb ∘ relation; property + part, both directions), NEGATION + defeasible exceptions (most-specific wins),
+ABDUCTION (reverse 'why?' via a stored inverse edge), CONTRADICTION detection (direct double-assertion, distinct
+from exceptions), symmetric & transitive relations, ANALOGY (Kanerva record-mapping), and INDUCTION of a relation's
+algebra (symmetry/transitivity) from its fact pattern or K labeled examples → auto-apply. Noise: dimension is the
+noisy-cue lever (D=8192 tolerates ~20% cue corruption; redundancy can't fix shared-cue noise).
+
 ## Bridging a symbolic engine (JEP-299/300)
 
 The Understanding Engine's learned graphs (`parents`, `part_of_g`, `causes`, `properties`) bridge in directly via
