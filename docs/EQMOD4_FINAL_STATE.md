@@ -71,9 +71,11 @@ NATIVELY, with a mapped cure hierarchy: ENERGY-GATE for untrained-key detection,
 codes/capacity for systematic interference, GEOMETRIC EMBEDDINGS for inductive generalization; aggregation, not
 cleanup, cures multi-hop compounding under noise. The honest boundary: the attractor store is memory+deduction (not
 induction), with no native negation/contradiction (those stay symbolic, tested in JEP-250); the genuine benefit
-beyond symbolic is graded plausibility/confidence, not an accuracy win. VALIDATED SOUND at scale (JEP-251: 0.998
-match to the symbolic closure over 50 random taxonomies × 2 seeds, 0 systematic leaks; residual = occasional
-non-systematic retrieval flakes, aggregation-curable) — paralleling the symbolic engine's JEP-124 soundness. All established
+beyond symbolic is graded plausibility/confidence, not an accuracy win. VALIDATED SOUND at scale across the FULL relation vocabulary
+(JEP-251: is-a 0.998 match over 50 random taxonomies × 2 seeds, 0 systematic leaks; JEP-252: is-a/part-of/causal/
+comparison/temporal each 1.00 over 30 chains × 2 seeds, 0 systematic AND 0 cross-relation leaks — typed binding
+isolates relations at scale; residual = occasional non-systematic retrieval flakes, aggregation-curable) —
+paralleling the symbolic engine's JEP-124 soundness. All established
 (Hopfield CAM + iterated associative recall + VSA binding + Hopfield energy as a stored-vs-spurious detector +
 ensemble voting), named; NO novelty — the value is the demonstrated end-to-end connection + its measured envelope.
 Pattern: docs/patterns/substrate_relational_store.md.
