@@ -360,7 +360,7 @@ class Conversation:
         """Consolidate the durable store so DEEP questions are answered reliably (JEP-370/371): materialize the
         transitive is-a closure -> multi-hop is-a becomes single-hop, removing per-hop compounding. Idempotent and
         exception-safe. Called automatically after a bulk read_text; safe to call by hand too."""
-        self.sm = self.sm.consolidate_closure(("isa",))
+        self.sm = self.sm.consolidate_closure(("isa",), auto_scale=True)
         return self
 
     def save(self):
