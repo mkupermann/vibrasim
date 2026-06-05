@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 70 / predictions 96 (73%). Latest: JEP-180 HIT (developmental loop boundary: perception is the bottleneck, gentle degradation; caught a non-discriminating-probe test flaw).
+Running tally: hits 70 / predictions 97 (72%). Latest: JEP-181 MISS (matured read() on Boole extracted FEWER not more — stricter guards; genre gate conclusively confirmed, ~0 genuine knowledge).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 The OVERALL 73% is dominated by early-programme misses (surface-form bugs, structure-learning difficulty mis-estimates).
@@ -118,3 +118,4 @@ Predictions ARE converging WITHIN a settled domain, and the residual misses are 
 | JEP-178 | 🔮 perceive an instance -> classify into prose-learned taxonomy (binding works) | perception 1.00, grounded multi-hop 'is it an animal?' 1.00 | HIT | Unifies learn-from-prose + grounding; toy perception caveat, binding mechanism is the contribution. |
 | JEP-179 | 🔮 developmental loop composes (cluster->name->read->reason), clustering the weak link | purity 1.00, classify 1.00, taxonomic 1.00 (favorable regime) | HIT | Human developmental pattern end-to-end: form concept from experience, learn what it is from language, reason. Toy perception caveat. |
 | JEP-180 | 🔮 loop degrades SHARPLY as clusters merge, perception the bottleneck | downstream tracks purity (0.93@noise2.0); perception IS the bottleneck, but degradation GENTLE | HIT | Mechanism right; over-predicted sharpness (high-D clustering robust). Test-design lesson: use a DISCRIMINATING probe. |
+| JEP-181 | 🔮 matured read() extracts MORE than JEP-155's 326 from Boole, low precision | 52 facts (FEWER — stricter guards), ~0 genuine; genre gate conclusive | MISS | A more PRECISE extractor extracts FEWER on wrong-genre text, not more (precision/recall tradeoff). Core genre-gate claim confirmed. |
