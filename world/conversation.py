@@ -293,6 +293,21 @@ class Conversation:
                 referenced.add(b)
         return [c for c in sorted(referenced) if c not in defined and c not in self.ROOTS]
 
+    def curiosity_question(self):
+        """Self-directed learning (JEP-361): the most-connected undefined concept the brain wants explained, as a
+        question, or None when nothing is unclear. Prioritises by reference count (the gap most worth filling)."""
+        from collections import Counter
+        g = self.gaps()
+        if not g:
+            return None
+        ref = Counter()
+        for (a, r, b) in self.sm.facts:
+            ref[a] += 1
+            if r in ("isa", "partof"):
+                ref[b] += 1
+        top = max(g, key=lambda c: (ref[c], c))
+        return top
+
     READY_FACTS = 6                                      # "once it is ready" (Michael rule #1): enough connected facts
 
     def _open_ended(self, text, subject):
