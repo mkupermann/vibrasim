@@ -1111,3 +1111,13 @@ def test_multiword_how_many_question():
     e.read("Water has 2 hydrogen atoms. A dog has 4 legs.")
     assert e.respond("how many hydrogen atoms does water have?") == "Water has 2 hydrogen atoms."  # multi-word
     assert e.respond("how many legs does a dog have?") == "A dog has 4 legs."                       # no regression
+
+
+def test_passive_causal_extraction():
+    # JEP-255: passive 'X is caused by Y' / 'X results from Y' -> Y causes X (subject is the effect)
+    e = UnderstandingEngine(seed=255)
+    e.read("Rust is caused by oxygen. Erosion results from water. A virus causes a fever.")
+    assert e.causes_effect("oxygen", "rust")       # passive 'is caused by' -> swapped
+    assert e.causes_effect("water", "erosion")     # 'results from' -> swapped
+    assert e.causes_effect("virus", "fever")       # active still works
+    assert not e.causes_effect("rust", "oxygen")   # the swap is directional, not symmetric

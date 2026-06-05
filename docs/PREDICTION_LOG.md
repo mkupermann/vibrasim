@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 133 / predictions 169 (79%). Latest: JEP-254 HIT (multi-word attribute in the 'how many X' question — 'how many hydrogen atoms does water have?' -> 'Water has 2 hydrogen atoms'; completes the multi-word handling across all three numeric parsers (capture/comparison/question), the fix-in-every-parser lesson; surfaced by real-usage QA on a new chemistry passage).
+Running tally: hits 134 / predictions 170 (79%). Latest: JEP-255 HIT (passive causal 'X is caused by Y' / 'X results from Y' -> Y causes X, with the cause/effect swap; 'Rust is caused by oxygen' -> oxygen causes rust; no spurious is-a/open leak, directional; surfaced by the new-domain QA pass).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 At JEP-221 the tally is 110/137 (80%) and has CONVERGED: the OVERALL rate is dragged down by early-programme misses
@@ -196,3 +196,4 @@ honestly informative:
 | JEP-252 | 🔮 all relation types sound at scale (>=0.98 each, 0 systematic, 0 cross-relation leak) | all PASS (every type 1.00, 0 systematic FP, 0 cross-relation leak) | HIT | Typed chaining + energy gate is relation-agnostic and correct for the full relation set; typed binding isolates relations at scale. |
 | JEP-253 | 🔮 substrate-driven English Q&A matches symbolic >=0.90; three-verb loop closes on substrate | all PASS (string-match 1.00 both seeds, verdicts 1.00, well-formed, depth-5 end-to-end) | HIT | Reusing the engine's renderer on the substrate chain gives string-identical English; substrate chain order matches symbolic naturally. |
 | JEP-254 | 🔮 multi-word 'how many X' question keyed by head noun fixes it, no regression (parallels 229/231) | PASS — 'hydrogen atoms' -> '2 hydrogen atoms', single-word unchanged; 96 tests green | HIT | The multi-word fix was missing from the 3rd parser (question); fix a surface pattern in EVERY parser (error-class 1/8). |
+| JEP-255 | 🔮 passive 'X is caused by Y' -> Y causes X (swap), no is-a/open leak, active unaffected | PASS — rust<-oxygen, erosion<-water, active intact, directional; 97 tests green | HIT | Passive-voice causal needs the cause/effect swap; the 'caused' keyword keeps it out of open relations, _bare_np out of is-a. |
