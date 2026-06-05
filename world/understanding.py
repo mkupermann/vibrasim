@@ -813,6 +813,44 @@ class UnderstandingEngine:
             frontier = nxt; d += 1
         return sorted(dist, key=lambda c: (dist[c], c))   # nearest cause first
 
+    def learn_relation(self, examples: list):
+        """OPEN-RELATION learning: induce a relational template from example sentences that share a surface pattern
+        ('Paris is the capital of France', 'London is the capital of England' -> relation 'is capital of'), store the
+        example facts, and register the template for extraction. Returns (relation, n) or None if the examples don't
+        share ONE consistent connective. NO transformer — pure surface-pattern induction (needs a consistent pattern;
+        paraphrase variation is out of scope, the no-transformer wall)."""
+        pats = []
+        for s in examples:
+            t = re.sub(r"\b(?:a|an|the)\b", " ", s.lower()).strip().rstrip(".")
+            toks = t.split()
+            if len(toks) >= 3:
+                pats.append((toks[0], " ".join(toks[1:-1]), toks[-1]))   # (subject, connective, object)
+        conns = {c for _, c, _ in pats}
+        if not pats or len(conns) != 1:
+            return None
+        rel = conns.pop()
+        if not hasattr(self, "learned_rels"):
+            self.learned_rels = set()
+        self.learned_rels.add(rel)
+        for s, _, o in pats:
+            fact = (self._norm(s), rel, self._norm(o))
+            if fact not in self.facts:
+                self.facts.append(fact); self._fact_vecs.append(self._bind(*fact))
+        return rel, len(pats)
+
+    def extract_relation(self, sentence: str):
+        """Apply learned relation templates (learn_relation) to a NEW sentence; store + return (s, rel, o) or None."""
+        t = re.sub(r"\b(?:a|an|the)\b", " ", sentence.lower()).strip().rstrip(".")
+        toks = t.split()
+        if len(toks) >= 3:
+            subj, conn, obj = toks[0], " ".join(toks[1:-1]), toks[-1]
+            if conn in getattr(self, "learned_rels", set()):
+                fact = (self._norm(subj), conn, self._norm(obj))
+                if fact not in self.facts:
+                    self.facts.append(fact); self._fact_vecs.append(self._bind(*fact))
+                return fact
+        return None
+
     def summarize(self, max_items: int = 6) -> str:
         """Generate a coherent multi-sentence SUMMARY of what was learned (e.g. from a read source): the top
         categories, the main taxonomic groupings, and any part-of / causal structure. Generative communication of the
