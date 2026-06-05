@@ -841,7 +841,16 @@ class UnderstandingEngine:
         if causes:
             cx = sorted(causes)[0]; cy = sorted(causes[cx])[0]
             sents.append(f"And some things cause others — for example, {self._art(cx)} causes {self._art(cy)}.")
-        return " ".join(sents)
+        # honest source assessment: flag any internal contradictions found (cf. consistency_audit)
+        audit = self.consistency_audit()
+        if audit:
+            x, c, _ = audit[0]
+            note = (f"But I noticed an inconsistency: {self._art(x)} is said to be {self._art(c)}, which conflicts "
+                    f"with what else I was told")
+            if len(audit) > 1:
+                note += f" (and {len(audit) - 1} other contradiction{'s' if len(audit) > 2 else ''})"
+            sents.append(note + ".")
+        return " ".join(s[0].upper() + s[1:] if s else s for s in sents)
 
     @classmethod
     def _join_phrases(cls, items):
