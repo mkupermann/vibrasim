@@ -143,34 +143,52 @@ class Conversation:
         return w
 
     def _normalize_for_learning(self, s):
-        """Rewrite common encyclopedic forms into engine-parseable ones (JEP-348). Returns (sentence, extra_facts)."""
+        """Rewrite common encyclopedic forms into engine-parseable ones (JEP-348/349). Returns (sentences, extra)."""
         extra = []
         t = s.strip()
         # 'is a kind/type/sort of' -> 'is a'
         t = re.sub(r"\bis\s+(an?)\s+(?:kind|type|sort)\s+of\b", r"is \1", t, flags=re.I)
-        # numeric possession: 'A dog has four/4 legs' -> add (dog, has_<noun>, N)
+        # numeric possession: 'A dog has four/4 legs' -> (dog, has_legs, N)
         m = re.search(r"\b([A-Za-z]+)\s+has\s+(\w+)\s+([a-z]+s)\b", t, flags=re.I)
         if m:
-            subj = self._singular(m.group(1).lower())
-            cnt = m.group(2).lower()
+            subj = self._singular(m.group(1).lower()); cnt = m.group(2).lower()
             num = self._NUMW.get(cnt, cnt if cnt.isdigit() else None)
             if num is not None and subj not in ("a", "an", "the"):
-                extra.append((subj, f"has_{m.group(3).lower()}", str(num)))   # full noun -> e.g. has_legs
-        # plural is-a: 'Dogs are carnivores' / 'Dogs are domesticated animals' -> 'A dog is a <head noun>'
+                extra.append((subj, f"has_{m.group(3).lower()}", str(num)))
+        # locational: 'Paris is (located) in France' -> (paris, located_in, france)
+        m = re.match(r"^(?:the\s+)?([A-Za-z]+)\s+is\s+(?:located\s+)?in\s+(?:the\s+)?([A-Za-z]+)\.?$", t, flags=re.I)
+        if m:
+            extra.append((m.group(1).lower(), "located_in", m.group(2).lower()))
+        # relative clause: 'A X, which is a Y, <rest>' -> 'A X is a Y.' + 'A X <rest>.'
+        m = re.match(r"^(?:a|an|the)\s+([a-z]+),\s+which\s+is\s+(an?)\s+([a-z]+),\s+(.+?)\.?$", t, flags=re.I)
+        if m:
+            x, art, y, rest = m.group(1).lower(), m.group(2), m.group(3).lower(), m.group(4).strip()
+            return [f"A {x} is {art} {y}.", f"A {x} {rest}."], extra
+        # conjunction subject: 'Cats and dogs are mammals' / 'A cat and a dog are mammals' -> two sentences
+        m = re.match(r"^(?:a\s+|an\s+)?([a-z]+)s?\s+and\s+(?:a\s+|an\s+)?([a-z]+)s?\s+are\s+(?:a\s+)?(.+?)\.?$",
+                     t, flags=re.I)
+        if m:
+            a1 = self._singular(m.group(1).lower()); a2 = self._singular(m.group(2).lower())
+            head = self._singular(m.group(3).strip().split()[-1].lower())
+            art = "an" if head[0] in "aeiou" else "a"
+            return [f"A {a1} is {art} {head}.", f"A {a2} is {art} {head}."], extra
+        # plural is-a: 'Dogs are carnivores' -> 'A dog is a carnivore'
         m = re.match(r"^([A-Z][a-z]+)s\s+are\s+(?:a\s+)?(.+?)\.?$", t)
         if m and " " not in m.group(1):
-            subj = self._singular((m.group(1)).lower())
-            obj_head = self._singular(m.group(2).strip().rstrip(".").split()[-1].lower())  # head noun
+            subj = self._singular(m.group(1).lower())
+            obj_head = self._singular(m.group(2).strip().rstrip(".").split()[-1].lower())
             art = "an" if obj_head[0] in "aeiou" else "a"
             t = f"A {subj} is {art} {obj_head}."
-        return t, extra
+        return [t], extra
 
     def _learn_one(self, sentence):
-        rewritten, extra = self._normalize_for_learning(sentence)
-        self.sm.learn_sentence(rewritten, self.eng)
+        sents, extra = self._normalize_for_learning(sentence)
+        for st in sents:
+            self.sm.learn_sentence(st, self.eng)
+        have = set(self.sm.facts)
         for (a, r, b) in extra:
-            if (a, r, b) not in set(self.sm.facts):
-                self.sm.add_fact(a, r, b)
+            if (a, r, b) not in have:
+                self.sm.add_fact(a, r, b); have.add((a, r, b))
 
     ROOTS = {"animal", "organism", "thing", "object", "plant", "matter", "substance", "concept", "idea",
              "place", "person", "event", "process", "material"}
