@@ -5379,3 +5379,21 @@ tolerates ~10% label noise with a sharp breakdown at the clean-subset-probabilit
 NET: no new science — but the energy model is delivered+durable+live, the frontier is precisely
 attributed, and a working architecture past the fundamental boundary is in hand and characterized.
 The value is the rigorous, self-correcting PROCESS. Summary: docs/amendments/ENERGY_FRONTIER_SUMMARY.md.
+
+## 2026-06-05 — Found (not caused): 2 PRE-EXISTING physics binding test failures
+
+While running a broad regression sweep, `tests/test_phase2_binding.py::test_atom_freq_off_no_molecule`
+and `::test_atom_decade_off_no_molecule` FAIL: they assert that with frequency-binding OFF (a ~6% freq
+mismatch / different decade), NO level-5 molecule forms — but one now does, so frequency-selective
+gating is no longer preventing cross-frequency atom→molecule binding in `bind_nodes_upward`.
+
+ATTRIBUTION (honest): NOT caused by this session — no commit since 2026-06-05 touched
+`world/physics.py`, `world/state.py`, or `world/config.py`; the failing tests import ONLY physics code,
+none of the cognition modules changed this session. The regression predates this session, most likely
+from the prior physics work around `global_wta_k` / G65-G68 (last physics.py commit: 80456e1). The rest
+of the suite is green (198 passed, incl. all cognition tests; only these 2 physics units fail).
+
+ACTION: flagged for a future physics pass — either the lateral-inhibition/binding change legitimately
+altered frequency gating (then these unit tests need updating to the new intended behaviour) or it is a
+real selectivity bug. Not fixed now: it is outside this session's cognition scope and needs the binding-
+change context to resolve correctly (no guessing). Surfaced honestly rather than silently ignored.
