@@ -27,14 +27,18 @@ like a brain. Keep German politics and Hungarian politics distinct. Learn like a
   exceptions, 308 abduction (reverse 'why?'), 309 contradiction detection, 310 symmetric, 311 located-in,
   314 analogy.
 
-**Meta-learning — learns the rules, not just the facts**
-- 316 induce relation algebra (symmetry/transitivity) from the fact pattern.
-- 317 induce transitivity from K labeled examples on a cover-only store.
-- 318 discover inverse relation pairs; 319 induce two-relation composition (grandparent = parent∘parent).
+**Meta-learning — learns the rules, and folds them back in**
+- 316 induce relation algebra (symmetry/transitivity); 317 induce transitivity on a cover-only store from K labeled
+  examples; 318 discover inverse pairs; 319 induce 2-relation composition (grandparent=parent∘parent); 321 induce a
+  RECURSIVE rule (ancestor = transitive closure of parent).
+- 323 CLOSE THE LOOP: materialize an induced rule into the store (forward-chaining) so the derived relation is
+  directly queryable, persists, and COMPOUNDS (great-grandparent via materialized grandparent).
 
-**Lock-in**
+**Usable + locked-in**
 - 320 grand integration capstone (all 11 operations in one reloaded store).
-- `tests/test_substrate_memory.py` (9 tests) under the permanent gate; 132 tests green.
+- 322 `world/brain_query.BrainQuery` + `tools/ask_brain.py` CLI — ask the durable brain questions
+  ("is a poodle an animal?", "what causes cancer?").
+- `tests/test_substrate_memory.py` (10 tests inc. BrainQuery) under the permanent gate; 133 tests green.
 - Teaching GUI persists both percepts (295) and taught facts (302) across sessions.
 
 ## Honesty record
