@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 67 / predictions 91 (74%). Latest: JEP-175 HIT (full-document scale: 0.93 recall / perfect precision / cross-topic multi-hop reasoning).
+Running tally: hits 67 / predictions 92 (73%). Latest: JEP-176 MISS (prose->joint-embedding bridge: embedding RELIABLE at small scale — conflated in-sample reconstruction with held-out generalization).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 The OVERALL 73% is dominated by early-programme misses (surface-form bugs, structure-learning difficulty mis-estimates).
@@ -113,3 +113,4 @@ Predictions ARE converging WITHIN a settled domain, and the residual misses are 
 | JEP-173 | 🔮 'why?' explains part-of + causal chains, recency-correct | all three relation types explained; recency works | HIT | Full reasoning transparency across taxonomy/mereology/causation. |
 | JEP-174 | 🔮 rich faculties (quant/hypothetical/Boolean/3-valued/contradiction) work over read knowledge | all work identically to told facts, no code change | HIT | read() populates the same structures as tell(); prose-learned knowledge is first-class across the full repertoire. |
 | JEP-175 | 🔮 ~0.85-0.90 recall at document scale, cross-topic reasoning works | 0.90->0.93 after relative-clause fix, precision perfect, cross-topic multi-hop correct | HIT | Pipeline operates at document scale; 'X is a Y that...' relative clause now handled. |
+| JEP-176 | 🔮 geometric is_a unreliable at small (24-concept) prose taxonomy | order 0.99 / poincare 0.95 — RELIABLE (in-sample reconstruction) | MISS | Conflated in-sample reconstruction (reliable when small) with held-out generalization (the real JEP-52 <50 caveat). Bridge validated. |
