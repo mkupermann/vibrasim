@@ -79,11 +79,23 @@ engine's contract):
   (`read()` ~0.87 precision with Hearst + bare-NP), but dense logic/argument prose (Boole) yields almost no structure
   even with the same patterns. The remaining gate: a real encyclopedic CORPUS (needs authorization) + the no-
   transformer rule forbidding learned extractors for messier registers.
-- **Unsupervised structure learning** — concepts/relations are still given/told, not discovered from raw experience
-  (JEP-69/70 NULL).
-- **Open dialogue / free generation** — communication is template-based on the domain, not open-ended.
-- **Rich grounding** — perception here is toy/easy (JEP-91/97 caveat); human-level grounding needs embodied
-  experience (symbol-grounding, JEP-54..63).
+- **Unsupervised structure learning** — partially SOLVED: the engine learns relational structure from observation
+  (transitivity, composition rules, JEP-128..130) and discovers concepts by clustering (JEP-113/179); the residual
+  is learning structure from NOISY+SPARSE+ONE-SHOT data simultaneously, which needs REUSE + active querying + the
+  right (meta-learned) prior together (JEP-151..154), and DAG REDUNDANCY for generalization (JEP-177).
+- **Abstract concepts** — REASONING works (the engine is structural, so justice->virtue->moral quality reasons like
+  any taxonomy, JEP-182); only GROUNDING is blocked (an abstract has no perceptual referent — as for humans, it is
+  learned relationally/linguistically via `read()`, not perceived).
+- **Open dialogue / free generation** — communication is template-based on the domain, not open-ended; factual
+  generation (profiles, explanations, Q&A) works, open/creative generation is blocked.
+- **Rich grounding** — perception here is toy/easy (JEP-91/97/180 caveat); the BINDING of perception to prose-learned
+  structure WORKS (JEP-178/179) and the full developmental loop composes (perceive->cluster->name->read->reason), but
+  human-level grounding needs embodied experience (symbol-grounding, JEP-54..63). The developmental loop inherits
+  perception's discriminability limits, not the binding's (JEP-180).
+- **The NL long tail** — the matured `read()` covers the common encyclopedic constructions at ~0.9 recall / high
+  precision (JEP-161..175), but the long tail of NL phrasings (and 'X of Y' nominal compounds, a deliberate
+  precision/recall tradeoff) is the no-transformer wall: classic patterns cannot cover arbitrary prose; learned
+  extractors are forbidden.
 
 Strategy: develop on simple language, hold 100%, scale gradually; Boole's "Laws of Thought" is the final exam, not
 the primer. Everything established and named (VSA/HRR, transitive closure, prototype perception, Boolean logic,
