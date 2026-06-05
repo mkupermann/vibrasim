@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 147 / predictions 183 (80%). Latest: JEP-268 HIT (COMMUNICATE fixes -- describe() splits abilities 'can bark' from adjectival properties 'is friendly' (was 'can bark, friendly'); 'rabies' singular -ies noun not stripped to 'raby'; surfaced by describe/summarize real-usage QA).
+Running tally: hits 148 / predictions 184 (80%). Latest: JEP-269 HIT (definitional copulas 'X is defined as / means / is known as Y' -> X is-a Y via the genus head noun; mammal->animal, puppy->dog->mammal->animal transitive; surfaced by the definitions QA pass).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 At JEP-221 the tally is 110/137 (80%) and has CONVERGED: the OVERALL rate is dragged down by early-programme misses
@@ -210,3 +210,4 @@ honestly informative:
 | JEP-266 | 🔮 hardened engine handles a fresh multi-domain document at >=0.9 recall | PASS — 15/16 = 0.94 across all new constructions; 1 miss = single-occurrence open relation (by design) | HIT | The cumulative 254..264 hardening validated end-to-end at document scale; robust (265). |
 | JEP-267 | 🔮 relax temporal verb phrase to (?:\w+\s+)* captures 'was signed before'; transitive | PASS — treaty->peace captured, war->peace transitive, reverse No; 107 tests | HIT | A multi-word verb phrase before before/after needs * not ?; restores broken transitive chains. |
 | JEP-268 | 🔮 describe split by adjective shape + 'rabies' to _NOT_PLURAL fixes 'can bark, friendly' + 'a raby' | PASS — 'It can bark. It is friendly.', 'causes rabies'; berries->berry still works; 108 tests | HIT | Adjectival properties (258) and abilities share the properties dict -> split by suffix shape in describe; -ies/-es singulars guarded. |
+| JEP-269 | 🔮 definitional copulas (defined as/means/known as) -> is-a via genus head noun; transitive | PASS — mammal->animal, puppy->dog, dog->canine, puppy->animal transitive; 109 tests | HIT | Definitions are subsumption (genus-differentia); reduce the definiens to its genus head noun. |
