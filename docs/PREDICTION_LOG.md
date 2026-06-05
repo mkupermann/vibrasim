@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 69 / predictions 95 (73%). Latest: JEP-179 HIT (full developmental loop: perceive->discover->name->read structure->reason).
+Running tally: hits 70 / predictions 96 (73%). Latest: JEP-180 HIT (developmental loop boundary: perception is the bottleneck, gentle degradation; caught a non-discriminating-probe test flaw).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 The OVERALL 73% is dominated by early-programme misses (surface-form bugs, structure-learning difficulty mis-estimates).
@@ -117,3 +117,4 @@ Predictions ARE converging WITHIN a settled domain, and the residual misses are 
 | JEP-177 | 🔮 embedding infers held-out is-a (scale-limited) vs symbolic 0 | ill-posed on trees: a node's sole parent-edge held out isolates it; NEITHER can infer | MISS | The variable is STRUCTURE (DAG redundancy) not scale; generalization needs redundancy, like robust inference. Check well-posedness before predicting. |
 | JEP-178 | 🔮 perceive an instance -> classify into prose-learned taxonomy (binding works) | perception 1.00, grounded multi-hop 'is it an animal?' 1.00 | HIT | Unifies learn-from-prose + grounding; toy perception caveat, binding mechanism is the contribution. |
 | JEP-179 | 🔮 developmental loop composes (cluster->name->read->reason), clustering the weak link | purity 1.00, classify 1.00, taxonomic 1.00 (favorable regime) | HIT | Human developmental pattern end-to-end: form concept from experience, learn what it is from language, reason. Toy perception caveat. |
+| JEP-180 | 🔮 loop degrades SHARPLY as clusters merge, perception the bottleneck | downstream tracks purity (0.93@noise2.0); perception IS the bottleneck, but degradation GENTLE | HIT | Mechanism right; over-predicted sharpness (high-D clustering robust). Test-design lesson: use a DISCRIMINATING probe. |
