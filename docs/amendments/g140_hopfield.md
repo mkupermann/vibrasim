@@ -23,3 +23,7 @@ no useful optimization G135, and its memory needs an engineered scaffold).
 - "Human-like AI without LLM": not reachable on these pieces (linear-composable ceiling, bigram on real text).
 - The realizable physical-computing path: oscillator/Ising/Hopfield hardware — optimization + associative
   memory, scaling, buildable cheaply (LC/ring oscillators). Build THIS.
+  > ⚠️ **Tempered (G146–G149, 2026-06-05):** the *optimization* half of this does NOT hold for the oscillator —
+  > it ties a correct greedy and loses to classical SA at scale (build SA, not the oscillator, for hard
+  > combinatorial problems). The *associative-memory* half (this G140 Hopfield recall) remains a valid bounded
+  > primitive (established Hopfield dynamics, named as such). See g146–g149 + FINDINGS_SUMMARY Addendum 5.
