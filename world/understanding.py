@@ -349,7 +349,8 @@ class UnderstandingEngine:
                     if added:
                         last_subject = whole; continue
             # causal: 'X causes Y' / 'X leads to Y'
-            m = re.search(rf"\b{np}\s+causes\s+{np}$", s) or re.search(rf"\b{np}\s+leads\s+to\s+{np}$", s)
+            m = (re.search(rf"\b{np}\s+causes\s+{np}$", s) or re.search(rf"\b{np}\s+leads\s+to\s+{np}$", s)
+                 or re.search(rf"\b{np}\s+results\s+in\s+{np}$", s))   # active causal verbs incl. 'results in' (JEP-274)
             if m:
                 a, b = self._norm_phrase(m.group(1)), self._norm_phrase(m.group(2))
                 if self._bare_np(a) and self._bare_np(b):
@@ -1031,7 +1032,7 @@ class UnderstandingEngine:
             if w0 in {"is", "are", "was", "were"} and not re.search(r"\b(?:of|in|at|by|to|on|with|from)\b", conn):
                 return True
             return bool(re.search(r"\b(?:part of|causes|caused|leads to|located in|situated in|found in|before|after"
-                                  r"|contains|consists of|comprises|includes)\b", conn)
+                                  r"|contains|consists of|comprises|includes|results in|results from)\b", conn)
                         or conn.endswith("than"))            # part-of / causal / spatial / temporal / comparison / mereo-verbs
         triples = []
         for s in re.split(r"[.;:]\s+", passage.strip()):

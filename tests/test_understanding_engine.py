@@ -1295,3 +1295,12 @@ def test_hyphenated_adj_and_property_inheritance():
     assert e.has_property("dog", "warm-blooded")                 # inherited mammal->dog
     assert e.has_property("poodle", "warm-blooded")              # multi-hop poodle->dog->mammal
     assert not e.has_property("penguin", "fly")                  # explicit exception overrides inherited 'bird can fly'
+
+
+def test_results_in_causal():
+    # JEP-274: 'X results in Y' -> X causes Y (active causal verb), transitive, not redundantly open
+    e = UnderstandingEngine(seed=274)
+    o = e.read("Smoking leads to cancer. Cancer results in death. Pollution results in disease.")
+    assert e.causes_effect("cancer", "death")       # 'results in'
+    assert e.causes_effect("smoking", "death")      # transitive smoking->cancer->death
+    assert "results in" not in o.get("open", {})    # active causal verb is fixed, not open
