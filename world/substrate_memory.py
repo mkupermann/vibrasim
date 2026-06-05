@@ -34,8 +34,12 @@ def atom_vector(name: str, D: int) -> np.ndarray:
 
 
 class SubstrateMemory:
-    def __init__(self, D: int = DEFAULT_D, tau: float = 0.12, module_cap: int = None):
+    def __init__(self, D: int = DEFAULT_D, tau: float = 0.12, module_cap: int = None, directed: bool = False):
         self.D = D
+        # DIRECTED edges (JEP-298): store the value PERMUTED (rho = circular shift) so an edge is recovered forward
+        # only; a backward probe yields rho(x)*x noise the cleanup rejects. Needed for transitive inference; the
+        # default symmetric path (JEP-294/295/296 key->value) is unchanged.
+        self.directed = directed
         # GROWING store (JEP-296): a STACK of bundle modules. When the current module saturates (~0.8*D/32 facts)
         # a new empty module is added (neurogenesis), so total capacity is unbounded (linear in #modules).
         self.module_cap = module_cap or max(1, int(0.8 * D / 32))
@@ -72,7 +76,8 @@ class SubstrateMemory:
         if self.module_counts[-1] >= self.module_cap:
             self.modules.append(np.zeros(self.D, dtype=np.float64))   # neurogenesis: a new module
             self.module_counts.append(0)
-        bound = bind(bind(self._vec(entity), self._vec(role)), self._vec(value))
+        val = np.roll(self._vec(value), 1) if self.directed else self._vec(value)
+        bound = bind(bind(self._vec(entity), self._vec(role)), val)
         self.modules[-1] = self.modules[-1] + bound
         self.module_counts[-1] += 1
         self.facts.append((entity, role, value))
@@ -88,6 +93,8 @@ class SubstrateMemory:
             return None, 0.0
         Mstack = np.stack([self._mem(m) for m in range(len(self.modules))])   # (n_mod, D), bipolar
         retrieved = Mstack * key                                              # unbind each module by the key
+        if self.directed:
+            retrieved = np.roll(retrieved, -1, axis=1)                        # rho^-1: undo the value permutation
         scores = retrieved @ VM.T / self.D                                    # (n_mod, V) cleanup similarities
         flat = int(np.argmax(scores))
         return names[flat % len(names)], float(scores.flat[flat])
@@ -113,7 +120,7 @@ class SubstrateMemory:
                  ex_mod=np.array(ex_mod, dtype=object), ex_sym=np.array(ex_sym, dtype=object))
         meta = {
             "D": self.D, "module_cap": self.module_cap, "module_counts": self.module_counts,
-            "facts": self.facts, "values": self.values,
+            "directed": self.directed, "facts": self.facts, "values": self.values,
             "learner": {"tau": self.learner.tau, "max_exemplars": self.learner.max_exemplars,
                         "n_asked": self.learner.n_asked, "n_seen": self.learner.n_seen,
                         "fit": {k: list(v) for k, v in self.learner._fit.items()}},
@@ -125,7 +132,8 @@ class SubstrateMemory:
     def load(cls, d: str):
         with open(os.path.join(d, "meta.json"), "r", encoding="utf-8") as f:
             meta = json.load(f)
-        self = cls(D=meta["D"], tau=meta["learner"]["tau"], module_cap=meta.get("module_cap"))
+        self = cls(D=meta["D"], tau=meta["learner"]["tau"], module_cap=meta.get("module_cap"),
+                   directed=meta.get("directed", False))
         self.facts = [tuple(t) for t in meta["facts"]]
         self.values = list(meta["values"])
         z = np.load(os.path.join(d, "vectors.npz"), allow_pickle=True)
