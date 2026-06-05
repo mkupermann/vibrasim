@@ -1264,6 +1264,14 @@ class UnderstandingEngine:
             if ex:
                 return f"No — not all. For example, {self._art(ex)} cannot {prop}."
             return f"I don't know whether all {self._norm_phrase(cat)}s can {prop}."
+        # CONVERSATIONAL follow-up: 'what about a cat?' -> reuse the last is-a question's category with a new subject
+        m = re.match(r"(?:what about|how about|and)\s+(?:(?:an|a|the)\s+)?(\w+)\s*\??$", q)
+        if m and getattr(self, "_last_query", None):
+            x2, c = self._norm(m.group(1)), self._last_query[1]
+            self._last_query = (x2, c)
+            if self.is_a(x2, c):
+                return f"Yes, {self._art(x2)} is {self._art(c)} too."
+            return f"No, {self._art(x2)} is not {self._art(c)} as far as I know."
         # ENUMERATION: 'what are all the mammals?' -> every concept that is-a the category
         m = re.match(r"what\s+(?:are\s+(?:all\s+)?(?:the\s+)?|kinds?\s+of\s+)([a-z]+)s?\b", q)
         if m and re.match(r"what\s+are\b", q):
