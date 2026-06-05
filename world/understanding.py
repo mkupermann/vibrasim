@@ -1201,6 +1201,18 @@ class UnderstandingEngine:
             if ex:
                 return f"No — not all. For example, {self._art(ex)} cannot {prop}."
             return f"I don't know whether all {self._norm_phrase(cat)}s can {prop}."
+        # OPEN-RELATION WH question: 'what is the capital of France?' -> subject of a learned relation with that object
+        mo = re.match(r"what\s+(.+)", q)
+        if mo and getattr(self, "learned_rels", None):
+            rest = re.sub(r"\b(?:a|an|the)\b", " ", mo.group(1)).split()
+            if len(rest) >= 2:
+                conn, obj = " ".join(rest[:-1]), self._norm(rest[-1])
+                if conn in self.learned_rels:
+                    subs = [s for s, r, o in self.facts if r == conn and o == obj]
+                    if subs:
+                        # an open-relation subject is typically a named entity -> capitalize, no article ('Paris.')
+                        return subs[0][:1].upper() + subs[0][1:] + "."
+                    return f"I don't know what {conn} {self._art(obj)}."
         # MEREOLOGY / CAUSAL questions (read() learns these; route them before the generic WH/explain fallback)
         art = r"(?:(?:an|a|the)\s+)?"
         m = re.match(rf"(?:is|are)\s+{art}(\w+)\s+part\s+of\s+{art}(\w+)", q)   # 'is a heart part of a dog?'
