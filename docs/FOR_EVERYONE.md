@@ -165,6 +165,13 @@ home-made ones), and freely *generating* new ideas rather than answering from wh
 those walls are, and why. That clarity is the point — and the new "teach it slowly, with you in the loop" direction is
 how we start chipping at the senses wall.
 
+**A first step at the "generating" wall.** The brain can now *say new true things it was never told* — pure
+deduction. Teach it "a beagle is a dog, a dog is a mammal, a dog can bark, a dog has four legs," and it will
+volunteer, on its own, "A beagle is a mammal," "A beagle is an animal," "A beagle can bark," "A beagle has 4 legs" —
+none of which it was given directly — and it writes them as proper English sentences it can then read back. That is
+*deductive* generation (saying what logically follows), not yet *creative* generation (inventing genuinely new
+ideas) — but it's the honest first crack in that wall, built with no big AI.
+
 ---
 
 *Everything above is recorded in detail, experiment by experiment, in this project's logbook and notes — including
