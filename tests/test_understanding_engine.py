@@ -628,3 +628,14 @@ def test_rich_faculties_over_read_knowledge():
     assert e.ask_bool("is a poodle an animal and is a poodle not a fish") is True
     assert e.respond("is a poodle a vegetable?").startswith("I don't know")                # three-valued
     assert e.would_contradict("A poodle is not a dog.")                                     # contradiction detection
+
+
+def test_document_scale_and_relative_clause():
+    # JEP-175: full-document (multi-paragraph) operation + 'X is a Y that ...' relative-clause predicate
+    e = UnderstandingEngine(seed=175)
+    e.read("A penguin is a bird that cannot fly. A bird is an animal. A dog is a mammal. A mammal is an animal. "
+           "A virus causes an infection. An infection causes inflammation. Inflammation causes pain.")
+    assert e.is_a("penguin", "bird")                       # relative-clause predicate truncated to head NP
+    assert e.respond("is a penguin an animal?").startswith("Yes")   # cross-fact multi-hop
+    assert e.causes_effect("virus", "pain")                # 3-hop causal chain across the document
+    assert not e.is_a("penguin", "fly")                    # 'that cannot fly' not misread as a parent

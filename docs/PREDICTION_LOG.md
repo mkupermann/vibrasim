@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 66 / predictions 90 (73%). Latest: JEP-174 HIT (full faculty set composes with learn-from-prose; read knowledge is first-class).
+Running tally: hits 67 / predictions 91 (74%). Latest: JEP-175 HIT (full-document scale: 0.93 recall / perfect precision / cross-topic multi-hop reasoning).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 The OVERALL 73% is dominated by early-programme misses (surface-form bugs, structure-learning difficulty mis-estimates).
@@ -112,3 +112,4 @@ Predictions ARE converging WITHIN a settled domain, and the residual misses are 
 | JEP-172 | 🔮 novel nonsense-word concepts reasoned identically to familiar (structural) | all multi-relation + interactions correct on never-seen words | HIT | Definitively rules out lexical confounds (JEP-87); understanding is purely relational. |
 | JEP-173 | 🔮 'why?' explains part-of + causal chains, recency-correct | all three relation types explained; recency works | HIT | Full reasoning transparency across taxonomy/mereology/causation. |
 | JEP-174 | 🔮 rich faculties (quant/hypothetical/Boolean/3-valued/contradiction) work over read knowledge | all work identically to told facts, no code change | HIT | read() populates the same structures as tell(); prose-learned knowledge is first-class across the full repertoire. |
+| JEP-175 | 🔮 ~0.85-0.90 recall at document scale, cross-topic reasoning works | 0.90->0.93 after relative-clause fix, precision perfect, cross-topic multi-hop correct | HIT | Pipeline operates at document scale; 'X is a Y that...' relative clause now handled. |
