@@ -5431,3 +5431,24 @@ self-renewing membrane. Self-repair would require bond turnover or spatially-tar
 present. Pre-registered G50: lower the bond-lifetime knobs (pair_decay_time/triad_decay_time) → does bond
 turnover fluidize the lattice and re-close the wound (at the cost of persistence)? If so, bond-rigidity ⊥
 self-repair is the real trade-off (the one G47 reached for at the wrong level).
+
+## 2026-06-05 — G146: validated G145 against PROPER simulated annealing — advantage REFUTED (greedy was buggy)
+G145 ("the programme's one genuine advantage": oscillator-Ising anneal beats greedy 8/8 on hard frustrated
+MAX-CUT) tested against its own stated proper peer (simulated annealing) + a sign-audited greedy, same 8
+instances (n=30, signed Gaussian, seed 2). Findings:
+- G146a: OSC beats GRD145 8/8 (reproduces G145).
+- G146b: GRD145 is SIGN-BUGGY -- it flips on gain<0, descending toward MIN-cut. Mean GRD145 = -39.9
+  (NEGATIVE cuts); corrected greedy mean = +55.3. The "8/8 vs greedy" headline was a win over a baseline
+  running the wrong direction.
+- G146c: OSC vs proper SA = COMPETITIVE (OSC>=SA 4/8, SA>OSC 4/8, mean OSC-SA=-0.18, eps=1.11). The
+  oscillator is a LEGITIMATE annealer, tied with textbook SA. G146d: both ~0.996-1.000 of REF.
+- DECISIVE unanticipated finding: corrected multi-restart greedy GRD(fixed) reaches REF on ALL 8 trials
+  (== reference optimum every time). These n=30 instances are NOT HARD -- trivial local search solves them
+  optimally. So the oscillator's apparent advantage in G145 was entirely an artifact of the buggy greedy;
+  against a CORRECT baseline OSC and SA merely TIE local search, buying nothing.
+NET: oscillator-Ising is a valid annealer but NOT a superior solver here; G145's "genuine physical
+advantage" is REFUTED at this scale. The claim isn't dead, just unproven -- it needs genuinely hard
+instances where correct multi-restart greedy demonstrably gets trapped. Pre-registered G147: scale up n /
+frustration density to find the regime (if any) where annealing opens a real gap over corrected greedy;
+if none up to large n, retract the advantage claim fully. (Also: G47-G49 this session re-derived the long-
+settled proto-cell self-repair sub-thread; the true substrate frontier is the energy/Ising thread G138-G145.)
