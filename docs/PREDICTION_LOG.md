@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 59 / predictions 83 (JEP-167 HIT — read() generalizes across domains; construction-coverage limited; geography 'located in' gap fixed -> all 3 domains 1.00) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
+Running tally: hits 60 / predictions 84 (JEP-168 HIT — respond() answers part-of + causal questions over read knowledge; conversational Q&A loop closed) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
 
 | id | prediction (🔮 before) | outcome | hit? | lesson (don't repeat) |
 |----|------------------------|---------|------|------------------------|
@@ -90,3 +90,4 @@ Running tally: hits 59 / predictions 83 (JEP-167 HIT — read() generalizes acro
 | JEP-165 | 🔮 precision >0.9, recall 0.7-0.8 on connected prose | precision perfect (0 spurious), recall 0.60 (over-predicted) | MISS (recall) | Aggregate test shows per-category 8/8 overstated readiness; misses mostly tractable (has-part, -ves, head-noun). |
 | JEP-166 | 🔮 has-part + -ves + head-noun raise recall 0.60 -> ~0.80, precision high | recall 0.90 (exceeded), 0 spurious; only ambiguous double-binding remains | HIT | read() now 0.90 recall / high precision on connected encyclopedic prose; residual is genuine NL ambiguity. |
 | JEP-167 | 🔮 generalizes to shared phrasings; geo/tech drop on characteristic constructions | bio/tech 1.00, geo 0.71 ('located in'); fixed -> all 1.00 | HIT | Recall is construction-coverage limited not domain-limited; spatial 'located in' -> part-of added. |
+| JEP-168 | 🔮 part-of + causal question handlers close conversational Q&A, no is-a interference | all multi-relation questions answered correctly; ordering clean | HIT | Engine learns from a passage and converses about it across is-a/part-of/causal in English. |

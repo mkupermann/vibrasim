@@ -961,6 +961,44 @@ class UnderstandingEngine:
             if ex:
                 return f"No — not all. For example, {self._art(ex)} cannot {prop}."
             return f"I don't know whether all {self._norm_phrase(cat)}s can {prop}."
+        # MEREOLOGY / CAUSAL questions (read() learns these; route them before the generic WH/explain fallback)
+        art = r"(?:(?:an|a|the)\s+)?"
+        m = re.match(rf"(?:is|are)\s+{art}(\w+)\s+part\s+of\s+{art}(\w+)", q)   # 'is a heart part of a dog?'
+        if m:
+            a, b = self._norm(m.group(1)), self._norm(m.group(2))
+            tail = (f"{self._art(a)} is part of {self._art(b)}." if self.part_of(a, b)
+                    else f"{self._art(a)} is not part of {self._art(b)} as far as I know.")
+            return ("Yes. " if self.part_of(a, b) else "No. ") + tail[0].upper() + tail[1:]
+        m = re.match(rf"what\s+(?:is|are)\s+(?:the\s+)?parts?\s+of\s+{art}(\w+)", q)  # 'what is part of a dog?'
+        if m:
+            x = self._norm(m.group(1))
+            parts = sorted(p for p, wholes in getattr(self, "part_of_g", {}).items() if x in wholes)
+            if parts:
+                joined = ", ".join(self._art(p) for p in parts)
+                ans = f"{joined} {'is' if len(parts) == 1 else 'are'} part of {self._art(x)}."
+                return ans[0].upper() + ans[1:]
+            return f"I don't know what is part of {self._art(x)}."
+        m = re.match(rf"does\s+{art}(\w+)\s+cause\s+{art}(\w+)", q)              # 'does a virus cause a fever?'
+        if m:
+            a, b = self._norm(m.group(1)), self._norm(m.group(2))
+            if self.causes_effect(a, b):
+                tail = f"{self._art(a)} causes {self._art(b)}."
+                return "Yes. " + tail[0].upper() + tail[1:]
+            return "No, not that I can tell."
+        m = re.match(rf"what\s+causes\s+{art}(\w+)", q)                         # 'what causes a fever?'
+        if m:
+            z = self._norm(m.group(1)); causes = self.abduce(z)
+            if causes:
+                tail = f"{self._art(causes[0])} causes {self._art(z)}."
+                return tail[0].upper() + tail[1:]
+            return f"I don't know what causes {self._art(z)}."
+        m = re.match(rf"what\s+does\s+{art}(\w+)\s+cause", q)                   # 'what does a virus cause?'
+        if m:
+            x = self._norm(m.group(1)); effs = sorted(getattr(self, "causes", {}).get(x, set()))
+            if effs:
+                tail = f"{self._art(x)} causes {', '.join(self._art(e) for e in effs)}."
+                return tail[0].upper() + tail[1:]
+            return f"I don't know what {self._art(x)} causes."
         m = re.match(r"what\s+(?:is|are)\s+(?:(?:an|a|the)\s+)?(.+)", q)
         if m:
             x = self._norm_phrase(m.group(1))

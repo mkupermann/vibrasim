@@ -548,3 +548,18 @@ def test_read_cross_domain_and_located_in():
     et = UnderstandingEngine(seed=2)
     et.read("A laptop is a computer. A laptop has a processor. A processor is a chip. A bug causes a crash.")
     assert et.is_a("laptop", "computer") and et.part_of("processor", "laptop") and et.causes_effect("bug", "crash")
+
+
+def test_respond_multirelation_questions():
+    # JEP-168: respond() answers part-of and causal questions over read knowledge (conversational Q&A)
+    e = UnderstandingEngine(seed=168)
+    e.read("A dog is a mammal. A heart is part of a dog. A cell is part of a heart. A virus causes a fever.")
+    assert e.respond("is a heart part of a dog?").startswith("Yes")
+    assert e.respond("is a cell part of a dog?").startswith("Yes")        # multi-hop part-of
+    assert e.respond("is a heart part of a cat?").startswith("No")
+    assert "heart" in e.respond("what is part of a dog?").lower()
+    assert e.respond("does a virus cause a fever?").startswith("Yes")
+    assert "virus" in e.respond("what causes a fever?").lower()
+    assert "fever" in e.respond("what does a virus cause?").lower()
+    # capitalization correct (no .capitalize() flattening)
+    assert "as far as I know" in e.respond("is a heart part of a cat?")
