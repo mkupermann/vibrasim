@@ -855,3 +855,16 @@ def test_open_relation_wh_question():
     assert e.respond("what is the capital of Spain?").startswith("I don't know")
     e.read("A dog is a mammal.")
     assert e.respond("what is a dog?") == "A dog is a mammal."     # generic WH unaffected
+
+
+def test_numeric_attribute_reasoning():
+    # JEP-207: quantitative reasoning — extract 'X has N Y' numeric facts, answer 'how many' + numeric comparison
+    e = UnderstandingEngine(seed=207)
+    out = e.read("A dog has 4 legs. A spider has eight legs. A bird has 2 wings. A heart is part of a dog.")
+    assert out.get("numeric") == 3 and out["part_of"] == 1        # numeric NOT mis-parsed as part-of
+    assert not e.part_of("4 leg", "dog")                          # the quantity is not a part
+    assert e.respond("how many legs does a dog have?") == "A dog has 4 legs."
+    assert e.respond("how many legs does a spider have?") == "A spider has 8 legs."   # 'eight' parsed
+    assert e.respond("does a spider have more legs than a dog?") == "Yes."            # 8 > 4
+    assert e.respond("does a dog have more legs than a spider?") == "No."
+    assert e.respond("how many legs does a cat have?").startswith("I don't know")     # unknown

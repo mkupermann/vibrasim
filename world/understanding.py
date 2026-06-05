@@ -265,6 +265,17 @@ class UnderstandingEngine:
                 if self._bare_np(a) and self._bare_np(b):
                     self.tell_part(a, b); learned["part_of"] += 1; last_subject = a
                 continue
+            # NUMERIC attribute: 'X has N Y' (N a number) -> a quantitative fact (NOT part-of)
+            m = re.match(rf"^{np}\s+(?:has|have)\s+(\d+|{'|'.join(self._NUM_WORDS)})\s+([a-z]+)$", s)
+            if m:
+                ent, num, attr = self._norm_phrase(m.group(1)), self._parse_num(m.group(2)), self._norm(m.group(3))
+                if ent not in self._PRONOUNS and self._bare_np(ent) and num is not None:
+                    if not hasattr(self, "num_attrs"):
+                        self.num_attrs = {}
+                    self.num_attrs[(ent, attr)] = num
+                    learned["numeric"] = learned.get("numeric", 0) + 1
+                    last_subject = ent
+                continue
             # part-of via possession: 'X has Y' / 'X has Y and Z' -> Y (and Z) are part-of X (whole HAS part)
             m = re.match(rf"^{np}\s+(?:has|have)\s+(.+)$", s)
             if m:
@@ -351,6 +362,16 @@ class UnderstandingEngine:
                    "stone", "sand", "rice", "milk", "blood", "oxygen", "data", "software", "hardware",
                    "tiredness", "happiness", "sadness", "darkness", "health", "wealth", "evidence", "research",
                    "traffic", "weather", "homework", "progress", "pain", "fun", "luck", "fame"}
+    _NUM_WORDS = ("zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
+                  "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen",
+                  "nineteen", "twenty")
+
+    @classmethod
+    def _parse_num(cls, s):
+        """Parse a number written as digits ('4') or a word ('four') -> int, or None."""
+        if s.isdigit():
+            return int(s)
+        return cls._NUM_WORDS.index(s) if s in cls._NUM_WORDS else None
 
     def tell(self, sentence: str) -> tuple:
         """Parse one simple fact. Returns ('isa',c,p) / ('neg_isa',c,p) / ('rel',s,r,o) / ('none',).
@@ -1201,6 +1222,20 @@ class UnderstandingEngine:
             if ex:
                 return f"No — not all. For example, {self._art(ex)} cannot {prop}."
             return f"I don't know whether all {self._norm_phrase(cat)}s can {prop}."
+        # NUMERIC questions: 'how many legs does a dog have?' / 'does a spider have more legs than a dog?'
+        na = getattr(self, "num_attrs", {})
+        m = re.match(r"how many\s+(\w+)\s+(?:does|do)\s+(?:(?:an|a|the)\s+)?(\w+)\s+have", q)
+        if m:
+            attr, ent = self._norm(m.group(1)), self._norm(m.group(2))
+            if (ent, attr) in na:
+                return f"{self._art(ent).capitalize()} has {na[(ent, attr)]} {m.group(1)}."
+            return f"I don't know how many {m.group(1)} {self._art(ent)} has."
+        m = re.match(r"does\s+(?:(?:an|a|the)\s+)?(\w+)\s+have\s+more\s+(\w+)\s+than\s+(?:(?:an|a|the)\s+)?(\w+)", q)
+        if m:
+            x, attr, z = self._norm(m.group(1)), self._norm(m.group(2)), self._norm(m.group(3))
+            if (x, attr) in na and (z, attr) in na:
+                return "Yes." if na[(x, attr)] > na[(z, attr)] else "No."
+            return "I don't have those numbers."
         # OPEN-RELATION WH question: 'what is the capital of France?' -> subject of a learned relation with that object
         mo = re.match(r"what\s+(.+)", q)
         if mo and getattr(self, "learned_rels", None):
