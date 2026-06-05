@@ -221,6 +221,15 @@ class UnderstandingEngine:
             mp = re.match(r"^(it|they|this|these|he|she)\s+(is|are)\s+(.*)$", s)
             if mp and last_subject is not None:
                 s = f"{last_subject} {mp.group(2)} {mp.group(3)}"
+            # EMBEDDED ', such as X,' interjection: 'Snakes, such as the cobra, are reptiles' -> cobra is-a snake,
+            # then strip the interjection so the main clause 'Snakes are reptiles' parses normally (JEP-259)
+            mse = re.match(rf"^{np},\s*such\s+as\s+(.+?),\s*(.+)$", s)
+            if mse:
+                subj = self._norm_phrase(mse.group(1))
+                ex = self._norm_phrase(re.sub(r"^(?:the|a|an)\s+", "", mse.group(2).strip()))
+                if self._bare_np(subj) and self._valid_concept(subj) and self._bare_np(ex) and self._valid_concept(ex):
+                    self.tell(f"a {ex} is a {subj}."); learned["is_a"] += 1   # example -> subject
+                s = f"{mse.group(1)} {mse.group(3)}"                          # rebuild 'Snakes are reptiles', fall through
             # 'X such as A and B' -> (A,X),(B,X)  (do first; it is unambiguous)
             m = re.search(rf"\b{np}\s+such\s+as\s+(.+)$", s)
             if m:

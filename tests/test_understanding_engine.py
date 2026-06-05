@@ -1155,3 +1155,15 @@ def test_adjectival_property_capture():
     assert e.respond("is a dog friendly?") == "Yes. A dog is friendly."
     assert not e.is_a("cobra", "venomous")             # still NOT is-a
     assert e.is_a("dog", "mammal")                      # genuine is-a unaffected
+
+
+def test_embedded_such_as():
+    # JEP-259: 'Snakes, such as the cobra, are reptiles' -> cobra is-a snake AND snakes is-a reptiles (main clause kept)
+    e = UnderstandingEngine(seed=259)
+    e.read("Snakes, such as the cobra, are reptiles. A reptile is an animal.")
+    assert e.is_a("cobra", "snake")        # the example link
+    assert e.is_a("snake", "reptile")      # the main clause survived the interjection
+    assert e.is_a("cobra", "animal")       # full chain cobra->snake->reptile->animal
+    e2 = UnderstandingEngine(seed=260)
+    e2.read("Reptiles such as snakes are cold-blooded.")
+    assert e2.is_a("snake", "reptile")     # trailing such-as still works (no regression)
