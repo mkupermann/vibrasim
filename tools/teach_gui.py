@@ -14,8 +14,14 @@ same 'A' as 'write A'. No transformer, no pretrained model -- it learns only fro
 
 This module is import-safe (no Tk window is created on import); the GUI launches only under __main__.
 """
+import os
+import sys
 import string
 import numpy as np
+
+# self-bootstrap: add the repo root to sys.path so this runs DIRECTLY (no PYTHONPATH needed) --
+#   .venv\Scripts\python.exe tools\teach_gui.py
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from world.active_learner import ActiveLearner
 
@@ -93,16 +99,37 @@ class TeachApp:
     def _ask_truth(self, guessed=None):
         for w in self.btns.winfo_children():
             w.destroy()
-        self.tk.Label(self.btns, text="Type the correct letter (or a sentence later):").pack(side="left")
-        ent = self.tk.Entry(self.btns, width=12); ent.pack(side="left", padx=4); ent.focus()
+        self.tk.Label(self.btns, text="Type the correct letter, OR a sentence ('This is an A. An A is a letter.'):").pack(side="left")
+        ent = self.tk.Entry(self.btns, width=40); ent.pack(side="left", padx=4); ent.focus()
         def submit():
-            ans = ent.get().strip().upper()[:1]
+            ans = ent.get().strip()
             if ans:
-                self.al.teach("write", ans, self.cur_x.ravel())
-                self.msg.config(text=f"Thank you — learned this as '{ans}'.")
+                # SENTENCE answer (Michael's "later, sentences"): name the percept + teach its facts in one go.
+                if " is " in ans.lower() or len(ans.split()) > 1:
+                    name = self._teach_sentence(ans)
+                    self.msg.config(text=f"Thank you — learned this as '{name}', and noted what you told me.")
+                else:                                          # a single letter/symbol
+                    self.al.teach("write", ans.upper()[:1], self.cur_x.ravel())
+                    self.msg.config(text=f"Thank you — learned this as '{ans.upper()[:1]}'.")
             self.next_item()
         self.tk.Button(self.btns, text="Teach", command=submit).pack(side="left", padx=4)
         ent.bind("<Return>", lambda e: submit())
+
+    def _teach_sentence(self, sentence):
+        """Michael answers with a sentence -> ground the percept from its first clause AND read its facts into the
+        engine (the JEP-291 mechanism). Lazily attaches an UnderstandingEngine the first time a sentence is used."""
+        import re
+        if not hasattr(self, "eng"):
+            from world.understanding import UnderstandingEngine
+            self.eng = UnderstandingEngine(seed=0)
+        s = sentence.strip()
+        m = re.match(r"(?:this|it|that)\s+is\s+(?:an?\s+|the\s+)?([a-z][a-z0-9\- ]*?)\s*[.,]", s.lower() + ".")
+        if not m:
+            m = re.match(r"^(?:an?\s+|the\s+)?([a-z][a-z0-9\- ]*?)\b", s.lower())
+        name = self.eng._norm(m.group(1).split()[-1]) if m else s.split()[0].lower()
+        self.al.teach("write", name, self.cur_x.ravel())       # ground the percept to the named symbol
+        self.eng.read(sentence)                                # learn the sentence's facts
+        return name
 
     def _feedback(self, guessed, correct):
         self.al.confirm("write", self.cur_x.ravel(), guessed, correct)
