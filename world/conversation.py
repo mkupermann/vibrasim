@@ -462,6 +462,13 @@ class Conversation:
             neg = mab.group(2).lower() != "can"
             rel = "not_hasprop" if neg else "hasprop"
             return [], extra + [(self._singular(mab.group(1).lower()), rel, mab.group(3).lower())]
+        # temporal/event ordering (JEP-472): 'X (comes|happens|...) before/after Y' -> (X, before, Y) [transitive].
+        # Must precede the SVO fallback (which would store 'comes'/'happens' as a bogus verb).
+        mt = re.match(r"^(?:the\s+)?([A-Za-z]+)\s+(?:comes?\s+|came\s+|happens?\s+|happened\s+|occurs?\s+|"
+                      r"occurred\s+|is\s+|was\s+)?(before|after)\s+(?:the\s+)?([A-Za-z]+)\.?$", t, flags=re.I)
+        if mt:
+            a, b = self._singular(mt.group(1).lower()), self._singular(mt.group(3).lower())
+            return [], extra + ([(a, "before", b)] if mt.group(2).lower() == "before" else [(b, "before", a)])
         # SVO action fact (LAST resort): 'X <verb> Y' -> (X, verb, Y) open relation (JEP-407). Exactly subject+verb+
         # object; verb must not be a copula/auxiliary; subject/object single clean words. Fallback so it never
         # overrides is-a/property/causal/etc.; tight to avoid wrong capture (miss > wrong).

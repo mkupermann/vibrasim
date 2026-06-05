@@ -70,6 +70,21 @@ class BrainQuery:
                     seen.add(p); out.append(p); q.append(p)
         return out
 
+    def _before_reachable(self, x, y, max_hops=20):
+        """JEP-472: transitive 'before' — is x before y via a chain of (·, before, ·) edges?"""
+        from collections import deque
+        q, seen = deque([x]), {x}
+        for _ in range(max_hops):
+            if not q:
+                break
+            cur = q.popleft()
+            for (a, r, b) in self.mem.facts:
+                if r == "before" and a == cur and b not in seen:
+                    if b == y:
+                        return True
+                    seen.add(b); q.append(b)
+        return False
+
     # ---- answer types (one auto-calibrated gate; see JEP-326) ----
     def is_a(self, x, y):
         if self.mem.contains(x, "not_isa", y, self.gate):
@@ -265,6 +280,22 @@ class BrainQuery:
             if v is not None and sc >= self.gate:
                 return " ".join(w.capitalize() for w in str(v).split("_"))
             return "I don't know that yet — teach me and ask again."
+        # temporal/event ordering (JEP-472): before/after, forward / backward / transitive
+        m = re.match(r"^what\s+(?:comes?|happens?|is)\s+after\s+(?:a\s+|an\s+|the\s+)?(\w+)$", s)
+        if m:
+            v, sc = self.mem.query(self._sing(m.group(1)), "before")
+            return " ".join(w.capitalize() for w in str(v).split("_")) if (v is not None and sc >= self.gate) \
+                else "I don't know that yet — teach me and ask again."
+        m = re.match(r"^what\s+(?:comes?|happens?|is)\s+before\s+(?:a\s+|an\s+|the\s+)?(\w+)$", s)
+        if m:
+            y = self._sing(m.group(1))
+            prev = [a for (a, r, b) in self.mem.facts if r == "before" and b == y]
+            return prev[0].replace("_", " ").capitalize() if prev \
+                else "I don't know that yet — teach me and ask again."
+        m = re.match(r"^is\s+(?:a\s+|an\s+|the\s+)?(\w+)\s+(before|after)\s+(?:a\s+|an\s+|the\s+)?(\w+)$", s)
+        if m:
+            x, y = self._sing(m.group(1)), self._sing(m.group(3))
+            return self._before_reachable(x, y) if m.group(2) == "before" else self._before_reachable(y, x)
         # JEP-471: inferred alliance/enmity through signed chains — "is X an ally/enemy of Y?" / "on the same side as Y"
         m = (re.match(r"^is\s+(?:a\s+|an\s+|the\s+)?(\w+)\s+(?:an?\s+)?(ally|friend|enemy|foe|rival)\s+of\s+"
                       r"(?:a\s+|an\s+|the\s+)?(\w+)$", s)
