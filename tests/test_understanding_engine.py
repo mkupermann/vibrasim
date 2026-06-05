@@ -1078,7 +1078,7 @@ def test_adjective_modified_counts():
     assert na[("jupiter", "moon")] == 4 and na[("cell", "part")] == 2     # modified counts captured, keyed by head
     assert na[("dog", "leg")] == 4 and na[("earth", "moon")] == 1         # plain counts unchanged
     assert ("spider", "tail") not in na                                   # list-guard: 'legs and a tail' is not a count
-    assert e.respond("how many moons does Jupiter have?") == "A jupiter has 4 large moons."   # modifier rendered
+    assert e.respond("how many moons does Jupiter have?") == "Jupiter has 4 large moons."   # JEP-262: bare-subject 'Jupiter' -> no article
     assert e.respond("how many parts does a cell have?") == "A cell has 2 small parts."
     assert e.respond("how many legs does a dog have?") == "A dog has 4 legs."                  # no regression
 
@@ -1194,3 +1194,14 @@ def test_spatial_containment_in():
     e2 = UnderstandingEngine(seed=262)
     o2 = e2.read("Paris is the capital of France. London is the capital of England.")
     assert "is capital of" in o2.get("open", {})
+
+
+def test_bare_subject_no_article():
+    # JEP-262: a concept introduced as a bare singular subject ('Copper is...', 'Rust is...') takes NO article
+    e = UnderstandingEngine(seed=262)
+    e.read("Copper is a metal. Rust is caused by oxygen. A metal is an element. Dogs are mammals.")
+    assert e._art("copper") == "copper"        # bare singular subject -> no article (was 'a copper')
+    assert e._art("rust") == "rust"
+    assert e._art("metal") == "a metal"        # article-led elsewhere -> _countable takes precedence
+    assert e._art("dog") == "a dog"            # plural subject 'Dogs' does NOT mark 'dog' no-article
+    assert e.respond("does oxygen cause rust?") == "Yes. Oxygen causes rust."   # no 'a rust'

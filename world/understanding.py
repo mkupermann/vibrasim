@@ -207,8 +207,16 @@ class UnderstandingEngine:
         # static mass-noun lexicon for polysemes like 'a metal is an element') — JEP-256
         if not hasattr(self, "_countable"):
             self._countable = set()
+        if not hasattr(self, "_no_article"):
+            self._no_article = set()                 # bare singular subjects ('Copper is...', 'Paris is...') -> no article
         for w in re.findall(r"\b(?:a|an)\s+([a-z][a-z0-9\-]*)", passage.lower()):
             self._countable.add(self._norm(w))
+        # a concept introduced as a BARE (article-less) SINGULAR subject is proper/mass -> no article (JEP-262);
+        # the complement of the article-led countability rule. Plural subjects ('Dogs are') are excluded (not singular).
+        for w in re.findall(r"(?:^|\.\s+)([A-Z][a-z]+)\s+(?:is|are|has|have|causes|caused|flows|contains|results|leads)\b", passage):
+            wl = self._norm(w.lower())
+            if not w.lower().endswith("s") or wl == w.lower():    # singular subject (not a bare plural)
+                self._no_article.add(wl)
         art = r"(?:(?:an|a|the)\s+)?"
         np = rf"{art}([a-z][a-z0-9\- ]*?)"     # concept NP: letter-first, then alphanumeric ('covid19', 'mp3', 'h2o')
         learned = {"is_a": 0, "part_of": 0, "causal": 0}
@@ -756,7 +764,9 @@ class UnderstandingEngine:
         # list: a concept the SOURCE introduced with 'a/an' ('a metal is an element') is countable here, even if the
         # lexicon marks it mass — learn countability from the source (JEP-256).
         if head not in getattr(self, "_countable", ()) and (
-                head in cls._MASS_NOUNS or (head.endswith("ness") and len(head) > 5 and head not in cls._COUNTABLE_NESS)):
+                head in getattr(self, "_no_article", ())     # bare-subject proper/mass ('Copper','Paris') -> no article (JEP-262)
+                or head in cls._MASS_NOUNS
+                or (head.endswith("ness") and len(head) > 5 and head not in cls._COUNTABLE_NESS)):
             return noun
         head = noun.split()[0]
         if head in cls._ART_A:
