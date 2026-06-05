@@ -172,3 +172,15 @@ scoped/decorative communication and proto-cell results, the honest, programme-wi
 exception: **the physics is decorative everywhere tested; standard classical methods carry every win.** The
 deliverable was never the simulation succeeding — it was the rigorous, self-correcting process, here applied
 to retract an over-claim (a sign-bugged baseline) rather than make one. Docs: g145–g149 amendments.
+
+### Addendum 5 refinement (G150) — the weakness was partly NAIVE DYNAMICS, not the whole paradigm
+G146–G149 tested only G145's *naive phase-only* oscillator. Adding the textbook amplitude-heterogeneity
+correction (AHC-CIM; Leleu/Yamamoto 2019) changes the picture (G150, PARTIAL): the corrected machine BEATS a
+correct multi-restart greedy 5/5 at n=360 (the naive one only TIED it) and comes within ~0.7% of classical
+SA (a hair behind, edging it on 1/5). So the precise, honest claim is NOT "physics confers no edge anywhere":
+a *properly-engineered* physical Ising annealer (CIM-AHC) is competitive with SA and genuinely beats local
+search on hard optimization. Three caveats keep this from rehabilitating the programme's thesis: (1) classical
+SA is still marginally best AND far simpler; (2) CIM-AHC is *established hardware* (named as such, no novelty);
+and critically (3) **it is NOT the EQMOD substrate** — EQMOD's own dynamics still cannot optimize (G135, its
+bindings are not a programmable problem Hamiltonian). So "the EQMOD substrate is decorative" stands unchanged;
+what is competitive is an adjacent, well-known physical-annealer paradigm, not EQMOD.
