@@ -195,11 +195,38 @@ class SubstrateMemory:
         for e, v in self.valence.items():
             self.energy.experience(self.entity_cloud(e), float(v))
 
+    def _valenced_ancestor(self, entity: str, max_hops: int = 8):
+        """JEP-450: climb is-a edges (breadth-first, nearest first) to the closest ancestor that carries a taught
+        valence. Returns (ancestor, valence) or None. Used so affect INHERITS through the taxonomy."""
+        seen = {entity}
+        frontier = [entity]
+        for _ in range(max_hops):
+            nxt = []
+            for e in frontier:
+                for (a, r, b) in self.facts:
+                    if a == e and r == "isa" and b not in seen:
+                        if b in self.valence:
+                            return (b, self.valence[b])
+                        seen.add(b); nxt.append(b)
+            if not nxt:
+                break
+            frontier = nxt
+        return None
+
     def predict_valence(self, entity: str):
-        """Affect of an entity: the exact taught value if known, else the energy model's GENERALIZED prediction from
-        the entity's feature-cloud (JEP-436). Returns None if nothing has been taught yet."""
+        """Affect of an entity: own taught value, else INHERITED from the nearest valenced is-a ancestor (JEP-450),
+        else the energy model's GENERALIZED prediction from the feature-cloud (JEP-436). None if nothing applies."""
         if entity in self.valence:
             return self.valence[entity]
+        anc = self._valenced_ancestor(entity)                     # JEP-450: affect inherits through the taxonomy
+        if anc is not None:
+            return anc[1]
+        # JEP-451: only fall back to the STATISTICAL generalization when valence training is rich enough to be
+        # trustworthy — otherwise a degenerate (e.g. single-example) model hallucinates affect for everything. Need
+        # a handful of valenced concepts spanning BOTH polarities; else abstain (neutral).
+        vals = list(self.valence.values())
+        if len(vals) < 6 or not (any(v > 0 for v in vals) and any(v < 0 for v in vals)):
+            return None
         self._backfill_energy()                                   # JEP-440: train from stored valence on first use
         if self.energy is None:
             return None

@@ -7,6 +7,10 @@ open relations). A tiny string parser maps natural questions to these. No transf
 import re
 import numpy as np
 
+# affect words that trigger an inherited-valence explanation ("why is X scary?") — JEP-450
+_AFFECT_QWORDS = {"good", "bad", "scary", "dangerous", "evil", "nice", "bright", "dark", "negative",
+                  "positive", "frightening", "harmful", "lovely", "wonderful", "terrible"}
+
 # irregular past tense -> present, so 'what did X write?' matches a stored 'wrote' (JEP-417: English verb morphology)
 _VERB_LEMMA = {
     "wrote": "write", "taught": "teach", "said": "say", "made": "make", "went": "go", "built": "build",
@@ -238,11 +242,23 @@ class BrainQuery:
         m = re.match(r"^what is the (?:energy|valence|feeling|charge) of (?:a\s+|an\s+|the\s+)?(\w+)$", s)
         if m:
             e = self._sing(m.group(1))
-            taught = e in getattr(self.mem, "valence", {})
             val = self._valence(m.group(1))
-            tag = "" if taught else " (generalized)"      # JEP-436: be honest when it's a prediction, not taught
+            # JEP-436/450/451: be honest about the SOURCE — taught vs inherited (taxonomy) vs generalized (statistical).
+            if e in getattr(self.mem, "valence", {}):
+                tag = ""
+            else:
+                anc = getattr(self.mem, "_valenced_ancestor", lambda *_: None)(e)
+                tag = f" (inherited from {anc[0].replace('_', ' ')})" if anc is not None else " (generalized)"
             return ("bright (positive energy)" + tag if val > 0 else
                     "dark (negative energy)" + tag if val < 0 else "neutral")
+        # JEP-450: explain INHERITED affect — "why is X <affect-word>?" -> the valenced is-a ancestor
+        m = re.match(r"^why\s+(?:is|are)\s+(?:a\s+|an\s+|the\s+)?(\w+)\s+(\w+)$", s)
+        if m and (m.group(2) in _AFFECT_QWORDS):
+            e = self._sing(m.group(1))
+            if e not in getattr(self.mem, "valence", {}):
+                anc = getattr(self.mem, "_valenced_ancestor", lambda *_: None)(e)
+                if anc is not None:
+                    return f"because {self._sing(m.group(1))} is a kind of {anc[0].replace('_', ' ')}"
         # attribute questions FIRST (before articles are stripped, to keep 'your'): JEP-404
         m = re.match(r"^(?:who|what)\s+is\s+your\s+([a-z]+)$", s)
         if m:
