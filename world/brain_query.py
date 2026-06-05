@@ -280,6 +280,26 @@ class BrainQuery:
             if v is not None and sc >= self.gate:
                 return " ".join(w.capitalize() for w in str(v).split("_"))
             return "I don't know that yet — teach me and ask again."
+        # timeline reconstruction (JEP-474): "what is the sequence/order/timeline?" -> topological sort of before-edges
+        if re.match(r"^what\s+is\s+the\s+(sequence|order|timeline)$", s):
+            befores = [(a, b) for (a, r, b) in self.mem.facts if r == "before"]
+            if befores:
+                nodes = {a for a, _ in befores} | {b for _, b in befores}
+                indeg = {n: 0 for n in nodes}
+                adj = {n: [] for n in nodes}
+                for a, b in befores:
+                    adj[a].append(b); indeg[b] += 1
+                from collections import deque
+                q = deque(sorted(n for n in nodes if indeg[n] == 0)); order = []
+                while q:
+                    u = q.popleft(); order.append(u)
+                    for v in sorted(adj[u]):
+                        indeg[v] -= 1
+                        if indeg[v] == 0:
+                            q.append(v)
+                if len(order) == len(nodes):
+                    return ", ".join(o.replace("_", " ") for o in order)
+            return "I don't know that yet — teach me and ask again."
         # temporal sequence endpoints (JEP-473): "what happened/came first/last?" -> source/sink of the before-graph
         m = re.match(r"^what\s+(?:happened|happens|comes?|came|is|was)\s+(first|last)$", s)
         if m:
