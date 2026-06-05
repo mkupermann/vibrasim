@@ -113,8 +113,10 @@ class UnderstandingEngine:
             return w
         if w.endswith("ies") and len(w) > 4:
             return w[:-3] + "y"
-        if w.endswith("ses") or w.endswith("shes") or w.endswith("ches"):
-            return w[:-2]
+        if w.endswith("shes") or w.endswith("ches") or w.endswith("sses"):
+            return w[:-2]                      # dishes->dish, batches->batch, glasses->glass
+        if w.endswith("ses"):
+            return w[:-1]                      # horses->horse, roses->rose (singular ends in -se, strip only -s)
         # -us / -is / -ss endings are typically NOT plurals (virus, basis, glass) -> keep
         if w.endswith("s") and not w.endswith(("ss", "us", "is")) and len(w) > 3:
             return w[:-1]
@@ -218,14 +220,43 @@ class UnderstandingEngine:
                 if self._bare_np(a) and self._bare_np(b):
                     self.tell_cause(a, b); learned["causal"] += 1
                 continue
-            # is-a: 'X is a kind of Y' / 'X is a/an Y'
-            m = re.search(rf"\b{np}\s+is\s+a\s+kind\s+of\s+{np}$", s) or re.search(rf"\b{np}\s+is\s+an?\s+([a-z]+)$", s)
+            # appositive: 'X, a kind of Y, ...' / 'X, an Y, ...' -> X is-a Y (then skip the main clause)
+            m = re.match(rf"^{np},\s+(?:a\s+kind\s+of\s+|an?\s+)([a-z]+),", s)
             if m:
                 a, b = self._norm_phrase(m.group(1)), self._norm_phrase(m.group(2))
                 if self._bare_np(a) and self._bare_np(b) and a != b:
                     self.tell(f"a {a} is a {b}."); learned["is_a"] += 1
                 continue
+            # general copula 'SUBJ(s) is/are PRED(s)' with CONJOINED subjects and MULTI-FACT predicates (shallow parse)
+            mc = re.match(r"^(.*?)\s+(?:is|are)\s+(.*)$", s)
+            if mc:
+                subjects = []
+                for sub in re.split(r"\s+and\s+", mc.group(1)):
+                    sub = self._norm_phrase(sub)
+                    if sub not in self._PRONOUNS and self._bare_np(sub) and self._valid_concept(sub):
+                        subjects.append(sub)
+                parents = []
+                for item in re.split(r"\s+and\s+", mc.group(2)):
+                    item = item.strip().rstrip(".")
+                    am = re.match(r"^(?:a\s+kind\s+of\s+|an?\s+|the\s+)([a-z][a-z\- ]*)$", item)
+                    if am:                                     # article-led -> a noun parent
+                        p = self._norm_phrase(am.group(1))
+                        if self._bare_np(p) and self._valid_concept(p):
+                            parents.append(p)
+                    elif re.fullmatch(r"[a-z]+s", item):       # bare PLURAL noun (ends -s, adjectives don't) -> is-a
+                        p = self._norm_phrase(item)
+                        if self._bare_np(p) and self._valid_concept(p):
+                            parents.append(p)
+                    # bare non-plural predicate (adjective/property: 'common','friendly') -> skip, not is-a
+                if subjects and parents:
+                    for sub in subjects:
+                        for par in parents:
+                            if sub != par:
+                                self.tell(f"a {sub} is a {par}."); learned["is_a"] += 1
+                    continue
         return learned
+
+    _PRONOUNS = {"it", "he", "she", "they", "this", "that", "these", "those", "i", "we", "you", "there", "which", "who"}
 
     def tell(self, sentence: str) -> tuple:
         """Parse one simple fact. Returns ('isa',c,p) / ('neg_isa',c,p) / ('rel',s,r,o) / ('none',).
