@@ -5586,3 +5586,9 @@ weights < closed-form readout on a random reservoir.) Honest takeaways: (1) the 
 real but moot here -- both die at the same horizon; (2) the genuine lever for long-delay working memory is a
 GATED memory cell (established LSTM/GRU fix), not better credit assignment. Open: can a substrate-native gate
 (multiplicative BTSP-modulated path) extend the horizon? Known architectural fix, named as such, not new math.
+
+
+## 2026-06-06 01:52 — Autopilot idle
+
+All experiments done or 3x NULL on feedback.
+
