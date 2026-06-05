@@ -191,6 +191,14 @@ class BrainQuery:
         m = re.match(r"^(?:who|what)\s+is\s+my\s+([a-z]+)$", s)            # first-person attribute (JEP-405)
         if m:
             return self._attr("user", self._sing(m.group(1)))
+        if s in ("what am i", "what am i?"):                              # first/second-person is-a (JEP-406)
+            return self._most_specific_parent("user")
+        if s in ("what are you", "what are you?"):
+            return self._most_specific_parent("you")
+        m = re.match(r"^where\s+is\s+(?:the\s+)?([a-z]+)$", s)             # 'where is Paris?' -> located_in (JEP-406)
+        if m:
+            v, sc = self.mem.query(self._sing(m.group(1)), "located_in")
+            return (v.capitalize() if (v is not None and sc >= self.gate) else None)
         m = re.match(r"^(?:who|what)\s+is\s+(?:the\s+)?([a-z]+)\s+of\s+(.+)$", s)   # 'what is the name of your creator'
         if m:
             ent = re.sub(r"^(?:your|the|a|an)\s+", "", m.group(2).strip())

@@ -270,6 +270,13 @@ class Conversation:
         ma = re.match(r"^(.+?)\s+is\s+your\s+([a-z]+)\.?$", t, flags=re.I)   # reverse: 'V is your A'
         if ma:
             return [], extra + [("you", self._singular(ma.group(2).lower()), _av(ma.group(1)))]
+        # first/second-person is-a (JEP-406): 'I am a teacher' -> (user, isa, teacher); 'You are a substrate' -> (you,..)
+        ma = re.match(r"^i\s+am\s+an?\s+([a-z]+)\.?$", t, flags=re.I)
+        if ma:
+            return [], extra + [("user", "isa", self._singular(ma.group(1).lower()))]
+        ma = re.match(r"^you\s+are\s+an?\s+([a-z]+)\.?$", t, flags=re.I)
+        if ma:
+            return [], extra + [("you", "isa", self._singular(ma.group(1).lower()))]
         # 'is a kind/type/sort of' -> 'is a'
         t = re.sub(r"\bis\s+(an?)\s+(?:kind|type|sort)\s+of\b", r"is \1", t, flags=re.I)
         # numeric possession: 'A dog has four/4 legs' -> (dog, has_legs, N)
