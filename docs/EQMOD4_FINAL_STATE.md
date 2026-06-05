@@ -28,7 +28,7 @@ genuine outputs are the WORKING ENGINE, a handful of real CONCEPTUAL findings, a
 
 ## Validated
 Property-based SOUND, fuzz ROBUST (0 crashes/6000 adversarial), SCALABLE (1000 concepts), STRUCTURAL not lexical,
-a comprehensive end-to-end INTEGRATION test, a multi-domain integration guard, and re-validation of the matured engine. 94 regression tests, every commit gated green. The substrate-relational arc (JEP-232..238) adds 7 pre-registered run-harnesses with locked bars + result.json (substrate-thread convention).
+a comprehensive end-to-end INTEGRATION test, a multi-domain integration guard, and re-validation of the matured engine. 102 regression tests, every commit gated green. The substrate-relational arc (JEP-232..253) adds 22 pre-registered run-harnesses with locked bars + result.json (substrate-thread convention). REAL-PROSE HARDENING (JEP-227..231, 254..260, all from real-usage QA on new-domain passages): alphanumeric concepts, is-a-parent open-relation leak, numeric singular/plural + multi-word attributes in capture/comparison/question, usage-learned mass/count countability, '-ous/-less' adjectives (not is-a), adjectival predicates as PROPERTIES, embedded ', such as X,' exemplification, read()-captured ability ('X can/cannot VERB') + singular 'can a X VERB?', and PASSIVE causal ('X is caused by Y').
 
 ## Where the substrate IS in the chain (JEP-232..238 — the relational engine, in the energy substrate)
 Michael's recurring question, answered concretely for relational knowledge. The engine's facts had only ever lived
