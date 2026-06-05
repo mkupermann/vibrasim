@@ -1215,3 +1215,16 @@ def test_mereological_verbs():
     assert e.part_of("nucleus", "body")            # transitive nucleus->cell->body
     assert e.part_of("copper", "bronze")
     assert "contains" not in o.get("open", {})     # mereological verb is a FIXED part-of relation, not open
+
+
+def test_does_have_possession_question():
+    # JEP-264: 'does X have Y?' -> part-of (with is-a inheritance) or numeric attribute
+    e = UnderstandingEngine(seed=264)
+    e.read("A heart is part of a mammal. A human is a mammal. A dog has 4 legs.")
+    assert e.respond("does a human have a heart?").startswith("Yes")   # human->mammal, heart part-of mammal
+    assert e.respond("does a mammal have a heart?").startswith("Yes")
+    assert "4 legs" in e.respond("does a dog have legs?")              # numeric attribute fallback
+    assert e.respond("does a human have a tail?").startswith("No")
+    e2 = UnderstandingEngine(seed=265)
+    e2.read("A spider has 8 legs. A dog has 4 legs.")
+    assert e2.respond("does a spider have more legs than a dog?") == "Yes."   # 'more...than' not shadowed

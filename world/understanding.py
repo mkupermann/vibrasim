@@ -1449,6 +1449,16 @@ class UnderstandingEngine:
                 self._last_num_query = (x, attr); self._last_query = None; self._last_rel_query = None
                 return "Yes." if na[(x, attr)] > na[(z, attr)] else "No."
             return "I don't have those numbers."
+        # POSSESSION question: 'does a human have a heart?' -> is Y part-of X (incl. is-a inheritance) or a numeric attr (JEP-264)
+        m = re.match(r"do(?:es)?\s+(?:(?:an|a|the)\s+)?(\w+)\s+have\s+(?:(?:an|a|the)\s+)?(\w+)", q)
+        if m:
+            x, y = self._norm(m.group(1)), self._norm(m.group(2))
+            if self.part_of(y, x):
+                self._last_rel_query = ("part", y, x); self._last_query = None; self._last_num_query = None
+                return f"Yes. {self._art(y).capitalize()} is part of {self._art(x)}."
+            if (x, y) in na:                                       # 'does a dog have legs?' -> the numeric attribute
+                return f"Yes. {self._art(x).capitalize()} has {na[(x, y)]} {y if na[(x, y)] == 1 else y + 's'}."
+            return f"No. Not that I was told."
         # OPEN-RELATION WH question: 'what is the capital of France?' -> subject of a learned relation with that object
         mo = re.match(r"what\s+(.+)", q)
         if mo and getattr(self, "learned_rels", None):

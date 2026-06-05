@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 142 / predictions 178 (80%). Latest: JEP-263 HIT (mereological verbs 'X contains/consists of Y' -> Y part-of X, transitive, excluded from redundant open induction; cell->body, nucleus->cell->body; surfaced by the biology/anatomy QA pass).
+Running tally: hits 143 / predictions 179 (80%). Latest: JEP-264 HIT ('does X have Y?' possession question -> part_of(Y,X) with is-a inheritance ('does a human have a heart?' -> Yes via human->mammal) or numeric fallback; 'more...than' not shadowed; closes the biology QA pass).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 At JEP-221 the tally is 110/137 (80%) and has CONVERGED: the OVERALL rate is dragged down by early-programme misses
@@ -205,3 +205,4 @@ honestly informative:
 | JEP-261 | 🔮 'is in' -> spatial part-of + question routing + exclude from open; transitive works | PASS — france/paris/italy part-of, spatial Qs Yes/No, transitive Paris->Europe, capital-of open kept; 103 tests | HIT | Spatial 'X is in Y' needed both extractor coverage (plain 'in') and question routing (was parsed as is-a). |
 | JEP-262 | 🔮 bare singular subjects -> no article (after _countable); fixes 'a copper/rust/paris', keeps countables/plurals | PASS — copper/rust/paris article-less, metal/dog countable, 'Oxygen causes rust', Jupiter corrected; 103 tests | HIT | Usage assigns article: article-led=countable, bare-singular-subject=no-article; mid-sentence proper-noun caps remain the NER wall. |
 | JEP-263 | 🔮 'X contains/consists of Y' -> Y part-of X + exclude from open; transitive | PASS — cell/nucleus/copper part-of, nucleus->body transitive, no open 'contains'; 104 tests | HIT | Mereological containment verbs are part-of, not generic open relations. |
+| JEP-264 | 🔮 'does X have Y?' -> part_of(Y,X) (inherits to subtypes) or numeric; no shadowing of 'more...than' | PASS — human/mammal have heart (inherited), dog has 4 legs, negatives No, comparison intact; 106 tests | HIT | Possession is mereology; the part-of x is-a interaction distributes the whole's parts to subtypes. |
