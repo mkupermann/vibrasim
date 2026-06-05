@@ -776,3 +776,12 @@ def test_summarize_flags_inconsistency():
     e2.tell("A whale is a mammal."); e2.tell("A mammal is not a fish."); e2.tell("A mammal is an animal.")
     e2.parents.setdefault("whale", set()).add("fish")
     assert "inconsistency" in e2.summarize().lower() and "whale" in e2.summarize().lower()
+
+
+def test_mass_noun_article_generation():
+    # JEP-199: mass nouns generate WITHOUT an article ('tiredness', not 'a tiredness')
+    e = UnderstandingEngine(seed=199)
+    assert e._art("tiredness") == "tiredness" and e._art("water") == "water"
+    assert e._art("dog") == "a dog" and e._art("animal") == "an animal"   # countable unaffected
+    e.read("A fever causes tiredness.")
+    assert e.respond("what does a fever cause?") == "A fever causes tiredness."   # not 'a tiredness'
