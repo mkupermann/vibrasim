@@ -128,6 +128,18 @@ engine*, *a handful of genuine insights*, and *the honest method*.
    home-made senses and a tiny vocabulary — but the full loop *perceive → learn from you → read → understand* now
    works end to end, with no modern AI.)
 
+4. **Giving it a memory that survives and grows like a brain's.** The newest milestone. Until recently the
+   substrate's knowledge lived only in the computer's working memory — close the program and it was gone. Now it
+   **saves itself to disk** (a folder you can copy and back up), so it **remembers across sessions** and **keeps
+   growing without forgetting** what it already knew. It keeps separate things separate — "German politics" and
+   "Hungarian politics" stay distinct even though both are "politics," so learning that one is corrupt doesn't
+   smear onto the other (the same trick a brain uses to keep "John's coffee" and "Mary's coffee" apart). And it
+   doesn't just *recall* — it **reasons across what it stored**: tell it "a poodle is a dog, a dog is a mammal, a
+   mammal is an animal, an animal is an organism," close it, reopen it tomorrow, and it can still work out "yes, a
+   poodle is an organism" by chaining those facts together — none of which it was told directly. (We also measured
+   the honest limits: each memory "module" holds a few hundred facts before it would blur, so to grow further it
+   simply adds more modules — like a brain adding capacity.)
+
 **The goal** — the north star — is to move, step by careful step, toward something with **human-like learning,
 understanding, and communication**: a system that learns from what it reads and from experience, *actually*
 understands the relationships between things, and can talk with you about them — built the honest, transparent way,
