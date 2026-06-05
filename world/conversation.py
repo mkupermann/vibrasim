@@ -159,6 +159,15 @@ class Conversation:
         m = re.match(r"^(?:the\s+)?([A-Za-z]+)\s+is\s+(?:located\s+)?in\s+(?:the\s+)?([A-Za-z]+)\.?$", t, flags=re.I)
         if m:
             extra.append((m.group(1).lower(), "located_in", m.group(2).lower()))
+        # 'such as' list: 'Mammals such as dogs, cats, and birds ...' -> each item isa mammal
+        m = re.search(r"\b([A-Za-z]+)s?,?\s+such\s+as\s+(.+?)(?:\s+(?:are|is|can|have|live|that|which|include)\b|[.;]|$)",
+                      t, flags=re.I)
+        if m:
+            cls = self._singular(m.group(1).lower())
+            for it in re.split(r",|\band\b", m.group(2)):
+                it = self._singular(it.strip().lower())
+                if it and it != cls and " " not in it and it.isalpha():
+                    extra.append((it, "isa", cls))
         # relative clause: 'A X, which is a Y, <rest>' -> 'A X is a Y.' + 'A X <rest>.'
         m = re.match(r"^(?:a|an|the)\s+([a-z]+),\s+which\s+is\s+an?\s+([a-z ]+?),\s+(.+?)\.?$", t, flags=re.I)
         if m:
