@@ -100,6 +100,21 @@ class SubstrateMemory:
         flat = int(np.argmax(scores))
         return names[flat % len(names)], float(scores.flat[flat])
 
+    def query_all(self, entity: str, role: str, gate: float):
+        """Set-valued retrieval (JEP-303): ALL values bound to (entity, role) with cleanup similarity >= gate, for
+        multi-parent / DAG relations. Returns [(value_name, sim), ...] sorted by sim."""
+        key = bind(self._vec(entity), self._vec(role))
+        VM, names = self._value_matrix()
+        if not names:
+            return []
+        Mstack = np.stack([self._mem(m) for m in range(len(self.modules))])
+        retrieved = Mstack * key
+        if self.directed:
+            retrieved = np.roll(retrieved, -1, axis=1)
+        scores = (retrieved @ VM.T / self.D).max(axis=0)        # best module per value
+        out = [(names[i], float(scores[i])) for i in range(len(names)) if scores[i] >= gate]
+        return sorted(out, key=lambda t: -t[1])
+
     def edge_sim(self, entity: str, role: str, value: str):
         """Similarity that (entity, role, value) is a stored edge — max over modules of the cleaned retrieval vs the
         value vector. Works for MULTI-valued relations (causal/property) where several values share one key."""

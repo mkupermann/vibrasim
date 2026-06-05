@@ -46,13 +46,16 @@ symbolic reader's full knowledge can live in the durable substrate and be reason
 
 - **Use** for: durable content-addressable knowledge that must survive restarts, accumulate over sessions, keep
   instances distinct, and support transitive queries — without any learned/pretrained component.
-- **Limits (honest):** per-module capacity ≈ D/32 (widen D or add modules); the taught/untaught margin narrows at
-  very high load (reliable "I don't know" then needs per-relation gates or a routing key); **cross-relation
-  inheritance** (part-of across is-a, property inheritance down is-a) is NOT done by a single-relation climb — that
-  is multi-relation reasoning left to the engine or a future amendment.
+- **Resolved since first draft:** cross-relation **inheritance** (property down is-a, part-of across is-a both
+  ways) is done natively by composing the is-a climb with a target-relation probe (JEP-301); **DAG taxonomies**
+  (multi-parent is-a) are handled by `query_all` (set-valued retrieval) + a BFS climb (JEP-303).
+- **Limits (honest):** per-module capacity ≈ D/32 (widen D or add modules, JEP-296); the taught/untaught margin
+  narrows at very high load (reliable "I don't know" then needs per-relation gates or a routing key); set-valued
+  retrieval at very high per-node fan-out eventually hits the same 1/√load decay (widen D / split module).
 
 ## Reusable API
-`SubstrateMemory(D, directed=)`, `add_fact(e,r,v)`, `query(e,r)→(value,sim)`, `contains(e,r,v,gate)`,
+`SubstrateMemory(D, directed=)`, `add_fact(e,r,v)`, `query(e,r)→(value,sim)`, `query_all(e,r,gate)→[(value,sim)]`,
+`contains(e,r,v,gate)`, `ingest_engine(eng)` / `learn_sentence(s,eng)` / `rebuild_engine()`,
 `save(dir)`/`load(dir)`; `atom_vector(name, D)` for cross-process-stable symbol vectors.
 
 Amendments: docs/amendments/jep29{4,5,6,7,8,9}_*.md, jep300_multirelational_bridge.md.
