@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 67 / predictions 93 (72%). Latest: JEP-177 MISS (held-out generalization is ill-posed on TREES — needs DAG REDUNDANCY, not scale; ties to the redundancy theme).
+Running tally: hits 68 / predictions 94 (72%). Latest: JEP-178 HIT (ground a prose-learned taxonomy in perception — perceive an instance, reason over read structure).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 The OVERALL 73% is dominated by early-programme misses (surface-form bugs, structure-learning difficulty mis-estimates).
@@ -115,3 +115,4 @@ Predictions ARE converging WITHIN a settled domain, and the residual misses are 
 | JEP-175 | 🔮 ~0.85-0.90 recall at document scale, cross-topic reasoning works | 0.90->0.93 after relative-clause fix, precision perfect, cross-topic multi-hop correct | HIT | Pipeline operates at document scale; 'X is a Y that...' relative clause now handled. |
 | JEP-176 | 🔮 geometric is_a unreliable at small (24-concept) prose taxonomy | order 0.99 / poincare 0.95 — RELIABLE (in-sample reconstruction) | MISS | Conflated in-sample reconstruction (reliable when small) with held-out generalization (the real JEP-52 <50 caveat). Bridge validated. |
 | JEP-177 | 🔮 embedding infers held-out is-a (scale-limited) vs symbolic 0 | ill-posed on trees: a node's sole parent-edge held out isolates it; NEITHER can infer | MISS | The variable is STRUCTURE (DAG redundancy) not scale; generalization needs redundancy, like robust inference. Check well-posedness before predicting. |
+| JEP-178 | 🔮 perceive an instance -> classify into prose-learned taxonomy (binding works) | perception 1.00, grounded multi-hop 'is it an animal?' 1.00 | HIT | Unifies learn-from-prose + grounding; toy perception caveat, binding mechanism is the contribution. |

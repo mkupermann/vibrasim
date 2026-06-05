@@ -639,3 +639,20 @@ def test_document_scale_and_relative_clause():
     assert e.respond("is a penguin an animal?").startswith("Yes")   # cross-fact multi-hop
     assert e.causes_effect("virus", "pain")                # 3-hop causal chain across the document
     assert not e.is_a("penguin", "fly")                    # 'that cannot fly' not misread as a parent
+
+
+def test_grounded_prose_learned_concept():
+    # JEP-178: ground a PROSE-LEARNED taxonomy in perception — perceive an instance, reason over read structure
+    import numpy as np
+    e = UnderstandingEngine(seed=178)
+    e.read("A dog is a mammal. A cat is a mammal. A mammal is an animal. A robin is a bird. A bird is an animal.")
+    rng = np.random.default_rng(0)
+    protos = {c: rng.normal(0, 1, e.feat_dim) for c in ["dog", "cat", "robin"]}
+    for c, v in protos.items():
+        e.add_prototype(c, v)
+    # a novel perceptual instance -> symbol -> multi-hop is_a over the PROSE-learned taxonomy
+    inst = protos["dog"] + rng.normal(0, 0.5, e.feat_dim)
+    seen = e.perceive(inst)
+    assert seen == "dog"
+    assert e.is_a(seen, "mammal") and e.is_a(seen, "animal")   # grounded multi-hop through read structure
+    assert not e.is_a(seen, "bird")
