@@ -5235,3 +5235,25 @@ honestly drawn. All ESTABLISHED methods (Hopfield CAM + iterated recall + VSA bi
 ensemble voting), named; NO novelty — the value is the demonstrated end-to-end connection + measured envelope, the
 concrete answer to "where is the substrate in the chain?" predict-calibrate 127/162 (78%, converged). Kill-switch
 absent; substrate physics thread (G1..G145) remains exhausted/idle.
+
+### Continuation (JEP-246..253): grounding, benefits, validation, and the three-verb loop closed
+
+- (246) the GROUNDED loop closes through the substrate (noisy cue cleans + reasons, one energy process).
+- (247) capacity scales LINEARLY (~0.5 edges/value-unit), VERIFIED.
+- (248) native EBM energy-query scores direct-fact plausibility (AUC 1.00); (249) energy is GRADED by support ->
+  evidence-calibrated CONFIDENCE (Spearman 1.0) — a genuine benefit beyond binary symbolic.
+- (250 NULL) the substrate does NOT natively flag contradiction (energy confounded by training frequency, JEP-249);
+  negation/consistency stay symbolic — the limit confirmed by test.
+- (251/252) VALIDATED SOUND at scale: is-a 0.998 over 50 random taxonomies; all five relation types 1.00 over 30
+  chains each, 0 systematic + 0 cross-relation leaks (typed binding isolates at scale).
+- (253 CAPSTONE) the full LEARN->UNDERSTAND->COMMUNICATE loop runs THROUGH the substrate: read prose -> store ->
+  energy-gated multi-hop reasoning -> render English STRING-IDENTICAL to the symbolic engine (1.00, incl a depth-5
+  chain). Michael's three verbs, end-to-end on the energy substrate, no transformer.
+
+The substrate-relational arc (JEP-232..253) is the COMPREHENSIVE, VALIDATED, LOOP-CLOSING answer to "where is the
+substrate in the chain?": the energy substrate is the engine's complete relational stack — memory + inference +
+communication + grounding — validated sound across all relation types, with native benefits (graded plausibility/
+confidence) beyond binary symbolic, all boundaries honestly mapped (memory-not-induction; no native negation). Three
+NULL->fix/positive cycles + several honest calibrations; all ESTABLISHED methods named, no novelty. 95 engine tests
+green, 22 substrate harnesses clean. predict-calibrate 132/168 (79%). Kill-switch absent; substrate physics G1..G145
+exhausted/idle.
