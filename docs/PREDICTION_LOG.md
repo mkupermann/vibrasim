@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 76 / predictions 103 (74%). Latest: JEP-187 HIT (developmental loop on REAL Fashion-MNIST images, 0.93; caught a non-discriminating-probe mistake in real time, applied JEP-180 lesson).
+Running tally: hits 77 / predictions 104 (74%). Latest: JEP-188 HIT (ground spatial RELATIONS from perceived geometry — transitive/inverse/perspective, composes with prose taxonomy).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 The OVERALL 73% is dominated by early-programme misses (surface-form bugs, structure-learning difficulty mis-estimates).
@@ -125,3 +125,4 @@ Predictions ARE converging WITHIN a settled domain, and the residual misses are 
 | JEP-185 | 🔮 read() comparison handler -> transitive comparison from prose, no copula overlap | comparison 3 extracted, elephant>mouse transitive Yes, no interference | HIT | Completes read()'s 5 relation types (is-a/part-of/causal/spatial/comparison). |
 | JEP-186 | 🔮 comparison/is-a interaction works both sides + leak guard | elephant>poodle, poodle>cat Yes; elephant>lion correctly Not | HIT | Completes the relation-interaction matrix (is-a x part-of/causal/comparison), each with correct semantics + leak guard. |
 | JEP-187 | 🔮 loop composes on real images, purity lower than toy, perception the bottleneck | purity 0.93, discriminating perception+reasoning 0.93; loop composes on REAL data | HIT | Grounding advanced toy->real. SELF-CATCH: nearly reused a non-discriminating probe (JEP-180 family), caught it before recording. |
+| JEP-188 | 🔮 perceived geometry grounds spatial relations, composes with the spatial faculty | cup-above-plate grounded -> transitive/inverse/perspective all hold + prose taxonomy composes | HIT | Grounding extends from objects to RELATIONS; spatial has a geometric signature, non-geometric relations need interaction data. |
