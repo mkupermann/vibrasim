@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 87 / predictions 114 (76%). Latest: JEP-198 HIT (summarize() flags a source's internal inconsistencies — honest source assessment combining communication + consistency).
+Running tally: hits 88 / predictions 115 (77%). Latest: JEP-199 HIT (mass nouns take no article in generation — 'tiredness' not 'a tiredness'; improves communication grammaticality).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 The OVERALL 73% is dominated by early-programme misses (surface-form bugs, structure-learning difficulty mis-estimates).
@@ -136,3 +136,4 @@ Predictions ARE converging WITHIN a settled domain, and the residual misses are 
 | JEP-196 | 🔮 consistency_audit reports all inherited-negative conflicts, empty if consistent | 1 contradiction (explained) on inconsistent KB, 0 on consistent | HIT | Whole-KB audit for a source's internal contradictions — learn-from-sources capability. |
 | JEP-197 | 🔮 summarize() gives a coherent overview of read knowledge | coherent multi-sentence summary (top categories + parts + causes); empty handled | HIT | Source summarization — whole-KB generative communication, complements per-concept describe(). |
 | JEP-198 | 🔮 summarize() flags internal contradictions, none if consistent | inconsistent source -> 'I noticed an inconsistency: ...'; consistent -> no note | HIT | Human-like honest source assessment: summarize AND flag self-contradiction (JEP-197 + 195/196). |
+| JEP-199 | 🔮 _art omits article for mass nouns, countable unaffected | 'tiredness'/'water' no article, 'a dog'/'an animal' preserved | HIT | Communication grammaticality; curated set not suffix rules (suffixes unreliable: city/-ity, organism/-ism countable). |

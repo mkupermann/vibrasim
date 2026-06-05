@@ -330,7 +330,9 @@ class UnderstandingEngine:
     # wrongly reject them as adjectives ('A seat is furniture')
     _MASS_NOUNS = {"furniture", "water", "information", "equipment", "music", "food", "money", "knowledge",
                    "weather", "clothing", "machinery", "matter", "energy", "wood", "metal", "glass", "plastic",
-                   "stone", "sand", "rice", "milk", "blood", "oxygen", "data", "software", "hardware"}
+                   "stone", "sand", "rice", "milk", "blood", "oxygen", "data", "software", "hardware",
+                   "tiredness", "happiness", "sadness", "darkness", "health", "wealth", "evidence", "research",
+                   "traffic", "weather", "homework", "progress", "pain", "fun", "luck", "fame"}
 
     def tell(self, sentence: str) -> tuple:
         """Parse one simple fact. Returns ('isa',c,p) / ('neg_isa',c,p) / ('rel',s,r,o) / ('none',).
@@ -630,7 +632,11 @@ class UnderstandingEngine:
 
     @classmethod
     def _art(cls, noun: str) -> str:
-        head = noun.split()[0] if noun else noun
+        if not noun:
+            return noun
+        if noun.split()[-1] in cls._MASS_NOUNS:     # mass/uncountable head -> no article ('water', not 'a water')
+            return noun
+        head = noun.split()[0]
         if head in cls._ART_A:
             art = "a "
         elif head in cls._ART_AN:
