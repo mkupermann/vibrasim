@@ -1367,3 +1367,13 @@ def test_equivalence_same_as():
     assert e.is_a("puma", "cat") and e.is_a("puma", "mammal")    # puma=cougar inherits cougar's ancestors
     assert e.is_a("cougar", "puma")                              # symmetric
     assert not e.is_a("cat", "puma")                            # cat is broader, NOT equal (no over-generalization)
+
+
+def test_subordinate_causal_because_due():
+    # JEP-282: 'X <verb> because of Y' / 'X <verb> due to Y' -> Y causes X (cause/effect swap)
+    e = UnderstandingEngine(seed=285)
+    e.read("Flooding happens because of rain. Disease spreads due to bacteria. A virus causes a fever.")
+    assert e.causes_effect("rain", "flooding")        # because of
+    assert e.causes_effect("bacteria", "disease")     # due to
+    assert e.causes_effect("virus", "fever")          # active still works
+    assert not e.causes_effect("flooding", "rain")    # directional, not symmetric
