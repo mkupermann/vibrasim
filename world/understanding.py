@@ -204,7 +204,7 @@ class UnderstandingEngine:
         fever.'); dense logic/argument prose (e.g. Boole) yields little — the gate is the GENRE, not the extractor."""
         self._detect_proper_nouns(passage)     # mid-sentence Capitalized words -> proper nouns (for correct generation)
         art = r"(?:(?:an|a|the)\s+)?"
-        np = rf"{art}([a-z][a-z\- ]*?)"
+        np = rf"{art}([a-z][a-z0-9\- ]*?)"     # concept NP: letter-first, then alphanumeric ('covid19', 'mp3', 'h2o')
         learned = {"is_a": 0, "part_of": 0, "causal": 0}
         last_subject = None     # most-recent subject, for recency-based cross-sentence pronoun resolution
         for s in re.split(r"[.;:]\s+", passage.strip().lower()):
