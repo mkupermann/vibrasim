@@ -25,6 +25,7 @@ class Conversation:
         self.eng = self.sm.rebuild_engine(seed=seed) if self.sm.sentences else UnderstandingEngine(seed=seed)
         self._constr_examples = []        # (sentence, (s,r,o)) the teacher gave for unparseable forms
         self._constr_templates = []       # induced templates -> self-extended reading (JEP-357)
+        self._synonyms = getattr(self.sm, "synonyms", {}) or {}   # taught word->canonical map (JEP-418), persisted
 
     def teach_construction(self, sentence, fact):
         """Teach the brain one example of a construction it couldn't parse. After 2 aligned examples it induces the
@@ -69,9 +70,24 @@ class Conversation:
 
     _FILLER_RE = re.compile(r"^(so|well|um|uh|hmm|ok|okay|please|hey|and|also|now)\b[,\s]*", re.I)
 
+    def _teach_synonym(self, text):
+        """'X means Y' / 'X is the same as Y' / 'X is another word for Y' -> X normalizes to Y (JEP-418)."""
+        m = re.match(r"^([a-z]+)\s+(?:means|is the same as|is another word for|is a synonym for|equals)\s+([a-z]+)\.?$",
+                     text.strip(), flags=re.I)
+        if m and m.group(1).lower() != m.group(2).lower():
+            self._synonyms[m.group(1).lower()] = m.group(2).lower()
+            self.sm.synonyms = dict(self._synonyms)       # persist on the durable store
+            return f"Got it — '{m.group(1)}' means the same as '{m.group(2)}'."
+        return None
+
+    def _apply_synonyms(self, t):
+        if not self._synonyms:
+            return t
+        return re.sub(r"[a-zA-Z]+", lambda w: self._synonyms.get(w.group(0).lower(), w.group(0)), t)
+
     def _preprocess(self, text):
         """Strip leading filler/politeness and normalise negated/contracted auxiliaries so messy input still routes."""
-        t = text.strip()
+        t = self._apply_synonyms(text.strip())            # normalize taught synonyms to canonical (JEP-418)
         while True:
             m = self._FILLER_RE.match(t)
             if not m or m.end() == 0:
@@ -103,6 +119,11 @@ class Conversation:
         text = (text or "").strip()
         if not text:
             return ""
+        if not self.is_question(text):                    # synonym teaching: 'big means large' (JEP-418)
+            syn = self._teach_synonym(text)
+            if syn:
+                self._dirty = True
+                return syn
         # pending interactive construction teaching: the teacher answers an "I couldn't understand…" with a fact
         if getattr(self, "_pending_unparsed", None) and not self.is_question(text):
             toks = re.sub(r"[.,]", " ", text.lower()).split()
