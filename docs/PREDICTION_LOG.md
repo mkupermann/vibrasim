@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 90 / predictions 117 (77%). Latest: JEP-201 HIT (read_open auto-induces new relations from repeated patterns in a passage — the engine is self-extensible from prose).
+Running tally: hits 91 / predictions 118 (77%). Latest: JEP-202 HIT (auto-learned open relations render naturally in describe — completes the open-relation learn->extract->query->communicate loop).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 The OVERALL 73% is dominated by early-programme misses (surface-form bugs, structure-learning difficulty mis-estimates).
@@ -139,3 +139,4 @@ Predictions ARE converging WITHIN a settled domain, and the residual misses are 
 | JEP-199 | 🔮 _art omits article for mass nouns, countable unaffected | 'tiredness'/'water' no article, 'a dog'/'an animal' preserved | HIT | Communication grammaticality; curated set not suffix rules (suffixes unreliable: city/-ity, organism/-ism countable). |
 | JEP-200 | 🔮 induce a new relation template from examples, extract + query new instances | 'is capital of' induced, 'Berlin...' extracted, queryable role-sensitively; inconsistent refused | HIT | Open-relation learning beyond the 5 fixed types (template induction). Limit: needs consistent surface pattern (no-transformer wall). |
 | JEP-201 | 🔮 read_open auto-induces recurring (>=2) open-relation patterns, excludes fixed | {'is capital of':3,'discovered':2} auto-induced, fixed-relations ignored, queryable; no-repetition -> {} | HIT | Engine self-extensible from prose (auto-discovers new relation types); limit = consistent recurring pattern (no-transformer wall). |
+| JEP-202 | 🔮 multi-word relations render verbatim, single-verb unaffected | 'It is capital of france' (was 'is capital ofs the france'); 'chases the cat' preserved | HIT | Completes open-relation integration into communication. Proper-noun article/capitalization a separate known limit. |

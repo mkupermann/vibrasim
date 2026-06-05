@@ -811,3 +811,14 @@ def test_read_open_auto_induction():
     assert e.extract_relation("Berlin is the capital of Germany.") == ("berlin", "is capital of", "germany")
     assert e.relation_true("berlin", "is capital of", "germany")      # new instance of an auto-learned relation
     assert UnderstandingEngine(seed=2).read_open("Paris is the capital of France. A dog barks loudly.") == {}  # no repetition
+
+
+def test_describe_open_relation_rendering():
+    # JEP-202: auto-learned open relations render naturally in describe (not 'is capital ofs the ...')
+    e = UnderstandingEngine(seed=202)
+    e.read_open("Paris is the capital of France. London is the capital of England.")
+    e.read("Paris is a city.")
+    d = e.describe("paris")
+    assert "is capital of france" in d and "is capital ofs" not in d   # multi-word relation rendered verbatim
+    e2 = UnderstandingEngine(seed=2); e2.tell("the dog chases the cat.")
+    assert "chases the cat" in e2.describe("dog")                       # single-verb relation unaffected
