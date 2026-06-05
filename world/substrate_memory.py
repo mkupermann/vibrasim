@@ -47,6 +47,7 @@ class SubstrateMemory:
         self.module_counts = [0]
         self.facts = []                              # list of (entity, role, value) for bookkeeping/growth
         self.values = []                             # value vocabulary (the cleanup dictionary)
+        self.sentences = []                          # taught PROSE (JEP-302) — replayed to rebuild the engine
         self.learner = ActiveLearner(tau=tau)        # perceptual memory (taught exemplars)
 
     # ---- atom / vector helpers ----
@@ -116,6 +117,30 @@ class SubstrateMemory:
         """Membership probe for a (possibly multi-valued) relation: is `value` bound to (entity, role)?"""
         return self.edge_sim(entity, role, value) >= gate
 
+    # ---- taught prose -> durable knowledge (JEP-302) ----
+    def ingest_engine(self, eng, roles=("parents:isa", "part_of_g:partof", "causes:causes", "properties:hasprop")):
+        """Bridge an UnderstandingEngine's learned relation graphs into the directed substrate store."""
+        for spec in roles:
+            attr, role = spec.split(":")
+            g = getattr(eng, attr, {})
+            for a, bs in dict(g).items():
+                for b in bs:
+                    self.add_fact(a, role, b)
+
+    def learn_sentence(self, sentence: str, eng):
+        """Record taught prose AND bridge its facts into the substrate (the engine parses; we store both)."""
+        eng.read(sentence)
+        self.sentences.append(sentence)
+        self.ingest_engine(eng)
+
+    def rebuild_engine(self, seed: int = 0):
+        """Replay the taught corpus into a fresh UnderstandingEngine (the durable knowledge, re-read)."""
+        from world.understanding import UnderstandingEngine
+        eng = UnderstandingEngine(seed=seed)
+        for s in self.sentences:
+            eng.read(s)
+        return eng
+
     # ---- perceptual facts (taught letters/sounds) ----
     def teach_percept(self, modality: str, symbol: str, x):
         self.learner.teach(modality, symbol, np.asarray(x, dtype=np.float64))
@@ -138,6 +163,7 @@ class SubstrateMemory:
         meta = {
             "D": self.D, "module_cap": self.module_cap, "module_counts": self.module_counts,
             "directed": self.directed, "facts": self.facts, "values": self.values,
+            "sentences": self.sentences,
             "learner": {"tau": self.learner.tau, "max_exemplars": self.learner.max_exemplars,
                         "n_asked": self.learner.n_asked, "n_seen": self.learner.n_seen,
                         "fit": {k: list(v) for k, v in self.learner._fit.items()}},
@@ -153,6 +179,7 @@ class SubstrateMemory:
                    directed=meta.get("directed", False))
         self.facts = [tuple(t) for t in meta["facts"]]
         self.values = list(meta["values"])
+        self.sentences = list(meta.get("sentences", []))
         z = np.load(os.path.join(d, "vectors.npz"), allow_pickle=True)
         if "modules" in z:                            # growing multi-module store (JEP-296)
             self.modules = [row.astype(np.float64) for row in z["modules"]]

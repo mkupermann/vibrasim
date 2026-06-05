@@ -72,6 +72,8 @@ class TeachApp:
             self.brain_dir = brain_dir or os.path.join(os.path.expanduser("~"), ".eqmod", "brain", "teach_gui")
             if os.path.exists(os.path.join(self.brain_dir, "meta.json")):
                 self.sm = SubstrateMemory.load(self.brain_dir)
+                if self.sm.sentences:                  # rebuild the reasoning engine from durable taught prose
+                    self.eng = self.sm.rebuild_engine(seed=0)
             else:
                 self.sm = SubstrateMemory(tau=0.12)
             self.al = self.sm.learner
@@ -198,7 +200,10 @@ class TeachApp:
             m = re.match(r"^(?:an?\s+|the\s+)?([a-z][a-z0-9\- ]*?)\b", s.lower())
         name = self.eng._norm(m.group(1).split()[-1]) if m else s.split()[0].lower()
         self.al.teach("write", name, self.cur_x.ravel())       # ground the percept to the named symbol
-        self.eng.read(sentence)                                # learn the sentence's facts
+        if self.sm is not None:
+            self.sm.learn_sentence(sentence, self.eng)         # DURABLE: record prose + bridge facts to substrate
+        else:
+            self.eng.read(sentence)                            # learn the sentence's facts (in-memory only)
         return name
 
     def _feedback(self, guessed, correct):
