@@ -1031,3 +1031,13 @@ def test_followup_numeric_and_context_switch():
     assert e.respond("what about an ant?") == "Yes."          # spider(8) > ant(6), numeric follow-up
     e.respond("is a dog an animal?")
     assert e.respond("what about a spider?").startswith("No") # context SWITCHED to is-a (no stale numeric)
+
+
+def test_followup_no_false_context_update():
+    # JEP-225: a 'Not that I can tell' follow-up must NOT update the order context (so 'why?' can't claim a false fact)
+    e = UnderstandingEngine(seed=225)
+    e.read("An elephant is bigger than a dog. A dog is bigger than a cat.")
+    e.respond("is an elephant bigger than a dog?")
+    assert e.respond("what about a mouse?").startswith("Not")           # mouse not in the order
+    w = e.respond("why?")
+    assert "mouse" not in w and "elephant is bigger than a dog" in w    # explains the prior VALID query, not the false one
