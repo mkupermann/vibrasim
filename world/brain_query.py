@@ -265,6 +265,17 @@ class BrainQuery:
             if v is not None and sc >= self.gate:
                 return " ".join(w.capitalize() for w in str(v).split("_"))
             return "I don't know that yet — teach me and ask again."
+        # JEP-471: inferred alliance/enmity through signed chains — "is X an ally/enemy of Y?" / "on the same side as Y"
+        m = (re.match(r"^is\s+(?:a\s+|an\s+|the\s+)?(\w+)\s+(?:an?\s+)?(ally|friend|enemy|foe|rival)\s+of\s+"
+                      r"(?:a\s+|an\s+|the\s+)?(\w+)$", s)
+             or re.match(r"^is\s+(?:a\s+|an\s+|the\s+)?(\w+)\s+on\s+the\s+(same)\s+side\s+as\s+"
+                         r"(?:a\s+|an\s+|the\s+)?(\w+)$", s))
+        if m:
+            al = getattr(self.mem, "_alignment", lambda *a: None)(self._sing(m.group(1)), self._sing(m.group(3)))
+            if al is None:
+                return False
+            want_ally = m.group(2) in ("ally", "friend", "same")
+            return bool((al > 0) == want_ally)
         # JEP-468: affective ambivalence — "is/does X (feel) conflicted/ambivalent/torn?" -> Heider imbalance
         m = re.match(r"^(?:is|does)\s+(?:a\s+|an\s+|the\s+)?(\w+)\s+(?:feel\s+)?(conflicted|ambivalent|torn)$", s)
         if m:

@@ -260,6 +260,29 @@ class SubstrateMemory:
                         seen.add(b); q.append((b, ns, hops + 1))
         return out
 
+    def _alignment(self, x: str, y: str, max_hops: int = 6):
+        """JEP-471: signed-path product between x and y through enemy_of/friend_of (Heider transitivity).
+        +1 = ally/same side, -1 = enemy/opposite, None = no signed path. Edges treated as undirected."""
+        if x == y:
+            return 1.0
+        from collections import deque
+        q = deque([(x, 1.0, 0)]); seen = {x}
+        while q:
+            e, sign, hops = q.popleft()
+            if hops >= max_hops:
+                continue
+            for (a, r, b) in self.facts:
+                if r not in self._SIGN:
+                    continue
+                nb = b if a == e else (a if b == e else None)     # undirected
+                if nb is None or nb in seen:
+                    continue
+                ns = sign * self._SIGN[r]
+                if nb == y:
+                    return ns
+                seen.add(nb); q.append((nb, ns, hops + 1))
+        return None
+
     def is_ambivalent(self, entity: str):
         """JEP-468: True iff the entity is reachable as BOTH positive and negative through signed relations
         (Heider imbalance / conflicting energy)."""
