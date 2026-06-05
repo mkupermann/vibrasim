@@ -1345,3 +1345,16 @@ def test_possessive_mereology():
     assert e.part_of("engine", "car")
     assert e.respond("does a dog have a heart?").startswith("Yes")
     assert e.is_a("dog", "mammal")             # regular is-a unaffected
+
+
+def test_functional_used_for_relation():
+    # JEP-280: 'X is used for Y' -> a learned 'is used for' relation; 'what is X used for?' -> Y
+    e = UnderstandingEngine(seed=282)
+    e.read("A knife is used for cutting. A pen is used for writing. A car is used for transport.")
+    assert e.relation_true("knife", "is used for", "cutting")
+    assert "cutting" in e.respond("what is a knife used for?")
+    assert "writing" in e.respond("what is a pen used for?")
+    # subject-side WH unaffected
+    e2 = UnderstandingEngine(seed=283)
+    e2.read("Paris is the capital of France. London is the capital of England.")
+    assert e2.respond("what is the capital of France?") == "Paris."

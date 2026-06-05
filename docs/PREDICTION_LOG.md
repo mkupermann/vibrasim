@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 158 / predictions 194 (81%). Latest: JEP-279 HIT (possessive mereology "X's Y" -> Y part-of X; 'a dog's heart' -> heart part-of dog, 'the car's engine' -> engine part-of car; the ambiguous 'X of Y' subject form left as residue).
+Running tally: hits 159 / predictions 195 (82%). Latest: JEP-280 HIT (functional 'X is used for Y' -> open relation (added 'for' to the prep list so it induces, not mis-parsed as is-a) + 'what is X used for?' question; knife->cutting, pen->writing).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 At JEP-221 the tally is 110/137 (80%) and has CONVERGED: the OVERALL rate is dragged down by early-programme misses
@@ -221,3 +221,4 @@ honestly informative:
 | JEP-277 | 🔮 add metals/materials to _MASS_NOUNS fixes 'an iron'; _countable override keeps polysemy | PASS — iron/copper/gold article-less, 'an iron'(appliance) still countable; 114 tests | HIT | Materials are a closed mass-noun class; usage-led countability (256) overrides the lexicon for the count sense. |
 | JEP-278 | 🔮 'what are X?' uses singularized cat + category fallback; no double-plural | PASS — whales->mammals (category), zebras no 'zebrass', dogs->poodle (subtypes); 116 tests | HIT | Plural WH: subtypes-or-category; singularize before re-pluralizing (number-morphology guard). |
 | JEP-279 | 🔮 possessive "X's Y" -> Y part-of X (guarded by valid-concept); 'X of Y' left (ambiguous) | PASS — dog's heart -> heart part-of dog, car's engine -> engine part-of car; 116 tests | HIT | Possessive 's is unambiguous mereology; 'X of Y' is ambiguous (part-of vs compound concept) -> not forced. |
+| JEP-280 | 🔮 add 'for' to is_fixed preps so 'is used for' induces + 'what is X used for?' handler | PASS — used-for induced, knife/pen/car functions answered, capital-of WH intact; 117 tests | HIT | 'for' is a relational preposition (is used for / is good for); functional relations are open relations. |
