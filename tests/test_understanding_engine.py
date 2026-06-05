@@ -1050,3 +1050,20 @@ def test_alphanumeric_concept_names():
     assert e.is_a("covid19", "microbe")          # 2-hop with an alphanumeric concept
     assert e.is_a("mp3", "format")
     assert getattr(e, "num_attrs", {}).get(("dog", "leg")) == 4   # '4 legs' still numeric, not a concept
+
+
+def test_realprose_qa_fixes():
+    # JEP-228: real-usage QA on a natural encyclopedic passage surfaced two genuine bugs, now fixed.
+    e = UnderstandingEngine(seed=228)
+    out = e.read("The Sun is a star. A star is a celestial body. The Earth is a planet. "
+                 "A planet is a celestial body. The Earth has 1 moon. A spider has 8 legs. "
+                 "Paris is the capital of France. London is the capital of England.")
+    # (1) a multi-word is-a parent ('celestial body') must NOT leak into open relations
+    assert "is celestial" not in out.get("open", {})
+    assert e.is_a("sun", "celestial body")          # the is-a parent is still captured normally
+    # (2) numeric Q&A singularizes for exactly one
+    assert e.respond("how many moons does the Earth have?") == "Earth has 1 moon."
+    assert e.respond("how many legs does a spider have?") == "A spider has 8 legs."
+    # (3) a prepositional copula IS still a genuine open relation (kept, not over-excluded)
+    assert "is capital of" in getattr(e, "learned_rels", set())
+    assert e.respond("what is the capital of France?") == "Paris."
