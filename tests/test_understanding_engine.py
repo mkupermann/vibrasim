@@ -946,3 +946,11 @@ def test_large_multidomain_document():
     assert e.respond("did the war happen before the treaty?") == "Yes."
     assert e.relation_true("paris", "is capital of", "france")
     assert out.get("open", {}) == {"is capital of": 2}     # 'has 2' NOT spuriously induced as an open relation
+
+
+def test_superlative_temporal():
+    # JEP-214: 'what happened first/last?' over the temporal order
+    e = UnderstandingEngine(seed=214)
+    e.read("The famine happened before the war. The war started before the treaty. The treaty came before the peace.")
+    assert e.respond("what happened first?") == "A famine happened first."
+    assert e.respond("what happened last?") == "A peace happened last."

@@ -1252,6 +1252,23 @@ class UnderstandingEngine:
             if ex:
                 return f"No — not all. For example, {self._art(ex)} cannot {prop}."
             return f"I don't know whether all {self._norm_phrase(cat)}s can {prop}."
+        # SUPERLATIVE temporal: 'what happened first/last?' -> the source/sink of the before-order
+        m = re.match(r"what\s+happened\s+(first|last)", q)
+        if m:
+            before = self._orders.get("before", {})
+            events = set(before) | {b for bs in before.values() for b in bs}
+            if events:
+                if m.group(1) == "first":      # nothing is before it
+                    cands = [ev for ev in events
+                             if not any(self._order_holds("before", o, ev) for o in events if o != ev)]
+                else:                           # nothing is after it
+                    cands = [ev for ev in events
+                             if not any(self._order_holds("before", ev, o) for o in events if o != ev)]
+                if len(cands) == 1:
+                    return f"{self._art(cands[0]).capitalize()} happened {m.group(1)}."
+                if len(cands) > 1:
+                    return f"Possibly {self._join_phrases(sorted(cands))} (the order is not fully determined)."
+            return "I don't have a timeline to order."
         # TEMPORAL questions: 'did the war happen before the peace?' / 'is X after Y?'
         m = re.match(r"(?:did|was|is|were|does)\s+(?:(?:an|a|the)\s+)?(\w+)\s+(?:\w+\s+)?(before|after)\s+(?:(?:an|a|the)\s+)?(\w+)", q)
         if m:
