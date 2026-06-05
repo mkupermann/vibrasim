@@ -66,6 +66,18 @@ def test_pronoun_it():
     assert c.say("can it bark?").strip().lower() == "yes."
 
 
+def test_prose_forms_conjunction_relclause_locational():
+    c = _conv()
+    c._learn_one("Cats and dogs are mammals.")
+    c._learn_one("A poodle, which is a dog, can bark.")
+    c._learn_one("Paris is in France.")
+    from world.brain_query import BrainQuery
+    bq = BrainQuery(c.sm, seed=0)
+    assert bq.is_a("cat", "mammal") is True and bq.is_a("dog", "mammal") is True
+    assert bq.is_a("poodle", "dog") is True and bq.has_property("poodle", "bark") is True
+    assert ("paris", "located_in", "france") in c.sm.facts
+
+
 def test_question_vs_statement_routing():
     c = _conv()
     assert Conversation.is_question("Is a dog a mammal?")
