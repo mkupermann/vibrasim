@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 132 / predictions 168 (79%). Latest: JEP-253 HIT (the full LEARN->UNDERSTAND->COMMUNICATE loop runs THROUGH the substrate — read prose, store in EnergyNet, reason by energy-gated chaining, render English STRING-IDENTICAL to the symbolic engine (1.00 both seeds), incl a depth-5 chain; Michael's three verbs end-to-end on the substrate, no transformer).
+Running tally: hits 133 / predictions 169 (79%). Latest: JEP-254 HIT (multi-word attribute in the 'how many X' question — 'how many hydrogen atoms does water have?' -> 'Water has 2 hydrogen atoms'; completes the multi-word handling across all three numeric parsers (capture/comparison/question), the fix-in-every-parser lesson; surfaced by real-usage QA on a new chemistry passage).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 At JEP-221 the tally is 110/137 (80%) and has CONVERGED: the OVERALL rate is dragged down by early-programme misses
@@ -195,3 +195,4 @@ honestly informative:
 | JEP-251 | 🔮 substrate is_a matches symbolic >=0.98 at scale, 0 systematic FP, >=90% taxonomies perfect | a/b/d PASS (match 0.998, 0 systematic FP, mean-per-tax 0.998); c marginal (88% seed7 vs >=90%) | HIT | Substrate store SOUND at scale; energy gate generalizes (no leaks); residual ~0.2% is occasional flakes (~12% of taxonomies), aggregation-curable. |
 | JEP-252 | 🔮 all relation types sound at scale (>=0.98 each, 0 systematic, 0 cross-relation leak) | all PASS (every type 1.00, 0 systematic FP, 0 cross-relation leak) | HIT | Typed chaining + energy gate is relation-agnostic and correct for the full relation set; typed binding isolates relations at scale. |
 | JEP-253 | 🔮 substrate-driven English Q&A matches symbolic >=0.90; three-verb loop closes on substrate | all PASS (string-match 1.00 both seeds, verdicts 1.00, well-formed, depth-5 end-to-end) | HIT | Reusing the engine's renderer on the substrate chain gives string-identical English; substrate chain order matches symbolic naturally. |
+| JEP-254 | 🔮 multi-word 'how many X' question keyed by head noun fixes it, no regression (parallels 229/231) | PASS — 'hydrogen atoms' -> '2 hydrogen atoms', single-word unchanged; 96 tests green | HIT | The multi-word fix was missing from the 3rd parser (question); fix a surface pattern in EVERY parser (error-class 1/8). |

@@ -1356,9 +1356,10 @@ class UnderstandingEngine:
             return "Not that I can tell."
         # NUMERIC questions: 'how many legs does a dog have?' / 'does a spider have more legs than a dog?'
         na = getattr(self, "num_attrs", {})
-        m = re.match(r"how many\s+(\w+)\s+(?:does|do)\s+(?:(?:an|a|the)\s+)?(\w+)\s+have", q)
+        # the queried attribute may be multi-word ('hydrogen atoms'); key by the HEAD noun, symmetric with capture (JEP-229)
+        m = re.match(r"how many\s+((?:\w+\s+)*\w+)\s+(?:does|do)\s+(?:(?:an|a|the)\s+)?(\w+)\s+have", q)
         if m:
-            attr, ent = self._norm(m.group(1)), self._norm(m.group(2))
+            attr, ent = self._norm(m.group(1).split()[-1]), self._norm(m.group(2))
             if (ent, attr) in na:
                 n = na[(ent, attr)]
                 phrase = getattr(self, "num_phrase", {}).get((ent, attr))   # may carry a modifier ('large moons')
