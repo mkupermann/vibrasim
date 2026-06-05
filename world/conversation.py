@@ -251,6 +251,14 @@ class Conversation:
             rest = m.group(3).strip()
             art = "an" if y[0] in "aeiou" else "a"
             return [f"A {x} is {art} {y}.", f"A {x} {rest}."], extra
+        # appositive: 'The X, a Y, <rest>' -> 'A X is a <head-of-Y>.' + 'A X <rest>.' (no 'which is'). JEP-386.
+        m = re.match(r"^(?:a|an|the)\s+([a-z]+),\s+an?\s+([a-z ]+?),\s+(.+?)\.?$", t, flags=re.I)
+        if m:
+            x = m.group(1).lower()
+            y = self._singular(m.group(2).strip().split()[-1].lower())
+            rest = m.group(3).strip()
+            art = "an" if y[0] in "aeiou" else "a"
+            return [f"A {x} is {art} {y}.", f"A {x} {rest}."], extra
         # conjunction subject: 'Cats and dogs are mammals' / 'A cat and a dog are mammals' -> two sentences
         m = re.match(r"^(?:a\s+|an\s+)?([a-z]+)s?\s+and\s+(?:a\s+|an\s+)?([a-z]+)s?\s+are\s+(?:a\s+)?(.+?)\.?$",
                      t, flags=re.I)
