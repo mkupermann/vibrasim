@@ -250,8 +250,25 @@ methods, no novelty claimed — the value is the honest characterization):
    UNIFICATION: the chaining-vs-aggregation lesson governs LEARNING as well as REASONING — hard consistency fragile,
    soft aggregation robust, universally. Honest calibration miss recorded (JEP-154: I forgot my own JEP-134 lesson).
 
+6. **LEARN-FROM-SOURCES, end to end + the representation-dependent compounding refinement (JEP-155..163).** A
+   complete, positive, no-transformer pipeline that LEARNS from prose and reasons over it: (a) the real-prose parse
+   gate is the GENRE, not the extractor (JEP-155/156 — same Hearst + bare-NP extractor gets ~0.87 precision on
+   encyclopedic prose vs ~0 on Boole's logic prose); (b) end-to-end learn-from-prose -> CROSS-SENTENCE multi-hop
+   understanding works (JEP-157, 1.00 vs bag-of-words 0.00; 'a poodle is an organism' from a passage that never says
+   it); (c) extended to MULTI-RELATION (is-a + part-of + causal, JEP-159) and consolidated into first-class tested
+   engine methods e.read()/e.describe() — closing the LEARN->UNDERSTAND->COMMUNICATE loop (JEP-160, multi-relation
+   English profiles); (d) read() hardened to 8/8 common prose-variation categories (JEP-161 boundary -> 162 shallow
+   parse for conjoined/plural/multi-fact/appositive with a POS-free adjective guard -> 163 recency coreference), with
+   honest bounds (genre, extraction-noise COMPOUNDING per JEP-157b — the universal insight's THIRD manifestation,
+   multi-entity coreference). And (e) the universal compounding insight REFINED to be representation-dependent
+   (JEP-158, a MISS that paid off): symbolic-independent edges compound EXPONENTIALLY, continuous-independent errors
+   AVERAGE (sqrt-k, robust — a concrete reason the learned path helps), continuous-systematic bias compounds
+   LINEARLY; substrate Hopfield cleanup (JEP-4) cures both continuous cases — tying the four pillars + the universal
+   insight + the substrate. Two singularization bugs found+fixed; one CARDINAL repeated bug honestly logged (D-dim
+   noise = sigma*sqrt(D)).
+
 These are the genuine outputs: a frontier REFRAMED end-to-end with honest bounds, a unifying INSIGHT about inference
 under noise (chaining vs aggregation, universal across learning AND reasoning), the full recipe for efficient
 structure learning, and a measured account of prediction bias. Established methods throughout; NOT human-level; the
-discipline (predict-calibrate 49/69, every miss diagnosed including JEP-154, ~38 self-corrections) is the
+discipline (predict-calibrate 56/79, every miss diagnosed including JEP-154/157/158/159, ~40 self-corrections) is the
 transferable deliverable.
