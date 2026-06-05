@@ -5573,3 +5573,16 @@ training the recurrent weights here). Two honest findings: (1) D=8 mis-calibrate
 underperforms both exact RTRL and the readout-only reservoir. Chained BET-145: sweep D in {8,16,24,32,48} to
 locate the reservoir memory horizon and test whether RTRL/e-prop extend past it (the real deep-credit regime).
 Principled (capacity-boundary characterization), not bar-tuning -- verdict logic unchanged, only D swept.
+
+## 2026-06-05 — BET-145: temporal-credit delay sweep — NULL; the bottleneck is ARCHITECTURE, not the learning rule
+Swept D in {8,16,24,32} for reservoir / RTRL / e-prop on delayed selective recall. Result NULL but sharply
+diagnostic: reservoir memory horizon ~D14 (0.853@8 -> 0.432@16 -> chance@24), and at the break point EXACT
+RTRL ALSO collapses (0.290@16 ~ chance), not just e-prop (0.260). So deep temporal credit assignment is NOT
+the bottleneck -- all three methods (readout-only, eligibility, AND exact online gradient) die at the same
+D~14 wall. Since EXACT credit fails identically, the limit is the ungated leaky-tanh cell's vanishing
+memory/gradient (classic long-term-dependency problem, Bengio 1994 -- why LSTM/GRU gating exists), not the
+credit rule. (At D=16 RTRL even underperforms the reservoir's ridge readout: once gradients vanish, SGD-trained
+weights < closed-form readout on a random reservoir.) Honest takeaways: (1) the e-prop<RTRL gap (BET-144) is
+real but moot here -- both die at the same horizon; (2) the genuine lever for long-delay working memory is a
+GATED memory cell (established LSTM/GRU fix), not better credit assignment. Open: can a substrate-native gate
+(multiplicative BTSP-modulated path) extend the horizon? Known architectural fix, named as such, not new math.
