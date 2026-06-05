@@ -963,3 +963,13 @@ def test_superlative_comparison():
            "A grandfather is older than a father. A father is older than a son.")
     assert e.respond("what is the biggest?") == "An elephant."
     assert e.respond("what is the oldest?") == "A grandfather."
+
+
+def test_enumeration_query():
+    # JEP-217: 'what are all the X?' lists every concept that is-a X (multi-hop)
+    e = UnderstandingEngine(seed=217)
+    e.read("A dog is a mammal. A cat is a mammal. A poodle is a kind of dog. A mammal is an animal. A robin is a bird. A bird is an animal.")
+    m = e.respond("what are all the mammals?")
+    assert "dog" in m and "cat" in m and "poodle" in m       # poodle via multi-hop (poodle->dog->mammal)
+    a = e.respond("what are all the animals?")
+    assert all(x in a for x in ["dog", "cat", "robin", "bird"])

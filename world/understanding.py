@@ -1252,6 +1252,14 @@ class UnderstandingEngine:
             if ex:
                 return f"No — not all. For example, {self._art(ex)} cannot {prop}."
             return f"I don't know whether all {self._norm_phrase(cat)}s can {prop}."
+        # ENUMERATION: 'what are all the mammals?' -> every concept that is-a the category
+        m = re.match(r"what\s+(?:are\s+(?:all\s+)?(?:the\s+)?|kinds?\s+of\s+)([a-z]+)s?\b", q)
+        if m and re.match(r"what\s+are\b", q):
+            cat = self._norm(m.group(1))
+            members = sorted(c for c in self.parents if c != cat and self.is_a(c, cat))
+            if members:
+                return self._join_phrases(members).capitalize() + "."
+            return f"I don't know any {m.group(1)}s."
         # SUPERLATIVE comparison: 'what is the biggest?' -> the top of the corresponding order (nothing exceeds it)
         m = re.match(r"what\s+is\s+the\s+([a-z]+est)\b", q)
         if m:
