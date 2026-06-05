@@ -63,7 +63,8 @@ e.is_a(e.perceive(new_bird_features), "animal")          # True
 | 21 | **GROUNDING** — perceive an instance -> reason via prose-learned taxonomy; the developmental loop (perceive->discover->name->read->reason) on toy AND real images; functional grounding from observed interactions | JEP-178/179/187..192 |
 | 22 | **CONSISTENCY** — detect IMPLIED contradictions (inherited negatives); audit a whole source for internal inconsistency | JEP-195/196 |
 | 23 | **ABSTRACT concepts** reason symbolically (grounding is what's special); STRUCTURAL not lexical (novel nonsense-word concepts) | JEP-172/182 |
-| 24 | **SELF-EXTENSIBLE** — `read_open()` auto-induces NEW relation types from repeated patterns in a passage (beyond the 5 fixed ones); proper-noun handling in generation | JEP-200/201/202/203 |
+| 24 | **SELF-EXTENSIBLE** — `read_open()` auto-induces NEW relation types from repeated patterns in a passage (beyond the 5 fixed ones); answers natural Q&A about them; proper-noun handling | JEP-200..206 |
+| 25 | **QUANTITATIVE** — 'X has N Y' numeric attributes from prose, 'how many?' Q&A, numeric comparison, numeric consistency; **TEMPORAL** — 'X before/after Y' order, transitive temporal Q&A | JEP-207..210 |
 | -- | VALIDATED: property-based SOUND, fuzz ROBUST (0 crashes/6000), SCALABLE to 1000, STRUCTURAL, full INTEGRATION test; matured engine re-validated | JEP-124-127, 171/184/194 |
 | -- | UNIFIED: perceive->understand->plan->ACT on conceptual goals; read->understand->communicate on prose | JEP-122/132/160 |
 
