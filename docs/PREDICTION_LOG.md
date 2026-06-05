@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 169 / predictions 205 (82%). Latest: JEP-290 HIT (per Michael 'words after letters' -- the engine READS written words from pixels (letters->word, lexicon cleanup recovers per-letter errors raw 0.75->cleaned 1.0) and UNDERSTANDS them via read prose; the developmental letters->words->meaning ladder).
+Running tally: hits 170 / predictions 206 (82%). Latest: JEP-291 HIT (per Michael 'answer with sentences' -- the teacher's SENTENCE both NAMES the percept and TEACHES facts (read into the engine); perceive+reason 0.94-0.97 from sentence-teaching; GUI tools/teach_gui.py accepts sentences + self-bootstraps for direct launch).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 At JEP-221 the tally is 110/137 (80%) and has CONVERGED: the OVERALL rate is dragged down by early-programme misses
@@ -232,3 +232,4 @@ honestly informative:
 | JEP-288 | 🔮 hear letters (>=.90) + shared symbol set + cross-modal recall (>=.90) + transfer | PASS — hear 1.0, 26/26 shared symbols, recall 0.96, ear<->eye transfer; FFT-binning fix | HIT | 'hear A' and 'write A' ground ONE symbol; cross-modal binding via (modality,symbol) store enables transfer. |
 | JEP-289 | 🔮 GroundedMind: teacher-grounded perception + prose reasoning -> perceive->reason >=.85, teacher <=70% | PASS — 'is this footwear?' 0.94-0.98, teacher asked 8-58%, end-to-end | HIT | Perception (active-learner prototypes) + understanding (prose is_a) compose into a perceive->understand loop with a teacher. |
 | JEP-290 | 🔮 read words from pixels (cleaned >=.90), cleanup recovers letter errors, read-then-reason | PASS — cleaned word acc 1.0 (raw 0.75), read+reason True, 'DOG'<-'OUG' | HIT | Letters->words via lexicon cleanup (the redundancy cure in reading); read words bridge to prose reasoning. |
+| JEP-291 | 🔮 teacher sentence grounds percept + reads facts -> perceive+reason >=.85; GUI sentence path | PASS — grounded+facts True, reason 0.94-0.97, GUI sentence path + direct launch | HIT | One sentence binds perception (name) to knowledge (read facts); the 'answer with sentences' teaching level. |
