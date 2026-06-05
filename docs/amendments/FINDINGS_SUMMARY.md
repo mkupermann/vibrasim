@@ -144,3 +144,31 @@ the memory thread is closed; chasing further layers past 70 NULLs would be refus
 The substrate is a memoryless nonlinear analog processor (instantaneous single-channel computation
 only). A learning/memory system requires a fundamentally different (sparse, quiescent-by-design,
 disconnect-capable) substrate -- an architecture, not a knob.
+
+## ADDENDUM 5 (2026-06-05) — the COMPUTATION/optimization thread's lone positive claim REFUTED (G145→G149)
+
+After the memory thread closed (Addendum 4), a later arc (G138–G145) pivoted to energy-based / Ising /
+annealing computation and produced the programme's ONLY positive-advantage claim: G145 reported an
+oscillator-Ising machine beating greedy 8/8 on hard frustrated MAX-CUT — "the one place vibrations-computing
+has a real edge." A 2026-06-05 audit (G146–G149) dismantled it, honestly and in stages:
+
+- **G146** — G145's greedy baseline was SIGN-BUGGY: it flipped on `gain<0`, descending toward MIN-cut
+  (returning NEGATIVE cuts, −25 to −67). A *correct* multi-restart greedy reaches the optimum on all 8 of
+  G145's n=30 instances — they aren't hard, and the oscillator merely ties correct greedy. The "8/8 win" was
+  a win over a backwards baseline. Oscillator vs proper SA at n=30: a tie (both near-optimal).
+- **G147–G148** — scaling to n=200–360 (genuinely hard regime), **classical simulated annealing** does
+  genuinely beat a strong correct greedy (~+2%, 14/15) — the textbook "annealing > local search on glassy
+  landscapes." BUT separating the *physical oscillator* from classical SA: the oscillator TIES correct greedy
+  (6/15, gap ≈ 0) and LOSES to SA 15/15 at every scale. The advantage belongs to the ALGORITHM (SA), which
+  needs no substrate.
+- **G149** — fairness control: gave the oscillator ~10× compute (same dynamics, only more of it). ROBUST-
+  NEGATIVE — it still ties correct greedy and loses to SA 10/10. The weakness is in the dynamics, not the
+  budget.
+
+**Corrected bottom line:** the substrate's last candidate advantage is an advantage of the **classical SA
+algorithm alone**; the physical/vibrations oscillator confers **no computational edge** over correct local
+search at any scale or budget tested. Combined with the closed memory thread (Addendum 4) and the
+scoped/decorative communication and proto-cell results, the honest, programme-wide conclusion stands without
+exception: **the physics is decorative everywhere tested; standard classical methods carry every win.** The
+deliverable was never the simulation succeeding — it was the rigorous, self-correcting process, here applied
+to retract an over-claim (a sign-bugged baseline) rather than make one. Docs: g145–g149 amendments.
