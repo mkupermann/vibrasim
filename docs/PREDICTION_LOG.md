@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 143 / predictions 179 (80%). Latest: JEP-264 HIT ('does X have Y?' possession question -> part_of(Y,X) with is-a inheritance ('does a human have a heart?' -> Yes via human->mammal) or numeric fallback; 'more...than' not shadowed; closes the biology QA pass).
+Running tally: hits 144 / predictions 180 (80%). Latest: JEP-265 HIT (re-validated the prose-hardened engine ROBUST after the 16 changes of JEP-254..264 -- 0 crashes / 4000 adversarial passages + 6 queries each; no fragility introduced, paralleling JEP-171/194/205).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 At JEP-221 the tally is 110/137 (80%) and has CONVERGED: the OVERALL rate is dragged down by early-programme misses
@@ -206,3 +206,4 @@ honestly informative:
 | JEP-262 | 🔮 bare singular subjects -> no article (after _countable); fixes 'a copper/rust/paris', keeps countables/plurals | PASS — copper/rust/paris article-less, metal/dog countable, 'Oxygen causes rust', Jupiter corrected; 103 tests | HIT | Usage assigns article: article-led=countable, bare-singular-subject=no-article; mid-sentence proper-noun caps remain the NER wall. |
 | JEP-263 | 🔮 'X contains/consists of Y' -> Y part-of X + exclude from open; transitive | PASS — cell/nucleus/copper part-of, nucleus->body transitive, no open 'contains'; 104 tests | HIT | Mereological containment verbs are part-of, not generic open relations. |
 | JEP-264 | 🔮 'does X have Y?' -> part_of(Y,X) (inherits to subtypes) or numeric; no shadowing of 'more...than' | PASS — human/mammal have heart (inherited), dog has 4 legs, negatives No, comparison intact; 106 tests | HIT | Possession is mereology; the part-of x is-a interaction distributes the whole's parts to subtypes. |
+| JEP-265 | 🔮 the 16 prose-hardening changes (254..264) are guarded -> engine stays robust, 0 crashes | PASS — 0 crashes / 4000 adversarial passages + 6 queries each; 106 unit tests green | HIT | New extractors/handlers all guarded (bare_np/valid_concept/suffix); re-validate after major change (JEP-171/194/205). |
