@@ -12,6 +12,7 @@ dependencies = [
     "optuna >= 4.0, <5.0",
     "yt-dlp>=2026.3.17",
     "librosa>=0.11.0",
+    "pypdf>=4.0",          # read .pdf sources in the conversation/web GUI (tools/web_gui.py, world/ingest.py)
 ]
 
 [project.optional-dependencies]
