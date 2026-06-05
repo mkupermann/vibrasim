@@ -1,5 +1,16 @@
 # Pattern — Oscillator-Ising computing ("vibrations computing", the real one)
 
+> ⚠️ **Major correction (2026-06-05, G146–G149).** An earlier version of this pattern claimed the oscillator
+> "genuinely computes" and "build this." Rigorous re-testing changed the conclusion: the oscillator-Ising
+> machine merely **TIES a correct multi-restart greedy** and **LOSES to classical simulated annealing** at
+> every scale (n=200–360), even at 10× compute. The G138/G139 "evidence" below compared against weak/loose
+> baselines (G139's "greedy", and G145's greedy was outright sign-bugged). The genuine optimization edge is
+> **simulated annealing's (a classical algorithm)** — annealing beats local search on hard frustrated
+> landscapes, and the oscillator is a *legitimate but weak* annealer, no better than correct greedy. **Honest
+> takeaway: to solve hard combinatorial problems, build SA / a proper annealer and benchmark against correct
+> local search — the oscillator confers no edge.** The rest of this doc is kept for the method/recipe; read
+> its claims through this correction. See `g146`–`g149` + FINDINGS_SUMMARY Addendum 5.
+
 ## What it is (established method — Kuramoto / oscillator Ising machine; named as such, not novel)
 A network of coupled phase oscillators relaxes to a low-energy spin configuration that SOLVES a
 combinatorial optimization problem (MAX-CUT, graph problems, scheduling). The problem is encoded in the
