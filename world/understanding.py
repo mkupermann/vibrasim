@@ -1264,14 +1264,24 @@ class UnderstandingEngine:
             if ex:
                 return f"No — not all. For example, {self._art(ex)} cannot {prop}."
             return f"I don't know whether all {self._norm_phrase(cat)}s can {prop}."
-        # CONVERSATIONAL follow-up: 'what about a cat?' -> reuse the last is-a question's category with a new subject
+        # CONVERSATIONAL follow-up: 'what about X?' -> reuse the last question (is-a category, or order comparison)
         m = re.match(r"(?:what about|how about|and)\s+(?:(?:an|a|the)\s+)?(\w+)\s*\??$", q)
-        if m and getattr(self, "_last_query", None):
-            x2, c = self._norm(m.group(1)), self._last_query[1]
-            self._last_query = (x2, c)
-            if self.is_a(x2, c):
-                return f"Yes, {self._art(x2)} is {self._art(c)} too."
-            return f"No, {self._art(x2)} is not {self._art(c)} as far as I know."
+        if m:
+            y = self._norm(m.group(1))
+            rq = getattr(self, "_last_rel_query", None)
+            if rq and rq[0] == "order":          # reuse the last comparison: same first arg + comparative, new 2nd arg
+                _, rx, _, comp = rq
+                self._last_rel_query = ("order", rx, y, comp)
+                verb = f"{comp} than" if comp.endswith("er") else comp
+                if self._order_holds(comp, rx, y):
+                    return f"Yes, {self._art(rx)} is {verb} {self._art(y)} too."
+                return f"Not that I can tell."
+            if getattr(self, "_last_query", None):
+                c = self._last_query[1]
+                self._last_query = (y, c)
+                if self.is_a(y, c):
+                    return f"Yes, {self._art(y)} is {self._art(c)} too."
+                return f"No, {self._art(y)} is not {self._art(c)} as far as I know."
         # ENUMERATION: 'what are all the mammals?' -> every concept that is-a the category
         m = re.match(r"what\s+(?:are\s+(?:all\s+)?(?:the\s+)?|kinds?\s+of\s+)([a-z]+)s?\b", q)
         if m and re.match(r"what\s+are\b", q):
