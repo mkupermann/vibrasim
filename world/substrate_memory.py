@@ -207,6 +207,15 @@ class SubstrateMemory:
     def recognize(self, modality: str, x):
         return self.learner.guess(modality, np.asarray(x, dtype=np.float64))
 
+    def has_resolvable_corrections(self):
+        """True if some direct positive fact is overridden by a negation (so compaction would reclaim it)."""
+        facts = set(self.facts)
+        for (pos, neg) in (("isa", "not_isa"), ("hasprop", "not_hasprop")):
+            for (s, r, o) in facts:
+                if r == neg and (s, pos, o) in facts:
+                    return True
+        return False
+
     def compact(self):
         """Rebuild from LIVE facts only, reclaiming capacity from resolved corrections (JEP-334). A direct positive
         fact that a negation overrides is dropped together with that now-moot negation; standalone negations
