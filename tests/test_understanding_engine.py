@@ -765,3 +765,14 @@ def test_summarize_read_knowledge():
     s = e.summarize()
     assert "animal" in s and "part of" in s and "causes" in s   # aggregates taxonomy + parts + causes
     assert UnderstandingEngine(seed=2).summarize() == "I haven't learned anything yet."
+
+
+def test_summarize_flags_inconsistency():
+    # JEP-198: summarize() integrates an honest consistency note (flags a source's contradictions)
+    e = UnderstandingEngine(seed=198)
+    e.read("A dog is a mammal. A mammal is an animal. A heart is part of a dog.")
+    assert "inconsistency" not in e.summarize().lower()       # consistent source: no note
+    e2 = UnderstandingEngine(seed=2)
+    e2.tell("A whale is a mammal."); e2.tell("A mammal is not a fish."); e2.tell("A mammal is an animal.")
+    e2.parents.setdefault("whale", set()).add("fish")
+    assert "inconsistency" in e2.summarize().lower() and "whale" in e2.summarize().lower()
