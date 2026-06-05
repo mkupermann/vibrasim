@@ -182,6 +182,19 @@ class UnderstandingEngine:
             return True
         return bool(toks) and len(toks) <= 4 and not any(t in bad for t in toks)
 
+    def _detect_proper_nouns(self, text: str) -> None:
+        """Heuristic: a word Capitalized MID-sentence (not at a sentence start, where capitalization is ambiguous) is
+        a PROPER NOUN. Accumulate them so generation renders 'France' (no article, capitalized), not 'a france'."""
+        if not hasattr(self, "proper_nouns"):
+            self.proper_nouns = set()
+        for sent in re.split(r"(?<=[.;:?!])\s+", text.strip()):
+            words = sent.split()
+            for i, w in enumerate(words):
+                cw = re.sub(r"[^A-Za-z\-]", "", w)
+                if i > 0 and len(cw) > 1 and cw[0].isupper() and cw.lower() != cw and "-" not in cw[:1]:
+                    if cw.lower() not in {"i"}:
+                        self.proper_nouns.add(self._norm(cw.lower()))
+
     def read(self, passage: str) -> dict:
         """LEARN FROM PROSE (the learn-from-sources capability, JEP-155..159): extract is-a + part-of + causal
         relations from an encyclopedic-register passage via classic Hearst-style lexico-syntactic patterns + a
@@ -189,6 +202,7 @@ class UnderstandingEngine:
 
         Works on encyclopedic/descriptive prose ('A dog is a mammal. A heart is part of a dog. A virus causes a
         fever.'); dense logic/argument prose (e.g. Boole) yields little — the gate is the GENRE, not the extractor."""
+        self._detect_proper_nouns(passage)     # mid-sentence Capitalized words -> proper nouns (for correct generation)
         art = r"(?:(?:an|a|the)\s+)?"
         np = rf"{art}([a-z][a-z\- ]*?)"
         learned = {"is_a": 0, "part_of": 0, "causal": 0}
@@ -630,10 +644,13 @@ class UnderstandingEngine:
               "one", "once", "u", "use", "user", "useful", "utah"}
     _ART_AN = {"hour", "honest", "honor", "honour", "heir", "honourable", "honorable"}
 
-    @classmethod
-    def _art(cls, noun: str) -> str:
+    def _art(self, noun: str) -> str:
         if not noun:
             return noun
+        # PROPER NOUNS (detected from input capitalization) take no article and are Capitalized ('France', not 'a france')
+        if noun in getattr(self, "proper_nouns", ()):
+            return " ".join(w[:1].upper() + w[1:] for w in noun.split())
+        cls = type(self)
         if noun.split()[-1] in cls._MASS_NOUNS:     # mass/uncountable head -> no article ('water', not 'a water')
             return noun
         head = noun.split()[0]
@@ -819,6 +836,8 @@ class UnderstandingEngine:
         example facts, and register the template for extraction. Returns (relation, n) or None if the examples don't
         share ONE consistent connective. NO transformer — pure surface-pattern induction (needs a consistent pattern;
         paraphrase variation is out of scope, the no-transformer wall)."""
+        for s in examples:
+            self._detect_proper_nouns(s)
         pats = []
         for s in examples:
             t = re.sub(r"\b(?:a|an|the)\b", " ", s.lower()).strip().rstrip(".")
@@ -855,6 +874,7 @@ class UnderstandingEngine:
         """Self-extensible reading: AUTO-INDUCE open relations from a passage — collect (subject, connective, object)
         triples, find connectives recurring >=2 times that are NOT one of the 5 fixed relations, induce those
         templates (learn_relation) and extract all their instances. Returns {relation: count}. NO transformer."""
+        self._detect_proper_nouns(passage)
         def is_fixed(conn):
             if conn in {"is", "are", "was", "were", "has", "have"}:
                 return True                                  # is-a copula / 'has' part-of
@@ -924,9 +944,8 @@ class UnderstandingEngine:
             sents.append(note + ".")
         return " ".join(s[0].upper() + s[1:] if s else s for s in sents)
 
-    @classmethod
-    def _join_phrases(cls, items):
-        items = [cls._art(i) for i in items]
+    def _join_phrases(self, items):
+        items = [self._art(i) for i in items]
         if len(items) == 1:
             return items[0]
         return ", ".join(items[:-1]) + " and " + items[-1]
@@ -1054,7 +1073,7 @@ class UnderstandingEngine:
         # relations where x is the subject
         # SVO + open relations: a single VERB renders 'chases the cat'; a multi-word/open relation ('is capital of')
         # renders verbatim ('is capital of france'), no added -s and no inserted 'the'
-        rels = [f"{r} {o}" if " " in r else f"{self._norm_rel(r)}s the {o}"
+        rels = [f"{r} {self._art(o)}" if " " in r else f"{self._norm_rel(r)}s the {o}"
                 for s, r, o in self.facts if s == self._norm(x)]
         if rels:
             sents.append("It " + ", and ".join(sorted(set(rels))) + ".")
