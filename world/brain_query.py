@@ -280,6 +280,17 @@ class BrainQuery:
             if v is not None and sc >= self.gate:
                 return " ".join(w.capitalize() for w in str(v).split("_"))
             return "I don't know that yet — teach me and ask again."
+        # 'between' query (JEP-475): "what (happens) between X and Z?" -> events e with X before e before Z
+        m = re.match(r"^what\s+(?:happens?|comes?|is)\s+between\s+(?:a\s+|an\s+|the\s+)?(\w+)\s+and\s+"
+                     r"(?:a\s+|an\s+|the\s+)?(\w+)$", s)
+        if m:
+            x, z = self._sing(m.group(1)), self._sing(m.group(2))
+            mids = list({e for (a, r, e2) in self.mem.facts if r == "before" for e in (a, e2)
+                         if e not in (x, z) and self._before_reachable(x, e) and self._before_reachable(e, z)})
+            mids.sort(key=lambda e: sum(1 for o in mids if self._before_reachable(e, o)), reverse=True)  # temporal order
+            if mids:
+                return ", ".join(e.replace("_", " ") for e in mids)
+            return "I don't know that yet — teach me and ask again."
         # timeline reconstruction (JEP-474): "what is the sequence/order/timeline?" -> topological sort of before-edges
         if re.match(r"^what\s+is\s+the\s+(sequence|order|timeline)$", s):
             befores = [(a, b) for (a, r, b) in self.mem.facts if r == "before"]
