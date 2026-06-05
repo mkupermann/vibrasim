@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 119 / predictions 148 (80%). Latest: JEP-233 HIT (the SUBSTRATE performs transitive multi-hop is-a inference by iterated retrieval — decode AND raw chaining 1.00 to 3 hops, control 0.00; the Understanding Engine's signature capability runs in the energy-based substrate).
+Running tally: hits 120 / predictions 149 (81%). Latest: JEP-234 HIT (the SUBSTRATE is a TYPED relational store — VSA role-binding subject(X)relation holds is-a/part-of/causal in one net, recall 1.00, binding discriminates, no type starved; completes the JEP-232/233/234 relational-substrate arc).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 At JEP-221 the tally is 110/137 (80%) and has CONVERGED: the OVERALL rate is dragged down by early-programme misses
@@ -175,3 +175,4 @@ honestly informative:
 | JEP-231 | 🔮 'more <modifier>* <head> than' keyed by head noun; modified cmp works, no regression, non-count falls through | Jupiter>Earth moons Yes; spider>dog legs Yes; 'more interesting' graceful | HIT | Closed the JEP-229 capture/comparison asymmetry; applied the JEP-230 in-rung counter-example lesson. |
 | JEP-232 | 🔮 substrate stores relations (K=4 recall>=.85), control fails, partial-cue works, K=12 degrades (capacity~11) | a/b/c PASS (recall 1.00, control .25, partial 1.00); d FAIL — capacity cliff is at K~21 not 12 (heteroassoc, key fully clamped) | CALIB | The relevant capacity bound depends on how much is cued; a fully-clamped key buys ~3-4x the autoassociative 0.14N. |
 | JEP-233 | 🔮 substrate chains retrievals -> 2/3-hop transitive inference (decode>=.85, raw k2>=.70, control fails); raw k3 the likely miss | all 4 bars PASS (decode/raw 1.00 to k3, control 0.00); raw k3 did NOT degrade (attractor self-corrects each hop) | HIT | Within capacity the value slot sits exactly on the attractor, so raw chaining == decode chaining; error accumulates only near the cliff. |
+| JEP-234 | 🔮 subject(X)relation bind -> typed store works (>=.85), discriminates (<.20), all types served, control fails | all 4 bars PASS (recall 1.00, wrong-rel .00-.04, per-type 1.00, control .00) | HIT | VSA Hadamard role-binding + Hopfield CAM = typed relational memory, no crosstalk within capacity. |
