@@ -184,3 +184,13 @@ SA is still marginally best AND far simpler; (2) CIM-AHC is *established hardwar
 and critically (3) **it is NOT the EQMOD substrate** — EQMOD's own dynamics still cannot optimize (G135, its
 bindings are not a programmable problem Hamiltonian). So "the EQMOD substrate is decorative" stands unchanged;
 what is competitive is an adjacent, well-known physical-annealer paradigm, not EQMOD.
+
+### Addendum 5 — budget-matched resolution (G151–G153): SA is marginally best; CIM-AHC is competitive but second
+Follow-ups settled the magnitude of the AHC-CIM↔SA comparison. The CIM-AHC result is ROBUST — it beats correct
+local search across both canonical hard families (Gaussian + ±1/SK, G151) and up to n=600 (G152). But a
+budget-matched control (G153: a generous numba SA vs the frozen-grid CIM) is decisive: classical **SA beats
+CIM-AHC 8/8** (~+1.7%) at n=450 & 600 — the earlier "near-tie / CIM edges ahead at n=600" was a budget
+artifact. So the fully-resolved ordering at matched budget is **SA > CIM-AHC > correct-greedy**: a properly
+engineered physical annealer (CIM-AHC) genuinely beats local search and is in SA's league, but classical SA is
+marginally best and far simpler. Unchanged: this is established adjacent Ising-machine hardware, NOT EQMOD
+(whose own dynamics can't optimize, G135).
