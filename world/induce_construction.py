@@ -43,15 +43,22 @@ def induce(examples):
     return {"n": n, "fixed": fixed, "mapping": mapping}
 
 
-def apply_template(tpl, sentence):
-    """Return the (s, r, o) fact extracted from `sentence` if it matches `tpl`, else None."""
+_ARTICLES = {"a", "an", "the"}
+
+
+def apply_template(tpl, sentence, flex_articles=False):
+    """Return the (s, r, o) fact extracted from `sentence` if it matches `tpl`, else None. With flex_articles, an
+    article (a/an/the) at a fixed position matches ANY article — function-word abstraction (JEP-355)."""
     if tpl is None:
         return None
     t = _toks(sentence)
     if len(t) != tpl["n"]:
         return None
     for pos, word in tpl["fixed"].items():
-        if t[pos] != word:                                    # fixed words must match in order
+        if flex_articles and word in _ARTICLES:
+            if t[pos] not in _ARTICLES:                       # must be SOME article
+                return None
+        elif t[pos] != word:                                  # fixed words must match in order
             return None
     fact = []
     for kind, v in tpl["mapping"]:
