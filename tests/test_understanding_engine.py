@@ -743,3 +743,15 @@ def test_inherited_negative_contradiction():
     e2 = UnderstandingEngine(seed=2)
     e2.read("A poodle is a dog. A dog is a mammal. A mammal is not a plant.")
     assert e2.would_contradict("A poodle is a plant.")         # multi-hop inherited negative
+
+
+def test_consistency_audit():
+    # JEP-196: audit the whole KB for internal contradictions (a source's implicit inconsistencies)
+    e = UnderstandingEngine(seed=196)
+    e.tell("A whale is a mammal."); e.tell("A mammal is not a fish."); e.tell("A mammal is an animal.")
+    e.parents.setdefault("whale", set()).add("fish")        # a source asserts the inconsistent edge
+    audit = e.consistency_audit()
+    assert len(audit) == 1 and audit[0][0] == "whale" and audit[0][1] == "fish"
+    e2 = UnderstandingEngine(seed=2)
+    e2.read("A dog is a mammal. A mammal is an animal. A salmon is a fish. A fish is an animal.")
+    assert e2.consistency_audit() == []                     # internally consistent
