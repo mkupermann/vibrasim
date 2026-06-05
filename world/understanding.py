@@ -365,11 +365,13 @@ class UnderstandingEngine:
                 if self._bare_np(a) and self._bare_np(b):
                     self.tell_cause(a, b); learned["causal"] += 1
                 continue
-            # PASSIVE causal: 'X is caused by Y' / 'X results from Y' -> Y causes X (subject is the EFFECT)
-            m = re.search(rf"\b{np}\s+is\s+caused\s+by\s+{np}$", s) or re.search(rf"\b{np}\s+results?\s+from\s+{np}$", s)
+            # PASSIVE/SUBORDINATE causal: 'X is caused by Y' / 'X results from Y' / 'X <verb> because of Y' /
+            # 'X <verb> due to Y' -> Y causes X (the subject is the EFFECT, the object the CAUSE) (JEP-255, 282)
+            m = (re.search(rf"\b{np}\s+is\s+caused\s+by\s+{np}$", s) or re.search(rf"\b{np}\s+results?\s+from\s+{np}$", s)
+                 or re.match(rf"^{np}\s+(?:\w+\s+)*(?:because\s+of|due\s+to)\s+{np}$", s))
             if m:
                 effect, cause = self._norm_phrase(m.group(1)), self._norm_phrase(m.group(2))
-                if self._bare_np(effect) and self._bare_np(cause):
+                if self._bare_np(effect) and self._bare_np(cause) and effect not in self._PRONOUNS:
                     self.tell_cause(cause, effect); learned["causal"] += 1   # note the swap: Y causes X
                 continue
             # relative clause: 'X, which is a/an Y, ...' -> X is-a Y (then skip the main clause)
@@ -1051,7 +1053,8 @@ class UnderstandingEngine:
             if w0 in {"is", "are", "was", "were"} and not re.search(r"\b(?:of|in|at|by|to|on|with|from|for)\b", conn):
                 return True
             return bool(re.search(r"\b(?:part of|causes|caused|leads to|located in|situated in|found in|before|after"
-                                  r"|contains|consists of|comprises|includes|results in|results from)\b", conn)
+                                  r"|contains|consists of|comprises|includes|results in|results from"
+                                  r"|because of|due to)\b", conn)
                         or conn.endswith("than"))            # part-of / causal / spatial / temporal / comparison / mereo-verbs
         triples = []
         for s in re.split(r"[.;:]\s+", passage.strip()):
