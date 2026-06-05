@@ -321,6 +321,15 @@ class Conversation:
         ma = re.match(r"^(.+?)\s+is\s+your\s+([a-z]+)\.?$", t, flags=re.I)   # reverse: 'V is your A'
         if ma:
             return [], extra + [("you", self._singular(ma.group(2).lower()), _av(ma.group(1)))]
+        # signed-relation affect propagation (JEP-467, Heider balance): 'X is a/an/the <enemy|friend|...> of Y'
+        # -> (X, enemy_of|friend_of, Y), so valence propagates through the relation with a sign.
+        msr = re.match(r"^(?:the\s+|a\s+|an\s+)?([A-Za-z]+)\s+is\s+(?:a\s+|an\s+|the\s+)?"
+                       r"(enemy|enemies|rival|rivals|opponent|opponents|foe|foes|adversary|adversaries|"
+                       r"friend|friends|ally|allies)\s+of\s+(?:a\s+|an\s+|the\s+)?([A-Za-z]+)\.?$", t, flags=re.I)
+        if msr:
+            w = msr.group(2).lower()
+            rel = "friend_of" if w in ("friend", "friends", "ally", "allies") else "enemy_of"
+            return [], extra + [(self._singular(msr.group(1).lower()), rel, self._singular(msr.group(3).lower()))]
         # reverse attribute: 'V is the A of Y' -> (Y, A, V)  e.g. 'Berlin is the capital of Germany' (JEP-415)
         ma = re.match(r"^([A-Za-z]+)\s+is\s+the\s+([a-z]+)\s+of\s+(?:the\s+)?([A-Za-z]+)\.?$", t, flags=re.I)
         if ma and ma.group(2) not in ("largest", "longest", "biggest", "smallest", "tallest", "highest"):

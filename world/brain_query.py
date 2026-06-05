@@ -248,7 +248,13 @@ class BrainQuery:
                 tag = ""
             else:
                 anc = getattr(self.mem, "_valenced_ancestor", lambda *_: None)(e)
-                tag = f" (inherited from {anc[0].replace('_', ' ')})" if anc is not None else " (generalized)"
+                sv = getattr(self.mem, "_signed_valence", lambda *_: None)(e)
+                if anc is not None:
+                    tag = f" (inherited from {anc[0].replace('_', ' ')})"
+                elif sv is not None:
+                    tag = " (via relationships)"        # JEP-467: Heider-balance propagation, not a statistical guess
+                else:
+                    tag = " (generalized)"
             return ("bright (positive energy)" + tag if val > 0 else
                     "dark (negative energy)" + tag if val < 0 else "neutral")
         # superlative (JEP-424): "what is the <largest|…> Y?" -> the stored (Y, <sup>, value)
