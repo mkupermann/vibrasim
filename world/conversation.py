@@ -236,6 +236,30 @@ class Conversation:
             subj = self._singular(mc.group(1).lower()); obj = self._singular(mc.group(2).lower())
             if subj not in ("a", "an", "the") and obj not in ("a", "an", "the"):
                 return [], extra + [(subj, "causes", obj), (obj, "caused_by", subj)]
+        # ATTRIBUTE / possessive facts -> (entity, attr, value); value may be a multi-word proper noun (JEP-404).
+        def _av(v):
+            return "_".join(w for w in re.sub(r"[.?!]", "", v.strip()).lower().split())
+
+        def _ae(e):
+            e = re.sub(r"^(?:your|the|a|an)\s+", "", e.strip(), flags=re.I)
+            w = e.lower().split()
+            return "you" if (w and w[0] in ("you", "yours")) else (self._singular(w[0]) if w else "")
+        ma = (re.match(r"^the\s+([a-z]+)\s+of\s+(.+?)\s+is\s+(.+?)\.?$", t, flags=re.I)
+              or re.match(r"^([a-z]+)'s\s+([a-z]+)\s+is\s+(.+?)\.?$", t, flags=re.I))
+        if ma and " is " not in ma.group(3) and ma.group(3).lower() not in ("a", "an"):
+            if ma.re.pattern.startswith("^the"):
+                attr, ent, val = self._singular(ma.group(1).lower()), _ae(ma.group(2)), _av(ma.group(3))
+            else:                                                       # "X's A is V"
+                ent, attr, val = self._singular(ma.group(1).lower()), self._singular(ma.group(2).lower()), _av(ma.group(3))
+            if ent and val:
+                return [], extra + [(ent, attr, val)]
+        ma = re.match(r"^(your|my)\s+([a-z]+)\s+is\s+(.+?)\.?$", t, flags=re.I)
+        if ma and ma.group(3).lower() not in ("a", "an") and not re.match(r"^an?\s", ma.group(3).strip(), flags=re.I):
+            ent = "you" if ma.group(1).lower() == "your" else "user"
+            return [], extra + [(ent, self._singular(ma.group(2).lower()), _av(ma.group(3)))]
+        ma = re.match(r"^(.+?)\s+is\s+your\s+([a-z]+)\.?$", t, flags=re.I)   # reverse: 'V is your A'
+        if ma:
+            return [], extra + [("you", self._singular(ma.group(2).lower()), _av(ma.group(1)))]
         # 'is a kind/type/sort of' -> 'is a'
         t = re.sub(r"\bis\s+(an?)\s+(?:kind|type|sort)\s+of\b", r"is \1", t, flags=re.I)
         # numeric possession: 'A dog has four/4 legs' -> (dog, has_legs, N)

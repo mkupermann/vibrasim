@@ -173,9 +173,28 @@ class BrainQuery:
                 return cand
         return w
 
+    def _attr(self, entity, attr):
+        """Look up a taught attribute value (entity, attr, value); display joined proper nouns nicely (JEP-404)."""
+        v, sc = self.mem.query(entity, attr)
+        if v is None or sc < self.gate:
+            return None
+        return " ".join(w.capitalize() for w in str(v).split("_"))
+
     # ---- tiny natural-question parser ----
     def ask(self, q):
         s = q.strip().lower().rstrip("?").strip()
+        # attribute questions FIRST (before articles are stripped, to keep 'your'): JEP-404
+        m = re.match(r"^(?:who|what)\s+is\s+your\s+([a-z]+)$", s)
+        if m:
+            return self._attr("you", self._sing(m.group(1)))
+        m = re.match(r"^(?:who|what)\s+is\s+(?:the\s+)?([a-z]+)\s+of\s+(.+)$", s)   # 'what is the name of your creator'
+        if m:
+            ent = re.sub(r"^(?:your|the|a|an)\s+", "", m.group(2).strip())
+            ent = "you" if ent in ("you", "yours") else self._sing(ent.split()[0])
+            return self._attr(ent, self._sing(m.group(1)))
+        m = re.match(r"^what\s+is\s+([a-z]+)'s\s+([a-z]+)$", s)                      # "what is michael's role"
+        if m:
+            return self._attr(self._sing(m.group(1)), self._sing(m.group(2)))
         s = re.sub(r"\b(a|an|the)\b", " ", s)
         s = re.sub(r"\s+", " ", s).strip()
         m = re.match(r"who (\w+) (\w+)$", s)             # "who domesticated the cat?" -> reverse open-relation
