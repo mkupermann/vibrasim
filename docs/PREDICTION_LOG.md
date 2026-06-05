@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 149 / predictions 185 (81%). Latest: JEP-270 HIT (object-side open-relation WH 'what does a carnivore eat?' -> 'meat'; the engine answered only subject-side WH before; subject-side unaffected; surfaced by the definitions QA pass).
+Running tally: hits 150 / predictions 186 (81%). Latest: JEP-271 HIT (comprehensive document-scale validation -- a fresh 19-sentence document spanning ALL 6 construction profiles + every relation type + multi-hop chains answered 16/16 = 1.00; cumulative 254..270 hardening validated perfect).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 At JEP-221 the tally is 110/137 (80%) and has CONVERGED: the OVERALL rate is dragged down by early-programme misses
@@ -212,3 +212,4 @@ honestly informative:
 | JEP-268 | 🔮 describe split by adjective shape + 'rabies' to _NOT_PLURAL fixes 'can bark, friendly' + 'a raby' | PASS — 'It can bark. It is friendly.', 'causes rabies'; berries->berry still works; 108 tests | HIT | Adjectival properties (258) and abilities share the properties dict -> split by suffix shape in describe; -ies/-es singulars guarded. |
 | JEP-269 | 🔮 definitional copulas (defined as/means/known as) -> is-a via genus head noun; transitive | PASS — mammal->animal, puppy->dog, dog->canine, puppy->animal transitive; 109 tests | HIT | Definitions are subsumption (genus-differentia); reduce the definiens to its genus head noun. |
 | JEP-270 | 🔮 'what does X VERB?' -> object of the learned verb relation; subject-side WH unaffected | PASS — carnivore eats meat, robin builds nest, capital-of still Paris; 110 tests | HIT | Open-relation WH needs BOTH argument positions (subject-side capital-of + object-side X-verb-?). |
+| JEP-271 | 🔮 fully-hardened engine handles a comprehensive all-construction document at >=0.9 | PASS — 16/16 = 1.00 across all 6 construction profiles + every relation type + multi-hop | HIT | The 254..270 hardening covers the common declarative construction space; bound is the NER/multi-word wall. |
