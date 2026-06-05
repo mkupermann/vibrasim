@@ -5508,3 +5508,19 @@ noted replication. Also tempered g139_ising_scale.md (which concluded "build thi
 pointer to the G146-G149 refutation. Root cause of the re-derivation: no quick frontier map -> added FRONTIER.md.
 (Note: g49 is triple-used as a number -- selective_uptake/mobility_targeted_repair/(removed) fluidity; the
 remaining two are distinct experiments, left as-is to avoid breaking references; FRONTIER.md flags the lesson.)
+
+## 2026-06-05 — G150: textbook CIM amplitude-correction (AHC) helps — proper oscillator BEATS greedy, ~ties SA
+Tested whether the naive oscillator's weakness (G148/G149: ties greedy, loses to SA 15/15) is paradigm-deep
+or just naive dynamics, by adding the established amplitude-heterogeneity correction (AHC; Leleu/Yamamoto CIM
+2019). Same hard instances (Gaussian spin-glass MAX-CUT, n in {200,360}, 5 inst), CIM = best over a
+PRE-REGISTERED frozen grid (xi in {0.1,0.3} x beta in {0.1,1.0} x 3 seeds). Result PARTIAL: AHC genuinely
+helps -- CIM >= naive 5/5 at both n, and CIM now BEATS correct multi-restart greedy 5/5 at n=360 (mean
++1.0-4.6%/inst) whereas the naive oscillator only TIED greedy. CIM vs SA: still a hair behind (CIM>=SA 1/5,
+mean -0.7%) -- the gap to SA narrowed from naive's ~2%/15-loss to ~0.7% but did not close. Honest refinement,
+does NOT overturn G146-G149: G145's *specific naive* oscillator was weak and its 8/8 rested on a sign-bugged
+baseline (stands); classical SA is still marginally best. BUT the weakness was partly naive dynamics -- a
+properly-engineered oscillator/CIM machine DOES beat local search and is competitive with SA. Precise claim:
+a correctly-implemented physical annealer (CIM-AHC, established method) is competitive with classical SA and
+genuinely beats local search; G145's version was under-engineered; SA remains marginally best & simpler. NOTE
+the CIM is a generic Ising-machine bolt-on, NOT EQMOD -- EQMOD's OWN dynamics still can't optimize (G135), so
+the substrate-is-decorative conclusion is unchanged; what's competitive is adjacent CIM hardware, not EQMOD.
