@@ -12,41 +12,49 @@ import numpy as np
 
 
 class ActiveLearner:
-    def __init__(self, tau: float = 0.10):
-        # symbol -> {"sum": vector, "n": count} per MODALITY; prototype = sum/n. Modalities keyed separately but
-        # all bound to the SAME symbol, so cross-modal (write 'A' + hear 'A') grounds one symbol.
-        self.protos = {}            # (modality, symbol) -> {"sum", "n"}
+    def __init__(self, tau: float = 0.10, max_exemplars: int = 40):
+        # (modality, symbol) -> list of EXEMPLAR vectors (instance-based / 1-NN). Storing exemplars instead of one
+        # running mean makes teacher CORRECTIONS stick: a corrected example matches a near-identical future percept
+        # directly, instead of diluting into a blurry class mean (the D-called-B failure). Modalities keyed
+        # separately but bound to the SAME symbol, so cross-modal (write 'A' + hear 'A') grounds one symbol.
+        self.protos = {}            # (modality, symbol) -> [vectors]
         self.tau = tau              # confidence margin below which the learner is UNSURE and asks the teacher
+        self.max_exemplars = max_exemplars   # per-symbol cap (bounds memory; keeps the most recent)
         self.n_asked = 0            # how many times it had to ask the teacher
         self.n_seen = 0
         self._fit = {}              # modality -> running [sum, n] of intra-class distances (how close a CORRECT match is)
 
     def _proto(self, modality, symbol):
-        d = self.protos[(modality, symbol)]
-        return d["sum"] / d["n"]
+        """Centroid of a symbol's exemplars (derived) — for cross-modal retrieval that wants one vector per symbol."""
+        ex = self.protos[(modality, symbol)]
+        return np.mean(ex, axis=0)
+
+    def _nearest_in(self, modality, symbol, x):
+        """Distance from x to the NEAREST exemplar of (modality, symbol)."""
+        ex = self.protos[(modality, symbol)]
+        return min(float(np.linalg.norm(x - e)) for e in ex)
 
     def _fit_dist(self, modality):
         f = self._fit.get(modality)
-        return (f[0] / f[1]) if f and f[1] else None   # typical distance of a correct example to its prototype
+        return (f[0] / f[1]) if f and f[1] else None   # typical distance of a correct example to its nearest exemplar
 
     def teach(self, modality: str, symbol: str, x: np.ndarray):
-        """The teacher provides the correct symbol for example x (in a modality) -> update its prototype + the
-        running 'how close is a correct match' statistic (the novelty baseline)."""
+        """The teacher provides the correct symbol for example x (in a modality) -> store it as an exemplar + update
+        the running 'how close is a correct match' statistic (the novelty baseline)."""
         x = np.asarray(x, dtype=np.float64)
         key = (modality, symbol)
-        if key in self.protos:                          # record the distance to the (current) correct prototype
-            dfit = float(np.linalg.norm(x - self._proto(modality, symbol)))
+        if key in self.protos:                          # record the distance to the (current) nearest correct exemplar
+            dfit = self._nearest_in(modality, symbol, x)
             f = self._fit.setdefault(modality, [0.0, 0]); f[0] += dfit; f[1] += 1
-        if key not in self.protos:
-            self.protos[key] = {"sum": x.copy(), "n": 1}
-        else:
-            self.protos[key]["sum"] += x
-            self.protos[key]["n"] += 1
+        ex = self.protos.setdefault(key, [])
+        ex.append(x.copy())
+        if len(ex) > self.max_exemplars:                # keep the most recent exemplars (bounded memory)
+            del ex[0]
 
     def _ranked(self, modality, x):
-        """Return symbols of this modality ranked by distance to x: [(symbol, dist), ...]."""
+        """Return symbols of this modality ranked by distance to x (nearest exemplar): [(symbol, dist), ...]."""
         x = np.asarray(x, dtype=np.float64)
-        ds = [(sym, float(np.linalg.norm(x - self._proto(mod, sym))))
+        ds = [(sym, self._nearest_in(mod, sym, x))
               for (mod, sym) in self.protos if mod == modality]
         return sorted(ds, key=lambda t: t[1])
 
