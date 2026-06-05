@@ -5524,3 +5524,14 @@ a correctly-implemented physical annealer (CIM-AHC, established method) is compe
 genuinely beats local search; G145's version was under-engineered; SA remains marginally best & simpler. NOTE
 the CIM is a generic Ising-machine bolt-on, NOT EQMOD -- EQMOD's OWN dynamics still can't optimize (G135), so
 the substrate-is-decorative conclusion is unchanged; what's competitive is adjacent CIM hardware, not EQMOD.
+
+## 2026-06-05 — G151: the G150 AHC-CIM finding GENERALIZES to the ±1 / SK spin-glass family
+Robustness/generalization check (NOT threshold-chasing): repeated G150 with ALL solver settings frozen, only
+the instance family changed from signed-Gaussian to +-1 (Sherrington-Kirkpatrick, the canonical hard MAX-CUT
+ensemble). n in {200,360}, 5 inst. Result GENERALIZES: CIM beats correct greedy 5/5 (n=200), 4/5 (n=360) and
+sits within ~0.4% of SA (|mean CIM-SA|=0.004, edges SA 2/5); AHC>=naive 4/5 & 5/5. Same shape as the Gaussian
+result. So the G146->G151 arc is settled and ROBUST across both canonical hard families: G145's naive
+oscillator is weak (sign-bugged-baseline 8/8), but the textbook AHC-CIM is a legitimate physical annealer that
+beats local search and ~ties SA. Caveats unchanged: SA still marginally best & far simpler; CIM-AHC is
+established hardware (no novelty); and it is NOT EQMOD (own dynamics can't optimize, G135). One-liner: a correct
+physical Ising annealer is real and competitive with SA; EQMOD is not that machine.
