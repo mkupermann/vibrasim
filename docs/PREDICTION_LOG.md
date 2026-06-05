@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 114 / predictions 141 (81%). Latest: JEP-226 HIT (large-scale multi-domain: 475 sentences/259 concepts, 8/8 incl 200-hop in 1ms; caught an alphanumeric-name limitation).
+Running tally: hits 115 / predictions 142 (81%). Latest: JEP-227 HIT (alphanumeric concept names 'covid19'/'mp3' now extracted; the JEP-226 limitation fixed).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 At JEP-221 the tally is 110/137 (80%) and has CONVERGED: the OVERALL rate is dragged down by early-programme misses
@@ -168,3 +168,4 @@ honestly informative:
 | JEP-223 | 🔮 numeric 'what about X?' + clean context-switch (mutually-exclusive recency trackers) | spider>ant Yes; context switches to is-a cleanly, no staleness | HIT | Multi-turn context spans is-a+comparison+temporal+numeric with correct switching. |
 | JEP-225 | 🔮 only update order context on a TRUE follow-up -> 'why?' can't claim a false fact | 'what about a mouse?' Not; 'why?' explains the prior valid comparison, not the false one | HIT | Self-caught correctness bug from running the demo; demo as real-usage check. |
 | JEP-226 | 🔮 handles large multi-domain KB efficiently + correctly | 475 sentences in 27ms, 8/8 incl 200-hop closure in 1ms (with letter names); fixed extractors reject alphanumeric names | HIT | Scales fast+correct; surfaced the [a-z]-only-concept limitation (alphanumeric names out of scope) + a digit-name test flaw. |
+| JEP-227 | 🔮 [a-z0-9] concept regex handles covid19/mp3, numbers stay numbers, no regression | covid19->microbe, mp3->format extracted; '4 legs' still numeric | HIT | Fixes the JEP-226 alphanumeric-name limitation (real prose has covid-19, mp3, h2o). |

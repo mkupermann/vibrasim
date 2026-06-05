@@ -1041,3 +1041,12 @@ def test_followup_no_false_context_update():
     assert e.respond("what about a mouse?").startswith("Not")           # mouse not in the order
     w = e.respond("why?")
     assert "mouse" not in w and "elephant is bigger than a dog" in w    # explains the prior VALID query, not the false one
+
+
+def test_alphanumeric_concept_names():
+    # JEP-227: letter-first alphanumeric concept names ('covid19', 'mp3') are extracted; numbers stay numbers
+    e = UnderstandingEngine(seed=227)
+    e.read("Covid19 is a virus. A virus is a microbe. Mp3 is a format. A dog has 4 legs.")
+    assert e.is_a("covid19", "microbe")          # 2-hop with an alphanumeric concept
+    assert e.is_a("mp3", "format")
+    assert getattr(e, "num_attrs", {}).get(("dog", "leg")) == 4   # '4 legs' still numeric, not a concept
