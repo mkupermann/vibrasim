@@ -194,8 +194,13 @@ class Conversation:
     _NUMW = {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7, "eight": 8,
              "nine": 9, "ten": 10, "zero": 0}
 
+    _SINGULAR_KEEP = {"gas", "bus", "lens", "virus", "species", "series", "news", "physics", "mathematics",
+                      "this", "his", "its", "is", "as", "plus", "bias", "atlas", "canvas", "campus", "octopus"}
+
     @staticmethod
     def _singular(w):
+        if w in Conversation._SINGULAR_KEEP:             # -s singular nouns: don't strip (gas -> gas, not 'ga') JEP-415
+            return w
         if w.endswith("ies") and len(w) > 4:
             return w[:-3] + "y"
         if w.endswith("ses") or w.endswith("xes") or w.endswith("ches") or w.endswith("shes"):
@@ -208,6 +213,7 @@ class Conversation:
         """Rewrite common encyclopedic forms into engine-parseable ones (JEP-348/349). Returns (sentences, extra)."""
         extra = []
         t = s.strip()
+        t = re.sub(r"\s*\([^)]*\)", "", t).strip()       # strip parentheticals '(Panthera leo)' (JEP-415)
         # strip a leading discourse marker so corrections/emphasis in flowing prose parse (JEP-391):
         # 'Actually, a whale is not a fish' -> 'a whale is not a fish'.
         t = re.sub(r"^(?:actually|however|indeed|in fact|of course|moreover|furthermore|therefore|thus|"
@@ -270,6 +276,11 @@ class Conversation:
         ma = re.match(r"^(.+?)\s+is\s+your\s+([a-z]+)\.?$", t, flags=re.I)   # reverse: 'V is your A'
         if ma:
             return [], extra + [("you", self._singular(ma.group(2).lower()), _av(ma.group(1)))]
+        # reverse attribute: 'V is the A of Y' -> (Y, A, V)  e.g. 'Berlin is the capital of Germany' (JEP-415)
+        ma = re.match(r"^([A-Za-z]+)\s+is\s+the\s+([a-z]+)\s+of\s+(?:the\s+)?([A-Za-z]+)\.?$", t, flags=re.I)
+        if ma and ma.group(2) not in ("largest", "longest", "biggest", "smallest", "tallest", "highest"):
+            return [], extra + [(self._singular(ma.group(3).lower()), self._singular(ma.group(2).lower()),
+                                 _av(ma.group(1)))]
         # first/second-person is-a (JEP-406): 'I am a teacher' -> (user, isa, teacher); 'You are a substrate' -> (you,..)
         ma = re.match(r"^i\s+am\s+an?\s+([a-z]+)\.?$", t, flags=re.I)
         if ma:
@@ -356,9 +367,12 @@ class Conversation:
         # SINGULAR copular is-a with a modified noun: 'The cheetah is a large cat' -> head 'cat' (JEP-414). Take the
         # head noun (strip a relative/prepositional tail) so the value is single-word and survives the junk guard,
         # instead of losing the fact to a multi-word value ('large cat').
-        msi = re.match(r"^(?:the\s+|a\s+|an\s+)?([a-z]+)\s+is\s+an?\s+(.+?)\.?$", t, flags=re.I)
+        msi = re.match(r"^(?:the\s+|a\s+|an\s+)?([a-z]+)\s+is\s+(?:an?|the)\s+(.+?)\.?$", t, flags=re.I)
         if msi:
-            obj = re.split(r"\s+(?:that|which|of|with|in|on)\s+", msi.group(2).strip(), maxsplit=1)[0]
+            # split before a trailing modifier so the head is the NOUN, not a trailing place/clause (JEP-414/415):
+            # 'large cat native to africa' -> 'large cat'; 'longest river in the world' -> 'longest river'.
+            obj = re.split(r"\s+(?:native|found|located|known|used|called|named|living|that|which|of|with|in|on|"
+                           r"from|to|near|by|for)\s+", msi.group(2).strip(), maxsplit=1)[0]
             head = self._singular(obj.split()[-1].lower())
             if head and head not in ("of", "kind", "type", "sort"):
                 subj = self._singular(msi.group(1).lower())
