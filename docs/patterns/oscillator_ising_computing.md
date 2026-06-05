@@ -1,15 +1,18 @@
 # Pattern — Oscillator-Ising computing ("vibrations computing", the real one)
 
-> ⚠️ **Major correction (2026-06-05, G146–G149).** An earlier version of this pattern claimed the oscillator
-> "genuinely computes" and "build this." Rigorous re-testing changed the conclusion: the oscillator-Ising
-> machine merely **TIES a correct multi-restart greedy** and **LOSES to classical simulated annealing** at
-> every scale (n=200–360), even at 10× compute. The G138/G139 "evidence" below compared against weak/loose
-> baselines (G139's "greedy", and G145's greedy was outright sign-bugged). The genuine optimization edge is
-> **simulated annealing's (a classical algorithm)** — annealing beats local search on hard frustrated
-> landscapes, and the oscillator is a *legitimate but weak* annealer, no better than correct greedy. **Honest
-> takeaway: to solve hard combinatorial problems, build SA / a proper annealer and benchmark against correct
-> local search — the oscillator confers no edge.** The rest of this doc is kept for the method/recipe; read
-> its claims through this correction. See `g146`–`g149` + FINDINGS_SUMMARY Addendum 5.
+> ⚠️ **Correction + refinement (2026-06-05, G146–G150).** An earlier version claimed the oscillator
+> "genuinely computes / build this" on the strength of G138/G139 — but those compared against weak/loose
+> baselines (and G145's greedy was outright sign-bugged). Rigorous re-testing:
+> - **The NAIVE phase-only oscillator (G145's dynamics) is weak** — it merely TIES a correct multi-restart
+>   greedy and LOSES to classical simulated annealing 15/15 at n=200–360, even at 10× compute (G146–G149).
+> - **BUT the textbook amplitude-heterogeneity correction (AHC-CIM; Leleu/Yamamoto 2019) fixes most of it**
+>   (G150): the corrected machine BEATS correct greedy 5/5 at n=360 and comes within ~0.7% of SA (a hair
+>   behind, edging it on 1/5). So a *properly-engineered* oscillator/CIM IS a legitimate annealer competitive
+>   with SA and genuinely better than local search — the naive G145 version was just under-engineered.
+> - **Honest takeaway:** for hard combinatorial optimization, a correct CIM-AHC (NOT G145's naive oscillator)
+>   is competitive with classical SA; SA stays marginally best and is far simpler, so SA is the pragmatic
+>   choice, but the physical-annealer paradigm is real. The recipe below should use **AHC**, not phase-only.
+>   See `g146`–`g150` + FINDINGS_SUMMARY Addendum 5.
 
 ## What it is (established method — Kuramoto / oscillator Ising machine; named as such, not novel)
 A network of coupled phase oscillators relaxes to a low-energy spin configuration that SOLVES a
