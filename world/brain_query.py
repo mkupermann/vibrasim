@@ -7,6 +7,20 @@ open relations). A tiny string parser maps natural questions to these. No transf
 import re
 import numpy as np
 
+# irregular past tense -> present, so 'what did X write?' matches a stored 'wrote' (JEP-417: English verb morphology)
+_VERB_LEMMA = {
+    "wrote": "write", "taught": "teach", "said": "say", "made": "make", "went": "go", "built": "build",
+    "gave": "give", "took": "take", "saw": "see", "knew": "know", "thought": "think", "found": "find",
+    "told": "tell", "became": "become", "led": "lead", "held": "hold", "brought": "bring", "bought": "buy",
+    "caught": "catch", "sought": "seek", "ran": "run", "came": "come", "spoke": "speak", "drove": "drive",
+    "rose": "rise", "chose": "choose", "won": "win", "sang": "sing", "drank": "drink", "ate": "eat",
+    "began": "begin", "broke": "break", "chose": "choose", "did": "do", "drew": "draw", "fell": "fall",
+    "felt": "feel", "flew": "fly", "forgot": "forget", "got": "get", "grew": "grow", "heard": "hear",
+    "kept": "keep", "left": "leave", "lost": "lose", "met": "meet", "paid": "pay", "put": "put",
+    "read": "read", "sent": "send", "sold": "sell", "sat": "sit", "stood": "stand", "wore": "wear",
+    "discovered": "discover", "proposed": "propose", "created": "create", "invented": "invent",
+}
+
 
 class BrainQuery:
     def __init__(self, mem, seed: int = 0):
@@ -103,6 +117,7 @@ class BrainQuery:
 
     @staticmethod
     def _vstem(w):
+        w = _VERB_LEMMA.get(w, w)                         # normalize irregular past -> present (JEP-417)
         return w[:5] if len(w) >= 5 else w               # crude verb stem (domesticate ~ domesticated)
 
     def who_did(self, verb, obj):
