@@ -56,11 +56,21 @@ a modular Hopfield/contrastive-Hebbian EBM):
   interaction (mis-diagnosed) → aggregation fails (the error was systematic, not random) → the right fix is the
   ENERGY-GATED chain stop (a diagnosed-lesson recurrence: detect "stored vs untrained key" by energy, not value-
   overlap, at EVERY such check — chain-root-stop as well as DAG slots).
+- **Boundaries + benefits** (245–249) — the store is MEMORY + DEDUCTIVE closure, NOT inductive generalization (a
+  held-out bridge edge breaks the chain; generalization needs proper geometric embeddings, JEP-23–27, not the
+  attractor store) (245); the GROUNDED loop closes through the substrate — a noisy perceptual cue cleans up AND
+  reasons multi-hop as one energy process (246); capacity scales LINEARLY (~0.5 edges/value-unit, verified) (247);
+  the substrate is a relational EBM with TWO native query modes — single-shot ENERGY-scoring of direct-fact
+  plausibility (AUC 1.00, 248) and iterated relaxation for transitive closure — and energy gives GRADED, evidence-
+  calibrated CONFIDENCE (more support → deeper minimum, Spearman 1.0, 249): a genuine capability BEYOND the binary
+  symbolic engine.
 So the substrate is the engine's robust relational MEMORY and INFERENCE engine (store/chain/type/DAG/interaction/
-full-multi-relation-from-prose), online-learnable, within the ~20-edge/module capacity, scalable linearly by modules
-— and it inherits the programme's core robustness lesson NATIVELY, with a mapped cure hierarchy: ENERGY-GATE for
-untrained-key detection, AGGREGATION for independent noise, codes/capacity for systematic interference; aggregation,
-not cleanup, cures multi-hop compounding under noise. All established
+full-multi-relation-from-prose), online-learnable, grounded-loop-closing, capacity-VERIFIED linear (~0.5 edges/value-
+unit), with native energy-query + graded-confidence modes — and it inherits the programme's core robustness lesson
+NATIVELY, with a mapped cure hierarchy: ENERGY-GATE for untrained-key detection, AGGREGATION for independent noise,
+codes/capacity for systematic interference, GEOMETRIC EMBEDDINGS for inductive generalization; aggregation, not
+cleanup, cures multi-hop compounding under noise. The honest boundary: the attractor store is memory+deduction (not
+induction); the genuine benefit beyond symbolic is graded plausibility/confidence, not an accuracy win. All established
 (Hopfield CAM + iterated associative recall + VSA binding + Hopfield energy as a stored-vs-spurious detector +
 ensemble voting), named; NO novelty — the value is the demonstrated end-to-end connection + its measured envelope.
 Pattern: docs/patterns/substrate_relational_store.md.
