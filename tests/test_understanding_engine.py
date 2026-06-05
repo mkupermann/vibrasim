@@ -1133,3 +1133,13 @@ def test_usage_learned_countability():
     e2 = UnderstandingEngine(seed=257)
     e2.read("Gravity causes a tide.")
     assert e2._art("gravity") == "gravity"     # bare mass noun unaffected (counter-example)
+
+
+def test_ous_adjective_not_isa():
+    # JEP-257: '-ous/-less' predicates end in -s but are ADJECTIVES, not plural nouns -> NOT is-a parents
+    e = UnderstandingEngine(seed=257)
+    e.read("The cobra is venomous. A snake is harmless. Dogs are mammals. Cats are felines.")
+    assert not e.is_a("cobra", "venomous")     # 'venomous' (-ous) must NOT become an is-a parent
+    assert not e.is_a("snake", "harmless")     # '-less' likewise
+    assert e.is_a("dog", "mammal")             # genuine plural-noun is-a unaffected (no regression)
+    assert e.is_a("cat", "feline")
