@@ -87,15 +87,17 @@ class SubstrateMemory:
         return self._vm, self._vm_names
 
     # ---- relational facts ----
-    def add_fact(self, entity: str, role: str, value: str):
+    def add_fact(self, entity: str, role: str, value: str, weight: float = 1.0):
         """Store 'entity's role IS value' as bind(entity*role, value) superposed into the current module. When that
-        module fills (module_cap), auto-add a fresh module so growth is unbounded (JEP-296)."""
+        module fills (module_cap), auto-add a fresh module so growth is unbounded (JEP-296). `weight` scales the
+        binding's contribution: weight>1 REINFORCES the edge so its cleanup similarity rises (JEP-376) — used to lift
+        faint materialized-closure edges above the decision gate without touching unrelated (negative) probes."""
         if self.module_counts[-1] >= self.module_cap:
             self.modules.append(np.zeros(self.D, dtype=np.float64))   # neurogenesis: a new module
             self.module_counts.append(0)
         val = np.roll(self._vec(value), 1) if self.directed else self._vec(value)
         bound = bind(bind(self._vec(entity), self._vec(role)), val)
-        self.modules[-1] = self.modules[-1] + bound
+        self.modules[-1] = self.modules[-1] + weight * bound
         self.module_counts[-1] += 1
         m = len(self.modules) - 1
         ms = self.key_modules.setdefault(self._kk(entity, role), [])
@@ -240,7 +242,7 @@ class SubstrateMemory:
         new.closed_relations = set(self.closed_relations)
         return new
 
-    def consolidate_closure(self, relations=("isa",), target_D=None, auto_scale=False):
+    def consolidate_closure(self, relations=("isa",), target_D=None, auto_scale=False, reinforce=1.0):
         """Consolidation (the relational analogue of dream consolidation G15/G18): materialize the TRANSITIVE CLOSURE
         of the given transitive relations, so every node->ancestor edge is stored DIRECTLY. This turns multi-hop
         queries (e.g. deep is-a) into SINGLE-hop lookups that do not compound per-hop cleanup error — the lever proven
@@ -251,9 +253,12 @@ class SubstrateMemory:
         store can be rebuilt at a larger dimension. `target_D` forces a dimension; `auto_scale` picks one so the
         consolidated load stays well under capacity (random cross-similarity ~1/sqrt(D)) — JEP-373. Returns a fresh
         SubstrateMemory; all original answers preserved plus the derived edges. Idempotent."""
-        # 1) compute the full target fact list (originals + closure edges) WITHOUT building vectors yet
+        # 1) compute the full target fact list (originals + closure edges) WITHOUT building vectors yet.
+        #    `derived` = the closure-materialized edges (reinforced with `reinforce` weight, JEP-376) so faint deep
+        #    edges rise above the gate; originals keep weight 1.
         target_facts = list(self.facts)
         seen_facts = set(self.facts)
+        derived = set()
         for rel in relations:
             neg = "not_" + rel
             denied = {(s, o) for (s, r, o) in self.facts if r == neg}
@@ -272,7 +277,7 @@ class SubstrateMemory:
                 for anc in ancestors(node, {node}):
                     edge = (node, rel, anc)
                     if (node, anc) not in denied and edge not in seen_facts:
-                        target_facts.append(edge); seen_facts.add(edge)
+                        target_facts.append(edge); seen_facts.add(edge); derived.add(edge)
         # 2) choose dimension: keep total load <= D/4 so cleanup SNR stays high (JEP-370 held negatives at D=8192
         #    for ~2300 facts). auto_scale rounds up to a power of two, never shrinks below the current D.
         D = self.D
@@ -289,7 +294,8 @@ class SubstrateMemory:
         cap = self.module_cap if D == self.D else None
         new = SubstrateMemory(D=D, tau=self.learner.tau, module_cap=cap, directed=self.directed)
         for (a, r, b) in target_facts:
-            new.add_fact(a, r, b)
+            w = reinforce if (a, r, b) in derived else 1.0          # reinforce materialized-closure edges (JEP-376)
+            new.add_fact(a, r, b, weight=w)
         new.sentences = list(self.sentences)
         new.learner = self.learner
         new.closed_relations = set(self.closed_relations) | set(relations)   # is-a now answerable single-hop (JEP-375)

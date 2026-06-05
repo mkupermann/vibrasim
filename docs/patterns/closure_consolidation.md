@@ -35,6 +35,26 @@ The existing single-gate `BrainQuery.is_a` then resolves deep chains in one hop 
 - **Re-run** after large ingests (it is idempotent and exception-safe). Pairs with `compact()` (reclaim resolved
   corrections) — compact first, then consolidate.
 
+## Query side: consolidation-aware is-a (JEP-375)
+Once a relation's closure is materialized, mark it on the store (`SubstrateMemory.closed_relations`, persisted through
+save/load) and answer is-a by **direct single-hop membership** (`y ∈ query_all(x,"isa")`), SKIPPING the recursive BFS
+walk. The walk over a consolidated store expands spurious borderline edges and inflates false-positives (negatives
+0.85 → 1.0 once skipped). The BFS path is kept for un-consolidated stores (multi-hop still needed there).
+`Conversation.consolidate()` wires this end-to-end; `read_text` calls it automatically after a bulk read.
+
+## Honest residual (JEP-374/376)
+- **Dimension** (auto_scale to keep load ≤ D/4, ~D=8192) restores deep reasoning, but pushing D further does NOT
+  reliably help negatives (non-monotonic) — those were a query-side issue, fixed by the BFS-skip above, not by D.
+- **Edge reinforcement does NOT work**: modules are read through `sign()` (binarized), which discards magnitude, so
+  weighting a binding has no effect on cleanup similarity (JEP-376 NULL).
+- A **residual ~3–7% deep-recall floor** remains for the very deepest nodes (those with ~10 materialized ancestors):
+  their heavily-loaded `(x,isa)` bundle dilutes per-value cleanup sim below the gate, and the true/false single-hop
+  similarity distributions genuinely overlap there. Closing it would require a magnitude-preserving / normalized
+  readout (a larger architectural change) — logged as future work.
+
+Net effect of the arc (JEP-370→376): adversarial composition 0.4 → 0.87+, deep is-a 0.85 → 0.93–0.97, negatives → 1.0,
+end-to-end and persistent in the live talk loop.
+
 ## Boundary
-This makes *within-domain* deep reasoning error-free at scale; it does nothing for *open-domain* coverage (the
-untaught knowledge tail, JEP-362) — that wall is separate and stands.
+This makes *within-domain* deep reasoning reliable at scale; it does nothing for *open-domain* coverage (the untaught
+knowledge tail, JEP-362) — that wall is separate and stands.
