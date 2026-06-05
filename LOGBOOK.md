@@ -5547,3 +5547,16 @@ at n=600 (0.992 vs CIM 0.997 of REF); a budget-matched SA would plausibly re-tie
 local search, ~ties SA) is now family-robust (Gaussian+/-1, G151) AND scale-robust (n<=600, G152). Caveats
 unchanged: established adjacent hardware (CIM-AHC), NOT EQMOD (own dynamics can't optimize, G135); classical
 SA remains the pragmatic choice (marginally best at matched budget, far simpler).
+
+## 2026-06-05 — G153: budget-matched resolution — the n=600 'CIM>SA' was a BUDGET ARTIFACT; SA marginally best
+Resolved the one open caveat from G152 with a fairness control (like G149): gave SA a GENEROUS budget
+(numba-JIT SA, 8 restarts x 4000 sweeps -- ~100x faster than the python loop) vs the frozen-grid CIM at
+n=450,600. Decisive SA_BEST_AT_MATCH: SA_gen > CIM 4/4 at BOTH n (8/8 total), CIM>=SA_gen 0/4, mean SAgen-CIM
++0.018/+0.017 (~1.7% SA ahead); SA_gen>SA_mod 4/4 (more budget genuinely helps). So the G152 'CIM edges SA at
+n=600' was a budget artifact exactly as the G152 caveat predicted -- confirmed not assumed (design biased
+TOWARD SA via generous budget). Fully-resolved G146->G153 picture: the AHC-CIM is a legitimate physical
+annealer that BEATS correct local search (G150/151) and is in SA's league, robust across families (G151) and
+scale (G152) -- BUT classical SA is genuinely marginally BEST at matched budget (~1.7% ahead, 8/8) and far
+simpler; budget-matched ordering is SA > CIM-AHC > correct-greedy. None of it is EQMOD (G135). One-liner:
+a correct physical Ising annealer is real and beats local search, but classical SA is the better & simpler
+solver -- and EQMOD is neither. Reusable asset: numba-JIT SA (tools/run_g153_budget_matched_sa.py).
