@@ -275,6 +275,9 @@ class SubstrateMemory:
         if target_D is not None:
             D = int(target_D)
         elif auto_scale:
+            # keep total load <= D/4 (D=8192 for ~1900 facts). This is enough to make DEEP single-hop is-a reliable;
+            # JEP-374 found that pushing further (D/8 -> 16384) does NOT reliably improve NEGATIVE probes (non-monotonic,
+            # floors ~0.9) — those are a gate-placement issue, addressed by gate calibration (JEP-375), not by more D.
             need = max(self.D, 4 * len(target_facts))
             D = 1 << (need - 1).bit_length()                      # next power of two >= need
         # 3) build the consolidated store at the chosen dimension (let module_cap recompute from D when D changes,
