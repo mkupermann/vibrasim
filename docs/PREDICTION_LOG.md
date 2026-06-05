@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 108 / predictions 135 (80%). Latest: JEP-219 HIT (conversational follow-up — 'what about a cat?' reuses the last question's context).
+Running tally: hits 109 / predictions 136 (80%). Latest: JEP-220 HIT (multi-turn conversation composes across turns — Q&A + why-all-chains + follow-up context).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 The OVERALL 73% is dominated by early-programme misses (surface-form bugs, structure-learning difficulty mis-estimates).
@@ -157,3 +157,4 @@ Predictions ARE converging WITHIN a settled domain, and the residual misses are 
 | JEP-217 | 🔮 'what are all the X?' -> all concepts that is-a X (multi-hop) | 'A cat, a dog and a poodle' (poodle via multi-hop); all animals listed | HIT | Enumeration = inverse of the is_a closure; a common useful query type. |
 | JEP-218 | 🔮 'why?' explains comparison + temporal chains, recency-correct | full comparison/temporal chains explained; is-a recency intact | HIT | Full reasoning transparency across is-a/part-of/causal/comparison/temporal. |
 | JEP-219 | 🔮 'what about X?' reuses last is-a question's category (multi-turn context) | 'Yes, a cat is an animal too'; salmon/rock correctly No; chainable | HIT | Conversational ellipsis/context — multi-turn 'communicate WITH me'. |
+| JEP-220 | 🔮 multi-turn conversation composes (Q&A + why + what-about across turns) | full dialogue correct; recency updated per turn across domains | HIT | Permanent conversational-composition guard. (My own test assertion was wrong - 2 items have no comma - fixed.) |

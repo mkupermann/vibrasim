@@ -996,3 +996,17 @@ def test_conversational_followup():
     e.respond("is a dog an animal?")
     assert e.respond("what about a cat?") == "Yes, a cat is an animal too."     # reuses 'animal' with new subject
     assert e.respond("and a salmon?").startswith("No")                          # salmon has no is-a path to animal
+
+
+def test_multiturn_conversation():
+    # JEP-220: a multi-turn conversation composes — Q&A across domains, 'why?', and 'what about X?' across turns
+    e = UnderstandingEngine(seed=220)
+    e.read("A dog is a mammal. A mammal is an animal. A cat is a mammal. "
+           "An elephant is bigger than a dog. A dog is bigger than a cat.")
+    assert e.respond("is a dog an animal?").startswith("Yes")
+    assert e.respond("what about a cat?") == "Yes, a cat is an animal too."          # follow-up context
+    assert "is a mammal" in e.respond("why?")                                          # why of the follow-up (is-a)
+    assert e.respond("is an elephant bigger than a cat?") == "Yes."                    # switch domain
+    assert e.respond("why?") == "Because an elephant is bigger than a dog, and a dog is bigger than a cat."  # order why
+    mm = e.respond("what are all the mammals?")
+    assert "cat" in mm and "dog" in mm                                                 # enumeration still works
