@@ -221,6 +221,14 @@ class Conversation:
             agent = self._singular(mp.group(3).lower())
             if patient not in ("a", "an", "the") and agent not in ("a", "an", "the"):
                 return [], extra + [(agent, part, patient)]
+        # 'is a part of' -> 'is part of' (so the engine's part-of handler fires) (JEP-388)
+        t = re.sub(r"\bis\s+an?\s+part\s+of\b", "is part of", t, flags=re.I)
+        # causal: 'X causes/cause/can cause Y' -> (X, causes, Y) + inverse (handles plural & modal the engine misses)
+        mc = re.match(r"^([A-Za-z]+)\s+(?:can\s+)?cause[s]?\s+(?:a\s+|an\s+|the\s+)?([A-Za-z]+)\.?$", t, flags=re.I)
+        if mc:
+            subj = self._singular(mc.group(1).lower()); obj = self._singular(mc.group(2).lower())
+            if subj not in ("a", "an", "the") and obj not in ("a", "an", "the"):
+                return [], extra + [(subj, "causes", obj), (obj, "caused_by", subj)]
         # 'is a kind/type/sort of' -> 'is a'
         t = re.sub(r"\bis\s+(an?)\s+(?:kind|type|sort)\s+of\b", r"is \1", t, flags=re.I)
         # numeric possession: 'A dog has four/4 legs' -> (dog, has_legs, N)
