@@ -15,6 +15,20 @@ class BrainQuery:
         self.gate = self._gate_for("isa")            # one auto-calibrated gate suffices (JEP-326: per-value sim is
         #                                              governed by module load, shared across relations -> a
         #                                              per-relation gate gave no meaningful benefit, gap <=0.033)
+        # analog gate for closed (consolidated) is-a: the magnitude-preserving readout has its own scale (JEP-378)
+        self._gate_analog = self._gate_for_analog("isa") if "isa" in getattr(mem, "closed_relations", ()) else None
+
+    def _gate_for_analog(self, role):
+        m = self.mem
+        edges = [(a, b) for (a, r, b) in m.facts if r == role]
+        if not edges:
+            return None
+        rng = np.random.default_rng(self.seed)
+        samp = [edges[i] for i in rng.choice(len(edges), min(30, len(edges)), replace=False)]
+        t = np.mean([m.edge_sim_analog(a, role, b) for (a, b) in samp])
+        u = np.mean([m.edge_sim_analog(f"none_{int(rng.integers(1e9))}", role,
+                                       f"non_{int(rng.integers(1e9))}") for _ in range(30)])
+        return float((t + u) / 2)
 
     def _gate_for(self, role):
         m = self.mem
@@ -42,13 +56,14 @@ class BrainQuery:
     def is_a(self, x, y):
         if self.mem.contains(x, "not_isa", y, self.gate):
             return False
-        direct = y in [p for (p, _) in self.mem.query_all(x, "isa", self.gate)]
-        # JEP-375: if the is-a closure is materialized (consolidation), every true ancestor is a DIRECT edge, so answer
-        # by single-hop membership and SKIP the recursive walk — the BFS over a consolidated store expands spurious
-        # borderline edges and inflates false-positives (neg 0.85 -> 1.0 once the walk is skipped).
-        if "isa" in getattr(self.mem, "closed_relations", ()):
-            return direct
-        return direct or y in self._ancestors(x, "isa")[1:]
+        # JEP-375/378: if the is-a closure is materialized, every true ancestor is a DIRECT edge -> answer by single-hop
+        # membership and SKIP the recursive walk (the BFS over a consolidated store inflates false-positives). Use the
+        # ANALOG readout (magnitude-preserving) which separates faint deep edges from near-misses where sign cannot,
+        # closing the deep-recall floor (JEP-377).
+        if "isa" in getattr(self.mem, "closed_relations", ()) and self._gate_analog is not None:
+            return self.mem.edge_sim_analog(x, "isa", y) >= self._gate_analog
+        return y in [p for (p, _) in self.mem.query_all(x, "isa", self.gate)] or \
+            y in self._ancestors(x, "isa")[1:]
 
     def has_property(self, x, p):
         for a in self._ancestors(x, "isa"):           # most specific first (BFS order ~ depth)

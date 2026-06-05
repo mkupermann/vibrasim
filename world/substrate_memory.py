@@ -156,6 +156,23 @@ class SubstrateMemory:
         """Membership probe for a (possibly multi-valued) relation: is `value` bound to (entity, role)?"""
         return self.edge_sim(entity, role, value) >= gate
 
+    def edge_sim_analog(self, entity: str, role: str, value: str):
+        """edge_sim with a MAGNITUDE-PRESERVING (analog) readout: unbind against the L2-normalized raw module sum
+        instead of sign(module). JEP-377 showed this separates faint-but-real deep edges from near-misses where the
+        binarized readout cannot — closing the deep is-a recall floor on consolidated stores. Scale differs from
+        edge_sim(), so it has its OWN calibrated gate (BrainQuery)."""
+        key = bind(self._vec(entity), self._vec(role))
+        vv = self._vec(value)
+        best = -1e9
+        for m in self._route(entity, role):
+            raw = self.modules[m]
+            vec = raw / (np.linalg.norm(raw) + 1e-12)
+            r = vec * key
+            if self.directed:
+                r = np.roll(r, -1)
+            best = max(best, float(r @ vv / self.D))
+        return best if best > -1e8 else 0.0
+
     def detect_conflicts(self, gate, pairs=(("hasprop", "not_hasprop"), ("isa", "not_isa"))):
         """Find genuine CONTRADICTIONS: a node holding both a positive and negative DIRECT edge for the same target.
         Uses direct-edge contains(), so a defeasible exception (inherited positive + explicit negative) is NOT a
