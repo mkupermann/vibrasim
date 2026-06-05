@@ -316,6 +316,13 @@ class UnderstandingEngine:
                 if self._bare_np(a) and self._bare_np(b):
                     self.tell_cause(a, b); learned["causal"] += 1
                 continue
+            # PASSIVE causal: 'X is caused by Y' / 'X results from Y' -> Y causes X (subject is the EFFECT)
+            m = re.search(rf"\b{np}\s+is\s+caused\s+by\s+{np}$", s) or re.search(rf"\b{np}\s+results?\s+from\s+{np}$", s)
+            if m:
+                effect, cause = self._norm_phrase(m.group(1)), self._norm_phrase(m.group(2))
+                if self._bare_np(effect) and self._bare_np(cause):
+                    self.tell_cause(cause, effect); learned["causal"] += 1   # note the swap: Y causes X
+                continue
             # relative clause: 'X, which is a/an Y, ...' -> X is-a Y (then skip the main clause)
             m = re.match(rf"^{np},\s+which\s+is\s+an?\s+([a-z]+),", s)
             if m:
