@@ -85,10 +85,36 @@ class Conversation:
         t = re.sub(r"^(can't|cant)\b", "can", t, flags=re.I)
         return t.strip()
 
+    def _is_unparseable(self, sentence):
+        """True if a fresh engine + the normalizer + learned templates ALL extract nothing from `sentence`."""
+        from world.understanding import UnderstandingEngine
+        sents, extra = self._normalize_for_learning(sentence)
+        if extra:
+            return False
+        if self._apply_learned_constructions(sentence) is not None:
+            return False
+        e = UnderstandingEngine(seed=self.seed)
+        for st in sents:
+            e.read(st)
+        return not (getattr(e, "parents", {}) or getattr(e, "part_of_g", {}) or getattr(e, "causes", {})
+                    or getattr(e, "properties", {}) or getattr(e, "facts", []) or getattr(e, "neg_isa", set()))
+
     def say(self, text):
         text = (text or "").strip()
         if not text:
             return ""
+        # pending interactive construction teaching: the teacher answers an "I couldn't understand…" with a fact
+        if getattr(self, "_pending_unparsed", None) and not self.is_question(text):
+            toks = re.sub(r"[.,]", " ", text.lower()).split()
+            if len(toks) == 3 and all(w.isalpha() for w in toks):
+                pend = self._pending_unparsed; self._pending_unparsed = None
+                before = len(self._constr_templates)
+                self.teach_construction(pend, tuple(toks))
+                msg = f"Thank you — so '{pend.strip().rstrip('.')}' means {toks[0]} {toks[1]} {toks[2]}."
+                if len(self._constr_templates) > before:
+                    msg += " And I think I've learned that pattern — I can read sentences like it now!"
+                return msg
+            self._pending_unparsed = None   # not a fact-answer -> drop the pending ask, fall through
         # "what about X?" follow-up: re-ask the last question template with the new subject
         m = re.match(r"(?:and )?what about (?:a |an |the )?([a-z]+)\??$", text.strip().lower())
         if m and getattr(self, "_last_question", None):
@@ -139,11 +165,16 @@ class Conversation:
         # STATEMENT -> learn; report how the memory grew
         self._track_subject(text)
         before = len(self.sm.facts)
-        for sent in re.split(r"(?<=[.!])\s+", text if text.endswith(('.', '!')) else text + "."):
-            sent = sent.strip()
-            if sent:
-                self._learn_one(sent)
+        clauses = [c.strip() for c in re.split(r"(?<=[.!])\s+", text if text.endswith(('.', '!')) else text + ".")
+                   if c.strip()]
+        for sent in clauses:
+            self._learn_one(sent)
         grew = len(self.sm.facts) - before
+        # interactive construction teaching (JEP-358): a single statement we genuinely couldn't parse -> ASK
+        if grew == 0 and len(clauses) == 1 and self._is_unparseable(clauses[0]):
+            self._pending_unparsed = clauses[0]
+            return (f"I couldn't quite understand \"{clauses[0].rstrip('.')}\". Tell me what it means as three "
+                    f"words — subject relation object (e.g. 'humans domesticated dog') — and I'll learn the pattern.")
         base = (f"Got it — I learned {grew} new fact{'s' if grew != 1 else ''} (I now know "
                 f"{len(self.sm.facts)} facts)." if grew else "Noted (nothing new to me there).")
         conn = self._connections(getattr(self, "_last_subject", None)) if grew else []
