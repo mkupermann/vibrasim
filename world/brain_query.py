@@ -123,6 +123,11 @@ class BrainQuery:
         n = self.how_many(x)
         if n is not None:
             bits.append(f"it has {n} legs")
+        # parts: things that are part-of x or an ancestor of x (JEP-396)
+        targets = set(self._ancestors(x, "isa"))
+        parts = sorted({p for (p, r, o) in self.mem.facts if r == "partof" and o in targets})
+        if parts:
+            bits.append("it has " + ", ".join(f"{'an' if p[0] in 'aeiou' else 'a'} {p}" for p in parts[:4]))
         return ("; ".join(bits) + ".").capitalize() if bits else f"I don't know much about {x} yet."
 
     def what(self, x, verb):
