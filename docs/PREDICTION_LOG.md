@@ -6,8 +6,13 @@ logged mistake is the one forbidden outcome. Goal: predictions converge to calib
 Running tally: hits 110 / predictions 137 (80%). Latest: JEP-221 HIT (complete engine incl. conversational features re-validated ROBUST — 0 crashes/6000).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
-The OVERALL 73% is dominated by early-programme misses (surface-form bugs, structure-learning difficulty mis-estimates).
-Predictions ARE converging WITHIN a settled domain, and the residual misses are honestly informative:
+At JEP-221 the tally is 110/137 (80%) and has CONVERGED: the OVERALL rate is dragged down by early-programme misses
+(surface-form bugs, structure-learning difficulty mis-estimates), but once the multi-domain engine became understood
+the run-rate is near-perfect — across the ~70 rungs of this continuation (JEP-152..221), the misses are 154/157/158/
+159/165 (all in genuinely-novel structure-learning / representation territory) plus 176/181 (in-sample-vs-held-out,
+extractor-precision), and EVERYTHING after JEP-181 was a HIT (~35 consecutive HITs on the engine/learn-from-sources/
+grounding/conversational domains). Predictions ARE converging WITHIN a settled domain, and the residual misses are
+honestly informative:
 - **Recent run JEP-166..173: 8 straight HITs** — once the engine/learn-from-prose domain was understood, predictions
   became reliably calibrated (anticipating bugs, recall limits, relation-interaction semantics, recency, robustness).
 - **The misses cluster in genuinely-NOVEL/uncertain territory**, each yielding a durable lesson: JEP-154 (forgot my
