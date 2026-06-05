@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 101 / predictions 128 (79%). Latest: JEP-212 HIT (temporal consistency — impossible-timeline cycle flagged; consistency now spans taxonomy + numeric + temporal).
+Running tally: hits 102 / predictions 129 (79%). Latest: JEP-213 HIT (large multi-domain document: 12/12 correct at document scale; fixed a minor 'has N' spurious open-relation leak).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 The OVERALL 73% is dominated by early-programme misses (surface-form bugs, structure-learning difficulty mis-estimates).
@@ -150,3 +150,4 @@ Predictions ARE converging WITHIN a settled domain, and the residual misses are 
 | JEP-210 | 🔮 'X before/after Y' -> order relation, transitive temporal Q&A, inverse | 3 temporal facts; war->peace transitive Yes; after=inverse; false rejected | HIT | Temporal sequencing from prose (reuses transitive-order machinery); limit = relative order only, no dates/arithmetic. |
 | JEP-211 | 🔮 all domains compose in one engine/passage, no interference | relational+open+quantitative+temporal+grounding all queryable correctly | HIT (100th) | Permanent regression guard for the full breadth; domains kept separate by their extractor guards. |
 | JEP-212 | 🔮 temporal cycle ('X before Y' and 'Y before X') flagged; consistent timeline not | cycle flagged 'before...and also after', consistent timeline empty | HIT | Completes consistency across ALL domains (taxonomy + numeric + temporal). |
+| JEP-213 | 🔮 large multi-domain document, high accuracy, no interference at scale | 12/12 across all domains, consistency clean; found+fixed 'has 2' spurious open induction | HIT | Full engine correct at document scale with clean domain separation. |
