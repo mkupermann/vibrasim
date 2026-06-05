@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 161 / predictions 197 (82%). Latest: JEP-282 HIT (subordinate causal 'X because of Y' / 'X due to Y' -> Y causes X (swap); rain->flooding, bacteria->disease; completes causal connective coverage: active/passive/subordinate).
+Running tally: hits 162 / predictions 198 (82%). Latest: JEP-283 HIT (bare mass nouns as subjects AND connective-objects -> no article -- 'A rain causes flooding'->'Rain causes flooding'; article-led 'a fever' preserved; substantially closes the article long-tail for mass/abstract nouns).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 At JEP-221 the tally is 110/137 (80%) and has CONVERGED: the OVERALL rate is dragged down by early-programme misses
@@ -224,3 +224,4 @@ honestly informative:
 | JEP-280 | 🔮 add 'for' to is_fixed preps so 'is used for' induces + 'what is X used for?' handler | PASS — used-for induced, knife/pen/car functions answered, capital-of WH intact; 117 tests | HIT | 'for' is a relational preposition (is used for / is good for); functional relations are open relations. |
 | JEP-281 | 🔮 'X is the same as Y' -> mutual is-a; transitive through the cycle, not over-general | PASS — puma->cat/mammal, symmetric, cat NOT a puma, no loop; 118 tests | HIT | Equivalence = symmetric subsumption; the closure's visited-set makes it cycle-safe. |
 | JEP-282 | 🔮 'X because of/due to Y' -> Y causes X (swap) + exclude from open; active unaffected | PASS — rain->flooding, bacteria->disease, directional, active intact; 119 tests | HIT | Subordinate causal connectives put the effect as subject; completes active/passive/subordinate causal coverage. |
+| JEP-283 | 🔮 broaden bare-subject scan to any verb + bare connective-objects -> no article; article-led preserved | PASS — rain/flooding/disease/bacteria article-less, 'a fever' preserved; 120 tests | HIT | Usage assigns article: bare singular mention (subject or connective-object) = no-article; article-led overrides. |
