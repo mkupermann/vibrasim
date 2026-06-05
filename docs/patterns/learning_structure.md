@@ -140,3 +140,19 @@ cures BOTH continuous cases. So: chained inference compounds, but HOW FAST depen
 aggregation/cleanup is the universal cure. CALIBRATION: I predicted continuous compounds 'like symbolic' — WRONG
 (direction), and hit a CARDINAL repeated bug (D-dim isotropic noise has magnitude sigma*sqrt(D); always scale by
 1/sqrt(D)). Measure, don't carry intuition across representations. Established (random-walk error, cleanup memory).
+
+## REDUNDANCY unifies robustness AND generalization (JEP-176/177)
+Bridging the symbolic learn-from-prose pipeline to the joint-embedding pillar surfaced a deeper unification of the
+redundancy theme. The learned embedding faithfully reconstructs a prose-learned taxonomy's is_a closure IN-SAMPLE
+(order 0.99 at 24 concepts — small scale is fine for reconstruction; the JEP-52 <50 caveat is about HELD-OUT
+generalization, NOT in-sample — distinguish them). But held-out is-a GENERALIZATION is ILL-POSED on a TREE: every
+non-root concept has exactly ONE parent edge, so holding it out ISOLATES the concept and NEITHER symbolic closure NOR
+the embedding can infer it. Generalization needs REDUNDANT structure (a DAG / multi-parent / sibling regularity /
+features) — the geometry infers an unstated relation only from OTHER kept relations.
+THE UNIFICATION: REDUNDANCY is the common requirement for BOTH
+- ROBUST INFERENCE under noise (error-correct a broken chain via independent paths — JEP-138/140), and
+- GENERALIZATION (infer a held-out edge from independent related structure — JEP-177).
+A single-path TREE supports neither; a many-path DAG supports both. Robustness and generalization are two faces of
+the same structural property — redundancy. (And symbolic closure vs learned embedding are COMPLEMENTARY: symbolic =
+exact on known/derivable structure, embedding = generalizes to unstated structure given redundancy + scale.)
+Established (transitive-closure inference, order/poincare embeddings, error-correcting redundancy); named; no novelty.
