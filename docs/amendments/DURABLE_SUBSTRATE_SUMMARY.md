@@ -1,4 +1,10 @@
-# Durable Substrate Reasoning — Programme Summary (JEP-294..320)
+# Durable Substrate Reasoning — Programme Summary (JEP-294..336)
+
+> **Full-arc regression (verified):** all current-state experiments re-run green — JEP-294/295/296/298/299/300/301/
+> 303/304/305/308/309/316/318/319/320/321/323/329/330/331/332/333/335 all PASS; 136 unit tests green. The whole arc
+> composes as one system with zero regressions across 45 amendments. (The intentional NULL→fix pairs 297→298,
+> 306→307, 313→315, 325→326 and the PARTIALs 328/334 are recorded findings, not failures.)
+
 
 One-page overview of the arc that turned the substrate's memory from RAM-only into a durable, growing, reasoning,
 self-organizing knowledge store — entirely on substrate-native VSA primitives (`world/vsa`,
