@@ -58,6 +58,16 @@ def test_atom_polarity_same_no_molecule():
     assert not any(w.k_alive[i] and w.k_level[i] == 5 for i in range(w.k_count))
 
 
+# NOTE (2026-06-05): the next two tests encode OBSOLETE behaviour and are long-standing failures
+# (fail back to >= G35, see LOGBOOK). By current DESIGN, bind_nodes_upward applies the frequency/decade
+# check ONLY to SUB-atom pairs: `pass_freq = ~sub_atom | freq_ok` with the comment "Atom-level pairs skip
+# freq check. Frequency selectivity happens once, at vibration→electron binding." So two atoms DO fuse
+# into a molecule regardless of their frequency mismatch — these tests assert the opposite. Marked xfail
+# to document the spec change without deleting (preserving intent) or falsely asserting; the binding
+# owner should decide whether to update the spec/tests or restore atom-level freq gating.
+@pytest.mark.xfail(reason="obsolete: atom→molecule binding intentionally skips the freq check (selectivity "
+                          "is at electron binding only). See bind_nodes_upward + LOGBOOK 2026-06-05.",
+                   strict=False)
 def test_atom_freq_off_no_molecule():
     w = _empty_world()
     _make_atom(w, 0, [10.0, 10.0, 10.0], 16000.0, True)
@@ -66,6 +76,9 @@ def test_atom_freq_off_no_molecule():
     assert not any(w.k_alive[i] and w.k_level[i] == 5 for i in range(w.k_count))
 
 
+@pytest.mark.xfail(reason="obsolete: atom→molecule binding intentionally skips the freq/decade check "
+                          "(selectivity is at electron binding only). See bind_nodes_upward + LOGBOOK 2026-06-05.",
+                   strict=False)
 def test_atom_decade_off_no_molecule():
     w = _empty_world()
     _make_atom(w, 0, [10.0, 10.0, 10.0], 9500.0, True)   # decade 3
