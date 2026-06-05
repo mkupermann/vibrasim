@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 146 / predictions 182 (80%). Latest: JEP-267 HIT (multi-word verb phrase in temporal order -- 'the treaty was signed before the peace' now captured (was dropped: only 1 word allowed before before/after), restoring the transitive war->treaty->peace chain; surfaced by the history/temporal QA pass).
+Running tally: hits 147 / predictions 183 (80%). Latest: JEP-268 HIT (COMMUNICATE fixes -- describe() splits abilities 'can bark' from adjectival properties 'is friendly' (was 'can bark, friendly'); 'rabies' singular -ies noun not stripped to 'raby'; surfaced by describe/summarize real-usage QA).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 At JEP-221 the tally is 110/137 (80%) and has CONVERGED: the OVERALL rate is dragged down by early-programme misses
@@ -209,3 +209,4 @@ honestly informative:
 | JEP-265 | 🔮 the 16 prose-hardening changes (254..264) are guarded -> engine stays robust, 0 crashes | PASS — 0 crashes / 4000 adversarial passages + 6 queries each; 106 unit tests green | HIT | New extractors/handlers all guarded (bare_np/valid_concept/suffix); re-validate after major change (JEP-171/194/205). |
 | JEP-266 | 🔮 hardened engine handles a fresh multi-domain document at >=0.9 recall | PASS — 15/16 = 0.94 across all new constructions; 1 miss = single-occurrence open relation (by design) | HIT | The cumulative 254..264 hardening validated end-to-end at document scale; robust (265). |
 | JEP-267 | 🔮 relax temporal verb phrase to (?:\w+\s+)* captures 'was signed before'; transitive | PASS — treaty->peace captured, war->peace transitive, reverse No; 107 tests | HIT | A multi-word verb phrase before before/after needs * not ?; restores broken transitive chains. |
+| JEP-268 | 🔮 describe split by adjective shape + 'rabies' to _NOT_PLURAL fixes 'can bark, friendly' + 'a raby' | PASS — 'It can bark. It is friendly.', 'causes rabies'; berries->berry still works; 108 tests | HIT | Adjectival properties (258) and abilities share the properties dict -> split by suffix shape in describe; -ies/-es singulars guarded. |
