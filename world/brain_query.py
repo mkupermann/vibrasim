@@ -107,11 +107,20 @@ class BrainQuery:
                 return True
         return any(self.mem.contains(y, "partof", a, self.gate) for a in self._ancestors(x, "isa"))
 
+    def _most_specific_parent(self, x):
+        """The most-specific is-a parent of x. After closure consolidation every ancestor is a DIRECT edge, so pick the
+        deepest candidate (most ancestors of its own) rather than an arbitrary one (JEP-397)."""
+        cands = [p for (p, _) in self.mem.query_all(x, "isa", self.gate)]
+        if not cands:
+            v, s = self.mem.query(x, "isa")
+            return v if (v is not None and s >= self.gate) else None
+        return max(cands, key=lambda c: len(self._ancestors(c, "isa")))
+
     def describe(self, x):
         """A spoken summary of what is known about x."""
         bits = []
-        parent, s = self.mem.query(x, "isa")
-        if parent is not None and s >= self.gate:
+        parent = self._most_specific_parent(x)
+        if parent is not None:
             bits.append(f"a {x} is {'an' if parent[0] in 'aeiou' else 'a'} {parent}")
         props = []
         for a in self._ancestors(x, "isa"):
@@ -196,10 +205,9 @@ class BrainQuery:
         m = re.match(r"what causes (\w+)$", s)
         if m:
             return self.why(m.group(1))
-        m = re.match(r"what is (\w+)$", s)               # "what is a poodle?" -> its (most specific) parent class
+        m = re.match(r"what is (\w+)$", s)               # "what is a poodle?" -> its most-specific parent class
         if m:
-            v, sc = self.mem.query(m.group(1), "isa")
-            return v if (v is not None and sc >= self.gate) else None
+            return self._most_specific_parent(m.group(1))   # deepest ancestor after consolidation (JEP-397)
         m = re.match(r"what does (\w+) (\w+)$", s)
         if m:
             return self.what(m.group(1), m.group(2))
