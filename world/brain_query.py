@@ -216,7 +216,13 @@ class BrainQuery:
         return " ".join(w.capitalize() for w in str(v).split("_"))
 
     def _valence(self, x):
-        return getattr(self.mem, "valence", {}).get(self._sing(x), 0.0)
+        """Affect of x: taught value if known, else the energy model's GENERALIZED prediction (JEP-436)."""
+        e = self._sing(x)
+        pv = getattr(self.mem, "predict_valence", None)
+        if pv is not None:
+            v = pv(e)
+            return float(v) if v is not None else 0.0
+        return getattr(self.mem, "valence", {}).get(e, 0.0)
 
     # ---- tiny natural-question parser ----
     def ask(self, q):
@@ -231,8 +237,12 @@ class BrainQuery:
             return self._valence(m.group(1)) < 0
         m = re.match(r"^what is the (?:energy|valence|feeling|charge) of (?:a\s+|an\s+|the\s+)?(\w+)$", s)
         if m:
+            e = self._sing(m.group(1))
+            taught = e in getattr(self.mem, "valence", {})
             val = self._valence(m.group(1))
-            return ("bright (positive energy)" if val > 0 else "dark (negative energy)" if val < 0 else "neutral")
+            tag = "" if taught else " (generalized)"      # JEP-436: be honest when it's a prediction, not taught
+            return ("bright (positive energy)" + tag if val > 0 else
+                    "dark (negative energy)" + tag if val < 0 else "neutral")
         # attribute questions FIRST (before articles are stripped, to keep 'your'): JEP-404
         m = re.match(r"^(?:who|what)\s+is\s+your\s+([a-z]+)$", s)
         if m:
