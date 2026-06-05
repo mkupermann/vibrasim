@@ -592,6 +592,14 @@ class UnderstandingEngine:
                         break
         for ent, attr, prev, num in getattr(self, "num_conflicts", []):
             found.append((ent, attr, f"{self._art(ent)} is said to have both {prev} and {num} {attr}s"))
+        # temporal cycle: 'X before Y' AND 'Y before X' (an impossible timeline)
+        before = self._orders.get("before", {})
+        seen_pairs = set()
+        for a, succ in before.items():
+            for b in succ:
+                if a != b and (b, a) not in seen_pairs and self._order_holds("before", b, a):
+                    seen_pairs.add((a, b))
+                    found.append((a, b, f"{self._art(a)} is said to be before {self._art(b)} and also after it"))
         return found
 
     def is_a_confidence(self, x: str, c: str) -> int:
