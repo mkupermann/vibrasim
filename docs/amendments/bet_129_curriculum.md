@@ -44,4 +44,4 @@ The 0.90 bar is missed only because M=14 caps total pairs at 182, so the curve i
 still climbing at the last point (0.875 → 0.883, not saturated). This is literally
 "learns more from every additional interaction." -> BET-130 lifts the data ceiling
 (M=20, up to ~300 training compositions) to cross 0.90, as predicted. See
-bet129_curriculum.png.
+docs/figures/bet129_curriculum.png.

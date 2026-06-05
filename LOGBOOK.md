@@ -4119,7 +4119,7 @@ could (percolation/turnover gone by construction).
 Built a decoupled 3D near-real-time viewer (tools/viz3d_energy.py, pyvista) that
 polls ~/.eqmod/energy/state.npz (run_bet110_energy.py --demo) every ~1.2s — nodes
 coloured by activation, modular geometry, relaxation into attractors. Smoke frame
-bet110_frame.png renders. Next: scale, noisy cues, then sequence/predictive
+docs/figures/bet110_frame.png renders. Next: scale, noisy cues, then sequence/predictive
 world-model (still energy-based, SSL, no transformer).
 
 
@@ -4135,7 +4135,7 @@ Parallel sweep over N: capacity (max patterns with completion>=0.9) = 10(N80),
 16(N160), 26(N240), 32(N320). Linear scaling, slope ~0.095*N, just below Hopfield
 0.138*N (gap = sparse modular connectivity). Monotonic, largest >= 2x smallest ->
 PASS. The substrate-scale memory ceiling is gone: more nodes = more memory. Plot
-bet111_capacity.png.
+docs/figures/bet111_capacity.png.
 
 Viewer fixes (user: live 3D showed no changes): (1) viz3d_energy.py --demo now
 runs the snapshot producer in a background thread = SINGLE command shows a live
@@ -4149,7 +4149,7 @@ each poll. Verified: 6 distinct snapshots, producer stable.
 Flip f fraction of a stored patterns bits, relax freely. Recovery: f=0.10->1.00,
 0.20->0.996, 0.25->0.95, 0.30->0.86, 0.50->0.45 (chance). Control (shuffled W)
 @0.10 = 0.55. Basin radius ~25%% flipped bits. All bars PASS. A genuine
-content-addressable error-correcting attractor. Plot bet112_noise.png.
+content-addressable error-correcting attractor. Plot docs/figures/bet112_noise.png.
 
 
 ## 2026-05-31 16:xx — BET-113 sequence prediction — PASS (predictive world-model primitive)

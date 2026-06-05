@@ -46,7 +46,7 @@ capacity law.
 (linear fit), tracking just below the classic Hopfield bound of 0.138·N — the
 modest gap is the sparse, modular connectivity. The substrate-scale ceiling that
 capped the entire spontaneous programme (BET-089→109) is gone: you buy more
-memory by adding nodes. Plot: `bet111_capacity.png`.
+memory by adding nodes. Plot: `docs/figures/bet111_capacity.png`.
 
 ### Next on this track
 

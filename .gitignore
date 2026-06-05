@@ -69,4 +69,17 @@ eqmod_full.tar.gz
 autopilot_output.txt
 .venv-dml/
 .venv-dml311/
-jep*_out.txt
+
+# --- Experiment run-logs must NOT clutter the repo root (enforced) ---
+# Findings live in docs/amendments/ + LOGBOOK.md. Redirect raw stdout to archive/run-logs/
+# (kept, not ignored) or to a temp path. These root-anchored patterns stop new logs from
+# reappearing at the top level while preserving anything filed under archive/run-logs/.
+/*_out.txt
+/*_err.txt
+/*_probe.txt
+/*_flux.txt
+/*_output.txt
+/*.log
+/*.tar.gz
+# Stray figures at root: real figures belong in docs/figures/
+/*.png
