@@ -925,10 +925,10 @@ class UnderstandingEngine:
         templates (learn_relation) and extract all their instances. Returns {relation: count}. NO transformer."""
         self._detect_proper_nouns(passage)
         def is_fixed(conn):
-            if conn in {"is", "are", "was", "were", "has", "have"}:
-                return True                                  # is-a copula / 'has' part-of
-            return bool(re.search(r"\b(?:part of|causes|caused|leads to|located in|situated in|found in)\b", conn)
-                        or conn.endswith("than"))            # part-of / causal / spatial / comparison
+            if conn in {"is", "are", "was", "were"} or conn.split()[0] in {"has", "have"}:
+                return True                                  # is-a copula / 'has ...' part-of or numeric
+            return bool(re.search(r"\b(?:part of|causes|caused|leads to|located in|situated in|found in|before|after)\b", conn)
+                        or conn.endswith("than"))            # part-of / causal / spatial / temporal / comparison
         triples = []
         for s in re.split(r"[.;:]\s+", passage.strip()):
             t = re.sub(r"\b(?:a|an|the)\b", " ", s.lower()).strip().rstrip(".")

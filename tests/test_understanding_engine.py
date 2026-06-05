@@ -932,3 +932,17 @@ def test_temporal_consistency():
     e2 = UnderstandingEngine(seed=2)
     e2.read("The war happened before the treaty. The treaty came before the peace.")
     assert e2.consistency_audit() == []                  # a consistent timeline
+
+
+def test_large_multidomain_document():
+    # JEP-213: full engine on a large multi-domain document — all domains correct at scale, no spurious open relations
+    e = UnderstandingEngine(seed=213)
+    out = e.read("A dog is a mammal. A mammal is an animal. A heart is part of a dog. A cat has 2 eyes. A bird has 2 wings. "
+                 "A virus causes a fever. An elephant is bigger than a dog. The war started before the treaty. "
+                 "Rome is the capital of Italy. Paris is the capital of France.")
+    assert e.is_a("dog", "animal") and e.part_of("heart", "dog") and e.causes_effect("virus", "fever")
+    assert e.respond("how many eyes does a cat have?") == "A cat has 2 eyes."
+    assert e.respond("is an elephant bigger than a dog?") == "Yes."
+    assert e.respond("did the war happen before the treaty?") == "Yes."
+    assert e.relation_true("paris", "is capital of", "france")
+    assert out.get("open", {}) == {"is capital of": 2}     # 'has 2' NOT spuriously induced as an open relation
