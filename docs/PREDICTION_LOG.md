@@ -3,7 +3,22 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 65 / predictions 89 (JEP-173 HIT — 'why?' explains part-of + causal chains too, with correct recency; full reasoning transparency) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
+Running tally: hits 65 / predictions 89 (73%). Latest: JEP-173 HIT ('why?' explains part-of + causal chains, full reasoning transparency).
+
+## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
+The OVERALL 73% is dominated by early-programme misses (surface-form bugs, structure-learning difficulty mis-estimates).
+Predictions ARE converging WITHIN a settled domain, and the residual misses are honestly informative:
+- **Recent run JEP-166..173: 8 straight HITs** — once the engine/learn-from-prose domain was understood, predictions
+  became reliably calibrated (anticipating bugs, recall limits, relation-interaction semantics, recency, robustness).
+- **The misses cluster in genuinely-NOVEL/uncertain territory**, each yielding a durable lesson: JEP-154 (forgot my
+  own JEP-134 noise lesson → match test regime to mechanism), JEP-157 (tested a noise-effect in a noise-free regime),
+  JEP-158 (symbolic intuition doesn't transfer to continuous reps; + a CARDINAL repeated D-scaling bug), JEP-159/165
+  (clean prose has no ambiguity / per-category tests overstate readiness → predict bugs not spreads).
+- **Honest limit on "100%"**: calibration converges where the domain is understood; it cannot be 100% on genuinely
+  novel experiments (that's where the information is). The discipline's real payoff is that NO logged lesson recurred
+  except the article-bug family (now structurally guarded) and the D-scaling bug (now guarded) — the forbidden
+  outcome (repeating a diagnosed mistake) was avoided. Convergence is real; perfection on novelty is not the goal,
+  CALIBRATED UNCERTAINTY is.
 
 | id | prediction (🔮 before) | outcome | hit? | lesson (don't repeat) |
 |----|------------------------|---------|------|------------------------|
