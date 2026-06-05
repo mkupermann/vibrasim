@@ -398,6 +398,14 @@ class UnderstandingEngine:
                 x = self._norm_phrase(m.group(1))
                 self.properties.setdefault(x, set()).add(m.group(2).lower()); last_subject = x
                 continue
+            # EQUIVALENCE/synonym: 'X is the same as Y' -> mutual is-a (puma <-> cougar; each inherits the other's
+            # ancestors, so a puma that equals a cougar IS a cat) (JEP-281)
+            m = re.match(rf"^{np}\s+is\s+the\s+same\s+as\s+{np}$", s)
+            if m:
+                a, b = self._norm_phrase(m.group(1)), self._norm_phrase(m.group(2))
+                if a not in self._PRONOUNS and self._bare_np(a) and self._bare_np(b) and a != b:
+                    self.tell(f"a {a} is a {b}."); self.tell(f"a {b} is a {a}."); learned["is_a"] += 1
+                continue
             # DEFINITIONAL copula: 'X is defined as Y' / 'X means Y' / 'X is (also) known as Y' / 'X refers to Y'
             # -> X is-a Y (definition treated as subsumption; head-noun fallback handles 'a warm-blooded animal') (JEP-269)
             m = re.match(rf"^{np}\s+(?:is\s+defined\s+as|means|is\s+(?:also\s+)?known\s+as|refers\s+to)\s+{np}$", s)

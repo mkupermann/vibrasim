@@ -1358,3 +1358,12 @@ def test_functional_used_for_relation():
     e2 = UnderstandingEngine(seed=283)
     e2.read("Paris is the capital of France. London is the capital of England.")
     assert e2.respond("what is the capital of France?") == "Paris."
+
+
+def test_equivalence_same_as():
+    # JEP-281: 'X is the same as Y' -> mutual is-a (equivalence); transitive through the cycle, not over-general
+    e = UnderstandingEngine(seed=284)
+    e.read("A puma is the same as a cougar. A cougar is a cat. A cat is a mammal.")
+    assert e.is_a("puma", "cat") and e.is_a("puma", "mammal")    # puma=cougar inherits cougar's ancestors
+    assert e.is_a("cougar", "puma")                              # symmetric
+    assert not e.is_a("cat", "puma")                            # cat is broader, NOT equal (no over-generalization)
