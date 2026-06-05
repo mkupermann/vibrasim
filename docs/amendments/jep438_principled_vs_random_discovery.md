@@ -68,3 +68,12 @@ two cost routes shown to be the SAME quantity — not a solution.
 
 **Capstone follow-up (JEP-439):** extend the M-grid past C(P,3) to confirm random features reach
 ≥0.85 at M* ≈ C(P,3) ≈ 2024 — demonstrating the feature-cost / search-cost equivalence quantitatively.
+
+### CORRECTION (from JEP-439, 2026-06-05): the "same quantity" claim above is WRONG
+JEP-439 swept P ∈ {12,15,18} and found random features do NOT track C(P,3): they need substantially
+MORE (P=18 at M≈3·C(18,3) reached only 0.73) because a tanh feature mixes ALL monomial orders, so the
+readout must disentangle degree-3 from everything else. So the two routes are NOT equal — **order-3
+OMP (exact, C(P,3) enumeration) is the CHEAPER route; random features are strictly worse** for pure
+high-order parity. The robust part of the JEP-438 finding stands (greedy order≤2 gets nothing; some
+O(C(P,k)) search is required), but "feature-cost == search-cost" is retracted. Honesty over
+consistency — see docs/amendments/jep439_cost_equivalence.md.
