@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 62 / predictions 86 (JEP-170 HIT — causal/taxonomy interaction with the correct ASYMMETRY vs mereology: effect-subtype NOT entailed) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
+Running tally: hits 63 / predictions 87 (JEP-171 HIT — learn-from-prose pipeline validated ROBUST (0 crashes/6000) + SOUND (0 violations/400)) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
 
 | id | prediction (🔮 before) | outcome | hit? | lesson (don't repeat) |
 |----|------------------------|---------|------|------------------------|
@@ -93,3 +93,4 @@ Running tally: hits 62 / predictions 86 (JEP-170 HIT — causal/taxonomy interac
 | JEP-168 | 🔮 part-of + causal question handlers close conversational Q&A, no is-a interference | all multi-relation questions answered correctly; ordering clean | HIT | Engine learns from a passage and converses about it across is-a/part-of/causal in English. |
 | JEP-169 | 🔮 part-of/is-a interaction absent (gap); both valid; leak risk | both implemented, part_of(heart,animal/poodle) True, part_of(heart,cat) stays False | HIT | Distinct relation types interact with correct bounded semantics; no up-then-down leak. |
 | JEP-170 | 🔮 causal/is-a interaction absent; effect-up + cause-subtype valid | implemented; effect-subtype correctly NOT entailed (asymmetry vs part-of) | HIT | Different relation types interact with taxonomy under different correct rules (parts distribute to subtypes, effects don't). |
+| JEP-171 | 🔮 read() robust (no crashes); relation-interaction invariants sound | 0 crashes/6000 adversarial, 0 violations/400 taxonomies | HIT | Pipeline matches core validation rigor; hedged fuzz bug didn't appear (guards throughout). |
