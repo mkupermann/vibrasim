@@ -366,21 +366,69 @@ Historical planning artefacts live under `docs/superpowers/specs/` and `docs/sup
 
 ---
 
-## Citations
+## Papers & Theories
 
-If you use EQMOD in research, please cite the underlying scientific work it operationalises:
+Every theory, paper, and established method EQMOD operationalises is listed here, grouped by the
+thread it feeds. **An honest disclaimer governs the whole list:** with the single exception of the
+specific *combinations* noted in the amendment docs, none of these methods is ours. We name the
+established work as established and reserve "new" for genuine novelty (see `docs/patterns/` and the
+per-amendment honesty notes). EQMOD assembles known mechanisms on an unusual substrate and reports
+what they do; the contribution is the mapped deadlock and the disciplined process, not the methods.
 
-- Magee, J.C. (2026). *Behavioral Time Scale Plasticity*. Nature Neuroscience review.
-- Wu, X., et al. (2025). *Behavioral time scale plasticity enables one-shot content-addressable memory*. Nature Communications.
-- Wilson, M.A. & McNaughton, B.L. (1994). *Reactivation of hippocampal ensemble memories during sleep*. Science.
-- Buzsáki, G. (2015). *Hippocampal sharp wave-ripple: A cognitive biomarker for episodic memory and planning*. Hippocampus.
-- Lewis, P.A. & Durrant, S.J. (2011). *Overlapping memory replay during sleep builds cognitive schemata*. Trends in Cognitive Sciences.
-- Block, N. (1995). *On a confusion about a function of consciousness*. Behavioral and Brain Sciences.
-- Dehaene, S. & Naccache, L. (2001). *Towards a cognitive neuroscience of consciousness*. Cognition.
-- Rosenthal, D. (2005). *Consciousness and Mind*. Oxford University Press.
-- Friston, K. (2010). *The free-energy principle: a unified brain theory?* Nature Reviews Neuroscience.
-- Varela, F.J., Maturana, H.R. & Uribe, R. (1974). *Autopoiesis: the organisation of living systems*. BioSystems.
-- Chalmers, D.J. (1995). *Facing up to the problem of consciousness*. Journal of Consciousness Studies. *(Cited explicitly to mark what we did NOT solve.)*
+### Behavioural-timescale plasticity & content-addressable memory (G14)
+- **Magee, J.C. (2026).** *Behavioral Time Scale Plasticity.* Nature Neuroscience (review). — seconds-scale eligibility-trace plasticity; the G14 inspiration (substrate lacks Magee's dendritic plateau trigger + instructive input — BTSP-*inspired*, not BTSP).
+- **Wu, X., et al. (2025).** *Behavioral time scale plasticity enables one-shot content-addressable memory.* Nature Communications.
+- **Bi, G. & Poo, M. (1998).** *Synaptic modifications in cultured hippocampal neurons.* J. Neuroscience. — the millisecond STDP window (Plan B bridge orientation).
+- **Hebb, D.O. (1949).** *The Organization of Behavior.* — co-firing potentiation; the substrate's correlation plasticity and the energy model's "connections strengthen with experience".
+- **Sutton, R.S. (1988).** *Learning to predict by the methods of temporal differences.* — eligibility traces (the trace mechanism shared by BTSP and TD).
+
+### Sleep, replay & offline consolidation (G15/G18; the Neuron 2026 convergence)
+- **Wilson, M.A. & McNaughton, B.L. (1994).** *Reactivation of hippocampal ensemble memories during sleep.* Science. — sequence replay; the basis of `world/dream.py`.
+- **Buzsáki, G. (2015).** *Hippocampal sharp wave-ripple.* Hippocampus. — SWR-gated, eligibility-biased replay seeding.
+- **Lewis, P.A. & Durrant, S.J. (2011).** *Overlapping memory replay during sleep builds cognitive schemata.* Trends Cogn. Sci. — schema integration / concept blending (G18 integration bridges).
+- **Hobson, J.A.** *AIM model* — forward modelling with the input gate closed (dream-state gating).
+- **"A learning-evoked slow-oscillatory architecture paces population activity for offline reactivation across the human medial temporal lobe."** *Neuron* (2026), Oxford ([press release](https://www.ox.ac.uk/news/2026-06-02-new-study-shows-the-brain-uses-brief-slow-rhythms-to-organise-how-memories-are)). — human MTL: brief ~2 Hz slow-oscillation bursts pace offline reactivation; reactivation strength predicts retention. **Convergent validation** of our existing eligibility-biased replay design (it does not resolve our documented charge-field/erosion deadlock; pacing is a coordination mechanism, our wall is structural).
+
+### Consciousness — operational, access-level only (G16)
+- **Block, N. (1995).** *On a confusion about a function of consciousness.* BBS. — access vs. phenomenal; we target access only.
+- **Dehaene, S. & Naccache, L. (2001).** *Towards a cognitive neuroscience of consciousness.* Cognition. — Global Neuronal Workspace, winner-take-all broadcast (no gamma synchrony / ignition transient implemented).
+- **Rosenthal, D. (2005).** *Consciousness and Mind.* OUP. — Higher-Order Theory.
+- **Friston, K. (2010).** *The free-energy principle.* Nat. Rev. Neuroscience. — prediction-error self-modification (G16 marker 3).
+- **Tononi, G.** *Integrated Information Theory (IIT).* — referenced as a contrast point for what the markers do not measure.
+- **Chalmers, D.J. (1995).** *Facing up to the problem of consciousness.* J. Consciousness Studies. — *cited to mark what we did NOT solve (the hard problem).*
+
+### Life / autopoiesis (G17 honest scope)
+- **Varela, F.J., Maturana, H.R. & Uribe, R. (1974).** *Autopoiesis: the organisation of living systems.* BioSystems. — cited to mark what G17 is **not**: the driver is allopoietic (homeostatic parameter feedback), not autopoietic.
+
+### Vector-symbolic / distributed memory (EQMOD-2 cognition thread)
+- **Plate, T. (1995).** *Holographic Reduced Representations (HRR).* IEEE Trans. Neural Networks. — circular-convolution binding; the relational store in `world/substrate_memory.py`.
+- **Kanerva, P.** *Sparse Distributed Memory* & *Hyperdimensional Computing.* — distributed "energy cloud" bundles; capacity/cleanup.
+
+### Reservoir computing, random features & online readout (the tractable-nonlinearity route, JEP-429/430)
+- **Jaeger, H. (2001).** *Echo State Networks.* — reservoir computing.
+- **Maass, W., et al. (2002).** *Liquid State Machines.* — the spiking-reservoir analogue.
+- **Rahimi, A. & Recht, B. (2007).** *Random features for large-scale kernel machines.* NeurIPS. — random nonlinear projection making low-order nonlinearity linearly separable (`world/valence_reservoir.py`).
+- **Huang, G.-B., et al. (2006).** *Extreme Learning Machine.* — fixed random hidden layer + linear readout.
+- **Recursive Least Squares** (adaptive filtering, Haykin) — the online closed-form readout update in the valence-reservoir learner.
+
+### Energy-based & associative memory; statistical mechanics (Ising/Hopfield/RBM thread, G138–G145)
+- **Hopfield, J.J. (1982).** *Neural networks and physical systems with emergent collective computational abilities.* PNAS. — associative recall; spurious/mixed states.
+- **Ising model** (statistical mechanics) — frustration and energy landscapes the physical-computing experiments probe.
+- **Hinton, G.E., et al.** *Boltzmann Machines / Restricted Boltzmann Machines / contrastive divergence*; **LeCun et al.** *Energy-Based Models*; **Rao, R. & Ballard, D. (1999)** *Predictive coding.* — the energy-based generative/inference references for G142+.
+
+### Affective "energy cloud" model (Michael's hypothesis; JEP-425/426)
+- **Damasio, A.** *Somatic Marker Hypothesis.* — affective valence (bright/dark "energy clouds") as a learning signal; tested in JEP-426→430.
+
+### Learning-theory limits (where the wall is, JEP-427)
+- **Minsky, M. & Papert, S. (1969).** *Perceptrons.* — XOR / parity is the canonical non-linearly-separable function; the precise boundary a scalar valence readout cannot cross without features.
+
+### Spiking-neuron & cortical-microcircuit references (flux substrate / SNN comparators)
+- **Izhikevich, E. (2007).** *Dopamine-modulated STDP* (two-equation neuron model). — `world/flux/izhikevich_rstdp.py`.
+- **Diehl, P. & Cook, M. (2015).** *Unsupervised learning of digit recognition using STDP.* — SNN+STDP comparator.
+- **Markram, H., et al. (2015).** *Reconstruction and simulation of neocortical microcircuitry.* Cell. — cortical-microcircuit architecture reference.
+
+### AI, mathematics & method
+- **Klowden, T. & Tao, T. (2026).** *Mathematical Methods and Human Thought in the Age of AI.* arXiv:2603.26524. — the human-centred, red-team (verify) vs blue-team (generate) framing; aligns with EQMOD's hard constraint (the LLM is the *parent/teacher*, the no-LLM substrate is the reasoner) and its mechanism-over-metric discipline.
 
 ---
 
