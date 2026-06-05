@@ -1040,7 +1040,7 @@ class UnderstandingEngine:
                 return True                                  # spatial containment is a FIXED relation, not open (JEP-261)
             # a copula form ('is', 'is celestial', 'are warm-blooded') is IS-A (the parent is a multi-word NP),
             # UNLESS a relational preposition makes it a genuine OPEN relation ('is capital of', 'is located in')
-            if w0 in {"is", "are", "was", "were"} and not re.search(r"\b(?:of|in|at|by|to|on|with|from)\b", conn):
+            if w0 in {"is", "are", "was", "were"} and not re.search(r"\b(?:of|in|at|by|to|on|with|from|for)\b", conn):
                 return True
             return bool(re.search(r"\b(?:part of|causes|caused|leads to|located in|situated in|found in|before|after"
                                   r"|contains|consists of|comprises|includes|results in|results from)\b", conn)
@@ -1501,6 +1501,16 @@ class UnderstandingEngine:
             if (x, y) in na:                                       # 'does a dog have legs?' -> the numeric attribute
                 return f"Yes. {self._art(x).capitalize()} has {na[(x, y)]} {y if na[(x, y)] == 1 else y + 's'}."
             return f"No. Not that I was told."
+        # OPEN-RELATION 'what is X <verb> for/...?' (a learned 'is ... PREP' relation, e.g. 'is used for') (JEP-280)
+        m = re.match(r"what\s+(?:is|are)\s+(?:(?:an|a|the)\s+)?(\w+)\s+(.+)", q)
+        if m and getattr(self, "learned_rels", None):
+            subj, tail = self._norm(m.group(1)), m.group(2).strip()
+            rel = next((r for r in self.learned_rels if r == "is " + tail or r == "are " + tail), None)
+            if rel:
+                objs = [o for s, r, o in self.facts if s == subj and r == rel]
+                if objs:
+                    return f"{self._art(subj).capitalize()} {rel} {self._art(objs[0])}."
+                return f"I don't know what {self._art(subj)} {rel}."
         # OPEN-RELATION object-side WH: 'what does a carnivore eat?' -> the OBJECT of a learned verb relation (JEP-270)
         m = re.match(r"what\s+do(?:es)?\s+(?:(?:an|a|the)\s+)?(\w+)\s+(\w+)", q)
         if m and getattr(self, "learned_rels", None):
