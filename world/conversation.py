@@ -65,8 +65,33 @@ class Conversation:
             if sent:
                 self.sm.learn_sentence(sent, self.eng)
         grew = len(self.sm.facts) - before
-        return (f"Got it — I learned {grew} new fact{'s' if grew != 1 else ''} (I now know "
+        base = (f"Got it — I learned {grew} new fact{'s' if grew != 1 else ''} (I now know "
                 f"{len(self.sm.facts)} facts)." if grew else "Noted (nothing new to me there).")
+        conn = self._connections(getattr(self, "_last_subject", None)) if grew else []
+        if conn:
+            base += " And that connects: " + "; ".join(conn) + "."
+        return base
+
+    def _connections(self, subject):
+        """Make connections (Michael's rule #2): the NEW entailments unlocked for `subject` by linking the new fact
+        to what is already known — deductive generation (JEP-331). Returns short English clauses, beyond the direct
+        parent."""
+        if not subject:
+            return []
+        from world.brain_query import BrainQuery
+        bq = BrainQuery(self.sm, seed=self.seed)
+        out = []
+        anc = bq._ancestors(subject, "isa")             # [subject, parent, grandparent, ...]
+        for a in anc[2:]:                                # skip subject + direct parent -> only multi-hop links
+            out.append(f"a {subject} is {'an' if a[0] in 'aeiou' else 'a'} {a}")
+        props = []
+        for a in anc[1:]:                                # inherited properties (from ancestors, not the subject)
+            for (p, _) in self.sm.query_all(a, "hasprop", bq.gate):
+                if not self.sm.contains(subject, "not_hasprop", p, bq.gate) and p not in props:
+                    props.append(p)
+        if props:
+            out.append(f"a {subject} can " + ", ".join(props[:3]))
+        return out[:4]
 
     def save(self):
         if self.sm.has_resolvable_corrections():
