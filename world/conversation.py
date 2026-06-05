@@ -353,6 +353,17 @@ class Conversation:
                 subj = self._singular(m2.group(1).lower()); obj = self._singular(m2.group(2).lower())
                 art = "an" if obj[0] in "aeiou" else "a"
                 t = f"A {subj} is {art} {obj}."
+        # SINGULAR copular is-a with a modified noun: 'The cheetah is a large cat' -> head 'cat' (JEP-414). Take the
+        # head noun (strip a relative/prepositional tail) so the value is single-word and survives the junk guard,
+        # instead of losing the fact to a multi-word value ('large cat').
+        msi = re.match(r"^(?:the\s+|a\s+|an\s+)?([a-z]+)\s+is\s+an?\s+(.+?)\.?$", t, flags=re.I)
+        if msi:
+            obj = re.split(r"\s+(?:that|which|of|with|in|on)\s+", msi.group(2).strip(), maxsplit=1)[0]
+            head = self._singular(obj.split()[-1].lower())
+            if head and head not in ("of", "kind", "type", "sort"):
+                subj = self._singular(msi.group(1).lower())
+                art = "an" if head[0] in "aeiou" else "a"
+                t = f"A {subj} is {art} {head}."
         # copular adjective/predicate: SINGULAR 'X is <single-word>' with NO article -> treat the word as a class so
         # it is queryable by both 'is X Y?' and 'are X Y?' (is_a OR has_property). 'The sun is hot' -> 'A sun is a hot'
         # (JEP-405). The is-a forms ('a dog is a mammal') are multi-word after 'is' and were handled earlier.
