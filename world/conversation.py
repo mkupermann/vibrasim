@@ -202,6 +202,13 @@ class Conversation:
         """Rewrite common encyclopedic forms into engine-parseable ones (JEP-348/349). Returns (sentences, extra)."""
         extra = []
         t = s.strip()
+        # conjunction of CLAUSES: 'X are Y, and Z are W' -> normalize each clause independently (JEP-380). Require the
+        # comma so this does NOT catch the conjunction-SUBJECT form 'X and Y are Z' (handled separately below).
+        m = re.match(r"^(.+?\s+(?:are|is)\s+.+?),\s+and\s+(.+?\s+(?:are|is)\s+.+?)\.?$", t, flags=re.I)
+        if m:
+            left, lex = self._normalize_for_learning(m.group(1))
+            right, rex = self._normalize_for_learning(m.group(2))
+            return left + right, extra + lex + rex
         # 'is a kind/type/sort of' -> 'is a'
         t = re.sub(r"\bis\s+(an?)\s+(?:kind|type|sort)\s+of\b", r"is \1", t, flags=re.I)
         # numeric possession: 'A dog has four/4 legs' -> (dog, has_legs, N)
@@ -247,6 +254,14 @@ class Conversation:
             obj_head = self._singular(m.group(2).strip().rstrip(".").split()[-1].lower())
             art = "an" if obj_head[0] in "aeiou" else "a"
             t = f"A {subj} is {art} {obj_head}."
+        else:
+            # general 'X are Y' with a SINGLE-word object — also catches IRREGULAR plurals that don't end in 's'
+            # (salmon, fish, sheep) which the rule above misses (JEP-380).
+            m2 = re.match(r"^([A-Za-z]+)\s+are\s+(?:a\s+)?([a-z]+)\.?$", t, flags=re.I)
+            if m2 and m2.group(1).lower() not in ("they", "these", "those", "we", "you"):
+                subj = self._singular(m2.group(1).lower()); obj = self._singular(m2.group(2).lower())
+                art = "an" if obj[0] in "aeiou" else "a"
+                t = f"A {subj} is {art} {obj}."
         return [t], extra
 
     def _learn_one(self, sentence):
