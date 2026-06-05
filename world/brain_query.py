@@ -76,9 +76,10 @@ class BrainQuery:
     def why(self, effect):
         return sorted(c for (c, _) in self.mem.query_all(effect, "caused_by", self.gate))
 
-    def how_many(self, x):
+    def how_many(self, x, part="legs"):
+        role = f"has_{part}"                              # JEP-390: any counted part, not just legs
         for a in self._ancestors(x, "isa"):
-            v, s = self.mem.query(a, "has_legs")
+            v, s = self.mem.query(a, role)
             if v is not None and s >= self.gate:
                 try:
                     return int(v)
@@ -166,9 +167,9 @@ class BrainQuery:
         m = re.match(r"tell me about (\w+)$", s) or re.match(r"describe (\w+)$", s)
         if m:
             return self.describe(m.group(1))
-        m = re.match(r"how many \w+ does (\w+) have$", s) or re.match(r"how many \w+ (?:does|do) (\w+) have$", s)
+        m = re.match(r"how many (\w+) (?:does|do) (\w+) have$", s)   # capture the part (JEP-390)
         if m:
-            return self.how_many(m.group(1))
+            return self.how_many(m.group(2), part=m.group(1))
         m = re.match(r"is (\w+) part of (\w+)$", s)                 # 'a/an/the' already stripped above (JEP-388)
         if m:
             return self.part_of(self._sing(m.group(1)), self._sing(m.group(2)))
