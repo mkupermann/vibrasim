@@ -1093,3 +1093,13 @@ def test_mass_noun_article_heuristic():
     # in generation: 'Gravity causes tides' -> describing the cause reads 'gravity', not 'a gravity'
     e.read("Gravity causes a tide.")
     assert "a gravity" not in e.respond("what causes a tide?").lower()
+
+
+def test_modified_numeric_comparison():
+    # JEP-231: numeric comparison keyed by head noun, symmetric with JEP-229 capture ('more large moons than')
+    e = UnderstandingEngine(seed=231)
+    e.read("Jupiter has 4 large moons. The Earth has 1 moon. A spider has 8 legs. A dog has 4 legs.")
+    assert e.respond("does Jupiter have more large moons than the Earth?") == "Yes."   # modifier, head 'moon'
+    assert e.respond("does a spider have more legs than a dog?") == "Yes."             # plain, no regression
+    assert e.respond("does a dog have more legs than a spider?") == "No."
+    assert e.respond("does a dog have more interesting than a spider?") == "I don't have those numbers."  # non-count, graceful

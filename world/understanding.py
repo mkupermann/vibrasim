@@ -1367,9 +1367,10 @@ class UnderstandingEngine:
                 unit = phrase or (attr if n == 1 else m.group(1))  # singular for exactly one ('1 moon', not '1 moons')
                 return f"{self._art(ent).capitalize()} has {n} {unit}."
             return f"I don't know how many {m.group(1)} {self._art(ent)} has."
-        m = re.match(r"does\s+(?:(?:an|a|the)\s+)?(\w+)\s+have\s+more\s+(\w+)\s+than\s+(?:(?:an|a|the)\s+)?(\w+)", q)
+        # the attribute may carry a modifier ('more large moons than'); key by the HEAD noun, symmetric with capture
+        m = re.match(r"does\s+(?:(?:an|a|the)\s+)?(\w+)\s+have\s+more\s+((?:\w+\s+)*\w+)\s+than\s+(?:(?:an|a|the)\s+)?(\w+)", q)
         if m:
-            x, attr, z = self._norm(m.group(1)), self._norm(m.group(2)), self._norm(m.group(3))
+            x, attr, z = self._norm(m.group(1)), self._norm(m.group(2).split()[-1]), self._norm(m.group(3))
             if (x, attr) in na and (z, attr) in na:
                 self._last_num_query = (x, attr); self._last_query = None; self._last_rel_query = None
                 return "Yes." if na[(x, attr)] > na[(z, attr)] else "No."
