@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 82 / predictions 109 (75%). Latest: JEP-193 HIT (mass nouns extractable: seat->furniture, stool->object chains; adjectives still rejected).
+Running tally: hits 83 / predictions 110 (75%). Latest: JEP-194 HIT (matured engine re-validated ROBUST 0 crashes/6000 + SOUND 0 violations/300 — feature additions preserved robustness/soundness).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 The OVERALL 73% is dominated by early-programme misses (surface-form bugs, structure-learning difficulty mis-estimates).
@@ -131,3 +131,4 @@ Predictions ARE converging WITHIN a settled domain, and the residual misses are 
 | JEP-191 | 🔮 appearance recovers visual not functional; affordance recovers function | appearance functional-purity 0.50, affordance 1.00 | HIT | Functional grounding needs INTERACTION perception (open frontier); complete grounding picture: appearance(vision)+names(language)+function(affordance). |
 | JEP-192 | 🔮 functional categories recoverable from observed interactions | usage-profile clustering -> functional purity 1.00 (appearance can't) | HIT | Functional grounding DEMONSTRATED from interaction observation (JEP-62 mechanism); residual = real embodied perception. Mass-noun caveat surfaced. |
 | JEP-193 | 🔮 curated mass-noun set extracts 'furniture' etc., no precision regression | seat->furniture, stool->object chain; dog->loyal still False | HIT | Recall gain on mass nouns; plural-heuristic + mass-lexicon separate nouns from adjectives without a POS tagger. |
+| JEP-194 | 🔮 matured engine (through 193) still robust + sound | 0 crashes/6000 (incl comparison/of/mass-noun), 0 comparison-interaction violations/300 | HIT | Extensive feature additions preserved robustness/soundness; matured engine confirmed solid. |
