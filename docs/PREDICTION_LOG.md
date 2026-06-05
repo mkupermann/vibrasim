@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 65 / predictions 89 (73%). Latest: JEP-173 HIT ('why?' explains part-of + causal chains, full reasoning transparency).
+Running tally: hits 66 / predictions 90 (73%). Latest: JEP-174 HIT (full faculty set composes with learn-from-prose; read knowledge is first-class).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 The OVERALL 73% is dominated by early-programme misses (surface-form bugs, structure-learning difficulty mis-estimates).
@@ -111,3 +111,4 @@ Predictions ARE converging WITHIN a settled domain, and the residual misses are 
 | JEP-171 | 🔮 read() robust (no crashes); relation-interaction invariants sound | 0 crashes/6000 adversarial, 0 violations/400 taxonomies | HIT | Pipeline matches core validation rigor; hedged fuzz bug didn't appear (guards throughout). |
 | JEP-172 | 🔮 novel nonsense-word concepts reasoned identically to familiar (structural) | all multi-relation + interactions correct on never-seen words | HIT | Definitively rules out lexical confounds (JEP-87); understanding is purely relational. |
 | JEP-173 | 🔮 'why?' explains part-of + causal chains, recency-correct | all three relation types explained; recency works | HIT | Full reasoning transparency across taxonomy/mereology/causation. |
+| JEP-174 | 🔮 rich faculties (quant/hypothetical/Boolean/3-valued/contradiction) work over read knowledge | all work identically to told facts, no code change | HIT | read() populates the same structures as tell(); prose-learned knowledge is first-class across the full repertoire. |
