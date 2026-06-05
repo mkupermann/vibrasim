@@ -45,7 +45,12 @@ def main():
         print(f"  [{label}]\n  you> {q}\n  ai > {e.respond(q)}")
     print(f"\n  you> describe a dog.\n  ai > {e.describe('a dog')}")
     print(f"  you> summarize.\n  ai > {e.summarize()}")
-    print("\n=== One engine, one passage, every question type — substrate-legal, no transformer. ===")
+
+    print("\n  --- and a MULTI-TURN conversation (it carries context + explains across turns) ---")
+    for q in ["is a dog an animal?", "what about a cat?", "why?",
+              "is an elephant bigger than a dog?", "what about a mouse?", "why?"]:
+        print(f"  you> {q}\n  ai > {e.respond(q)}")
+    print("\n=== One engine, one passage, every question type + multi-turn dialogue — substrate-legal, no transformer. ===")
 
 
 if __name__ == "__main__":
