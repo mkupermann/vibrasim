@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 153 / predictions 189 (81%). Latest: JEP-274 HIT (active causal verb 'X results in Y' -> X causes Y, transitive smoking->cancer->death, not redundantly open; complements the passive 'results from' of JEP-255).
+Running tally: hits 154 / predictions 190 (81%). Latest: JEP-275 HIT (cumulative re-validation after 272..274 -- comprehensive doc 12/13=0.92 (the 1 miss is a by-design single-occurrence open relation, not a regression) + fuzz 0 crashes/2000; the engine stays comprehensive + robust).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 At JEP-221 the tally is 110/137 (80%) and has CONVERGED: the OVERALL rate is dragged down by early-programme misses
@@ -216,3 +216,4 @@ honestly informative:
 | JEP-272 | 🔮 strip all/every/each -> is-a; 'No X is Y' -> negative; regular is-a unaffected | PASS — All dogs->mammals (transitive to animal), No fish->not mammal, shark->fish intact; 111 tests | HIT | Universal-affirmative quantifiers strip to is-a; universal-negative 'No X' maps to the negative-fact path. |
 | JEP-273 | 🔮 hyphenated -ed adjectives as properties (both parsers) + ancestor-property inheritance w/ exception override | PASS — warm-blooded captured, dog/poodle inherit, penguin exception beats 'bird can fly'; 112 tests | HIT | Participial adjectives are properties; category properties distribute to subtypes defeasibly (the property x is-a interaction). |
 | JEP-274 | 🔮 'X results in Y' -> X causes Y + exclude from open; transitive | PASS — cancer->death, smoking->death transitive, no open 'results in'; 112 tests | HIT | 'results in' is an active causal verb (cf passive 'results from', JEP-255). |
+| JEP-275 | 🔮 latest additions (272..274) keep the engine comprehensive (~>=0.9 doc) + robust (0 crashes) | PASS — doc 12/13=0.92 (1 miss = by-design single-occ open relation), fuzz 0/2000; 113 tests | HIT | Cumulative validation: 20 prose fixes leave the engine comprehensive + robust; only by-design open-relation misses. |
