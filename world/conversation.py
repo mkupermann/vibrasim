@@ -202,6 +202,10 @@ class Conversation:
         """Rewrite common encyclopedic forms into engine-parseable ones (JEP-348/349). Returns (sentences, extra)."""
         extra = []
         t = s.strip()
+        # strip a leading discourse marker so corrections/emphasis in flowing prose parse (JEP-391):
+        # 'Actually, a whale is not a fish' -> 'a whale is not a fish'.
+        t = re.sub(r"^(?:actually|however|indeed|in fact|of course|moreover|furthermore|therefore|thus|"
+                   r"note that)[,:]?\s+", "", t, flags=re.I)
         # conjunction of CLAUSES: 'X are Y, and Z are W' -> normalize each clause independently (JEP-380). Require the
         # comma so this does NOT catch the conjunction-SUBJECT form 'X and Y are Z' (handled separately below).
         m = re.match(r"^(.+?\s+(?:are|is)\s+.+?),\s+and\s+(.+?\s+(?:are|is)\s+.+?)\.?$", t, flags=re.I)
