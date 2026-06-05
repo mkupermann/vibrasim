@@ -42,8 +42,42 @@ class Conversation:
         if m and m.group(1) not in ("it", "kind", "type"):
             self._last_subject = m.group(1)
 
+    _FILLER_RE = re.compile(r"^(so|well|um|uh|hmm|ok|okay|please|hey|and|also|now)\b[,\s]*", re.I)
+
+    def _preprocess(self, text):
+        """Strip leading filler/politeness and normalise negated/contracted auxiliaries so messy input still routes."""
+        t = text.strip()
+        while True:
+            m = self._FILLER_RE.match(t)
+            if not m or m.end() == 0:
+                break
+            t = t[m.end():]
+        # negated/contracted question auxiliaries -> base form (meaning preserved for yes/no lookups)
+        t = re.sub(r"^(isn't|isnt)\b", "is", t, flags=re.I)
+        t = re.sub(r"^(aren't|arent)\b", "are", t, flags=re.I)
+        t = re.sub(r"^(doesn't|doesnt)\b", "does", t, flags=re.I)
+        t = re.sub(r"^(don't|dont)\b", "do", t, flags=re.I)
+        t = re.sub(r"^(can't|cant)\b", "can", t, flags=re.I)
+        return t.strip()
+
     def say(self, text):
-        text = text.strip()
+        text = (text or "").strip()
+        if not text:
+            return ""
+        # "what about X?" follow-up: re-ask the last question template with the new subject
+        m = re.match(r"(?:and )?what about (?:a |an |the )?([a-z]+)\??$", text.strip().lower())
+        if m and getattr(self, "_last_question", None):
+            return self._say_one(re.sub(r"\b" + re.escape(self._last_q_subject) + r"\b",
+                                        m.group(1), self._last_question)) if getattr(self, "_last_q_subject", None) \
+                else self._say_one(text)
+        # a turn may mix teaching and asking across sentences -> process each clause
+        clauses = [c.strip() for c in re.split(r"(?<=[.!?])\s+", text) if c.strip()]
+        if len(clauses) > 1:
+            return " ".join(self._say_one(c) for c in clauses)
+        return self._say_one(text)
+
+    def _say_one(self, text):
+        text = self._preprocess(text)
         if not text:
             return ""
         if text.lower().rstrip("?.!").strip() in (
@@ -57,6 +91,9 @@ class Conversation:
             from world.brain_query import BrainQuery
             text = self._resolve_pronoun(text)
             self._track_subject(text)
+            self._last_question = text
+            ms = re.search(r"\b(?:is|can|does|do|about)\s+(?:a |an |the )?([a-z]+)\b", text.lower())
+            self._last_q_subject = ms.group(1) if ms else None
             ans = BrainQuery(self.sm, seed=self.seed).ask(text)
             if ans is None:
                 return "I don't know that yet — teach me and ask again."

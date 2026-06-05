@@ -100,11 +100,24 @@ class BrainQuery:
                     return res
         return sorted(o for (o, _) in self.mem.query_all(x, verb, self.gate))
 
+    def _sing(self, w):
+        """Singular fallback: 'poodles' -> 'poodle' when only the singular is a known concept."""
+        subjects = {a for (a, _, _) in self.mem.facts}
+        if w in subjects:
+            return w
+        for cand in (w[:-1] if w.endswith("s") else None, w[:-2] if w.endswith("es") else None):
+            if cand and cand in subjects:
+                return cand
+        return w
+
     # ---- tiny natural-question parser ----
     def ask(self, q):
         s = q.strip().lower().rstrip("?").strip()
         s = re.sub(r"\b(a|an|the)\b", " ", s)
         s = re.sub(r"\s+", " ", s).strip()
+        m = re.match(r"do (\w+) (\w+)$", s)              # "do poodles bark?" -> has_property(poodle, bark)
+        if m:
+            return self.has_property(self._sing(m.group(1)), m.group(2))
         m = re.match(r"tell me about (\w+)$", s) or re.match(r"describe (\w+)$", s)
         if m:
             return self.describe(m.group(1))
