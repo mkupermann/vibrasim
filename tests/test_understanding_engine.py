@@ -603,3 +603,16 @@ def test_novel_concept_learning_structural():
     assert e.causes_effect("glim", "wibble")      # causal+is-a interaction on novel words
     assert not e.is_a("florp", "feb")             # part is not type (holds for novel words)
     assert "zorp" in e.describe("a blicket")      # generates a profile for a never-seen concept
+
+
+def test_why_across_relation_types():
+    # JEP-173: 'why?' explains part-of and causal chains too (not just is-a), with correct recency
+    e = UnderstandingEngine(seed=173)
+    e.read("A heart is part of a dog. A cell is part of a heart. A virus causes an infection. "
+           "An infection causes a fever. A dog is a mammal. A mammal is an animal.")
+    e.respond("is a cell part of a dog?")
+    assert e.respond("why?") == "Because a cell is part of a heart, and a heart is part of a dog."
+    e.respond("does a virus cause a fever?")
+    assert e.respond("why?") == "Because a virus causes an infection, and an infection causes a fever."
+    e.respond("is a dog an animal?")                       # recency: most recent question type wins
+    assert "is a mammal" in e.respond("why?") and "part of" not in e.respond("why?")

@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 64 / predictions 88 (JEP-172 HIT — understanding is STRUCTURAL not lexical: novel nonsense-word concepts reasoned identically, ruling out vocabulary confounds) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
+Running tally: hits 65 / predictions 89 (JEP-173 HIT — 'why?' explains part-of + causal chains too, with correct recency; full reasoning transparency) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
 
 | id | prediction (🔮 before) | outcome | hit? | lesson (don't repeat) |
 |----|------------------------|---------|------|------------------------|
@@ -95,3 +95,4 @@ Running tally: hits 64 / predictions 88 (JEP-172 HIT — understanding is STRUCT
 | JEP-170 | 🔮 causal/is-a interaction absent; effect-up + cause-subtype valid | implemented; effect-subtype correctly NOT entailed (asymmetry vs part-of) | HIT | Different relation types interact with taxonomy under different correct rules (parts distribute to subtypes, effects don't). |
 | JEP-171 | 🔮 read() robust (no crashes); relation-interaction invariants sound | 0 crashes/6000 adversarial, 0 violations/400 taxonomies | HIT | Pipeline matches core validation rigor; hedged fuzz bug didn't appear (guards throughout). |
 | JEP-172 | 🔮 novel nonsense-word concepts reasoned identically to familiar (structural) | all multi-relation + interactions correct on never-seen words | HIT | Definitively rules out lexical confounds (JEP-87); understanding is purely relational. |
+| JEP-173 | 🔮 'why?' explains part-of + causal chains, recency-correct | all three relation types explained; recency works | HIT | Full reasoning transparency across taxonomy/mereology/causation. |
