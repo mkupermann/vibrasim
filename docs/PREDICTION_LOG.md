@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 52 / predictions 73 (JEP-157 MISS then 157b HIT — learn-from-prose works end-to-end; compounding shows only under extraction noise) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
+Running tally: hits 52 / predictions 74 (JEP-158 MISS — continuous reps AVERAGE independent noise; opposite symbolic; + a repeated D-scaling bug) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
 
 | id | prediction (🔮 before) | outcome | hit? | lesson (don't repeat) |
 |----|------------------------|---------|------|------------------------|
@@ -80,3 +80,4 @@ Running tally: hits 52 / predictions 73 (JEP-157 MISS then 157b HIT — learn-fr
 | JEP-156 | 🔮 bare-NP guard: encyclopedic precision >0.7, Boole near-zero genuine | ency 0.87/0.93, Boole 62 all-fragments | HIT | GENRE isolated as the cause via controlled minimal pair; learn-from-sources works on the right genre. |
 | JEP-157 | 🔮 end-to-end works + multi-hop degrades with depth (compounding) | engine 1.00 all depths vs bow 0.00; NO degrade (clean extraction) | MISS | End-to-end PASS, but tested compounding in a noise-FREE regime where it can't show. Match test regime to mechanism. |
 | JEP-157b | 🔮 (corrected) under extraction noise, multi-hop compounds + redundancy corrects | noise0.25 d1 0.79->d4 0.51; redundancy x3 -> 0.97 | HIT | Third manifestation of the universal compounding/aggregation insight (learn-from-prose pipeline). |
+| JEP-158 | 🔮 learned multi-hop compounds like symbolic; cleanup cures | OPPOSITE: continuous-independent errors CANCEL (sqrt k, 0.99@d16); shared bias compounds (linear, 0.49); cleanup cures both | MISS | Wrong in direction (twice) + a CARDINAL repeated bug (D-dim noise = sigma*sqrt(D); scale by 1/sqrt(D)). Refined insight: compounding exponent is representation-dependent. |

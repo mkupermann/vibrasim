@@ -125,3 +125,18 @@ I MISSED JEP-154 by not applying my OWN prior finding (JEP-134): I used strict c
 few-shot would help, when it hurt. The discipline is to CARRY FORWARD lessons, not re-learn them — the predict-
 calibrate value isn't just per-experiment accuracy, it's accumulating a model that doesn't repeat known mistakes.
 Established throughout (robust estimation, M-estimators, compositional/transfer learning, majority denoising); named.
+
+## REFINEMENT: the compounding EXPONENT is representation-dependent (JEP-158)
+The chaining-vs-aggregation insight has a representation-dependent EXPONENT, measured:
+- SYMBOLIC, independent edges: reliability ~ (1-p)^k — EXPONENTIAL decay with depth (each discrete edge can fail
+  independently; one wrong edge breaks the chain). The most fragile.
+- CONTINUOUS/distributed, INDEPENDENT per-hop errors: error ~ f*sqrt(k) — SUB-LINEAR (random walk: errors partially
+  CANCEL, and in high-D are nearly orthogonal to the discriminating lattice direction). ROBUST — continuous reps
+  AVERAGE independent noise. (A concrete reason distributed/learned representations help.)
+- CONTINUOUS, SYSTEMATIC/shared bias: error ~ k*bias — LINEAR (a reused operator's bias accumulates coherently).
+  Fragile, but less than exponential.
+CURE (universal): per-hop nearest-entity / attractor CLEANUP (the substrate Hopfield, JEP-4) re-anchors each hop and
+cures BOTH continuous cases. So: chained inference compounds, but HOW FAST depends on the representation, and
+aggregation/cleanup is the universal cure. CALIBRATION: I predicted continuous compounds 'like symbolic' — WRONG
+(direction), and hit a CARDINAL repeated bug (D-dim isotropic noise has magnitude sigma*sqrt(D); always scale by
+1/sqrt(D)). Measure, don't carry intuition across representations. Established (random-walk error, cleanup memory).
