@@ -42,9 +42,12 @@ Single-step recall, membership (`contains`), multi-hop transitive climb (is-a, p
 scales to ~4600 facts/46 modules @0.93–0.95), set-valued DAG climb (`query_all` + BFS), cross-relation INHERITANCE
 (is-a climb ∘ relation; property + part, both directions), NEGATION + defeasible exceptions (most-specific wins),
 ABDUCTION (reverse 'why?' via a stored inverse edge), CONTRADICTION detection (direct double-assertion, distinct
-from exceptions), symmetric & transitive relations, ANALOGY (Kanerva record-mapping), and INDUCTION of a relation's
-algebra (symmetry/transitivity) from its fact pattern or K labeled examples → auto-apply. Noise: dimension is the
-noisy-cue lever (D=8192 tolerates ~20% cue corruption; redundancy can't fix shared-cue noise).
+from exceptions), symmetric & transitive relations, ANALOGY (Kanerva record-mapping), TEMPORAL ordering (before/
+after transitive+asymmetric, "what happened first", multiple timelines), NUMERIC attributes ("how many" via
+inheritance+override, comparison), and INDUCTION of relation algebra (symmetry/transitivity), inverse pairs,
+two-relation composition, and recursive closure from data → auto-apply → MATERIALIZE back into the store. A
+`BrainQuery` interface + `ask_brain.py` CLI route natural questions to these. Noise: dimension is the noisy-cue
+lever (D=8192 tolerates ~20% cue corruption; redundancy can't fix shared-cue noise).
 
 ## Bridging a symbolic engine (JEP-299/300)
 
