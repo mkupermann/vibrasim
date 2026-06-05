@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 118 / predictions 146 (81%). Latest: JEP-231 HIT (adjective-modified numeric COMPARISON 'more large moons than' keyed by head noun, symmetric with JEP-229; counter-examples run in-rung).
+Running tally: hits 118 / predictions 147 (80%). Latest: JEP-232 PARTIAL/CALIBRATION (the SUBSTRATE carries the Understanding Engine's is-a relations as content-addressable attractors — a/b/c PASS — but my K=12 capacity probe landed BELOW the real cliff at K~21; mis-applied the autoassociative 0.14N bound to a heteroassociative store).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 At JEP-221 the tally is 110/137 (80%) and has CONVERGED: the OVERALL rate is dragged down by early-programme misses
@@ -173,3 +173,4 @@ honestly informative:
 | JEP-229 | 🔮 optional adjectives before head noun captures '4 large moons', no regression, list-guarded | (jupiter,moon)=4 renders '4 large moons'; '8 legs and a tail' guarded out; '4 legs' unchanged | HIT | Modified count nouns are ubiquitous in real prose; guard prevents list misfire. |
 | JEP-230 | 🔮 '-ness' reliably uncountable; suffix rule + physics mass nouns fixes 'a gravity' without breaking countables | mass+true-'-ness' no article; but 'business'/'witness'/'illness' ARE countable -> needed exception set | CALIB | A morphological suffix rule needs its exception set enumerated AND tested against counter-examples in-rung. |
 | JEP-231 | 🔮 'more <modifier>* <head> than' keyed by head noun; modified cmp works, no regression, non-count falls through | Jupiter>Earth moons Yes; spider>dog legs Yes; 'more interesting' graceful | HIT | Closed the JEP-229 capture/comparison asymmetry; applied the JEP-230 in-rung counter-example lesson. |
+| JEP-232 | 🔮 substrate stores relations (K=4 recall>=.85), control fails, partial-cue works, K=12 degrades (capacity~11) | a/b/c PASS (recall 1.00, control .25, partial 1.00); d FAIL — capacity cliff is at K~21 not 12 (heteroassoc, key fully clamped) | CALIB | The relevant capacity bound depends on how much is cued; a fully-clamped key buys ~3-4x the autoassociative 0.14N. |
