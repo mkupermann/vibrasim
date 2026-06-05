@@ -152,6 +152,33 @@ engine*, *a handful of genuine insights*, and *the honest method*.
    **several thousand facts** at once. (Still home‑made and small — but the whole loop *read → remember → reason →
    discover rules*, with nothing borrowed from today's big AIs, now runs end to end and is locked down with tests.)
 
+6. **It now has *feelings* about things — and senses the "energy" of the world.** The newest direction, and the
+   closest to how people actually experience things. The idea (Michael's) is that we don't store the world as cold
+   facts — we store it as **energy clouds** with a *charge*: good things feel "bright," bad things "dark," and the
+   more they matter, the stronger the connection. We built exactly that, with no modern AI:
+   - **It learns what feels good or bad — and generalizes.** Teach it that snakes feel "dark" and heroes "bright," and
+     ask about a *brand-new* creature it was never given a feeling for — it correctly senses the right charge from
+     what the thing is *like*. And it's honest about it: it says when a feeling is something it was *told*, something
+     it *inherited* ("dark — because a cobra is a kind of snake"), or just a *guess* — and if it has too little to go
+     on, it stays neutral instead of making something up.
+   - **Feelings make memories stick.** Just like for people, an emotionally-charged fact survives where a dull one is
+     forgotten: bury a hundred boring facts on top of "a dragon breathes fire" and it still remembers the dragon. (The
+     honest flip side, exactly as in real memory: vivid emotional things crowd out the mundane ones.)
+   - **It senses the "energy" of what it perceives — even of things it can't name.** Show it a shape, or play it a
+     *sound*, and it can feel whether it's pleasant or harsh **straight from the perception** — even for an object it
+     doesn't recognize ("I don't know what this is, but it feels dark"). We did this with real sound: it *hears* a
+     harsh, noisy tone as "dark" and a clean, harmonious one as "bright," and gets it right even for notes it never
+     heard in training. That is, quite literally, *perceiving the energies of the environment.*
+
+7. **We pinned down, with experiments, exactly where "new science" would be needed — and corrected ourselves
+   honestly along the way.** Michael kept asking the sharp question: *have we discovered new science?* The honest
+   answer stayed **no** — everything we use is established, decades-old method, and we always name it as such. But we
+   did something valuable: we **mapped precisely where the hard, unsolved part is** (spotting deep, hidden patterns
+   that have no simple surface clue), and then — this is the part we're proud of — **we repeatedly proved our own
+   confident guesses wrong with data and said so out loud.** We claimed a certain kind of learning was "too costly";
+   we measured it and found we were over-pessimistic, and corrected the record. Then we *stress-tested* the corrected
+   claim until we found its real limit. That self-correcting honesty — not any single result — is the actual product.
+
 **The goal** — the north star — is to move, step by careful step, toward something with **human-like learning,
 understanding, and communication**: a system that learns from what it reads and from experience, *actually*
 understands the relationships between things, and can talk with you about them — built the honest, transparent way,
