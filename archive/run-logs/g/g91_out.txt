@@ -1,9 +1,0 @@
-=== G91: quiet + disconnected + refractory + consolidation (full combination) ===
-  n=6: stim-frac=0.83 post-frac=0.44 uni-post=0.00
-  n=10: stim-frac=0.17 post-frac=0.00 uni-post=0.10
-  n=16: stim-frac=0.00 post-frac=0.00 uni-post=0.00
-
---- VERDICT ---
-working n(s): []
-G91: NULL/partial
-DONE

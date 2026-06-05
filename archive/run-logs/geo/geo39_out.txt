@@ -1,16 +1,0 @@
-=== GEO-39: hardened GroundedQA acceptance test ===
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 9809.79it/s]
-Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|##########| 290/290 [00:00<00:00, 10096.44it/s]
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 11146.43it/s]
-Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|##########| 290/290 [00:00<00:00, 22999.87it/s]
-  1 semantic-grounded   : PASS
-  2 multi-hop           : PASS
-  3 abstain             : PASS
-  4 faithful            : PASS
-  5 updatable           : PASS
-
-  5/5 checks pass
---- VERDICT ---
-GEO-39: PASS - hardened GroundedQA end-to-end (5/5).
-DONE

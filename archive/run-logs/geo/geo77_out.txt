@@ -1,6 +1,0 @@
-=== GEO-77: symbolic counterfactual simulation ===
-  counterfactual-simulation mean-F1 = 1.00  (n=8)
-
---- VERDICT ---
-GEO-77: PASS - symbolic SIMULATION answers store-manipulable counterfactuals (1.00): copy the store, apply the hypothetical change, re-query. Extends the system from 'abstain on what-ifs' to 'answer the answerable what-ifs'. (One class only: membership changes; causal/open counterfactuals remain out of scope, GEO-75.)
-DONE

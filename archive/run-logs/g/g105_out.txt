@@ -1,9 +1,0 @@
-=== G105: transmission over distance (far-end x>16) vs co-located readout ===
-  seed 42: far(x>16)=0.24 | co-located=1.00 (chance=0.25, n=240)
-  seed 7: far(x>16)=0.29 | co-located=1.00 (chance=0.25, n=240)
-
---- VERDICT ---
-G105a transmission over distance (far >=0.85 both): False
-G105b co-located sanity (>=0.85 both)             : True
-G105: PARTIAL - symbol is encoded but does NOT survive propagation to the far end; the channel is CO-LOCATED readout, not transmission over distance -> correct the wording
-DONE

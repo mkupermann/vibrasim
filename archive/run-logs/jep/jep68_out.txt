@@ -1,7 +1,0 @@
-=== JEP-68: relational goal-directed action (VSA relations + SR planning) ===
-  relational-goal resolution accuracy = 0.390
-  relational goal-directed planning success = 0.390
-
---- VERDICT ---
-JEP-68: PARTIAL/NULL - resolution 0.39, planning 0.39
-DONE

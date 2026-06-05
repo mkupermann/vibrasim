@@ -1,10 +1,0 @@
-=== GEO-30: grounded updatability under contradiction ===
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 11391.55it/s]
-  returns STORED (counterfactual) answer = 1.00  (n=12)
-  (real-world prior would be returned in  = 0.00 of cases)
-  runtime edit France->Nice, re-query -> 'Nice' (expect 'Nice')
-
---- VERDICT ---
-GEO-30: PASS - grounded retrieval returns the STORED fact, overriding the LLM/real-world prior, and a runtime edit flips the answer. Concrete edge over a frozen LLM: cheap, reliable fact updates without retraining.
-DONE

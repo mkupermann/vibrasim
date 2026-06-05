@@ -1,6 +1,0 @@
-=== JEP-70: unsupervised relation discovery from unlabeled sequences ===
-  discovered-'next' held-out prediction hits@1 = 0.418  (from 5 seed pairs + UNLABELED sequences)
-
---- VERDICT ---
-JEP-70: PARTIAL/NULL - discovered-relation held-out hits@1 0.42
-DONE

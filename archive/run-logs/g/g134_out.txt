@@ -1,8 +1,0 @@
-=== G134: GEOMETRY (proximity detection) — does the physics earn its place? ===
-  seed 42 (pos=50/100): raw+linear=0.57 | ELM=0.71 | PHYSICAL=0.61  (222.8s)
-  seed 7 (pos=50/100): raw+linear=0.67 | ELM=0.75 | PHYSICAL=0.54  (230.1s)
-
---- VERDICT ---
-PHYSICAL beats raw+linear by >=0.10 (both seeds): False
-G134: NULL - even on a geometric proximity task the physical features do not beat raw+linear; the substrate does not earn its place here either
-DONE

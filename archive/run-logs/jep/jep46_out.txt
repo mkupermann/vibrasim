@@ -1,6 +1,0 @@
-=== JEP-46: integration on real WordNet with ORDER is-a ===
-  trials=94  reached-correct-category = 0.500  (JEP-37 poincare was 0.79)
-
---- VERDICT ---
-JEP-46: PARTIAL/NULL - reached 0.50 (vs 0.79 poincare)
-DONE

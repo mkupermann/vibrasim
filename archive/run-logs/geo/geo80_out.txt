@@ -1,10 +1,0 @@
-=== GEO-80: does grounding propagate WRONG facts? ===
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|##########| 290/290 [00:00<00:00, 10455.03it/s]
-  (a) BARE (memory)        true-acc = 0.90
-  (b) GROUNDED-CORRECT     true-acc = 1.00
-  (c) GROUNDED-WRONG       true-acc = 0.00  (followed wrong fact: 1.00)
-
---- VERDICT ---
-GEO-80: CONFIRMED (honest GIGO) - grounding PROPAGATES retrieval errors: with a WRONG retrieved fact the model's true-accuracy collapses to 0.00 (vs bare 0.90), following the wrong context 1.00 of the time. Grounding is only as good as retrieval — a wrong retrieval yields a CONFIDENT wrong answer. Critical deployment caveat: invest in retrieval quality; abstention (GEO-23) limits but does not eliminate this.
-DONE

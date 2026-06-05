@@ -1,8 +1,0 @@
-=== JEP-10: PC vs backprop on MNIST (60k, net 784-1024-10, 16 threads) ===
-  backprop:       test acc=0.8893  (16s)
-  pred-coding:    test acc=0.9652  (58s)
-
---- VERDICT ---
-JEP-10: PARTIAL/NULL - backprop 0.8893, PC 0.9652
-  saved PC model -> data/jep10_pc_model.npz
-DONE

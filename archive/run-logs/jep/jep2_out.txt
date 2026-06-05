@@ -1,7 +1,0 @@
-=== JEP-2: JEPA world model + EBM + MPC ===
-  MPC w/ learned JEPA model reached = 0.07
-  random-action baseline reached    = 0.05
-
---- VERDICT ---
-JEP-2: PARTIAL/NULL - MPC 0.07, random 0.05 (learned model may be too inaccurate to plan)
-DONE

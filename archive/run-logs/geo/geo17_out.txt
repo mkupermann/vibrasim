@@ -1,11 +1,0 @@
-=== GEO-17: 3-hop + distractors + paraphrase stress test ===
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 11436.49it/s]
-  hop1 (person->company) acc = 1.00
-  hop2 (company->city)   acc = 1.00
-  hop3 (city->country)   acc = 1.00
-  FULL 3-hop end-to-end  acc = 1.00  (chance 0.08, +100 distractors, paraphrased)
-
---- VERDICT ---
-GEO-17: PASS - 3-hop geometric reasoning survives distractors + paraphrase (1.00).
-DONE

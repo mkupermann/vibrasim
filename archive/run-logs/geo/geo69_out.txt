@@ -1,9 +1,0 @@
-=== GEO-69: static vs contextual semantic retrieval ===
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 10437.12it/s]
-  contextual (full transformer) hits@1 = 0.80
-  static (mean-pooled word vecs) hits@1 = 0.70  (lexical 0.10)
-
---- VERDICT ---
-GEO-69: DEFLATION - semantic matching does NOT need the transformer (0.70 static vs 0.80 contextual): mean-pooled static word vectors already resolve descriptions. The capability is DISTRIBUTIONAL SEMANTICS (pre-transformer), not an LLM-specific one.
-DONE

@@ -1,8 +1,0 @@
-=== JEP-126: scale validation (1000 concepts, deep hierarchy) ===
-   built 1000 concepts in 0.02s; max ancestor-set size (sampled) 535
-   correctness: 1999/1999 match reference; mean is_a query 0.048 ms
-
---- VERDICT ---
-JEP-126: PASS - at 1000 concepts the engine is CORRECT (0 mismatches vs reference) and FAST
-(0.05 ms/query). The core reasoning scales to real-size knowledge bases. Established, named; no novelty.
-DONE

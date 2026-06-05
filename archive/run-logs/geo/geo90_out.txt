@@ -1,12 +1,0 @@
-=== GEO-90: quantitative operators ===
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 10745.80it/s]
-  range    : OK
-  sum      : OK
-  sort     : OK
-  combined : OK
-  overall = 1.00
-
---- VERDICT ---
-GEO-90: PASS - quantitative operators (range/sum/sort/combined) work over the structured store. Operator coverage complete: count, compare, negate, range, sum, sort, join, temporal, contradiction, conflict, ambiguity, counterfactual-simulation. Geometry resolves, the symbolic layer computes.
-DONE

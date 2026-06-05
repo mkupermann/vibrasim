@@ -1,11 +1,0 @@
-=== GEO-33: answerability via focus-term verification ===
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 10942.86it/s]
-  stored-role focus maxsim: [1.0, 1.0, 1.0, 1.0, 1.0]
-  absent-role focus maxsim: [0.41, 0.25, 0.3, 0.34, 0.32]
-  calibrated tau_focus = 0.66
-  balanced acc (answerable vs unanswerable) = 1.00
-
---- VERDICT ---
-GEO-33: PASS - focus-term verification cleanly separates answerable (stored role) from in-domain-unanswerable (absent role) questions. Hybrid geometric+symbolic existence check fixes the GEO-32b grounding gap.
-DONE

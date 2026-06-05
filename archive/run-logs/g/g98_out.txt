@@ -1,3 +1,0 @@
-=== G98: multi-symbol message transmission & ISI (K=4 spatial channels) ===
-  seed 42 gap= 12: symbol-acc=0.17 (n=79, chance=0.25)
-  seed 42 gap=  6: symbol-acc=0.21 (n=111, chance=0.25)

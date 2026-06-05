@@ -1,9 +1,0 @@
-=== G130: head-to-head — ACTIVITY spreads vs POSITION stays (validates the discovery) ===
-  seed 42: chargeA0=1326.0 -> chargeA=462.0 chargeB=0.0 (spread B/A=0.00) | B-region atom gain=-74
-  seed 7: chargeA0=1368.0 -> chargeA=558.0 chargeB=0.0 (spread B/A=0.00) | B-region atom gain=-89
-
---- VERDICT ---
-G130a ACTIVITY spreads A->B (charge B/A>=0.2 both)   : False
-G130b POSITION stays (no atom gain in B, both)       : True
-G130: NULL/PARTIAL - the activity-spreads / position-stays asymmetry did not hold (see output)
-DONE

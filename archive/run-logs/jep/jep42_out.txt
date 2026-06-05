@@ -1,9 +1,0 @@
-=== JEP-42: order embeddings for IS-A (WordNet carnivore N=366) ===
-  held-out IS-A: TPR=0.853 TNR=0.968 balanced-acc=0.911  (Poincare ceiling ~0.78)
-
---- VERDICT ---
-JEP-42: PASS - order embeddings BREAK the ~0.78 ceiling: held-out balanced IS-A 0.91 on 366
-WordNet concepts (TPR 0.85, TNR 0.97). The ceiling WAS the Poincare method; a partial-order
-embedding (Vendrov 2016) - designed for transitive entailment - handles deep real hierarchies far
-better. The method, not the data, was the limit. Established (Vendrov 2016), named as such.
-DONE

@@ -1,13 +1,0 @@
-=== GEO-87: complete type-aware agent ===
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 10063.91it/s]
-Loading weights:   0%|          | 0/105 [00:00<?, ?it/s]Loading weights: 100%|##########| 105/105 [00:00<00:00, 9714.82it/s]
-    miss: 'the legal eagle' -> 'IDK' (want 'Mia Okafor')
-    miss: 'that money numbers guy' -> 'IDK' (want 'Tom Reyes')
-    miss: 'that money cap thing' -> 'IDK' (want 'budget')
-    miss: 'that kitchen plumbing job' -> 'Raj Patel' (want 'fix the kitchen sink')
-  complete-agent accuracy = 0.67  (n=12)
-
---- VERDICT ---
-GEO-87: PARTIAL - 0.67
-DONE

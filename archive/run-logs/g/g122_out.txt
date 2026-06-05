@@ -1,8 +1,0 @@
-=== G122: formation-suppression maintenance (cull band vibrations; no atom clearing) ===
-  seed 42: readout=[1, 0, 1] target=[1, 0, 1] exact=True
-  seed 7: readout=[1, 0, 1] target=[1, 0, 1] exact=True
-
---- VERDICT ---
-G122 pattern held with formation-suppression only (both seeds): True
-G122: PASS - culling formation (band vibrations) suffices; drift-in alone does NOT fill cells -> lighter maintenance works
-DONE

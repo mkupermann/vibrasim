@@ -83,3 +83,7 @@ autopilot_output.txt
 /*.tar.gz
 # Stray figures at root: real figures belong in docs/figures/
 /*.png
+
+# large re-downloadable datasets (removed as ballast 2026-06-06)
+data/FashionMNIST/
+data/MNIST/

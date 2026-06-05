@@ -1,6 +1,0 @@
-=== JEP-71: analogical reasoning via VSA (A:B::C:?) ===
-  analogy completion (A:B::C:?) hits@1 = 0.262
-
---- VERDICT ---
-JEP-71: PARTIAL/NULL - analogy hits@1 0.26
-DONE

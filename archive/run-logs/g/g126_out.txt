@@ -1,9 +1,0 @@
-=== G126: store+recall hex nibbles in matter memory (cells pitch 6) ===
-  stored : ['0xe', '0x4', '0xa', '0x7']
-  seed 42: recalled=['0xe', '0x4', '0xa', '0x6'] exact=False
-  seed 7: recalled=['0xe', '0x4', '0xa', '0x6'] exact=False
-
---- VERDICT ---
-G126 all nibbles recalled exactly (both seeds): False
-G126: NULL/PARTIAL - some nibbles mis-recalled (see output)
-DONE

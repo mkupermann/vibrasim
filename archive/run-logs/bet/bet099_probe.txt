@@ -1,7 +1,0 @@
-warmup done, starved; neuron_dynamics ON, confined stim ->
-  t=3500s cumulative firings: stim=195 ctrl=63
-  t=4000s cumulative firings: stim=195 ctrl=63
-  t=4500s cumulative firings: stim=195 ctrl=63
-  t=5000s cumulative firings: stim=195 ctrl=63
-FIRING_RESULT stim=195 ctrl=63 ratio=3.1
-PROBE DONE

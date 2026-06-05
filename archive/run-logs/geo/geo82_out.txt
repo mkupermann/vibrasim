@@ -1,10 +1,0 @@
-=== GEO-82: LLM-prior fact-checking ===
-Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|##########| 290/290 [00:00<00:00, 10654.21it/s]
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-  CORRECT well-known facts flagged   = 0.20  (want LOW)
-  WRONG well-known facts flagged     = 1.00  (want HIGH = catches errors)
-  PRIVATE facts flagged              = 0.80  (LLM can't check)
-
---- VERDICT ---
-GEO-82: TRADEOFF MAP - LLM-prior fact-check catches WRONG well-known facts (1.00) while mostly not flagging correct ones (0.20), BUT flags PRIVATE facts (0.80) it cannot verify and would also flag legitimate UPDATES/counterfactuals (which by design contradict the prior, GEO-30). So LLM-prior fact-checking is usable ONLY for stores that should match common knowledge; it CONFLICTS with the system's updatability/private-fact strengths. A real, honest tradeoff.
-DONE

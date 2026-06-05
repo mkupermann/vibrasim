@@ -1,8 +1,0 @@
-=== JEP-27: mixed-curvature TASK-based (N=77) ===
-  pure Euclidean:  relatedness=0.934  IS-A=0.513  (min=0.513)
-  pure Hyperbolic: relatedness=0.719  IS-A=0.877  (min=0.719)
-  MIXED (E+H):     relatedness=0.816  IS-A=0.868  (min=0.816)
-
---- VERDICT ---
-JEP-27: PARTIAL/NULL - mixed min 0.82 vs euc 0.51, hyp 0.72
-DONE

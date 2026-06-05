@@ -1,18 +1,0 @@
-=== GEO-99: shipped-API verification ===
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 10203.91it/s]
-  add_fact/ask          : OK
-  retrieve+kind         : OK
-  chain                 : OK
-  count_where           : OK
-  resolve_entity        : OK
-  check_contradiction   : OK
-  values_for            : OK
-  add_document          : OK
-  calibrate_abstention  : OK
-  sanitize_text         : OK
-  10/10 methods verified
-
---- VERDICT ---
-GEO-99: PASS - all 10 shipped public methods work as documented. The deliverable's API is verified (not just asserted), after the GEO-98 sanitize_text bug. Shippable.
-DONE

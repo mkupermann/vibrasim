@@ -1,9 +1,0 @@
-=== GEO-70: word-order / compositional matching ===
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 11677.30it/s]
-  contextual (transformer) hits@1 = 0.88
-  static (order-blind)     hits@1 = 0.88
-
---- VERDICT ---
-GEO-70: see cells - contextual 0.88, static 0.88
-DONE

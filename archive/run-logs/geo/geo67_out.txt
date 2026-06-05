@@ -1,16 +1,0 @@
-=== GEO-67: minimum viable model (semantic retrieval) ===
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-C:\Users\nicet\Documents\GitHub\vibrasim\.venv\Lib\site-packages\huggingface_hub\file_download.py:138: UserWarning: `huggingface_hub` cache-system uses symlinks by default to efficiently store duplicated files but your machine does not support them in C:\Users\nicet\.cache\huggingface\hub\models--sentence-transformers--paraphrase-MiniLM-L3-v2. Caching files will still work but in a degraded version that might require more space on your disk. This warning can be disabled by setting the `HF_HUB_DISABLE_SYMLINKS_WARNING` environment variable. For more details, see https://huggingface.co/docs/huggingface_hub/how-to-cache#limitations.
-To support symlinks on Windows, you either need to activate Developer Mode or to run Python as an administrator. In order to activate developer mode, see this article: https://docs.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development
-  warnings.warn(message)
-Loading weights:   0%|          | 0/55 [00:00<?, ?it/s]Loading weights: 100%|##########| 55/55 [00:00<00:00, 10885.56it/s]
-  paraphrase-MiniLM-L3-v2      (~17M/3-layer  ) semantic hits@1 = 0.80
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 9387.10it/s]
-  all-MiniLM-L6-v2             (~22M/6-layer  ) semantic hits@1 = 0.80
-Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|##########| 199/199 [00:00<00:00, 10296.52it/s]
-  all-mpnet-base-v2            (~110M/12-layer) semantic hits@1 = 1.00
-  (lexical baseline on this task: 0.10)
-
---- VERDICT ---
-GEO-67: characterization — smallest model beating lexical decisively (>=0.6) is the efficiency floor.
-DONE

@@ -1,9 +1,0 @@
-=== GEO-26: descriptive (non-lexical) multi-hop ===
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 10088.58it/s]
-  geometric descriptive 2-hop end-to-end = 1.00  (chance 0.10)
-  lexical at the descriptive hop          = 1.00
-
---- VERDICT ---
-GEO-26: geo 1.00, lexical-hop 1.00 - inspect
-DONE

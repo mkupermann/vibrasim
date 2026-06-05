@@ -1,9 +1,0 @@
-=== GEO-47: temporal reasoning ===
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 10171.72it/s]
-  temporal hybrid accuracy = 1.00
-  non-temporal baseline    = 0.50  (latest fact, ignores year)
-
---- VERDICT ---
-GEO-47: PASS - temporal reasoning works: geometric gather of an entity's facts + symbolic time-filter answers time-scoped queries (1.00), where a non-temporal baseline fails on past years (0.50).
-DONE

@@ -1,8 +1,0 @@
-=== JEP-125: parser robustness fuzz test ===
-   fuzzed 8000 inputs x 3 entry points; crashes: 0
-
---- VERDICT ---
-JEP-125: PASS - 0 crashes across 8000 random/malformed/adversarial inputs x 3 entry points. The parser
-is robust: bad input is handled cleanly (parsed, ignored, or 'none'), never an exception. Established
-(fuzz testing), named; no novelty.
-DONE

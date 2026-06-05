@@ -1,11 +1,0 @@
-=== GEO-19: integrated learn-then-reason pipeline ===
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 9294.21it/s]
-  (1)+(2) learned relation generalizes to held-out cities  acc = 1.00
-  (3) chain country->continent (on predicted)              acc = 1.00  (oracle-country 1.00)
-  (4) end-to-end symbolic aggregate (count per continent)  acc = 1.00
-      true {'Africa': 2, 'Asia': 1, 'Europe': 2, 'SouthAmerica': 1}  chained {'Africa': 2, 'Asia': 1, 'Europe': 2, 'SouthAmerica': 1}
-
---- VERDICT ---
-GEO-19: PASS - integrated learn->apply->chain->aggregate pipeline works on HELD-OUT data. The whole method runs as one system.
-DONE

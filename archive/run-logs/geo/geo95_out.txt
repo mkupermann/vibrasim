@@ -1,11 +1,0 @@
-=== GEO-95: grounded summarization ===
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]Loading weights: 100%|##########| 290/290 [00:00<00:00, 9952.28it/s]
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 11060.25it/s]
-    e.g. Alice summary: 'alice, a data scientist with expertise in the falcon project based in boston, has been actively contributing to the fiel'
-  coverage (key facts mentioned) = 0.94
-  faithfulness (no invented years) = 1.00
-
---- VERDICT ---
-GEO-95: PASS - the 0.5B model produces grounded multi-fact summaries (coverage 0.94, faithful 1.00): retrieve an entity's facts -> summarize from context. Summarization-over-your-notes works on the PC.
-DONE

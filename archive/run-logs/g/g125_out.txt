@@ -1,2 +1,0 @@
-=== G125: ANCHORED carriers (re-pinned), POST=2500 ===
-  seed 42: WRITE readout=[1, 0, 1] target=[1,0,1] | CONTROL=[0, 0, 0]

@@ -1,9 +1,0 @@
-=== G113: matter transmission line — 16 atoms, K=3 y-bands, drive 280 ticks ===
-  seed 42: arrived=16/16 | symbol-acc(on arrivals)=1.00 (chance=0.33)
-  seed 7: arrived=16/16 | symbol-acc(on arrivals)=1.00 (chance=0.33)
-
---- VERDICT ---
-G113a majority of atoms arrive (>=50%): True
-G113b symbol preserved (acc>=0.85)    : True
-G113: PASS - driven matter is a K-ary transmission line over distance (symbols recovered at the far end)
-DONE

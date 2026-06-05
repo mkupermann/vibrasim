@@ -1,9 +1,0 @@
-=== GEO-53: negation operator ===
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 10945.08it/s]
-  symbolic set-complement  mean-F1 = 1.00
-  pure-geometric baseline  mean-F1 = 0.68  (GEO-20: geometry ignores 'not')
-
---- VERDICT ---
-GEO-53: PASS - the symbolic NEGATION operator (set-complement) answers negation queries (1.00) where pure geometry fails (0.68). Closes the GEO-20 negation gap; negation is the symbolic layer's job.
-DONE

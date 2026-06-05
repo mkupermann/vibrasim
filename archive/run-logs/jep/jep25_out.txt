@@ -1,8 +1,0 @@
-=== JEP-25: mixed-curvature embedding, grid-with-trees (N=112, 4x4 grid + depth-2 trees) ===
-  pure Euclidean (4D):        Spearman=0.933
-  pure Hyperbolic (4D):       Spearman=0.502
-  MIXED (Euclid2D x Hyper2D): Spearman=0.833
-
---- VERDICT ---
-JEP-25: PARTIAL/NULL - euclid 0.93, hyper 0.50, mixed 0.83
-DONE

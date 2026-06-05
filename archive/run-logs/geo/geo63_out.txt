@@ -1,16 +1,0 @@
-=== GEO-63: performance benchmark (CPU) ===
-Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 11011.48it/s]
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 10104.39it/s]
-  N=  10  index-build=    25ms  per-query=   6.5ms  (154 q/s)
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 10083.40it/s]
-  N= 100  index-build=   121ms  per-query=   7.1ms  (142 q/s)
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 8799.90it/s]
-  N=1000  index-build=  1102ms  per-query=   6.8ms  (148 q/s)
-Loading weights:   0%|          | 0/103 [00:00<?, ?it/s]Loading weights: 100%|##########| 103/103 [00:00<00:00, 9418.42it/s]
-Loading weights:   0%|          | 0/105 [00:00<?, ?it/s]Loading weights: 100%|##########| 105/105 [00:00<00:00, 10082.92it/s]
-  N=1000 + rerank_k=10  per-query=  23.9ms
-
---- VERDICT ---
-GEO-63: characterization — latency curve above is the finding (interactive if per-query < ~100ms).
-DONE

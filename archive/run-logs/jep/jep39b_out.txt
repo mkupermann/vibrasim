@@ -1,6 +1,0 @@
-=== JEP-39b: entailment cones at scale (WordNet carnivore N=366) ===
-  held-out IS-A classification: TPR=0.417 TNR=0.982 balanced-acc=0.700
-
---- VERDICT ---
-JEP-39b: PARTIAL/NULL - balanced-acc 0.70 (TPR 0.42 TNR 0.98)
-DONE
