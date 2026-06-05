@@ -5162,3 +5162,9 @@ correct eventually' achieved as calibrated uncertainty). Docs: UNDERSTANDING_ENG
 EQMOD4_FINAL_STATE.md (synthesis), patterns/multidomain_learn_from_sources.md, 4 demos. NOT human-level, NOT novel;
 the working engine + the predict-calibrate discipline are the deliverables. Frontier (all data/constraint-blocked,
 each characterized): real embodied perception, real corpus at scale + the NL paraphrase/genre wall, open generation.
+
+
+## 2026-06-05 05:52 — Autopilot idle
+
+All experiments done or 3x NULL on feedback.
+
