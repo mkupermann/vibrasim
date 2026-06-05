@@ -760,7 +760,7 @@ class UnderstandingEngine:
         sc = self._parse_isa_q(q)
         if sc:
             x, c = self._norm_phrase(sc[0]), self._norm_phrase(sc[1])
-            self._last_query = (x, c); self._last_rel_query = None
+            self._last_query = (x, c); self._last_rel_query = None; self._last_num_query = None
             verdict = self.assess(x, c)
             if verdict == "unknown":
                 return f"I don't know whether {self._art(x)} is {self._art(c)}."
@@ -1212,7 +1212,7 @@ class UnderstandingEngine:
         if mc:
             x, comp, z = self._norm(mc.group(1)), mc.group(2).lower(), self._norm(mc.group(3))
             if self._order_holds(comp, x, z):
-                self._last_rel_query = ("order", x, z, comp); self._last_query = None
+                self._last_rel_query = ("order", x, z, comp); self._last_query = None; self._last_num_query = None
                 return "Yes."
             return "Not that I can tell."
         # "why?" follow-up: justify the last answer using the reasoning chain (is-a, part-of, or causal)
@@ -1268,6 +1268,13 @@ class UnderstandingEngine:
         m = re.match(r"(?:what about|how about|and)\s+(?:(?:an|a|the)\s+)?(\w+)\s*\??$", q)
         if m:
             y = self._norm(m.group(1))
+            nq = getattr(self, "_last_num_query", None)
+            na = getattr(self, "num_attrs", {})
+            if nq and (nq[0], nq[1]) in na:      # reuse the last numeric comparison: same first entity + attribute
+                rx, attr = nq
+                if (y, attr) in na:
+                    return ("Yes." if na[(rx, attr)] > na[(y, attr)] else "No.")
+                return f"I don't know how many {attr}s {self._art(y)} has."
             rq = getattr(self, "_last_rel_query", None)
             if rq and rq[0] == "order":          # reuse the last comparison: same first arg + comparative, new 2nd arg
                 _, rx, _, comp = rq
@@ -1325,7 +1332,7 @@ class UnderstandingEngine:
             x, rel, y = self._norm(m.group(1)), m.group(2), self._norm(m.group(3))
             a, b = (x, y) if rel == "before" else (y, x)
             if self._order_holds("before", a, b):
-                self._last_rel_query = ("order", a, b, "before"); self._last_query = None
+                self._last_rel_query = ("order", a, b, "before"); self._last_query = None; self._last_num_query = None
                 return "Yes."
             return "Not that I can tell."
         # NUMERIC questions: 'how many legs does a dog have?' / 'does a spider have more legs than a dog?'
@@ -1340,6 +1347,7 @@ class UnderstandingEngine:
         if m:
             x, attr, z = self._norm(m.group(1)), self._norm(m.group(2)), self._norm(m.group(3))
             if (x, attr) in na and (z, attr) in na:
+                self._last_num_query = (x, attr); self._last_query = None; self._last_rel_query = None
                 return "Yes." if na[(x, attr)] > na[(z, attr)] else "No."
             return "I don't have those numbers."
         # OPEN-RELATION WH question: 'what is the capital of France?' -> subject of a learned relation with that object
@@ -1360,7 +1368,7 @@ class UnderstandingEngine:
         if m:
             a, b = self._norm(m.group(1)), self._norm(m.group(2))
             if self.part_of(a, b):
-                self._last_rel_query = ("part", a, b); self._last_query = None
+                self._last_rel_query = ("part", a, b); self._last_query = None; self._last_num_query = None
             tail = (f"{self._art(a)} is part of {self._art(b)}." if self.part_of(a, b)
                     else f"{self._art(a)} is not part of {self._art(b)} as far as I know.")
             return ("Yes. " if self.part_of(a, b) else "No. ") + tail[0].upper() + tail[1:]
@@ -1377,7 +1385,7 @@ class UnderstandingEngine:
         if m:
             a, b = self._norm(m.group(1)), self._norm(m.group(2))
             if self.causes_effect(a, b):
-                self._last_rel_query = ("cause", a, b); self._last_query = None
+                self._last_rel_query = ("cause", a, b); self._last_query = None; self._last_num_query = None
                 tail = f"{self._art(a)} causes {self._art(b)}."
                 return "Yes. " + tail[0].upper() + tail[1:]
             return "No, not that I can tell."
