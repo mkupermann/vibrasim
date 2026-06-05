@@ -52,6 +52,22 @@ loses an edge (JEP-235d). Fix:
 - **Bounded by capacity**: ~20 facts/module. Scale by adding modules/units (linear), not a new mechanism. The
   engineered modular mask (`p_cross` small) that bounds percolation also throttles *cross-module* key→value binding,
   so keep a (subject, relation, object) fact WITHIN one dense module.
+- **Memory, not generalization** (JEP-245): the attractor store reproduces stored facts + their DEDUCTIVE closure
+  (chaining), but does NOT infer UNSTATED edges — a held-out bridge breaks the chain. Inductive generalization to
+  unstated subsumption needs proper geometric embeddings (hyperbolic/order, JEP-23–27), not the attractor store and
+  not naive VSA bundling (which washes out deep ancestors).
+- **No native NEGATION / contradiction** (honest limit): the store holds positive relational edges; it has no native
+  representation of "X is NOT a Y" or contradiction. The engine handles negatives + consistency SYMBOLICALLY
+  (`not_properties`, `consistency_audit`); that stays in the symbolic layer. (The energy DOES grade positive-fact
+  plausibility (248) and support/confidence (249) — but not negation.)
+- **Native query modes / benefits** (248/249): single-shot ENERGY-scoring of direct-fact plausibility (AUC 1.00) +
+  iterated relaxation for transitive closure; energy is GRADED by support → evidence-calibrated CONFIDENCE (Spearman
+  1.0), a genuine capability beyond the binary symbolic engine. The benefit is graded plausibility/confidence + the
+  architectural integration (perceive→clean→retrieve→reason in one relaxation, JEP-246), NOT an accuracy win.
+- **Grounded** (JEP-246): a noisy perceptual cue cleans up AND reasons multi-hop as one energy process (robust to
+  ~10% bit-noise, graceful beyond the basin).
 - Established throughout: Hopfield content-addressable memory + iterated associative recall + VSA Hadamard
-  role-binding. No novelty claimed; the contribution is the connection and the measured envelope.
-- Harnesses: `tools/run_jep232_relation_store.py`, `run_jep233_chaining.py`, `run_jep234_typed_relations.py`.
+  role-binding + Hopfield energy (detector / plausibility / confidence) + ensemble voting. No novelty claimed; the
+  contribution is the connection and the measured envelope.
+- Harnesses: `tools/run_jep232_relation_store.py` … `run_jep249_energy_confidence.py` (the full 232–249 arc);
+  amendments `docs/amendments/jep232..jep249_*.md`; synthesis `docs/EQMOD4_FINAL_STATE.md`.
