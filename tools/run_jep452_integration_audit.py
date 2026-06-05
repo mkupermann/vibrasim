@@ -5,6 +5,7 @@ confident falsehoods. Pre-registered bars in docs/amendments/jep452_integration_
 import json
 from pathlib import Path
 
+import tempfile
 from world.conversation import Conversation
 
 TEACH = [
@@ -28,7 +29,7 @@ def _deny(x):
 
 
 def run(seed):
-    c = Conversation()
+    c = Conversation(brain_dir=tempfile.mkdtemp())  # clean-room (lesson #16)
     for t in TEACH:
         c.say(t)
     # emotional fact + interference (affective memory)

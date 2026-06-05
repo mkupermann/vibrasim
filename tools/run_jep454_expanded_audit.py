@@ -5,6 +5,7 @@ correct/abstain/FALSEHOOD. Pre-registered bars in docs/amendments/jep454_expande
 import json
 from pathlib import Path
 
+import tempfile
 from world.conversation import Conversation
 
 TEACH = [
@@ -69,7 +70,7 @@ def _classify(ans, kind, expected):
 
 
 def run(seed):
-    c = Conversation()
+    c = Conversation(brain_dir=tempfile.mkdtemp())  # clean-room (lesson #16)
     for t in TEACH:
         c.say(t)
     for i in range(120):                          # interference (bury the emotional fact)
