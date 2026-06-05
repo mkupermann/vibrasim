@@ -5496,3 +5496,15 @@ different rng-consumption order, yet the conclusion is identical -- not instance
 COMPUTATION THREAD CLOSED: across G145->G149 the substrate's last candidate advantage is an advantage of the
 classical SA ALGORITHM alone; the physical/vibrations oscillator confers no edge over correct local search at
 any scale or budget tested. Physics decorative everywhere -- the programme's complete, honest endpoint.
+
+### Consistency audit (2026-06-05) — removed a duplicate G49; tempered G139
+A corpus consistency audit (triggered after correcting the G145 claim) caught that my G49 "fluidity wound
+re-closure" (g49_fluidity_wound_reclosure.md + run_g49_fluidity_repair.py) was a strict RE-DERIVATION of the
+pre-existing g49_mobility_targeted_repair.md (run earlier the same day by another session), which had already
+reached the identical NULL AND gone further -- isolating the true blocker as template-directed recruitment and
+CLOSING the G46->G49 sub-thread. I removed my duplicate (number-colliding) doc+tool; its one incremental bit
+(f=0.0 rigidity -> persistence is purely the bond graph) is folded into the canonical g49_mobility doc as a
+noted replication. Also tempered g139_ising_scale.md (which concluded "build this oscillator hardware") with a
+pointer to the G146-G149 refutation. Root cause of the re-derivation: no quick frontier map -> added FRONTIER.md.
+(Note: g49 is triple-used as a number -- selective_uptake/mobility_targeted_repair/(removed) fluidity; the
+remaining two are distinct experiments, left as-is to avoid breaking references; FRONTIER.md flags the lesson.)
