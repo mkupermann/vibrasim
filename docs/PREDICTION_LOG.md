@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 128 / predictions 163 (79%). Latest: JEP-248 HIT (the substrate has a native EBM ENERGY-QUERY — a single energy eval of concat(X,Y) scores DIRECT fact plausibility at AUC 1.00; transitive edges sit with the false set -> energy-query handles direct facts, chaining handles transitive; the JEP-245 memory boundary from the energy side).
+Running tally: hits 129 / predictions 164 (79%). Latest: JEP-249 HIT (the substrate gives GRADED CONFIDENCE — fact support (restatement count) deepens the attractor monotonically (Spearman 1.0, 26-28% deeper s8 vs s1); a genuine capability beyond the binary symbolic engine, the EBM-native form of redundancy).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 At JEP-221 the tally is 110/137 (80%) and has CONVERGED: the OVERALL rate is dragged down by early-programme misses
@@ -190,3 +190,4 @@ honestly informative:
 | JEP-246 | 🔮 noisy perceptual cue cleans up + reasons multi-hop through substrate (clean 1.00, f=.1>=.85, graceful) | all PASS (f=0/.1 = 1.00, f=.2 ~.55, f=.3 ~.4, bitdiff ~7/40); one energy process, robust to ~10% noise | HIT | Perceive->clean->retrieve->reason in one relaxation dynamics; architectural integration (not an accuracy win), graceful degradation beyond basin radius. |
 | JEP-247 | 🔮 capacity scales ~linearly with value-slot size (cap/M ~0.5 const, M=40 ~20, sharp cliff at scale) | all PASS (M=40/60/80 -> 20/30/~42, cap/M 0.50, recall@cap+4 ~0.03) | HIT | Heteroassociative capacity scales linearly with value-slot size; the linear-scaling claim verified, not asserted. |
 | JEP-248 | 🔮 energy separates direct-true/false (AUC>=.90), transitive NOT low-energy (memory boundary) | all PASS (AUC 1.00, acc 1.00, energy direct -89 / false -39 / transitive -44, no FP transitive) | HIT | The EBM has two native query modes: single-shot energy-scoring for direct facts, iterated relaxation for transitive closure; doesn't generalize to unstated edges. |
+| JEP-249 | 🔮 fact support lowers energy monotonically (spearman>=.80, distinguishable extremes) -> graded confidence | all PASS (spearman 1.00, energy -93->-117 over support 1->8, 0 inversions, no saturation, all recalled) | HIT | The EBM gives evidence-calibrated graded confidence (more support->deeper minimum); a real benefit beyond binary symbolic, the EBM form of redundancy. |
