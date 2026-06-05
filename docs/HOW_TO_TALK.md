@@ -38,8 +38,17 @@ Put the text in a `.txt` file, then:
 ```
 
 It reads every clear factual sentence, learns it, and the memory **accumulates** across days. Then discuss it with
-`talk.py --dir mybrain`. Honest reach today: it reads clear, factual, encyclopedia-style prose well (~93% of such
-sentences); it cannot crack novels, opinion, or nuanced argument — that's the documented wall.
+`talk.py --dir mybrain`. Honest reach today: it reads clear, factual, encyclopedia-style prose well (~90% coverage on a
+realistic article, validated JEP-387/389), and now handles many natural constructions — plurals ("Dogs are mammals"),
+relative clauses ("Mammals are animals that are warm-blooded"), conjunctions ("Salmon are fish, and fish are animals"),
+appositives ("The lion, a large cat, is a predator"), "such as" lists, quantifiers ("Most birds can fly"), passive
+voice ("Salmon are eaten by bears"), part-of ("A wheel is part of a car"), causation ("Smoking causes cancer"), counts
+("A car has four wheels"), and **corrections** ("Actually, a whale is not a fish" updates an earlier "a whale is a
+fish"). Inside the domain it has read, deep multi-hop questions are answered reliably and **without mistakes**
+(consolidation, JEP-378), and it **abstains honestly** ("I don't know") on anything the text never said — it does not
+hallucinate. It still cannot crack novels, opinion, nuanced argument, or open-domain questions outside what it was
+taught — that is the documented wall (the untaught knowledge tail). Remaining minor gaps: adjective+noun subjects
+("Worn brakes cause accidents").
 
 ## 3. Ask it from the command line (one-off)
 
