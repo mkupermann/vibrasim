@@ -151,7 +151,14 @@ class BrainQuery:
         parts = sorted({p for (p, r, o) in self.mem.facts if r == "partof" and o in targets})
         if parts:
             bits.append("it has " + ", ".join(f"{'an' if p[0] in 'aeiou' else 'a'} {p}" for p in parts[:4]))
-        return ("; ".join(bits) + ".").capitalize() if bits else f"I don't know much about {x} yet."
+        # open relations where x is the subject (actions/attributes): 'it likes coffee', 'its name is X' (JEP-409)
+        _STRUCT = {"isa", "hasprop", "not_hasprop", "not_isa", "partof", "caused_by", "located_in"}
+        for (s, r, o) in self.mem.facts:
+            if s == x and r not in _STRUCT and not r.startswith("has_"):
+                val = str(o).replace("_", " ")
+                bits.append(f"its {r} is {val}" if r in ("name", "role", "creator", "capital", "age", "color")
+                            else f"it {r} {val}")
+        return ("; ".join(bits[:8]) + ".").capitalize() if bits else f"I don't know much about {x} yet."
 
     def what(self, x, verb):
         # try the verb plus simple morphological variants (eat->eats), so "what does a cat eat?" finds "eats"
