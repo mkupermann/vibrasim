@@ -224,10 +224,19 @@ class Conversation:
     _SINGULAR_KEEP = {"gas", "bus", "lens", "virus", "species", "series", "news", "physics", "mathematics",
                       "this", "his", "its", "is", "as", "plus", "bias", "atlas", "canvas", "campus", "octopus"}
 
+    # -oes plurals of -o nouns take 'es' (hero->heroes), NOT a bare 's' — the simple strip gives 'heroe'. Small
+    # irregular table (JEP-455) so these singularize correctly; -o nouns that take a bare 's' (shoe/photo/piano)
+    # fall through to the general rule and strip the 's' as usual.
+    _OES_SINGULAR = {"heroes": "hero", "potatoes": "potato", "tomatoes": "tomato", "echoes": "echo",
+                     "tornadoes": "tornado", "volcanoes": "volcano", "mosquitoes": "mosquito",
+                     "torpedoes": "torpedo", "vetoes": "veto", "buffaloes": "buffalo", "cargoes": "cargo"}
+
     @staticmethod
     def _singular(w):
         if w in Conversation._SINGULAR_KEEP:             # -s singular nouns: don't strip (gas -> gas, not 'ga') JEP-415
             return w
+        if w in Conversation._OES_SINGULAR:              # -oes plurals (heroes -> hero), JEP-455
+            return Conversation._OES_SINGULAR[w]
         if w.endswith("ies") and len(w) > 4:
             return w[:-3] + "y"
         if w.endswith("ses") or w.endswith("xes") or w.endswith("ches") or w.endswith("shes"):
@@ -370,7 +379,9 @@ class Conversation:
         # plural is-a: 'Dogs are carnivores' -> 'A dog is a carnivore'
         m = re.match(r"^([A-Z][a-z]+)s\s+are\s+(?:a\s+)?(.+?)\.?$", t)
         if m and " " not in m.group(1):
-            subj = self._singular(m.group(1).lower())
+            # reconstruct the full plural (regex peeled the trailing 's') so _singular handles -oes etc.
+            # ('Heroes' -> group(1)='Heroe' -> 'heroes' -> 'hero', not 'heroe') — JEP-455.
+            subj = self._singular((m.group(1) + "s").lower())
             obj = m.group(2).strip().rstrip(".")
             # strip a trailing relative clause so it doesn't hijack the head noun (JEP-382):
             # 'animals that are warm-blooded' -> head 'animals' (+ capture 'that are <adj>' as a property)
