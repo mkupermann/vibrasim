@@ -612,6 +612,20 @@ class UnderstandingEngine:
             return m.group(1), m.group(2)
         return None
 
+    @staticmethod
+    def _rel_chain(graph: dict, x: str, z: str):
+        """Shortest path x -> ... -> z through a relation graph (dict of node -> set of successors), or None."""
+        from collections import deque
+        q, seen = deque([[x]]), {x}
+        while q:
+            path = q.popleft()
+            if path[-1] == z:
+                return path
+            for nxt in graph.get(path[-1], ()):
+                if nxt not in seen:
+                    seen.add(nxt); q.append(path + [nxt])
+        return None
+
     def _isa_chain(self, x: str, c: str):
         """A shortest path x -> ... -> c through the IS-A DAG (BFS), or None if no path."""
         from collections import deque
@@ -634,7 +648,7 @@ class UnderstandingEngine:
         sc = self._parse_isa_q(q)
         if sc:
             x, c = self._norm_phrase(sc[0]), self._norm_phrase(sc[1])
-            self._last_query = (x, c)
+            self._last_query = (x, c); self._last_rel_query = None
             verdict = self.assess(x, c)
             if verdict == "unknown":
                 return f"I don't know whether {self._art(x)} is {self._art(c)}."
@@ -950,8 +964,19 @@ class UnderstandingEngine:
         if mc:
             x, comp, z = self._norm(mc.group(1)), mc.group(2).lower(), self._norm(mc.group(3))
             return "Yes." if self._order_holds(comp, x, z) else "Not that I can tell."
-        # "why?" follow-up: justify the last is-a answer using the reasoning chain
+        # "why?" follow-up: justify the last answer using the reasoning chain (is-a, part-of, or causal)
         if re.fullmatch(r"why\b.*", q):
+            rq = getattr(self, "_last_rel_query", None)
+            if rq:
+                kind, rx, rz = rq
+                graph = getattr(self, "part_of_g", {}) if kind == "part" else getattr(self, "causes", {})
+                verb = "is part of" if kind == "part" else "causes"
+                chain = self._rel_chain(graph, rx, rz)
+                if chain and len(chain) > 1:
+                    steps = ", and ".join(f"{self._art(chain[i])} {verb} {self._art(chain[i + 1])}"
+                                          for i in range(len(chain) - 1))
+                    return f"Because {steps}."
+                return f"Because {self._art(rx)} {verb} {self._art(rz)}."
             if not self._last_query:
                 return "You haven't asked me a question I can justify yet."
             x, c = self._last_query
@@ -984,6 +1009,8 @@ class UnderstandingEngine:
         m = re.match(rf"(?:is|are)\s+{art}(\w+)\s+part\s+of\s+{art}(\w+)", q)   # 'is a heart part of a dog?'
         if m:
             a, b = self._norm(m.group(1)), self._norm(m.group(2))
+            if self.part_of(a, b):
+                self._last_rel_query = ("part", a, b); self._last_query = None
             tail = (f"{self._art(a)} is part of {self._art(b)}." if self.part_of(a, b)
                     else f"{self._art(a)} is not part of {self._art(b)} as far as I know.")
             return ("Yes. " if self.part_of(a, b) else "No. ") + tail[0].upper() + tail[1:]
@@ -1000,6 +1027,7 @@ class UnderstandingEngine:
         if m:
             a, b = self._norm(m.group(1)), self._norm(m.group(2))
             if self.causes_effect(a, b):
+                self._last_rel_query = ("cause", a, b); self._last_query = None
                 tail = f"{self._art(a)} causes {self._art(b)}."
                 return "Yes. " + tail[0].upper() + tail[1:]
             return "No, not that I can tell."
