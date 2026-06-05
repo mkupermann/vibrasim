@@ -536,3 +536,15 @@ def test_read_jep166_extensions():
     assert e.is_a("salmon", "fish")                        # relative clause
     # irregular plurals normalize
     assert e._norm("wolves") == "wolf" and e._norm("leaves") == "leaf" and e._norm("mice") == "mouse"
+
+
+def test_read_cross_domain_and_located_in():
+    # JEP-167: read() generalizes across domains; 'X is located in Y' -> part-of; quantifier-stripping in 'has'
+    e = UnderstandingEngine(seed=167)
+    e.read("Paris is a city. Paris is located in France. France is a country. Europe has many countries.")
+    assert e.is_a("paris", "city") and e.is_a("france", "country")
+    assert e.part_of("paris", "france")        # 'located in' -> part-of
+    assert e.part_of("country", "europe")      # 'has many countries' -> 'country' (quantifier stripped), not 'many country'
+    et = UnderstandingEngine(seed=2)
+    et.read("A laptop is a computer. A laptop has a processor. A processor is a chip. A bug causes a crash.")
+    assert et.is_a("laptop", "computer") and et.part_of("processor", "laptop") and et.causes_effect("bug", "crash")
