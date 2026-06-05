@@ -92,6 +92,15 @@ class Conversation:
             text = self._resolve_pronoun(text)
             self._track_subject(text)
             self._last_question = text
+            low_q = text.lower().rstrip("?.! ").strip()
+            if low_q in ("what is not clear to you", "what is unclear to you", "what don't you understand",
+                         "what dont you understand", "what is not clear", "what is unclear",
+                         "what do you not understand", "what are you unsure about"):
+                g = self.gaps()
+                if not g:
+                    return "Everything I've been taught connects so far — nothing is unclear to me yet."
+                qs = "; ".join(f"what is {'an' if c[0] in 'aeiou' else 'a'} {c}?" for c in g[:5])
+                return f"A few things aren't clear to me yet — {qs}"
             ms = re.search(r"\b(?:is|can|does|do|about)\s+(?:a |an |the )?([a-z]+)\b", text.lower())
             self._last_q_subject = ms.group(1) if ms else None
             ans = BrainQuery(self.sm, seed=self.seed).ask(text)
@@ -119,6 +128,35 @@ class Conversation:
         if oq:
             base += " " + oq
         return base
+
+    ROOTS = {"animal", "organism", "thing", "object", "plant", "matter", "substance", "concept", "idea",
+             "place", "person", "event", "process", "material"}
+
+    def read_text(self, text):
+        """Read a whole document into the durable brain (Michael: 'the substrate reads a new text'). Learns every
+        parseable sentence, the memory grows; the same brain accumulates across sessions/days. Returns a summary."""
+        before = len(self.sm.facts)
+        sents = [s.strip() for s in re.split(r"(?<=[.!?])\s+", text.replace("\n", " ")) if s.strip()]
+        for s in sents:
+            if not self.is_question(s):
+                self.sm.learn_sentence(s, self.eng)
+        grew = len(self.sm.facts) - before
+        concepts = len({a for (a, r, b) in self.sm.facts if r == "isa"} |
+                       {b for (a, r, b) in self.sm.facts if r == "isa"})
+        return {"sentences": len(sents), "facts_learned": grew, "total_facts": len(self.sm.facts),
+                "concepts": concepts}
+
+    def gaps(self):
+        """What the brain has heard of but cannot place: concepts REFERENCED (is-a / relations) but never DEFINED
+        (no is-a parent of their own) and not recognized roots. These are honest knowledge gaps."""
+        facts = self.sm.facts
+        defined = {a for (a, r, b) in facts if r == "isa"}             # has its own is-a parent -> we know what it is
+        referenced = set()
+        for (a, r, b) in facts:
+            referenced.add(a)
+            if r in ("isa", "partof"):
+                referenced.add(b)
+        return [c for c in sorted(referenced) if c not in defined and c not in self.ROOTS]
 
     READY_FACTS = 6                                      # "once it is ready" (Michael rule #1): enough connected facts
 
