@@ -169,6 +169,9 @@ class BrainQuery:
         m = re.match(r"how many \w+ does (\w+) have$", s) or re.match(r"how many \w+ (?:does|do) (\w+) have$", s)
         if m:
             return self.how_many(m.group(1))
+        m = re.match(r"is (\w+) part of (\w+)$", s)                 # 'a/an/the' already stripped above (JEP-388)
+        if m:
+            return self.part_of(self._sing(m.group(1)), self._sing(m.group(2)))
         m = re.match(r"is (\w+) (?:kind of |type of )?(\w+)$", s)   # 'a/an/the' already stripped above
         if m:
             return self.is_a(m.group(1), m.group(2))
