@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 139 / predictions 175 (79%). Latest: JEP-260 HIT (read() now captures 'X can/cannot VERB' as properties (it captured NONE before -- only tell() did) + singular 'can a penguin fly?' -> 'No. A penguin cannot fly.'; a gated-regression self-catch (np swallowed the relative-clause sentence, caught by the test gate, fixed before commit)).
+Running tally: hits 140 / predictions 176 (79%). Latest: JEP-261 HIT (spatial containment 'X is in Y' -> part-of + question routing 'is X in/located-in Y?' -> part_of, incl transitive 'is Paris in Europe?'; excluded from redundant open induction; genuine open relations preserved; surfaced by the geography QA pass).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 At JEP-221 the tally is 110/137 (80%) and has CONVERGED: the OVERALL rate is dragged down by early-programme misses
@@ -202,3 +202,4 @@ honestly informative:
 | JEP-258 | 🔮 'X is <adj>' -> property; 'is X <adj>?' answered from properties; is-a undisturbed | PASS — cobra/dog properties captured, venomous/friendly answered Yes, is-a intact; 100 tests | HIT | Copula adjectival predicates are properties not taxonomy; the 257->258 pair fully handles them. |
 | JEP-259 | 🔮 preprocess embedded ', such as X,' -> example is-a subject + rebuild main clause; trailing form unaffected | PASS — cobra->snake + snake->reptile, 4-hop chain works, trailing such-as intact; 101 tests | HIT | A comma-bounded interjection broke both the such-as regex and the copula subject; strip+rebuild recovers both links. |
 | JEP-260 | 🔮 singular 'can a X VERB?' + read() property capture; risk: np swallows 'is a bird that cannot fly' | PASS — read captures properties, singular Yes/No works, universal works; risk MATERIALIZED (1 test failed) caught by gate + fixed | HIT | read() never captured ability facts (only tell did); guard the consuming `continue` on bare-NP so the relative-clause is-a survives. |
+| JEP-261 | 🔮 'is in' -> spatial part-of + question routing + exclude from open; transitive works | PASS — france/paris/italy part-of, spatial Qs Yes/No, transitive Paris->Europe, capital-of open kept; 103 tests | HIT | Spatial 'X is in Y' needed both extractor coverage (plain 'in') and question routing (was parsed as is-a). |
