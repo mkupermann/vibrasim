@@ -807,6 +807,49 @@ class UnderstandingEngine:
             frontier = nxt; d += 1
         return sorted(dist, key=lambda c: (dist[c], c))   # nearest cause first
 
+    def summarize(self, max_items: int = 6) -> str:
+        """Generate a coherent multi-sentence SUMMARY of what was learned (e.g. from a read source): the top
+        categories, the main taxonomic groupings, and any part-of / causal structure. Generative communication of the
+        WHOLE knowledge base, not a single concept (cf. describe). No transformer."""
+        if not self.parents:
+            return "I haven't learned anything yet."
+        # top categories = concepts that are parents but have no parents themselves (the roots of the taxonomy)
+        all_parents = {p for ps in self.parents.values() for p in ps}
+        children_of = {}
+        for c, ps in self.parents.items():
+            for p in ps:
+                children_of.setdefault(p, []).append(c)
+        roots = sorted((p for p in all_parents if p not in self.parents),
+                       key=lambda r: -len(children_of.get(r, [])))
+        sents = []
+        if roots:
+            top = roots[:max_items]
+            sents.append("I learned about " + self._join_phrases(top) + ".")
+            # for the most-populated root, describe its direct groupings
+            r = roots[0]; kids = sorted(children_of.get(r, []))[:max_items]
+            if kids:
+                if len(kids) == 1:
+                    sents.append(f"{self._art(kids[0])} is {self._art(r)}.")
+                else:
+                    sents.append("Things like " + self._join_phrases(kids) + " are kinds of " + r + ".")
+        part_of_g = getattr(self, "part_of_g", {})
+        if part_of_g:
+            ex = sorted(part_of_g)[0]
+            whole = sorted(part_of_g[ex])[0]
+            sents.append(f"Some things have parts — for example, {self._art(ex)} is part of {self._art(whole)}.")
+        causes = getattr(self, "causes", {})
+        if causes:
+            cx = sorted(causes)[0]; cy = sorted(causes[cx])[0]
+            sents.append(f"And some things cause others — for example, {self._art(cx)} causes {self._art(cy)}.")
+        return " ".join(sents)
+
+    @classmethod
+    def _join_phrases(cls, items):
+        items = [cls._art(i) for i in items]
+        if len(items) == 1:
+            return items[0]
+        return ", ".join(items[:-1]) + " and " + items[-1]
+
     def causes_effect(self, x: str, z: str, intervene: str = None) -> bool:
         """Does x causally affect z (transitively)? Under do(intervene), the intervened node's INCOMING causal
         edges are cut (Pearl's do-operator): its value is set externally, so its usual causes no longer reach

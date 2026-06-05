@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 85 / predictions 112 (76%). Latest: JEP-196 HIT (consistency_audit of read knowledge — detects a source's internal contradictions with explanations).
+Running tally: hits 86 / predictions 113 (76%). Latest: JEP-197 HIT (summarize() generates a coherent source overview — generative communication of the whole KB).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 The OVERALL 73% is dominated by early-programme misses (surface-form bugs, structure-learning difficulty mis-estimates).
@@ -134,3 +134,4 @@ Predictions ARE converging WITHIN a settled domain, and the residual misses are 
 | JEP-194 | 🔮 matured engine (through 193) still robust + sound | 0 crashes/6000 (incl comparison/of/mass-noun), 0 comparison-interaction violations/300 | HIT | Extensive feature additions preserved robustness/soundness; matured engine confirmed solid. |
 | JEP-195 | 🔮 inherited-negative check detects implied inconsistency, no over-flag | 'whale is a fish' flagged (whale->mammal->not-fish) w/ explanation; consistent not flagged; multi-hop works | HIT | Detects contradictions IMPLIED by the combination (inherited class-exclusion), not just explicit — for learn-from-sources. |
 | JEP-196 | 🔮 consistency_audit reports all inherited-negative conflicts, empty if consistent | 1 contradiction (explained) on inconsistent KB, 0 on consistent | HIT | Whole-KB audit for a source's internal contradictions — learn-from-sources capability. |
+| JEP-197 | 🔮 summarize() gives a coherent overview of read knowledge | coherent multi-sentence summary (top categories + parts + causes); empty handled | HIT | Source summarization — whole-KB generative communication, complements per-concept describe(). |

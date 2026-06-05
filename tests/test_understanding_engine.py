@@ -755,3 +755,13 @@ def test_consistency_audit():
     e2 = UnderstandingEngine(seed=2)
     e2.read("A dog is a mammal. A mammal is an animal. A salmon is a fish. A fish is an animal.")
     assert e2.consistency_audit() == []                     # internally consistent
+
+
+def test_summarize_read_knowledge():
+    # JEP-197: summarize() generates a coherent overview of read knowledge (source summarization)
+    e = UnderstandingEngine(seed=197)
+    e.read("A dog is a mammal. A cat is a mammal. A mammal is an animal. A robin is a bird. A bird is an animal. "
+           "A heart is part of a dog. A virus causes a fever.")
+    s = e.summarize()
+    assert "animal" in s and "part of" in s and "causes" in s   # aggregates taxonomy + parts + causes
+    assert UnderstandingEngine(seed=2).summarize() == "I haven't learned anything yet."
