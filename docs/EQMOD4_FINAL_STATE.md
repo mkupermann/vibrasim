@@ -5,9 +5,11 @@ No LLM, no transformer, no pretrained model anywhere. Everything below is establ
 genuine outputs are the WORKING ENGINE, a handful of real CONCEPTUAL findings, and the predict-calibrate DISCIPLINE.
 
 ## What it does (Michael's three verbs, end to end, from real prose + perception)
-- **LEARN** — `e.read(passage)` extracts FIVE relation types from encyclopedic prose (is-a, part-of, causal,
+- **LEARN** — `e.read(passage)` extracts FIVE fixed relation types from encyclopedic prose (is-a, part-of, causal,
   spatial-containment, comparison) at ~0.9 recall / high precision, document-scale, cross-domain; revises beliefs
-  when a source corrects it; learns entirely novel concepts (proven structural, not lexical).
+  when a source corrects it; learns entirely novel concepts (proven structural, not lexical); and is **SELF-
+  EXTENSIBLE** — auto-induces *new* relation types from recurring patterns in a passage (e.g. 'is capital of'), then
+  extracts, queries, and answers natural questions about them ('what is the capital of France?' -> 'Paris').
 - **UNDERSTAND** — multi-hop inference over a multi-parent DAG; the full faculty set (Boolean, three-valued,
   quantification, hypothetical, analogy, causal+intervention, probabilistic, temporal, provenance, mereology,
   abduction, diagnosis, planning); and the COMPLETE relation-interaction matrix — taxonomy interacts correctly with
