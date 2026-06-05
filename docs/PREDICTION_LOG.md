@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 51 / predictions 71 (JEP-156 HIT — genre minimal-pair: encyclopedic 0.87 precision vs Boole ~0, same extractor) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
+Running tally: hits 52 / predictions 73 (JEP-157 MISS then 157b HIT — learn-from-prose works end-to-end; compounding shows only under extraction noise) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
 
 | id | prediction (🔮 before) | outcome | hit? | lesson (don't repeat) |
 |----|------------------------|---------|------|------------------------|
@@ -78,3 +78,5 @@ Running tally: hits 51 / predictions 71 (JEP-156 HIT — genre minimal-pair: enc
 | JEP-154b | 🔮 (corrected) redundancy closes it with NOISE-TOLERANT scoring | soft 0.99 vs strict 0.06 at k=20 | HIT | Same CHAINING-vs-AGGREGATION lesson governs learning AND reasoning. |
 | JEP-155 | 🔮 Hearst extracts few GENUINE is-a pairs from Boole (genre is the gate) | 326 candidates but near-zero precision (fragments/properties) | HIT | Correct on genre, but raw count deceptively high — the predict-QUALITY-not-RATE lesson (JEP-108) recurred. |
 | JEP-156 | 🔮 bare-NP guard: encyclopedic precision >0.7, Boole near-zero genuine | ency 0.87/0.93, Boole 62 all-fragments | HIT | GENRE isolated as the cause via controlled minimal pair; learn-from-sources works on the right genre. |
+| JEP-157 | 🔮 end-to-end works + multi-hop degrades with depth (compounding) | engine 1.00 all depths vs bow 0.00; NO degrade (clean extraction) | MISS | End-to-end PASS, but tested compounding in a noise-FREE regime where it can't show. Match test regime to mechanism. |
+| JEP-157b | 🔮 (corrected) under extraction noise, multi-hop compounds + redundancy corrects | noise0.25 d1 0.79->d4 0.51; redundancy x3 -> 0.97 | HIT | Third manifestation of the universal compounding/aggregation insight (learn-from-prose pipeline). |
