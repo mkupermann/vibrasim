@@ -19,9 +19,11 @@ substrate-native assembly + the measured limits, not new mathematics.
    **hashlib** seeding (NOT Python's builtin `hash()`, which is per-process salted) — so a *separate process*
    reconstructs identical vectors. Survives close+reopen and grows across sessions without forgetting.
 
-3. **Unbounded growth / neurogenesis (JEP-296).** When the current module reaches ~0.8·K* facts, a new empty
-   module is auto-added; `query` searches all modules and takes the best cleanup match. Total capacity is linear
-   in #modules. 384 facts where a single bundle → 0.38 recover 0.98 across 4 modules.
+3. **Unbounded growth / neurogenesis (JEP-296) + module-aware routing (JEP-307).** When the current module reaches
+   ~0.8·K* facts, a new empty module is auto-added. `query` searches only the module(s) holding the queried key
+   (`key_modules` routing table) — this is essential at scale: a naive global-argmax search lets a spurious match
+   in a non-holding module hijack a multi-hop chain (JEP-306 NULL: is-a collapsed 1.0→0.5 past 1 module). With
+   routing, multi-hop reasoning stays ~0.98 to ~900 facts / 9 modules. Total capacity linear in #modules.
 
 4. **Directed edges via permutation (JEP-298).** Plain Hadamard binding is **direction-ambiguous** (commutative +
    self-inverse → a node retrieves children as well as parents; this sank the first multi-hop attempt, JEP-297
