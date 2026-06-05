@@ -136,6 +136,11 @@ class TeachApp:
             self.mem_lbl.config(text=self._mem_text(taught))
 
     def _on_close(self):
+        # compact on close so corrections are PHYSICALLY applied to the durable brain (JEP-335/336), not left to
+        # ~95%-reliable per-query override. Only rebuilds when there's something to resolve.
+        if self.sm is not None and self.sm.has_resolvable_corrections():
+            self.sm = self.sm.compact()
+            self.al = self.sm.learner
         self._save()
         self.root.destroy()
 
