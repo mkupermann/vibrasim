@@ -185,6 +185,8 @@ class SubstrateMemory:
                         _add(b, "caused_by", a)               # inverse, enables abduction (why?)
         for (a, b) in (getattr(eng, "neg_isa", set()) or set()):
             _add(a, "not_isa", b)
+        for (s, r, o) in (getattr(eng, "facts", []) or []):       # OPEN relations (any learned verb: eats, ...)
+            _add(s, r, o)
 
     def learn_sentence(self, sentence: str, eng):
         """Record taught prose AND bridge its facts into the substrate (the engine parses; we store both)."""
