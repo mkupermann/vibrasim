@@ -22,5 +22,23 @@ beats the correct module, so multi-module recovery never reaches 0.90 even thoug
 If so, J296a FAILS and the honest finding is "modules need disjoint value sub-vocabularies or a module-routing key,"
 which I would pre-register as JEP-297 rather than tune here.
 
-## Result
-(filled after the run)
+## Result (seeds 0, 7), D=4096, K*=128, 384 facts
+- **J296a:** SINGLE bundle recovery = **0.39 / 0.38** (blacks out, as predicted) vs MULTI auto-module (4 modules
+  spun up) = **0.98 / 0.94** (≥0.90). **PASS.**
+- **J296b:** untaught-entity gap = **+0.029 / +0.027** (separable, positive). **PASS** — honest caveat: the margin
+  is NARROW at this load (taught vs untaught similarities both shrink as modules fill), so a rejection threshold
+  would need care; tracked as future work, not tuned here.
+- **J296c:** grown store save→load (fresh object) = **0.98 / 0.94**, unchanged. **PASS.**
+- **No-regression:** single-module persistence = **1.00**; JEP-295 full re-run still PASS (1.00 across A/B/C);
+  123 understanding tests green. **PASS.**
+
+Performance note: query was O(rebuild-dictionary) per call — cached atom vectors (lru_cache) + a cached value
+matrix + a single vectorized `(modules × key) @ values᷈ᵀ` cleanup brought a 384-fact sweep from minutes to ~seconds.
+
+## Verdict: **PASS**
+Growth is unbounded: when a module saturates (~0.8·K* facts) a new one is auto-added (modular VSA / neurogenesis —
+established, named as such), recall stays ≥0.90 across modules where a single bundle collapses to chance, and the
+multi-module brain persists to disk. Combined with JEP-295, the substrate now has a durable memory that grows
+without a fixed ceiling. Honest open edge (→ JEP-297): the taught/untaught separation narrows as load grows, so
+reliable "I don't know" rejection at very high fact counts needs a module-routing key or disjoint sub-vocabularies.
+

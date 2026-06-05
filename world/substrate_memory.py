@@ -15,6 +15,7 @@ pretrained model -- only the substrate's own VSA primitives (world/vsa).
 import os
 import json
 import hashlib
+import functools
 import numpy as np
 
 from world.vsa import bind, unbind, sim, CleanupMemory
@@ -23,9 +24,11 @@ from world.active_learner import ActiveLearner
 DEFAULT_D = 4096
 
 
+@functools.lru_cache(maxsize=200_000)
 def atom_vector(name: str, D: int) -> np.ndarray:
     """A deterministic, cross-process-stable bipolar hypervector for a symbol name (hashlib-seeded, NOT builtin
-    hash() which is per-process salted). Same name -> same vector everywhere; different names -> near-orthogonal."""
+    hash() which is per-process salted). Same name -> same vector everywhere; different names -> near-orthogonal.
+    Cached: the VSA ops never mutate their inputs, so returning the shared array is safe and avoids re-hashing."""
     seed = int(hashlib.sha256(name.encode("utf-8")).hexdigest(), 16) % (2 ** 32)
     return np.random.default_rng(seed).choice([-1.0, 1.0], D)
 
@@ -54,11 +57,13 @@ class SubstrateMemory:
         s = np.sign(self.modules[m]); s[s == 0] = 1.0
         return s
 
-    def _cleanup(self):
-        cm = CleanupMemory()
-        for v in self.values:
-            cm.add(v, self._vec(v))
-        return cm
+    def _value_matrix(self):
+        """(V, D) matrix of value vectors + names, cached and rebuilt only when the vocabulary grows."""
+        if getattr(self, "_vm_n", -1) != len(self.values):
+            self._vm = np.stack([self._vec(v) for v in self.values]) if self.values else np.zeros((0, self.D))
+            self._vm_names = list(self.values)
+            self._vm_n = len(self.values)
+        return self._vm, self._vm_names
 
     # ---- relational facts ----
     def add_fact(self, entity: str, role: str, value: str):
@@ -78,13 +83,14 @@ class SubstrateMemory:
         """Recover the value bound to (entity, role): (value_name, similarity). Searches ALL modules and returns the
         single best cleanup match (the module that actually holds this fact wins)."""
         key = bind(self._vec(entity), self._vec(role))
-        cm = self._cleanup()
-        best_name, best_sim = None, -1e9
-        for m in range(len(self.modules)):
-            name, s = cm.cleanup(unbind(self._mem(m), key))
-            if s > best_sim:
-                best_name, best_sim = name, s
-        return best_name, best_sim
+        VM, names = self._value_matrix()
+        if not names:
+            return None, 0.0
+        Mstack = np.stack([self._mem(m) for m in range(len(self.modules))])   # (n_mod, D), bipolar
+        retrieved = Mstack * key                                              # unbind each module by the key
+        scores = retrieved @ VM.T / self.D                                    # (n_mod, V) cleanup similarities
+        flat = int(np.argmax(scores))
+        return names[flat % len(names)], float(scores.flat[flat])
 
     # ---- perceptual facts (taught letters/sounds) ----
     def teach_percept(self, modality: str, symbol: str, x):
