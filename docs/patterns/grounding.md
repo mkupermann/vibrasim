@@ -94,3 +94,20 @@ themselves (here given), and large relation vocabularies. But within 2-relation 
 structure is LEARNABLE from observation, robustly — a genuine step past the JEP-69/70 NULL. Lesson: "can't learn
 arbitrary structure" was too pessimistic; CONSISTENCY and RULE-MATCH signals make a lot of structure learnable when
 the data is adequate. Established (consistency-based inference, ILP/rule-discovery simplest form), named.
+
+## The developmental concept-acquisition loop, on TOY and REAL perception (JEP-178/179/180/187)
+Grounding the prose-learned engine: the symbol now ties to BOTH a perceptual prototype AND a prose-learned taxonomic
+position, and the FULL human developmental loop composes — PERCEIVE unlabeled instances -> DISCOVER categories
+(unsupervised clustering) -> NAME them -> ACQUIRE structure from a PROSE definition -> REASON about new instances
+(perceive -> symbol -> multi-hop is_a). 'Show a dog, is it an animal?' answered via vision + reading combined.
+- TOY perception (well-separated prototypes): clustering purity 1.00, downstream 1.00 (JEP-179).
+- REAL perception (Fashion-MNIST raw pixels, trouser/sneaker/bag): clustering purity 0.93, per-class perception 0.93,
+  discriminating reasoning 0.93 (JEP-187). The loop composes on REAL images, not just toy prototypes.
+- THE BOTTLENECK is the DISCOVERY/PERCEPTION step; downstream reasoning is EXACT given correct perception, so the
+  loop inherits perception's discriminability limits (JEP-180), NOT the binding's or the reasoning's. Toy->real costs
+  ~7 points of purity; richer/noisier perception would cost more.
+HONEST SCOPE: still PIXEL grounding (visual, not functional — a sneaker and a slipper cluster by appearance, JEP-58/
+61); FUNCTIONAL grounding (affordance/interaction, JEP-62) needs interaction data and is the open frontier. Plus a
+recurring METHOD lesson reinforced here (JEP-180/187): a downstream metric must DISCRIMINATE the failure mode — 'is
+it an object?' when every class is an object measures nothing; use a class-discriminating probe. Established
+(agglomerative clustering, prototype perception, cross-situational naming); named; no novelty.
