@@ -1052,7 +1052,10 @@ class UnderstandingEngine:
         if props:
             sents.append("It can " + ", ".join(sorted(props)) + ".")
         # relations where x is the subject
-        rels = [f"{self._norm_rel(r)}s the {o}" for s, r, o in self.facts if s == self._norm(x)]
+        # SVO + open relations: a single VERB renders 'chases the cat'; a multi-word/open relation ('is capital of')
+        # renders verbatim ('is capital of france'), no added -s and no inserted 'the'
+        rels = [f"{r} {o}" if " " in r else f"{self._norm_rel(r)}s the {o}"
+                for s, r, o in self.facts if s == self._norm(x)]
         if rels:
             sents.append("It " + ", and ".join(sorted(set(rels))) + ".")
         # mereology: parts that x HAS (things that are part-of x), and what x is part-of
