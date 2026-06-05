@@ -45,6 +45,9 @@ class SubstrateMemory:
         self.module_cap = module_cap or max(1, int(0.8 * D / 32))
         self.modules = [np.zeros(D, dtype=np.float64)]   # running SUM per module; mem_m = sign(module)
         self.module_counts = [0]
+        # module-aware routing (JEP-307): which module(s) hold each (entity, role) key -> search only those, so a
+        # multi-hop chain never gets hijacked by a spurious global-argmax match in a non-holding module.
+        self.key_modules = {}                            # "entity\x1frole" -> sorted list of module indices
         self.facts = []                              # list of (entity, role, value) for bookkeeping/growth
         self.values = []                             # value vocabulary (the cleanup dictionary)
         self.sentences = []                          # taught PROSE (JEP-302) — replayed to rebuild the engine
@@ -57,6 +60,17 @@ class SubstrateMemory:
     @property
     def accum(self):
         return self.modules[0]                       # back-compat alias (single-module callers)
+
+    @staticmethod
+    def _kk(entity, role):
+        return f"{entity}\x1f{role}"
+
+    def _route(self, entity, role):
+        """Module indices to search for (entity, role). Empty routing table -> all modules (back-compat); known
+        table but key absent -> [] (untaught key -> clean no-match)."""
+        if not self.key_modules:
+            return range(len(self.modules))
+        return self.key_modules.get(self._kk(entity, role), [])
 
     def _mem(self, m):
         s = np.sign(self.modules[m]); s[s == 0] = 1.0
@@ -81,6 +95,10 @@ class SubstrateMemory:
         bound = bind(bind(self._vec(entity), self._vec(role)), val)
         self.modules[-1] = self.modules[-1] + bound
         self.module_counts[-1] += 1
+        m = len(self.modules) - 1
+        ms = self.key_modules.setdefault(self._kk(entity, role), [])
+        if m not in ms:
+            ms.append(m)
         self.facts.append((entity, role, value))
         if value not in self.values:
             self.values.append(value)
@@ -90,9 +108,10 @@ class SubstrateMemory:
         single best cleanup match (the module that actually holds this fact wins)."""
         key = bind(self._vec(entity), self._vec(role))
         VM, names = self._value_matrix()
-        if not names:
+        mods = list(self._route(entity, role))
+        if not names or not mods:
             return None, 0.0
-        Mstack = np.stack([self._mem(m) for m in range(len(self.modules))])   # (n_mod, D), bipolar
+        Mstack = np.stack([self._mem(m) for m in mods])                       # only holding modules (routing)
         retrieved = Mstack * key                                              # unbind each module by the key
         if self.directed:
             retrieved = np.roll(retrieved, -1, axis=1)                        # rho^-1: undo the value permutation
@@ -105,13 +124,14 @@ class SubstrateMemory:
         multi-parent / DAG relations. Returns [(value_name, sim), ...] sorted by sim."""
         key = bind(self._vec(entity), self._vec(role))
         VM, names = self._value_matrix()
-        if not names:
+        mods = list(self._route(entity, role))
+        if not names or not mods:
             return []
-        Mstack = np.stack([self._mem(m) for m in range(len(self.modules))])
+        Mstack = np.stack([self._mem(m) for m in mods])
         retrieved = Mstack * key
         if self.directed:
             retrieved = np.roll(retrieved, -1, axis=1)
-        scores = (retrieved @ VM.T / self.D).max(axis=0)        # best module per value
+        scores = (retrieved @ VM.T / self.D).max(axis=0)        # best holding-module per value
         out = [(names[i], float(scores[i])) for i in range(len(names)) if scores[i] >= gate]
         return sorted(out, key=lambda t: -t[1])
 
@@ -121,12 +141,12 @@ class SubstrateMemory:
         key = bind(self._vec(entity), self._vec(role))
         vv = self._vec(value)
         best = -1e9
-        for m in range(len(self.modules)):
+        for m in self._route(entity, role):
             r = self._mem(m) * key
             if self.directed:
                 r = np.roll(r, -1)
             best = max(best, float(r @ vv / self.D))
-        return best
+        return best if best > -1e8 else 0.0
 
     def contains(self, entity: str, role: str, value: str, gate: float):
         """Membership probe for a (possibly multi-valued) relation: is `value` bound to (entity, role)?"""
@@ -178,7 +198,7 @@ class SubstrateMemory:
         meta = {
             "D": self.D, "module_cap": self.module_cap, "module_counts": self.module_counts,
             "directed": self.directed, "facts": self.facts, "values": self.values,
-            "sentences": self.sentences,
+            "sentences": self.sentences, "key_modules": self.key_modules,
             "learner": {"tau": self.learner.tau, "max_exemplars": self.learner.max_exemplars,
                         "n_asked": self.learner.n_asked, "n_seen": self.learner.n_seen,
                         "fit": {k: list(v) for k, v in self.learner._fit.items()}},
@@ -195,6 +215,7 @@ class SubstrateMemory:
         self.facts = [tuple(t) for t in meta["facts"]]
         self.values = list(meta["values"])
         self.sentences = list(meta.get("sentences", []))
+        self.key_modules = {k: list(v) for k, v in meta.get("key_modules", {}).items()}
         z = np.load(os.path.join(d, "vectors.npz"), allow_pickle=True)
         if "modules" in z:                            # growing multi-module store (JEP-296)
             self.modules = [row.astype(np.float64) for row in z["modules"]]
