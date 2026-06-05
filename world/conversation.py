@@ -212,6 +212,15 @@ class Conversation:
         # strip a LEADING quantifier so it isn't absorbed into the subject name (JEP-384): 'Both frogs and toads...'
         # -> 'frogs and toads...'; 'Most birds can fly' -> 'birds can fly'. ('a/an/the' are NOT quantifiers.)
         t = re.sub(r"^(?:both|most|some|many|all|several|few|each|certain|every)\s+", "", t, flags=re.I)
+        # passive voice: 'X is/are/was/were <participle> by Y' -> (Y, participle, X) open relation (JEP-385).
+        # Requires the ' by ' marker so it never fires on copular 'X is a Y' / locational 'X is in Y'.
+        mp = re.match(r"^(?:a\s+|an\s+|the\s+)?([A-Za-z]+)\s+(?:is|are|was|were)\s+([a-z]+(?:ed|en))\s+by\s+"
+                      r"(?:a\s+|an\s+|the\s+)?([A-Za-z]+)\.?$", t, flags=re.I)
+        if mp:
+            patient = self._singular(mp.group(1).lower()); part = mp.group(2).lower()
+            agent = self._singular(mp.group(3).lower())
+            if patient not in ("a", "an", "the") and agent not in ("a", "an", "the"):
+                return [], extra + [(agent, part, patient)]
         # 'is a kind/type/sort of' -> 'is a'
         t = re.sub(r"\bis\s+(an?)\s+(?:kind|type|sort)\s+of\b", r"is \1", t, flags=re.I)
         # numeric possession: 'A dog has four/4 legs' -> (dog, has_legs, N)
