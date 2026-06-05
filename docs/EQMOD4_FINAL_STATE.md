@@ -17,8 +17,10 @@ genuine outputs are the WORKING ENGINE, a handful of real CONCEPTUAL findings, a
   leak guard; plus QUANTITATIVE understanding ('X has N Y' -> 'how many?'/numeric comparison) and TEMPORAL ordering
   ('X before/after Y', transitive). All domains compose in one engine (a multi-domain integration guard), with
   CONSISTENCY checking over both taxonomy and quantities.
-- **COMMUNICATE** — conversational Q&A across all relation types, multi-relation English profiles, "why?"
-  explanations of the reasoning chain, learning-through-dialogue, belief revision.
+- **COMMUNICATE** — conversational Q&A across ALL domains (is-a, part-of, causal, comparison, temporal, quantitative,
+  open relations, enumeration, superlatives); multi-relation English profiles; "why?" explanations of the reasoning
+  chain across is-a/part-of/causal/comparison/temporal; source summarization (with honest inconsistency-flagging);
+  MULTI-TURN conversational context ("what about X?"); learning-through-dialogue; belief revision.
 - **GROUND** — a concept's grounding draws on THREE complementary sources: APPEARANCE from vision (reliable coarse
   categories on real Fashion-MNIST, 0.87), NAMES from language (sharpen the fine distinctions vision blurs, 0.72 vs
   0.54), FUNCTION from observing INTERACTIONS (recovers categories that cross-cut appearance, 1.00 vs 0.50). The full
@@ -51,7 +53,7 @@ and a comprehensive end-to-end INTEGRATION test. 63 regression tests, every comm
 ## Honest assessment vs the goal
 This is NOT human-level understanding and NOT novel — it is a comprehensive, validated, substrate-legal FOUNDATION
 that does learn/understand/communicate/ground end to end under a hard constraint, with every frontier precisely
-characterized as to why it is open and what would unblock it. predict-calibrate 82/109 (75%), converging within
+characterized as to why it is open and what would unblock it. predict-calibrate 110/137 (80%, converged), converging within
 settled domains, no diagnosed lesson recurred; the discipline (pre-registration, honest NULLs, the 12 recurring
 error classes) is the transferable deliverable. Guides: docs/UNDERSTANDING_ENGINE.md, docs/EQMOD4_GUIDE.md; patterns:
 docs/patterns/; demos: tools/demo_{learn_from_prose,grounded_understanding,full_conversation}.py.
