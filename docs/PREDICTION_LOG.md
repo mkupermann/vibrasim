@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 123 / predictions 154 (80%). Latest: JEP-239 PARTIAL/CALIBRATION (the substrate relational store is ONLINE-learnable with only MILD interference — my 'catastrophic forgetting' prediction was WRONG, in the additive-Hebb-robustness direction I had flagged; rehearsal holds 0.94-1.00).
+Running tally: hits 123 / predictions 155 (79%). Latest: JEP-240 NULL/PARTIAL (attractor CLEANUP does NOT reliably cure discrete multi-hop compounding — it can LOCK IN decode errors, hurting seed7; sharpens JEP-158: cleanup cures CONTINUOUS drift not DISCRETE errors; AGGREGATION/redundancy is the robust cure).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 At JEP-221 the tally is 110/137 (80%) and has CONVERGED: the OVERALL rate is dragged down by early-programme misses
@@ -181,3 +181,4 @@ honestly informative:
 | JEP-237 | 🔮 energy gate (<=0.7*median stored energy) drops empty slots, 0/0 confusion, DAG closure>=.90 | all 4 bars PASS (poodle->{dog,pet}, cat->{pet}, closure 1.00, 0 false-accept/reject, cut -63 in the -90/-47 gap) | HIT | A NULL (236) diagnosed into a checkable mechanism (binding-energy discriminates) that 237 confirmed — predict-calibrate working as intended. |
 | JEP-238 | 🔮 part-of x is-a UP interaction composes through substrate (heart->animal True, leak guard cat False, >=.90) | all 4 bars PASS (UP True, leak guard True, battery 1.00, control 0.33) | HIT | Composing two content-addressable retrievals reproduces the interaction matrix; leak guard automatic (chain never reaches the sibling). |
 | JEP-239 | 🔮 pure online FORGETS (<0.7) + rehearsal beats it by >=.15; rehearsal maintains, online learns new | a/c PASS (learns new, rehearsal holds >=.85); b WRONG (only mild forgetting, final .78-.89) + d marginal (.11-.16) | MISS | Attractor-net Hebbian-family updates add capacity ~additively -> graceful not catastrophic forgetting; I flagged this counter-possibility. |
+| JEP-240 | 🔮 cleanup mitigates multi-hop compounding under noise (cln k4 > raw k4 by >=.10, both seeds) | a/b/d PASS (compounding real, cleanup partial); c FAILS — cleanup helps seed42 (+.22) but HURTS seed7 (-.11): not reliable | MISS | Over-generalized JEP-158's continuous-drift cleanup to a discrete CAM (error-class 10); discrete cleanup LOCKS IN decode errors; aggregation, not cleanup, generalizes. |
