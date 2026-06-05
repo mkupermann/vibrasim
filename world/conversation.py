@@ -160,9 +160,12 @@ class Conversation:
         if m:
             extra.append((m.group(1).lower(), "located_in", m.group(2).lower()))
         # relative clause: 'A X, which is a Y, <rest>' -> 'A X is a Y.' + 'A X <rest>.'
-        m = re.match(r"^(?:a|an|the)\s+([a-z]+),\s+which\s+is\s+(an?)\s+([a-z]+),\s+(.+?)\.?$", t, flags=re.I)
+        m = re.match(r"^(?:a|an|the)\s+([a-z]+),\s+which\s+is\s+an?\s+([a-z ]+?),\s+(.+?)\.?$", t, flags=re.I)
         if m:
-            x, art, y, rest = m.group(1).lower(), m.group(2), m.group(3).lower(), m.group(4).strip()
+            x = m.group(1).lower()
+            y = self._singular(m.group(2).strip().split()[-1].lower())   # head noun of a multi-word class
+            rest = m.group(3).strip()
+            art = "an" if y[0] in "aeiou" else "a"
             return [f"A {x} is {art} {y}.", f"A {x} {rest}."], extra
         # conjunction subject: 'Cats and dogs are mammals' / 'A cat and a dog are mammals' -> two sentences
         m = re.match(r"^(?:a\s+|an\s+)?([a-z]+)s?\s+and\s+(?:a\s+|an\s+)?([a-z]+)s?\s+are\s+(?:a\s+)?(.+?)\.?$",
