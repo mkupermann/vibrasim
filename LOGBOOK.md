@@ -5208,3 +5208,30 @@ docs/amendments/jep23{2..9}_*.md. predict-calibrate 123/154 (80%, converged), tw
 capacity bound, 239 forgetting) both in directions I had flagged as live alternatives. The kill-switch
 .eqmod_autonomy_off is absent (autonomy reactivated per user at commit 53b650a); the substrate physics thread
 (G1..G145) remains exhausted/idle. NOT human-level, NOT novel; the connection + the discipline are the deliverables.
+
+### Continuation (JEP-242..247): full engine on the substrate + boundaries verified
+
+The arc extended from is-a (232..241) to the COMPLETE engine and its boundaries:
+- (242 PARTIAL → 243 NULL → 244 PASS) the FULL multi-relation engine (is-a/part-of/causal/comparison/temporal,
+  multi-hop each + interaction) runs ROBUSTLY on ONE typed substrate net from one prose passage (battery 1.00 both
+  seeds). The fix arc is the discipline in action: a brittle interaction (mis-diagnosed as a flake) → aggregation
+  fails (the error was SYSTEMATIC) → digging in exposed a DIAGNOSED-LESSON RECURRENCE (the chain root-stop re-used
+  SIM_STOP value-overlap, the JEP-236 bug) → the ENERGY-GATED chain stop (JEP-237 applied consistently) closes it.
+- (245 PARTIAL) the honest BOUNDARY: the substrate attractor store is MEMORY + DEDUCTIVE closure (chaining over
+  stored edges), NOT inductive generalization — a held-out bridge edge breaks the chain; generalization to unstated
+  subsumption needs proper geometric embeddings (hyperbolic/order, JEP-23-27), and naive VSA bundling (sign AND
+  analog) washes out deep ancestors.
+- (246 PASS) the GROUNDED loop closes through the substrate: a noisy perceptual cue (10% bit-flips) cleans up AND
+  reasons multi-hop as ONE energy process (1.00 at f=0.1, graceful degradation beyond the basin).
+- (247 PASS) the 'scalable linearly' claim VERIFIED: capacity ~0.5 edges/value-unit, M=40/60/80 → cap 20/30/~42,
+  sharp blackout cliff at every scale.
+
+Three NULL→fix/positive cycles (236→237, 240→241, 242→243→244). Cure hierarchy mapped: ENERGY-GATE (untrained-key
+detection: roots, empty slots), AGGREGATION (independent noise), CODES/CAPACITY (systematic interference);
+GEOMETRIC EMBEDDINGS (inductive generalization, a separate representation problem). The substrate-relational arc
+(JEP-232..247) is COMPREHENSIVELY complete: the energy substrate is the engine's robust, typed, multi-relation
+MEMORY + DEDUCTIVE-INFERENCE engine, online-learnable, grounded-loop-closing, linearly scalable, all boundaries
+honestly drawn. All ESTABLISHED methods (Hopfield CAM + iterated recall + VSA binding + Hopfield-energy detector +
+ensemble voting), named; NO novelty — the value is the demonstrated end-to-end connection + measured envelope, the
+concrete answer to "where is the substrate in the chain?" predict-calibrate 127/162 (78%, converged). Kill-switch
+absent; substrate physics thread (G1..G145) remains exhausted/idle.
