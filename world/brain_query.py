@@ -280,6 +280,16 @@ class BrainQuery:
             if v is not None and sc >= self.gate:
                 return " ".join(w.capitalize() for w in str(v).split("_"))
             return "I don't know that yet — teach me and ask again."
+        # temporal sequence endpoints (JEP-473): "what happened/came first/last?" -> source/sink of the before-graph
+        m = re.match(r"^what\s+(?:happened|happens|comes?|came|is|was)\s+(first|last)$", s)
+        if m:
+            befores = [(a, b) for (a, r, b) in self.mem.facts if r == "before"]
+            if befores:
+                heads = {a for a, _ in befores}; tails = {b for _, b in befores}
+                ends = sorted(heads - tails) if m.group(1) == "first" else sorted(tails - heads)
+                if len(ends) >= 1:
+                    return ends[0].replace("_", " ").capitalize()
+            return "I don't know that yet — teach me and ask again."
         # temporal/event ordering (JEP-472): before/after, forward / backward / transitive
         m = re.match(r"^what\s+(?:comes?|happens?|is)\s+after\s+(?:a\s+|an\s+|the\s+)?(\w+)$", s)
         if m:
