@@ -708,3 +708,14 @@ def test_read_comparison_relation():
     assert e.respond("is an elephant bigger than a mouse?") == "Yes."     # transitive (3-hop) from prose
     assert e.respond("is a mouse bigger than an elephant?").startswith("Not")
     assert e.is_a("dog", "mammal")                                        # is-a unaffected (no interference)
+
+
+def test_comparison_isa_interaction():
+    # JEP-186: comparison INTERACTS with taxonomy (a subtype inherits its supertype's comparative position)
+    e = UnderstandingEngine(seed=186)
+    e.read("An elephant is bigger than a dog. A dog is bigger than a cat. A poodle is a kind of dog. "
+           "A dog is a mammal. A lion is a mammal.")
+    assert e.respond("is an elephant bigger than a poodle?") == "Yes."   # smaller-side subtype (poodle is-a dog)
+    assert e.respond("is a poodle bigger than a cat?") == "Yes."         # bigger-side subtype (poodle is-a dog > cat)
+    assert e.respond("is an elephant bigger than a cat?") == "Yes."      # direct transitive (regression)
+    assert e.respond("is an elephant bigger than a lion?").startswith("Not")  # leak guard (lion is-a mammal, not dog)

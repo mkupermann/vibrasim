@@ -860,17 +860,24 @@ class UnderstandingEngine:
         return False
 
     def _order_holds(self, comp: str, x: str, z: str) -> bool:
-        """Transitive closure over a comparison relation: is x `comp`-than z (directly or transitively)?"""
+        """Transitive closure over a comparison relation, WITH the is-a interaction: a subtype inherits its
+        supertype's comparative position ('an elephant is bigger than a dog, a poodle is a dog' -> an elephant is
+        bigger than a poodle). Bigger-side subtype: seed from x's is-a ancestors. Smaller-side subtype: z satisfies
+        the target if z is-a a reached node. Mirrors the causal/is-a interaction (JEP-170)."""
         g = self._orders.get(comp, {})
         x, z = self._norm(x), self._norm(z)
-        stack, seen = [x], {x}
+        starts = {x} | (self.ancestors(x) if hasattr(self, "ancestors") else set())
+        reached, stack, seen = set(), list(starts), set(starts)
         while stack:
             cur = stack.pop()
             for y in g.get(cur, ()):
-                if y == z:
-                    return True
                 if y not in seen:
-                    seen.add(y); stack.append(y)
+                    seen.add(y); reached.add(y); stack.append(y)
+        if z in reached:
+            return True
+        for y in reached:                 # smaller-side subtype: z is-a a reached node -> x comp z
+            if self.is_a(z, y):
+                return True
         return False
 
     def describe(self, concept: str) -> str:
