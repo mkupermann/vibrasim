@@ -43,6 +43,10 @@ The energy SIGNAL is not the wall; the wall is **unsupervised non-linear feature
   "feature-cost == search-cost" claim I made in 438 — honesty over consistency.)
 - **JEP-441** random DEPTH (deep ELM) does not beat width — composition of random layers is still
   untargeted.
+- **JEP-442 (upper bound)** a LEARNED 2-layer net (backprop, reference baseline only) cracks order-3
+  parity at 1.000 with M=64 ≪ C(18,3)=816 and its feature-importance lands exactly on the true triple;
+  matched random features are at chance. So *learned* features escape cheaply — the gap is **non-local
+  targeted learning**, not capacity or enumeration.
 
 **Net frontier statement.** For an order-k rule with no lower-order signal, every cheap / backprop-
 free / non-enumerative route fails: greedy climbing (no gradient), flat random features (≳C(P,k),
