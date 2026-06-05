@@ -67,6 +67,8 @@ class SubstrateMemory:
         self.synonyms = {}                           # taught word->canonical English synonym map (JEP-418/419)
         self.strength = {}                           # fact -> times reinforced by experience (Hebbian, JEP-425)
         self.valence = {}                            # entity -> affective charge (+bright / -dark cloud, JEP-425)
+        self.energy = None                           # JEP-436: ValenceReservoirLearner — GENERALIZES taught valence
+        self.energy_seed = 0                          # to UNTAUGHT concepts from their feature-cloud (lazy-built)
 
     # ---- atom / vector helpers ----
     def _vec(self, name):
@@ -143,6 +145,35 @@ class SubstrateMemory:
         if value not in self.values:
             self.values.append(value)
         self.strength[key] = 1                                                 # first experience (Hebbian, JEP-425)
+
+    # ---- affective energy model (JEP-436): generalize valence to UNTAUGHT concepts ----
+    def entity_cloud(self, entity: str):
+        """An entity's distributed FEATURE cloud = normalized superposition of the value-vectors of its facts (its
+        properties). Concepts with similar properties get similar clouds, so a learned valence GENERALIZES across them.
+        Falls back to the entity's own atom vector when it has no facts yet."""
+        vecs = [self._vec(v) for (e, r, v) in self.facts if e == entity]
+        if not vecs:
+            return self._vec(entity).astype(np.float64)
+        c = np.sum(vecs, axis=0)
+        return (c / (np.linalg.norm(c) + 1e-9)).astype(np.float64)
+
+    def learn_valence(self, entity: str, valence: float):
+        """Teach an entity's affect (+bright / -dark) AND feed it to the energy model so the affect generalizes to
+        similar untaught concepts. Stores the exact taught value for direct recall (no generalization error on taught)."""
+        from world.valence_reservoir import ValenceReservoirLearner
+        self.valence[entity] = float(valence)
+        if self.energy is None:
+            self.energy = ValenceReservoirLearner(n_inputs=self.D, n_features=600, seed=self.energy_seed)
+        self.energy.experience(self.entity_cloud(entity), float(valence))
+
+    def predict_valence(self, entity: str):
+        """Affect of an entity: the exact taught value if known, else the energy model's GENERALIZED prediction from
+        the entity's feature-cloud (JEP-436). Returns None if nothing has been taught yet."""
+        if entity in self.valence:
+            return self.valence[entity]
+        if self.energy is None:
+            return None
+        return float(self.energy.feel(self.entity_cloud(entity)))
 
     def query(self, entity: str, role: str):
         """Recover the value bound to (entity, role): (value_name, similarity). Searches ALL modules and returns the
@@ -295,6 +326,11 @@ class SubstrateMemory:
         # the materialized closure edges are live facts, so they survive compaction -> keep the flag (JEP-375)
         new.closed_relations = set(self.closed_relations)
         new.synonyms = dict(self.synonyms); new.valence = dict(self.valence); new.strength = dict(self.strength)
+        # JEP-436: carry the energy model so generalized valence survives consolidation — but only if the dimension is
+        # unchanged (its random projection is tied to D; a rebuilt-at-new-D store needs the learner retrained).
+        new.energy_seed = self.energy_seed
+        if new.D == self.D:
+            new.energy = self.energy
         return new
 
     def consolidate_closure(self, relations=("isa",), target_D=None, auto_scale=False, reinforce=1.0):
@@ -355,6 +391,11 @@ class SubstrateMemory:
         new.learner = self.learner
         new.closed_relations = set(self.closed_relations) | set(relations)   # is-a now answerable single-hop (JEP-375)
         new.synonyms = dict(self.synonyms); new.valence = dict(self.valence); new.strength = dict(self.strength)
+        # JEP-436: carry the energy model so generalized valence survives consolidation — but only if the dimension is
+        # unchanged (its random projection is tied to D; a rebuilt-at-new-D store needs the learner retrained).
+        new.energy_seed = self.energy_seed
+        if new.D == self.D:
+            new.energy = self.energy
         return new
 
     # ---- persistence ----

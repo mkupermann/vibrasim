@@ -443,10 +443,16 @@ class Conversation:
         # affective valence: tag each entity with a bright(+)/dark(-) charge when an affective word is asserted of it
         # (Michael's energy-cloud model; established: affect/somatic-marker). JEP-425.
         for (a, r, b) in self.sm.facts[before:]:
-            if b in _AFFECT_POS:
-                self.sm.valence[a] = self.sm.valence.get(a, 0.0) + 1.0
-            elif b in _AFFECT_NEG:
-                self.sm.valence[a] = self.sm.valence.get(a, 0.0) - 1.0
+            delta = 1.0 if b in _AFFECT_POS else -1.0 if b in _AFFECT_NEG else 0.0
+            if delta == 0.0:
+                continue
+            new_val = self.sm.valence.get(a, 0.0) + delta
+            # JEP-436: train the energy model too, so affect GENERALIZES to untaught concepts.
+            learn = getattr(self.sm, "learn_valence", None)
+            if learn is not None:
+                learn(a, new_val)
+            else:
+                self.sm.valence[a] = new_val
 
     ROOTS = {"animal", "organism", "thing", "object", "plant", "matter", "substance", "concept", "idea",
              "place", "person", "event", "process", "material"}

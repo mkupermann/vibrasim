@@ -214,3 +214,33 @@ def test_noise_tolerance_improves_with_width():
         return ok / n
     assert recall(4096, 0.15) <= recall(8192, 0.15) + 1e-9
     assert recall(8192, 0.10) >= 0.9
+
+
+def test_energy_model_generalizes_valence_to_untaught_concepts():
+    """JEP-436: learn_valence trains the energy model so predict_valence GENERALIZES affect to
+    concepts never told their valence, from their feature-cloud — while returning taught values exact."""
+    import numpy as np
+    from world.substrate_memory import SubstrateMemory
+    dark = [f"dk_{i}" for i in range(5)]; bright = [f"br_{i}" for i in range(5)]; pool = dark + bright
+    rng = np.random.default_rng(0)
+
+    def populate(sm, names):
+        out = []
+        for nm in names:
+            feats = [pool[i] for i in rng.choice(len(pool), size=5, replace=False)]
+            for f in feats:
+                sm.add_fact(nm, "has", f)
+            nd = sum(f in dark for f in feats)
+            out.append((nm, -1.0 if nd > 5 - nd else 1.0))
+        return out
+
+    sm = SubstrateMemory(D=4096); sm.energy_seed = 0
+    train = populate(sm, [f"tr_{i}" for i in range(200)])
+    test = populate(sm, [f"te_{i}" for i in range(100)])     # facts only, valence NOT taught
+    for nm, v in train:
+        sm.learn_valence(nm, v)
+
+    held = sum(np.sign(sm.predict_valence(nm)) == v for nm, v in test) / len(test)
+    taught = sum(sm.predict_valence(nm) == v for nm, v in train) / len(train)
+    assert held >= 0.80          # generalizes to untaught concepts
+    assert taught == 1.0         # exact on taught (no regression)
