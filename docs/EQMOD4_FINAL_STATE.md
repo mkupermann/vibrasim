@@ -1,6 +1,6 @@
 # EQMOD-4 — Final State: the Understanding Engine (honest synthesis)
 
-The definitive, honest answer to "what have we reached?" — the culmination of the JEP programme (JEP-1..193).
+The definitive, honest answer to "what have we reached?" — the culmination of the JEP programme (JEP-1..221).
 No LLM, no transformer, no pretrained model anywhere. Everything below is established methods, named as such; the
 genuine outputs are the WORKING ENGINE, a handful of real CONCEPTUAL findings, and the predict-calibrate DISCIPLINE.
 
@@ -28,7 +28,7 @@ genuine outputs are the WORKING ENGINE, a handful of real CONCEPTUAL findings, a
 
 ## Validated
 Property-based SOUND, fuzz ROBUST (0 crashes/6000 adversarial), SCALABLE (1000 concepts), STRUCTURAL not lexical,
-and a comprehensive end-to-end INTEGRATION test. 63 regression tests, every commit gated green.
+a comprehensive end-to-end INTEGRATION test, a multi-domain integration guard, and re-validation of the matured engine. 87 regression tests, every commit gated green.
 
 ## Genuine conceptual findings (the real intellectual output)
 1. **Compounding vs aggregation** is universal across structure-learning, reasoning, and learn-from-prose: chained
@@ -56,4 +56,4 @@ that does learn/understand/communicate/ground end to end under a hard constraint
 characterized as to why it is open and what would unblock it. predict-calibrate 110/137 (80%, converged), converging within
 settled domains, no diagnosed lesson recurred; the discipline (pre-registration, honest NULLs, the 12 recurring
 error classes) is the transferable deliverable. Guides: docs/UNDERSTANDING_ENGINE.md, docs/EQMOD4_GUIDE.md; patterns:
-docs/patterns/; demos: tools/demo_{learn_from_prose,grounded_understanding,full_conversation}.py.
+docs/patterns/; demos: tools/demo_{learn_from_prose,grounded_understanding,full_conversation,full_qa}.py.
