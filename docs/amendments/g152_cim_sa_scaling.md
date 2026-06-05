@@ -53,6 +53,8 @@ the modest sweep budget — if SA looks under-resourced (anneal_ratio low) that 
 favorably with n than the CIM grid (12 runs), so SA is mildly under-resourced at n=600 (ratio 0.992 vs CIM
 0.997). A budget-matched SA would very plausibly re-tie. The defensible claim is therefore the **near-tie**,
 not "CIM beats SA." Recorded as HOLDS, with this caveat explicit rather than spun into a false positive.
+**→ CONFIRMED by G153:** a generous numba SA beats CIM-AHC **8/8** at n=450 & 600 (~+1.7%); the n=600 CIM
+lead was indeed a budget artifact, and classical SA is marginally best at matched budget.
 
 **Net (G150→G152).** The session's scoped positive — *a properly-engineered AHC-CIM beats correct local
 search and is competitive (near-tie) with classical SA* — is now both **family-robust** (Gaussian + ±1, G151)
