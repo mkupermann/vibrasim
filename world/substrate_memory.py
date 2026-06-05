@@ -236,6 +236,42 @@ class SubstrateMemory:
         new.learner = self.learner
         return new
 
+    def consolidate_closure(self, relations=("isa",)):
+        """Consolidation (the relational analogue of dream consolidation G15/G18): materialize the TRANSITIVE CLOSURE
+        of the given transitive relations, so every node->ancestor edge is stored DIRECTLY. This turns multi-hop
+        queries (e.g. deep is-a) into SINGLE-hop lookups that do not compound per-hop cleanup error — the lever proven
+        in JEP-370 to restore deep within-domain reasoning at scale (where the hop-by-hop walk collapses). Negations
+        are respected: an ancestor edge is NOT materialized through a node that explicitly denies it (not_<rel>).
+        Returns a fresh SubstrateMemory; all original answers are preserved, plus the derived transitive edges.
+        Idempotent. Cost: more stored edges (~depth x), a tunable storage-for-accuracy trade."""
+        new = SubstrateMemory(D=self.D, tau=self.learner.tau, module_cap=self.module_cap, directed=self.directed)
+        for (a, r, b) in self.facts:                              # keep every original fact
+            new.add_fact(a, r, b)
+        for rel in relations:
+            neg = "not_" + rel
+            denied = {(s, o) for (s, r, o) in self.facts if r == neg}
+            parents = {}                                         # node -> direct parents for this relation
+            for (s, r, o) in self.facts:
+                if r == rel:
+                    parents.setdefault(s, []).append(o)
+            def ancestors(node, seen):
+                out = []
+                for p in parents.get(node, []):
+                    if (node, p) in denied or p in seen:
+                        continue
+                    seen.add(p); out.append(p); out.extend(ancestors(p, seen))
+                return out
+            existing = {(s, r, o) for (s, r, o) in new.facts}
+            for node in list(parents.keys()):
+                for anc in ancestors(node, {node}):
+                    if (node, anc) in denied:
+                        continue
+                    if (node, rel, anc) not in existing:
+                        new.add_fact(node, rel, anc); existing.add((node, rel, anc))
+        new.sentences = list(self.sentences)
+        new.learner = self.learner
+        return new
+
     # ---- persistence ----
     def save(self, d: str):
         os.makedirs(d, exist_ok=True)
