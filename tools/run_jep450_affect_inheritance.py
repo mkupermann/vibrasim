@@ -5,11 +5,12 @@ ancestor must NOT inherit. Pre-registered bars in docs/amendments/jep450_affect_
 import json
 from pathlib import Path
 
+import tempfile
 from world.conversation import Conversation
 
 
 def run(seed):
-    c = Conversation()
+    c = Conversation(brain_dir=tempfile.mkdtemp())  # clean-room (lesson #16)
     # affect on a PARENT class + taxonomy (scary branch)
     for s in ["Snakes are scary.", "A snake is a reptile.", "A cobra is a snake.",
               "A python is a snake.",

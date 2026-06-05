@@ -6,11 +6,12 @@ docs/amendments/jep451_affect_inheritance_gated.md.
 import json
 from pathlib import Path
 
+import tempfile
 from world.conversation import Conversation
 
 
 def run(seed):
-    c = Conversation()
+    c = Conversation(brain_dir=tempfile.mkdtemp())  # clean-room (lesson #16)
     for s in ["Snakes are evil.", "A snake is a reptile.", "A cobra is a snake.",
               "A python is a snake.", "A desk is a table.", "A table is furniture."]:
         c.say(s)
