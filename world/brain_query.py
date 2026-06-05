@@ -258,6 +258,17 @@ class BrainQuery:
             if p in ("legs", "leg"):
                 return self.how_many(x) not in (None, 0)
             return self.has_property(x, p) or self.part_of(p.rstrip("s"), x)
+        m = re.match(r"is (\w+) in (\w+)$", s)          # 'is Paris in France?' -> verify located_in (JEP-410)
+        if m:
+            v, sc = self.mem.query(self._sing(m.group(1)), "located_in")
+            return bool(v is not None and sc >= self.gate and v == self._sing(m.group(2)))
+        m = re.match(r"(?:does|do) (\w+) (\w+) (?:a |an |the )?(\w+)$", s)   # 'does Michael like coffee?' verify (JEP-410)
+        if m and m.group(2) != "have":
+            x, verb, obj = self._sing(m.group(1)), m.group(2), self._sing(m.group(3))
+            objs = []                                    # try verb variants (like<->likes) like what() does
+            for v in (verb, verb + "s", verb + "es", verb + "d", verb + "ed", verb.rstrip("s")):
+                objs += self.what_did(x, v) or []
+            return obj in objs
         m = re.match(r"what causes (\w+)$", s)
         if m:
             return self.why(m.group(1)) or None
