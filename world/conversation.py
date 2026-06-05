@@ -117,7 +117,7 @@ class Conversation:
         for sent in re.split(r"(?<=[.!])\s+", text if text.endswith(('.', '!')) else text + "."):
             sent = sent.strip()
             if sent:
-                self.sm.learn_sentence(sent, self.eng)
+                self._learn_one(sent)
         grew = len(self.sm.facts) - before
         base = (f"Got it — I learned {grew} new fact{'s' if grew != 1 else ''} (I now know "
                 f"{len(self.sm.facts)} facts)." if grew else "Noted (nothing new to me there).")
@@ -129,6 +129,49 @@ class Conversation:
             base += " " + oq
         return base
 
+    _NUMW = {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7, "eight": 8,
+             "nine": 9, "ten": 10, "zero": 0}
+
+    @staticmethod
+    def _singular(w):
+        if w.endswith("ies") and len(w) > 4:
+            return w[:-3] + "y"
+        if w.endswith("ses") or w.endswith("xes") or w.endswith("ches") or w.endswith("shes"):
+            return w[:-2]
+        if w.endswith("s") and not w.endswith("ss"):
+            return w[:-1]
+        return w
+
+    def _normalize_for_learning(self, s):
+        """Rewrite common encyclopedic forms into engine-parseable ones (JEP-348). Returns (sentence, extra_facts)."""
+        extra = []
+        t = s.strip()
+        # 'is a kind/type/sort of' -> 'is a'
+        t = re.sub(r"\bis\s+(an?)\s+(?:kind|type|sort)\s+of\b", r"is \1", t, flags=re.I)
+        # numeric possession: 'A dog has four/4 legs' -> add (dog, has_<noun>, N)
+        m = re.search(r"\b([A-Za-z]+)\s+has\s+(\w+)\s+([a-z]+s)\b", t, flags=re.I)
+        if m:
+            subj = self._singular(m.group(1).lower())
+            cnt = m.group(2).lower()
+            num = self._NUMW.get(cnt, cnt if cnt.isdigit() else None)
+            if num is not None and subj not in ("a", "an", "the"):
+                extra.append((subj, f"has_{m.group(3).lower()}", str(num)))   # full noun -> e.g. has_legs
+        # plural is-a: 'Dogs are carnivores' / 'Dogs are domesticated animals' -> 'A dog is a <head noun>'
+        m = re.match(r"^([A-Z][a-z]+)s\s+are\s+(?:a\s+)?(.+?)\.?$", t)
+        if m and " " not in m.group(1):
+            subj = self._singular((m.group(1)).lower())
+            obj_head = self._singular(m.group(2).strip().rstrip(".").split()[-1].lower())  # head noun
+            art = "an" if obj_head[0] in "aeiou" else "a"
+            t = f"A {subj} is {art} {obj_head}."
+        return t, extra
+
+    def _learn_one(self, sentence):
+        rewritten, extra = self._normalize_for_learning(sentence)
+        self.sm.learn_sentence(rewritten, self.eng)
+        for (a, r, b) in extra:
+            if (a, r, b) not in set(self.sm.facts):
+                self.sm.add_fact(a, r, b)
+
     ROOTS = {"animal", "organism", "thing", "object", "plant", "matter", "substance", "concept", "idea",
              "place", "person", "event", "process", "material"}
 
@@ -139,7 +182,7 @@ class Conversation:
         sents = [s.strip() for s in re.split(r"(?<=[.!?])\s+", text.replace("\n", " ")) if s.strip()]
         for s in sents:
             if not self.is_question(s):
-                self.sm.learn_sentence(s, self.eng)
+                self._learn_one(s)
         grew = len(self.sm.facts) - before
         concepts = len({a for (a, r, b) in self.sm.facts if r == "isa"} |
                        {b for (a, r, b) in self.sm.facts if r == "isa"})
