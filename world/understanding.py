@@ -183,10 +183,15 @@ class UnderstandingEngine:
         art = r"(?:(?:an|a|the)\s+)?"
         np = rf"{art}([a-z][a-z\- ]*?)"
         learned = {"is_a": 0, "part_of": 0, "causal": 0}
+        last_subject = None     # most-recent subject, for recency-based cross-sentence pronoun resolution
         for s in re.split(r"[.;:]\s+", passage.strip().lower()):
             s = s.strip().rstrip(".")
             if not s:
                 continue
+            # recency coreference: a sentence-initial pronoun ('It is a mammal') -> the last subject (heuristic)
+            mp = re.match(r"^(it|they|this|these|he|she)\s+(is|are)\s+(.*)$", s)
+            if mp and last_subject is not None:
+                s = f"{last_subject} {mp.group(2)} {mp.group(3)}"
             # 'X such as A and B' -> (A,X),(B,X)  (do first; it is unambiguous)
             m = re.search(rf"\b{np}\s+such\s+as\s+(.+)$", s)
             if m:
@@ -248,6 +253,8 @@ class UnderstandingEngine:
                         if self._bare_np(p) and self._valid_concept(p):
                             parents.append(p)
                     # bare non-plural predicate (adjective/property: 'common','friendly') -> skip, not is-a
+                if subjects:
+                    last_subject = subjects[0]                 # remember for the next sentence's pronoun
                 if subjects and parents:
                     for sub in subjects:
                         for par in parents:

@@ -494,3 +494,16 @@ def test_read_no_adjective_false_positives():
     assert not e.is_a("dog", "loyal")
     assert not e.is_a("cat", "friendly")
     assert e._norm("horses") == "horse" and e._norm("roses") == "rose" and e._norm("glasses") == "glass"
+
+
+def test_read_recency_pronoun_resolution():
+    # JEP-163: cross-sentence recency coreference closes the common 'X is A. It is B.' pattern
+    e = UnderstandingEngine(seed=163)
+    e.read("A wolf is a canine. It is a mammal. A mammal is an animal.")
+    assert e.is_a("wolf", "canine")
+    assert e.is_a("wolf", "mammal")      # 'It' -> wolf (most recent subject)
+    assert e.is_a("wolf", "animal")      # multi-hop after pronoun resolution
+    # pronoun + adjective predicate still adds nothing (FP guard survives resolution)
+    e2 = UnderstandingEngine(seed=1)
+    e2.read("A cat is a feline. It is independent.")
+    assert not e2.is_a("cat", "independent")
