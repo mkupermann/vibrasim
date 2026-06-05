@@ -79,7 +79,16 @@ class BrainQuery:
         return False
 
     def why(self, effect):
-        return sorted(c for (c, _) in self.mem.query_all(effect, "caused_by", self.gate))
+        # trace the causal chain transitively (immediate causes first, then their causes) — JEP-400.
+        out, seen, frontier = [], {effect}, [effect]
+        while frontier:
+            nxt = []
+            for e in frontier:
+                for (c, _) in self.mem.query_all(e, "caused_by", self.gate):
+                    if c not in seen:
+                        seen.add(c); out.append(c); nxt.append(c)
+            frontier = nxt
+        return out
 
     def how_many(self, x, part="legs"):
         role = f"has_{part}"                              # JEP-390: any counted part, not just legs
@@ -209,7 +218,10 @@ class BrainQuery:
             return self.has_property(x, p) or self.part_of(p.rstrip("s"), x)
         m = re.match(r"what causes (\w+)$", s)
         if m:
-            return self.why(m.group(1))
+            return self.why(m.group(1)) or None
+        m = re.match(r"why does (\w+) happen$", s) or re.match(r"why (\w+)$", s)   # 'why does X happen?' -> abduction
+        if m:
+            return self.why(self._sing(m.group(1))) or None
         m = re.match(r"what is (\w+)$", s)               # "what is a poodle?" -> its most-specific parent class
         if m:
             return self._most_specific_parent(m.group(1))   # deepest ancestor after consolidation (JEP-397)
