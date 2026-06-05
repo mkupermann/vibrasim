@@ -75,7 +75,12 @@ beyond symbolic is graded plausibility/confidence, not an accuracy win. VALIDATE
 (JEP-251: is-a 0.998 match over 50 random taxonomies × 2 seeds, 0 systematic leaks; JEP-252: is-a/part-of/causal/
 comparison/temporal each 1.00 over 30 chains × 2 seeds, 0 systematic AND 0 cross-relation leaks — typed binding
 isolates relations at scale; residual = occasional non-systematic retrieval flakes, aggregation-curable) —
-paralleling the symbolic engine's JEP-124 soundness. All established
+paralleling the symbolic engine's JEP-124 soundness.
+- **Three-verb loop closed** (253) — the full LEARN→UNDERSTAND→COMMUNICATE loop runs THROUGH the substrate: read
+  prose → store → energy-gated multi-hop reasoning → render English STRING-IDENTICAL to the symbolic engine (1.00
+  both seeds, incl a depth-5 chain). The substrate is the engine's complete relational stack (memory + inference +
+  communication + grounding), no transformer anywhere — the substrate supplies reasoning, the engine's template
+  supplies grammar. All established
 (Hopfield CAM + iterated associative recall + VSA binding + Hopfield energy as a stored-vs-spurious detector +
 ensemble voting), named; NO novelty — the value is the demonstrated end-to-end connection + its measured envelope.
 Pattern: docs/patterns/substrate_relational_store.md.
