@@ -760,17 +760,25 @@ class UnderstandingEngine:
         causes = getattr(self, "causes", {})
         x, z = self._norm(x), self._norm(z)
         iv = self._norm(intervene) if intervene else None
-        out, stack, seen = set(), [x], {x}
+        # cause-side is-a: a SUBTYPE inherits its supertypes' causal powers ('a poodle is a dog, a dog causes
+        # allergies' -> a poodle causes allergies). So seed the search with x AND its is-a ancestors.
+        starts = {x} | (self.ancestors(x) if hasattr(self, "ancestors") else set())
+        reached, stack, seen = set(), list(starts), set(starts)
         while stack:
             cur = stack.pop()
             for nxt in causes.get(cur, ()):
                 # do(iv) cuts edges INTO iv: a cause cur->iv no longer propagates (iv is set, not caused)
                 if nxt == iv:
                     continue
-                if nxt == z:
-                    return True
                 if nxt not in seen:
-                    seen.add(nxt); stack.append(nxt)
+                    seen.add(nxt); reached.add(nxt); stack.append(nxt)
+        if z in reached:
+            return True
+        # effect-side is-a: X causes Y, Y is-a Z -> X causes Z ('causes cancer, cancer is a disease' -> causes a
+        # disease). NOTE: NOT the reverse (an effect's SUBtype is not entailed: 'causes cancer' =/= every cancer kind).
+        for y in reached:
+            if self.is_a(y, z):
+                return True
         return False
 
     def add_rule(self, target: str, r1: str, r2: str) -> None:
