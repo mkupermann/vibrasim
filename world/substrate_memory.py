@@ -408,14 +408,21 @@ class SubstrateMemory:
                 ex_rows.append(np.asarray(v, dtype=np.float64)); ex_mod.append(mod); ex_sym.append(sym)
         EX = np.stack(ex_rows) if ex_rows else np.zeros((0, 0))
         modules = np.stack(self.modules)             # (n_modules, D) — the growing brain
-        np.savez(os.path.join(d, "vectors.npz"), modules=modules, EX=EX,
-                 ex_mod=np.array(ex_mod, dtype=object), ex_sym=np.array(ex_sym, dtype=object))
+        arrays = {"modules": modules, "EX": EX,
+                  "ex_mod": np.array(ex_mod, dtype=object), "ex_sym": np.array(ex_sym, dtype=object)}
+        energy_meta = {"present": False}
+        if self.energy is not None:                  # JEP-437: persist the energy model's readout state
+            arrays["energy_w"] = np.asarray(self.energy.w, dtype=np.float64)
+            arrays["energy_P"] = np.asarray(self.energy.P, dtype=np.float64)
+            energy_meta = {"present": True, "seed": int(self.energy_seed), "M": int(self.energy.M)}
+        np.savez(os.path.join(d, "vectors.npz"), **arrays)
         meta = {
             "D": self.D, "module_cap": self.module_cap, "module_counts": self.module_counts,
             "directed": self.directed, "facts": self.facts, "values": self.values,
             "sentences": self.sentences, "key_modules": self.key_modules,
             "closed_relations": sorted(self.closed_relations), "synonyms": self.synonyms,
             "valence": self.valence, "strength": {"|".join(k): v for k, v in self.strength.items()},
+            "energy": energy_meta,
             "learner": {"tau": self.learner.tau, "max_exemplars": self.learner.max_exemplars,
                         "n_asked": self.learner.n_asked, "n_seen": self.learner.n_seen,
                         "fit": {k: list(v) for k, v in self.learner._fit.items()}},
@@ -450,4 +457,11 @@ class SubstrateMemory:
         EX, mods, syms = z["EX"], z["ex_mod"], z["ex_sym"]
         for i in range(len(mods)):
             self.learner.protos.setdefault((str(mods[i]), str(syms[i])), []).append(EX[i].astype(np.float64))
+        em = meta.get("energy", {"present": False})           # JEP-437: restore the energy model if it was saved
+        if em.get("present") and "energy_w" in z:
+            from world.valence_reservoir import ValenceReservoirLearner
+            self.energy_seed = int(em.get("seed", 0))
+            self.energy = ValenceReservoirLearner(n_inputs=self.D, n_features=int(em["M"]), seed=self.energy_seed)
+            self.energy.w = z["energy_w"].astype(np.float64)   # R,b already re-seeded identically in __init__
+            self.energy.P = z["energy_P"].astype(np.float64)
         return self
