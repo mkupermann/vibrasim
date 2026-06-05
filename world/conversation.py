@@ -11,6 +11,12 @@ import re
 QUESTION_STARTS = ("is ", "are ", "can ", "does ", "do ", "what ", "why ", "who ", "how ", "where ", "which ",
                    "tell me ", "describe ")          # treat 'tell me about X' / 'describe X' as questions to answer
 
+# affective lexicon (Michael's energy-cloud valence: bright(+) / dark(-)), JEP-425. Established: affect/somatic-marker.
+_AFFECT_POS = {"good", "kind", "beautiful", "wonderful", "happy", "love", "peace", "brave", "honest", "gentle",
+               "wise", "noble", "pure", "joy", "joyful", "friendly", "generous", "loyal", "calm", "safe", "healthy"}
+_AFFECT_NEG = {"bad", "evil", "cruel", "ugly", "terrible", "hate", "war", "fear", "violent", "dishonest", "selfish",
+               "wicked", "dangerous", "toxic", "painful", "sad", "angry", "greedy", "hostile", "harmful", "sick"}
+
 
 class Conversation:
     def __init__(self, brain_dir=None, seed: int = 0):
@@ -427,15 +433,20 @@ class Conversation:
         sents, extra = self._normalize_for_learning(sentence)
         for st in sents:
             self.sm.learn_sentence(st, self.eng)
-        have = set(self.sm.facts)
         for (a, r, b) in extra:
-            if (a, r, b) not in have:
-                self.sm.add_fact(a, r, b); have.add((a, r, b))
+            self.sm.add_fact(a, r, b)             # add_fact dedups internally; re-adds strengthen it (Hebbian, JEP-425)
         # self-extended reading (JEP-357): if nothing was extracted, try a learned construction
         if len(self.sm.facts) == before and self._constr_templates:
             f = self._apply_learned_constructions(sentence)
-            if f and f not in have:
+            if f and f not in set(self.sm.facts):
                 self.sm.add_fact(*f)
+        # affective valence: tag each entity with a bright(+)/dark(-) charge when an affective word is asserted of it
+        # (Michael's energy-cloud model; established: affect/somatic-marker). JEP-425.
+        for (a, r, b) in self.sm.facts[before:]:
+            if b in _AFFECT_POS:
+                self.sm.valence[a] = self.sm.valence.get(a, 0.0) + 1.0
+            elif b in _AFFECT_NEG:
+                self.sm.valence[a] = self.sm.valence.get(a, 0.0) - 1.0
 
     ROOTS = {"animal", "organism", "thing", "object", "plant", "matter", "substance", "concept", "idea",
              "place", "person", "event", "process", "material"}

@@ -215,10 +215,24 @@ class BrainQuery:
             return None
         return " ".join(w.capitalize() for w in str(v).split("_"))
 
+    def _valence(self, x):
+        return getattr(self.mem, "valence", {}).get(self._sing(x), 0.0)
+
     # ---- tiny natural-question parser ----
     def ask(self, q):
         s = q.strip().lower().rstrip("?").strip()
         s = re.sub(r"\bwas\b", "is", s); s = re.sub(r"\bwere\b", "are", s)   # past tense -> present (JEP-405)
+        # affective valence (Michael's energy-cloud: bright/dark) — JEP-425
+        m = re.match(r"^is\s+(?:a\s+|an\s+|the\s+)?(\w+)\s+(good|positive|bright|nice)$", s)
+        if m:
+            return self._valence(m.group(1)) > 0
+        m = re.match(r"^is\s+(?:a\s+|an\s+|the\s+)?(\w+)\s+(bad|negative|dark|evil)$", s)
+        if m:
+            return self._valence(m.group(1)) < 0
+        m = re.match(r"^what is the (?:energy|valence|feeling|charge) of (?:a\s+|an\s+|the\s+)?(\w+)$", s)
+        if m:
+            val = self._valence(m.group(1))
+            return ("bright (positive energy)" if val > 0 else "dark (negative energy)" if val < 0 else "neutral")
         # attribute questions FIRST (before articles are stripped, to keep 'your'): JEP-404
         m = re.match(r"^(?:who|what)\s+is\s+your\s+([a-z]+)$", s)
         if m:
