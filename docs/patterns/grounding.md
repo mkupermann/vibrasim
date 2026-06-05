@@ -111,3 +111,21 @@ HONEST SCOPE: still PIXEL grounding (visual, not functional — a sneaker and a 
 recurring METHOD lesson reinforced here (JEP-180/187): a downstream metric must DISCRIMINATE the failure mode — 'is
 it an object?' when every class is an object measures nothing; use a class-discriminating probe. Established
 (agglomerative clustering, prototype perception, cross-situational naming); named; no novelty.
+
+## Hierarchical discovery + VISION/LANGUAGE complementarity at granularity (JEP-188/189/190)
+Extending the developmental loop beyond flat object concepts:
+- GROUNDING RELATIONS (188): a spatial relation is grounded from perceived geometry (positions) and composes with the
+  spatial faculty (transitive/inverse/perspective) AND prose-learned taxonomy. Grounding goes object -> relation
+  (for relations with a perceptual signature; non-geometric relations need interaction data).
+- HIERARCHICAL discovery (189): hierarchical clustering of real images recovers a PARTIAL taxonomy — the COARSE
+  super-categories (footwear vs tops, 0.87) are MORE visually separable than the FINE classes (0.62). Emergent and
+  slightly counter-intuitive: in pixel space, shape-based super-categories separate cleanly while appearance-similar
+  fine classes overlap. Visual similarity aligns with COARSE semantic structure but diverges at the FINE level.
+- VISION+LANGUAGE COMPLEMENTARITY (190): because vision blurs fine classes, LANGUAGE (a few fine labels) sharpens
+  them — language-supervised fine accuracy 0.72 > vision-only unsupervised 0.54. So vision and language are
+  COMPLEMENTARY at different GRANULARITIES: vision yields reliable COARSE categories from raw experience, language
+  acquires the FINE distinctions vision cannot resolve. THE HUMAN DEVELOPMENTAL PATTERN: coarse categories from
+  perception, fine distinctions from naming — neither alone suffices, together they cover both granularities.
+This is the genuine shape of grounded concept learning under the constraint: perception bootstraps the coarse
+structure, language refines it. Functional/affordance grounding (JEP-62) remains the open frontier (needs interaction
+data). Established (hierarchical clustering, semi-supervised naming); named; no novelty.
