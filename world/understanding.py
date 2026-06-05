@@ -458,7 +458,9 @@ class UnderstandingEngine:
                    "tiredness", "happiness", "sadness", "darkness", "health", "wealth", "evidence", "research",
                    "traffic", "weather", "homework", "progress", "pain", "fun", "luck", "fame",
                    "gravity", "friction", "electricity", "momentum", "radiation", "steam", "smoke",
-                   "dust", "air", "heat", "sunlight", "gravity", "magnetism", "humidity"}
+                   "dust", "air", "heat", "sunlight", "gravity", "magnetism", "humidity",
+                   "iron", "copper", "gold", "silver", "steel", "aluminum", "aluminium", "bronze", "brass",
+                   "tin", "lead", "zinc", "nickel", "salt", "sugar", "oil", "coal", "rust", "concrete", "cement"}
     _COUNTABLE_NESS = {"business", "witness", "illness", "likeness", "wilderness", "harness"}
     _NUM_WORDS = ("zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
                   "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen",
