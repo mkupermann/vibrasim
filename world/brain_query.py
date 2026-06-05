@@ -260,6 +260,16 @@ class BrainQuery:
         m = re.match(r"what is (\w+)$", s)               # "what is a poodle?" -> its most-specific parent class
         if m:
             return self._most_specific_parent(m.group(1))   # deepest ancestor after consolidation (JEP-397)
+        m = re.match(r"what (?:does|do) (\w+)s? have$", s)    # 'what does a dog have?' -> its parts (JEP-407)
+        if m:
+            x = self._sing(m.group(1))
+            targets = set(self._ancestors(x, "isa"))
+            parts = sorted({p for (p, r, o) in self.mem.facts if r == "partof" and o in targets})
+            return parts or None
+        m = re.match(r"what do (\w+) (\w+)$", s)              # 'what do dogs eat?' -> forward open-relation (JEP-407)
+        if m:
+            x = self._sing(m.group(1))
+            return self.what_did(x, m.group(2)) or self.what(x, m.group(2)) or None
         m = re.match(r"what does (\w+) (\w+)$", s)
         if m:
             return self.what(m.group(1), m.group(2))
