@@ -563,3 +563,16 @@ def test_respond_multirelation_questions():
     assert "fever" in e.respond("what does a virus cause?").lower()
     # capitalization correct (no .capitalize() flattening)
     assert "as far as I know" in e.respond("is a heart part of a cat?")
+
+
+def test_part_of_isa_interaction():
+    # JEP-169: mereology INTERACTS with taxonomy (correctly, without leaking)
+    e = UnderstandingEngine(seed=169)
+    e.read("A dog is a mammal. A mammal is an animal. A heart is part of a dog. A cell is part of a heart. "
+           "A poodle is a kind of dog. A cat is a mammal.")
+    assert e.part_of("heart", "animal")     # whole's supertype: a dog's heart is part of an animal
+    assert e.part_of("cell", "animal")      # 2-hop part-of + is-a
+    assert e.part_of("heart", "poodle")     # whole's subtype inherits the part: a poodle has a heart
+    assert not e.part_of("heart", "cat")    # CRITICAL: up-then-down must NOT leak (dog's heart != cat's part)
+    assert not e.is_a("heart", "animal")    # part-of is still NOT is-a
+    assert not e.part_of("animal", "heart") # asymmetric

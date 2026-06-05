@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 60 / predictions 84 (JEP-168 HIT — respond() answers part-of + causal questions over read knowledge; conversational Q&A loop closed) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
+Running tally: hits 61 / predictions 85 (JEP-169 HIT — mereology/taxonomy interaction: a dog's heart is part of an animal, with the up-then-down leak guarded) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
 
 | id | prediction (🔮 before) | outcome | hit? | lesson (don't repeat) |
 |----|------------------------|---------|------|------------------------|
@@ -91,3 +91,4 @@ Running tally: hits 60 / predictions 84 (JEP-168 HIT — respond() answers part-
 | JEP-166 | 🔮 has-part + -ves + head-noun raise recall 0.60 -> ~0.80, precision high | recall 0.90 (exceeded), 0 spurious; only ambiguous double-binding remains | HIT | read() now 0.90 recall / high precision on connected encyclopedic prose; residual is genuine NL ambiguity. |
 | JEP-167 | 🔮 generalizes to shared phrasings; geo/tech drop on characteristic constructions | bio/tech 1.00, geo 0.71 ('located in'); fixed -> all 1.00 | HIT | Recall is construction-coverage limited not domain-limited; spatial 'located in' -> part-of added. |
 | JEP-168 | 🔮 part-of + causal question handlers close conversational Q&A, no is-a interference | all multi-relation questions answered correctly; ordering clean | HIT | Engine learns from a passage and converses about it across is-a/part-of/causal in English. |
+| JEP-169 | 🔮 part-of/is-a interaction absent (gap); both valid; leak risk | both implemented, part_of(heart,animal/poodle) True, part_of(heart,cat) stays False | HIT | Distinct relation types interact with correct bounded semantics; no up-then-down leak. |
