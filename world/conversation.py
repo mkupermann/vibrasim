@@ -28,12 +28,27 @@ class Conversation:
         t = text.strip().lower()
         return t.endswith("?") or t.startswith(QUESTION_STARTS)
 
+    def _resolve_pronoun(self, text):
+        """Replace a standalone 'it' with the last subject discussed (so 'can it bark?' follows 'a poodle ...')."""
+        if getattr(self, "_last_subject", None):
+            return re.sub(r"\bit\b", self._last_subject, text)
+        return text
+
+    def _track_subject(self, text):
+        # remember the last concrete noun mentioned (after a/an/the, or after is/can/does) for pronoun binding
+        m = re.search(r"\b(?:a|an|the)\s+([a-z]+)\b", text.lower()) or \
+            re.search(r"\b(?:is|can|does|about)\s+([a-z]+)\b", text.lower())
+        if m and m.group(1) not in ("it", "kind", "type"):
+            self._last_subject = m.group(1)
+
     def say(self, text):
         text = text.strip()
         if not text:
             return ""
         if self.is_question(text):
             from world.brain_query import BrainQuery
+            text = self._resolve_pronoun(text)
+            self._track_subject(text)
             ans = BrainQuery(self.sm, seed=self.seed).ask(text)
             if ans is None:
                 return "I don't know that yet — teach me and ask again."
@@ -43,6 +58,7 @@ class Conversation:
                 return (", ".join(ans) if ans else "Nothing I know of") + "."
             return str(ans)
         # STATEMENT -> learn; report how the memory grew
+        self._track_subject(text)
         before = len(self.sm.facts)
         for sent in re.split(r"(?<=[.!])\s+", text if text.endswith(('.', '!')) else text + "."):
             sent = sent.strip()
