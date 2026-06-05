@@ -576,3 +576,17 @@ def test_part_of_isa_interaction():
     assert not e.part_of("heart", "cat")    # CRITICAL: up-then-down must NOT leak (dog's heart != cat's part)
     assert not e.is_a("heart", "animal")    # part-of is still NOT is-a
     assert not e.part_of("animal", "heart") # asymmetric
+
+
+def test_causal_isa_interaction_asymmetry():
+    # JEP-170: causal INTERACTS with taxonomy, but ASYMMETRICALLY vs mereology (effect-subtype NOT entailed)
+    e = UnderstandingEngine(seed=170)
+    e.read("Smoking causes cancer. A cancer is a disease. A disease is a condition. "
+           "A poodle is a dog. A dog causes allergies. A lung-cancer is a cancer.")
+    assert e.causes_effect("smoking", "disease")        # effect-side UP: cancer is-a disease
+    assert e.causes_effect("smoking", "condition")      # 2-hop effect supertype
+    assert e.causes_effect("poodle", "allergy")         # cause-side subtype inherits causal power
+    assert e.causes_effect("smoking", "cancer")         # direct (regression)
+    assert not e.causes_effect("smoking", "lung_cancer")  # effect-SUBtype NOT entailed (the asymmetry vs part-of)
+    assert not e.causes_effect("animal", "allergy")     # supertype does NOT inherit a subtype's causal power
+    assert not e.causes_effect("disease", "smoking")    # asymmetric
