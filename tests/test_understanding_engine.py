@@ -842,3 +842,16 @@ def test_read_unified_fixed_and_open():
     assert out.get("open", {}).get("is capital of") == 2
     assert e.is_a("dog", "animal") and e.part_of("heart", "dog")
     assert e.relation_true("paris", "is capital of", "france")
+
+
+def test_open_relation_wh_question():
+    # JEP-206: answer natural WH questions over a learned open relation ('what is the capital of France?' -> Paris)
+    e = UnderstandingEngine(seed=206)
+    e.read("Paris is the capital of France. London is the capital of England. "
+           "Einstein discovered relativity. Darwin discovered evolution.")   # 'discovered' x2 -> induced
+    assert e.respond("what is the capital of France?") == "Paris."
+    assert e.respond("what is the capital of England?") == "London."
+    assert e.respond("what discovered relativity?") == "Einstein."
+    assert e.respond("what is the capital of Spain?").startswith("I don't know")
+    e.read("A dog is a mammal.")
+    assert e.respond("what is a dog?") == "A dog is a mammal."     # generic WH unaffected
