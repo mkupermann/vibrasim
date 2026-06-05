@@ -5452,3 +5452,19 @@ instances where correct multi-restart greedy demonstrably gets trapped. Pre-regi
 frustration density to find the regime (if any) where annealing opens a real gap over corrected greedy;
 if none up to large n, retract the advantage claim fully. (Also: G47-G49 this session re-derived the long-
 settled proto-cell self-repair sub-thread; the true substrate frontier is the energy/Ising thread G138-G145.)
+
+## 2026-06-05 — G147: annealing vs CORRECT strong greedy at scale — EMERGING gap (sub-threshold at n=150)
+Decisive scale test of whether the oscillator/Ising/annealing paradigm has ANY genuine edge, vs a correct
+sign-audited multi-restart greedy (60 restarts -- a STRONG baseline). Spin-glass MAX-CUT, n in {30,60,100,150},
+6 instances each. Result -- mean gap (anneal_ratio - grd_ratio): n=30 +0.000 (greedy=opt, confirms G146),
+n=60 +0.002, n=100 +0.004, n=150 +0.013; anneal win rate 0/6 -> 2/6 -> 5/6 -> 6/6. A real gap OPENS
+monotonically with scale: at n=150 strong correct greedy falls ~1.3% below annealing on every instance.
+This is the pre-registered EMERGING signature (monotone sub-threshold growth). HONESTY: the harness printed
+NO_ADVANTAGE but that is a code ORDERING BUG (checks any_gap>=0.02 before the monotone branch, so EMERGING is
+unreachable when no single n hits 0.02); the pre-registration of record is the DOC, whose EMERGING definition
+fits exactly. Reported as EMERGING/PARTIAL, not silently accepting the misprint nor flipping to ADVANTAGE
+(the 0.02 bar genuinely wasn't met -- no goalpost-moving). Reading: a separation between annealing and even a
+strong correct greedy emerges as frustrated instances grow (local search degrades faster on glassy landscapes,
+as expected) -- the programme's positive claim is neither refuted (G146) nor confirmed; it is emerging and
+scale-dependent. Pre-registered G148: rerun at n in {200,280,360}, classification ordering fixed -- ADVANTAGE
+if gap>=0.02 at largest n with anneal wins>=4/5, else NO_ADVANTAGE (plateau) or EMERGING-still (0.01-0.02).
