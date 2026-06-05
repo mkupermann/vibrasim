@@ -111,6 +111,12 @@ class UnderstandingEngine:
         # light, deterministic singularization so "animals"/"animal" unify
         if w in UnderstandingEngine._NOT_PLURAL:
             return w
+        irregular = {"wolves": "wolf", "leaves": "leaf", "lives": "life", "knives": "knife", "wives": "wife",
+                     "halves": "half", "shelves": "shelf", "calves": "calf", "thieves": "thief", "loaves": "loaf",
+                     "feet": "foot", "teeth": "tooth", "geese": "goose", "mice": "mouse", "men": "man",
+                     "women": "woman", "children": "child", "people": "person"}
+        if w in irregular:
+            return irregular[w]
         if w.endswith("ies") and len(w) > 4:
             return w[:-3] + "y"
         if w.endswith("shes") or w.endswith("ches") or w.endswith("sses"):
@@ -227,12 +233,31 @@ class UnderstandingEngine:
                 if self._bare_np(a) and self._bare_np(b):
                     self.tell_part(a, b); learned["part_of"] += 1; last_subject = a
                 continue
+            # part-of via possession: 'X has Y' / 'X has Y and Z' -> Y (and Z) are part-of X (whole HAS part)
+            m = re.match(rf"^{np}\s+(?:has|have)\s+(.+)$", s)
+            if m:
+                whole = self._norm_phrase(m.group(1))
+                if whole not in self._PRONOUNS and self._bare_np(whole) and self._valid_concept(whole):
+                    added = False
+                    for obj in re.split(r"\s+and\s+|,\s*", m.group(2)):
+                        part = self._norm_phrase(re.sub(r"^(?:a|an|the)\s+", "", obj.strip()))
+                        if self._bare_np(part) and self._valid_concept(part) and part != whole:
+                            self.tell_part(part, whole); learned["part_of"] += 1; added = True
+                    if added:
+                        last_subject = whole; continue
             # causal: 'X causes Y' / 'X leads to Y'
             m = re.search(rf"\b{np}\s+causes\s+{np}$", s) or re.search(rf"\b{np}\s+leads\s+to\s+{np}$", s)
             if m:
                 a, b = self._norm_phrase(m.group(1)), self._norm_phrase(m.group(2))
                 if self._bare_np(a) and self._bare_np(b):
                     self.tell_cause(a, b); learned["causal"] += 1
+                continue
+            # relative clause: 'X, which is a/an Y, ...' -> X is-a Y (then skip the main clause)
+            m = re.match(rf"^{np},\s+which\s+is\s+an?\s+([a-z]+),", s)
+            if m:
+                a, b = self._norm_phrase(m.group(1)), self._norm_phrase(m.group(2))
+                if a not in self._PRONOUNS and self._bare_np(a) and self._bare_np(b) and a != b:
+                    self.tell(f"a {a} is a {b}."); learned["is_a"] += 1; last_subject = a
                 continue
             # appositive: 'X, a kind of Y, ...' / 'X, an Y, ...' -> X is-a Y (then skip the main clause)
             m = re.match(rf"^{np},\s+(?:a\s+kind\s+of\s+|an?\s+)([a-z]+),", s)
@@ -255,6 +280,8 @@ class UnderstandingEngine:
                     am = re.match(r"^(?:a\s+kind\s+of\s+|an?\s+|the\s+)([a-z][a-z\- ]*)$", item)
                     if am:                                     # article-led -> a noun parent
                         p = self._norm_phrase(am.group(1))
+                        if not self._valid_concept(p) and self._bare_np(p):
+                            p = p.split()[-1]                  # head-noun fallback: 'warm-blooded animal' -> 'animal'
                         if self._bare_np(p) and self._valid_concept(p):
                             parents.append(p)
                     elif re.fullmatch(r"[a-z]+s", item):       # bare PLURAL noun (ends -s, adjectives don't) -> is-a
@@ -269,6 +296,11 @@ class UnderstandingEngine:
                         for par in parents:
                             if sub != par:
                                 self.tell(f"a {sub} is a {par}."); learned["is_a"] += 1
+                    # an adjective-modified parent IS-A its head noun ('a warm-blooded animal is an animal')
+                    for par in set(parents):
+                        head = par.split()[-1]
+                        if head != par and self._valid_concept(head):
+                            self.tell(f"a {par} is a {head}.")
                     continue
         return learned
 

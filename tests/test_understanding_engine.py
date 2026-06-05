@@ -522,3 +522,17 @@ def test_read_belief_revision_from_prose():
     e2 = UnderstandingEngine(seed=1)
     e2.read("A dog is a mammal. A dog is not a reptile. A whale is a creature. It is not a fish.")
     assert e2.is_a("dog", "mammal") and not e2.is_a("dog", "reptile") and not e2.is_a("whale", "fish")
+
+
+def test_read_jep166_extensions():
+    # JEP-166: has-part, irregular -ves plural, adjectival head-noun, relative clause 'which is a'
+    e = UnderstandingEngine(seed=166)
+    e.read("A fish has gills. A bird has feathers and wings. Dogs and wolves are canines. "
+           "A mammal is a warm-blooded animal. A salmon, which is a fish, lives in rivers.")
+    assert e.part_of("gill", "fish")                       # 'X has Y'
+    assert e.part_of("feather", "bird") and e.part_of("wing", "bird")  # 'has Y and Z'
+    assert e.is_a("wolf", "canine")                        # wolves -> wolf (-ves)
+    assert e.is_a("mammal", "animal")                      # warm-blooded animal -> animal (head-noun link)
+    assert e.is_a("salmon", "fish")                        # relative clause
+    # irregular plurals normalize
+    assert e._norm("wolves") == "wolf" and e._norm("leaves") == "leaf" and e._norm("mice") == "mouse"
