@@ -234,6 +234,15 @@ class UnderstandingEngine:
                         if self._bare_np(kid) and self._valid_concept(kid):
                             self.tell(f"a {kid} is a {parent}."); learned["is_a"] += 1
                 continue
+            # TEMPORAL order: 'X (happened/was/came) before/after Y' -> the 'before' order relation (after = inverse)
+            m = re.match(rf"^{np}\s+(?:\w+\s+)?(before|after)\s+{np}$", s)
+            if m:
+                x, rel, y = self._norm(m.group(1)), m.group(2), self._norm(m.group(3))
+                if x not in self._PRONOUNS and len(x) > 1 and len(y) > 1:
+                    a, b = (x, y) if rel == "before" else (y, x)        # 'after' = inverse 'before'
+                    self._orders.setdefault("before", {}).setdefault(a, set()).add(b)
+                    learned["temporal"] = learned.get("temporal", 0) + 1; last_subject = x
+                continue
             # COMPARISON / ordering: 'X is bigger/older/... than Y' -> the order relation (a 5th relation type)
             m = re.match(rf"^{np}\s+(?:is|are)\s+(?:more\s+)?([a-z]+)\s+than\s+{np}$", s)
             if m:
@@ -1235,6 +1244,12 @@ class UnderstandingEngine:
             if ex:
                 return f"No — not all. For example, {self._art(ex)} cannot {prop}."
             return f"I don't know whether all {self._norm_phrase(cat)}s can {prop}."
+        # TEMPORAL questions: 'did the war happen before the peace?' / 'is X after Y?'
+        m = re.match(r"(?:did|was|is|were|does)\s+(?:(?:an|a|the)\s+)?(\w+)\s+(?:\w+\s+)?(before|after)\s+(?:(?:an|a|the)\s+)?(\w+)", q)
+        if m:
+            x, rel, y = self._norm(m.group(1)), m.group(2), self._norm(m.group(3))
+            a, b = (x, y) if rel == "before" else (y, x)
+            return "Yes." if self._order_holds("before", a, b) else "Not that I can tell."
         # NUMERIC questions: 'how many legs does a dog have?' / 'does a spider have more legs than a dog?'
         na = getattr(self, "num_attrs", {})
         m = re.match(r"how many\s+(\w+)\s+(?:does|do)\s+(?:(?:an|a|the)\s+)?(\w+)\s+have", q)
