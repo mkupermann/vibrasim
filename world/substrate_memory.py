@@ -64,6 +64,7 @@ class SubstrateMemory:
         self.learner = ActiveLearner(tau=tau)        # perceptual memory (taught exemplars)
         self.closed_relations = set()                # relations whose transitive closure is materialized (JEP-375):
         #                                              is-a over these is answered by direct single-hop membership.
+        self.synonyms = {}                           # taught word->canonical English synonym map (JEP-418/419)
 
     # ---- atom / vector helpers ----
     def _vec(self, name):
@@ -281,6 +282,7 @@ class SubstrateMemory:
         new.learner = self.learner
         # the materialized closure edges are live facts, so they survive compaction -> keep the flag (JEP-375)
         new.closed_relations = set(self.closed_relations)
+        new.synonyms = dict(self.synonyms)
         return new
 
     def consolidate_closure(self, relations=("isa",), target_D=None, auto_scale=False, reinforce=1.0):
@@ -340,6 +342,7 @@ class SubstrateMemory:
         new.sentences = list(self.sentences)
         new.learner = self.learner
         new.closed_relations = set(self.closed_relations) | set(relations)   # is-a now answerable single-hop (JEP-375)
+        new.synonyms = dict(self.synonyms)
         return new
 
     # ---- persistence ----
@@ -358,7 +361,7 @@ class SubstrateMemory:
             "D": self.D, "module_cap": self.module_cap, "module_counts": self.module_counts,
             "directed": self.directed, "facts": self.facts, "values": self.values,
             "sentences": self.sentences, "key_modules": self.key_modules,
-            "closed_relations": sorted(self.closed_relations),
+            "closed_relations": sorted(self.closed_relations), "synonyms": self.synonyms,
             "learner": {"tau": self.learner.tau, "max_exemplars": self.learner.max_exemplars,
                         "n_asked": self.learner.n_asked, "n_seen": self.learner.n_seen,
                         "fit": {k: list(v) for k, v in self.learner._fit.items()}},
@@ -377,6 +380,7 @@ class SubstrateMemory:
         self.sentences = list(meta.get("sentences", []))
         self.key_modules = {k: list(v) for k, v in meta.get("key_modules", {}).items()}
         self.closed_relations = set(meta.get("closed_relations", []))
+        self.synonyms = dict(meta.get("synonyms", {}))
         z = np.load(os.path.join(d, "vectors.npz"), allow_pickle=True)
         if "modules" in z:                            # growing multi-module store (JEP-296)
             self.modules = [row.astype(np.float64) for row in z["modules"]]
