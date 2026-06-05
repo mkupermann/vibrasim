@@ -267,8 +267,20 @@ methods, no novelty claimed — the value is the honest characterization):
    insight + the substrate. Two singularization bugs found+fixed; one CARDINAL repeated bug honestly logged (D-dim
    noise = sigma*sqrt(D)).
 
+7. **REDUNDANCY unifies robustness AND generalization; symbolic and learned are COMPLEMENTARY (JEP-169..177).** The
+   engine gained correct relation-type INTERACTIONS with distinct semantics (a dog's heart is part of an animal; but
+   an effect's subtype is NOT entailed — parts distribute to subtypes, effects don't), validated ROBUST+SOUND, and
+   shown STRUCTURAL not lexical (reasons over novel nonsense-word concepts identically). Bridging the symbolic
+   learn-from-prose pipeline to the joint-embedding pillar surfaced the deepest unification: the learned embedding
+   reconstructs a prose-learned taxonomy IN-SAMPLE (order 0.99), but held-out GENERALIZATION is ill-posed on a TREE
+   (a node's sole parent-edge held out isolates it). REDUNDANCY is the common requirement for BOTH robust inference
+   under noise (error-correct via independent paths) AND generalization (infer a held-out edge from independent
+   structure) — a single-path tree supports neither, a many-path DAG supports both. And symbolic closure (exact on
+   known/derivable) vs learned embedding (generalizes to unstated, given redundancy+scale) are COMPLEMENTARY, not
+   rivals — the two halves of the programme connect.
+
 These are the genuine outputs: a frontier REFRAMED end-to-end with honest bounds, a unifying INSIGHT about inference
 under noise (chaining vs aggregation, universal across learning AND reasoning), the full recipe for efficient
 structure learning, and a measured account of prediction bias. Established methods throughout; NOT human-level; the
-discipline (predict-calibrate 56/79, every miss diagnosed including JEP-154/157/158/159, ~40 self-corrections) is the
+discipline (predict-calibrate 67/93, every miss diagnosed and no logged lesson recurred, ~42 self-corrections) is the
 transferable deliverable.
