@@ -473,3 +473,24 @@ def test_describe_multirelation_profile():
     assert "caused by an infection" in e.describe("a fever")                    # reverse causal
     # profile must NOT wrongly assert part-of as is-a
     assert "heart is a" not in d_heart.lower().replace("heart is a body", "")
+
+
+def test_read_shallow_parse_extensions():
+    # JEP-162: read() handles conjoined subjects, plural-category, multi-fact predicates, appositives (shallow parse)
+    e = UnderstandingEngine(seed=162)
+    e.read("A lion and a tiger are cats. Dogs are mammals. A whale is a mammal and an animal. "
+           "A beagle, a kind of dog, is friendly. Mammals such as cats and horses are warm-blooded.")
+    assert e.is_a("lion", "cat") and e.is_a("tiger", "cat")     # conjoined subject
+    assert e.is_a("dog", "mammal")                              # plural category 'Dogs are mammals'
+    assert e.is_a("whale", "mammal") and e.is_a("whale", "animal")  # multi-fact predicate
+    assert e.is_a("beagle", "dog")                              # appositive
+    assert e.is_a("horse", "mammal")                            # such-as 3-item (horses->horse, -ses fix)
+
+
+def test_read_no_adjective_false_positives():
+    # adjective predicates must NOT be read as is-a (the plural-noun guard)
+    e = UnderstandingEngine(seed=1)
+    e.read("Dogs are loyal. A cat is friendly. Birds are warm-blooded.")
+    assert not e.is_a("dog", "loyal")
+    assert not e.is_a("cat", "friendly")
+    assert e._norm("horses") == "horse" and e._norm("roses") == "rose" and e._norm("glasses") == "glass"

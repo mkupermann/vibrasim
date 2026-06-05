@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 54 / predictions 77 (JEP-161 HIT — read() boundary is sentence complexity; several cases shallow-parse-tractable) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
+Running tally: hits 55 / predictions 78 (JEP-162 HIT — shallow-parse extensions push read() 4/8 -> 7/8 categories, no false positives) (JEP-92 x3, JEP-93, JEP-94 x2, JEP-95). The 3 recent hits (93,94#2,95) all came from ANTICIPATING the surface-form class proactively — calibration is working. NOTE: JEP-94 #1 was a REPEATED mistake (article fix not propagated); meta-lesson logged.
 
 | id | prediction (🔮 before) | outcome | hit? | lesson (don't repeat) |
 |----|------------------------|---------|------|------------------------|
@@ -84,3 +84,4 @@ Running tally: hits 54 / predictions 77 (JEP-161 HIT — read() boundary is sent
 | JEP-159 | 🔮 ambiguity-driven precision spread (is-a 0.85 / part-of 0.75 / causal 0.70) | uniform 1.00 after fixing a virus->viru singularization bug; cross-relation 8/8 | MISS | Clean prose has no ambiguity; predict BUGS not spreads. Headline (multi-relation learn-from-prose + cross-relation reasoning) WORKS. |
 | JEP-160 | 🔮 engine generates correct multi-relation profiles (surface-form the risk) | dog/heart/virus profiles correct, part-of kept distinct from is-a | HIT | Closes learn(read)->understand->communicate loop on prose-learned knowledge. |
 | JEP-161 | 🔮 read() boundary = sentence complexity (conjoined/plural/appositive/pronoun/multi-fact miss) | exactly that: simple/kind-of/such-as OK, the rest miss | HIT | Several boundary cases are shallow-parse-tractable (no transformer); coreference/constituency genuinely hard. |
+| JEP-162 | 🔮 shallow parse -> 7/8 categories, pronoun the lone gap, no adjective FPs | exactly 7/8; FP guard holds; -ses bug fixed | HIT | Conjoined/plural/multi-fact/appositive handled no-transformer; plural-noun heuristic separates noun is-a from adjective. |
