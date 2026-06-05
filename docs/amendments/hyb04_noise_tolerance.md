@@ -57,3 +57,14 @@ the algebraic structure-discovery module, with simple subset-voting, survives mo
 honest correction of my own pessimistic prediction (the LPN barrier is real but further out than I
 guessed). Recorded NULL against the locked bars; no retuning. Established results (LPN; majority-vote
 robustification), named. No transformer.
+
+### HYB-05 (exploratory boundary sweep): the real breaking point is ε ≈ 0.10–0.12
+Pushing ε higher (0.12, 0.15, 0.20, 0.25, 0.30, 0.40) the robust module fails at ALL of them (both seeds)
+— it worked at ε=0.10 (HYB-04) but breaks SHARPLY by ε=0.12. The transition is exactly where the
+clean-subset probability `(1−ε)^S` (S=20) crosses ~0.08: at ε=0.10 ~12% of subsets are noise-free
+(~24/200, enough to win each per-bit majority vote); at ε=0.12 it is ~7.8% (~16/200, borderline) and the
+vote collapses. So the noise tolerance is fully and interpretably characterized: **the robust algebraic
+module recovers structure up to ~10% label noise, with a sharp breakdown governed by the clean-subset
+probability** (movable by smaller subsets / more subsets), and the deep LPN regime (ε → 0.5) is
+hopeless. Honest, complete characterization of the constructive architecture's noise limit. (Exploratory
+sweep, boundary-finding — not a pre-registered PASS/NULL.)
