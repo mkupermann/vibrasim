@@ -1211,10 +1211,22 @@ class UnderstandingEngine:
         mc = re.match(r"(?:is|are)\s+(?:(?:an|a|the)\s+)?(\w+)\s+(\w+)\s+than\s+(?:(?:an|a|the)\s+)?(\w+)", q)
         if mc:
             x, comp, z = self._norm(mc.group(1)), mc.group(2).lower(), self._norm(mc.group(3))
-            return "Yes." if self._order_holds(comp, x, z) else "Not that I can tell."
+            if self._order_holds(comp, x, z):
+                self._last_rel_query = ("order", x, z, comp); self._last_query = None
+                return "Yes."
+            return "Not that I can tell."
         # "why?" follow-up: justify the last answer using the reasoning chain (is-a, part-of, or causal)
         if re.fullmatch(r"why\b.*", q):
             rq = getattr(self, "_last_rel_query", None)
+            if rq and rq[0] == "order":                         # comparison / temporal order chain
+                _, rx, rz, comp = rq
+                verb = f"{comp} than" if comp.endswith("er") else comp
+                chain = self._rel_chain(self._orders.get(comp, {}), rx, rz)
+                if chain and len(chain) > 1:
+                    steps = ", and ".join(f"{self._art(chain[i])} is {verb} {self._art(chain[i + 1])}"
+                                          for i in range(len(chain) - 1))
+                    return f"Because {steps}."
+                return f"Because {self._art(rx)} is {verb} {self._art(rz)}."
             if rq:
                 kind, rx, rz = rq
                 graph = getattr(self, "part_of_g", {}) if kind == "part" else getattr(self, "causes", {})
@@ -1294,7 +1306,10 @@ class UnderstandingEngine:
         if m:
             x, rel, y = self._norm(m.group(1)), m.group(2), self._norm(m.group(3))
             a, b = (x, y) if rel == "before" else (y, x)
-            return "Yes." if self._order_holds("before", a, b) else "Not that I can tell."
+            if self._order_holds("before", a, b):
+                self._last_rel_query = ("order", a, b, "before"); self._last_query = None
+                return "Yes."
+            return "Not that I can tell."
         # NUMERIC questions: 'how many legs does a dog have?' / 'does a spider have more legs than a dog?'
         na = getattr(self, "num_attrs", {})
         m = re.match(r"how many\s+(\w+)\s+(?:does|do)\s+(?:(?:an|a|the)\s+)?(\w+)\s+have", q)

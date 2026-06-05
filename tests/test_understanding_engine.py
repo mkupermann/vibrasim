@@ -973,3 +973,17 @@ def test_enumeration_query():
     assert "dog" in m and "cat" in m and "poodle" in m       # poodle via multi-hop (poodle->dog->mammal)
     a = e.respond("what are all the animals?")
     assert all(x in a for x in ["dog", "cat", "robin", "bird"])
+
+
+def test_why_across_orders():
+    # JEP-218: 'why?' explains comparison and temporal chains too (not just is-a/part-of/causal)
+    e = UnderstandingEngine(seed=218)
+    e.read("An elephant is bigger than a dog. A dog is bigger than a cat. "
+           "The war started before the treaty. The treaty came before the peace.")
+    e.respond("is an elephant bigger than a cat?")
+    assert e.respond("why?") == "Because an elephant is bigger than a dog, and a dog is bigger than a cat."
+    e.respond("did the war happen before the peace?")
+    assert "war is before" in e.respond("why?") and "treaty is before" in e.respond("why?")
+    e.read("A dog is a mammal. A mammal is an animal.")
+    e.respond("is a dog an animal?")
+    assert "is a mammal" in e.respond("why?")          # is-a recency still works
