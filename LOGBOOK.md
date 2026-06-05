@@ -5560,3 +5560,16 @@ scale (G152) -- BUT classical SA is genuinely marginally BEST at matched budget 
 simpler; budget-matched ordering is SA > CIM-AHC > correct-greedy. None of it is EQMOD (G135). One-liner:
 a correct physical Ising annealer is real and beats local search, but classical SA is the better & simpler
 solver -- and EQMOD is neither. Reusable asset: numba-JIT SA (tools/run_g153_budget_matched_sa.py).
+
+## 2026-06-05 — BET-144: deep temporal credit (e-prop vs RTRL vs reservoir) — NULL (D=8 too easy; e-prop weak)
+Pivoted to the cognition thread's stated open frontier (deep temporal credit without BPTT). Built a leaky-tanh
+RNN with 3 arms on delayed selective recall + distractors: RESERVOIR (readout-only, EQMOD-2 baseline), RTRL
+(exact online gradient, Williams-Zipser 1989), E-PROP (eligibility traces, Bellec 2020 -- substrate-native,
+BTSP-aligned). No BPTT/transformer. Result NULL: sanity passes (RTRL & e-prop both 1.000 at D=1 -> trainers
+work), but at D=8+distractors the RESERVOIR already solves it (0.815 >> 0.45 bar) -- an H=24 echo-state
+reservoir holds the gated cue 8 steps, so no deep-credit gap exists at this delay. RTRL near-perfect (0.995);
+e-prop only 0.613 -- BELOW the reservoir and far below RTRL (symmetric e-prop is a weaker learner than not
+training the recurrent weights here). Two honest findings: (1) D=8 mis-calibrated (too easy); (2) e-prop
+underperforms both exact RTRL and the readout-only reservoir. Chained BET-145: sweep D in {8,16,24,32,48} to
+locate the reservoir memory horizon and test whether RTRL/e-prop extend past it (the real deep-credit regime).
+Principled (capacity-boundary characterization), not bar-tuning -- verdict logic unchanged, only D swept.
