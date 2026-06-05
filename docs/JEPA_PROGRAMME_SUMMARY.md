@@ -240,6 +240,18 @@ methods, no novelty claimed — the value is the honest characterization):
    directions: OVER-predicted difficulty on CLEAN data (exact-match is strong, 3x), UNDER-predicted it on NOISY data
    (closures compound, 2x). The discipline surfaced a real bias in my intuition — measure, don't trust it.
 
-These are the genuine outputs: a frontier REFRAMED with honest bounds, a unifying INSIGHT about inference under
-noise, and a measured account of prediction bias. Established methods throughout; NOT human-level; the discipline
-(predict-calibrate 35/54, every miss diagnosed, ~35 self-corrections) is the transferable deliverable.
+5. **The exhaustive structure-learning map + the FULL RECIPE (JEP-141..154, capstone).** The frontier is now mapped
+   end-to-end: clean=easy (search-cost), noisy=hard (closures compound; redundancy at cost), sparse-passive=
+   ambiguous, sparse=ACTIVE-querying solves (n log n), one-shot=PRIORS help with a bias cost (JEP-151, no free
+   lunch), meta-prior=learnable from consistent domains but doesn't solve deep one-shot (JEP-152). The complete
+   recipe for efficient learning under the realistic deep+noisy+minimal regime: compositional REUSE fixes the search
+   constraint (~5x sample-complexity cut, JEP-153) + few-shot REDUNDANCY beats noise (->0.99) + NOISE-TOLERANT SOFT
+   aggregation as the critical enabler (strict consistency is actively HARMED by noisy data, JEP-154b). THE
+   UNIFICATION: the chaining-vs-aggregation lesson governs LEARNING as well as REASONING — hard consistency fragile,
+   soft aggregation robust, universally. Honest calibration miss recorded (JEP-154: I forgot my own JEP-134 lesson).
+
+These are the genuine outputs: a frontier REFRAMED end-to-end with honest bounds, a unifying INSIGHT about inference
+under noise (chaining vs aggregation, universal across learning AND reasoning), the full recipe for efficient
+structure learning, and a measured account of prediction bias. Established methods throughout; NOT human-level; the
+discipline (predict-calibrate 49/69, every miss diagnosed including JEP-154, ~38 self-corrections) is the
+transferable deliverable.
