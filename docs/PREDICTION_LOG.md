@@ -3,7 +3,7 @@
 Running record of pre-experiment predictions vs outcomes. A MISS is diagnosed into a checkable LESSON; repeating a
 logged mistake is the one forbidden outcome. Goal: predictions converge to calibrated (reliably correct).
 
-Running tally: hits 110 / predictions 137 (80%). Latest: JEP-221 HIT (complete engine incl. conversational features re-validated ROBUST — 0 crashes/6000).
+Running tally: hits 111 / predictions 138 (80%). Latest: JEP-222 HIT (multi-turn context across domains — 'what about X?' reuses last is-a OR comparison query).
 
 ## Calibration trajectory (honest assessment vs Michael's "make predictions 100% correct eventually")
 At JEP-221 the tally is 110/137 (80%) and has CONVERGED: the OVERALL rate is dragged down by early-programme misses
@@ -164,3 +164,4 @@ honestly informative:
 | JEP-219 | 🔮 'what about X?' reuses last is-a question's category (multi-turn context) | 'Yes, a cat is an animal too'; salmon/rock correctly No; chainable | HIT | Conversational ellipsis/context — multi-turn 'communicate WITH me'. |
 | JEP-220 | 🔮 multi-turn conversation composes (Q&A + why + what-about across turns) | full dialogue correct; recency updated per turn across domains | HIT | Permanent conversational-composition guard. (My own test assertion was wrong - 2 items have no comma - fixed.) |
 | JEP-221 | 🔮 conversational features robust to adversarial/out-of-context input | 0 crashes/6000 (read + 11-turn convo + fuzzed Qs + summarize + audit) | HIT | Complete engine (all domains + multi-turn conversation) confirmed robust. |
+| JEP-222 | 🔮 'what about X?' reuses last order query (first arg + comparative, new 2nd arg) | 'an elephant is bigger than a mouse too'; is-a follow-up still works (context-switched) | HIT | Multi-turn context across is-a + comparison domains. |

@@ -1010,3 +1010,14 @@ def test_multiturn_conversation():
     assert e.respond("why?") == "Because an elephant is bigger than a dog, and a dog is bigger than a cat."  # order why
     mm = e.respond("what are all the mammals?")
     assert "cat" in mm and "dog" in mm                                                 # enumeration still works
+
+
+def test_followup_across_domains():
+    # JEP-222: 'what about X?' reuses the last is-a OR comparison query (multi-turn context across domains)
+    e = UnderstandingEngine(seed=222)
+    e.read("An elephant is bigger than a dog. A dog is bigger than a cat. A cat is bigger than a mouse. "
+           "A dog is a mammal. A mammal is an animal.")
+    e.respond("is an elephant bigger than a dog?")
+    assert e.respond("what about a mouse?") == "Yes, an elephant is bigger than a mouse too."   # comparison follow-up
+    e.respond("is a dog an animal?")
+    assert e.respond("what about a mammal?") == "Yes, a mammal is an animal too."                # is-a follow-up (context switched)
