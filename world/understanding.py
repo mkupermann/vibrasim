@@ -161,6 +161,72 @@ class UnderstandingEngine:
 
     _NEG_ISA = re.compile(r"^\s*(?:(?:an|a|the)\s+)?(.+?)\s+(?:is|are)\s+not\s+(?:(?:an|a|the)\s+)?(.+?)\s*\.?\s*$", re.I)
 
+    @staticmethod
+    def _bare_np(phrase: str) -> bool:
+        """True if phrase is a short bare noun phrase (<=4 words, no conjunctions/prepositions/clause markers) —
+        the guard that makes pattern extraction from real prose PRECISE (JEP-156): rejects clause fragments that
+        the <=4-word _valid_concept check alone lets through."""
+        bad = {"and", "or", "but", "that", "which", "who", "whom", "whose", "if", "then", "than", "as",
+               "of", "in", "on", "at", "by", "to", "for", "with", "from", "into", "is", "are", "was", "were"}
+        toks = phrase.split()
+        return bool(toks) and len(toks) <= 4 and not any(t in bad for t in toks)
+
+    def read(self, passage: str) -> dict:
+        """LEARN FROM PROSE (the learn-from-sources capability, JEP-155..159): extract is-a + part-of + causal
+        relations from an encyclopedic-register passage via classic Hearst-style lexico-syntactic patterns + a
+        bare-NP guard, and ingest them. NO transformer. Returns counts of what was learned per relation.
+
+        Works on encyclopedic/descriptive prose ('A dog is a mammal. A heart is part of a dog. A virus causes a
+        fever.'); dense logic/argument prose (e.g. Boole) yields little — the gate is the GENRE, not the extractor."""
+        art = r"(?:(?:an|a|the)\s+)?"
+        np = rf"{art}([a-z][a-z\- ]*?)"
+        learned = {"is_a": 0, "part_of": 0, "causal": 0}
+        for s in re.split(r"[.;:]\s+", passage.strip().lower()):
+            s = s.strip().rstrip(".")
+            if not s:
+                continue
+            # 'X such as A and B' -> (A,X),(B,X)  (do first; it is unambiguous)
+            m = re.search(rf"\b{np}\s+such\s+as\s+(.+)$", s)
+            if m:
+                parent = self._norm_phrase(m.group(1))
+                if self._bare_np(parent) and self._valid_concept(parent):
+                    stop = {"is", "are", "was", "were", "can", "cannot", "have", "has", "which", "that"}
+                    for kid in re.split(r"\s+and\s+|,\s*", m.group(2)):
+                        # truncate each list item to its leading noun-phrase run (drop a trailing verb phrase,
+                        # e.g. 'cats are common' -> 'cats') so a trailing VP does not lose the item
+                        toks = kid.strip().split()
+                        head = []
+                        for t in toks:
+                            if t in stop:
+                                break
+                            head.append(t)
+                        kid = self._norm_phrase(" ".join(head))
+                        if self._bare_np(kid) and self._valid_concept(kid):
+                            self.tell(f"a {kid} is a {parent}."); learned["is_a"] += 1
+                continue
+            # part-of: 'X is part of Y'
+            m = re.search(rf"\b{np}\s+is\s+part\s+of\s+{np}$", s)
+            if m:
+                a, b = self._norm_phrase(m.group(1)), self._norm_phrase(m.group(2))
+                if self._bare_np(a) and self._bare_np(b):
+                    self.tell_part(a, b); learned["part_of"] += 1
+                continue
+            # causal: 'X causes Y' / 'X leads to Y'
+            m = re.search(rf"\b{np}\s+causes\s+{np}$", s) or re.search(rf"\b{np}\s+leads\s+to\s+{np}$", s)
+            if m:
+                a, b = self._norm_phrase(m.group(1)), self._norm_phrase(m.group(2))
+                if self._bare_np(a) and self._bare_np(b):
+                    self.tell_cause(a, b); learned["causal"] += 1
+                continue
+            # is-a: 'X is a kind of Y' / 'X is a/an Y'
+            m = re.search(rf"\b{np}\s+is\s+a\s+kind\s+of\s+{np}$", s) or re.search(rf"\b{np}\s+is\s+an?\s+([a-z]+)$", s)
+            if m:
+                a, b = self._norm_phrase(m.group(1)), self._norm_phrase(m.group(2))
+                if self._bare_np(a) and self._bare_np(b) and a != b:
+                    self.tell(f"a {a} is a {b}."); learned["is_a"] += 1
+                continue
+        return learned
+
     def tell(self, sentence: str) -> tuple:
         """Parse one simple fact. Returns ('isa',c,p) / ('neg_isa',c,p) / ('rel',s,r,o) / ('none',).
 

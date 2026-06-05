@@ -22,6 +22,13 @@ e.explain("is a poodle a living_thing?")    # "Yes. A poodle is a dog, a dog is 
 e.tell("the dog chases the cat.")
 e.relation_true("cat", "chases", "dog")     # False (same words, wrong roles)
 e.ask_bool("is a poodle an animal and is a poodle not a fish")   # True
+# LEARN FROM A PROSE PASSAGE (learn-from-sources, JEP-155..159) — Hearst patterns + bare-NP guard, NO transformer:
+e.read("A poodle is a kind of dog. A dog is a mammal. A mammal is an animal. "
+       "A heart is part of a dog. A virus causes a fever. Mammals such as dogs and cats are warm-blooded.")
+e.is_a("poodle", "animal")        # True  (multi-hop, no single sentence states it)
+e.part_of("heart", "dog")         # True  (part-of, kept distinct: is_a('heart','animal') is False)
+e.causes_effect("virus", "fever") # True  (causal chain)
+# (the gate is the GENRE: encyclopedic/descriptive prose works ~0.87 precision; dense logic prose e.g. Boole yields little)
 # correction:
 e.tell("A whale is a fish.");  e.tell("A whale is not a fish.");  e.tell("A whale is a mammal.")
 e.explain("is a whale an animal?")          # "Yes. A whale is a mammal, a mammal is an animal."

@@ -39,4 +39,19 @@ def main():
     print(f"  ai > (check) {e2.would_contradict('A whale is not a fish.')}")
     e2.tell("A whale is not a fish."); e2.tell("A whale is a mammal.")
     ask(e2,"is a whale an animal?")                             # corrected
+    # LEARN FROM A PROSE PASSAGE (the learn-from-sources capability, JEP-155..159) - no transformer
+    print("  [reading an encyclopedic passage and learning from it]")
+    e3=UnderstandingEngine(seed=9)
+    passage=("A poodle is a kind of dog. A dog is a mammal. A mammal is an animal. "
+             "A heart is part of a dog. A cell is part of a heart. "
+             "A virus causes an infection. An infection causes a fever. "
+             "Mammals such as dogs and cats are warm-blooded.")
+    learned=e3.read(passage)
+    print(f'  you> "{passage}"')
+    print(f"  ai > (learned {learned['is_a']} is-a, {learned['part_of']} part-of, {learned['causal']} causal facts)\n")
+    print(f"  Q: is a poodle an animal?  A: {'Yes' if e3.is_a('poodle','animal') else 'No'}  (3-hop, no single sentence says it)")
+    print(f"  Q: is a cat an animal?  A: {'Yes' if e3.is_a('cat','animal') else 'No'}  (from 'mammals such as ... cats')")
+    print(f"  Q: is a cell part of a dog?  A: {'Yes' if e3.part_of('cell','dog') else 'No'}  (multi-hop part-of)")
+    print(f"  Q: does a virus cause a fever?  A: {'Yes' if e3.causes_effect('virus','fever') else 'No'}  (causal chain)")
+    print(f"  Q: is a heart an animal?  A: {'Yes' if e3.is_a('heart','animal') else 'No'}  (correct: part-of is NOT is-a)\n")
 if __name__=="__main__": main()
