@@ -5592,3 +5592,9 @@ GATED memory cell (established LSTM/GRU fix), not better credit assignment. Open
 
 All experiments done or 3x NULL on feedback.
 
+
+
+## 2026-06-06 14:52 — Autopilot idle
+
+All experiments done or 3x NULL on feedback.
+
