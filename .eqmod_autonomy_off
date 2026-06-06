@@ -1,5 +1,0 @@
-Autonomie-Autopilot AUS.
-Angelegt 2026-06-06 auf Michaels ausdrückliche, wiederholte Anweisung "Stop ... und dann höre erstmal auf".
-Solange diese Datei existiert, ruht der EQMOD-Autopilot (keine selbstgetriebenen Experimente).
-Zum Wieder-Einschalten: diese Datei löschen (Remove-Item .eqmod_autonomy_off).
-Session-Stand vollständig zusammengefasst in docs/SESSION_SUMMARY_2026-06-06.md.
