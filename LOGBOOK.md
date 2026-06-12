@@ -5665,3 +5665,38 @@ mis-specified (wrong/too-weak channel). This is itself a pattern-01 instance: th
 structural job; the outcome metric measured the wrong quantity. It does NOT bear on the memory deadlock (out of
 scope by construction). No bars tuned; NULL on the functional marker stands.
 
+
+## 2026-06-12 — G159: does the topological (H0) partition functionally gate activity? — PASS (scoped)
+
+Pre-registered in docs/amendments/G159_topological_isolation_probe.md (bars FROZEN 2026-06-12). Resolves the
+functional question G158 left open, on a channel the rule actually controls: apply_bridge_charge_propagation
+(BET-105) moves charge ONLY along b_alive bonds (a firing atom deposits rate*strength into bonded neighbours).
+With no free vibrations and n_emit=0, the bond graph is the ONLY A->B route — so the H0 partition either blocks it
+or not. Tooling: tools/g159_topological_isolation.py (reuses the G158 union-find form_bridges patch; atoms pinned;
+A driven above theta_fire; count B firings). compartment_boundary=0 (partition is the topological RULE, not a
+hand-placed plane as in G86).
+
+Result PASS (frozen marker I = B_activity(M=2)/B_activity(M=1) <= 0.10):
+  TREATMENT M=2: B_fire=0, A_fire=249, comps=2, bottleneck rejected (310 cross-merge attempts), B_peak_charge=0.0.
+  CONTROL   M=1: B_fire=54, A_fire=213, comps=1, bottleneck present (str=1.0), B_peak_charge=5.87.
+  I = 0.0000 <= 0.10. Mechanism-fired: A fired both arms; components held (M2=2, M1=1); control percolates (54>=5).
+The emergent H0 partition AUTONOMOUSLY cuts the bottleneck and TOTALLY blocks bond-mediated charge percolation,
+where the connected control percolates — a self-organising, topology-derived substitute for G86's hand-placed wall.
+
+INTEGRITY CAVEATS (no overclaim):
+  - SCOPE: bond-mediated channel ONLY. The field channel (r_integrate / emitted vibrations) is OFF by construction
+    (n_emit=0, zero free vibrations). In a full substrate the field channel would still leak (G86 contained it by
+    spatial separation). And the memory starve/erode dilemma (G93) is untouched. So this is NOT a memory-deadlock
+    break — it is "the topological rule is a working, emergent activity-isolation mechanism on its own channel."
+  - The 3 seeds are IDENTICAL (+/- 0.00) because this configuration is fully DETERMINISTIC (no initial vibrations,
+    no thermal motion, no emission, no random draws). The seed grid therefore does NOT exercise stochastic variance
+    here; robustness to geometry/drive would need those varied, not the seed. The PASS rests on the clean mechanism
+    + percolating control, not on seed-averaging.
+  - The isolation is partly "by construction" (bonds are the only channel, so cutting the bond stops flow); the
+    NON-trivial content is that the H0 RULE, not a human, decided WHERE to cut (the bottleneck) and held the
+    partition against 310 merge attempts. That is the emergent-vs-engineered (G86) contribution.
+
+Net: first genuine FUNCTIONAL positive of the new-math programme, honestly scoped. Pairs with G158 (structural
+partition confirmed) to give a complete two-stage result: the H0 rule builds a modular partition AND that partition
+gates bond-mediated activity — necessary, not sufficient, for modular memory (field channel + erosion remain).
+
