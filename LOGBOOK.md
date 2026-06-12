@@ -5772,3 +5772,35 @@ building block), but the redesign has NOT yet broken D4. The fix (R2): make the 
 (spread along live bonds) so non-propagation must EMERGE from containment (C2 bond-partition + C3 field-sink),
 never from a hand gate. The panel unanimously predicts R2 NULL (the D4 trap resurfaces on the C3 knife-edge).
 
+## 2026-06-12 — REDESIGN R2: composition memory — NULL (frozen verdict stands) + INCONCLUSIVE on substance
+
+Tooling: tools/redesign_r2_composition.py. Two runs:
+  Run 1 — FAIL (mechanism didn't fire): M3b sink efficacy 0.267 << 0.90. Cause: C3 keyed absorption on atoms
+  with k_charge>=1.0, but firing RESETS charge to 0, so the absorption region was mostly empty. Per discipline
+  (M3 mechanism-fired gate) this is FAIL=debug, NOT a NULL. Fixed C3 keying to proximity-to-any-alive-atom
+  (vibrations are emitted AT atoms -> caught at source; still a local rule, no hand-placed boundary). M1/M2/M3
+  BARS UNCHANGED. Re-ran.
+  Run 2 — NULL by the frozen bar (mechanism now fired): sink_eff=0.978, partition held=2 throughout, A fired.
+    M1 retention PASS (A decays at the passive baseline rate, mag_ratio 0.724==BASE, cos=1.0 -> sink killed A's
+      field-sustained re-firing, A just decays as it should).
+    M2 containment FAIL on clause (b) ||vB||/||vA||=1.776 > 0.30 -> VERDICT NULL.
+    M3 PASS. N1 fails-as-expected (partition-off leak 1.66).
+
+HONEST DIAGNOSIS — the NULL is driven by a MIS-SPECIFIED MARKER, not demonstrated leakage:
+  - ||vB|| (56.1) is B's OWN injected RECALL-noise store, ~= the noise-only null N3 (58.8 +/- 2.4), NOT A-leakage.
+    The frozen M2 clause (c) "||vB|| <= mean_N3 + 3SD = 66.1" PASSES (56.1 < 66.1; MAIN is even slightly BELOW
+    the pure-noise mean). So by the meaningful containment metric (B above its own noise), A did NOT leak to B.
+  - Clause (b) ||vB||/||vA|| <= 0.30 CANNOT distinguish A-leak from injected B-noise in a task that puts noise in
+    B; it is the wrong metric. I AND-ed a bad clause into M2 and it forced the NULL.
+  - SECOND flaw: the protocol leaves A QUIET during the recall window (sink kills A's field-firing), so there is
+    no ACTIVE leak source -> containment was never actually stressed. So R2 is also INCONCLUSIVE, not clean
+    evidence either way.
+
+DISCIPLINE: I noticed I WANTED to drop the failing clause (b) and call R2 a PASS on the N3 metric. I did NOT.
+R2's verdict is NULL and is PERMANENT — no post-hoc bar change. The marker flaw + the quiet-A-during-recall flaw
+are EXPERIMENTAL DESIGN flaws to fix in a NEW pre-registration (R3), frozen before any run: drop clause (b); use
+the N3-baseline as the sole containment metric; keep A CONTINUOUSLY DRIVEN during the recall window so there is a
+genuine active leak source for the sink+partition to contain. Flagged explicitly because this sits right on the
+pre-registration / don't-chase-a-result line — whether R3 is principled iteration or fishing is a judgment to make
+deliberately, not slide into. R1/G159/G160 unaffected.
+
