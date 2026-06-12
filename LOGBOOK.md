@@ -5598,3 +5598,33 @@ All experiments done or 3x NULL on feedback.
 
 All experiments done or 3x NULL on feedback.
 
+
+## 2026-06-12 — G154: content-addressable recall on the matter register — NULL (mechanism verified)
+
+Pre-registered in docs/amendments/G154_matter_recall.md (bars FROZEN 2026-06-12). Tests whether the matter
+register (the one scoped memory positive, G114-G125) can do content-addressable recall: store a k-bit pattern,
+present half the bits as a cue, and have the substrate's OWN dynamics restore the missing half. Associative
+mechanism = native bridges (form_bridges) + bridge tension (apply_bridge_tension, a spring to r_eq=r_2*0.5).
+Baseline = classical Hopfield at MATCHED WALL-CLOCK. Negative control = identical run with no bonds (atom_valence=0).
+Tooling: tools/g154_matter_recall.py (verdict harness), tools/g154_probe.py (mechanism-fired diagnostic).
+
+Result NULL, 8 patterns x seeds {42,7,13}:
+  SUBSTRATE recall bit-acc 0.014 +/- 0.020 ; NEG-CTRL 0.000 ; HOPFIELD 1.000 ; substrate 546x slower.
+Verdict by the frozen bar: NULL (Hopfield matches/beats at a fraction of the wall-clock; physics decorative).
+
+Mechanism-fired check (docs/patterns/01) BEFORE believing the null — the null is REAL, not a harness bug:
+  - Bonds DO form (b_count=2 on a 3-chain). Tension DOES apply a restoring force in the right direction. The
+    negative control is correctly inert (displaced carrier 29.0 -> 29.0, no bonds).
+  - But recall fails for a precise structural reason: apply_bridge_tension uses a SINGLE GLOBAL equilibrium
+    distance r_eq = r_2*0.5 with NO per-bond rest length. The bonds encode "be r_eq from your neighbour," not
+    "be at cell k," so a stored multi-cell pattern is not a retrievable attractor. A pinned neighbour on the wrong
+    side pushes the displaced carrier AWAY from its target (displace=8: 29.0 -> 28.6 over 400 ticks, -> 27.8 over
+    1500; target 21 never reached). The dynamics are also orders of magnitude too slow.
+
+Honest conclusion: matter-position is a REGISTER (carriers persist where placed, G115), NOT a content-addressable
+associative memory under native primitives — the only associative coupling (bridge tension) has no per-association
+rest length, and classical Hopfield does the task perfectly at ~1/546th the compute. This closes the matter-memory
+recall frontier named open in MATTER_MEMORY_SUMMARY (~lines 49-53), as a NULL, with the binding constraint
+identified. Per the amendment's HARD GATING, G155-G157 are NOT softened to chase a win elsewhere; G157 (gated on a
+G154/G155 PASS) does not run. NULL stands, no post-hoc tuning.
+
