@@ -5804,3 +5804,40 @@ genuine active leak source for the sink+partition to contain. Flagged explicitly
 pre-registration / don't-chase-a-result line — whether R3 is principled iteration or fishing is a judgment to make
 deliberately, not slide into. R1/G159/G160 unaffected.
 
+## 2026-06-12 — REDESIGN R3 (FINAL composition iteration): PASS by frozen bars — but it is CONTAINMENT, not MEMORY
+
+Pre-registered in docs/redesign/amendments/R3_composition_final.md (bars + stopping rule FROZEN before code).
+Tool: tools/redesign_r3_composition.py. Fixes R2's two flaws (both harder): containment measured ONLY vs B's own
+noise null (drop the broken ||vB||/||vA|| clause); A DRIVEN CONTINUOUSLY through recall = a genuine active leak
+source. Emergent store (v_stored, spread along live bonds); C2 H0 partition (every tick); C3 local flux-sink
+(absorb near any alive atom).
+
+Frozen verdict (seeds {42,7,13}): PASS. cos(A,peak)=0.997; MAIN normB=97.0 <= bar 107.5 (N3 null 82.8+/-12.3);
+sink_eff=0.98; partition held=2; A active (103 fires); N1 (partition off) normB=114 > bar (control fails ->
+sensitive). M1 & M2 & M3 & N1-fails all true.
+ROBUSTNESS AUDIT (10 seeds, not a re-iteration — verification of the headline positive, per docs/patterns
+auditing_a_headline_positive): HOLDS. MAIN normB=91.2 <= bar 106.3 (null 82.6+/-11.8); N1=108.1 > bar; sink 0.978;
+partition held. The PASS is robust, not a 3-seed fluke.
+
+HONEST SCOPING — the auto-verdict string "deadlock broken" is an OVERCLAIM; corrected here:
+  - M1 (retention, cos=0.997/0.998) is TRIVIAL: A is driven continuously, so "retention" is just the sustained
+    drive, not memory persistence. The PASS rests entirely on M2 (containment).
+  - So R3 demonstrates EMERGENT SPATIAL CONTAINMENT OF AN ACTIVE LEAK SOURCE: module A fires ~110x emitting field,
+    yet B stays within its own noise null (B is +0.7SD above pure noise at n=10 — a small residual leak, contained
+    under the 2SD bar), where the partition-OFF control leaks above the bar. The partition cuts the leak from
+    +2.15SD (N1) to +0.73SD (MAIN), ~2/3 reduction. This is the necessary D1+D2 containment piece, achieved
+    emergently (H0 partition + local sink), NOT a hand-placed wall (vs G86).
+  - It does NOT demonstrate persistent selective MEMORY (write -> quiet -> recall a specific pattern). That was
+    R2's territory (inconclusive). There is an inherent tension: drive A (active leak source, trivial M1) XOR
+    quiet A (meaningful retention, no leak source) — R3 can show containment OR retention, not both at once.
+    And erosion (D3) was OFF throughout.
+
+CONCLUSION (composition question CLOSED per the stopping rule, no R4): the emergence-preserving composition
+ACHIEVES emergent spatial containment of active percolation (R3 PASS, robust, scoped) — a real building-block and
+the first emergent (not hand-placed) containment in the programme. But the central MEMORY deadlock (selective +
+PERSISTENT recall) is NOT broken: containment != memory, retention was only shown trivially, and erosion is
+untouched. Net across R1-R3: D1 gated (G159), D2 contained emergently (R3), D3 untouched, and persistent memory
+undemonstrated. The honest headline is "emergent modular containment works; emergent persistent memory does not
+(yet) follow from it" — consistent with the programme's standing verdict that the substrate is decorative for
+memory. PASS stands as SCOPED; no bars tuned.
+
