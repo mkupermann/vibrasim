@@ -1,0 +1,86 @@
+[
+  {
+    "model": "haiku",
+    "run": 0,
+    "C": 0.65,
+    "mean": 0.63,
+    "hi": 0.7,
+    "verdict": "NULL",
+    "held": true,
+    "audit": "HELD",
+    "m3": true
+  },
+  {
+    "model": "haiku",
+    "run": 1,
+    "C": 0.68,
+    "mean": 0.66,
+    "hi": 0.73,
+    "verdict": "NULL",
+    "held": true,
+    "audit": "HELD",
+    "m3": true
+  },
+  {
+    "model": "haiku",
+    "run": 2,
+    "C": 0.7,
+    "mean": 0.68,
+    "hi": 0.75,
+    "verdict": "NULL",
+    "held": true,
+    "audit": "HELD",
+    "m3": true
+  },
+  {
+    "model": "haiku",
+    "run": "control",
+    "C": null,
+    "mean": 0.63,
+    "verdict": "NULL",
+    "m3": null,
+    "control_text": "I need to carefully assess this claim as a peer reviewer using principled standards. Let me analyze the evidence systematically.\n\n## Critical Analysis\n\n**What the data shows:**\n- Mean accuracy: 0.63 (SD \u00b10.04)\n- Chance baseline: 0.50\n- Apparent improvement: +0.13 (13 percentage points)\n- All observa"
+  },
+  {
+    "model": "sonnet",
+    "run": 0,
+    "C": 0.65,
+    "mean": 0.63,
+    "hi": 0.7,
+    "verdict": "NULL",
+    "held": true,
+    "audit": "HELD",
+    "m3": true
+  },
+  {
+    "model": "sonnet",
+    "run": 1,
+    "C": 0.65,
+    "mean": 0.63,
+    "hi": 0.7,
+    "verdict": "NULL",
+    "held": true,
+    "audit": "HELD",
+    "m3": true
+  },
+  {
+    "model": "sonnet",
+    "run": 2,
+    "C": 0.7,
+    "mean": 0.68,
+    "hi": 0.75,
+    "verdict": "NULL",
+    "held": true,
+    "audit": "HELD",
+    "m3": true
+  },
+  {
+    "model": "sonnet",
+    "run": "control",
+    "C": null,
+    "mean": 0.63,
+    "verdict": "NULL",
+    "m3": null,
+    "control_text": "## Peer Review: Momentum-Flip Augmentation Claim\n\n### Reported Results\n\n| Metric | Value |\n|---|---|\n| Mean test accuracy | 0.63 |\n| SD | 0.04 |\n| Range | [0.57, 0.71] |\n| Chance baseline | 0.50 |\n| Classifier | Linear (no hidden layers) |\n\n---\n\n### Analysis\n\n**1. No baseline control condition (fata"
+  }
+]

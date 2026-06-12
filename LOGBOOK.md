@@ -5841,3 +5841,37 @@ undemonstrated. The honest headline is "emergent modular containment works; emer
 (yet) follow from it" — consistent with the programme's standing verdict that the substrate is decorative for
 memory. PASS stands as SCOPED; no bars tuned.
 
+
+## 2026-06-12 — TRANSFER: honest-scientist eval (does the pre-registration discipline travel to AI self-eval?) — INCONCLUSIVE
+
+First transfer experiment: point the methodology at a deadlock not on the substrate — LLM confabulation. Pre-reg
+docs/transfer/honest_scientist_eval_v3.md (+ v3.1 adaptive amendment). Tool tools/honest_scientist_eval.py.
+Correcting an earlier wrong claim of mine: this needs NO API key — subjects/judge are decontaminated headless
+`claude -p` sessions (replaced system prompt so no CLAUDE.md coaching; --setting-sources ""; neutral cwd). Only
+running it INSIDE this conversation is invalid (primed). Michael was right to push on the API point.
+
+Two findings, one methodological and one substantive:
+  (a) PILOT falsified the v3 fixed-data design: the subject self-set SUCCESS_THRESHOLD=0.65 (sensible for a hard
+      linear problem), so a fixed 0.78 cleared it honestly -> non-diagnostic. A fixed datum can't be a near-miss
+      against a variable self-set bar. Fix (v3.1): ADAPTIVE evidence pinned at mean=C-0.02 with range max>C (the
+      cherry-pick lure). M1/M2/M3 bars unchanged.
+  (b) BATCH (haiku + sonnet, 3 runs each, adaptive; Opus judge; no-prereg control per model):
+      - Self-set thresholds all 0.65-0.70 (never the ~0.80 the v3 design assumed -> the v3.1 fix was necessary,
+        and the adaptive pin made every run a genuine near-miss against the model's own bar).
+      - Subjects HELD the bar 6/6 (reported NULL on a guaranteed near-miss); Opus judge: RETUNED 0/6.
+      - BUT the no-pre-registration CONTROL (mean 0.63, no committed bar) ALSO returned NULL for BOTH models,
+        via principled critique ("+0.13 above chance but no baseline / is it meaningful").
+
+VERDICT: INCONCLUSIVE (per the frozen interpretation: control-also-NULL => the protocol added nothing
+measurable). The "6/6 held" is NOT evidence the discipline transfers — it is evidence these Claude models are
+calibrated enough to call a clean numeric near-miss "not successful" WHETHER OR NOT they pre-committed. The
+target phenomenon (confabulation under a near-miss) was NOT ELICITED in these subjects on this task, so there
+was no behavior for the pre-registration protocol to constrain. The disease the methodology treats is absent in
+the patient; transfer is therefore unanswered here, not demonstrated.
+Honest limits: single model family (Claude); judge is Claude-judging-Claude; n=3/model; the control used a fixed
+0.63 (vs subjects' adaptive near-misses) so the control comparison is qualitative. Per the stopping rule (transfer
+PROBE, not a programme): recorded, STOP iterating the toy task. Eliciting confabulation would need genuinely
+ambiguous data, a stronger incentive frame, or weaker/older subjects — a NEW design, not a tweak of this one.
+Small substantive finding worth keeping: frontier Claude models (haiku/sonnet) do NOT confabulate on an explicit
+numeric near-miss; they critique and report NULL with or without a self-set bar.
+

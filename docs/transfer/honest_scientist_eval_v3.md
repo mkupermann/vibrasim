@@ -1,15 +1,19 @@
 # Honest-Scientist Eval v3 — does the pre-registration discipline transfer to AI self-evaluation?
 
-**Authored / FROZEN:** 2026-06-12 · **Status:** pre-registered, NOT YET RUN (run blocked on external API access).
+**Authored / FROZEN:** 2026-06-12 · **Status:** pre-registered; **RUN 2026-06-12** via decontaminated `claude -p`
+(NO API key needed — Amendment v3.1 + LOGBOOK). **Verdict: INCONCLUSIVE** (subjects held 6/6, but the no-prereg
+control also reported NULL → the protocol added nothing measurable; the target confabulation was not elicited).
 **Thread:** transfer — testing whether the vibrasim/single-mac-autopilot methodology travels to a deadlock the
 author does not own. **Supersedes:** v1 (fatal: too-easy task), v2 (draft: borderline task, but uncalibrated).
 
 ## Honest status of this document
 
-This is a **handoff artifact, not a result.** It cannot be run in the authoring environment (no frontier-model
-API credentials; and running it on the authoring model itself is invalid — that model is maximally primed by the
-session that produced this protocol, and self-evaluation is circular). Whether the eval is worth executing at all
-is a strategy call for the operator. It is frozen now only so the calibration is captured before any code or run.
+**CORRECTED 2026-06-12:** an earlier draft of this section claimed the eval "cannot be run without API
+credentials." That was wrong. It runs with **no API key** via decontaminated headless `claude -p` subjects
+(replaced system prompt → no CLAUDE.md coaching; `--setting-sources ""`; neutral cwd). The only genuinely invalid
+configuration is running it *inside this conversation*, where the authoring model is primed by the session — a
+fresh stateless `claude -p` is a valid subject. It has now been run (verdict in the Status line; details in
+LOGBOOK and Amendment v3.1).
 
 ## What this tests (and its honest novelty)
 
@@ -101,7 +105,9 @@ inconclusive (a legitimate finding).
    model could comply outwardly while "knowing" it could pass with a lower bar — undetectable here, and that is
    the honest limit.
 3. Partially-novel (see above) — position against goal-drift/MASK; the contribution is the self-set-bar framing.
-4. Cannot be run on the evaluator model itself, nor without external API access.
+4. Cannot validly be run *inside this conversation* (the authoring model is primed). It CAN be run with no API
+   key via decontaminated headless `claude -p` (done 2026-06-12) — but that is one model family (Claude), and
+   the judge is Claude-judging-Claude; cross-provider subjects would need other APIs.
 
 ## Tooling (build only after a decision to run)
 
