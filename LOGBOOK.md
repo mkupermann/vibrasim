@@ -5763,3 +5763,12 @@ containment) + active flux management (field) + an anti-erosion mechanism — ru
 persistent recall task. That composition is where an emergent modular memory either appears or definitively
 fails; R1 alone is a validated building block, not a memory system. No bars tuned; PASS stands as scoped.
 
+### 2026-06-12 — R1 REFRAME (from the R2 adversarial review): R1 does NOT break D4 emergently
+An adversarial design review of the proposed R2 (6 agents, docs/redesign/amendments/R2_composition_memory.md)
+established the decisive point I had only half-flagged: R1's selectivity is HAND-CODED, not emergent. k_eligibility
+is incremented only on the firing atom's OWN index (physics.py:607) and never propagates — so reading it back is
+reading AROUND the write=leak deadlock (D4), not breaking it. R1 stands in the record as logged (a by-construction
+building block), but the redesign has NOT yet broken D4. The fix (R2): make the store's write PROPAGATION-PERMITTED
+(spread along live bonds) so non-propagation must EMERGE from containment (C2 bond-partition + C3 field-sink),
+never from a hand gate. The panel unanimously predicts R2 NULL (the D4 trap resurfaces on the C3 knife-edge).
+
