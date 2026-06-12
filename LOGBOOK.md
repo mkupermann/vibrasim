@@ -5732,3 +5732,34 @@ erosion (G93). So an emergent modular memory would need topology (bonds) + activ
 an anti-erosion mechanism — three separate constraints, mirroring why the memory deadlock is closed. No bars
 tuned; NULL stands; does NOT weaken G159 (different channel).
 
+
+## 2026-06-12 — REDESIGN R1: decouple the store from the propagation field (eligibility-as-store) — PASS (scoped)
+
+First emergence-preserving redesign phase. Pre-registered in docs/redesign/amendments/R1_write_propagate_decouple.md
+(bars FROZEN 2026-06-12). Foundation docs: docs/redesign/deadlock_principles.md, design_requirements.md (R3 ->
+deadlock D4 write=leak). Idea: move the STORE off the charge field onto k_eligibility — a slow (tau=6s), per-atom,
+NON-propagating BTSP trace bumped +1 only on the firing atom's own index (physics.py:607). Reuses an existing
+primitive (no hand-built RAM); it is a readout change. Tooling: tools/redesign_r1_eligibility_store.py.
+
+Result PASS, seeds {42,7,13} (identical — deterministic config):
+  ARM 1 contained (no bonds, n_emit=0): A_fire=60, B_fire=0 (containment real). elig_A 18.48 -> 13.24 over a
+    ~2s recall window; elig_B=0; charge_A_end=0.
+    Selectivity S = elig(B)/elig(A) = 0.0000 (<= 0.10 bar). Persistence P = elig(A,end)/peak = 0.7165 (>= 0.50).
+  ARM 2 neg-control (no drive): elig(A)=0.0 (<= 0.10).
+  ARM 3 boundary (field ON, B near): elig leak elig(B)/elig(A) = 0.957, B_fire=157 -> eligibility LEAKS when
+    firing is uncontained (field makes B fire -> B eligibility rises). R1 is necessary, NOT sufficient.
+  Mechanism-fired (A fires, B silent in Arm 1): True. VERDICT: PASS.
+
+HONEST READ (no overclaim): the PASS is largely BY CONSTRUCTION and I flag it as such — P=0.7165 is exactly the
+eligibility decay e^(-2/6); S=0 is exact because eligibility is per-atom and B never fires. So this does not
+DISCOVER a surprise; it ESTABLISHES the design property: a slow, local, non-propagating variable can serve as a
+store decoupled from the fast propagation field, breaking D4. Charge is provably NOT a store (reset on fire +
+0.5s decay -> charge_A_end=0). SCOPE: D4 only. Erosion (D3) is OFF here (lambda_dec=0) — with decay on, an
+eroding atom takes its eligibility with it. Containment (D1/D2) is REQUIRED — Arm 3 (leak 0.957) shows the store
+leaks via field-induced firing when uncontained.
+
+Forward: R1 is one of 3+ breaks. The real test is COMPOSITION — R1 (eligibility store) + G159 (H0 bond
+containment) + active flux management (field) + an anti-erosion mechanism — run together against a selective
+persistent recall task. That composition is where an emergent modular memory either appears or definitively
+fails; R1 alone is a validated building block, not a memory system. No bars tuned; PASS stands as scoped.
+
