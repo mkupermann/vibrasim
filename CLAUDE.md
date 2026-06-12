@@ -32,4 +32,4 @@ Bottom-up substrate simulator. Computational neuroscience / consciousness resear
 
 ## Known Bugs
 
-- F3b-Test has silent-pass bug: `if n_strong_before == 0: persistence_fractions.append(1.0)` — test can never fail when no strong structures were formed.
+- F3b silent-pass (RESOLVED, guarded — 2026-06-12): the historic bug was `if n_strong_before == 0: persistence_fractions.append(1.0)` (test could never fail when no strong structures formed). The live test `tests/test_substrate_growth_e2e.py::test_F3b_strong_structures_persist` is now a `@pytest.mark.skip` stub raising `NotImplementedError`, and its docstring specifies the correct fix (`pytest.fail()` on the precondition, not a trivial pass). The pattern is statically guarded suite-wide by the AUTO-1 auditor `tests/test_audit_silent_pass.py` (3 tests, green). Live risk only returns if Plan A Task 10 implements F3b with the bad pattern — which the auditor would flag.
