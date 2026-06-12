@@ -5700,3 +5700,35 @@ Net: first genuine FUNCTIONAL positive of the new-math programme, honestly scope
 partition confirmed) to give a complete two-stage result: the H0 rule builds a modular partition AND that partition
 gates bond-mediated activity — necessary, not sufficient, for modular memory (field channel + erosion remain).
 
+
+## 2026-06-12 — G160: does the H0 partition contain the FIELD channel? — NULL (predicted)
+
+Pre-registered in docs/amendments/G160_field_channel_isolation.md (bars FROZEN 2026-06-12). Bounds G159: the
+field channel (neuron_dynamics integrating charge from EMITTED VIBRATIONS within r_integrate) does not use the
+bond graph, so the H0 partition should NOT gate it. Rejected the originally-proposed "bonds-off, M=2 vs M=1"
+design as DEGENERATE (bonds off + pinned atoms => M has zero dynamical effect => arms identical => marker
+unsatisfiable). Corrected design keeps bonds ON: G159 proved the bond channel carries 0 across the M=2 cut, so
+any B firing with the field on is unambiguously FIELD leakage. Tooling: tools/g160_field_channel_isolation.py.
+
+Result NULL (predicted), seeds {42,7,13}:
+  ARM A (leak; M=2, field on, gap=12): B_fire = 117.7 +/- 64.3; comps held = 2; B_peak_charge 5.6-7.5 (> theta=4).
+  ARM B (reachability sanity; gap=4): B_fire = 87.0 >= 5 (field demonstrably crosses; test sensitive).
+  ARM C (topology-independence; bonds OFF, gap=12): B_fire(M=2) = B_fire(M=1) = 124.7 EXACTLY -> the field
+    channel ignores the bond topology, empirically confirmed.
+  Mechanism-fired: A fired, M=2 held 2 components, sanity holds, C2==C1. VERDICT: NULL — field LEAKS across the
+  topological cut; the H0 partition gates the BOND channel only.
+
+HONEST MECHANISM REFINEMENT (the pre-registered "spatial separation" framing is slightly off for this regime):
+the leak here is GLOBAL FLOODING, not slow diffusion — with sustained emission and NO vibration decay
+(lambda_dec=0) in a PERIODIC box, free vibrations saturate (free_vibs hit the 4096 cap) and deposit charge
+everywhere; B fires ~equally at gap 12 (117) and gap 4 (87), so DISTANCE barely matters (it would also fail under
+periodic wrap). So the field channel's containment requirement is ACTIVE FLUX MANAGEMENT (vibration decay /
+absorption / the quiet-substrate culling the memory programme already used, G88+), NOT topology and NOT mere
+static separation. NULL verdict unchanged; this only refines WHY.
+
+Two-channel picture now complete and attributed: bond-mediated spread <- gated by H0 topology (G159);
+field-mediated spread <- needs active flux sinks (G160), topology-independent (ARM C). Neither addresses atom
+erosion (G93). So an emergent modular memory would need topology (bonds) + active flux management (field) +
+an anti-erosion mechanism — three separate constraints, mirroring why the memory deadlock is closed. No bars
+tuned; NULL stands; does NOT weaken G159 (different channel).
+
