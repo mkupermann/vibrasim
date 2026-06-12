@@ -5628,3 +5628,40 @@ recall frontier named open in MATTER_MEMORY_SUMMARY (~lines 49-53), as a NULL, w
 identified. Per the amendment's HARD GATING, G155-G157 are NOT softened to chase a win elsewhere; G157 (gated on a
 G154/G155 PASS) does not run. NULL stands, no post-hoc tuning.
 
+
+## 2026-06-12 — G158: topological (H0-persistence) bond rule — RULE CONFIRMED structurally; functional marker NULL (under-sensitive)
+
+Pre-registered in docs/amendments/G158_topological_bond_rule.md (bars FROZEN 2026-06-12). Reframed BEFORE drafting
+after an adversarial check found the original "attack percolation" intent would re-derive G86 (percolation is
+containable; the binding memory constraint is the orthogonal active-starve/quiet-erode dilemma, G93). Honest scope:
+does a persistent-homology (H0 / connected-component) constraint on bond formation SELF-ORGANISE a stable modular
+partition of the structural bond graph (partition chosen by graph topology, not a hand-placed plane as in G86),
+and functionally isolate modules in the TENSION graph? Explicitly NOT a memory-deadlock break.
+Tooling: tools/g158_topological_bond_rule.py (monkeypatches world.bridges.form_bridges with a union-find
+constrained version; tick() re-imports the name so the patch applies).
+
+Two parts, two honest outcomes:
+  (1) STRUCTURAL CLAIM — CONFIRMED, 3 seeds identical. M=2: graph self-organises to and HOLDS exactly 2 components
+      across all ticks, rejects 10 bottleneck merges, lambda2 = 0 (disconnected). M=1 (rule off): collapses to 1
+      component, lambda2 = 0.4384 (connected), one extra bond (the bottleneck). The rule builds and maintains the
+      modular partition purely from graph topology; the spectral signature (lambda2 0 vs 0.44) is textbook. The
+      emergent-vs-engineered modularity claim is demonstrated.
+  (2) PRE-REGISTERED FUNCTIONAL MARKER (mechanical-percolation ratio P) — NULL / UNDER-SENSITIVE. P(M=2)=0.059 ~=
+      P(M=1)=0.059: the control did NOT percolate (bar required P(M=1)>=0.30). Diagnosis (pattern 01, mechanism
+      fired): a SINGLE bottleneck bond cannot overcome the B-cluster's own internal rigidity (its 34-40-46 bonds
+      anchor it); B's ~0.06 displacement is just its internal relaxation, present with OR without the bottleneck.
+      Mechanical tension is too weak a channel to read isolation. The auto-verdict string ("FAIL — partition is
+      geometry") is MISLEADING and overridden by the structural evidence: the partition is demonstrably the rule's
+      doing (M=1 vs M=2 differ in components; 10 merges rejected), not geometry.
+
+DISCIPLINE NOTE: after seeing the under-sensitive control I was tempted to swap the B-cluster for a single free
+probe atom so the control would finally percolate — i.e. change the setup post-hoc until it passes. Per the
+project's pre-registration rule (no retuning to manufacture a pass; flag the urge explicitly) I STOPPED and did
+NOT re-run with an easier setup. The frozen functional marker stands at NULL/under-sensitive.
+
+Honest net: the new-math RULE works as a self-organising modularity mechanism (structural + spectral evidence
+unambiguous), but the pre-registered FUNCTIONAL consequence is unproven — the chosen mechanical observable was
+mis-specified (wrong/too-weak channel). This is itself a pattern-01 instance: the mechanism fired and did its
+structural job; the outcome metric measured the wrong quantity. It does NOT bear on the memory deadlock (out of
+scope by construction). No bars tuned; NULL on the functional marker stands.
+
