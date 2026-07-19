@@ -1,24 +1,15 @@
 """Live 3D PyVista visualisation for BET / belief-path experiments.
 
-Main-thread viewer. Entities are **large, colour-coded spheres** so they are
-actually visible (not 6px dust on black):
+Main-thread viewer.
 
-  FREE VIBRATIONS  blue (even polarity) / red (odd)  — mid-size spheres
-  ELECTRON (L1)    bright orange
-  PAIR (L2)        silver
-  TRIAD (L3)       cream
-  ATOM (L4)        white (largest of the small set)
-  MOLECULE (L5+)   green → magenta by level
+  FREE VIBRATIONS  **wave lines** (not spheres): sine polylines along travel
+                   direction; wavelength ~ 1/freq; colour by polarity + band
+  ELECTRON (L1)    bright orange sphere
+  PAIR / TRIAD     silver / cream spheres
+  ATOM (L4)        white sphere
+  MOLECULE (L5+)   green → magenta spheres
 
-Also draws short **velocity sticks** on free vibrations (motion / “wave” cue)
-and a legend. Camera recentres on content each frame.
-
-Keyboard:
-  space  pause / play
-  s      single step when paused
-  q      quit / skip rest headless
-  r      reset camera to content
-  1–5    toggle visibility filters (see HUD)
+Keyboard: space pause · s step · r camera · q quit
 """
 from __future__ import annotations
 
@@ -38,8 +29,6 @@ COLOR_TRIAD = np.array([1.00, 0.90, 0.55])
 COLOR_ATOM = np.array([1.00, 1.00, 1.00])
 COLOR_MOL_BASE = np.array([0.20, 1.00, 0.45])
 
-# Visual radii in world units (box is typically 60–80)
-R_VIBR = 0.85
 RADIUS_BY_LEVEL = {
     1: 1.4,   # electron
     2: 1.8,   # pair
@@ -59,16 +48,121 @@ for _l in range(5, 33):
     t = min(1.0, (_l - 5) / 12.0)
     COLOR_BY_LEVEL[_l] = (1.0 - t) * COLOR_MOL_BASE + t * np.array([1.0, 0.2, 0.9])
 
+# Wave polyline: samples along each free vibration
+WAVE_SAMPLES = 24          # points per vibration wave
+WAVE_LENGTH = 5.5          # world-units span of the drawn wave packet
+WAVE_AMP = 0.9             # transverse amplitude
+# Wavelength mapping: higher freq → shorter visual wavelength
+WAVE_LAMBDA_MIN = 0.6
+WAVE_LAMBDA_MAX = 3.2
+
 LEGEND = (
     "LEGEND\n"
-    "  BLUE / RED spheres = free vibrations (even / odd polarity)\n"
-    "  short sticks         = velocity (motion)\n"
-    "  ORANGE              = electrons\n"
-    "  SILVER / CREAM      = pairs / triads\n"
-    "  WHITE               = atoms\n"
-    "  GREEN→MAGENTA       = molecules (higher level)\n"
+    "  BLUE / RED WAVE LINES = free vibrations (even / odd polarity)\n"
+    "    tighter wiggles = higher frequency\n"
+    "  ORANGE spheres          = electrons (bound matter)\n"
+    "  SILVER / CREAM          = pairs / triads\n"
+    "  WHITE                   = atoms\n"
+    "  GREEN→MAGENTA           = molecules\n"
     "KEYS  space pause  s step  r camera  q quit"
 )
+
+
+def _orthonormal_frame(direction: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    """Two unit vectors perpendicular to *direction*."""
+    d = direction / (np.linalg.norm(direction) + 1e-12)
+    # pick an axis not parallel to d
+    helper = np.array([0.0, 0.0, 1.0]) if abs(d[2]) < 0.9 else np.array([1.0, 0.0, 0.0])
+    u = np.cross(d, helper)
+    u = u / (np.linalg.norm(u) + 1e-12)
+    v = np.cross(d, u)
+    v = v / (np.linalg.norm(v) + 1e-12)
+    return u, v
+
+
+def build_vibration_waves(world) -> tuple[Optional[object], Optional[object]]:
+    """Build PyVista PolyData of sine wave packets for free vibrations.
+
+    Returns (wave_mesh, backbone_mesh) or (None, None) if empty.
+    """
+    import pyvista as pv
+
+    mask = np.asarray(world.s_alive, dtype=bool)
+    n = int(mask.sum())
+    if n == 0:
+        return None, None
+
+    pts = np.ascontiguousarray(world.s_pos[mask], dtype=np.float64)
+    vel = np.ascontiguousarray(world.s_vel[mask], dtype=np.float64)
+    pol = np.asarray(world.s_pol[mask], dtype=bool)
+    freq = np.asarray(world.s_freq[mask], dtype=np.float64)
+    t = float(world.t)
+
+    # log-frequency → visual wavelength (high f = short λ)
+    logf = np.log10(np.maximum(freq, 10.0))
+    logf01 = np.clip((logf - 2.0) / 3.0, 0.0, 1.0)  # ~100..10000 Hz decades
+    lambdas = WAVE_LAMBDA_MAX - logf01 * (WAVE_LAMBDA_MAX - WAVE_LAMBDA_MIN)
+
+    n_s = WAVE_SAMPLES
+    # Preallocate points for all waves
+    all_pts = np.zeros((n * n_s, 3), dtype=np.float64)
+    all_rgb = np.zeros((n * n_s, 3), dtype=np.uint8)
+    # VTK lines: for each wave, one polyline cell of n_s points
+    # format: [n_s, i0, i1, ..., i_{n_s-1}] per line
+    lines = np.zeros(n * (n_s + 1), dtype=np.int64)
+    # backbone straight lines (travel direction)
+    back_pts = np.zeros((n * 2, 3), dtype=np.float64)
+    back_lines = np.zeros(n * 3, dtype=np.int64)
+
+    s = np.linspace(-0.5, 0.5, n_s, dtype=np.float64)  # parametric along packet
+
+    for i in range(n):
+        speed = float(np.linalg.norm(vel[i]))
+        if speed > 1e-6:
+            d = vel[i] / speed
+        else:
+            d = np.array([1.0, 0.0, 0.0])
+        u, _v = _orthonormal_frame(d)
+        lam = float(lambdas[i])
+        # phase advances with frequency so waves appear to oscillate in time
+        phase = t * float(freq[i]) * 0.02
+        # centre of packet at particle position
+        along = s * WAVE_LENGTH
+        # sine displacement in transverse direction u
+        sine = WAVE_AMP * np.sin(2.0 * np.pi * along / lam + phase)
+        wave = pts[i] + d[None, :] * along[:, None] + u[None, :] * sine[:, None]
+        sl = i * n_s
+        all_pts[sl : sl + n_s] = wave
+
+        # colour: polarity base + brightness by frequency band
+        base = COLOR_VIBR_EVEN if pol[i] else COLOR_VIBR_ODD
+        bright = 0.55 + 0.45 * float(logf01[i])
+        col = np.clip(base * bright, 0.0, 1.0)
+        all_rgb[sl : sl + n_s] = (col * 255.0).astype(np.uint8)
+
+        # line connectivity
+        lo = i * (n_s + 1)
+        lines[lo] = n_s
+        lines[lo + 1 : lo + 1 + n_s] = np.arange(sl, sl + n_s)
+
+        # straight backbone through centre (travel axis)
+        half = 0.5 * WAVE_LENGTH * d
+        back_pts[2 * i] = pts[i] - half
+        back_pts[2 * i + 1] = pts[i] + half
+        back_lines[3 * i] = 2
+        back_lines[3 * i + 1] = 2 * i
+        back_lines[3 * i + 2] = 2 * i + 1
+
+    waves = pv.PolyData()
+    waves.points = all_pts
+    waves.lines = lines
+    waves["rgb"] = all_rgb
+
+    backbone = pv.PolyData()
+    backbone.points = back_pts
+    backbone.lines = back_lines
+
+    return waves, backbone
 
 
 def _level_counts(world) -> str:
@@ -196,16 +290,15 @@ class BetLiveView:
         return True
 
     def _clear_dynamic(self, pl) -> None:
-        for name in ("vibrations", "vib_vel", "nodes", "hud", "legend"):
+        for name in ("vibrations", "vib_backbone", "nodes", "hud", "legend"):
             try:
                 pl.remove_actor(name, render=False)
             except Exception:
                 pass
-        # Also strip leftover actors that share prefixes (pyvista renames sometimes)
         try:
             actors = list(getattr(pl.renderer, "actors", {}).keys())
             for name in actors:
-                if any(k in str(name) for k in ("vibr", "node", "glyph", "PolyData")):
+                if any(k in str(name) for k in ("vibr", "node", "glyph", "PolyData", "backbone")):
                     try:
                         pl.remove_actor(name, render=False)
                     except Exception:
@@ -223,56 +316,30 @@ class BetLiveView:
         w = world
         self._frame += 1
 
-        # --- FREE VIBRATIONS as large coloured spheres ---
+        # --- FREE VIBRATIONS = frequency WAVE LINES (not spheres) ---
         if self._show_vibr and w.n_alive > 0:
-            mask = np.asarray(w.s_alive, dtype=bool)
-            n = int(mask.sum())
-            if n > 0:
-                pts = np.ascontiguousarray(w.s_pos[mask], dtype=np.float64)
-                pol = np.asarray(w.s_pol[mask], dtype=bool)
-                colors = np.zeros((n, 3), dtype=np.float64)
-                colors[pol] = COLOR_VIBR_EVEN
-                colors[~pol] = COLOR_VIBR_ODD
-                # Slight frequency brightness variation so bands differ
-                freq = np.asarray(w.s_freq[mask], dtype=np.float64)
-                f01 = np.clip(np.log10(np.maximum(freq, 10.0)) / 5.0, 0.0, 1.0)
-                colors = colors * (0.65 + 0.35 * f01[:, None])
-                colors = np.clip(colors, 0.0, 1.0)
-
-                pc = pv.PolyData(pts)
-                pc["rgb"] = (colors * 255.0).astype(np.uint8)
-                pc["r"] = np.full(n, R_VIBR, dtype=np.float64)
-                sphere = pv.Sphere(radius=1.0, theta_resolution=12, phi_resolution=12)
-                glyphs = pc.glyph(geom=sphere, scale="r", orient=False, factor=1.0)
+            waves, backbone = build_vibration_waves(w)
+            if waves is not None:
                 pl.add_mesh(
-                    glyphs, scalars="rgb", rgb=True, smooth_shading=True,
-                    name="vibrations", opacity=0.95,
+                    waves,
+                    scalars="rgb",
+                    rgb=True,
+                    line_width=3,
+                    name="vibrations",
+                    opacity=1.0,
+                    render_lines_as_tubes=True,
+                )
+            if backbone is not None and self._show_vel:
+                # faint straight axis = travel direction of the wave packet
+                pl.add_mesh(
+                    backbone,
+                    color=(0.85, 0.85, 0.40),
+                    line_width=1,
+                    name="vib_backbone",
+                    opacity=0.35,
                 )
 
-                # Velocity sticks (motion / wave cue)
-                if self._show_vel:
-                    vel = np.ascontiguousarray(w.s_vel[mask], dtype=np.float64)
-                    speed = np.linalg.norm(vel, axis=1, keepdims=True)
-                    speed = np.maximum(speed, 1e-6)
-                    direction = vel / speed
-                    # stick length proportional to speed, capped
-                    length = np.clip(speed.ravel() * 0.08, 0.5, 3.5)
-                    ends = pts + direction * length[:, None]
-                    # lines: pack as cells
-                    line_pts = np.vstack([pts, ends])
-                    lines = np.zeros((n, 3), dtype=np.int64)
-                    lines[:, 0] = 2
-                    lines[:, 1] = np.arange(n)
-                    lines[:, 2] = np.arange(n, 2 * n)
-                    pdata = pv.PolyData()
-                    pdata.points = line_pts
-                    pdata.lines = lines.ravel()
-                    pl.add_mesh(
-                        pdata, color=(0.9, 0.9, 0.3), line_width=2,
-                        name="vib_vel", opacity=0.7,
-                    )
-
-        # --- NODES (electrons → molecules) as large spheres ---
+        # --- NODES (electrons → molecules) as spheres (bound matter) ---
         if self._show_nodes and w.k_count > 0:
             alive = np.asarray(w.k_alive[: w.k_count], dtype=bool)
             idx = np.where(alive)[0]

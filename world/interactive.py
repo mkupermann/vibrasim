@@ -236,37 +236,51 @@ class InteractiveViewer:
     # Geometry rebuilds (cheap, per frame)
     # ------------------------------------------------------------------
     def _rebuild_vibrations(self):
-        import pyvista as pv
+        """Free vibrations as frequency wave-lines (not spheres/points)."""
         pl = self._pl
-        # Remove old
         if self._vib_actor is not None:
             try:
                 pl.remove_actor(self._vib_actor, render=False)
             except Exception:
                 pass
             self._vib_actor = None
+        # remove optional backbone if present
+        try:
+            pl.remove_actor("vib_backbone", render=False)
+        except Exception:
+            pass
         if not self.show_vibrations:
             return
         w = self.world
         if w.n_alive <= 0:
             return
-        mask = w.s_alive
-        pts = w.s_pos[mask]
-        if len(pts) == 0:
+        try:
+            from world.bet_live import build_vibration_waves
+            waves, backbone = build_vibration_waves(w)
+        except Exception:
             return
-        cloud = pv.PolyData(pts.copy())
-        pol = w.s_pol[mask]
-        colors = np.where(
-            pol[:, None],
-            np.array(COLOR_VIBR_EVEN),
-            np.array(COLOR_VIBR_ODD),
-        )
-        cloud["colors"] = (colors * 255).astype(np.uint8)
+        if waves is None:
+            return
         self._vib_actor = pl.add_mesh(
-            cloud, scalars="colors", rgb=True,
-            style="points", point_size=6, render_points_as_spheres=True,
+            waves,
+            scalars="rgb",
+            rgb=True,
+            line_width=3,
             name="vibrations",
+            opacity=1.0,
+            render_lines_as_tubes=True,
         )
+        if backbone is not None:
+            try:
+                pl.add_mesh(
+                    backbone,
+                    color=(0.85, 0.85, 0.40),
+                    line_width=1,
+                    name="vib_backbone",
+                    opacity=0.35,
+                )
+            except Exception:
+                pass
 
     def _rebuild_nodes(self):
         import pyvista as pv
