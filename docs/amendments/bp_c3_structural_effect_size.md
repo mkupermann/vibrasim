@@ -19,4 +19,4 @@ mean over trials of (mean_R − mean_L) ≥ **0.40**, with both sides populated 
 Reuse C1b geometry: N=400/side, T=1200, box 80×50×50, r_2=28, seeds **{91,93,97}**, 3 trials/seed.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-19). mean_Δ=0.278 (<0.40); same-band |Δ|=0.50 (control too large); frac_pos=0.556; pop=1.0. Structural bias exists weakly but fails effect-size + control bars.
