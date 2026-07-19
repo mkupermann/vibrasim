@@ -346,7 +346,9 @@ def run_protocol(
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(prog="run_bp_b1_molecule_information")
     p.add_argument("--smoke", action="store_true", help="N=4, T=50, seed 42 only")
-    p.add_argument("--live", action="store_true", help="PyVista 3D for first treatment trial")
+    p.add_argument("--live", action="store_true", default=True,
+                   help="PyVista 3D for first treatment trial (default ON)")
+    p.add_argument("--headless", action="store_true", help="disable live 3D")
     p.add_argument("--live-all", action="store_true", help="live-view every trial (slow)")
     args = p.parse_args(argv)
 
@@ -355,7 +357,7 @@ def main(argv: list[str] | None = None) -> int:
     else:
         n_trials, t_hold, seeds, smoke = N_FULL, T_FULL, SEEDS_FULL, False
 
-    live = bool(args.live or args.live_all)
+    live = False if args.headless else True
     print(f"BP-B1 start smoke={smoke} N={n_trials} T={t_hold} seeds={seeds} live={live}")
     result = run_protocol(
         n_trials=n_trials, t_hold=t_hold, seeds=seeds, smoke=smoke,
