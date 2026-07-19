@@ -15,13 +15,16 @@ Last updated: **2026-07-19**.
 - Spine: vibrations → energy field → bind → electrons → atoms → molecules (information) → matter → collections with talent → brain
 - Hard constraints: still `CLAUDE.md` (no LLM / transformer / pretrained embedding / BPE on this path; ports engineered, internals emerge)
 
-### Latest belief-path result
-- **BP-B1 PASS** (2026-07-19): molecule **composition fingerprint** is a selective content channel under engineered write + quiet hold (T=500); empty/scramble/position controls fail as required. Doc: `docs/amendments/bp_b1_molecule_information.md`. Scope: existence, not emergence.
+### Latest belief-path results
+- **BP-B1 PASS** (2026-07-19): composition fingerprint selective under **engineered** write. Doc: `docs/amendments/bp_b1_molecule_information.md`.
+- **BP-B2 PASS** (2026-07-19): **emergent** molecule decades decode drive identity (held-out seeds 11,23; acc 1.00); same-band / shuffle / count controls fail. Doc: `docs/amendments/bp_b2_emergent_species.md`.
+
+Rung B (molecules carry information) is **climbed at existence + emergent-write scope**.
 
 ### Next step (pick one)
-- **BP-B2** (if continuing middle rung): emergent species under two drives — no hand-plant of the label; same decode + controls.
 - **Rung C**: collections get talent (light vs sound selectivity without separate ML stacks).
 - **Rung A**: field → bind threshold.
+- **BP-B3** (optional stress): longer hold, multi-bit species alphabet, or transport of fingerprint over distance.
 
 ---
 

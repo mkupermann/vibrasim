@@ -97,4 +97,24 @@ Results: `~/.eqmod/bet/BP-B2/result.json`
 
 ## RESULT
 
-*(empty until after the official run)*
+**Verdict: PASS** (2026-07-19)  
+Runner: `tools/run_bp_b2_emergent_species.py`  
+Artifact: `~/.eqmod/bet/BP-B2/result.json`  
+Official seeds: {11, 23} · N=20/seed · T=1200  
+
+| Bar | Value | Threshold | Pass? |
+|-----|------:|-----------|:-----:|
+| B1 treatment acc | **1.000** | ≥ 0.90 | yes |
+| B2 C1 same-band acc | **0.475** | ≤ 0.60 | yes |
+| B3 C2 shuffle acc | **0.550** | ≤ 0.60 | yes |
+| B4 C3 count-only acc | **0.375** | ≤ 0.60 | yes |
+| B5 mol formation | **1.000** | ≥ 0.80 | yes |
+
+### Harness note
+First full attempt crashed with `RecursionError` in composition walk (cyclic CSR under molecule fusion). Fixed with cycle-safe depth-limited walk in the runner only — **bars unchanged**. Re-run completed cleanly.
+
+### Scope (honest)
+- **Emergent write works:** different vibration frequency drives produce molecule decade structure that decodes drive identity (mean decade ≶ 3.5) at 100% on held-out seeds.
+- Same-band control, label shuffle, and molecule-count-only readout stay near chance — content is in **composition**, not count or label noise.
+- Drive bands are **chosen experimental conditions** (engineered ports of stimulation), not discovered physics. Internals (which species form) emerge.
+- Does **not** show collection talent (Rung C) or field→bind law (Rung A).

@@ -5646,3 +5646,33 @@ stayed near chance (0.525).
 ### Next
 BP-B2 (emergent write) or Rung C — Michael's call.
 
+
+## 2026-07-19 — BP-B2 PASS: emergent molecule species carry drive identity
+
+Belief-path Rung B follow-on. Pre-reg committed first (3c21e8b) with held-out
+seeds {11, 23} (exploratory probes used 42/7/99 and are not the acceptance sample).
+
+### Protocol
+Drive A freq [100,2000] vs Drive B [500,10000]; session-3b-like binding; T=1200
+ticks; no hand-planted molecules. Decode: mean atom-decade across level-5+
+molecules < 3.5 → A else B.
+
+### Results (official)
+| Bar | Value | thr | ok |
+|-----|------:|-----|:--:|
+| B1 treatment | 1.000 | >=0.90 | Y |
+| B2 C1 same band | 0.475 | <=0.60 | Y |
+| B3 C2 shuffle | 0.550 | <=0.60 | Y |
+| B4 C3 count-only | 0.375 | <=0.60 | Y |
+| B5 mol formation | 1.000 | >=0.80 | Y |
+
+**Verdict: PASS.**
+
+### Harness
+First full run RecursionError on cyclic composition CSR — cycle-safe walker added
+in runner; bars not retuned; re-run PASS.
+
+### Scope
+Emergent write: drive spectrum → molecule structure → readable label. Not Rung C
+talent, not Rung A field law. Rung B closed at this scope.
+

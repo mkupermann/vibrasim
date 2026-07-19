@@ -60,7 +60,7 @@ The belief path does **not** deny that honesty. It says: **act as if the ladder 
 | R4 Proto-collections (membrane) | Matter joins into a stable body | **POSITIVE, scoped** — proto-cell forms, homeostasis, set-point; repair only partial with bond turnover |
 | R5 Selective memory | Matter holds content | **ACTIVITY: CLOSED NEGATIVE** (write≈leak). **MATTER POSITION: POSITIVE, scoped** (G114–G119) |
 | R6 Communication | Information moves | **POSITIVE, scoped** — co-located codec; free carriers do **not** carry symbols over distance |
-| R7 Molecules *carry information* | Internal molecular structure is the engram | **POSITIVE, scoped (BP-B1 PASS)** — composition fingerprint (`A33`/`A34`) decodes under engineered write + quiet hold; controls fail. **Not** emergent formation (BP-B2 open). |
+| R7 Molecules *carry information* | Internal molecular structure is the engram | **POSITIVE (BP-B1 + BP-B2 PASS)** — engineered write (B1) and **emergent** drive→species decode (B2, held-out seeds). Scope: frequency-drive conditions, not open talent. |
 | R8 Collections have *talent* | Light / sound / understanding specialize without modality-specific ML stacks | **OPEN** — current audio/video paths use engineered encoders/ports |
 | R9 Brain from collections | Cross-modal bind, learn, answer from matter assemblies | **OPEN** — later “cognition” wins used VSA/reservoir/Brian2 (**archive**, not this path) |
 | Computation / Ising / SA | Vibrations optimize hard problems | **CLOSED for EQMOD dynamics** — decorative; adjacent CIM is not EQMOD |
@@ -164,7 +164,7 @@ Do not start all three. Pick **one**. Bars below are *programme-level sketches*;
 | Date | Decision |
 |------|----------|
 | 2026-07-19 | Restart the **question** (belief ladder). Keep the **lab**. Adjacent tracks → archive. Active charter = this file. |
-| 2026-07-19 | Rung B chosen. **BP-B1 PASS** — composition fingerprint is a selective content channel under engineered write + quiet hold (scoped existence). Next: BP-B2 (emergence) or Rung C (talent) or Rung A (field). |
+| 2026-07-19 | Rung B: **BP-B1 PASS** (engineered write) then **BP-B2 PASS** (emergent drive→molecule decades). Next: Rung C (talent) or Rung A (field). |
 
 ---
 
