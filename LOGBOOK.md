@@ -5703,3 +5703,22 @@ Density of free vibrations is load-bearing for binding; pair rule still required
 Belief's 'energy field' under current primitives = local free-vibration density,
 not a separate field equation. Next open belief rung: C (talent).
 
+
+## 2026-07-19 — Autonomous session: live default + Rung C C1/C1b
+
+Michael: always live; agent decides for session.
+
+### Infrastructure
+- `world/bet_live.py` — main-thread PyVista during BETs; 2.5s end pose
+- BP-A1/B1/B2/C1/C1b: **live ON by default**, `--headless` for batch
+
+### Rung C
+- **BP-C1 NULL**: dual-drive L-low/R-high; B4 both-populated 0.50; B1 0.42
+- **BP-C1b NULL** (denser/longer, new pre-reg): B4 **1.00**, B1 **0.778** (<0.90),
+  controls OK. Population fixed; specialisation majority but not locked bar.
+- Pattern: `docs/patterns/dual_drive_collection_specialisation.md`
+- No post-hoc bar retune.
+
+### Belief ladder status
+A PASS · B PASS · C open (near-miss mapped) · brain blocked on clean C
+

@@ -3,7 +3,7 @@
 **One-screen pointer so a new session knows where the frontier is WITHOUT re-deriving settled work.**  
 Authoritative detail: `docs/BELIEF_PATH.md` (active question), `docs/FINDINGS_SUMMARY.md` / `docs/SYNTHESIS.md` (closed maps), `LOGBOOK.md` (diary, newest at bottom).  
 If this file disagrees with those, **BELIEF_PATH + the latest pre-registered amendment win for direction; FINDINGS/SYNTHESIS win for settled negatives.**  
-Last updated: **2026-07-19**.
+Last updated: **2026-07-19** (autonomous belief-path session).
 
 ---
 
@@ -13,18 +13,23 @@ Last updated: **2026-07-19**.
 
 - Charter: **`docs/BELIEF_PATH.md`**
 - Spine: vibrations → energy field → bind → electrons → atoms → molecules (information) → matter → collections with talent → brain
-- Hard constraints: still `CLAUDE.md` (no LLM / transformer / pretrained embedding / BPE on this path; ports engineered, internals emerge)
+- **Live 3D default ON** for belief-path runners (`world/bet_live.py`); use `--headless` for batch/CI
 
 ### Latest belief-path results
-- **BP-A1 PASS** (2026-07-19): local free-vibration **density** enables binding (cluster ≫ sparse; scramble kills binding). Field = density under current primitives. Doc: `docs/amendments/bp_a1_field_bind.md`.
-- **BP-B1 PASS**: composition fingerprint under engineered write.
-- **BP-B2 PASS**: emergent molecule decades decode drive identity.
+| ID | Verdict | One-liner |
+|----|---------|-----------|
+| **BP-A1** | **PASS** | Local free-vibration **density** enables binding |
+| **BP-B1** | **PASS** | Molecule composition fingerprint = content (engineered write) |
+| **BP-B2** | **PASS** | Emergent species decades decode drive identity |
+| **BP-C1** | **NULL** | Dual-drive talent: **population too sparse** (B4 fail) |
+| **BP-C1b** | **NULL** | Population fixed (B4=1.0); specialisation **0.778 &lt; 0.90** — real but noisy |
 
-Rungs **A** (density field→bind) and **B** (molecules carry information) are climbed at stated scope.
+Rungs **A** and **B** climbed. **Rung C** open with a **mapped near-miss** (majority specialisation, not acceptance). Pattern: `docs/patterns/dual_drive_collection_specialisation.md`.
 
-### Next step
-- **Rung C**: collections get talent (light vs sound selectivity without separate ML stacks) — main open belief rung.
-- Optional stress: BP-B3 multi-bit / transport; BP-A2 continuous energy scalar if a new primitive is proposed.
+### Next step (when resuming)
+- **BP-C2** (only if pursuing talent further): probe-response selectivity after dual drive — new bars, not retune C1b’s 0.90.
+- Or freeze Rung C as “partial/noisy structural specialisation” and document brain rung as blocked until talent is clean.
+- Optional: BP-B3 multi-bit molecule alphabet; BP-A2 if proposing a new energy primitive beyond density.
 
 ---
 
@@ -32,32 +37,21 @@ Rungs **A** (density field→bind) and **B** (molecules carry information) are c
 
 | Thread | Status | Bottom line |
 |--------|--------|-------------|
-| Binding hierarchy under current rules | **Mapped** | Electrons→atoms→molecules work; rules are hand-specified; 8% fragile under structured stimuli |
-| Proto-cell | **POSITIVE, scoped** | Forms, homeostasis, set-point; repair only partial (bond turnover frontier) |
-| Memory (activity) | **CLOSED NEGATIVE** | No stable blank; write≈leak (~70 NULLs) |
-| Memory (matter position) | **POSITIVE, scoped** | Selective+persistent multi-bit store; maintained not static |
-| Communication | **POSITIVE, scoped** | Co-located spatial codec; not free-carrier transport over distance |
-| EQMOD own dynamics as optimizer | **CLOSED NEGATIVE** | Decorative (G135) |
-| Adjacent CIM / SA | **Archive** | AHC-CIM real vs greedy; SA best at matched budget — **not** the belief path |
-| Temporal credit / e-prop / gated cell | **Archive** | Bottleneck = ungated architecture (BET-145); BET-146 never required for belief path |
-| VSA / reservoir “cognition wins” | **Archive** | Established methods; not molecule→talent→brain emergence |
-
-Highest historical experiment numbers (archive completeness only): substrate **G153**, cognition **~JEP-476**, **BET-145** last executed on temporal credit. Do not allocate new G/BET numbers that re-test the closed rows above without a new representation or rule.
+| Binding hierarchy under current rules | **Mapped** | Electrons→atoms→molecules work; rules hand-specified |
+| Proto-cell | **POSITIVE, scoped** | Forms, homeostasis; repair partial |
+| Memory (activity) | **CLOSED NEGATIVE** | write≈leak |
+| Memory (matter position) | **POSITIVE, scoped** | Selective multi-bit store |
+| Communication | **POSITIVE, scoped** | Co-located codec only |
+| EQMOD as optimizer / SA-CIM / VSA wins | **Archive** | Not belief path |
 
 ---
 
-## Programme-wide honesty (unchanged)
+## Live 3D commands
 
-The physics can be decorative for many *tasks* and still be the right object for the *belief*.  
-Wins that abandon reduction to vibrations are **not** belief-path wins.  
-NULL is a valid verdict. Post-hoc bar tuning is forbidden.  
-The process (pre-reg, controls, retraction) remains the meta-deliverable if the ladder fails.
-
----
-
-## If you are deciding the next step
-
-1. Open `docs/BELIEF_PATH.md`.  
-2. Do **not** resume SA/CIM, BET-146, VSA language demos, or G-churn by default.  
-3. Pre-register bars **before** any run.  
-4. After the run: LOGBOOK entry + update the open-rung table in BELIEF_PATH + this file.
+```text
+python tools/run_bp_a1_field_bind.py --smoke          # live default
+python tools/run_bp_b2_emergent_species.py --smoke
+python tools/run_bp_c1b_collection_talent_dense.py --smoke
+python -m world gui                                   # free playground
+# batch: add --headless
+```
