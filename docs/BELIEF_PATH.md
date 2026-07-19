@@ -157,6 +157,23 @@ Do not start all three. Pick **one**. Bars below are *programme-level sketches*;
 4. Confirm the next experiment is on Rung A, B, or C (or a pre-registered child of one).  
 5. If the proposed work is archive-shaped (VSA win, SA, Brian2, BET-146-style), **stop and ask Michael** — do not “helpfully” resume the old path.
 
+### Live 3D during a BET
+
+Belief-path runners support PyVista live view (main thread):
+
+```text
+python tools/run_bp_a1_field_bind.py --smoke --live
+python tools/run_bp_b1_molecule_information.py --smoke --live
+python tools/run_bp_b2_emergent_species.py --smoke --live
+```
+
+- `--live` — first treatment trial only (default for watching)  
+- `--live-all` — every trial (slow)  
+- Keys: `space` pause, `s` step, `q` finish rest headless  
+
+Free playground (not a BET): `python -m world gui`  
+Shared helper: `world/bet_live.py`
+
 ---
 
 ## 10. Decision record

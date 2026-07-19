@@ -20,8 +20,8 @@ _ROOT = Path(__file__).resolve().parents[1]
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
+from world.bet_live import run_ticks_live
 from world.config import WorldConfig
-from world.physics import tick
 from world.state import World
 
 # --- Locked protocol ---
@@ -104,15 +104,20 @@ def run_arm(
     mode: str,
     scramble_freq: bool,
     n_ticks: int,
+    live: bool = False,
 ) -> dict:
     plant_seed = int(seed * 1_000_003 + trial_i * 91 + n * 7 + (1 if scramble_freq else 0) + (2 if mode == "sparse" else 0))
     cfg = make_cfg(seed)
     world = World(cfg)
     plant(world, n, mode=mode, scramble_freq=scramble_freq, plant_seed=plant_seed)
     dt = float(cfg.dt)
-    for _ in range(n_ticks):
-        tick(world, dt)
-        world.t += dt
+    tag = f"{mode}{'+scramble' if scramble_freq else ''} N={n}"
+    run_ticks_live(
+        world, n_ticks, dt,
+        live=live,
+        title=f"BP-A1 {tag}",
+        ticks_per_frame=5,
+    )
     e = count_electrons(world)
     return {
         "seed": seed,
@@ -126,20 +131,34 @@ def run_arm(
     }
 
 
-def run_protocol(*, seeds: tuple[int, ...], trials: int, n_ticks: int, smoke: bool) -> dict:
+def run_protocol(
+    *, seeds: tuple[int, ...], trials: int, n_ticks: int, smoke: bool, live: bool = False, live_all: bool = False,
+) -> dict:
     t_rows: list[dict] = []
     c1_rows: list[dict] = []
     c2_rows: list[dict] = []
     b4_cluster: list[dict] = []
     b4_sparse: list[dict] = []
 
+    live_used = False
     for seed in seeds:
         for ti in range(trials):
-            t_rows.append(run_arm(seed=seed, trial_i=ti, n=N_MAIN, mode="cluster", scramble_freq=False, n_ticks=n_ticks))
-            c1_rows.append(run_arm(seed=seed, trial_i=ti, n=N_MAIN, mode="sparse", scramble_freq=False, n_ticks=n_ticks))
-            c2_rows.append(run_arm(seed=seed, trial_i=ti, n=N_MAIN, mode="cluster", scramble_freq=True, n_ticks=n_ticks))
-            b4_cluster.append(run_arm(seed=seed, trial_i=ti, n=N_LO, mode="cluster", scramble_freq=False, n_ticks=n_ticks))
-            b4_sparse.append(run_arm(seed=seed, trial_i=ti, n=N_LO, mode="sparse", scramble_freq=False, n_ticks=n_ticks))
+            def _live_now() -> bool:
+                nonlocal live_used
+                if not live:
+                    return False
+                if live_all:
+                    return True
+                if live_used:
+                    return False
+                live_used = True
+                return True
+
+            t_rows.append(run_arm(seed=seed, trial_i=ti, n=N_MAIN, mode="cluster", scramble_freq=False, n_ticks=n_ticks, live=_live_now()))
+            c1_rows.append(run_arm(seed=seed, trial_i=ti, n=N_MAIN, mode="sparse", scramble_freq=False, n_ticks=n_ticks, live=_live_now() if live_all else False))
+            c2_rows.append(run_arm(seed=seed, trial_i=ti, n=N_MAIN, mode="cluster", scramble_freq=True, n_ticks=n_ticks, live=_live_now() if live_all else False))
+            b4_cluster.append(run_arm(seed=seed, trial_i=ti, n=N_LO, mode="cluster", scramble_freq=False, n_ticks=n_ticks, live=False))
+            b4_sparse.append(run_arm(seed=seed, trial_i=ti, n=N_LO, mode="sparse", scramble_freq=False, n_ticks=n_ticks, live=False))
 
     def mean_e(rows: list[dict]) -> float:
         return float(np.mean([r["electrons"] for r in rows])) if rows else 0.0
@@ -194,6 +213,10 @@ def run_protocol(*, seeds: tuple[int, ...], trials: int, n_ticks: int, smoke: bo
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(prog="run_bp_a1_field_bind")
     p.add_argument("--smoke", action="store_true")
+    p.add_argument("--live", action="store_true",
+                   help="open PyVista 3D window for the first treatment trial")
+    p.add_argument("--live-all", action="store_true",
+                   help="live-view every main arm trial (slow)")
     args = p.parse_args(argv)
 
     if args.smoke:
@@ -201,8 +224,12 @@ def main(argv: list[str] | None = None) -> int:
     else:
         seeds, trials, n_ticks, smoke = SEEDS_FULL, TRIALS_PER_SEED, T_FULL, False
 
-    print(f"BP-A1 start smoke={smoke} seeds={seeds} trials={trials} T={n_ticks}")
-    result = run_protocol(seeds=seeds, trials=trials, n_ticks=n_ticks, smoke=smoke)
+    live = bool(args.live or args.live_all)
+    print(f"BP-A1 start smoke={smoke} seeds={seeds} trials={trials} T={n_ticks} live={live}")
+    result = run_protocol(
+        seeds=seeds, trials=trials, n_ticks=n_ticks, smoke=smoke,
+        live=live, live_all=bool(args.live_all),
+    )
 
     out_dir = Path.home() / ".eqmod" / "bet" / "BP-A1"
     out_dir.mkdir(parents=True, exist_ok=True)

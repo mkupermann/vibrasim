@@ -21,8 +21,8 @@ if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
 from tools.classify_molecules import species_fingerprint
+from world.bet_live import run_ticks_live
 from world.config import WorldConfig
-from world.physics import tick
 from world.state import World
 
 
@@ -89,13 +89,14 @@ def make_cfg(seed: int, freq_min: float, freq_max: float) -> WorldConfig:
     )
 
 
-def form_world(seed: int, freq_min: float, freq_max: float, n_ticks: int) -> World:
+def form_world(
+    seed: int, freq_min: float, freq_max: float, n_ticks: int,
+    *, live: bool = False, title: str = "BP-B2",
+) -> World:
     cfg = make_cfg(seed, freq_min, freq_max)
     world = World(cfg)
     dt = float(cfg.dt)
-    for _ in range(n_ticks):
-        tick(world, dt)
-        world.t += dt
+    run_ticks_live(world, n_ticks, dt, live=live, title=title, ticks_per_frame=8)
     return world
 
 
@@ -140,9 +141,13 @@ def drive_for_label(label: str, *, c1: bool) -> tuple[float, float]:
     return DRIVE_A if label == "A" else DRIVE_B
 
 
-def run_protocol(*, n_trials: int, t_form: int, seeds: tuple[int, ...], smoke: bool) -> dict:
+def run_protocol(
+    *, n_trials: int, t_form: int, seeds: tuple[int, ...], smoke: bool,
+    live: bool = False, live_all: bool = False,
+) -> dict:
     t_rows: list[dict] = []
     c1_rows: list[dict] = []
+    live_used = False
 
     for seed in seeds:
         rng = np.random.default_rng(seed)
@@ -151,8 +156,16 @@ def run_protocol(*, n_trials: int, t_form: int, seeds: tuple[int, ...], smoke: b
             # Trial-unique seed so A/B draws differ within a schedule
             trial_seed = int(seed * 1_000_003 + i * 97 + (0 if lab == "A" else 1))
 
+            use_live = False
+            if live and (live_all or not live_used):
+                use_live = True
+                live_used = True
+
             lo_t, hi_t = drive_for_label(lab, c1=False)
-            w_t = form_world(trial_seed, lo_t, hi_t, t_form)
+            w_t = form_world(
+                trial_seed, lo_t, hi_t, t_form,
+                live=use_live, title=f"BP-B2 drive {lab} band=[{lo_t:.0f},{hi_t:.0f}]",
+            )
             st_t = molecule_stats(w_t)
             pred_t = decode_mean_decade(st_t["mean_decade"])
             t_rows.append({
@@ -169,7 +182,10 @@ def run_protocol(*, n_trials: int, t_form: int, seeds: tuple[int, ...], smoke: b
 
             lo_c, hi_c = drive_for_label(lab, c1=True)
             # Different trial_seed offset so C1 is independent physics
-            w_c1 = form_world(trial_seed + 17, lo_c, hi_c, t_form)
+            w_c1 = form_world(
+                trial_seed + 17, lo_c, hi_c, t_form,
+                live=live_all, title=f"BP-B2 C1 same-band label={lab}",
+            )
             st_c1 = molecule_stats(w_c1)
             pred_c1 = decode_mean_decade(st_c1["mean_decade"])
             c1_rows.append({
@@ -242,6 +258,8 @@ def run_protocol(*, n_trials: int, t_form: int, seeds: tuple[int, ...], smoke: b
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(prog="run_bp_b2_emergent_species")
     p.add_argument("--smoke", action="store_true")
+    p.add_argument("--live", action="store_true", help="PyVista 3D for first treatment trial")
+    p.add_argument("--live-all", action="store_true", help="live-view every trial (slow)")
     args = p.parse_args(argv)
 
     if args.smoke:
@@ -249,8 +267,12 @@ def main(argv: list[str] | None = None) -> int:
     else:
         n_trials, t_form, seeds, smoke = N_FULL, T_FULL, SEEDS_FULL, False
 
-    print(f"BP-B2 start smoke={smoke} N={n_trials} T={t_form} seeds={seeds}")
-    result = run_protocol(n_trials=n_trials, t_form=t_form, seeds=seeds, smoke=smoke)
+    live = bool(args.live or args.live_all)
+    print(f"BP-B2 start smoke={smoke} N={n_trials} T={t_form} seeds={seeds} live={live}")
+    result = run_protocol(
+        n_trials=n_trials, t_form=t_form, seeds=seeds, smoke=smoke,
+        live=live, live_all=bool(args.live_all),
+    )
 
     out_dir = Path.home() / ".eqmod" / "bet" / "BP-B2"
     out_dir.mkdir(parents=True, exist_ok=True)
