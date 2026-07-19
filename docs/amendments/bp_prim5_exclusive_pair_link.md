@@ -29,4 +29,5 @@ Seeds {521, 531}, trials 10.
 🔮 PASS
 
 ## RESULT
-*(after)*
+### PRIM5-D0 **PASS** (2026-07-20 night)
+L1=1 L2=1 L3=1. Exclusive pair-link creates exactly two class-matched cross bridges.

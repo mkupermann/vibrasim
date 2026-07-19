@@ -19,4 +19,4 @@ Seeds {421, 431}, trials 10; N_write=12/pair; T_idle=300.
 🔮 LEAN PASS if multislot seeds 2 atoms/side and form_bridges links matching pairs; miss if bridges only link nearest cross pair once or mix endpoints.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20 night). B1=1.0 B2=0.0 B3=1.0. Two exclusive pairs co-resident with multislot.

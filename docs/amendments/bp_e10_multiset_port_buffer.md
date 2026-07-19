@@ -19,4 +19,4 @@ Seeds {401, 411}, trials 10; N_write=10/band; T_idle=40.
 🔮 PASS
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20 night). B1=1.0 B2=0.0 B3=1.0. Multiset K=3 holds under PRIM4.

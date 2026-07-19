@@ -25,4 +25,4 @@ Seeds {541, 551}, trials 12. Budget 150s / hard 300s.
 🔮 PASS lean: exclusive edges route charge only along matched pair.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20 night). B1=1.0 B2=0.0 B3=1.0. Selective L0→R0 charge with PRIM5 exclusive links. E15 boundary stands for all-to-all.
