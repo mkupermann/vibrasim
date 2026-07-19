@@ -24,4 +24,10 @@ Seeds {461, 471}, trials 10; N_write=12; T_prop=120. Budget 90s / hard 180s.
 🔮 LEAN PASS if firing_events + prop along cross bridges work; miss if neurons never fire or prop_min blocks.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20 night). B1=**0.000** (end-state ΔR≥1), B2=1.000, B3=1.000.
+
+### Calibration
+🔮 lean PASS — **MISS**. Cross bridges form; prop can raise R charge on fire ticks, but `tau_membrane` decays charge so **end-of-window** ΔR fails. No bar retune.
+
+### Next
+E14: **peak** cross charge during prop window (transient transfer), not end-state.
