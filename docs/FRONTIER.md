@@ -19,20 +19,22 @@
 | E3 | **NULL** | Last-write ≠ strength (0.45); equal mass not recency |
 | E4 | **PASS** | L band → R partner 1.0; uncorrelated ctrl 0.42 |
 | E5 | **PASS** | K=3 dual-side class decode 1.0; indep match 0.33 |
+| E6 | **PASS** | Last joint content wins; residual first=0 |
+| E-series storage | **CLOSED PARTIAL** | `bp_e_series_port_storage_closure.md` |
 
 ## Open / blocked
 
 | Question | Status |
 |----------|--------|
 | Free-chemistry talent @ 0.90 | **Blocked** without new primitive (do not retune C5 FREE bar) |
-| Port-local structural memory (which side) | **PASS** E2 — usable engineered base |
+| Port side + multi-band storage + overwrite | **PASS** E2/E4–E6 (engineered curriculum) |
 | Write *order* from equal strength | **CLOSED** (pattern `ilw_strength_not_recency`) |
-| Write-time multi-band storage (K≤3) | **PASS** E4–E5 (external map; not learning) |
-| Multi-trial / no-map association | **Open** — next hard E-climb |
-| Brain (R9) | Blocked until honest C reopen or port curriculum climbs |
+| Multi-trial / no-map association | **Open** — hard; not storage farm |
+| Recency channel | Needs new primitive (L4 permanent) |
+| Brain (R9) | Blocked until C reopen or beyond-storage curriculum |
 
 ## Do not re-derive
-Archive tracks (VSA / SA-CIM / BET-144+ / GEO-LLM). Memory activity write≈leak. C dual free inject. Do not farm more K-band storage PASSes without a new mechanism.
+Archive tracks (VSA / SA-CIM / BET-144+ / GEO-LLM). Memory activity write≈leak. C dual free inject. E K-band storage farm closed.
 
 ## Next allowed move
-**One** pre-reg that can honestly NULL: sequential **content overwrite** (last joint pair wins) **or** multi-trial association without external map. Not free talent without new primitive. Not another K-band centroid farm.
+**One** hard pre-reg only: multi-trial association without external map, **or** named recency/eligibility primitive, **or** free-talent primitive. Not E7 storage cosmetics.

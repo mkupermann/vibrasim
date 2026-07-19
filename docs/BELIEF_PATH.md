@@ -184,6 +184,7 @@ Shared helper: `world/bet_live.py`
 | 2026-07-19 | Rung A+B PASS. C1–C4 NULL → **C CLOSED PARTIAL**. Sharp discipline. PRIM1 directional write pre-reg next. |
 | 2026-07-19 | PRIM1-D2 + PRIM2-D0 PASS; C5 NULL (ILW eng. specialisation works; free talent still short). |
 | 2026-07-20 | E1 NULL → E2 PASS (port side trace). E3 NULL: strength ≠ last-write order; family closed. E4 association next. |
+| 2026-07-20 | E4–E6 PASS (storage+overwrite). E-series port storage **CLOSED PARTIAL**. Next = multi-trial/no-map or new primitive only. |
 
 ---
 

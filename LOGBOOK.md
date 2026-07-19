@@ -5889,3 +5889,14 @@ E-series board: E2+E4 usable base; E3 order-from-strength closed.
 Pre-reg e5fb853 before data.
 B1_L=1.0 B2_R=1.0 B3_ctrl_match=0.333 B4_pop=1.0  **PASS**
 Prediction HIT. Pattern write_time_map_not_learning: E4/E5 are engineered multi-band storage + external map, not learned association. Stop farming K-band PASSes; next needs new hard mechanism.
+
+## 2026-07-20 — BP-E6 PASS + E-series port storage CLOSED PARTIAL
+
+Pre-reg c4793d3 before data.
+E6: L/R last=1.0 residual first=0 ctrl=1.0  **PASS**
+
+### E-series synthesis
+docs/amendments/bp_e_series_port_storage_closure.md
+E2 side trace; E4-E5 multi-band storage; E6 overwrite; E3 order closed.
+Honest: external map storage, not learned association. Stop K-band farm.
+Next allowed: multi-trial no-map association OR recency primitive OR free-talent primitive only.
