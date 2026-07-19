@@ -2033,6 +2033,59 @@ def apply_ilw_port_event(world, port_pos, rng=None, seed_freq: float = 3000.0) -
     return out
 
 
+def _ensure_bridge(world, i: int, j: int, delta: float = 1.0) -> int:
+    """Create or strengthen bridge between atoms i,j. Returns bridge index or -1."""
+    if i < 0 or j < 0 or i == j:
+        return -1
+    a, b = (i, j) if i < j else (j, i)
+    for bi in range(world.b_count):
+        if not world.b_alive[bi]:
+            continue
+        x, y = int(world.b_atom_i[bi]), int(world.b_atom_j[bi])
+        if (min(x, y), max(x, y)) == (a, b):
+            world.b_strength[bi] = float(world.b_strength[bi]) + float(delta)
+            return bi
+    bi = world.b_count
+    if bi >= world.b_alive.shape[0]:
+        return -1
+    world.b_alive[bi] = True
+    world.b_atom_i[bi] = i
+    world.b_atom_j[bi] = j
+    world.b_strength[bi] = float(delta)
+    world.b_count += 1
+    if hasattr(world, "k_bond_count"):
+        world.k_bond_count[i] = int(world.k_bond_count[i]) + 1
+        world.k_bond_count[j] = int(world.k_bond_count[j]) + 1
+    return bi
+
+
+def apply_ilw_pair_write(world, port_L, port_R, seed_L: float, seed_R: float, rng=None) -> dict:
+    """PRIM5: dual ILW on L and R; optionally exclusive bridge between written slots.
+
+    Returns {L, R, bridge, mode_L, mode_R}. No-op pieces if ilw disabled.
+    """
+    cfg = world.config
+    out_L = apply_ilw_port_event(world, port_L, rng, seed_freq=float(seed_L))
+    out_R = apply_ilw_port_event(world, port_R, rng, seed_freq=float(seed_R))
+    i = int(out_L.get("atom_idx", -1))
+    if i < 0:
+        i = int(out_L.get("mol_idx", -1))
+    j = int(out_R.get("atom_idx", -1))
+    if j < 0:
+        j = int(out_R.get("mol_idx", -1))
+    b = -1
+    if getattr(cfg, "ilw_pair_link_enabled", False) and i >= 0 and j >= 0:
+        d = float(getattr(cfg, "ilw_pair_link_delta", 1.0))
+        b = _ensure_bridge(world, i, j, delta=d)
+    return {
+        "L": out_L,
+        "R": out_R,
+        "atom_L": i,
+        "atom_R": j,
+        "bridge": b,
+    }
+
+
 def apply_scale_repulsion(world, dt: float) -> None:
     """§4.6 scale-separation repulsion.
 
