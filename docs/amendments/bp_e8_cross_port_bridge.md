@@ -32,4 +32,10 @@ Seeds {341, 351}, trials 12; N_write=15; T_idle=300; mid=40; ports (20,25,25)/(6
 🔮 **LEAN NULL or borderline**: form_bridges uses r_2 and valence; ports 40 apart under r_2=45 should work *if* atoms stay near ports — but midplane does not block bridges. Most-likely miss: atoms drift/repel, or bond formation blocked elsewhere → B1 fail.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20 night). B1_dual_cross=**1.000**, B2_onesided=**0.000**, B3_pop=**1.000**.
+
+### Calibration
+🔮 lean NULL — **MISS** (good surprise): with r_2=45 and valence=4, dual ILW seeds form reliable cross-mid bridges; one-sided never does.
+
+### Lesson
+Physical cross-port **graph link** is available without PRIM4. Association object can be the bridge + endpoint structure.
