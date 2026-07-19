@@ -1,16 +1,24 @@
 """Live 3D PyVista visualisation for BET / belief-path experiments.
 
-Main-thread viewer (VTK is happier on the UI thread than `LivePreview`'s
-background thread). Call from experiment runners with ``--live``:
+Main-thread viewer. Entities are **large, colour-coded spheres** so they are
+actually visible (not 6px dust on black):
 
-    from world.bet_live import run_ticks_live
+  FREE VIBRATIONS  blue (even polarity) / red (odd)  — mid-size spheres
+  ELECTRON (L1)    bright orange
+  PAIR (L2)        silver
+  TRIAD (L3)       cream
+  ATOM (L4)        white (largest of the small set)
+  MOLECULE (L5+)   green → magenta by level
 
-    run_ticks_live(world, n_ticks, dt, title="BP-A1 cluster", live=True)
+Also draws short **velocity sticks** on free vibrations (motion / “wave” cue)
+and a legend. Camera recentres on content each frame.
 
-Keyboard while open:
-  q / Esc   close early and finish remaining ticks headless
-  space     pause / resume physics
-  s         single step when paused
+Keyboard:
+  space  pause / play
+  s      single step when paused
+  q      quit / skip rest headless
+  r      reset camera to content
+  1–5    toggle visibility filters (see HUD)
 """
 from __future__ import annotations
 
@@ -21,36 +29,80 @@ import numpy as np
 
 from world.physics import tick
 
-COLOR_VIBR_EVEN = (0.29, 0.56, 0.89)
-COLOR_VIBR_ODD = (0.91, 0.30, 0.24)
-COLOR_ELECTRON = (0.95, 0.61, 0.07)
-COLOR_ATOM = (1.0, 1.0, 1.0)
+# Bright, high-contrast palette (0–1 RGB)
+COLOR_VIBR_EVEN = np.array([0.15, 0.55, 1.00])   # electric blue
+COLOR_VIBR_ODD = np.array([1.00, 0.20, 0.25])    # hot red
+COLOR_ELECTRON = np.array([1.00, 0.65, 0.05])    # amber
+COLOR_PAIR = np.array([0.75, 0.80, 0.90])
+COLOR_TRIAD = np.array([1.00, 0.90, 0.55])
+COLOR_ATOM = np.array([1.00, 1.00, 1.00])
+COLOR_MOL_BASE = np.array([0.20, 1.00, 0.45])
 
-RADIUS_BY_LEVEL = {l: 1.0 + l * 0.5 for l in range(1, 33)}
-RADIUS_BY_LEVEL[4] = 3.0
+# Visual radii in world units (box is typically 60–80)
+R_VIBR = 0.85
+RADIUS_BY_LEVEL = {
+    1: 1.4,   # electron
+    2: 1.8,   # pair
+    3: 2.2,   # triad
+    4: 2.8,   # atom
+}
+for _l in range(5, 33):
+    RADIUS_BY_LEVEL[_l] = 3.2 + 0.25 * (_l - 5)
+
 COLOR_BY_LEVEL = {
     1: COLOR_ELECTRON,
-    2: (0.85, 0.85, 0.90),
-    3: (0.95, 0.92, 0.85),
+    2: COLOR_PAIR,
+    3: COLOR_TRIAD,
     4: COLOR_ATOM,
 }
 for _l in range(5, 33):
-    _t = (_l - 5) / 27.0
-    COLOR_BY_LEVEL[_l] = (0.3 + 0.7 * _t, 0.9 - 0.5 * _t, 1.0 - 0.8 * _t)
+    t = min(1.0, (_l - 5) / 12.0)
+    COLOR_BY_LEVEL[_l] = (1.0 - t) * COLOR_MOL_BASE + t * np.array([1.0, 0.2, 0.9])
+
+LEGEND = (
+    "LEGEND\n"
+    "  BLUE / RED spheres = free vibrations (even / odd polarity)\n"
+    "  short sticks         = velocity (motion)\n"
+    "  ORANGE              = electrons\n"
+    "  SILVER / CREAM      = pairs / triads\n"
+    "  WHITE               = atoms\n"
+    "  GREEN→MAGENTA       = molecules (higher level)\n"
+    "KEYS  space pause  s step  r camera  q quit"
+)
 
 
 def _level_counts(world) -> str:
-    parts = []
-    for L, name in ((1, "e-"), (2, "pair"), (3, "triad"), (4, "atom")):
+    parts = [f"vibr {int(world.s_alive.sum())}"]
+    names = {1: "e-", 2: "pair", 3: "triad", 4: "atom"}
+    for L, name in names.items():
         n = int(((world.k_level[: world.k_count] == L) & world.k_alive[: world.k_count]).sum())
-        if n:
-            parts.append(f"{name} {n}")
+        parts.append(f"{name} {n}")
     n_mol = int(((world.k_level[: world.k_count] >= 5) & world.k_alive[: world.k_count]).sum())
-    if n_mol:
-        parts.append(f"mol {n_mol}")
-    n_v = int(world.s_alive.sum())
-    parts.insert(0, f"vibr {n_v}")
-    return "  ".join(parts)
+    parts.append(f"mol {n_mol}")
+    return " | ".join(parts)
+
+
+def _content_bounds(world) -> Optional[tuple]:
+    """Axis-aligned bounds of all visible content, or None if empty."""
+    pts = []
+    if world.n_alive > 0:
+        m = world.s_alive
+        if m.any():
+            pts.append(world.s_pos[m])
+    if world.k_count > 0:
+        m = world.k_alive[: world.k_count]
+        if m.any():
+            pts.append(world.k_pos[: world.k_count][m])
+    if not pts:
+        return None
+    allp = np.vstack(pts)
+    lo = allp.min(axis=0)
+    hi = allp.max(axis=0)
+    # pad
+    pad = 4.0
+    lo = lo - pad
+    hi = hi + pad
+    return (float(lo[0]), float(hi[0]), float(lo[1]), float(hi[1]), float(lo[2]), float(hi[2]))
 
 
 class BetLiveView:
@@ -63,6 +115,10 @@ class BetLiveView:
         self.playing = True
         self._step_once = False
         self._user_quit = False
+        self._show_vibr = True
+        self._show_nodes = True
+        self._show_vel = True
+        self._frame = 0
 
     def open(self, world) -> bool:
         try:
@@ -72,17 +128,27 @@ class BetLiveView:
             return False
         try:
             bx, by, bz = world.config.box_size
-            pl = pv.Plotter(title=self.title)
+            pl = pv.Plotter(title=self.title, window_size=(1280, 800))
             pl.set_background("black")
+            # Soft grey box so content pops
             box = pv.Box(bounds=(0, bx, 0, by, 0, bz))
-            pl.add_mesh(box, style="wireframe", color=(0.3, 0.3, 0.35), line_width=1, name="box")
+            pl.add_mesh(
+                box, style="wireframe", color=(0.45, 0.45, 0.55),
+                line_width=2, name="box", opacity=0.9,
+            )
+            # Lighting
+            try:
+                pl.enable_lightkit()
+            except Exception:
+                pass
             pl.add_key_event("space", self._toggle_play)
             pl.add_key_event("s", self._request_step)
             pl.add_key_event("q", self._request_quit)
-            pl.camera_position = "iso"
+            pl.add_key_event("r", lambda: self._reset_camera(world))
             pl.show(interactive_update=True, auto_close=False)
             self._pl = pl
-            self._rebuild(world, hud_extra="")
+            self._rebuild(world, hud_extra="starting…")
+            self._reset_camera(world)
             pl.update()
             return True
         except Exception as exc:
@@ -99,6 +165,25 @@ class BetLiveView:
     def _request_quit(self):
         self._user_quit = True
 
+    def _reset_camera(self, world=None):
+        pl = self._pl
+        if pl is None:
+            return
+        try:
+            b = _content_bounds(world) if world is not None else None
+            if b is not None:
+                pl.reset_camera(bounds=b)
+            else:
+                pl.camera_position = "iso"
+                pl.reset_camera()
+            pl.camera.zoom(1.15)
+        except Exception:
+            try:
+                pl.camera_position = "iso"
+                pl.reset_camera()
+            except Exception:
+                pass
+
     def _window_alive(self) -> bool:
         pl = self._pl
         if pl is None or self._closed:
@@ -110,60 +195,120 @@ class BetLiveView:
             return False
         return True
 
+    def _clear_dynamic(self, pl) -> None:
+        for name in ("vibrations", "vib_vel", "nodes", "hud", "legend"):
+            try:
+                pl.remove_actor(name, render=False)
+            except Exception:
+                pass
+        # Also strip leftover actors that share prefixes (pyvista renames sometimes)
+        try:
+            actors = list(getattr(pl.renderer, "actors", {}).keys())
+            for name in actors:
+                if any(k in str(name) for k in ("vibr", "node", "glyph", "PolyData")):
+                    try:
+                        pl.remove_actor(name, render=False)
+                    except Exception:
+                        pass
+        except Exception:
+            pass
+
     def _rebuild(self, world, hud_extra: str = "") -> None:
         import pyvista as pv
 
         pl = self._pl
         if pl is None:
             return
-        # Clear dynamic actors by name if present
-        for name in ("vibrations", "nodes", "hud"):
-            try:
-                pl.remove_actor(name, render=False)
-            except Exception:
-                pass
-
+        self._clear_dynamic(pl)
         w = world
-        if w.n_alive > 0:
-            mask = w.s_alive
-            pts = w.s_pos[mask]
-            if len(pts) > 0:
-                cloud = pv.PolyData(pts.copy())
-                pol = w.s_pol[mask]
-                colors = np.where(
-                    pol[:, None],
-                    np.array(COLOR_VIBR_EVEN),
-                    np.array(COLOR_VIBR_ODD),
-                )
-                cloud["colors"] = (colors * 255).astype(np.uint8)
+        self._frame += 1
+
+        # --- FREE VIBRATIONS as large coloured spheres ---
+        if self._show_vibr and w.n_alive > 0:
+            mask = np.asarray(w.s_alive, dtype=bool)
+            n = int(mask.sum())
+            if n > 0:
+                pts = np.ascontiguousarray(w.s_pos[mask], dtype=np.float64)
+                pol = np.asarray(w.s_pol[mask], dtype=bool)
+                colors = np.zeros((n, 3), dtype=np.float64)
+                colors[pol] = COLOR_VIBR_EVEN
+                colors[~pol] = COLOR_VIBR_ODD
+                # Slight frequency brightness variation so bands differ
+                freq = np.asarray(w.s_freq[mask], dtype=np.float64)
+                f01 = np.clip(np.log10(np.maximum(freq, 10.0)) / 5.0, 0.0, 1.0)
+                colors = colors * (0.65 + 0.35 * f01[:, None])
+                colors = np.clip(colors, 0.0, 1.0)
+
+                pc = pv.PolyData(pts)
+                pc["rgb"] = (colors * 255.0).astype(np.uint8)
+                pc["r"] = np.full(n, R_VIBR, dtype=np.float64)
+                sphere = pv.Sphere(radius=1.0, theta_resolution=12, phi_resolution=12)
+                glyphs = pc.glyph(geom=sphere, scale="r", orient=False, factor=1.0)
                 pl.add_mesh(
-                    cloud, scalars="colors", rgb=True,
-                    style="points", point_size=6, render_points_as_spheres=True,
-                    name="vibrations",
+                    glyphs, scalars="rgb", rgb=True, smooth_shading=True,
+                    name="vibrations", opacity=0.95,
                 )
 
-        if w.k_count > 0:
-            idx = np.where(w.k_alive[: w.k_count])[0]
-            if len(idx) > 0:
-                positions = w.k_pos[idx].copy()
-                levels = w.k_level[idx].astype(np.int32)
-                radii = np.array([RADIUS_BY_LEVEL.get(int(L), 1.0) for L in levels])
-                colors = np.array([COLOR_BY_LEVEL.get(int(L), COLOR_ATOM) for L in levels])
-                pc = pv.PolyData(positions)
-                pc["radius"] = radii
-                pc["colors"] = (colors * 255).astype(np.uint8)
-                unit = pv.Sphere(radius=1.0, theta_resolution=16, phi_resolution=16)
-                glyphs = pc.glyph(geom=unit, scale="radius", orient=False)
-                pl.add_mesh(glyphs, scalars="colors", rgb=True, smooth_shading=True, name="nodes")
+                # Velocity sticks (motion / wave cue)
+                if self._show_vel:
+                    vel = np.ascontiguousarray(w.s_vel[mask], dtype=np.float64)
+                    speed = np.linalg.norm(vel, axis=1, keepdims=True)
+                    speed = np.maximum(speed, 1e-6)
+                    direction = vel / speed
+                    # stick length proportional to speed, capped
+                    length = np.clip(speed.ravel() * 0.08, 0.5, 3.5)
+                    ends = pts + direction * length[:, None]
+                    # lines: pack as cells
+                    line_pts = np.vstack([pts, ends])
+                    lines = np.zeros((n, 3), dtype=np.int64)
+                    lines[:, 0] = 2
+                    lines[:, 1] = np.arange(n)
+                    lines[:, 2] = np.arange(n, 2 * n)
+                    pdata = pv.PolyData()
+                    pdata.points = line_pts
+                    pdata.lines = lines.ravel()
+                    pl.add_mesh(
+                        pdata, color=(0.9, 0.9, 0.3), line_width=2,
+                        name="vib_vel", opacity=0.7,
+                    )
 
+        # --- NODES (electrons → molecules) as large spheres ---
+        if self._show_nodes and w.k_count > 0:
+            alive = np.asarray(w.k_alive[: w.k_count], dtype=bool)
+            idx = np.where(alive)[0]
+            if len(idx) > 0:
+                positions = np.ascontiguousarray(w.k_pos[idx], dtype=np.float64)
+                levels = w.k_level[idx].astype(np.int32)
+                radii = np.array([RADIUS_BY_LEVEL.get(int(L), 2.0) for L in levels], dtype=np.float64)
+                colors = np.array(
+                    [COLOR_BY_LEVEL.get(int(L), COLOR_ATOM) for L in levels],
+                    dtype=np.float64,
+                )
+                pc = pv.PolyData(positions)
+                pc["rgb"] = (np.clip(colors, 0, 1) * 255.0).astype(np.uint8)
+                pc["r"] = radii
+                sphere = pv.Sphere(radius=1.0, theta_resolution=16, phi_resolution=16)
+                glyphs = pc.glyph(geom=sphere, scale="r", orient=False, factor=1.0)
+                pl.add_mesh(
+                    glyphs, scalars="rgb", rgb=True, smooth_shading=True,
+                    name="nodes", opacity=1.0,
+                )
+
+        # HUD + legend
         hud = (
             f"{self.title}\n"
-            f"t={w.t:7.2f}s   {_level_counts(w)}\n"
-            f"{'[PAUSED space=play]' if not self.playing else '[playing space=pause]'}  "
-            f"s=step  q=skip rest headless\n"
+            f"t={w.t:7.2f}s\n"
+            f"{_level_counts(w)}\n"
+            f"{'[PAUSED]' if not self.playing else '[PLAYING]'}  "
+            f"space/s/r/q\n"
             f"{hud_extra}"
         )
-        pl.add_text(hud, position="upper_left", font_size=10, color="white", name="hud")
+        pl.add_text(hud, position="upper_left", font_size=11, color="white", name="hud")
+        pl.add_text(LEGEND, position="lower_left", font_size=9, color=(0.75, 0.85, 0.75), name="legend")
+
+        # Keep content framed
+        if self._frame % 8 == 1:
+            self._reset_camera(w)
 
     def run_ticks(
         self,
@@ -174,7 +319,6 @@ class BetLiveView:
         ticks_per_frame: int = 5,
         hud_fn: Optional[Callable] = None,
     ) -> int:
-        """Advance *n_ticks*; returns ticks actually simulated (may equal n_ticks after headless catch-up)."""
         if self._pl is None:
             for _ in range(n_ticks):
                 tick(world, dt)
@@ -199,21 +343,21 @@ class BetLiveView:
                 self._pl.update()
                 if not self.playing:
                     time.sleep(0.03)
+                else:
+                    time.sleep(0.01)  # slight yield so window stays responsive
         except KeyboardInterrupt:
             self._user_quit = True
 
-        # Finish remaining ticks headless if user closed / quit early
         while done < n_ticks:
             tick(world, dt)
             world.t += dt
             done += 1
 
-        # Brief end pose so the final structure is visible (always-live sessions)
         if self._window_alive() and not self._user_quit:
             try:
-                self._rebuild(world, hud_extra=f"DONE {done}/{n_ticks} — watch, then window closes")
+                self._rebuild(world, hud_extra=f"DONE {done}/{n_ticks}")
                 self._pl.update()
-                time.sleep(2.5)
+                time.sleep(2.0)
             except Exception:
                 pass
         return done
@@ -238,10 +382,6 @@ def run_ticks_live(
     ticks_per_frame: int = 5,
     hud_fn: Optional[Callable] = None,
 ) -> None:
-    """Physics loop with optional live 3D window.
-
-    When ``live`` is False, identical to a plain tick loop (headless BETs unchanged).
-    """
     if not live or n_ticks <= 0:
         for _ in range(n_ticks):
             tick(world, dt)
