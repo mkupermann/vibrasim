@@ -1,10 +1,10 @@
-"""GPU preferences for PyVista / VTK live visualisation.
+"""GPU preferences for PyVista / VTK live visualisation (AMD-safe).
 
-Your machine has:
-  - AMD Radeon RX 7700S  (discrete, preferred)
-  - AMD Radeon 780M      (integrated)
+Default is **safe OpenGL**: no MSAA / SSAA / depth-peeling shaders that often
+fail on AMD with ``Error! Could not set shader program``.
 
-We request the **high-performance** adapter and tune OpenGL MSAA / depth peeling.
+Optional quality (if stable on your driver):
+  set EQMOD_GL_QUALITY=1
 """
 from __future__ import annotations
 
@@ -19,7 +19,8 @@ _LAST_RENDERER: Optional[str] = None
 def request_high_performance_gpu() -> None:
     """Hint Windows / drivers to prefer the discrete GPU for this process."""
     os.environ.setdefault("AMD_POWERXPRESS_REQUEST_HIGH_PERFORMANCE", "1")
-    os.environ.setdefault("__GL_THREADED_OPTIMIZATIONS", "1")
+    # Avoid some broken threaded GL paths on multi-adapter laptops
+    os.environ.setdefault("__GL_THREADED_OPTIMIZATIONS", "0")
 
     if sys.platform != "win32":
         return
@@ -29,7 +30,6 @@ def request_high_performance_gpu() -> None:
         py = os.path.abspath(sys.executable)
         key_path = r"Software\Microsoft\DirectX\UserGpuPreferences"
         with winreg.CreateKeyEx(winreg.HKEY_CURRENT_USER, key_path, 0, winreg.KEY_SET_VALUE) as key:
-            # 2 = High performance GPU (RX 7700S on this laptop)
             winreg.SetValueEx(key, py, 0, winreg.REG_SZ, "GpuPreference=2;")
             if py.lower().endswith("python.exe"):
                 pyw = py[:-10] + "pythonw.exe"
@@ -39,15 +39,28 @@ def request_high_performance_gpu() -> None:
         print(f"[gpu_viz] registry GpuPreference skip: {exc}")
 
 
-def configure_pyvista_gpu(multi_samples=8, verbose=True):
-    """Global PyVista theme + once-per-process GPU request."""
+def _want_quality() -> bool:
+    return os.environ.get("EQMOD_GL_QUALITY", "").strip() in ("1", "true", "yes")
+
+
+def configure_pyvista_gpu(multi_samples=0, verbose=True):
+    """Global PyVista theme — **safe defaults** for AMD OpenGL."""
     global _CONFIGURED
     request_high_performance_gpu()
     try:
         import pyvista as pv
 
-        pv.global_theme.multi_samples = multi_samples
-        pv.global_theme.anti_aliasing = "msaa"
+        if _want_quality():
+            pv.global_theme.multi_samples = max(4, multi_samples or 4)
+            pv.global_theme.anti_aliasing = "msaa"
+        else:
+            # No MSAA shader paths (common "Could not set shader program" trigger)
+            pv.global_theme.multi_samples = 0
+            try:
+                pv.global_theme.anti_aliasing = None
+            except Exception:
+                pv.global_theme.anti_aliasing = "msaa"
+                pv.global_theme.multi_samples = 0
         try:
             pv.global_theme.allow_empty_mesh = True
         except Exception:
@@ -56,33 +69,46 @@ def configure_pyvista_gpu(multi_samples=8, verbose=True):
         print(f"[gpu_viz] pyvista theme: {exc}")
     _CONFIGURED = True
     if verbose:
-        print(f"[gpu_viz] high-performance GPU requested for {sys.executable}")
+        mode = "QUALITY" if _want_quality() else "SAFE (no MSAA/depth-peel)"
+        print(f"[gpu_viz] OpenGL mode={mode}  exe={sys.executable}")
 
 
 def apply_plotter_gpu(pl) -> str:
-    """Tune an existing Plotter for GPU quality. Returns renderer string."""
+    """Tune plotter. Safe mode: do **not** enable MSAA/SSAA/depth peeling."""
     global _LAST_RENDERER
-    configure_pyvista_gpu(8, False)
+    configure_pyvista_gpu(0, False)
     info = "unknown"
     try:
-        try:
-            pl.enable_anti_aliasing("msaa", multi_samples=8)
-        except Exception:
+        if _want_quality():
             try:
-                pl.enable_anti_aliasing("ssaa")
+                pl.enable_anti_aliasing("msaa", multi_samples=4)
             except Exception:
                 pass
-        # Depth peeling can flicker with animated translucent sheets.
-        if os.environ.get("EQMOD_DEPTH_PEEL", "").strip() == "1":
+            if os.environ.get("EQMOD_DEPTH_PEEL", "").strip() == "1":
+                try:
+                    pl.enable_depth_peeling(number_of_peels=4, occlusion_ratio=0.0)
+                except Exception:
+                    pass
+        else:
+            # Explicitly disable multi-sampling on the render window
             try:
-                pl.enable_depth_peeling(number_of_peels=4, occlusion_ratio=0.0)
+                pl.disable_anti_aliasing()
             except Exception:
                 pass
+            rw = getattr(pl, "ren_win", None) or getattr(pl, "render_window", None)
+            if rw is not None:
+                try:
+                    rw.SetMultiSamples(0)
+                except Exception:
+                    pass
 
         rw = getattr(pl, "ren_win", None) or getattr(pl, "render_window", None)
         if rw is not None:
             try:
-                rw.SetMultiSamples(8)
+                # Prefer a simple OpenGL feature level if available
+                if hasattr(rw, "SetMultiSamples"):
+                    if not _want_quality():
+                        rw.SetMultiSamples(0)
             except Exception:
                 pass
             try:
@@ -107,23 +133,12 @@ def apply_plotter_gpu(pl) -> str:
 
 
 def field_resolution_for_gpu() -> int:
-    """Higher field mesh resolution on discrete GPUs.
-
-    Override with env ``EQMOD_FIELD_RES=72`` (or any int 24..128).
-    """
+    """Field mesh resolution. Override: EQMOD_FIELD_RES=48."""
     env = os.environ.get("EQMOD_FIELD_RES", "").strip()
     if env.isdigit():
-        return max(24, min(128, int(env)))
-    # User asked for the good GPU — default high on any discrete AMD/NVIDIA name
-    name = (_LAST_RENDERER or "").lower()
-    if any(k in name for k in ("7700", "7800", "7900", "rtx", "gtx", "radeon(tm) rx", "geforce")):
-        return 72
-    # Still raise quality on Radeon hardware (this laptop's discrete may report after restart)
-    if "radeon" in name or "amd" in name:
-        return 64
-    if "integrated" in name or "uhd" in name:
-        return 48
-    return 56
+        return max(24, min(96, int(env)))
+    # Safe interactive default (shader-stable + smooth enough)
+    return 40
 
 
 def last_renderer() -> Optional[str]:
@@ -131,11 +146,9 @@ def last_renderer() -> Optional[str]:
 
 
 def print_gpu_help() -> None:
-    """How to force RX 7700S if OpenGL still binds the 780M iGPU."""
     print(
-        "[gpu_viz] If the HUD still shows '780M' instead of 'RX 7700S':\n"
-        "  Windows → Settings → System → Display → Graphics\n"
-        "  → Add .venv\\Scripts\\python.exe → Options → High performance\n"
-        "  Then fully quit and re-run: python tools/run_belief_live_loop.py\n"
-        "  Optional: set EQMOD_FIELD_RES=72 for denser field mesh."
+        "[gpu_viz] SAFE OpenGL mode (fixes 'Could not set shader program' on AMD).\n"
+        "  Optional quality later: set EQMOD_GL_QUALITY=1\n"
+        "  Prefer RX 7700S: Windows → Settings → System → Display → Graphics\n"
+        "    → add .venv\\Scripts\\python.exe → High performance"
     )

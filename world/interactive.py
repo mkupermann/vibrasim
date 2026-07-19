@@ -118,12 +118,16 @@ class InteractiveViewer:
         import pyvista as pv
         from world.gpu_viz import apply_plotter_gpu, configure_pyvista_gpu
 
-        configure_pyvista_gpu(multi_samples=8, verbose=True)
+        configure_pyvista_gpu(0, True)
         bx, by, bz = self.config.box_size
         pl = pv.Plotter(title="EQMOD — interactive substrate viewer", window_size=(1600, 1000))
         self._pl = pl
         pl.set_background("black")
-        pl.enable_anti_aliasing("msaa")
+        # Safe OpenGL — do not enable MSAA by default (AMD shader crashes)
+        try:
+            pl.disable_anti_aliasing()
+        except Exception:
+            pass
 
         # Static bounding box of the periodic substrate
         box = pv.Box(bounds=(0, bx, 0, by, 0, bz))
@@ -271,7 +275,8 @@ class InteractiveViewer:
                     grid,
                     color=tuple(float(c) for c in col),
                     opacity=opacity,
-                    smooth_shading=True,
+                    smooth_shading=False,
+                    lighting=False,
                     name=f"field_layer_{i}",
                     show_edges=False,
                 )

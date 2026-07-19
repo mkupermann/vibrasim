@@ -15,8 +15,10 @@ _ROOT = Path(__file__).resolve().parents[1]
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
-os.environ.setdefault("EQMOD_FIELD_RES", "48")
+# Safe OpenGL by default (no MSAA) — set EQMOD_GL_QUALITY=1 only if stable
+os.environ.setdefault("EQMOD_FIELD_RES", "40")
 os.environ.setdefault("AMD_POWERXPRESS_REQUEST_HIGH_PERFORMANCE", "1")
+os.environ.setdefault("EQMOD_GL_QUALITY", "0")
 
 from world.gpu_viz import configure_pyvista_gpu, print_gpu_help, request_high_performance_gpu
 from world.bet_live import BetLiveView

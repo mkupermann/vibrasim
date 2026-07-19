@@ -210,11 +210,7 @@ class BetLiveView:
                 box, style="wireframe", color=(0.55, 0.58, 0.70),
                 line_width=2, name="box",
             )
-            try:
-                pl.enable_lightkit()
-            except Exception:
-                pass
-
+            # No lightkit / fancy lighting — AMD driver shader crashes
             pl.add_key_event("space", self._toggle_play)
             pl.add_key_event("s", self._request_step)
             pl.add_key_event("q", self._request_quit)
@@ -239,15 +235,15 @@ class BetLiveView:
             for b in range(self._n_bands):
                 grid = pv.StructuredGrid(self._XX, self._YY, heights[b])
                 col = LAYER_COLORS[b]
+                # Flat shading, no specular — avoids "Could not set shader program" on AMD
                 actor = pl.add_mesh(
                     grid,
                     color=col,
                     opacity=FIELD_OPACITY,
-                    smooth_shading=True,
+                    smooth_shading=False,
                     name=f"field_layer_{b}",
                     show_edges=False,
-                    specular=0.45,
-                    specular_power=20,
+                    lighting=False,
                 )
                 self._layer_grids.append(grid)
                 self._layer_actors.append(actor)
@@ -385,8 +381,8 @@ class BetLiveView:
         sphere = pv.Sphere(radius=1.0, theta_resolution=14, phi_resolution=14)
         glyphs = pc.glyph(geom=sphere, scale="r", orient=False, factor=1.0)
         self._node_actor = pl.add_mesh(
-            glyphs, scalars="rgb", rgb=True, smooth_shading=True,
-            name="nodes", opacity=1.0,
+            glyphs, scalars="rgb", rgb=True, smooth_shading=False,
+            lighting=False, name="nodes", opacity=1.0,
         )
 
     def _update_hud(self, world, extra: str = "") -> None:
