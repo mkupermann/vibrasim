@@ -17,6 +17,7 @@ Belief path — `docs/BELIEF_PATH.md`
 | BP-B3 | **PASS** | 3-class multi-bit composition |
 | BP-B4 | **NULL** | 3 narrow bands: pop + decode fail |
 | BP-B5 | **PASS** | fingerprint survives thermal motion |
+| BP-B6 | **PASS** | A33+A34 coexist and both decode |
 | BP-C1 | **NULL** | dual-drive sparse |
 | BP-C1b | **NULL** | specialisation 0.778&lt;0.90 |
 | BP-C2 | **NULL** | probe talent fail |
