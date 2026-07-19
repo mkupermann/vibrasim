@@ -56,7 +56,7 @@ The belief path does **not** deny that honesty. It says: **act as if the ladder 
 |------|----------------|--------------------------------------------------|
 | R1 Vibrations + local motion | Substrate exists | **Done** — Phase 1/2, calibration |
 | R2 Binding → electrons → atoms → molecules | Hierarchy forms | **Done under current rules** — engineered table (8% etc.), fragile under structured stimuli |
-| R3 Energy field → bind threshold | Field drives matter formation | **Mostly NULL / weak** under flux/G24–G26-style probes; still the least settled *primitive* claim |
+| R3 Energy field → bind threshold | Field drives matter formation | **POSITIVE, scoped (BP-A1 PASS)** — local free-vibration **density** enables binding (cluster≫sparse; scramble fails). Not a new energy equation; density *is* the field under current primitives. |
 | R4 Proto-collections (membrane) | Matter joins into a stable body | **POSITIVE, scoped** — proto-cell forms, homeostasis, set-point; repair only partial with bond turnover |
 | R5 Selective memory | Matter holds content | **ACTIVITY: CLOSED NEGATIVE** (write≈leak). **MATTER POSITION: POSITIVE, scoped** (G114–G119) |
 | R6 Communication | Information moves | **POSITIVE, scoped** — co-located codec; free carriers do **not** carry symbols over distance |
@@ -164,7 +164,7 @@ Do not start all three. Pick **one**. Bars below are *programme-level sketches*;
 | Date | Decision |
 |------|----------|
 | 2026-07-19 | Restart the **question** (belief ladder). Keep the **lab**. Adjacent tracks → archive. Active charter = this file. |
-| 2026-07-19 | Rung B: **BP-B1 PASS** (engineered write) then **BP-B2 PASS** (emergent drive→molecule decades). Next: Rung C (talent) or Rung A (field). |
+| 2026-07-19 | Rung B: **BP-B1 + BP-B2 PASS**. Rung A: **BP-A1 PASS** (density field enables bind). Next: **Rung C** (collections get talent). |
 
 ---
 
