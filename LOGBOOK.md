@@ -5614,3 +5614,35 @@ No autopilot churn, no G145–G153 re-open, no BET-146 required for this path, n
 ### Next (blocked on Michael)
 Choose Rung A / B / C. Then write one pre-registered amendment with locked bars + negative controls + time budget; only then implement/run.
 
+
+## 2026-07-19 — BP-B1 PASS: molecules carry information (existence, scoped)
+
+Belief-path Rung B first climb. Pre-registration committed first
+(`docs/amendments/bp_b1_molecule_information.md`, commit fed4f64) then runner
+`tools/run_bp_b1_molecule_information.py`.
+
+### Protocol (locked)
+N=20 trials/seed, seeds {42, 7}, hold T=500 ticks. Quiet world (lambda_gen=0,
+lambda_dec_mol=0, no thermal motion). Species alpha=A33, beta=A34 planted with
+real level-4 constituents via allocate_node; decode by composition fingerprint only.
+
+### Results
+| Bar | Value | thr | ok |
+|-----|------:|-----|:--:|
+| B1 treatment acc | 1.000 | >=0.90 | Y |
+| B2 C1 empty | 0.000 | <=0.60 | Y |
+| B3 C2 scramble | 0.000 | <=0.60 | Y |
+| B4 C3 position | 0.525 | <=0.60 | Y |
+| B5 survival | 1.000 | >=0.80 | Y |
+
+**Verdict: PASS.** Smoke also PASS.
+
+### Honest scope
+Structure-as-content *exists* on this medium under engineered write. Does *not*
+show free-evolution emergence of informative species (BP-B2) or collection talent
+(Rung C). Distinct from matter-position memory (G114-G119): position-only readout
+stayed near chance (0.525).
+
+### Next
+BP-B2 (emergent write) or Rung C — Michael's call.
+

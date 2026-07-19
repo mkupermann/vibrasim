@@ -14,10 +14,14 @@ Last updated: **2026-07-19**.
 - Charter: **`docs/BELIEF_PATH.md`**
 - Spine: vibrations → energy field → bind → electrons → atoms → molecules (information) → matter → collections with talent → brain
 - Hard constraints: still `CLAUDE.md` (no LLM / transformer / pretrained embedding / BPE on this path; ports engineered, internals emerge)
-- **Next step:** Michael picks **Rung A / B / C** in BELIEF_PATH §7; pre-register **one** experiment; run; log; update this file
 
-### Recommended first climb
-**Rung B — molecules carry information** (middle gap between “structure exists” and “collections have talent”).
+### Latest belief-path result
+- **BP-B1 PASS** (2026-07-19): molecule **composition fingerprint** is a selective content channel under engineered write + quiet hold (T=500); empty/scramble/position controls fail as required. Doc: `docs/amendments/bp_b1_molecule_information.md`. Scope: existence, not emergence.
+
+### Next step (pick one)
+- **BP-B2** (if continuing middle rung): emergent species under two drives — no hand-plant of the label; same decode + controls.
+- **Rung C**: collections get talent (light vs sound selectivity without separate ML stacks).
+- **Rung A**: field → bind threshold.
 
 ---
 
