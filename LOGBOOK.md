@@ -5823,3 +5823,14 @@ No implementation data yet. No talent bars in D0.
 Belief update: collections can co-exist; defensible talent not achieved under
 current free-vib dual injection. Spine continues only with new primitive/ports.
 
+
+## 2026-07-19 — (1) C closure (2) PRIM1 D0+D1
+
+### PRIM1-D0 DIAGNOSTIC leaky
+mean chi=0.433 → compartments justified.
+
+### PRIM1-D1 NULL
+Variant A two spheres: chi_on=0.412 (bar 0.15), only marginal vs off (0.430).
+Containment primitive as dual spheres FAILS acceptance.
+No talent re-open. No bar retune.
+

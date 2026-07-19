@@ -150,5 +150,8 @@ If D0 says tight and C already failed, D2 is **not** automatic — write a diffe
 All trials class=leaky. Interpretation locked: dual inject is leaky; **PRIM1-D1 Variant A justified**.
 Artifact: ~/.eqmod/bet/PRIM1-D0/result.json
 
-### PRIM1-D1
-*(after run)*
+### PRIM1-D1 (2026-07-19)
+**NULL** — Variant A dual spheres: chi_on=**0.412** (need ≤0.15), chi_off=0.430 (only slight reduce), pop_on=0.75.
+Engineered sphere compartments do **not** achieve locked containment. DLW-as-two-spheres insufficient.
+Artifact: ~/.eqmod/bet/PRIM1-D1/result.json
+Next (not auto): midplane wall primitive or internal non-broadcast write (new pre-reg).

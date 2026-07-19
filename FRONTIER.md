@@ -1,34 +1,19 @@
 # FRONTIER — sharp discipline
 
-**Binding:** `docs/DISCIPLINE_SHARP.md`  
-**Updated:** 2026-07-19 · steps **1 then 2** complete (closure + primitive pre-reg)
+**docs/DISCIPLINE_SHARP.md** · 2026-07-19
 
-## Just completed
+## Done today (1 then 2)
+1. **C CLOSED PARTIAL** — `bp_c_partial_closure.md`
+2. **PRIM1** directional write:
+   - D0 **leaky** χ=0.433
+   - D1 **NULL** — dual sphere compartments χ=0.412 ≰ 0.15
 
-### 1) Rung C — CLOSED PARTIAL
-- Doc: `docs/amendments/bp_c_partial_closure.md`  
-- Pattern: `docs/patterns/collection_talent_injection_ceiling.md`  
-- Closed class: dual regional free-vib injection talent (frequency **and** period)  
-- **No C5** on bands/periods/bars  
+## Board
+A/B climbed · C closed partial · D1 PASS · PRIM1 containment not accepted as dual spheres
 
-### 2) New primitive — PRE-REGISTERED (no data yet)
-- Doc: `docs/amendments/bp_prim1_directional_write.md`  
-- Name: **Directional Local Write (DLW)**  
-- First step: **PRIM1-D0** containment audit (χ cross-talk) — instrumentation only  
+## Next (pre-reg required)
+- Midplane / slab wall containment, OR
+- Internal non-broadcast write primitive (new doc), OR
+- Pause science and only document
 
-## Board (belief)
-
-| Rung | Status |
-|------|--------|
-| A density→bind | PASS (A1, A2) |
-| B molecule info | PASS (B1–B3, B5–B7); B4 NULL |
-| **C talent** | **CLOSED PARTIAL** |
-| D joint pos+species | PASS (D1) |
-| PRIM1 DLW | **pre-reg only** — D0 not run |
-
-## Next (discipline)
-Implement + run **PRIM1-D0 only** (measure χ).  
-Then branch on locked interpretation in PRIM1 doc — do not skip to talent.
-
-## Mode
-Headless · one question · pre-reg before data · no smoke theater
+No C5. No talent without working local write.
