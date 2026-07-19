@@ -57,13 +57,13 @@ def main() -> int:
         lambda_dec=0.0,
     )
     print("Opening BELIEF LIVE window…")
-    print("  BLUE/RED WAVE LINES = free vibrations (tighter wiggle = higher freq)")
-    print("  ORANGE spheres = electrons   WHITE = atoms")
+    print("  TRANSLUCENT SHEETS = continuous vibration FIELD (layers = frequency dimensions)")
+    print("  ORANGE spheres = electrons   WHITE = atoms  (bound matter)")
     print("  space=pause  s=step  r=camera  q=quit")
     world = World(cfg)
     plant_cluster(world, n=140, seed=7)
     view = BetLiveView(
-        title="BELIEF LIVE — wave-line vibrations → orange electrons → white atoms"
+        title="BELIEF LIVE — hidden field layers → bound electrons/atoms"
     )
     if not view.open(world):
         print("Could not open PyVista window")
@@ -85,7 +85,7 @@ def main() -> int:
                 ticks_per_frame=3,  # slower = easier to watch binding
                 hud_fn=lambda w, d, n, c=cycle: (
                     f"cycle {c}  frame {d}/{n}\n"
-                    f"WATCH: blue/red WAVE LINES bind into ORANGE electrons"
+                    f"WATCH: layered field condenses → ORANGE electrons / WHITE atoms"
                 ),
             )
             if view._user_quit:
