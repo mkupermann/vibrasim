@@ -32,4 +32,5 @@ This is **port-local structural memory** (trace of write side), not understandin
 N_write=25, T_idle=200, seeds {211,223}, trials/seed=12, box 80×50×50
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1=1.000, B2 control=**0.625** (>0.60), B3=1.000.  
+Treatment works; equal-write control slightly biased (not chance). No bar retune → E2 with cleaner controls.
