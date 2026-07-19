@@ -1,38 +1,56 @@
-# FRONTIER — current state of the EQMOD/vibrasim substrate programme
+# FRONTIER — current state of the EQMOD / vibrasim programme
 
-**One-screen pointer so a new session knows where the frontier is WITHOUT re-deriving settled work.**
-Authoritative detail lives in `docs/amendments/FINDINGS_SUMMARY.md` (+ its addenda), `LOGBOOK.md` (append-only
-diary; newest at the bottom), and the per-experiment `docs/amendments/g*.md`. This file is a map, not a source
-of truth — if it disagrees with those, they win. Last updated: 2026-06-05.
+**One-screen pointer so a new session knows where the frontier is WITHOUT re-deriving settled work.**  
+Authoritative detail: `docs/BELIEF_PATH.md` (active question), `docs/FINDINGS_SUMMARY.md` / `docs/SYNTHESIS.md` (closed maps), `LOGBOOK.md` (diary, newest at bottom).  
+If this file disagrees with those, **BELIEF_PATH + the latest pre-registered amendment win for direction; FINDINGS/SYNTHESIS win for settled negatives.**  
+Last updated: **2026-07-19**.
 
-## Highest experiment numbers (check before starting anything)
-- **Substrate physics thread `gNNN`:** completed through **G153**. `ls docs/amendments/g*.md | sort` and read the
-  highest few before proposing a "new" gNNN — much of G30–G153 is already done.
-- **Cognition/affect thread `JEP-NNN`:** completed through ~**JEP-476** (clean-room integration audit PASS).
-- Do NOT trust a stale start-of-session git snapshot for the frontier (it caused G47–G49 to be re-derived on
-  2026-06-05). Trust `git log` + the highest `g*.md`/`jep*` docs.
+---
 
-## Verdict by thread (all honestly closed; see FINDINGS_SUMMARY for the full case)
+## Active programme (read first)
+
+**Belief path — restart the question, keep the lab.**
+
+- Charter: **`docs/BELIEF_PATH.md`**
+- Spine: vibrations → energy field → bind → electrons → atoms → molecules (information) → matter → collections with talent → brain
+- Hard constraints: still `CLAUDE.md` (no LLM / transformer / pretrained embedding / BPE on this path; ports engineered, internals emerge)
+- **Next step:** Michael picks **Rung A / B / C** in BELIEF_PATH §7; pre-register **one** experiment; run; log; update this file
+
+### Recommended first climb
+**Rung B — molecules carry information** (middle gap between “structure exists” and “collections have talent”).
+
+---
+
+## Settled threads (do NOT re-derive)
+
 | Thread | Status | Bottom line |
 |--------|--------|-------------|
-| Memory (activity representation) | **CLOSED NEGATIVE** | No stable blank state; any region latches activity → no written-vs-unwritten contrast (G83–G96, ~70 NULLs). |
-| Memory (MATTER position) | **POSITIVE, scoped** | Driven-matter position is a selective+persistent multi-bit store with wide spacing (G114–G119); MAINTAINED not static (G120). The one real memory positive. |
-| Communication | **POSITIVE, scoped** | Co-located real-time spatial codec; needs active reset between symbols; NOT transport over distance (G97–G105). |
-| Transport | **scoped** | Free carriers don't cross distance; continuously-driven matter does, slowly (G109–G112). |
-| Computation / optimization | **EQMOD substrate NEGATIVE; adjacent CIM hardware competitive (2026-06-05)** | G145's "8/8" rested on a sign-bugged greedy; the NAIVE oscillator ties correct greedy & loses to SA (G146–G149). But the textbook AHC-CIM (Leleu 2019) BEATS correct greedy & is in SA's league (G150), robust across both Gaussian & ±1/SK families (G151) and to n=600 (G152) — a real but *established, adjacent* physical-annealer result, NOT EQMOD. At **matched budget classical SA is marginally BEST** (~1.7% ahead, 8/8; G153), and far simpler. EQMOD's OWN dynamics still can't optimize (G135). Ordering: SA > CIM-AHC > correct-greedy. |
+| Binding hierarchy under current rules | **Mapped** | Electrons→atoms→molecules work; rules are hand-specified; 8% fragile under structured stimuli |
+| Proto-cell | **POSITIVE, scoped** | Forms, homeostasis, set-point; repair only partial (bond turnover frontier) |
+| Memory (activity) | **CLOSED NEGATIVE** | No stable blank; write≈leak (~70 NULLs) |
+| Memory (matter position) | **POSITIVE, scoped** | Selective+persistent multi-bit store; maintained not static |
+| Communication | **POSITIVE, scoped** | Co-located spatial codec; not free-carrier transport over distance |
+| EQMOD own dynamics as optimizer | **CLOSED NEGATIVE** | Decorative (G135) |
+| Adjacent CIM / SA | **Archive** | AHC-CIM real vs greedy; SA best at matched budget — **not** the belief path |
+| Temporal credit / e-prop / gated cell | **Archive** | Bottleneck = ungated architecture (BET-145); BET-146 never required for belief path |
+| VSA / reservoir “cognition wins” | **Archive** | Established methods; not molecule→talent→brain emergence |
 
-## Programme-wide honest conclusion
-The physics is **decorative everywhere tested**; standard classical methods carry every win. The deliverable was
-never the simulation succeeding — it is the rigorous, self-correcting **process** (pre-registration, matched
-negative controls, retracting over-claims like the G145 sign-bug). See `README.md` lines ~37–67 for Michael's
-own framing of this as the honest result.
+Highest historical experiment numbers (archive completeness only): substrate **G153**, cognition **~JEP-476**, **BET-145** last executed on temporal credit. Do not allocate new G/BET numbers that re-test the closed rows above without a new representation or rule.
 
-## If you are an autonomous session deciding the next step
-1. The substrate's positive threads (matter-memory, co-located codec) are SCOPED and characterized; the negative
-   threads (activity-memory, computation) are closed after exhaustive testing. There is no obvious open positive.
-2. Before launching a "new" experiment, confirm it is not already in `docs/amendments/` (G30–G149). Re-derivation
-   wastes compute (it happened this session).
-3. Genuinely valuable moves now are consolidation, reproducibility/process infrastructure, or a *clearly* novel
-   question — not churn. NULL is a valid finding; manufactured busywork is not. Honor pre-registration
-   discipline (bars in `docs/amendments/<name>.md` BEFORE the run; no post-hoc threshold tuning).
-</content>
+---
+
+## Programme-wide honesty (unchanged)
+
+The physics can be decorative for many *tasks* and still be the right object for the *belief*.  
+Wins that abandon reduction to vibrations are **not** belief-path wins.  
+NULL is a valid verdict. Post-hoc bar tuning is forbidden.  
+The process (pre-reg, controls, retraction) remains the meta-deliverable if the ladder fails.
+
+---
+
+## If you are deciding the next step
+
+1. Open `docs/BELIEF_PATH.md`.  
+2. Do **not** resume SA/CIM, BET-146, VSA language demos, or G-churn by default.  
+3. Pre-register bars **before** any run.  
+4. After the run: LOGBOOK entry + update the open-rung table in BELIEF_PATH + this file.
