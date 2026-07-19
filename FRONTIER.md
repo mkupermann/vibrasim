@@ -1,36 +1,32 @@
-# FRONTIER — current state of the EQMOD / vibrasim programme
+# FRONTIER — EQMOD / vibrasim (lab continuous, headless)
 
-**Last updated: 2026-07-19** (lab only — live 3D animation stopped)
+**Last updated: 2026-07-19** · animation OFF · lab does not stop between BETs
 
 ## Active programme
+Belief path — `docs/BELIEF_PATH.md`  
+(vibrations → field → bind → electrons → atoms → molecules/info → matter → talent → brain)
 
-**Belief path** — `docs/BELIEF_PATH.md`  
-Spine: vibrations → field → bind → electrons → atoms → molecules (info) → matter → collections/talent → brain  
+## Results board
 
-**Lab mode:** experiments are **headless by default**. Optional `--live` only if you explicitly want PyVista.
+| ID | Verdict | Note |
+|----|---------|------|
+| BP-A1 | **PASS** | density enables bind |
+| BP-A2 | **PASS** | density ratio robust N∈{20,40,80} |
+| BP-B1 | **PASS** | composition binary content |
+| BP-B2 | **PASS** | emergent 2-drive decade decode |
+| BP-B3 | **PASS** | 3-class multi-bit composition |
+| BP-B4 | **NULL** | 3 narrow bands: pop + decode fail |
+| BP-B5 | **PASS** | fingerprint survives thermal motion |
+| BP-C1 | **NULL** | dual-drive sparse |
+| BP-C1b | **NULL** | specialisation 0.778&lt;0.90 |
+| BP-C2 | **NULL** | probe talent fail |
+| BP-C3 | **NULL** | effect-size / control fail |
 
-## Belief-path results
-
-| ID | Verdict | One-liner |
-|----|---------|-----------|
-| **BP-A1** | **PASS** | Local free-vibration **density** enables binding |
-| **BP-B1** | **PASS** | Molecule composition fingerprint (engineered write) |
-| **BP-B2** | **PASS** | Emergent molecule decades decode drive identity |
-| **BP-B3** | **PASS** | **3-class** composition multi-bit (A33/A34/A44) |
-| **BP-C1** | **NULL** | Dual-drive talent — population too sparse |
-| **BP-C1b** | **NULL** | Population OK; structural specialisation **0.778 &lt; 0.90** |
-| **BP-C2** | **NULL** | Probe-response talent fails (low/high 0.44 / 0.22) |
-
-### Ladder
-- **A** density→bind — climbed  
-- **B** molecules carry information — climbed (B1+B2+B3)  
-- **C** collections get talent — **open / partial** (structural near-miss; no probe talent)  
+## Ladder
+- **A** density→bind — **climbed** (A1+A2)  
+- **B** molecules carry information — **climbed** (B1–B3,B5); B4 NULL on 3-band emergent  
+- **C** talent — **open / partial** (all C NULL; boundary mapped)  
 - **Brain** — not started  
 
-## Next lab step (when continuing)
-- Freeze Rung C as **mapped boundary** (pattern already written), or  
-- New amendment only with a **different** talent mechanism (not bar retune of C1b/C2).  
-- Optional: BP-B3 multi-bit molecule alphabet.
-
-## Settled archive (do not re-derive)
-Activity-memory closed negative; matter-position memory scoped positive; EQMOD optimizer decorative; VSA/SA-CIM archive.
+## Operating rule
+Headless only. Pre-reg → run → LOGBOOK → next. No post-hoc bar retune. No idle “stopped”.

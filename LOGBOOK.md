@@ -5752,3 +5752,17 @@ Rung B deepened: multi-bit composition channel holds.
 ### Status
 A PASS · B PASS (B1–B3) · C partial/NULL · brain not started · no live 3D.
 
+
+## 2026-07-19 — Continuous lab chain (no animation, no idle stop)
+
+User: do all labs without stopping. Animation remains off.
+
+| Exp | Verdict |
+|-----|---------|
+| BP-B4 | NULL (3-band emergent pop/decode) |
+| BP-C3 | NULL (effect size) |
+| BP-A2 | PASS (density ratio robust) |
+| BP-B5 | PASS (fingerprint under thermal motion) |
+
+Board: A climbed; B climbed+deepened; C still partial. Lab continues.
+
