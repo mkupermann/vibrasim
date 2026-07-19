@@ -1936,6 +1936,10 @@ def apply_ilw_port_event(world, port_pos, rng=None, seed_freq: float = 3000.0) -
     Returns stats dict: {mode, atom_idx, mol_idx, delta_strength}.
     Engineered write; named as such. No-op if ilw_enabled is False.
     *seed_freq* used when allocating a new level-4 atom (C5 dual-port bands).
+
+    PRIM4 (ilw_multislot_enabled): if no level≥4 in radius has relative freq
+    distance ≤ ilw_multislot_rel_freq to seed_freq, allocate a new L4 instead of
+    collapsing onto a mismatched band (multi-item port buffer).
     """
     cfg = world.config
     out = {"mode": "none", "atom_idx": -1, "mol_idx": -1, "delta_strength": 0.0}
@@ -1945,36 +1949,79 @@ def apply_ilw_port_event(world, port_pos, rng=None, seed_freq: float = 3000.0) -
     R = float(getattr(cfg, "ilw_radius", 8.0))
     dS = float(getattr(cfg, "ilw_delta_strength", 0.5))
     box = np.asarray(cfg.box_size, dtype=np.float64)
+    seed = float(seed_freq)
+    multislot = bool(getattr(cfg, "ilw_multislot_enabled", False))
+    rel_thr = float(getattr(cfg, "ilw_multislot_rel_freq", 0.35))
     K = world.k_count
     best_m, best_d2 = -1, R * R
     best_a, best_ad2 = -1, R * R
+    # PRIM4: best same-band targets (may differ from nearest spatial)
+    best_m_band, best_m_band_d2 = -1, R * R
+    best_a_band, best_a_band_d2 = -1, R * R
     for i in range(K):
         if not world.k_alive[i]:
             continue
         d = world.k_pos[i] - port
         d -= box * np.round(d / box)
         d2 = float(np.dot(d, d))
+        if d2 > R * R:
+            continue
         lvl = int(world.k_level[i])
-        if lvl >= 5 and d2 <= best_d2:
-            best_d2 = d2
-            best_m = i
-        if lvl == 4 and d2 <= best_ad2:
-            best_ad2 = d2
-            best_a = i
+        f = float(world.k_freq[i])
+        rel = abs(f - seed) / max(abs(seed), abs(f), 1.0)
+        if lvl >= 5:
+            if d2 <= best_d2:
+                best_d2 = d2
+                best_m = i
+            if rel <= rel_thr and d2 <= best_m_band_d2:
+                best_m_band_d2 = d2
+                best_m_band = i
+        if lvl == 4:
+            if d2 <= best_ad2:
+                best_ad2 = d2
+                best_a = i
+            if rel <= rel_thr and d2 <= best_a_band_d2:
+                best_a_band_d2 = d2
+                best_a_band = i
+    if multislot:
+        # Prefer same-band mol, then same-band atom; else seed new slot.
+        if best_m_band >= 0:
+            world.k_strength[best_m_band] = float(world.k_strength[best_m_band]) + dS
+            world.k_freq[best_m_band] = 0.9 * float(world.k_freq[best_m_band]) + 0.1 * seed
+            out.update(mode="strengthen_mol", mol_idx=best_m_band, delta_strength=dS)
+            return out
+        if best_a_band >= 0:
+            world.k_strength[best_a_band] = float(world.k_strength[best_a_band]) + dS
+            world.k_freq[best_a_band] = 0.85 * float(world.k_freq[best_a_band]) + 0.15 * seed
+            out.update(mode="strengthen_atom", atom_idx=best_a_band, delta_strength=dS)
+            return out
+        # new slot even if other bands present
+        idx = world.allocate_node(
+            pos=port.copy(),
+            freq=seed,
+            pol=True,
+            level=4,
+            constituents=np.zeros(0, dtype=np.int32),
+            comp_kind=1,
+        )
+        if idx >= 0:
+            world.k_strength[idx] = 1.0 + dS
+            out.update(mode="seed_atom_slot", atom_idx=idx, delta_strength=dS)
+        return out
+    # --- legacy single-slot path (PRIM2) ---
     if best_m >= 0:
         world.k_strength[best_m] = float(world.k_strength[best_m]) + dS
-        # nudge molecule freq slightly toward seed_freq for dual-port spectral write
-        world.k_freq[best_m] = 0.9 * float(world.k_freq[best_m]) + 0.1 * float(seed_freq)
+        world.k_freq[best_m] = 0.9 * float(world.k_freq[best_m]) + 0.1 * seed
         out.update(mode="strengthen_mol", mol_idx=best_m, delta_strength=dS)
         return out
     if best_a >= 0:
         world.k_strength[best_a] = float(world.k_strength[best_a]) + dS
-        world.k_freq[best_a] = 0.85 * float(world.k_freq[best_a]) + 0.15 * float(seed_freq)
+        world.k_freq[best_a] = 0.85 * float(world.k_freq[best_a]) + 0.15 * seed
         out.update(mode="strengthen_atom", atom_idx=best_a, delta_strength=dS)
         return out
     idx = world.allocate_node(
         pos=port.copy(),
-        freq=float(seed_freq),
+        freq=seed,
         pol=True,
         level=4,
         constituents=np.zeros(0, dtype=np.int32),

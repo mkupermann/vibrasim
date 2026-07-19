@@ -106,6 +106,9 @@ class WorldConfig:
     # PRIM3: exponential leak of level≥4 k_strength toward 1.0.
     # 0.0 = off (legacy). Units: seconds (tau in s ← 1+(s-1)*exp(-dt/tau)).
     ilw_strength_decay_tau: float = 0.0
+    # PRIM4: multi-slot ILW — allocate new L4 when nearest band differs.
+    ilw_multislot_enabled: bool = False
+    ilw_multislot_rel_freq: float = 0.35
     flux_plasticity_rate: float = 0.0     # Bridge strengthening rate from vibration flux (0=off). Plasticity from physics.
     flux_threshold: float = 2.0           # Flux above this potentiates a bridge, below depresses.
     flux_decay: float = 0.05              # Strength decay per second for low-flux bridges.
