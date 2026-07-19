@@ -104,14 +104,35 @@ def apply_plotter_gpu(pl) -> str:
 
 
 def field_resolution_for_gpu() -> int:
-    """Higher field mesh resolution on discrete GPUs."""
+    """Higher field mesh resolution on discrete GPUs.
+
+    Override with env ``EQMOD_FIELD_RES=72`` (or any int 24..128).
+    """
+    env = os.environ.get("EQMOD_FIELD_RES", "").strip()
+    if env.isdigit():
+        return max(24, min(128, int(env)))
+    # User asked for the good GPU — default high on any discrete AMD/NVIDIA name
     name = (_LAST_RENDERER or "").lower()
     if any(k in name for k in ("7700", "7800", "7900", "rtx", "gtx", "radeon(tm) rx", "geforce")):
         return 72
-    if "780m" in name or "integrated" in name or "uhd" in name:
+    # Still raise quality on Radeon hardware (this laptop's discrete may report after restart)
+    if "radeon" in name or "amd" in name:
+        return 64
+    if "integrated" in name or "uhd" in name:
         return 48
     return 56
 
 
 def last_renderer() -> Optional[str]:
     return _LAST_RENDERER
+
+
+def print_gpu_help() -> None:
+    """How to force RX 7700S if OpenGL still binds the 780M iGPU."""
+    print(
+        "[gpu_viz] If the HUD still shows '780M' instead of 'RX 7700S':\n"
+        "  Windows → Settings → System → Display → Graphics\n"
+        "  → Add .venv\\Scripts\\python.exe → Options → High performance\n"
+        "  Then fully quit and re-run: python tools/run_belief_live_loop.py\n"
+        "  Optional: set EQMOD_FIELD_RES=72 for denser field mesh."
+    )

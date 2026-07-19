@@ -14,13 +14,21 @@ _ROOT = Path(__file__).resolve().parents[1]
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
-from world.gpu_viz import configure_pyvista_gpu, request_high_performance_gpu
+from world.gpu_viz import (
+    configure_pyvista_gpu,
+    print_gpu_help,
+    request_high_performance_gpu,
+)
 from world.bet_live import BetLiveView
 from world.config import WorldConfig
 from world.state import World
 
 # Discrete GPU preference before any OpenGL context
 request_high_performance_gpu()
+# Default denser field on this machine (good GPU)
+import os
+os.environ.setdefault("EQMOD_FIELD_RES", "72")
+
 
 
 
@@ -65,7 +73,8 @@ def main() -> int:
     print("  TRANSLUCENT SHEETS = continuous vibration FIELD (layers = frequency dimensions)")
     print("  ORANGE spheres = electrons   WHITE = atoms  (bound matter)")
     print("  space=pause  s=step  r=camera  q=quit")
-    configure_pyvista_gpu(multi_samples=8, verbose=True)
+    configure_pyvista_gpu(8, True)
+    print_gpu_help()
     world = World(cfg)
     plant_cluster(world, n=140, seed=7)
     view = BetLiveView(
@@ -74,6 +83,9 @@ def main() -> int:
     if not view.open(world):
         print("Could not open PyVista window")
         return 1
+    from world.gpu_viz import last_renderer
+    print(f"[live] OpenGL adapter in use: {last_renderer()}")
+
     cycle = 0
     try:
         while view._window_alive() and not view._user_quit:
