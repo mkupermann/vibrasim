@@ -51,4 +51,18 @@ Prior ≈ 0.55 PASS if density was the only bind; NULL if specialisation still w
 
 ## RESULT
 
-*(empty until after official run)*
+**Verdict: NULL** (2026-07-19)  
+`~/.eqmod/bet/BP-C1b/result.json` · seeds {19,31,47} · 3 trials/seed · T=1500  
+
+| Bar | Value | thr | ok |
+|-----|------:|-----|:--:|
+| B1 T specialisation | **0.778** | ≥0.90 | no |
+| B2 same-band | **0.222** | ≤0.60 | yes |
+| B3 flipped | **0.111** | ≤0.60 | yes |
+| B4 both populated | **1.000** | ≥0.80 | yes |
+
+### Diagnosis
+- **Population fixed** vs C1 (B4 PASS) — denser regime worked.
+- Specialisation is **real and majority** (7/9 trials, controls fail) but **below locked 0.90**.
+- No post-hoc bar relax. Finding: dual-drive structural talent is **partial / emergent-but-noisy**, not clean acceptance.
+- Next (optional): BP-C1c multi-bit probe selectivity, or accept Rung C as open with this boundary.

@@ -207,6 +207,15 @@ class BetLiveView:
             tick(world, dt)
             world.t += dt
             done += 1
+
+        # Brief end pose so the final structure is visible (always-live sessions)
+        if self._window_alive() and not self._user_quit:
+            try:
+                self._rebuild(world, hud_extra=f"DONE {done}/{n_ticks} — watch, then window closes")
+                self._pl.update()
+                time.sleep(2.5)
+            except Exception:
+                pass
         return done
 
     def close(self) -> None:
