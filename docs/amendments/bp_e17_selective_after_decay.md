@@ -22,4 +22,4 @@ Seeds {561, 571}, trials 10. Budget 180s / hard 360s.
 🔮 LEAN NULL or borderline: atoms survive (L4 permanent) but charge prop may weaken if strength leak affects something else; bridges stay. Selectivity may hold because freqs remain.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20 night). B1=**1.000**, B2=**0.000**, B3=**1.000**. Selective recall survives strength-decay hold; bridges persist.
