@@ -236,15 +236,20 @@ class InteractiveViewer:
     # Geometry rebuilds (cheap, per frame)
     # ------------------------------------------------------------------
     def _rebuild_vibrations(self):
-        """Free vibrations as frequency wave-lines (not spheres/points)."""
+        """Free vibrations as continuous layered field (hidden dimensions)."""
         pl = self._pl
+        # remove previous field layers + legacy vib actor
         if self._vib_actor is not None:
             try:
                 pl.remove_actor(self._vib_actor, render=False)
             except Exception:
                 pass
             self._vib_actor = None
-        # remove optional backbone if present
+        for i in range(8):
+            try:
+                pl.remove_actor(f"field_layer_{i}", render=False)
+            except Exception:
+                pass
         try:
             pl.remove_actor("vib_backbone", render=False)
         except Exception:
@@ -252,33 +257,23 @@ class InteractiveViewer:
         if not self.show_vibrations:
             return
         w = self.world
-        if w.n_alive <= 0:
-            return
         try:
-            from world.bet_live import build_vibration_waves
-            waves, backbone = build_vibration_waves(w)
+            from world.bet_live import build_vibration_field_layers
+            layers = build_vibration_field_layers(w, n_bands=4)
         except Exception:
             return
-        if waves is None:
-            return
-        self._vib_actor = pl.add_mesh(
-            waves,
-            scalars="rgb",
-            rgb=True,
-            line_width=3,
-            name="vibrations",
-            opacity=1.0,
-            render_lines_as_tubes=True,
-        )
-        if backbone is not None:
+        for i, (grid, col, opacity) in enumerate(layers):
             try:
-                pl.add_mesh(
-                    backbone,
-                    color=(0.85, 0.85, 0.40),
-                    line_width=1,
-                    name="vib_backbone",
-                    opacity=0.35,
+                actor = pl.add_mesh(
+                    grid,
+                    color=tuple(float(c) for c in col),
+                    opacity=opacity,
+                    smooth_shading=True,
+                    name=f"field_layer_{i}",
+                    show_edges=False,
                 )
+                if self._vib_actor is None:
+                    self._vib_actor = actor
             except Exception:
                 pass
 
