@@ -9,4 +9,4 @@ A33 vs A34 still decode ≥0.90 after T=500 with ambient free vibrations present
 seeds {131,137}, N=20/seed, plant + 200 free random vibrations at start (wide band, not eligible-paired necessarily).
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-19). T=1.000, scramble=0, surv=1.000 with 200 ambient free vibrations.
