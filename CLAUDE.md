@@ -4,14 +4,16 @@
 
 Bottom-up substrate simulator. Computational neuroscience / consciousness research. The goal is developing a deadlock-breaking process, not necessarily succeeding at the simulation.
 
-## Active programme (2026-07-19)
+## Active programme (2026-07-19) — sharp discipline
 
-**Belief path — restart the question, keep the lab.** Read first:
+**Belief path.** Read first, in order:
 
-- `docs/BELIEF_PATH.md` — spine (vibrations → field → bind → electrons → atoms → molecules as information → matter → talented collections → brain), in/out of bounds, open rungs
-- `FRONTIER.md` — one-screen current frontier
+1. `docs/DISCIPLINE_SHARP.md` — operating rules (one question, pre-reg, no bar retune, no smoke theater)
+2. `docs/BELIEF_PATH.md` — spine
+3. `FRONTIER.md` — board
 
-Do **not** default to archive tracks (VSA/reservoir language wins, Brian2 SNN stack, oscillator-Ising/SA/CIM, BET-144/145/146 temporal credit, GEO/LLM) unless Michael explicitly re-admits them. Those findings stay in LOGBOOK/summaries as boundaries.
+Do **not** default to archive tracks (VSA/reservoir, Brian2, SA/CIM, BET-144+, GEO/LLM) unless Michael re-admits them.  
+Do **not** re-run dual-drive frequency talent (C1–C3 family). Headless default; no live 3D unless asked.
 
 ## Hard Constraints
 

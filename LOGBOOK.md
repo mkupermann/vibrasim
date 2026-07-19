@@ -5785,3 +5785,23 @@ Lab keeps chaining headless. Rung B solid. C still partial.
 
 Board updated FRONTIER. No animation. No idle.
 
+
+## 2026-07-19 — Sharp discipline mode + BP-C4 NULL
+
+Michael: mit schärferer Disziplin weitermachen.
+
+### Discipline
+- docs/DISCIPLINE_SHARP.md active
+- lab_continuous smoke loop STOPPED
+- headless; one question; pre-reg before data
+
+### BP-C4 (temporal dual drive — NEW vs C1–C3)
+Pre-reg commit 6dd5992 before data.
+B1=0.111, B2=1.000, B3 control=0.722, B4=1.000 → **NULL**
+Control contaminated; P_R artifact. Pattern: collection_talent_injection_ceiling.md
+**Mechanism class closed:** dual regional free-vib injection (freq or period).
+
+### Next (allowed)
+C partial-closure writeup, OR new primitive pre-reg, OR engineered-ports talent named honestly.
+No C5 period/band retune.
+

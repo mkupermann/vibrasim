@@ -82,4 +82,23 @@ If PASS: first evidence that **temporal** dual drive yields selective response �
 
 ## RESULT
 
-*(empty — fill only after run)*
+**Verdict: NULL** (2026-07-19) · headless · seeds {151,157,163} · 3 trials/seed  
+`~/.eqmod/bet/BP-C4/result.json`
+
+| Bar | Value | thr | ok |
+|-----|------:|-----|:--:|
+| B1 probe P_L | **0.111** | ≥0.75 | no |
+| B2 probe P_R | **1.000** | ≥0.75 | no* |
+| B3 control mean | **0.722** | ≤0.55 | no |
+| B4 train pop | **1.000** | ≥0.70 | yes |
+
+\*B2 alone would pass but is **not** defensible: control (B3) also high → period-probe selectivity is **not** specifically from dual temporal train.
+
+### Diagnosis (Pattern-01)
+- Mechanism fired (injection + population).  
+- Local effect asymmetric / artifactual (P_R always “wins” dR>dL; P_L almost never favors left).  
+- Binding constraint: probe metric (Δ level≥1 counts) is **not a clean talent readout** under global periodic injection — same failure class as C2, different drive family.  
+- **No bar retune. No C5 same design.**
+
+### Discipline consequence
+Under D9 + three frequency NULLs + this temporal NULL: **collection talent via dual regional free-vibration injection (freq or period) is closed as a mechanism class** on current primitives. Next C-step only with a **new primitive** or formal partial closure of Rung C.
