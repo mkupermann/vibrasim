@@ -30,4 +30,6 @@ Seeds {361, 371}, trials 12; N_write=15; T_idle=300. Budget 90s / hard 180s.
 Most-likely miss: mean over multiple bridges / freq drift confuses mid class.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20 night). B1=**1.000**, B2_ctrl=**0.250**, B3=**1.000**.
+
+Bridge + endpoint freqs recover exclusive pair class; independent L/R rarely look like legal pairs. Still uses table centroids (honest).
