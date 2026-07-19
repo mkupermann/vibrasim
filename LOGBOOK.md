@@ -5930,3 +5930,9 @@ Sharp discipline. Full night chain (summary):
 New knobs default OFF: ilw_strength_decay_tau, ilw_multislot_*, ilw_pair_link_*.
 Board: docs/FRONTIER.md + docs/amendments/bp_night_2026_07_20.md
 Next hard: multi-trial learning / sustained charge latch / free talent primitive only.
+
+## 2026-07-20 night cont — E17 PASS, E18 NULL
+
+E17: selective recall survives T_hold=500 with strength decay. PASS.
+E18: multi-trial graph partner via charge-weighted R freq **NULL** (B1=0). Bands present; continuous readout fails. E16 class-peak selectivity still stands.
+Scheduler 2h recurring night continue (ID logged in session).

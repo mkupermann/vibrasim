@@ -29,4 +29,10 @@ Protocol: seeds {581,591}, trials 10; T_train=8 episodes × N_write=8; multislot
 🔮 PASS lean: E16 already shows L0→R0 selectivity; this is the same without naming classes in decoder — only argmax charge on R.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20 night). B1_graph_acc=**0.000**, B2_rewire=**0.000**, B3_bands=**1.000**.
+
+### Calibration
+🔮 lean PASS — **MISS**. Multi-trial storage of bands works (B3); charge-weighted R-freq partner readout does **not** recover the map (B1=0). Possible: unbridged L slots, charge=0, or mixed R charge. E16 selectivity used class-gated peaks, not continuous freq readout. No bar retune.
+
+### Boundary
+Content-addressable partner via charge-weighted freq under multi-trial train is **not** established. Selective class peak (E16) still stands.

@@ -32,6 +32,8 @@
 | E15 | NULL | Selective recall fails (all-to-all graph) |
 | PRIM5-D0 | PASS | Exclusive pair-link on dual write |
 | E16 | **PASS** | Selective L0→R0 charge recall |
+| E17 | **PASS** | Selective after decay hold |
+| E18 | **NULL** | Charge-weighted partner map readout fails |
 
 ## What works (engineered port curriculum)
 
