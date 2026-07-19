@@ -22,8 +22,8 @@ _ROOT = Path(__file__).resolve().parents[1]
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
+from world.bet_live import run_ticks_live
 from world.config import WorldConfig
-from world.physics import tick
 from world.state import World
 from tools.classify_molecules import _ground_atom_decades, species_fingerprint
 
@@ -169,14 +169,12 @@ def random_pos(rng: np.random.Generator, box: np.ndarray) -> np.ndarray:
     return rng.uniform(0.0, 1.0, size=3) * box
 
 
-def hold(world: World, n_ticks: int) -> None:
+def hold(world: World, n_ticks: int, *, live: bool = False, title: str = "BP-B1") -> None:
     dt = float(world.config.dt)
-    for _ in range(n_ticks):
-        tick(world, dt)
-        world.t += dt
+    run_ticks_live(world, n_ticks, dt, live=live, title=title, ticks_per_frame=10)
 
 
-def trial_treatment(seed: int, label: str, t_hold: int, trial_i: int) -> dict:
+def trial_treatment(seed: int, label: str, t_hold: int, trial_i: int, *, live: bool = False) -> dict:
     cfg = make_cfg(seed)
     world = World(cfg)
     rng = np.random.default_rng(seed * 1_000_003 + trial_i * 17 + (0 if label == "alpha" else 1))
@@ -184,7 +182,7 @@ def trial_treatment(seed: int, label: str, t_hold: int, trial_i: int) -> dict:
     pos = random_pos(rng, box)
     mol = plant_real_molecule(world, label, pos)
     fp0 = molecule_fingerprint(world, mol)
-    hold(world, t_hold)
+    hold(world, t_hold, live=live, title=f"BP-B1 treatment label={label}")
     alive = bool(world.k_alive[mol])
     fp1 = molecule_fingerprint(world, mol) if alive else "A?"
     pred = decode_by_fingerprint(fp1)
@@ -202,7 +200,7 @@ def trial_treatment(seed: int, label: str, t_hold: int, trial_i: int) -> dict:
     }
 
 
-def trial_c1_empty(seed: int, label: str, t_hold: int, trial_i: int) -> dict:
+def trial_c1_empty(seed: int, label: str, t_hold: int, trial_i: int, *, live: bool = False) -> dict:
     """Empty shell — fingerprint cannot carry the write label."""
     cfg = make_cfg(seed)
     world = World(cfg)
@@ -210,7 +208,7 @@ def trial_c1_empty(seed: int, label: str, t_hold: int, trial_i: int) -> dict:
     box = np.asarray(cfg.box_size, dtype=np.float64)
     pos = random_pos(rng, box)
     mol = plant_empty_shell(world, pos)
-    hold(world, t_hold)
+    hold(world, t_hold, live=live, title="BP-B1 C1 empty shell")
     alive = bool(world.k_alive[mol])
     fp1 = molecule_fingerprint(world, mol) if alive else "A?"
     pred = decode_by_fingerprint(fp1)
@@ -224,7 +222,7 @@ def trial_c1_empty(seed: int, label: str, t_hold: int, trial_i: int) -> dict:
     }
 
 
-def trial_c2_scramble(seed: int, label: str, t_hold: int, trial_i: int) -> dict:
+def trial_c2_scramble(seed: int, label: str, t_hold: int, trial_i: int, *, live: bool = False) -> dict:
     cfg = make_cfg(seed)
     world = World(cfg)
     rng = np.random.default_rng(seed * 1_000_003 + trial_i * 23 + 5)
@@ -232,7 +230,7 @@ def trial_c2_scramble(seed: int, label: str, t_hold: int, trial_i: int) -> dict:
     pos = random_pos(rng, box)
     mol = plant_real_molecule(world, label, pos)
     scramble_composition(world, mol, label)
-    hold(world, t_hold)
+    hold(world, t_hold, live=live, title="BP-B1 C2 scramble")
     alive = bool(world.k_alive[mol])
     fp1 = molecule_fingerprint(world, mol) if alive else "A?"
     pred = decode_by_fingerprint(fp1)
@@ -246,14 +244,14 @@ def trial_c2_scramble(seed: int, label: str, t_hold: int, trial_i: int) -> dict:
     }
 
 
-def trial_c3_position(seed: int, label: str, t_hold: int, trial_i: int) -> dict:
+def trial_c3_position(seed: int, label: str, t_hold: int, trial_i: int, *, live: bool = False) -> dict:
     cfg = make_cfg(seed)
     world = World(cfg)
     rng = np.random.default_rng(seed * 1_000_003 + trial_i * 29 + 7)
     box = np.asarray(cfg.box_size, dtype=np.float64)
     pos = random_pos(rng, box)
     mol = plant_real_molecule(world, label, pos)
-    hold(world, t_hold)
+    hold(world, t_hold, live=live, title="BP-B1 C3 position")
     alive = bool(world.k_alive[mol])
     pos_read = world.k_pos[mol] if alive else pos
     pred = decode_by_position(np.asarray(pos_read), box)
@@ -273,20 +271,28 @@ def label_schedule(n: int, rng: np.random.Generator) -> list[str]:
     return labels
 
 
-def run_protocol(*, n_trials: int, t_hold: int, seeds: tuple[int, ...], smoke: bool) -> dict:
+def run_protocol(
+    *, n_trials: int, t_hold: int, seeds: tuple[int, ...], smoke: bool,
+    live: bool = False, live_all: bool = False,
+) -> dict:
     all_T: list[dict] = []
     all_C1: list[dict] = []
     all_C2: list[dict] = []
     all_C3: list[dict] = []
+    live_used = False
 
     for seed in seeds:
         rng = np.random.default_rng(seed)
         schedule = label_schedule(n_trials, rng)
         for i, lab in enumerate(schedule):
-            all_T.append(trial_treatment(seed, lab, t_hold, i))
-            all_C1.append(trial_c1_empty(seed, lab, t_hold, i))
-            all_C2.append(trial_c2_scramble(seed, lab, t_hold, i))
-            all_C3.append(trial_c3_position(seed, lab, t_hold, i))
+            use_live = False
+            if live and (live_all or not live_used):
+                use_live = True
+                live_used = True
+            all_T.append(trial_treatment(seed, lab, t_hold, i, live=use_live))
+            all_C1.append(trial_c1_empty(seed, lab, t_hold, i, live=live_all))
+            all_C2.append(trial_c2_scramble(seed, lab, t_hold, i, live=live_all))
+            all_C3.append(trial_c3_position(seed, lab, t_hold, i, live=live_all))
 
     def acc(rows: list[dict]) -> float:
         if not rows:
@@ -340,6 +346,8 @@ def run_protocol(*, n_trials: int, t_hold: int, seeds: tuple[int, ...], smoke: b
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(prog="run_bp_b1_molecule_information")
     p.add_argument("--smoke", action="store_true", help="N=4, T=50, seed 42 only")
+    p.add_argument("--live", action="store_true", help="PyVista 3D for first treatment trial")
+    p.add_argument("--live-all", action="store_true", help="live-view every trial (slow)")
     args = p.parse_args(argv)
 
     if args.smoke:
@@ -347,8 +355,12 @@ def main(argv: list[str] | None = None) -> int:
     else:
         n_trials, t_hold, seeds, smoke = N_FULL, T_FULL, SEEDS_FULL, False
 
-    print(f"BP-B1 start smoke={smoke} N={n_trials} T={t_hold} seeds={seeds}")
-    result = run_protocol(n_trials=n_trials, t_hold=t_hold, seeds=seeds, smoke=smoke)
+    live = bool(args.live or args.live_all)
+    print(f"BP-B1 start smoke={smoke} N={n_trials} T={t_hold} seeds={seeds} live={live}")
+    result = run_protocol(
+        n_trials=n_trials, t_hold=t_hold, seeds=seeds, smoke=smoke,
+        live=live, live_all=bool(args.live_all),
+    )
 
     out_dir = Path.home() / ".eqmod" / "bet" / "BP-B1"
     out_dir.mkdir(parents=True, exist_ok=True)
