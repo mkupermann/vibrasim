@@ -1,7 +1,7 @@
 """BP-C2 — probe-response talent after dual-drive training.
 
 Pre-registered: docs/amendments/bp_c2_probe_talent.md
-Live default ON; --headless for batch.
+Lab is headless by default; pass --live only if you want PyVista.
 """
 from __future__ import annotations
 
@@ -206,10 +206,10 @@ def run_protocol(seeds, trials, smoke, live, live_all):
 def main(argv=None):
     p = argparse.ArgumentParser()
     p.add_argument("--smoke", action="store_true")
-    p.add_argument("--headless", action="store_true")
+    p.add_argument("--live", action="store_true", default=False)
     p.add_argument("--live-all", action="store_true")
     args = p.parse_args(argv)
-    live = not args.headless
+    live = bool(args.live or args.live_all)
     print(f"BP-C2 start smoke={args.smoke} live={live}")
     result = run_protocol(SEEDS, TRIALS, args.smoke, live, args.live_all)
     out = Path.home() / ".eqmod" / "bet" / "BP-C2"

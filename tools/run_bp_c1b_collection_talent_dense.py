@@ -1,7 +1,7 @@
 """BP-C1b — denser dual-drive collection specialisation (follows C1 NULL).
 
 Pre-registered: docs/amendments/bp_c1b_collection_talent_dense.md
-Live default ON; --headless for batch.
+Lab is headless by default; pass --live only if you want PyVista.
 """
 from __future__ import annotations
 
@@ -146,14 +146,14 @@ def run_protocol(seeds, trials, n_ticks, smoke, live, live_all):
 def main(argv=None):
     p = argparse.ArgumentParser()
     p.add_argument("--smoke", action="store_true")
-    p.add_argument("--headless", action="store_true")
+    p.add_argument("--live", action="store_true", default=False)
     p.add_argument("--live-all", action="store_true")
     args = p.parse_args(argv)
     if args.smoke:
         seeds, trials, n_ticks, smoke = (19,), 1, 600, True
     else:
         seeds, trials, n_ticks, smoke = SEEDS_FULL, TRIALS_PER_SEED, T_FULL, False
-    live = not args.headless
+    live = bool(args.live or args.live_all)
     print(f"BP-C1b start smoke={smoke} seeds={seeds} trials={trials} T={n_ticks} live={live}")
     result = run_protocol(seeds, trials, n_ticks, smoke, live, args.live_all)
     out = Path.home() / ".eqmod" / "bet" / "BP-C1b"

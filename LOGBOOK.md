@@ -5722,3 +5722,20 @@ Michael: always live; agent decides for session.
 ### Belief ladder status
 A PASS · B PASS · C open (near-miss mapped) · brain blocked on clean C
 
+
+## 2026-07-19 — Stop animation; lab only; BP-C2 NULL
+
+Michael: stop 3D animation; just the laboratory.
+
+### Process
+- Killed all `run_belief_live_loop` / gui viewer processes.
+- BP runners: live **default OFF** (opt-in `--live` only).
+
+### BP-C2 (headless)
+Probe-response talent after dual drive. Official seeds {53,59,61}.
+B1 0.444, B2 0.222, B3 0.556, B4 1.000 → **NULL**.
+Rung C remains open/partial; no post-hoc bar tuning.
+
+### Ladder
+A PASS · B PASS · C partial (C1/C1b/C2 NULL) · brain not started.
+

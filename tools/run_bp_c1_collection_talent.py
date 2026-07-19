@@ -1,7 +1,7 @@
 """BP-C1 — Dual-drive collections specialise (Rung C structural talent).
 
 Pre-registered: docs/amendments/bp_c1_collection_talent.md
-Live 3D default ON; use --headless for batch.
+Lab is headless by default; pass --live only if you want PyVista.
 
 Usage:
     python tools/run_bp_c1_collection_talent.py --smoke
@@ -224,8 +224,7 @@ def run_protocol(
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(prog="run_bp_c1_collection_talent")
     p.add_argument("--smoke", action="store_true")
-    p.add_argument("--live", action="store_true", default=True)
-    p.add_argument("--headless", action="store_true")
+    p.add_argument("--live", action="store_true", default=False)
     p.add_argument("--live-all", action="store_true")
     args = p.parse_args(argv)
 
@@ -234,7 +233,7 @@ def main(argv: list[str] | None = None) -> int:
     else:
         seeds, trials, n_ticks, smoke = SEEDS_FULL, TRIALS_PER_SEED, T_FULL, False
 
-    live = False if args.headless else True
+    live = bool(args.live or args.live_all)
     print(f"BP-C1 start smoke={smoke} seeds={seeds} trials={trials} T={n_ticks} live={live}")
     result = run_protocol(
         seeds=seeds, trials=trials, n_ticks=n_ticks, smoke=smoke,

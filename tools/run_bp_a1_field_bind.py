@@ -213,10 +213,8 @@ def run_protocol(
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(prog="run_bp_a1_field_bind")
     p.add_argument("--smoke", action="store_true")
-    p.add_argument("--live", action="store_true", default=True,
-                   help="PyVista 3D for first treatment trial (default ON)")
-    p.add_argument("--headless", action="store_true",
-                   help="disable live 3D (batch / CI)")
+    p.add_argument("--live", action="store_true", default=False,
+                   help="optional PyVista 3D (off by default — lab is headless)")
     p.add_argument("--live-all", action="store_true",
                    help="live-view every main arm trial (slow)")
     args = p.parse_args(argv)
@@ -226,9 +224,7 @@ def main(argv: list[str] | None = None) -> int:
     else:
         seeds, trials, n_ticks, smoke = SEEDS_FULL, TRIALS_PER_SEED, T_FULL, False
 
-    live = (not args.headless) or bool(args.live_all)
-    if args.headless:
-        live = False
+    live = bool(args.live or args.live_all)
     print(f"BP-A1 start smoke={smoke} seeds={seeds} trials={trials} T={n_ticks} live={live}")
     result = run_protocol(
         seeds=seeds, trials=trials, n_ticks=n_ticks, smoke=smoke,
