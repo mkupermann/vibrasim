@@ -94,4 +94,26 @@ Results: `~/.eqmod/bet/BP-B1/result.json`
 
 ## RESULT
 
-*(empty until after the run — do not fill before data)*
+**Verdict: PASS** (2026-07-19)  
+Runner: `tools/run_bp_b1_molecule_information.py`  
+Artifact: `~/.eqmod/bet/BP-B1/result.json`
+
+| Bar | Value | Threshold | Pass? |
+|-----|------:|-----------|:-----:|
+| B1 treatment acc | **1.000** | ≥ 0.90 | yes |
+| B2 C1 empty acc | **0.000** | ≤ 0.60 | yes |
+| B3 C2 scramble acc | **0.000** | ≤ 0.60 | yes |
+| B4 C3 position acc | **0.525** | ≤ 0.60 | yes |
+| B5 survival | **1.000** | ≥ 0.80 | yes |
+
+Protocol: N=20 trials/seed × seeds {42, 7}, T=500 hold ticks. Smoke (N=4, T=50, seed 42) also PASS (all bars).
+
+### Scope (honest)
+
+- **Existence of structure-as-content under engineered write:** composition fingerprint (`A33` vs `A34`) survives quiet physics and decodes the write label; empty shells and scrambled composition do not; position-only readout stays near chance.
+- **Not shown:** emergent species formation from free evolution (BP-B2); talent of collections (Rung C); that composition is *dynamically* maintained under stress (only quiet hold tested).
+- Composition is CSR state on real constituents — a low-bar existence proof that the medium *can* hold molecular structure as a content channel distinct from position (G114–G119).
+
+### Prediction check
+
+Pre-data prior ~0.55 PASS; outcome PASS. Main risk was carrier death — did not materialize under locked quiet config (`lambda_dec_mol=0`, no thermal motion).
