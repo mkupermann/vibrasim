@@ -40,4 +40,10 @@ Most-likely miss: residual first still >0.20 if first block seeds a *second* ato
 Temporal order from strength (E3 closed); free talent; multi-trial learning without joint rewrite.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1_L_last=**1.000**, B2_R_last=**1.000**, B3_residual_first=**0.000**, B4_ctrl=**1.000**.
+
+### Calibration
+🔮 predicted PASS — **HIT**. Sequential ILW on same port atoms overwrites band identity; residual first wiped.
+
+### Scope
+Curriculum rewrite of port content works under engineered ILW nudge. Not temporal order-from-strength (E3); not learning.
