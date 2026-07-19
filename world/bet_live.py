@@ -24,6 +24,15 @@ from typing import Callable, List, Optional, Sequence, Tuple
 import numpy as np
 
 from world.physics import tick
+from world.gpu_viz import (
+    apply_plotter_gpu,
+    configure_pyvista_gpu,
+    field_resolution_for_gpu,
+    request_high_performance_gpu,
+)
+
+# Prefer discrete GPU before any OpenGL context exists
+request_high_performance_gpu()
 
 # Bound-matter palette
 COLOR_ELECTRON = np.array([1.00, 0.65, 0.05])
@@ -54,8 +63,8 @@ LAYER_COLORS = [
     np.array([1.00, 0.45, 0.20]),  # orange-red — very high
 ]
 
-# Field mesh resolution (balance quality vs speed)
-FIELD_RES = 48          # grid samples per axis on each layer
+# Field mesh resolution — raised on discrete GPUs via field_resolution_for_gpu()
+FIELD_RES = 56          # default; open() may raise this after GPU probe
 FIELD_SIGMA = 6.0       # spatial kernel of each vibration's contribution (world units)
 FIELD_AMP = 2.2         # vertical undulation amplitude
 FIELD_K0 = 0.35         # spatial wave number scale
@@ -270,8 +279,10 @@ class BetLiveView:
             print("[bet_live] pyvista not installed — live view disabled")
             return False
         try:
+            configure_pyvista_gpu(multi_samples=8, report=True)
             bx, by, bz = world.config.box_size
-            pl = pv.Plotter(title=self.title, window_size=(1280, 800))
+            # Larger window so the discrete GPU is worth it
+            pl = pv.Plotter(title=self.title, window_size=(1600, 1000))
             pl.set_background((0.02, 0.02, 0.05))  # deep space, not pure black
             box = pv.Box(bounds=(0, bx, 0, by, 0, bz))
             pl.add_mesh(
@@ -287,8 +298,16 @@ class BetLiveView:
             pl.add_key_event("q", self._request_quit)
             pl.add_key_event("r", lambda: self._reset_camera(world))
             pl.show(interactive_update=True, auto_close=False)
+            # After context exists: MSAA, depth peeling, report adapter
+            gpu_info = apply_plotter_gpu(pl)
+            # Raise field mesh density on discrete GPUs
+            global FIELD_RES
+            FIELD_RES = field_resolution_for_gpu()
             self._pl = pl
-            self._rebuild(world, hud_extra="field layers initialising…")
+            self._rebuild(
+                world,
+                hud_extra=f"GPU field res={FIELD_RES} | {gpu_info[:80]}",
+            )
             self._reset_camera(world)
             pl.update()
             return True

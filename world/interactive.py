@@ -116,9 +116,11 @@ class InteractiveViewer:
     # ------------------------------------------------------------------
     def run(self) -> int:
         import pyvista as pv
+        from world.gpu_viz import apply_plotter_gpu, configure_pyvista_gpu
 
+        configure_pyvista_gpu(multi_samples=8, report=True)
         bx, by, bz = self.config.box_size
-        pl = pv.Plotter(title="EQMOD — interactive substrate viewer")
+        pl = pv.Plotter(title="EQMOD — interactive substrate viewer", window_size=(1600, 1000))
         self._pl = pl
         pl.set_background("black")
         pl.enable_anti_aliasing("msaa")
@@ -189,6 +191,7 @@ class InteractiveViewer:
 
         pl.camera_position = "iso"
         pl.show(interactive_update=True, auto_close=False)
+        apply_plotter_gpu(pl)
 
         # Main loop — single thread, no race conditions
         try:
