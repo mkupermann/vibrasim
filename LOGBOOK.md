@@ -5834,3 +5834,13 @@ Variant A two spheres: chi_on=0.412 (bar 0.15), only marginal vs off (0.430).
 Containment primitive as dual spheres FAILS acceptance.
 No talent re-open. No bar retune.
 
+
+## 2026-07-19 — A midplane + B ILW (sharp discipline)
+
+### PRIM1-D2 midplane
+First run NULL chi=0.39 (periodic wrap bug). Fix + same bars → **PASS chi=0.000**.
+### PRIM2-D0 ILW
+**PASS**: free arm contaminates right (689); ILW right free delta=0; structural change 100%.
+
+Containment + non-broadcast write primitives accepted. Talent re-open = separate pre-reg.
+

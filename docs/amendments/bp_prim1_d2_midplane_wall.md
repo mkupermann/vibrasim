@@ -45,4 +45,7 @@ Estimate 20 min impl + 15 min run · 2× ceilings apply.
 Prior ≈ 0.55 PASS if reflection is correct; NULL if tagging/spawn or periodic wrap still mixes sides.
 
 ## RESULT
-*(after run)*
+**PASS** (2026-07-19) after wrap-bugfix.
+chi_on=**0.000**, chi_off=0.430, pop=1.000. All bars met.
+First D2 attempt NULL was implementation bug (periodic x wrap bypassed midplane); fixed in physics.apply_midplane_wall; re-run under same bars (not bar retune).
+
