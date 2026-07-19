@@ -14,9 +14,14 @@ _ROOT = Path(__file__).resolve().parents[1]
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
+from world.gpu_viz import configure_pyvista_gpu, request_high_performance_gpu
 from world.bet_live import BetLiveView
 from world.config import WorldConfig
 from world.state import World
+
+# Discrete GPU preference before any OpenGL context
+request_high_performance_gpu()
+
 
 
 def plant_cluster(world: World, n: int = 120, seed: int = 42) -> None:
@@ -56,14 +61,15 @@ def main() -> int:
         lambda_gen=0.0,
         lambda_dec=0.0,
     )
-    print("Opening BELIEF LIVE window…")
+    print("Opening BELIEF LIVE window (GPU)…")
     print("  TRANSLUCENT SHEETS = continuous vibration FIELD (layers = frequency dimensions)")
     print("  ORANGE spheres = electrons   WHITE = atoms  (bound matter)")
     print("  space=pause  s=step  r=camera  q=quit")
+    configure_pyvista_gpu(multi_samples=8, report=True)
     world = World(cfg)
     plant_cluster(world, n=140, seed=7)
     view = BetLiveView(
-        title="BELIEF LIVE — hidden field layers → bound electrons/atoms"
+        title="BELIEF LIVE — hidden field layers → bound electrons/atoms [GPU]"
     )
     if not view.open(world):
         print("Could not open PyVista window")
