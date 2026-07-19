@@ -77,4 +77,18 @@ Live 3D default ON (`--headless` to disable).
 
 ## RESULT
 
-*(empty until after official run)*
+**Verdict: NULL** (2026-07-19)  
+Artifact: `~/.eqmod/bet/BP-C1/result.json`  
+Seeds {17,29,43} · 4 trials/seed · T=800  
+
+| Bar | Value | thr | ok |
+|-----|------:|-----|:--:|
+| B1 T specialisation | **0.417** | ≥0.90 | no |
+| B2 C1 same-band | **0.000** | ≤0.60 | yes |
+| B3 C2 flipped | **0.000** | ≤0.60 | yes |
+| B4 both populated | **0.500** | ≥0.80 | no |
+
+### Diagnosis (Pattern-01)
+- Mechanism (dual drive) fires; controls behave (same-band does not fake specialisation).
+- **Binding constraint:** insufficient level≥4 matter in *both* halves within T=800 / N=300 — half of trials leave a side empty; when both populate, specialisation only ~42%.
+- Not a bar-tuning case → open **BP-C1b** with denser/longer formation (new amendment), not edit C1.
