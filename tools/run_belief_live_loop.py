@@ -65,7 +65,7 @@ def main() -> int:
     print("  TRANSLUCENT SHEETS = continuous vibration FIELD (layers = frequency dimensions)")
     print("  ORANGE spheres = electrons   WHITE = atoms  (bound matter)")
     print("  space=pause  s=step  r=camera  q=quit")
-    configure_pyvista_gpu(multi_samples=8, report=True)
+    configure_pyvista_gpu(multi_samples=8, verbose=True)
     world = World(cfg)
     plant_cluster(world, n=140, seed=7)
     view = BetLiveView(
