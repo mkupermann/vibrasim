@@ -109,6 +109,9 @@ class WorldConfig:
     # PRIM4: multi-slot ILW — allocate new L4 when nearest band differs.
     ilw_multislot_enabled: bool = False
     ilw_multislot_rel_freq: float = 0.35
+    # PRIM5: exclusive bridge between the two atoms just dual-written.
+    ilw_pair_link_enabled: bool = False
+    ilw_pair_link_delta: float = 1.0
     flux_plasticity_rate: float = 0.0     # Bridge strengthening rate from vibration flux (0=off). Plasticity from physics.
     flux_threshold: float = 2.0           # Flux above this potentiates a bridge, below depresses.
     flux_decay: float = 0.05              # Strength decay per second for low-flux bridges.

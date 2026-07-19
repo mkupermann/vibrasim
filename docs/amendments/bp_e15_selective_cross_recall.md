@@ -26,4 +26,10 @@ Seeds {501, 511}, trials 12; N_write=12; T_prop=60. Budget 120s / hard 240s.
 🔮 LEAN NULL or borderline: bridges may cross-link all L–R pairs (complete bipartite), so firing L0 also charges R1. Most-likely miss B1 if graph is fully connected across bands.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20 night). B1_selective=**0.000**, B2_fireall=**0.000**, B3_both=**1.000**.
+
+### Calibration
+🔮 lean NULL — **HIT**. Complete bipartite cross-bridges: firing L0 charges all R partners equally (or R1 ≥ R0). Selective recall needs **exclusive pair links**, not all-to-all cross graph.
+
+### Next
+PRIM5: dual-write creates bridge only between the two slots just written (band-matched exclusive link).
