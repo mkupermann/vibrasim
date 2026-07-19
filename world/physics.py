@@ -1904,12 +1904,12 @@ def apply_midplane_wall(world, dt: float) -> None:
         world.s_vel[hit_hi, 0] = -np.abs(world.s_vel[hit_hi, 0])
 
 
-def apply_ilw_port_event(world, port_pos, rng=None) -> dict:
+def apply_ilw_port_event(world, port_pos, rng=None, seed_freq: float = 3000.0) -> dict:
     """PRIM2: internal local write at *port_pos* — no free-vibration injection.
 
     Returns stats dict: {mode, atom_idx, mol_idx, delta_strength}.
-    Engineered write; named as such. No-op content if ilw_enabled is False
-    unless force=True from experiment harness (harness may call with enabled cfg).
+    Engineered write; named as such. No-op if ilw_enabled is False.
+    *seed_freq* used when allocating a new level-4 atom (C5 dual-port bands).
     """
     cfg = world.config
     out = {"mode": "none", "atom_idx": -1, "mol_idx": -1, "delta_strength": 0.0}
@@ -1920,7 +1920,6 @@ def apply_ilw_port_event(world, port_pos, rng=None) -> dict:
     dS = float(getattr(cfg, "ilw_delta_strength", 0.5))
     box = np.asarray(cfg.box_size, dtype=np.float64)
     K = world.k_count
-    # Find nearest level≥5 molecule within R
     best_m, best_d2 = -1, R * R
     best_a, best_ad2 = -1, R * R
     for i in range(K):
@@ -1938,17 +1937,18 @@ def apply_ilw_port_event(world, port_pos, rng=None) -> dict:
             best_a = i
     if best_m >= 0:
         world.k_strength[best_m] = float(world.k_strength[best_m]) + dS
+        # nudge molecule freq slightly toward seed_freq for dual-port spectral write
+        world.k_freq[best_m] = 0.9 * float(world.k_freq[best_m]) + 0.1 * float(seed_freq)
         out.update(mode="strengthen_mol", mol_idx=best_m, delta_strength=dS)
         return out
     if best_a >= 0:
-        # slight charge/strength on atom as local write mark
         world.k_strength[best_a] = float(world.k_strength[best_a]) + dS
+        world.k_freq[best_a] = 0.85 * float(world.k_freq[best_a]) + 0.15 * float(seed_freq)
         out.update(mode="strengthen_atom", atom_idx=best_a, delta_strength=dS)
         return out
-    # Engineered seed atom at port (honest §4.8-style write)
     idx = world.allocate_node(
         pos=port.copy(),
-        freq=3000.0,
+        freq=float(seed_freq),
         pol=True,
         level=4,
         constituents=np.zeros(0, dtype=np.int32),
