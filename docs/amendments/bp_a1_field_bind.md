@@ -98,4 +98,22 @@ Results: `~/.eqmod/bet/BP-A1/result.json`
 
 ## RESULT
 
-*(empty until after the official run)*
+**Verdict: PASS** (2026-07-19)  
+Runner: `tools/run_bp_a1_field_bind.py`  
+Artifact: `~/.eqmod/bet/BP-A1/result.json`  
+Official seeds: {13, 37, 41} · 4 trials/seed · T=200 · N=40  
+
+| Bar | Value | Threshold | Pass? |
+|-----|------:|-----------|:-----:|
+| B1 T electrons/N | **0.483** | ≥ 0.35 | yes |
+| B2 C1/T ratio (sparse) | **0.388** | ≤ 0.55 | yes |
+| B3 C2/T ratio (scramble) | **0.241** | ≤ 0.55 | yes |
+| B4 N=10 cluster / sparse | **4.25 / 0.83** | ≥3.0 / ≤1.0 | yes |
+
+Means: T=19.3 e⁻, sparse=7.5, scramble=4.7 (N=40). Smoke also PASS.
+
+### Scope (honest)
+- Local **free-vibration density** is load-bearing for binding at fixed *N* and freqs.
+- Pair rule remains necessary (scramble kills most binding even in a cluster).
+- Field is operationalized as density of free vibrations — **not** a new energy primitive beyond what the physics already has.
+- Supports the belief’s “at a certain density/energy, binding happens” as density-gated encounters + 8% table — not as a separate mysterious field equation.

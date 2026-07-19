@@ -5676,3 +5676,30 @@ in runner; bars not retuned; re-run PASS.
 Emergent write: drive spectrum → molecule structure → readable label. Not Rung C
 talent, not Rung A field law. Rung B closed at this scope.
 
+
+## 2026-07-19 — BP-A1 PASS: local density field enables binding (Rung A)
+
+Belief-path Rung A. Pre-reg committed first (1da889f) with held-out seeds
+{13, 37, 41}. Design probes used 11/23/31 only.
+
+### Protocol
+N=40 free vibrations; T=200 ticks; eligible freqs (500 / 500*1.08, alt polarity).
+T=cluster sigma=2; C1=sparse same N/freqs; C2=cluster + freq scramble; B4 at N=10.
+
+### Official results
+| Bar | Value | thr | ok |
+|-----|------:|-----|:--:|
+| B1 T e/N | 0.483 | >=0.35 | Y |
+| B2 sparse/T | 0.388 | <=0.55 | Y |
+| B3 scramble/T | 0.241 | <=0.55 | Y |
+| B4 N10 cl/sp | 4.25 / 0.83 | >=3 / <=1 | Y |
+
+Means: T=19.3, sparse=7.5, scramble=4.7 electrons.
+
+**Verdict: PASS.**
+
+### Scope
+Density of free vibrations is load-bearing for binding; pair rule still required.
+Belief's 'energy field' under current primitives = local free-vibration density,
+not a separate field equation. Next open belief rung: C (talent).
+

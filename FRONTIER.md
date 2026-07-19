@@ -16,15 +16,15 @@ Last updated: **2026-07-19**.
 - Hard constraints: still `CLAUDE.md` (no LLM / transformer / pretrained embedding / BPE on this path; ports engineered, internals emerge)
 
 ### Latest belief-path results
-- **BP-B1 PASS** (2026-07-19): composition fingerprint selective under **engineered** write. Doc: `docs/amendments/bp_b1_molecule_information.md`.
-- **BP-B2 PASS** (2026-07-19): **emergent** molecule decades decode drive identity (held-out seeds 11,23; acc 1.00); same-band / shuffle / count controls fail. Doc: `docs/amendments/bp_b2_emergent_species.md`.
+- **BP-A1 PASS** (2026-07-19): local free-vibration **density** enables binding (cluster ≫ sparse; scramble kills binding). Field = density under current primitives. Doc: `docs/amendments/bp_a1_field_bind.md`.
+- **BP-B1 PASS**: composition fingerprint under engineered write.
+- **BP-B2 PASS**: emergent molecule decades decode drive identity.
 
-Rung B (molecules carry information) is **climbed at existence + emergent-write scope**.
+Rungs **A** (density field→bind) and **B** (molecules carry information) are climbed at stated scope.
 
-### Next step (pick one)
-- **Rung C**: collections get talent (light vs sound selectivity without separate ML stacks).
-- **Rung A**: field → bind threshold.
-- **BP-B3** (optional stress): longer hold, multi-bit species alphabet, or transport of fingerprint over distance.
+### Next step
+- **Rung C**: collections get talent (light vs sound selectivity without separate ML stacks) — main open belief rung.
+- Optional stress: BP-B3 multi-bit / transport; BP-A2 continuous energy scalar if a new primitive is proposed.
 
 ---
 
