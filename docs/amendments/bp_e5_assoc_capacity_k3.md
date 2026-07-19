@@ -47,4 +47,10 @@ Most-likely miss: mid-band 1500 collapses toward neighbor under ILW freq nudge; 
 Learned multi-trial association; free talent; temporal order.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1_L=**1.000**, B2_R=**1.000**, B3_ctrl_match=**0.333**, B4_pop=**1.000**.
+
+### Calibration
+🔮 predicted PASS — **HIT**. Three exclusive ILW bands remain separable on both halves; independent L/R match ≈1/3.
+
+### Scope (honest)
+K=3 write-time multi-band **storage** under engineered seed_freq + experimenter centroids. Not multi-trial learning; association map is external to the substrate (see pattern `write_time_map_not_learning`).

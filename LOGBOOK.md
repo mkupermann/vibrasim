@@ -5883,3 +5883,9 @@ Pre-reg commit f1c2553 before data.
 
 Write-time dual ILW opposite-band pairing preserved under idle. Engineered, scoped. Prediction HIT.
 E-series board: E2+E4 usable base; E3 order-from-strength closed.
+
+## 2026-07-20 — BP-E5 PASS K=3 capacity (scoped storage)
+
+Pre-reg e5fb853 before data.
+B1_L=1.0 B2_R=1.0 B3_ctrl_match=0.333 B4_pop=1.0  **PASS**
+Prediction HIT. Pattern write_time_map_not_learning: E4/E5 are engineered multi-band storage + external map, not learned association. Stop farming K-band PASSes; next needs new hard mechanism.
