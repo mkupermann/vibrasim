@@ -72,4 +72,24 @@ Prior: FREE+wall ≈0.55 PASS on B1 (C1b was 0.78 without wall); ILW ≈0.70 on 
 `~/.eqmod/bet/BP-C5/result.json`
 
 ## RESULT
-*(after run)*
+
+**Verdict: NULL** (2026-07-19) · `~/.eqmod/bet/BP-C5/result.json`  
+seeds {201,203,207} × 3 trials · T=1200 · midplane ON  
+
+| Bar | Value | thr | ok |
+|-----|------:|-----|:--:|
+| B1 FREE specialisation | **0.667** | ≥0.90 | no |
+| B2 ILW specialisation | **1.000** | ≥0.90 | yes |
+| B3 FREE pop | **1.000** | ≥0.80 | yes |
+| B4 ILW pop | **1.000** | ≥0.80 | yes |
+| B5 χ FREE | **0.000** | ≤0.15 | yes |
+
+### Diagnosis
+- Containment works (χ=0).  
+- **ILW dual-port spectral write fully separates halves** (B2). Honest: engineered seed_freq L/R — not pure free emergence.  
+- **FREE dual-band under wall still only ~2/3** specialisation — same class as C1b near-miss (0.78), fails 0.90.  
+- Overall NULL: free-chemistry talent still not at bar; ILW path is a **scoped engineered specialisation**, not a full C PASS under all bars.
+
+### Belief language
+Do **not** say “C PASSed.”  
+Say: “With midplane+ILW, engineered local write produces reliable structural L/R difference; free-vib dual-band under wall still insufficient for 0.90.”

@@ -5844,3 +5844,10 @@ First run NULL chi=0.39 (periodic wrap bug). Fix + same bars → **PASS chi=0.00
 
 Containment + non-broadcast write primitives accepted. Talent re-open = separate pre-reg.
 
+
+## 2026-07-19 — BP-C5 NULL (informative)
+
+Pre-reg 9dfb781 before data.
+FREE+midplane spec 0.667 (fail 0.90); ILW spec 1.000; chi 0; pop 1.
+Overall NULL. ILW engineered specialisation works; free chemistry still short of bar.
+

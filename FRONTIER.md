@@ -1,24 +1,26 @@
 # FRONTIER — sharp discipline
 
-**docs/DISCIPLINE_SHARP.md** · 2026-07-19
+**docs/DISCIPLINE_SHARP.md** · 2026-07-19 after **BP-C5**
 
-## A + B primitives (this session)
+## BP-C5 result: **NULL** (informative)
 
-| Step | Verdict |
-|------|---------|
-| C CLOSED PARTIAL | done |
-| PRIM1-D0 χ | **leaky** 0.433 |
-| PRIM1-D1 dual spheres | **NULL** |
-| PRIM1-D2 midplane wall | **PASS** χ=0.000 (after wrap fix) |
-| PRIM2-D0 ILW vs FREE | **PASS** (no free contamination; local structure yes) |
+| Arm | Specialisation | Pop | χ |
+|-----|----------------|-----|---|
+| FREE + midplane | **0.667** (&lt;0.90) | 1.0 | **0.0** |
+| ILW + midplane | **1.000** | 1.0 | n/a |
 
-## Meaning for belief
-- **Containment** works with midplane wall (engineered §4.8).
-- **Non-broadcast write** works as ILW (engineered local strength/seed).
-- **Talent not yet re-tested** — needs new C amendment using these tools, pre-reg first.
+- Walls work.  
+- **Engineered ILW** specialises halves (scoped, named engineering).  
+- **Free dual-band chemistry** still fails the 0.90 structural bar even with χ=0.
 
-## Ladder
-A/B climbed · C closed partial · D1 PASS · PRIM1-D2 PASS · PRIM2-D0 PASS · brain still blocked until talent re-open
+## Board
+A/B PASS · C closed partial + C5 NULL · PRIM1-D2 PASS · PRIM2-D0 PASS · D1 PASS
 
-## Next
-Pre-reg **bp_c5_ilw_compartments_talent** only if reopening C with ILW+midplane — not automatic.
+## Belief (honest)
+Collection **difference** via **ILW ports** is achievable as **engineered write**.  
+Collection talent from **free shared physics alone** remains **unproven** at locked bars.
+
+## Next (discipline)
+- Document ILW as §4.8 port doctrine for structural dual collections, **or**  
+- New pre-reg only if a *non-engineered* free-chemistry talent mechanism is proposed  
+- No lowering B1 from 0.90
