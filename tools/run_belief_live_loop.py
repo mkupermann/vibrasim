@@ -1,10 +1,11 @@
-"""Always-on live 3D — clearly visible vibrations + electrons + atoms.
+"""Always-on live 3D — continuous vibration FIELD layers + bound matter.
 
 Usage:
     python tools/run_belief_live_loop.py
 """
 from __future__ import annotations
 
+import os
 import sys
 from pathlib import Path
 
@@ -14,42 +15,38 @@ _ROOT = Path(__file__).resolve().parents[1]
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
-from world.gpu_viz import (
-    configure_pyvista_gpu,
-    print_gpu_help,
-    request_high_performance_gpu,
-)
+os.environ.setdefault("EQMOD_FIELD_RES", "48")
+os.environ.setdefault("AMD_POWERXPRESS_REQUEST_HIGH_PERFORMANCE", "1")
+
+from world.gpu_viz import configure_pyvista_gpu, print_gpu_help, request_high_performance_gpu
 from world.bet_live import BetLiveView
 from world.config import WorldConfig
 from world.state import World
+from world.physics import tick
 
-# Discrete GPU preference before any OpenGL context
 request_high_performance_gpu()
-# Default denser field on this machine (good GPU)
-import os
-os.environ.setdefault("EQMOD_FIELD_RES", "72")
 
 
-
-
-def plant_cluster(world: World, n: int = 120, seed: int = 42) -> None:
-    """Dense central cloud of free vibrations (blue/red) that bind into electrons."""
+def plant_cluster(world: World, n: int = 160, seed: int = 42) -> None:
     rng = np.random.default_rng(seed)
     box = np.asarray(world.config.box_size, dtype=np.float64)
     centre = box / 2.0
-    # Spread a bit wider so the cluster fills the view
-    sigma = 4.0
+    sigma = 8.0  # wider so field covers the sheets
     for i in range(n):
         pos = (centre + rng.normal(0.0, sigma, size=3)) % box
-        # Eligible pair freqs (8% rule)
-        freq = 500.0 if (i % 2 == 0) else 500.0 * 1.08
+        # spread frequencies across layers (decades)
+        decade = 2 + (i % 4)  # 100s .. 10000s-ish
+        base = 10.0 ** decade
+        freq = base * float(rng.uniform(1.0, 3.0))
+        if i % 2 == 1:
+            freq *= 1.08  # binding-eligible partners
         z = rng.uniform(-1.0, 1.0)
         phi = rng.uniform(0.0, 2.0 * np.pi)
         sq = float(np.sqrt(max(1.0 - z * z, 0.0)))
         world.s_pos[i] = pos
         world.s_freq[i] = freq
         world.s_pol[i] = bool(i % 2 == 0)
-        world.s_vel[i] = 12.0 * np.array([sq * np.cos(phi), sq * np.sin(phi), z])
+        world.s_vel[i] = 10.0 * np.array([sq * np.cos(phi), sq * np.sin(phi), z])
         world.s_alive[i] = True
     world.n_alive = n
 
@@ -69,41 +66,42 @@ def main() -> int:
         lambda_gen=0.0,
         lambda_dec=0.0,
     )
-    print("Opening BELIEF LIVE window (GPU)…")
-    print("  TRANSLUCENT SHEETS = continuous vibration FIELD (layers = frequency dimensions)")
-    print("  ORANGE spheres = electrons   WHITE = atoms  (bound matter)")
+    print("BELIEF LIVE — continuous field layers (not particles)")
+    print("  SHEETS = free vibration field by frequency dimension")
+    print("  ORANGE = electrons   WHITE = atoms")
     print("  space=pause  s=step  r=camera  q=quit")
     configure_pyvista_gpu(8, True)
     print_gpu_help()
+
     world = World(cfg)
-    plant_cluster(world, n=140, seed=7)
-    view = BetLiveView(
-        title="BELIEF LIVE — hidden field layers → bound electrons/atoms [GPU]"
-    )
+    plant_cluster(world, n=160, seed=7)
+    # Warm a few ticks so field has phase motion before show
+    for _ in range(5):
+        tick(world, cfg.dt)
+        world.t += cfg.dt
+
+    view = BetLiveView(title="BELIEF LIVE — field layers [stable, no flicker]")
     if not view.open(world):
-        print("Could not open PyVista window")
+        print("Could not open window")
         return 1
-    from world.gpu_viz import last_renderer
-    print(f"[live] OpenGL adapter in use: {last_renderer()}")
 
     cycle = 0
     try:
         while view._window_alive() and not view._user_quit:
             cycle += 1
-            # Replant when free vibrations nearly gone (bound into electrons)
             n_free = int(world.s_alive.sum())
-            if cycle == 1 or n_free < 15:
+            # Replant when field sources nearly gone — keep field alive
+            if n_free < 20:
                 world = World(cfg)
-                plant_cluster(world, n=140, seed=7 + cycle * 3)
-                print(f"[live] cycle {cycle}: replanted free vibrations")
+                plant_cluster(world, n=160, seed=7 + cycle * 5)
+                print(f"[live] cycle {cycle}: replanted field sources ({160})")
             view.run_ticks(
                 world,
-                200,
+                300,
                 float(cfg.dt),
-                ticks_per_frame=3,  # slower = easier to watch binding
+                ticks_per_frame=2,
                 hud_fn=lambda w, d, n, c=cycle: (
-                    f"cycle {c}  frame {d}/{n}\n"
-                    f"WATCH: layered field condenses → ORANGE electrons / WHITE atoms"
+                    f"cycle {c}  {d}/{n}  WATCH sheets undulate; orange=electrons"
                 ),
             )
             if view._user_quit:
