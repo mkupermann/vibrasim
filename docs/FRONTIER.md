@@ -2,39 +2,62 @@
 
 **Charter:** `docs/BELIEF_PATH.md`  
 **Discipline:** `docs/DISCIPLINE_SHARP.md`  
-**Updated:** 2026-07-20
+**Updated:** 2026-07-20 (night autonomous)
 
-## Live board
+## Live board (night run)
 
-| ID | Verdict | One-line finding |
-|----|---------|------------------|
-| A1–A2 | PASS | Density gates bind; scramble fails |
-| B1–B3, B5–B7 | PASS | Molecule structure as content (scoped); B4 multi-band emergent weak |
-| C1–C4 | NULL / CLOSED PARTIAL | Free dual-injection talent class closed |
-| PRIM1-D2 | PASS | Midplane wall χ=0 |
-| PRIM2-D0 | PASS | ILW non-broadcast local write |
-| C5 | NULL | ILW specialises 1.0; FREE+wall 0.667 < 0.90 |
-| E1 | NULL | Treat decode 1.0; equal-write control 0.625 > 0.60 |
-| E2 | **PASS** | Port trace + clean none/eq controls |
-| E3 | **NULL** | Last-write ≠ strength (0.45); equal mass not recency |
-| E4 | **PASS** | L band → R partner 1.0; uncorrelated ctrl 0.42 |
-| E5 | **PASS** | K=3 dual-side class decode 1.0; indep match 0.33 |
-| E6 | **PASS** | Last joint content wins; residual first=0 |
-| E-series storage | **CLOSED PARTIAL** | `bp_e_series_port_storage_closure.md` |
+| ID | Verdict | One-line |
+|----|---------|----------|
+| A1–A2 | PASS | Density → bind |
+| B1–B3,B5–B7 | PASS | Molecule content (scoped) |
+| C1–C4 | CLOSED PARTIAL | Free dual-inject talent |
+| PRIM1-D2 | PASS | Midplane χ=0 |
+| PRIM2-D0 | PASS | ILW non-broadcast |
+| C5 | NULL | ILW specialises; FREE 0.667 |
+| E1 | NULL | Port trace; eq control bias |
+| E2 | PASS | Port side trace + clean controls |
+| E3 | NULL | Strength ≠ order (closed) |
+| E4–E6 | PASS | Write-time storage + overwrite |
+| E storage | CLOSED PARTIAL | External-map storage curriculum |
+| PRIM3-D0 | PASS | L4 strength decay (recency) |
+| E7 | PASS | Order via gap+decay |
+| E8 | PASS | Cross-mid bridges (r₂=45,val=4) |
+| E9 | PASS | Pair class from bridge endpoints |
+| PRIM4-D0 | PASS | Multi-slot ILW |
+| E10 | PASS | K=3 multiset port buffer |
+| E11 | PASS | Dual exclusive pairs co-resident |
+| E12 | PASS | No generative partner (boundary) |
+| E13 | NULL | End-state cross charge (decay) |
+| E14 | PASS | **Peak** cross-mid charge transfer |
+| E15 | NULL | Selective recall fails (all-to-all graph) |
+| PRIM5-D0 | PASS | Exclusive pair-link on dual write |
+| E16 | **PASS** | Selective L0→R0 charge recall |
 
-## Open / blocked
+## What works (engineered port curriculum)
 
-| Question | Status |
+1. Side trace, multi-band storage, overwrite, recency (decay)  
+2. Multiset buffer (PRIM4)  
+3. Cross-port **exclusive** association edges (PRIM5)  
+4. Selective charge routing L-band → matched R-band (E16)  
+5. Peak (not sustained) activity transfer across midplane (E14)
+
+## Boundaries locked
+
+| Boundary | Status |
 |----------|--------|
-| Free-chemistry talent @ 0.90 | **Blocked** without new primitive (do not retune C5 FREE bar) |
-| Port side + multi-band storage + overwrite | **PASS** E2/E4–E6 (engineered curriculum) |
-| Write *order* from equal strength | **CLOSED** (pattern `ilw_strength_not_recency`) |
-| Multi-trial / no-map association | **Open** — hard; not storage farm |
-| Recency channel | Needs new primitive (L4 permanent) |
-| Brain (R9) | Blocked until C reopen or beyond-storage curriculum |
+| Free talent @0.90 | Blocked (no new free primitive) |
+| Order without decay | CLOSED (E3) |
+| Generative partner from L alone | No (E12) |
+| Selective recall on all-to-all bridges | No (E15) |
+| Sustained end-state cross charge | No (E13) without new hold |
 
-## Do not re-derive
-Archive tracks (VSA / SA-CIM / BET-144+ / GEO-LLM). Memory activity write≈leak. C dual free inject. E K-band storage farm closed.
+## Next hard only
 
-## Next allowed move
-**One** hard pre-reg only: multi-trial association without external map, **or** named recency/eligibility primitive, **or** free-talent primitive. Not E7 storage cosmetics.
+- Multi-trial **learning** of pair map without baking table into readout  
+- Sustained cross-charge / latch (new hold primitive)  
+- Free-chemistry talent with **new** mechanism  
+- Brain R9 still blocked until C reopen or deeper curriculum  
+
+## Do not
+
+Archive tracks · C5 FREE bar retune · K-band farm · E3 bar retune · lab_continuous smoke theater

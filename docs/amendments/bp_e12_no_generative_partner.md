@@ -27,4 +27,4 @@ Seeds {441, 451}, trials 10; N_write=15; T_idle=100; multislot ON; valence=4; r_
 🔮 PASS (boundary): no generative partner; L persists; control has R.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20 night). B1_R_after_kill=0 B2_L=1.0 B3_ctrl=1.0. Association is co-presence, not generation.

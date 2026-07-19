@@ -5911,3 +5911,22 @@ P1=1 P2=1 P3=1.
 B1 last-decode=1.0 with tau=2 gap=400; B2 no-decay ctrl=0.45; B3 eq_imb=0.
 E3 boundary stands (tau=0). New channel = gap + engineered strength leak.
 Pattern: ilw_recency_via_strength_decay.md
+
+## 2026-07-20 NIGHT autonomous — port curriculum climb
+
+Sharp discipline. Full night chain (summary):
+
+| ID | V |
+|----|---|
+| PRIM3 + E7 | PASS order via decay |
+| E8 E9 | PASS cross bridges + endpoint pairs |
+| PRIM4 E10 E11 | PASS multislot multiset dictionary |
+| E12 | PASS no generative partner |
+| E13 | NULL end-state charge |
+| E14 | PASS peak cross charge |
+| E15 | NULL selective (all-to-all) |
+| PRIM5 E16 | PASS exclusive link + selective recall |
+
+New knobs default OFF: ilw_strength_decay_tau, ilw_multislot_*, ilw_pair_link_*.
+Board: docs/FRONTIER.md + docs/amendments/bp_night_2026_07_20.md
+Next hard: multi-trial learning / sustained charge latch / free talent primitive only.

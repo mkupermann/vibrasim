@@ -23,4 +23,4 @@ Seeds {481, 491}, trials 10; T_prop=60. Budget 90s / hard 180s.
 🔮 PASS from E13 diagnosis (R hit 2.0 on fire tick).
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20 night). B1=1.0 B2=1.0 B3=1.0. Peak cross charge; prediction HIT after E13 miss.
