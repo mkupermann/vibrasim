@@ -41,4 +41,4 @@ Chance ≈ 0.33.
 N=15 trials/seed (5 per label), seeds {81,83}, T=1000 ticks, box 60³, n_initial=600, r_2=28, ftol=0.03, session3b-like.
 
 ## RESULT
-*(after run)*
+**NULL** (2026-07-19 headless). B1=0.133, B5 pop=0.467; controls OK. Three narrow bands don't form enough level≥4 matter / separable decades at this scale.
