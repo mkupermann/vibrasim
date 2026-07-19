@@ -42,4 +42,5 @@ Seeds {381, 391}, trials 10; smoke 1×3. N_write=12; T_idle=50. Budget 60s / har
 🔮 PASS if implementation allocates second atom when rel freq gap large.
 
 ## RESULT
-*(after)*
+### PRIM4-D0 **PASS** (2026-07-20 night)
+M1=1.0 M2=0.0 M3=1.0. Multislot holds two bands; legacy collapses.
