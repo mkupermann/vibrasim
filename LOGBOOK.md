@@ -5766,3 +5766,12 @@ User: do all labs without stopping. Animation remains off.
 
 Board: A climbed; B climbed+deepened; C still partial. Lab continues.
 
+
+## 2026-07-19 — Continuous lab (apology: animation stop != lab stop)
+
+| Exp | Verdict |
+|-----|---------|
+| BP-B6 | PASS (two species coexistence) |
+
+Lab keeps chaining headless. Rung B solid. C still partial.
+

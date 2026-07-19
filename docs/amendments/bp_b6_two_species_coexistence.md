@@ -12,4 +12,4 @@ B1 joint both-correct ≥0.90 · B2 at least one wrong if both empty shells · B
 seeds {121,123}, 15 trials/seed, T=500, quiet, thermal=0.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-19). joint=1.000, empty control=1.000, surv=1.000.
