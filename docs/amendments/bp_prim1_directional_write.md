@@ -145,4 +145,10 @@ If D0 says tight and C already failed, D2 is **not** automatic — write a diffe
 
 ## RESULT
 
-*(D0/D1 filled after runs only)*
+### PRIM1-D0 (2026-07-19)
+**DIAGNOSTIC: leaky** — mean χ=**0.433** (seeds 171,173 × 2 trials).  
+All trials class=leaky. Interpretation locked: dual inject is leaky; **PRIM1-D1 Variant A justified**.
+Artifact: ~/.eqmod/bet/PRIM1-D0/result.json
+
+### PRIM1-D1
+*(after run)*
