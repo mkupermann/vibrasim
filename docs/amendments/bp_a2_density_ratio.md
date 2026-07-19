@@ -16,4 +16,4 @@ At N∈{20,40,80}, cluster/sparse electron-count ratio ≥ **2.0** mean across s
 N grid {20,40,80}, seeds {101,103}, T=200, same plant as A1, 3 trials per N×seed.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-19). mean cluster/sparse=3.04 (≥2); scramble/cluster=0.255 (≤0.55); all N cluster≥3. A1 density finding robust across N∈{20,40,80}.
