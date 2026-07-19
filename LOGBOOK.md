@@ -5900,3 +5900,14 @@ docs/amendments/bp_e_series_port_storage_closure.md
 E2 side trace; E4-E5 multi-band storage; E6 overwrite; E3 order closed.
 Honest: external map storage, not learned association. Stop K-band farm.
 Next allowed: multi-trial no-map association OR recency primitive OR free-talent primitive only.
+
+## 2026-07-20 night — PRIM3 PASS + BP-E7 PASS (order via decay)
+
+### PRIM3-D0 PASS
+ilw_strength_decay_tau: L4 strength leaks toward 1.0; default 0 legacy-safe.
+P1=1 P2=1 P3=1.
+
+### BP-E7 PASS
+B1 last-decode=1.0 with tau=2 gap=400; B2 no-decay ctrl=0.45; B3 eq_imb=0.
+E3 boundary stands (tau=0). New channel = gap + engineered strength leak.
+Pattern: ilw_recency_via_strength_decay.md
