@@ -17,6 +17,7 @@
 | E1 | NULL | Treat decode 1.0; equal-write control 0.625 > 0.60 |
 | E2 | **PASS** | Port trace + clean none/eq controls |
 | E3 | **NULL** | Last-write ≠ strength (0.45); equal mass not recency |
+| E4 | **PASS** | L band → R partner 1.0; uncorrelated ctrl 0.42 |
 
 ## Open / blocked
 
@@ -25,11 +26,12 @@
 | Free-chemistry talent @ 0.90 | **Blocked** without new primitive (do not retune C5 FREE bar) |
 | Port-local structural memory (which side) | **PASS** E2 — usable engineered base |
 | Write *order* from equal strength | **CLOSED** (pattern `ilw_strength_not_recency`) |
-| Cross-port content association | **Next** BP-E4 pre-reg |
+| Cross-port content association (2-class) | **PASS** E4 (write-time, engineered) |
+| Associative capacity K>2 | **Next** if climbing E-series |
 | Brain (R9) | Blocked until honest C reopen or port curriculum climbs |
 
 ## Do not re-derive
 Archive tracks (VSA / SA-CIM / BET-144+ / GEO-LLM). Memory activity write≈leak. C dual free inject.
 
 ## Next allowed move
-**One** pre-reg: BP-E4 cross-port association (L band → predict R partner after joint ILW write). Not E3 bar retune. Not free talent reopen without new primitive.
+**One** pre-reg: BP-E5 associative capacity (K=3 exclusive pairs) **or** multi-trial learned association without re-writing R. Not free talent reopen without new primitive.

@@ -71,4 +71,10 @@ Most-likely miss: control >0.60 if decoder or RNG accidentally correlates, or tr
 
 ## RESULT
 
-*(after)*
+**PASS** (2026-07-20). B1_treat=**1.000**, B2_ctrl=**0.417** (≤0.60), B3_pop=**1.000**. Smoke matched full.
+
+### Calibration
+🔮 predicted PASS (treat≈1, ctrl≈0.5) — **HIT**. Write-time dual ILW freqs hold under idle; uncorrelated L/R breaks L→R rule.
+
+### Scope (honest)
+Engineered joint write preserves a 2-class opposite-band pairing. Not multi-trial learning; not free talent; not order (E3).
