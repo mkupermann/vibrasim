@@ -57,12 +57,13 @@ def main() -> int:
         lambda_dec=0.0,
     )
     print("Opening BELIEF LIVE window…")
-    print("  BLUE/RED = free vibrations   ORANGE = electrons   WHITE = atoms")
+    print("  BLUE/RED WAVE LINES = free vibrations (tighter wiggle = higher freq)")
+    print("  ORANGE spheres = electrons   WHITE = atoms")
     print("  space=pause  s=step  r=camera  q=quit")
     world = World(cfg)
     plant_cluster(world, n=140, seed=7)
     view = BetLiveView(
-        title="BELIEF LIVE — blue/red vibrations → orange electrons → white atoms"
+        title="BELIEF LIVE — wave-line vibrations → orange electrons → white atoms"
     )
     if not view.open(world):
         print("Could not open PyVista window")
@@ -84,7 +85,7 @@ def main() -> int:
                 ticks_per_frame=3,  # slower = easier to watch binding
                 hud_fn=lambda w, d, n, c=cycle: (
                     f"cycle {c}  frame {d}/{n}\n"
-                    f"WATCH: blue/red cloud shrinks as ORANGE electrons appear"
+                    f"WATCH: blue/red WAVE LINES bind into ORANGE electrons"
                 ),
             )
             if view._user_quit:
