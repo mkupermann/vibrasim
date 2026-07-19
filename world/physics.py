@@ -1847,6 +1847,108 @@ def apply_engineered_compartment(world, dt: float) -> None:
         _reflect_at_sphere(world, dt, centre, R, cfg.compartment_mode, box)
 
 
+def apply_midplane_wall(world, dt: float) -> None:
+    """PRIM1-D2: reflecting midplane at x = midplane_wall_x for free vibrations only.
+
+    No-op when midplane_wall_enabled is False. Prevents free vibs from changing side;
+    reverses v_x and clamps x to the side of origin. Bound nodes untouched.
+    """
+    cfg = world.config
+    if not getattr(cfg, "midplane_wall_enabled", False):
+        return
+    xw = float(getattr(cfg, "midplane_wall_x", 40.0))
+    eps = 1e-6
+    alive = world.s_alive
+    if not np.any(alive):
+        return
+    # Vectorised reflection
+    x = world.s_pos[:, 0]
+    vx = world.s_vel[:, 0]
+    # Crossed from left to right: was intended left but x >= xw with vx > 0
+    # Simpler: any free vib on right with tag... we don't have tags in physics.
+    # Reflect if position is on wrong side of last motion: if x crossed plane this
+    # tick we don't store previous x — so clamp any particle that is past the
+    # plane while moving outward from its half is wrong without tags.
+    #
+    # Correct approach without tags: prevent *crossing* by checking if the
+    # segment [x - vx*dt, x] straddles xw (post-move state is already at x).
+    # Approximate: if particle is within |vx|*dt of plane and moving toward
+    # crossing — use post-move: reflect all that sit exactly across after move
+    # by undoing one step. Store pre-move in caller? tick already moved.
+    #
+    # Post-move clamp: particles with x >= xw and vx pointing further into
+    # wrong half from injection — without tags we split by current half and
+    # zero flux: if x > xw and previous would be... 
+    # Standard: after move, if x crossed, put back and flip vx.
+    # We reconstruct pre-x ≈ x - vx*dt
+    dt = float(dt) if dt != 0 else 1e-9
+    pre_x = x - vx * dt
+    crossed_lr = (pre_x < xw) & (x >= xw) & alive
+    crossed_rl = (pre_x >= xw) & (x < xw) & alive
+    if np.any(crossed_lr):
+        world.s_pos[crossed_lr, 0] = xw - eps
+        world.s_vel[crossed_lr, 0] = -np.abs(world.s_vel[crossed_lr, 0])
+    if np.any(crossed_rl):
+        world.s_pos[crossed_rl, 0] = xw + eps
+        world.s_vel[crossed_rl, 0] = np.abs(world.s_vel[crossed_rl, 0])
+
+
+def apply_ilw_port_event(world, port_pos, rng=None) -> dict:
+    """PRIM2: internal local write at *port_pos* — no free-vibration injection.
+
+    Returns stats dict: {mode, atom_idx, mol_idx, delta_strength}.
+    Engineered write; named as such. No-op content if ilw_enabled is False
+    unless force=True from experiment harness (harness may call with enabled cfg).
+    """
+    cfg = world.config
+    out = {"mode": "none", "atom_idx": -1, "mol_idx": -1, "delta_strength": 0.0}
+    if not getattr(cfg, "ilw_enabled", False):
+        return out
+    port = np.asarray(port_pos, dtype=np.float64)
+    R = float(getattr(cfg, "ilw_radius", 8.0))
+    dS = float(getattr(cfg, "ilw_delta_strength", 0.5))
+    box = np.asarray(cfg.box_size, dtype=np.float64)
+    K = world.k_count
+    # Find nearest level≥5 molecule within R
+    best_m, best_d2 = -1, R * R
+    best_a, best_ad2 = -1, R * R
+    for i in range(K):
+        if not world.k_alive[i]:
+            continue
+        d = world.k_pos[i] - port
+        d -= box * np.round(d / box)
+        d2 = float(np.dot(d, d))
+        lvl = int(world.k_level[i])
+        if lvl >= 5 and d2 <= best_d2:
+            best_d2 = d2
+            best_m = i
+        if lvl == 4 and d2 <= best_ad2:
+            best_ad2 = d2
+            best_a = i
+    if best_m >= 0:
+        world.k_strength[best_m] = float(world.k_strength[best_m]) + dS
+        out.update(mode="strengthen_mol", mol_idx=best_m, delta_strength=dS)
+        return out
+    if best_a >= 0:
+        # slight charge/strength on atom as local write mark
+        world.k_strength[best_a] = float(world.k_strength[best_a]) + dS
+        out.update(mode="strengthen_atom", atom_idx=best_a, delta_strength=dS)
+        return out
+    # Engineered seed atom at port (honest §4.8-style write)
+    idx = world.allocate_node(
+        pos=port.copy(),
+        freq=3000.0,
+        pol=True,
+        level=4,
+        constituents=np.zeros(0, dtype=np.int32),
+        comp_kind=1,
+    )
+    if idx >= 0:
+        world.k_strength[idx] = 1.0 + dS
+        out.update(mode="seed_atom", atom_idx=idx, delta_strength=dS)
+    return out
+
+
 def apply_scale_repulsion(world, dt: float) -> None:
     """§4.6 scale-separation repulsion.
 
@@ -2344,6 +2446,7 @@ def tick(world, dt: float) -> None:
     # processes all of them. Default cap = 0 → no-op for legacy worlds.
     cull_excess_vibrations(world)
     move_vibrations(world.s_pos, world.s_vel, world.s_alive, box, dt)
+    apply_midplane_wall(world, dt)  # PRIM1-D2 — free-vib midplane reflect (no-op unless enabled)
     apply_membrane_channel(world, dt)  # G31 — selective-permeability barrier (no-op when membrane_channel_k=0)
     apply_engineered_compartment(world, dt)  # G33 — engineered port wall (no-op when compartment_k=0)
     apply_scale_repulsion(world, dt)
