@@ -5851,3 +5851,22 @@ Pre-reg 9dfb781 before data.
 FREE+midplane spec 0.667 (fail 0.90); ILW spec 1.000; chi 0; pop 1.
 Overall NULL. ILW engineered specialisation works; free chemistry still short of bar.
 
+
+## 2026-07-20 — E-series: E1 NULL, E2 PASS, E3 NULL (order closed)
+
+Sharp discipline; headless; no bar retune.
+
+| Exp | Verdict | Finding |
+|-----|---------|---------|
+| BP-E1 | NULL | Treat decode 1.0; equal-write control 0.625 > 0.60 |
+| BP-E2 | **PASS** | treat=1.0, none=0.458, eq_imb=0.0, written=1.0 |
+| BP-E3 | **NULL** | B1_last=0.45 thr=0.85; B2_eq_imb=0; B3_pop=1.0 |
+
+### Boundary
+Equal N sequential ILW does not encode last-write in strength. Pattern: docs/patterns/ilw_strength_not_recency.md. Order-from-equal-strength family **closed**.
+
+### Board
+docs/FRONTIER.md restored for belief path. E2 is usable port-trace base.
+
+### Next
+BP-E4 cross-port association (new question), not E3 retry.
