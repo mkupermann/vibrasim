@@ -1848,49 +1848,60 @@ def apply_engineered_compartment(world, dt: float) -> None:
 
 
 def apply_midplane_wall(world, dt: float) -> None:
-    """PRIM1-D2: reflecting midplane at x = midplane_wall_x for free vibrations only.
+    """PRIM1-D2: free vibrations confined to half-boxes (midplane + no x-wrap).
 
-    No-op when midplane_wall_enabled is False. Prevents free vibs from changing side;
-    reverses v_x and clamps x to the side of origin. Bound nodes untouched.
+    No-op when midplane_wall_enabled is False. Bound nodes untouched.
+    Uses world._s_pos_pre_x from tick (pre-move x) to detect crosses and wraps.
     """
     cfg = world.config
     if not getattr(cfg, "midplane_wall_enabled", False):
         return
-    xw = float(getattr(cfg, "midplane_wall_x", 40.0))
-    eps = 1e-6
     alive = world.s_alive
     if not np.any(alive):
         return
-    # Vectorised reflection
+    xw = float(getattr(cfg, "midplane_wall_x", 40.0))
+    box = np.asarray(cfg.box_size, dtype=np.float64)
+    L = float(box[0])
+    eps = 1e-6
+    dt = float(dt) if dt != 0 else 1e-9
     x = world.s_pos[:, 0]
     vx = world.s_vel[:, 0]
-    # Crossed from left to right: was intended left but x >= xw with vx > 0
-    # Simpler: any free vib on right with tag... we don't have tags in physics.
-    # Reflect if position is on wrong side of last motion: if x crossed plane this
-    # tick we don't store previous x — so clamp any particle that is past the
-    # plane while moving outward from its half is wrong without tags.
-    #
-    # Correct approach without tags: prevent *crossing* by checking if the
-    # segment [x - vx*dt, x] straddles xw (post-move state is already at x).
-    # Approximate: if particle is within |vx|*dt of plane and moving toward
-    # crossing — use post-move: reflect all that sit exactly across after move
-    # by undoing one step. Store pre-move in caller? tick already moved.
-    #
-    # Post-move clamp: particles with x >= xw and vx pointing further into
-    # wrong half from injection — without tags we split by current half and
-    # zero flux: if x > xw and previous would be... 
-    # Standard: after move, if x crossed, put back and flip vx.
-    # We reconstruct pre-x ≈ x - vx*dt
-    dt = float(dt) if dt != 0 else 1e-9
-    pre_x = x - vx * dt
-    crossed_lr = (pre_x < xw) & (x >= xw) & alive
-    crossed_rl = (pre_x >= xw) & (x < xw) & alive
+    pre = getattr(world, "_s_pos_pre_x", None)
+    if pre is None:
+        pre = x - vx * dt
+    pre = np.asarray(pre, dtype=np.float64)
+
+    # Undo periodic wrap on x (teleport left↔right)
+    wrapped = alive & (np.abs(x - pre) > 0.5 * L)
+    if np.any(wrapped):
+        from_left = wrapped & (pre < xw)
+        from_right = wrapped & (pre >= xw)
+        if np.any(from_left):
+            world.s_pos[from_left, 0] = eps
+            world.s_vel[from_left, 0] = np.abs(world.s_vel[from_left, 0])
+        if np.any(from_right):
+            world.s_pos[from_right, 0] = L - eps
+            world.s_vel[from_right, 0] = -np.abs(world.s_vel[from_right, 0])
+        x = world.s_pos[:, 0]
+
+    crossed_lr = alive & (pre < xw) & (x >= xw)
+    crossed_rl = alive & (pre >= xw) & (x < xw)
     if np.any(crossed_lr):
         world.s_pos[crossed_lr, 0] = xw - eps
         world.s_vel[crossed_lr, 0] = -np.abs(world.s_vel[crossed_lr, 0])
     if np.any(crossed_rl):
         world.s_pos[crossed_rl, 0] = xw + eps
         world.s_vel[crossed_rl, 0] = np.abs(world.s_vel[crossed_rl, 0])
+
+    x = world.s_pos[:, 0]
+    hit_lo = alive & (x <= 0.0)
+    hit_hi = alive & (x >= L)
+    if np.any(hit_lo):
+        world.s_pos[hit_lo, 0] = eps
+        world.s_vel[hit_lo, 0] = np.abs(world.s_vel[hit_lo, 0])
+    if np.any(hit_hi):
+        world.s_pos[hit_hi, 0] = L - eps
+        world.s_vel[hit_hi, 0] = -np.abs(world.s_vel[hit_hi, 0])
 
 
 def apply_ilw_port_event(world, port_pos, rng=None) -> dict:
@@ -2445,6 +2456,11 @@ def tick(world, dt: float) -> None:
     # END of the previous tick and the NEXT tick's move_vibrations
     # processes all of them. Default cap = 0 → no-op for legacy worlds.
     cull_excess_vibrations(world)
+    # PRIM1-D2 needs pre-move x to detect midplane cross and periodic wrap.
+    if getattr(world.config, "midplane_wall_enabled", False) and world.n_alive > 0:
+        world._s_pos_pre_x = world.s_pos[:, 0].copy()
+    else:
+        world._s_pos_pre_x = None
     move_vibrations(world.s_pos, world.s_vel, world.s_alive, box, dt)
     apply_midplane_wall(world, dt)  # PRIM1-D2 — free-vib midplane reflect (no-op unless enabled)
     apply_membrane_channel(world, dt)  # G31 — selective-permeability barrier (no-op when membrane_channel_k=0)

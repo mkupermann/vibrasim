@@ -66,4 +66,7 @@ Talent re-open = **separate** amendment after PASS.
 Prior ≈ 0.45 PASS on I1–I3 if ILW never touches `s_alive` inject.
 
 ## RESULT
-*(after runs)*
+### PRIM2-D0 **PASS** (2026-07-19)
+I1: ILW delta free_right=0 (FREE arm=689); I2 structural 1.0; I3 FREE contaminates 689.
+ILW is accepted as non-broadcast local write (engineered port). Talent re-open needs separate amendment.
+
