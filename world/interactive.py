@@ -327,8 +327,8 @@ class InteractiveViewer:
         glyphs = pc.glyph(geom=unit_sphere, scale="radius", orient=False)
         # The glyph operation broadcasts point arrays; colors carry through.
         self._node_actor = pl.add_mesh(
-            glyphs, scalars="colors", rgb=True, smooth_shading=True,
-            name="nodes",
+            glyphs, scalars="colors", rgb=True, smooth_shading=False,
+            lighting=False, name="nodes",
         )
 
         # Picking: bind picker to the original point cloud (not the glyph mesh)
