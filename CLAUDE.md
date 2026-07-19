@@ -4,12 +4,22 @@
 
 Bottom-up substrate simulator. Computational neuroscience / consciousness research. The goal is developing a deadlock-breaking process, not necessarily succeeding at the simulation.
 
+## Active programme (2026-07-19)
+
+**Belief path — restart the question, keep the lab.** Read first:
+
+- `docs/BELIEF_PATH.md` — spine (vibrations → field → bind → electrons → atoms → molecules as information → matter → talented collections → brain), in/out of bounds, open rungs
+- `FRONTIER.md` — one-screen current frontier
+
+Do **not** default to archive tracks (VSA/reservoir language wins, Brian2 SNN stack, oscillator-Ising/SA/CIM, BET-144/145/146 temporal credit, GEO/LLM) unless Michael explicitly re-admits them. Those findings stay in LOGBOOK/summaries as boundaries.
+
 ## Hard Constraints
 
 - **NO LLM, NO transformer, NO pretrained embedding model, NO BPE tokenizer** in any solution.
 - Stay strictly within the substrate's own primitives: STDP, BTSP eligibility traces, dream consolidation (G15/G18), k_pattern_id segregation (G10), SubstrateLibrary (mixture-of-experts memory), and engineered port topology (CONCEPT §4.8).
 - Ports are axonal-projection analogues, not emergent CTC. Ports are engineered; internals must emerge.
 - When asked for new capability (e.g., text output), propose amendments that reuse these primitives. Never bolt on neural-net layers.
+- On the belief path: every step must still reduce toward vibrations/binding/matter/collections — no replacing a rung with an established ML stack and calling it emergence.
 
 ## Pre-Registration Discipline
 

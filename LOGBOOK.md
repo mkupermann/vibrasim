@@ -5598,3 +5598,19 @@ All experiments done or 3x NULL on feedback.
 
 All experiments done or 3x NULL on feedback.
 
+
+## 2026-07-19 — Restart the question, keep the lab (belief path)
+
+Michael: the original belief (vibrations → energy field → bind → electrons → atoms → molecules that carry information → matter → collections with talent → brain) was lost under adjacent tracks (flux diagnostics, VSA/reservoir cognition, oscillator-Ising/SA, temporal credit/e-prop). Decision today: **do not start the lab over**; **restart the scientific question**.
+
+### Actions
+- Wrote `docs/BELIEF_PATH.md` — active programme charter: spine, in/out of bounds, mapped rungs vs open rungs, drift detectors, session checklist.
+- Rewrote `FRONTIER.md` to point at BELIEF_PATH as the active frontier; settled threads listed as do-not-re-derive; archive = SA/CIM, BET-144+, VSA wins, GEO/LLM.
+- Recommended first climb: **Rung B (molecules carry information)** — middle gap between structure and talent. Rung A = field→bind; Rung C = collections get talent. One rung only; pre-register before any run.
+
+### Explicit non-resume
+No autopilot churn, no G145–G153 re-open, no BET-146 required for this path, no bolting reservoirs/LLMs as substitute for the ladder.
+
+### Next (blocked on Michael)
+Choose Rung A / B / C. Then write one pre-registered amendment with locked bars + negative controls + time budget; only then implement/run.
+
