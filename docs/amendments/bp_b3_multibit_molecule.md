@@ -74,4 +74,16 @@ Prior ≈ 0.70 PASS (B1 mechanism generalises to 3 classes).
 
 ## RESULT
 
-*(empty until after run)*
+**Verdict: PASS** (2026-07-19)  
+`~/.eqmod/bet/BP-B3/result.json` · seeds {71,73} · N=24/seed · T=500 · headless  
+
+| Bar | Value | thr | ok |
+|-----|------:|-----|:--:|
+| B1 treatment (3-class) | **1.000** | ≥0.90 | yes |
+| B2 empty | **0.000** | ≤0.40 | yes |
+| B3 scramble | **0.000** | ≤0.40 | yes |
+| B4 position | **0.396** | ≤0.45 | yes |
+| B5 survival | **1.000** | ≥0.80 | yes |
+
+### Scope
+Three composition species (`A33`/`A34`/`A44`) decode at 100% under engineered write + quiet hold. Multi-bit content channel confirmed beyond binary B1. Not emergent free-formation of a 3-way alphabet (that would be B4).

@@ -5739,3 +5739,16 @@ Rung C remains open/partial; no post-hoc bar tuning.
 ### Ladder
 A PASS · B PASS · C partial (C1/C1b/C2 NULL) · brain not started.
 
+
+## 2026-07-19 — Lab continues (animation stays off): BP-B3 PASS
+
+Clarification: stopping animation != stopping the laboratory. Headless only.
+
+### BP-B3 multi-bit molecule information
+Three species A33/A34/A44; N=24/seed, seeds {71,73}, T=500.
+B1=1.000, C1=0, C2=0, C3=0.396, surv=1.000 → **PASS**.
+Rung B deepened: multi-bit composition channel holds.
+
+### Status
+A PASS · B PASS (B1–B3) · C partial/NULL · brain not started · no live 3D.
+

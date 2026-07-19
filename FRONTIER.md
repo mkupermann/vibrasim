@@ -16,13 +16,14 @@ Spine: vibrations → field → bind → electrons → atoms → molecules (info
 | **BP-A1** | **PASS** | Local free-vibration **density** enables binding |
 | **BP-B1** | **PASS** | Molecule composition fingerprint (engineered write) |
 | **BP-B2** | **PASS** | Emergent molecule decades decode drive identity |
+| **BP-B3** | **PASS** | **3-class** composition multi-bit (A33/A34/A44) |
 | **BP-C1** | **NULL** | Dual-drive talent — population too sparse |
 | **BP-C1b** | **NULL** | Population OK; structural specialisation **0.778 &lt; 0.90** |
 | **BP-C2** | **NULL** | Probe-response talent fails (low/high 0.44 / 0.22) |
 
 ### Ladder
 - **A** density→bind — climbed  
-- **B** molecules carry information — climbed  
+- **B** molecules carry information — climbed (B1+B2+B3)  
 - **C** collections get talent — **open / partial** (structural near-miss; no probe talent)  
 - **Brain** — not started  
 
