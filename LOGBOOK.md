@@ -5870,3 +5870,16 @@ docs/FRONTIER.md restored for belief path. E2 is usable port-trace base.
 
 ### Next
 BP-E4 cross-port association (new question), not E3 retry.
+
+## 2026-07-20 — BP-E4 PASS cross-port association
+
+Pre-reg commit f1c2553 before data.
+
+| Bar | Value | thr | pass |
+|-----|-------|-----|------|
+| B1 treat L->R | 1.000 | >=0.90 | yes |
+| B2 uncorr ctrl | 0.417 | <=0.60 | yes |
+| B3 both pop | 1.000 | >=0.90 | yes |
+
+Write-time dual ILW opposite-band pairing preserved under idle. Engineered, scoped. Prediction HIT.
+E-series board: E2+E4 usable base; E3 order-from-strength closed.
