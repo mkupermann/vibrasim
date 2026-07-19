@@ -279,7 +279,7 @@ class BetLiveView:
             print("[bet_live] pyvista not installed — live view disabled")
             return False
         try:
-            configure_pyvista_gpu(multi_samples=8, report=True)
+            configure_pyvista_gpu(multi_samples=8, verbose=True)
             bx, by, bz = world.config.box_size
             # Larger window so the discrete GPU is worth it
             pl = pv.Plotter(title=self.title, window_size=(1600, 1000))

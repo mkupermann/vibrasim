@@ -118,7 +118,7 @@ class InteractiveViewer:
         import pyvista as pv
         from world.gpu_viz import apply_plotter_gpu, configure_pyvista_gpu
 
-        configure_pyvista_gpu(multi_samples=8, report=True)
+        configure_pyvista_gpu(multi_samples=8, verbose=True)
         bx, by, bz = self.config.box_size
         pl = pv.Plotter(title="EQMOD — interactive substrate viewer", window_size=(1600, 1000))
         self._pl = pl
