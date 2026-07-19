@@ -19,4 +19,4 @@ Same treatment as E1 (one-sided ILW → decode side by strength).
 Protocol: same as E1 seeds {211,223} trials 12; N_write=25; T_idle=200.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). treat=1.0, none=0.458, eq_imb=0.0, written=1.0.
