@@ -67,4 +67,15 @@ Live default ON.
 
 ## RESULT
 
-*(empty until after run)*
+**Verdict: NULL** (2026-07-19)  
+`~/.eqmod/bet/BP-C2/result.json` · seeds {53,59,61} · 3 trials/seed · **headless lab**  
+
+| Bar | Value | thr | ok |
+|-----|------:|-----|:--:|
+| B1 T-low probe | **0.444** | ≥0.75 | no |
+| B2 T-high probe | **0.222** | ≥0.75 | no |
+| B3 C1 mean | **0.556** | ≤0.60 | yes |
+| B4 train pop | **1.000** | ≥0.80 | yes |
+
+### Diagnosis
+Training forms dual-region matter (B4 PASS). Probe response does **not** select the trained region above chance — talent is not behavioural under this probe design. Combined with C1b structural near-miss (0.778), **Rung C stays open / partial** — no bar retune.
