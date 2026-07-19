@@ -5775,3 +5775,13 @@ Board: A climbed; B climbed+deepened; C still partial. Lab continues.
 
 Lab keeps chaining headless. Rung B solid. C still partial.
 
+
+## 2026-07-19 — Lab continuous chain continues
+
+| Exp | Verdict |
+|-----|---------|
+| BP-B7 | PASS (fingerprint + ambient field) |
+| BP-D1 | PASS (joint position + species) |
+
+Board updated FRONTIER. No animation. No idle.
+

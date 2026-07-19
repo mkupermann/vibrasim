@@ -12,4 +12,4 @@ B1 joint ≥0.85 · B2 position-only ≤0.60 · B3 species-only ≥0.90 · B5 su
 box 80, mid=40, plant label@side, T=400, seeds {141,143}, N=16/seed.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-19). joint=1.000, pos-as-species=0.500, species=1.000, surv=1.000.
