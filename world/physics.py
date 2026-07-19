@@ -1904,6 +1904,32 @@ def apply_midplane_wall(world, dt: float) -> None:
         world.s_vel[hit_hi, 0] = -np.abs(world.s_vel[hit_hi, 0])
 
 
+def apply_ilw_strength_decay(world, dt: float) -> int:
+    """PRIM3: leak level≥4 k_strength toward 1.0 when ilw_strength_decay_tau > 0.
+
+    Does not kill atoms (L4 identity permanence). Returns number of nodes touched.
+    No-op when tau <= 0.
+    """
+    cfg = world.config
+    tau = float(getattr(cfg, "ilw_strength_decay_tau", 0.0) or 0.0)
+    if tau <= 0.0 or dt <= 0.0:
+        return 0
+    factor = float(np.exp(-float(dt) / tau))
+    K = world.k_count
+    n = 0
+    for i in range(K):
+        if not world.k_alive[i]:
+            continue
+        if int(world.k_level[i]) < 4:
+            continue
+        s = float(world.k_strength[i])
+        if s <= 1.0:
+            continue
+        world.k_strength[i] = 1.0 + (s - 1.0) * factor
+        n += 1
+    return n
+
+
 def apply_ilw_port_event(world, port_pos, rng=None, seed_freq: float = 3000.0) -> dict:
     """PRIM2: internal local write at *port_pos* — no free-vibration injection.
 
@@ -2493,6 +2519,7 @@ def tick(world, dt: float) -> None:
     apply_bond_turnover(world, dt)      # G53 — spontaneous bond break (fluid membrane); no-op when bond_turnover_rate=0
     decay_unstable_nodes(world, dt)
     decay_high_level_nodes(world, dt)   # NEW (R2)
+    apply_ilw_strength_decay(world, dt)  # PRIM3 — L4 strength leak (no-op unless tau>0)
     ambient_regeneration(world, dt)
     # G15: dream-state replay seeding. Must run BEFORE neuron_dynamics so
     # injected charge triggers firings within the same tick. No-op when

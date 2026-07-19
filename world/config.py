@@ -103,6 +103,9 @@ class WorldConfig:
     ilw_enabled: bool = False
     ilw_radius: float = 8.0
     ilw_delta_strength: float = 0.5
+    # PRIM3: exponential leak of level≥4 k_strength toward 1.0.
+    # 0.0 = off (legacy). Units: seconds (tau in s ← 1+(s-1)*exp(-dt/tau)).
+    ilw_strength_decay_tau: float = 0.0
     flux_plasticity_rate: float = 0.0     # Bridge strengthening rate from vibration flux (0=off). Plasticity from physics.
     flux_threshold: float = 2.0           # Flux above this potentiates a bridge, below depresses.
     flux_decay: float = 0.05              # Strength decay per second for low-flux bridges.
