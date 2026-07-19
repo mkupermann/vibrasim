@@ -27,7 +27,7 @@ Meta-Ziel bleibt: ehrlicher Prozess (Pre-Reg, Kontrollen, NULL, Overclaim-Rückn
 | D6 | **Bekannte Methoden nicht als neu verkaufen** (VSA, Reservoir, SA, …). |
 | D7 | **Headless default.** `--live` nur auf ausdrücklichen Wunsch. |
 | D8 | **Kein `lab_continuous` Smoke-Karussell** als „Labor läuft“. Smokes nur zur Technik-Prüfung, nicht als Wissenschaftsersatz. |
-| D9 | **C-Talent:** kein weiteres Dual-Drive-Mean-Decade-Experiment mit weicheren Bars. Nächster C-Schritt braucht **neues Mechanismus-Primitiv oder neue Frage**. |
+| D9 | **C-Talent:** Dual-Injection-Klasse (Frequenz *und* Periode) **CLOSED PARTIAL** (`bp_c_partial_closure.md`). Kein C5 Band/Periode. Weiter nur **PRIM1** oder ehrlich benannte §4.8-Ports. |
 | D10 | Nach jedem Verdict: LOGBOOK + FRONTIER in **einem** Commit; dann erst nächste Pre-Reg. |
 
 ---

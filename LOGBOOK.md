@@ -5805,3 +5805,21 @@ Control contaminated; P_R artifact. Pattern: collection_talent_injection_ceiling
 C partial-closure writeup, OR new primitive pre-reg, OR engineered-ports talent named honestly.
 No C5 period/band retune.
 
+
+## 2026-07-19 — Sharp discipline: (1) C partial closure (2) PRIM1 pre-reg
+
+Michael: 1 dann 2.
+
+### 1) Rung C CLOSED PARTIAL
+docs/amendments/bp_c_partial_closure.md
+C1–C4 synthesis only; no new data. Injection dual-drive talent class closed
+(freq + period). Pattern collection_talent_injection_ceiling.md stands.
+
+### 2) PRIM1 Directional Local Write PRE-REGISTERED
+docs/amendments/bp_prim1_directional_write.md
+First diagnostic PRIM1-D0 = cross-talk χ under C1b-like dual inject.
+No implementation data yet. No talent bars in D0.
+
+Belief update: collections can co-exist; defensible talent not achieved under
+current free-vib dual injection. Spine continues only with new primitive/ports.
+

@@ -61,7 +61,7 @@ The belief path does **not** deny that honesty. It says: **act as if the ladder 
 | R5 Selective memory | Matter holds content | **ACTIVITY: CLOSED NEGATIVE** (write≈leak). **MATTER POSITION: POSITIVE, scoped** (G114–G119) |
 | R6 Communication | Information moves | **POSITIVE, scoped** — co-located codec; free carriers do **not** carry symbols over distance |
 | R7 Molecules *carry information* | Internal molecular structure is the engram | **POSITIVE (BP-B1+B2+B3 PASS)** — engineered write (B1), emergent drive decode (B2), **3-class multi-bit** (B3). |
-| R8 Collections have *talent* | Light / sound / understanding specialize without modality-specific ML stacks | **OPEN / partial** — C1 sparse NULL; C1b structural 0.778&lt;0.90; **C2 probe talent NULL** (0.44/0.22). Boundary mapped. |
+| R8 Collections have *talent* | Light / sound / understanding specialize without modality-specific ML stacks | **CLOSED PARTIAL** (`bp_c_partial_closure.md`) — injection dual-drive class (freq+period) failed C1–C4. Reopen only via new primitive (PRIM1) or named §4.8 ports. |
 | R9 Brain from collections | Cross-modal bind, learn, answer from matter assemblies | **OPEN** — later “cognition” wins used VSA/reservoir/Brian2 (**archive**, not this path) |
 | Computation / Ising / SA | Vibrations optimize hard problems | **CLOSED for EQMOD dynamics** — decorative; adjacent CIM is not EQMOD |
 
@@ -181,7 +181,7 @@ Shared helper: `world/bet_live.py`
 | Date | Decision |
 |------|----------|
 | 2026-07-19 | Restart the **question** (belief ladder). Keep the **lab**. Adjacent tracks → archive. Active charter = this file. |
-| 2026-07-19 | Rung A+B PASS. Rung C: C1/C1b/C2 all NULL (partial/boundary). **Animation stopped — lab headless only.** |
+| 2026-07-19 | Rung A+B PASS. C1–C4 NULL → **C CLOSED PARTIAL**. Sharp discipline. PRIM1 directional write pre-reg next. |
 
 ---
 
