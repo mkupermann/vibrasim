@@ -31,4 +31,10 @@ Seeds {321, 331}, trials 10; N_write=15; T_gap=400; T_short=50; mid=40. Budget 9
 Most-likely miss: T_gap too short / tau too long → B1 fails; or no-decay still biased → B2 fails.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1_treat=**1.000**, B2_no_decay=**0.450**, B3_eq_imb=**0.000**.
+
+### Calibration
+🔮 predicted PASS — **HIT**. Gap+PRIM3 decay recovers last side; no-decay ~chance (E3); equal balanced.
+
+### Scope
+Order channel is **engineered strength leak + temporal gap**, not free emergence. E3 boundary stands for tau=0.

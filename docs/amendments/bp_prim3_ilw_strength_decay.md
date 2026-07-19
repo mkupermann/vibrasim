@@ -48,4 +48,5 @@ Seeds {311, 313}, trials 8; smoke 1×3. Midplane+ILW on. Budget 45s / hard 100s.
 🔮 PASS — exponential leak is deterministic on k_strength.
 
 ## RESULT
-*(after)*
+### PRIM3-D0 **PASS** (2026-07-20)
+P1=1.0 P2=1.0 P3=1.0. Strength leak fires under tau=2; off preserves mass; no free-vib.
