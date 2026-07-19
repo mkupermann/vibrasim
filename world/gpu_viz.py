@@ -72,10 +72,13 @@ def apply_plotter_gpu(pl) -> str:
                 pl.enable_anti_aliasing("ssaa")
             except Exception:
                 pass
-        try:
-            pl.enable_depth_peeling(number_of_peels=8, occlusion_ratio=0.0)
-        except Exception:
-            pass
+        # Depth peeling can flicker with animated translucent sheets.
+        if os.environ.get("EQMOD_DEPTH_PEEL", "").strip() == "1":
+            try:
+                pl.enable_depth_peeling(number_of_peels=4, occlusion_ratio=0.0)
+            except Exception:
+                pass
+
         rw = getattr(pl, "ren_win", None) or getattr(pl, "render_window", None)
         if rw is not None:
             try:
