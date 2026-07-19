@@ -1,36 +1,34 @@
 # FRONTIER — sharp discipline
 
 **Binding:** `docs/DISCIPLINE_SHARP.md`  
-**Updated:** 2026-07-19 after BP-C4 NULL
+**Updated:** 2026-07-19 · steps **1 then 2** complete (closure + primitive pre-reg)
+
+## Just completed
+
+### 1) Rung C — CLOSED PARTIAL
+- Doc: `docs/amendments/bp_c_partial_closure.md`  
+- Pattern: `docs/patterns/collection_talent_injection_ceiling.md`  
+- Closed class: dual regional free-vib injection talent (frequency **and** period)  
+- **No C5** on bands/periods/bars  
+
+### 2) New primitive — PRE-REGISTERED (no data yet)
+- Doc: `docs/amendments/bp_prim1_directional_write.md`  
+- Name: **Directional Local Write (DLW)**  
+- First step: **PRIM1-D0** containment audit (χ cross-talk) — instrumentation only  
+
+## Board (belief)
+
+| Rung | Status |
+|------|--------|
+| A density→bind | PASS (A1, A2) |
+| B molecule info | PASS (B1–B3, B5–B7); B4 NULL |
+| **C talent** | **CLOSED PARTIAL** |
+| D joint pos+species | PASS (D1) |
+| PRIM1 DLW | **pre-reg only** — D0 not run |
+
+## Next (discipline)
+Implement + run **PRIM1-D0 only** (measure χ).  
+Then branch on locked interpretation in PRIM1 doc — do not skip to talent.
 
 ## Mode
-Headless · one question · pre-reg before data · no smoke theater · no live 3D unless asked
-
-## Board
-
-| ID | Verdict |
-|----|---------|
-| A1, A2 | PASS |
-| B1–B3, B5–B7 | PASS |
-| B4 | NULL |
-| C1–C3 | NULL (freq dual-drive) |
-| **C4** | **NULL** (temporal dual-drive; control contaminated) |
-| D1 | PASS |
-
-## Mechanism class CLOSED
-**Dual regional free-vibration injection as talent** (frequency *or* period) — see  
-`docs/patterns/collection_talent_injection_ceiling.md`
-
-## Ladder (honest)
-- **A** density→bind — climbed  
-- **B** molecule information — climbed (scoped)  
-- **C** talent — **partially closed**: injection-dual designs fail; needs new primitive or §4.8 ports doctrine  
-- **D** joint position+species — PASS (engineered plant)  
-- **Brain** — blocked until C is reopened with a *new* class of mechanism  
-
-## Next allowed moves (pick one; pre-reg first)
-1. Formal **Rung C partial-closure** document (belief update, not a BET).  
-2. Pre-reg **new primitive** amendment (why current rules cannot do talent).  
-3. Pre-reg talent with **explicit engineered ports** (named as such, not emergence).  
-
-No C5 on periods/bands.
+Headless · one question · pre-reg before data · no smoke theater
