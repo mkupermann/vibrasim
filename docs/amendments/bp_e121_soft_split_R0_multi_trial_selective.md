@@ -19,4 +19,4 @@ Seeds {3341,3351} trials 6. Budget ~12 min, hard cap 24 min.
 🔮 LEAN PASS. Completes multi-trial L-selective reconfig on non-shared endpoints.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Multi-trial selective on split R0: silence both → restore 00 → re-cut 00, L1 stays isolated. Non-shared multi-trial L-selective reconfig closed.

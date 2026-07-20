@@ -38,9 +38,9 @@ Single-arm re-cut after full fan-out restore fails (E101–E103).
 
 **Selective vs dual restore after shared-endpoint edit (E110–E119):** After dual-cut into **shared** R0 or after identity-diag cut, restoring a **single** arm reopens L0 but **does not preserve L1 isolation** (E110/E111/E113 B3=0). Hard dual-cut + soft selective same leak (E113). **Dual restore all cut arms** recovers cleanly: soft/hard R0 silence (E112/E115), both diags (E114/E116). Multi-trial soft/hard silence cycles (E117/E118 PASS).
 
-**Non-shared endpoints unlock selective restore (E119 PASS):** Split R0→R0a/R0b (separate spatial ends for arms 00/10). Soft-cut both + restore only 00 → L0→R0a ON and L1→R0b still OFF. Shared bipartite R was the E110 leak cause.
+**Non-shared endpoints unlock selective restore (E119–E121 PASS):** Split R0→R0a/R0b (separate spatial ends for arms 00/10). Soft-cut both + restore only 00 → L0→R0a ON and L1→R0b still OFF (E119). Hard dual-cut + soft selective same (E120). Multi-trial silence→restore 00→re-cut 00 keeps L1 isolated (E121). Shared bipartite R was the E110 leak cause.
 
-Doctrine: (1) shared R → restore **all** cut in-edges (or re-cut all for multi-trial silence); (2) non-shared R copies → single-arm selective restore is L-selective.
+Doctrine: (1) shared R → restore **all** cut in-edges (or re-cut all for multi-trial silence); (2) non-shared R copies → single-arm selective restore and multi-trial selective re-cut are L-selective (soft/hard).
 
 ## Not free talent
 All wipe/restore is engineered §4.8 ports + ILW + bridges + latch. Free dual talent remains CLOSED PARTIAL (C16 family).
