@@ -21,4 +21,5 @@ Seeds {2361,2371,2381} trials 3. T=1200. Budget ~15 min, hard cap 30 min.
 🔮 LEAN PASS if decay amplifies true band structure either orientation. NULL if effect is one-sided artifact.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1=0.556 B2=0.667 B3=1.0 B4=−0.11.  
+Flipped (L-high R-low) reverse specialisation fails under decay; control slightly better. Decay does not symmetrically amplify either orientation.

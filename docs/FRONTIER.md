@@ -117,6 +117,7 @@
 | C16 | **PASS** | ILW strength-decay free dual **0.90 unlock** (seed-set) |
 | C17 | **NULL** | C16 held-out replicate fails (0.778); not locked |
 | C18 | **PASS** | Same-band + decay no false spec; dual-band 1.0 |
+| C19 | **NULL** | Flipped reverse specialisation fails under decay |
 
 ## What works (engineered port curriculum)
 
