@@ -16,13 +16,16 @@ LOW, HIGH = (100.0, 2000.0), (500.0, 10000.0)
 def cfg(seed, large):
     if large:
         box, mid = (120.,70.,50.), 60.0
+        cell = 120.0
     else:
         box, mid = (80.,50.,50.), 40.0
+        cell = 100.0
     return WorldConfig(
         n_initial_vibrations=0, box_size=box, n_vibrations_max=8192, n_nodes_max=4096,
         rng_seed=seed, r_1=5., r_2=28., freq_tolerance=0.03, pair_decay_time=60., triad_decay_time=600.,
         lambda_gen=0., lambda_dec=0., speed_min=5., speed_max=25.,
         midplane_wall_enabled=True, midplane_wall_x=mid,
+        repulsion_cell_size=cell,
     ), mid
 
 def inject(w, rng, n, x0, x1, f0, f1, y0, y1):
