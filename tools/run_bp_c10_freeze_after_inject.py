@@ -61,14 +61,14 @@ def sides(w):
     ok=pop and float(np.mean(L))<float(np.mean(R))
     return pop, ok
 
-def run(seed, ti, freeze):
+def run(seed, ti, freeze, t_total, t_ball):
     w=World(cfg(seed))
     birth=np.zeros(w.config.n_vibrations_max, dtype=np.int8)
     rng=np.random.default_rng(seed*1601+ti*47+int(freeze))
     inject(w,rng,birth,N_SIDE,8,32,LOW[0],LOW[1],1)
     inject(w,rng,birth,N_SIDE,48,72,HIGH[0],HIGH[1],2)
-    fa = T_BALL if freeze else None
-    chi=evolve(w,birth,T_TOTAL,freeze_after=fa)
+    fa = t_ball if freeze else None
+    chi=evolve(w,birth,t_total,freeze_after=fa)
     pop,ok=sides(w)
     return ok,pop,chi
 
@@ -76,13 +76,11 @@ def main(argv=None):
     p=argparse.ArgumentParser(); p.add_argument("--smoke",action="store_true")
     args=p.parse_args(argv)
     seeds,trials,t_tot,t_ball = ((1411,),1,300,50) if args.smoke else (SEEDS,TRIALS,T_TOTAL,T_BALL)
-    global T_TOTAL, T_BALL
-    T_TOTAL, T_BALL = t_tot, t_ball
     print(f"BP-C10 start smoke={args.smoke}")
     fr,mv=[],[]
     for s in seeds:
         for ti in range(trials):
-            fr.append(run(s,ti,True)); mv.append(run(s,ti,False))
+            fr.append(run(s,ti,True,t_tot,t_ball)); mv.append(run(s,ti,False,t_tot,t_ball))
     b1=float(np.mean([1 if r[0] else 0 for r in fr]))
     b2=float(np.mean([1 if r[0] else 0 for r in mv]))
     b3=float(np.mean([1 if r[1] else 0 for r in fr]))
