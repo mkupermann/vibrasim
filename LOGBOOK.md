@@ -6273,3 +6273,8 @@ B1=B2=B3=1.0 **PASS**. Disarm doctrine works for AND arm of hybrid without colla
 
 Soft-cut L1 and L3; disarm; restore L1-M only.
 B1=B2=B3=1.0 **PASS**. Selective recovery: AND returns, OR bypass stays off.
+
+## 2026-07-20 sequential - BP-E76 PASS dual cut OR-only restore
+
+Soft-cut L1+L3; disarm; restore L3-R only.
+B1=B2=B3=1.0 **PASS**. Mirror of E75: selective OR recovery; AND stays off.

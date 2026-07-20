@@ -18,4 +18,4 @@ Seeds {2211,2221} trials 8. Budget ~5 min, hard cap 10 min.
 🔮 LEAN PASS (E75 mirror). Miss if L3 restore collaterally rewrites L1–M.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Dual soft-cut; selective L3–R restore recovers OR only; AND stays silent.

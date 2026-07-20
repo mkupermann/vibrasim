@@ -111,6 +111,7 @@
 | E73 | **PASS** | Hard-kill bypass + disarm + restore L3–R |
 | E74 | **PASS** | Hybrid AND soft-cut + disarm restore; bypass stays |
 | E75 | **PASS** | Dual soft-cut; selective AND-only restore |
+| E76 | **PASS** | Dual soft-cut; selective OR-only restore |
 
 ## What works (engineered port curriculum)
 
