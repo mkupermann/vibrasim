@@ -19,4 +19,4 @@ Seeds {3361,3371} trials 6. Budget ~12 min, hard cap 24 min.
 🔮 LEAN PASS. Hard analogue of E121 multi-trial selective.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Hard multi-trial selective on split R0 closed. Soft (E121) + hard (E122) multi-trial L-selective reconfig complete.
