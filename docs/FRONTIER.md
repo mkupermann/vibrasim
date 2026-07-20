@@ -105,6 +105,7 @@
 | C14 | **NULL** | bridge_leak free dual = control 0.778; no unlock |
 | E69 | **PASS** | Soft 2×2 reconfig concurrent identity/swap/identity |
 | E70 | **PASS** | Hard-kill OR bypass; AND path remains |
+| E71 | **NULL** | Soft-cut bypass OK; L3–R-only restore fails |
 
 ## What works (engineered port curriculum)
 
