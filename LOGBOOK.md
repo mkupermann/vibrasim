@@ -6026,3 +6026,9 @@ E27 boundary closed by engineered forget (ilw_pair_replace_enabled).
 
 C8: seq=0.778 sim=0.889 **NULL** — time multiplex not free-talent unlock.
 E29: two-hop L->M->R charge B1=B2=B3=1.0 **PASS**
+
+## 2026-07-20 — E30 NULL replace multi-hop; E31 PASS parallel isolation
+
+E30: replace ON kills L-M when adding M-R; bridges=0 **NULL**
+E31: replace OFF; fire L1 -> R1 on R2 off; both L both R. **PASS**
+Pattern pair_replace_vs_multihop.md

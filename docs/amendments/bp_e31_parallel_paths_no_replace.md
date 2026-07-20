@@ -16,4 +16,5 @@ Seeds {1001,1011} trials 10.
 🔮 PASS — E29 two-hop works without replace; isolation should hold.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=1.0 B2=1.0 B3=1.0 B4=1.0.  
+Parallel path isolation works with replace **OFF**. Doctrine: multi-hop needs non-replace; curriculum overwrite needs replace (E28).
