@@ -19,4 +19,5 @@ Seeds {2921,2931} trials 6. Budget ~10 min, hard cap 20 min.
 🔮 LEAN PASS if soft at R0 only hits bridges to R0. Miss if R0 shared with 10 path (L1–R0).
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1=1.0 B2=1.0 B3=0.0.  
+Endpoint soft at R0 silences L0→R0 while keeping L0→R1 (B2 PASS), but **kills L1→R0 path too** (shared R0 endpoint) so B3 fails. Shared endpoints block single-arm selective soft cut on bipartite 2×2.
