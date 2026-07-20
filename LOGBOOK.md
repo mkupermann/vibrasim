@@ -6009,3 +6009,9 @@ E26 latch tau half-life: B1=0 (tau2) B2=1 B3=1 **NULL**
 PRIM7 sideband cull: G1=0.67 G2_off=0.78 **NULL** (cull hurts free talent)
 
 Table-free map now defensible via ablation. Free talent still blocked.
+
+## 2026-07-20 scheduler — BP-E27 NULL curriculum overwrite
+
+Pre-reg c8854b3 before data.
+B1 match B=0.50 B2 residual A=0.50 B3 A-only=1.0 B4=1.0  **NULL**
+PRIM5 multi-slot pair links accumulate; last map does not wipe first. Curriculum relearning blocked without new replace/forget mechanism.

@@ -48,6 +48,7 @@
 | E25 | **PASS** | Table-free map + **bridge ablation** control |
 | E26 | **NULL** | Latch tau=2 half-life bar not met |
 | PRIM7-D0 | **NULL** | Sideband cull hurts free spec (0.67 vs off 0.78) |
+| E27 | **NULL** | Map curriculum overwrite: A→B leaves 50/50 residual |
 
 ## What works (engineered port curriculum)
 
@@ -73,8 +74,8 @@
 ## Next hard only
 
 - Free talent only with mechanism **≠** dual free inject / attractors / sideband cull  
-- Brain R9 still blocked until C reopen or deeper curriculum  
-- Optional: re-open latch tau with new protocol ID; deepen E20/E21/E25
+- Map **overwrite/curriculum** needs new primitive (E27 both maps coexist)  
+- Brain R9 still blocked until C reopen or deeper curriculum
 
 ## Do not
 
