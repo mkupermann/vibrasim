@@ -6158,3 +6158,8 @@ B1=B2=B3=1.0 **PASS**. Selective hard cut isolates; path1 intact; retrain recove
 
 Shared L fans to three R arms; soft-cut curriculum selects arm.
 B1=B2=B3=1.0 **PASS**. True demux (one source) distinct from E49 multi-L MUX.
+
+## 2026-07-20 sequential - BP-E58 PASS hard 3-path MUX
+
+E49 geometry with hard kill instead of soft; curriculum select 0/1/2.
+B1=B2=B3=1.0 **PASS**. Soft and hard MUX both work with full restore between selects.

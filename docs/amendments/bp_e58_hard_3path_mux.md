@@ -20,4 +20,4 @@ Seeds {1681,1691} trials 6. Budget ~5 min, hard cap 10 min.
 🔮 LEAN PASS (E49+E56 composition). Miss if hard kill over-destroys restore capacity across trials.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Hard-kill 3-path MUX curriculum; restore recovers selected path each step.
