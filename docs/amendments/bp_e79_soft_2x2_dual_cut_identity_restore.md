@@ -18,4 +18,4 @@ Seeds {2421,2431} trials 6. Budget ~8 min, hard cap 16 min.
 🔮 LEAN PASS with disarm doctrine. Miss if dual cut destroys restore capacity.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Dual soft-cut all arms OFF; selective identity restore recovers concurrent routing and L0 isolation.
