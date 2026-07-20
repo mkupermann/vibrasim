@@ -6117,3 +6117,8 @@ L1 ON; both-L cut silent; retrain OR (disarm Mand) L1 ON again. B1=B2=B3=1.0 **P
 ## 2026-07-20 — BP-E49 PASS three-path soft MUX
 
 Select path 0/1/2 only in curriculum. B1=B2=B3=1.0 **PASS**
+
+## 2026-07-20 1m fire — BP-E50 NULL mid-hop soft cut restore
+
+B1=1 B2=1 B3=0 **NULL**: mid soft-cut silences 3-hop; restore A-B only insufficient.
+Full-path restore (E44) still required when I covers multiple hops.

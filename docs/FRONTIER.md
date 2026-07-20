@@ -80,6 +80,7 @@
 | E47 | **PASS** | Graded soft weaken: half keeps path, many silence |
 | E48 | **PASS** | XOR cut then OR retrain restores path |
 | E49 | **PASS** | Three-path soft MUX curriculum |
+| E50 | **NULL** | Mid-hop soft cut silences; A–B-only restore fails |
 
 ## What works (engineered port curriculum)
 
