@@ -48,4 +48,5 @@ Seeds `{641, 651}`, trials 10; smoke 1×3. PRIM5 pair link, valence=0. Budget 90
 🔮 PASS — latch accumulates prop deposits independent of membrane.
 
 ## RESULT
-*(after)*
+### PRIM6-D0 **PASS** (2026-07-20 night scheduler)
+P1=1.0 P2=1.0 P3=1.0. Latch holds after T_end; membrane charge gone; no free inject.

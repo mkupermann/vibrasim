@@ -36,6 +36,8 @@
 | E18 | **NULL** | Charge-weighted end-state partner fails |
 | E19 | **NULL** | Bridged end-state argmax fails (membrane) |
 | E20 | **PASS** | Bridged + **peak** argmax partner (multi-trial) |
+| PRIM6-D0 | **PASS** | `k_latch` holds bridge-prop mark |
+| E21 | **PASS** | End-state partner via latch (not membrane) |
 
 ## What works (engineered port curriculum)
 
@@ -44,6 +46,7 @@
 3. Cross-port **exclusive** association edges (PRIM5)  
 4. Selective charge routing L-band → matched R-band (E16/E17)  
 5. Peak activity transfer + content-addressable partner (E14/E20)  
+6. **Latched** end-state partner mark (PRIM6 / E21)  
 
 ## Boundaries locked
 
@@ -53,14 +56,14 @@
 | Order without decay | CLOSED (E3) |
 | Generative partner from L alone | No (E12) |
 | Selective recall on all-to-all bridges | No (E15) |
-| End-state charge partner readout | No (E13/E18/E19) — use peak (pattern) |
+| End-state via membrane charge alone | No (E13/E18/E19) — peak or latch |
 
 ## Next hard only
 
-- Sustained cross-charge / **latch** primitive (end-state hold)  
 - Multi-trial map with **no** hidden scoring map at all  
 - Free-chemistry talent with **new** mechanism  
 - Brain R9 still blocked until C reopen or deeper curriculum  
+- Optional: latch tau>0 half-life characterisation
 
 ## Do not
 

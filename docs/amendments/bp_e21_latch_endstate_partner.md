@@ -27,4 +27,10 @@ Seeds `{661, 671}`, trials 12. Budget 150s / hard 300s.
 🔮 PASS if PRIM6 holds latch through T_end.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20 night scheduler). B1_latch_end=**1.000**, B2_nolatch=**0.000**, B3=**1.000**.
+
+### Calibration
+🔮 predicted PASS — **HIT**. End-state partner via `k_latch` works; membrane-only end-state still fails (E19 regime).
+
+### Scope
+Engineered latch channel restores durable end-state content-addressable partner after multi-trial PRIM5 train. Not free metabolic memory.
