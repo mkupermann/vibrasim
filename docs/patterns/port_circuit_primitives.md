@@ -51,6 +51,8 @@ E29–E37 PASS chain · PRIM5/6/8 · replace doctrine
 | Soft-cut + restore OR bypass | E71 NULL | L3–R-only restore fails |
 | Soft-cut + disarm + restore | E72 PASS | residual emitters were the block |
 | Hard-cut + disarm + restore OR | E73 PASS | structural recover OR bypass |
+| Hybrid AND soft + disarm restore | E74 PASS | OR bypass unharmed |
+| Dual cut + selective AND restore | E75 PASS | bypass stays silent |
 
 ## Incompatible defaults
 - **replace ON** ↔ multi-hop chains (E30)

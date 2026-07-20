@@ -110,6 +110,7 @@
 | E72 | **PASS** | Soft-cut bypass restore after disarm emitters |
 | E73 | **PASS** | Hard-kill bypass + disarm + restore L3–R |
 | E74 | **PASS** | Hybrid AND soft-cut + disarm restore; bypass stays |
+| E75 | **PASS** | Dual soft-cut; selective AND-only restore |
 
 ## What works (engineered port curriculum)
 

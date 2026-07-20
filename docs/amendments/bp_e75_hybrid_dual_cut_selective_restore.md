@@ -22,4 +22,4 @@ Seeds {2191,2201} trials 8. Budget ~5 min, hard cap 10 min.
 🔮 LEAN PASS. Miss if dual cut collaterally zeros shared R or restore bleeds.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Dual soft-cut both OFF; selective L1–M restore recovers AND only; bypass stays silent.

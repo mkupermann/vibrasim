@@ -6268,3 +6268,8 @@ B1=B2=B3=1.0 **PASS**. Soft and hard OR-bypass cut+restore closed with emitter d
 
 Soft-cut L1; disarm; restore L1-M; L3 bypass still ON.
 B1=B2=B3=1.0 **PASS**. Disarm doctrine works for AND arm of hybrid without collateral on OR.
+
+## 2026-07-20 sequential - BP-E75 PASS dual cut selective restore
+
+Soft-cut L1 and L3; disarm; restore L1-M only.
+B1=B2=B3=1.0 **PASS**. Selective recovery: AND returns, OR bypass stays off.
