@@ -2390,6 +2390,25 @@ def neuron_dynamics(world, dt: float) -> None:
         world.k_refractory_until[ai] = world.t + cfg.t_refractory
         world.firing_events.append((float(world.t), int(ai)))
 
+    # PRIM10: lateral charge inhibition around firers (soft competition).
+    r_inh = float(getattr(cfg, "fire_inhibit_radius", 0.0) or 0.0)
+    frac_inh = float(getattr(cfg, "fire_inhibit_frac", 0.5) or 0.0)
+    if r_inh > 0.0 and frac_inh > 0.0 and len(firing_atoms) > 0:
+        box = np.asarray(cfg.box_size, dtype=np.float64)
+        r2i = r_inh * r_inh
+        scale = max(0.0, 1.0 - frac_inh)
+        fire_set = set(int(x) for x in firing_atoms)
+        K = world.k_count
+        for ai in firing_atoms:
+            ap = world.k_pos[int(ai)]
+            for j in range(K):
+                if j in fire_set or not world.k_alive[j] or int(world.k_level[j]) < 4:
+                    continue
+                d = world.k_pos[j] - ap
+                d -= box * np.round(d / box)
+                if float(np.dot(d, d)) <= r2i:
+                    world.k_charge[j] *= scale
+
     # R2 strengthening: every level-5+ molecule within r_strengthen of any
     # firing atom on this tick gets strength += dt.
     if len(firing_atoms) > 0:

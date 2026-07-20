@@ -123,6 +123,9 @@ class WorldConfig:
     midplane_gate_f_mid: float = 1581.1388300841897  # sqrt(500*5000)
     # PRIM9: bridge prop only if ≥2 distinct firers hit same target this tick.
     coincidence_and_enabled: bool = False
+    # PRIM10: on fire, scale down charge of other L4 within radius (0=off).
+    fire_inhibit_radius: float = 0.0
+    fire_inhibit_frac: float = 0.5
     flux_plasticity_rate: float = 0.0     # Bridge strengthening rate from vibration flux (0=off). Plasticity from physics.
     flux_threshold: float = 2.0           # Flux above this potentiates a bridge, below depresses.
     flux_decay: float = 0.05              # Strength decay per second for low-flux bridges.
