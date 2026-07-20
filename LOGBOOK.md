@@ -6193,3 +6193,8 @@ B1=1 B2=0 B3=1 **NULL**: soft-cut does not disable AND (both still ON).
 
 STDP+neuron free dual vs STDP-off control.
 B1=0.778 B2=0.889 B3=1.0 B4=-0.11 **NULL**. STDP does not unlock free talent (matches C11 BTSP failure class).
+
+## 2026-07-20 sequential - BP-E63 PASS hard-disable AND input
+
+Hard kill I at L1 r=8; restore L1-M.
+B1=B2=B3=1.0 **PASS**. Endpoint-local hard cut disables AND (E62 soft mid failed).

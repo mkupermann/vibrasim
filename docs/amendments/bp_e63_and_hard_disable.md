@@ -23,4 +23,4 @@ Seeds {1861,1871} trials 8. Budget ~4 min, hard cap 8 min.
 🔮 LEAN PASS (endpoint-local hard kill at L1). Miss if kill also destroys M–R via shared nodes.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Hard kill at L1 (r=8) disables dual-input AND; restore L1–M re-enables. Closes E62 soft-mid miss with endpoint-local hard cut.
