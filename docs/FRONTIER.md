@@ -45,6 +45,9 @@
 | C7 | **NULL** | Scrambled seeds still specialise 0.67; correct 0.78 |
 | Attractor+free class | **CLOSED PARTIAL** | `bp_c6_c7_attractor_free_closure.md` |
 | E24 | **NULL** | K=3 multi-sample table-free: treat OK; rewire cons 0.63 |
+| E25 | **PASS** | Table-free map + **bridge ablation** control |
+| E26 | **NULL** | Latch tau=2 half-life bar not met |
+| PRIM7-D0 | **NULL** | Sideband cull hurts free spec (0.67 vs off 0.78) |
 
 ## What works (engineered port curriculum)
 
@@ -54,6 +57,7 @@
 4. Selective charge routing L-band → matched R-band (E16/E17)  
 5. Peak activity transfer + content-addressable partner (E14/E20)  
 6. **Latched** end-state partner mark (PRIM6 / E21)  
+7. **Table-free** multi-sample map with bridge ablation (E25)
 
 ## Boundaries locked
 
@@ -68,10 +72,9 @@
 
 ## Next hard only
 
-- Table-free map: need **stronger negative control** than rewire (E24 rewire only →0.63)  
-- Free talent only with mechanism **≠** dual free inject ± attractor seeds  
+- Free talent only with mechanism **≠** dual free inject / attractors / sideband cull  
 - Brain R9 still blocked until C reopen or deeper curriculum  
-- Optional: latch tau>0; deepen E20/E21 curricula
+- Optional: re-open latch tau with new protocol ID; deepen E20/E21/E25
 
 ## Do not
 
