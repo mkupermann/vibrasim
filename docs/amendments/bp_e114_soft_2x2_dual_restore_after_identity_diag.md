@@ -20,4 +20,4 @@ Seeds {3201,3211} trials 6. Budget ~10 min, hard cap 20 min.
 🔮 LEAN PASS. Selective failed (E111); dual restore both cut arms should recover full concurrent.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Dual restore of both identity-diag cut arms recovers full concurrent fanout. Selective (E111) fails; dual succeeds.
