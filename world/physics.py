@@ -2409,6 +2409,27 @@ def neuron_dynamics(world, dt: float) -> None:
                 if float(np.dot(d, d)) <= r2i:
                     world.k_charge[j] *= scale
 
+    # PRIM11: hard inhibit — emitters zero k_latch of nearby L4 on fire.
+    r_zl = float(getattr(cfg, "fire_zero_latch_radius", 0.0) or 0.0)
+    if r_zl > 0.0 and len(firing_atoms) > 0 and hasattr(world, "k_latch"):
+        box = np.asarray(cfg.box_size, dtype=np.float64)
+        r2z = r_zl * r_zl
+        fire_set = set(int(x) for x in firing_atoms)
+        K = world.k_count
+        has_emit = hasattr(world, "k_zero_latch_emitter")
+        for ai in firing_atoms:
+            ai = int(ai)
+            if has_emit and int(world.k_zero_latch_emitter[ai]) == 0:
+                continue  # only tagged emitters clear latch
+            ap = world.k_pos[ai]
+            for j in range(K):
+                if j in fire_set or not world.k_alive[j] or int(world.k_level[j]) < 4:
+                    continue
+                d = world.k_pos[j] - ap
+                d -= box * np.round(d / box)
+                if float(np.dot(d, d)) <= r2z:
+                    world.k_latch[j] = 0.0
+
     # R2 strengthening: every level-5+ molecule within r_strengthen of any
     # firing atom on this tick gets strength += dt.
     if len(firing_atoms) > 0:
