@@ -1933,6 +1933,43 @@ def apply_charge_latch_decay(world, dt: float) -> None:
     world.k_latch[:K] *= factor
 
 
+def apply_fire_zero_latch(world) -> None:
+    """PRIM11: after prop, emitters that fired this tick zero nearby k_latch.
+
+    Runs *after* bridge charge prop so XOR-style clear beats same-tick deposits.
+    """
+    cfg = world.config
+    r_zl = float(getattr(cfg, "fire_zero_latch_radius", 0.0) or 0.0)
+    if r_zl <= 0.0 or not hasattr(world, "k_latch"):
+        return
+    K = world.k_count
+    t_now = world.t
+    emitters = []
+    for tf, ai in world.firing_events:
+        if tf != t_now:
+            continue
+        ai = int(ai)
+        if ai < 0 or ai >= K:
+            continue
+        if hasattr(world, "k_zero_latch_emitter") and int(world.k_zero_latch_emitter[ai]) == 0:
+            continue
+        emitters.append(ai)
+    if not emitters:
+        return
+    box = np.asarray(cfg.box_size, dtype=np.float64)
+    r2z = r_zl * r_zl
+    emit_set = set(emitters)
+    for ai in emitters:
+        ap = world.k_pos[ai]
+        for j in range(K):
+            if j in emit_set or not world.k_alive[j] or int(world.k_level[j]) < 4:
+                continue
+            d = world.k_pos[j] - ap
+            d -= box * np.round(d / box)
+            if float(np.dot(d, d)) <= r2z:
+                world.k_latch[j] = 0.0
+
+
 def apply_ilw_strength_decay(world, dt: float) -> int:
     """PRIM3: leak level≥4 k_strength toward 1.0 when ilw_strength_decay_tau > 0.
 
@@ -2409,27 +2446,6 @@ def neuron_dynamics(world, dt: float) -> None:
                 if float(np.dot(d, d)) <= r2i:
                     world.k_charge[j] *= scale
 
-    # PRIM11: hard inhibit — emitters zero k_latch of nearby L4 on fire.
-    r_zl = float(getattr(cfg, "fire_zero_latch_radius", 0.0) or 0.0)
-    if r_zl > 0.0 and len(firing_atoms) > 0 and hasattr(world, "k_latch"):
-        box = np.asarray(cfg.box_size, dtype=np.float64)
-        r2z = r_zl * r_zl
-        fire_set = set(int(x) for x in firing_atoms)
-        K = world.k_count
-        has_emit = hasattr(world, "k_zero_latch_emitter")
-        for ai in firing_atoms:
-            ai = int(ai)
-            if has_emit and int(world.k_zero_latch_emitter[ai]) == 0:
-                continue  # only tagged emitters clear latch
-            ap = world.k_pos[ai]
-            for j in range(K):
-                if j in fire_set or not world.k_alive[j] or int(world.k_level[j]) < 4:
-                    continue
-                d = world.k_pos[j] - ap
-                d -= box * np.round(d / box)
-                if float(np.dot(d, d)) <= r2z:
-                    world.k_latch[j] = 0.0
-
     # R2 strengthening: every level-5+ molecule within r_strengthen of any
     # firing atom on this tick gets strength += dt.
     if len(firing_atoms) > 0:
@@ -2735,6 +2751,7 @@ def tick(world, dt: float) -> None:
     from world.bridges import apply_correlation_plasticity, apply_bridge_charge_propagation
     apply_correlation_plasticity(world, dt)  # BET-099 — firing-coincidence bridge plasticity (no-op when rate=0)
     apply_bridge_charge_propagation(world, dt)  # BET-105 — non-broadcast write along bridges (no-op when rate=0)
+    apply_fire_zero_latch(world)  # PRIM11 — clear latch after prop (XOR inhibit)
     apply_charge_latch_decay(world, dt)  # PRIM6 — latched prop mark (no-op unless latch on)
     apply_btsp(world, dt)          # NEW (G14) — second-scale eligibility-trace plasticity
     # G16: self-aware substrate — must run after apply_btsp so
