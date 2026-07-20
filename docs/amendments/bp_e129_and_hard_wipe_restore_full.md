@@ -19,4 +19,4 @@ Seeds {3541,3551} trials 6. Budget ~8 min, hard cap 16 min.
 🔮 LEAN PASS. Hard wipe-restore of pure AND matches soft E128.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Hard dual wipe both L + full restore recovers dual-fire AND. Soft (E128) + hard (E129) pure AND wipe-restore closed.

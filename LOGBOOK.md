@@ -6585,3 +6585,8 @@ B1=0.444 B2=0.667 B3=1.0 B4=-0.222 **NULL**. Port seed does not unlock free dual
 
 Soft dual-cut both L; restore both; dual fire ON (single still AND).
 B1=B2=B3=1.0 **PASS**. Pure AND wipe-restore recovery closed.
+
+## 2026-07-20 sequential - BP-E129 PASS coincidence AND hard dual wipe-restore
+
+Hard dual-kill both L; restore both; dual fire ON.
+B1=B2=B3=1.0 **PASS**. Soft (E128) + hard pure AND wipe-restore closed.
