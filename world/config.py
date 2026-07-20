@@ -112,6 +112,8 @@ class WorldConfig:
     # PRIM5: exclusive bridge between the two atoms just dual-written.
     ilw_pair_link_enabled: bool = False
     ilw_pair_link_delta: float = 1.0
+    # PRIM8: kill other bridges from each endpoint when forming a pair link.
+    ilw_pair_replace_enabled: bool = False
     # PRIM6: latched activity from bridge charge prop (separate from membrane).
     # Default OFF. tau<=0 with enabled = no decay; tau>0 = exp decay seconds.
     charge_latch_enabled: bool = False

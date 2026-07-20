@@ -2088,9 +2088,32 @@ def _ensure_bridge(world, i: int, j: int, delta: float = 1.0) -> int:
     return bi
 
 
+def _kill_other_bridges_from(world, atom: int, keep_partner: int) -> int:
+    """PRIM8: kill alive bridges incident on *atom* except the one to keep_partner."""
+    n = 0
+    for bi in range(world.b_count):
+        if not world.b_alive[bi]:
+            continue
+        x, y = int(world.b_atom_i[bi]), int(world.b_atom_j[bi])
+        if atom not in (x, y):
+            continue
+        other = y if x == atom else x
+        if other == keep_partner:
+            continue
+        world.b_alive[bi] = False
+        if hasattr(world, "k_bond_count"):
+            if world.k_alive[x]:
+                world.k_bond_count[x] = max(0, int(world.k_bond_count[x]) - 1)
+            if world.k_alive[y]:
+                world.k_bond_count[y] = max(0, int(world.k_bond_count[y]) - 1)
+        n += 1
+    return n
+
+
 def apply_ilw_pair_write(world, port_L, port_R, seed_L: float, seed_R: float, rng=None) -> dict:
     """PRIM5: dual ILW on L and R; optionally exclusive bridge between written slots.
 
+    PRIM8: if ilw_pair_replace_enabled, drop other bridges from each endpoint.
     Returns {L, R, bridge, mode_L, mode_R}. No-op pieces if ilw disabled.
     """
     cfg = world.config
@@ -2103,15 +2126,20 @@ def apply_ilw_pair_write(world, port_L, port_R, seed_L: float, seed_R: float, rn
     if j < 0:
         j = int(out_R.get("mol_idx", -1))
     b = -1
+    killed = 0
     if getattr(cfg, "ilw_pair_link_enabled", False) and i >= 0 and j >= 0:
         d = float(getattr(cfg, "ilw_pair_link_delta", 1.0))
         b = _ensure_bridge(world, i, j, delta=d)
+        if getattr(cfg, "ilw_pair_replace_enabled", False) and b >= 0:
+            killed += _kill_other_bridges_from(world, i, j)
+            killed += _kill_other_bridges_from(world, j, i)
     return {
         "L": out_L,
         "R": out_R,
         "atom_L": i,
         "atom_R": j,
         "bridge": b,
+        "killed_bridges": killed,
     }
 
 
