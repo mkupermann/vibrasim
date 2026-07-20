@@ -6490,3 +6490,8 @@ B1=0.0 B2=0.0 B3=0.444 B4=0.0 **NULL**. Free triple-band ordered class does not 
 
 Full restore; soft-cut 00+10; restore only 00.
 B1=1.0 B2=1.0 B3=0.0 **NULL**. Shared R0: restoring one in-edge revives L1 path too.
+
+## 2026-07-20 sequential - BP-E111 NULL partial restore after identity-diag
+
+Full restore; soft-cut 00+11; restore only 00.
+B1=1.0 B2=1.0 B3=0.0 **NULL**. Same selective-restore leak class as E110.
