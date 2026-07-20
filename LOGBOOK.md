@@ -6278,3 +6278,8 @@ B1=B2=B3=1.0 **PASS**. Selective recovery: AND returns, OR bypass stays off.
 
 Soft-cut L1+L3; disarm; restore L3-R only.
 B1=B2=B3=1.0 **PASS**. Mirror of E75: selective OR recovery; AND stays off.
+
+## 2026-07-20 sequential - BP-E77 PASS dual cut full restore
+
+Soft-cut L1+L3; disarm; restore L1-M and L3-R.
+B1=B2=B3=1.0 **PASS**. Full hybrid recovery; coincidence AND still requires both inputs.

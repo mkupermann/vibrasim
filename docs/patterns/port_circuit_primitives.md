@@ -53,6 +53,8 @@ E29–E37 PASS chain · PRIM5/6/8 · replace doctrine
 | Hard-cut + disarm + restore OR | E73 PASS | structural recover OR bypass |
 | Hybrid AND soft + disarm restore | E74 PASS | OR bypass unharmed |
 | Dual cut + selective AND restore | E75 PASS | bypass stays silent |
+| Dual cut + selective OR restore | E76 PASS | AND stays silent |
+| Dual cut + full AND+OR restore | E77 PASS | both recover; L1-only gated |
 
 ## Incompatible defaults
 - **replace ON** ↔ multi-hop chains (E30)
