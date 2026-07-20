@@ -19,4 +19,5 @@ Seeds {1311,1321} trials 10.
 🔮 PASS lean: single L lights R; both triggers Mand cut, subsequent L silent.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=1.0 B2=1.0 B3=1.0.  
+XOR: single L lights R; both L → Mand cuts bridges → subsequent L silent.
