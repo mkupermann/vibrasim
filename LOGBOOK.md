@@ -6203,3 +6203,8 @@ B1=B2=B3=1.0 **PASS**. Endpoint-local hard cut disables AND (E62 soft mid failed
 
 Wake+dream vs wake-only free dual inject.
 B1=0.667 B2=0.667 B3=1.0 B4=0 **NULL**. Dream consolidation does not unlock free talent.
+
+## 2026-07-20 sequential - BP-E64 PASS soft-disable AND at L1
+
+Soft weaken I at L1 r=8; restore L1-M.
+B1=B2=B3=1.0 **PASS**. Soft endpoint works (E62 soft mid failed; E63 hard endpoint PASS).
