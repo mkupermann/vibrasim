@@ -40,3 +40,5 @@ C16 is a **new mechanism class** (PRIM3 strength decay on free-formed nodes), no
 | C20 | PASS | no-wall fails; wall helps |
 
 | C21 | NULL | atom_valence=2 hurts free dual |
+
+| C22 | NULL | large box free dual no unlock |
