@@ -20,4 +20,4 @@ Seeds {3121,3131} trials 6. Budget ~10 min, hard cap 20 min.
 🔮 LEAN PASS. E79/E80 selective restore class; shared R0 + one in-edge only.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1=1.0 B2=1.0 B3=0.0. Dual-cut silences R0; restore 00 revives L0 fanout **and** L1→R0 (shared-endpoint selective restore leak).

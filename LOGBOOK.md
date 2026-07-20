@@ -6485,3 +6485,8 @@ B1=B2=B3=1.0 **PASS**. Hard pure identity after full restore. Soft/hard diagonal
 
 Three spatial thirds LOW/MID/HIGH vs same-band control; single midplane wall.
 B1=0.0 B2=0.0 B3=0.444 B4=0.0 **NULL**. Free triple-band ordered class does not unlock.
+
+## 2026-07-20 sequential - BP-E110 NULL selective restore after R0 dual-cut
+
+Full restore; soft-cut 00+10; restore only 00.
+B1=1.0 B2=1.0 B3=0.0 **NULL**. Shared R0: restoring one in-edge revives L1 path too.
