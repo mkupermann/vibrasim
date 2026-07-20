@@ -107,6 +107,7 @@
 | E70 | **PASS** | Hard-kill OR bypass; AND path remains |
 | E71 | **NULL** | Soft-cut bypass OK; L3–R-only restore fails |
 | C15 | **NULL** | bridge_consolidate free dual 0.778; delta 0.11 |
+| E72 | **PASS** | Soft-cut bypass restore after disarm emitters |
 
 ## What works (engineered port curriculum)
 

@@ -6253,3 +6253,8 @@ B1=1 B2=1 B3=0 **NULL**: bypass silence sticks; L3-R retrain insufficient after 
 
 bridge_consolidate free dual vs off control.
 B1=0.778 B2=0.667 B3=1.0 B4=0.11 **NULL**. Slight edge over control but fails 0.90 and delta bars.
+
+## 2026-07-20 sequential - BP-E72 PASS disarm then restore bypass
+
+Soft-cut L3; disarm k_weaken; restore L3-R; AND stays.
+B1=B2=B3=1.0 **PASS**. E71 NULL was residual weaken emitters re-zeroing rewrite.

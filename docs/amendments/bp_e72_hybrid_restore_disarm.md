@@ -23,4 +23,4 @@ Seeds {2131,2141} trials 8. Budget ~4 min, hard cap 8 min.
 🔮 LEAN PASS if residual emitter caused E71 fail. NULL if soft cut permanently damages nodes/R-side.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Disarm weaken emitters after soft-cut unlocks L3–R restore. Closes E71: residual emitters re-weakened rewritten bridges.
