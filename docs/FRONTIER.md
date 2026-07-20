@@ -100,6 +100,7 @@
 | E64 | **PASS** | Soft-weaken at L1 disables dual-input AND |
 | E65 | **PASS** | (L1∧L2) OR L3 hybrid path |
 | E66 | **PASS** | Soft-cut OR bypass; AND path remains |
+| E67 | **PASS** | Soft 2×2 concurrent dual-drive under identity |
 
 ## What works (engineered port curriculum)
 

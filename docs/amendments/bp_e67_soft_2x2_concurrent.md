@@ -29,4 +29,4 @@ Seeds {1971,1981} trials 6. Budget ~6 min, hard cap 12 min.
 🔮 LEAN PASS. Miss if concurrent charge crosstalk lights wrong R.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Concurrent L0+L1 under identity lights both R; single-L isolation holds.
