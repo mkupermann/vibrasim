@@ -42,3 +42,4 @@ C16 is a **new mechanism class** (PRIM3 strength decay on free-formed nodes), no
 | C21 | NULL | atom_valence=2 hurts free dual |
 
 | C22 | NULL | large box free dual no unlock |
+| C23 | NULL | triple-band thirds ordered 0.0; pop 0.44 |
