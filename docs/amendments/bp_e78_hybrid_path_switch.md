@@ -23,4 +23,4 @@ Seeds {2251,2261} trials 6. Budget ~8 min, hard cap 16 min.
 🔮 LEAN PASS with disarm doctrine. Miss if multi-step residual state accumulates.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Hybrid path-switch OR-only → AND-only → OR-only multi-trial.

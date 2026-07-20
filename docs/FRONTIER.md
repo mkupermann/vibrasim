@@ -113,6 +113,7 @@
 | E75 | **PASS** | Dual soft-cut; selective AND-only restore |
 | E76 | **PASS** | Dual soft-cut; selective OR-only restore |
 | E77 | **PASS** | Dual soft-cut; full AND+OR restore |
+| E78 | **PASS** | Hybrid path-switch OR↔AND multi-trial |
 
 ## What works (engineered port curriculum)
 
