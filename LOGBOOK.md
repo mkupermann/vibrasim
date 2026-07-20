@@ -6163,3 +6163,8 @@ B1=B2=B3=1.0 **PASS**. True demux (one source) distinct from E49 multi-L MUX.
 
 E49 geometry with hard kill instead of soft; curriculum select 0/1/2.
 B1=B2=B3=1.0 **PASS**. Soft and hard MUX both work with full restore between selects.
+
+## 2026-07-20 sequential - BP-E59 PASS soft 2x2 crossbar
+
+Identity (00+11) then swap (01+10) then re-identity via soft cut.
+B1=B2=B3=1.0 **PASS**. Full bipartite soft crossbar switch.

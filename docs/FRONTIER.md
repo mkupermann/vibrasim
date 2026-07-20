@@ -89,6 +89,7 @@
 | E56 | **PASS** | Dual 3-hop selective hard kill + restore path0 |
 | E57 | **PASS** | Soft DEMUX shared L → three R arms |
 | E58 | **PASS** | Hard 3-path MUX curriculum |
+| E59 | **PASS** | Soft 2×2 crossbar identity/swap curriculum |
 
 ## What works (engineered port curriculum)
 

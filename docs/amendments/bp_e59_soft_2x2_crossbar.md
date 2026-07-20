@@ -23,4 +23,4 @@ Seeds {1721,1731} trials 6. Budget ~6 min, hard cap 12 min.
 🔮 LEAN PASS if soft radii local. Miss if shared L/R ports cross-contaminate latches.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Soft 2×2 crossbar: identity and swap routing via soft arm select; re-identity holds.
