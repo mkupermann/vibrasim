@@ -96,6 +96,7 @@
 | E62 | **NULL** | Soft-cut L1–M fails to disable dual-input AND |
 | C12 | **NULL** | STDP free dual 0.778; control 0.889; no unlock |
 | E63 | **PASS** | Hard-kill L1 disables dual-input AND; restore re-enables |
+| C13 | **NULL** | Dream free dual = control 0.667; no unlock |
 
 ## What works (engineered port curriculum)
 
@@ -105,7 +106,7 @@ See `docs/patterns/port_circuit_primitives.md` — relays, logic, cuts, MUX curr
 
 | Boundary | Status |
 |----------|--------|
-| Free talent @0.90 pure | Still blocked (C1–C12, PRIM7) |
+| Free talent @0.90 pure | Still blocked (C1–C13, PRIM7) |
 | Stationary free (vel=0) | No bind (C9) |
 | Ballistic-then-freeze free | No 0.90 (C10) |
 | Soft lateral inhibit WTA | No exclusive winner (PRIM10) |

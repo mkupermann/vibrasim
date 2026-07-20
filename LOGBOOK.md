@@ -6198,3 +6198,8 @@ B1=0.778 B2=0.889 B3=1.0 B4=-0.11 **NULL**. STDP does not unlock free talent (ma
 
 Hard kill I at L1 r=8; restore L1-M.
 B1=B2=B3=1.0 **PASS**. Endpoint-local hard cut disables AND (E62 soft mid failed).
+
+## 2026-07-20 sequential - BP-C13 NULL dream free talent
+
+Wake+dream vs wake-only free dual inject.
+B1=0.667 B2=0.667 B3=1.0 B4=0 **NULL**. Dream consolidation does not unlock free talent.

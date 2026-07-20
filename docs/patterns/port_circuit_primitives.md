@@ -40,6 +40,7 @@ E29–E37 PASS chain · PRIM5/6/8 · replace doctrine
 | Hard 2×2 crossbar | E60 PASS | hard-kill identity/swap |
 | AND-gated L–G–R relay | E61 NULL | G-only still drives R |
 | Soft-disable AND input | E62 NULL | L1–M soft cut fails |
+| Hard-disable AND input at L1 | E63 PASS | endpoint kill + restore |
 
 ## Incompatible defaults
 - **replace ON** ↔ multi-hop chains (E30)
