@@ -51,6 +51,8 @@
 | E27 | **NULL** | Map curriculum overwrite: A→B leaves 50/50 residual |
 | PRIM8-D0 | **PASS** | Pair-link replace (forget old partner) |
 | E28 | **PASS** | Curriculum A→B with replace: B=1.0 residual A=0 |
+| C8 | **NULL** | Sequential free inject 0.78; sim 0.89 — timing not unlock |
+| E29 | **PASS** | Two-hop charge relay L→M→R |
 
 ## What works (engineered port curriculum)
 
@@ -61,7 +63,8 @@
 5. Peak activity transfer + content-addressable partner (E14/E20)  
 6. **Latched** end-state partner mark (PRIM6 / E21)  
 7. **Table-free** multi-sample map with bridge ablation (E25)  
-8. **Curriculum overwrite** via pair-replace forget (PRIM8 / E28)
+8. **Curriculum overwrite** via pair-replace forget (PRIM8 / E28)  
+9. **Two-hop** charge relay along exclusive links (E29)
 
 ## Boundaries locked
 
@@ -76,7 +79,7 @@
 
 ## Next hard only
 
-- Free talent only with mechanism **≠** dual free inject / attractors / sideband cull  
+- Free talent only with mechanism **≠** dual free inject / attractors / sideband / sequential  
 - Brain R9 still blocked until C reopen or deeper curriculum
 
 ## Do not

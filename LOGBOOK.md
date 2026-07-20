@@ -6021,3 +6021,8 @@ PRIM5 multi-slot pair links accumulate; last map does not wipe first. Curriculum
 PRIM8-D0: replace=1 bridge; off>=2; endpoints B. **PASS**
 E28: match B=1.0 residual A=0 A-only=1.0 **PASS**
 E27 boundary closed by engineered forget (ilw_pair_replace_enabled).
+
+## 2026-07-20 — C8 NULL sequential free; E29 PASS two-hop relay
+
+C8: seq=0.778 sim=0.889 **NULL** — time multiplex not free-talent unlock.
+E29: two-hop L->M->R charge B1=B2=B3=1.0 **PASS**
