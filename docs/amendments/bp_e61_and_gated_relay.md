@@ -23,4 +23,5 @@ Seeds {1791,1801} trials 8. Budget ~4 min, hard cap 8 min.
 🔮 LEAN PASS if PRIM9 blocks single-input prop on gated node. Miss if L–G–R still acts as plain OR relay.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1=1.0 B2=1.0 B3=0.0.  
+L-only blocked; L+G ON; **G-only still lights R** (gate node can self-drive G–R without second input). AND-gated relay not closed under this wiring — gate does not suppress self-initiated fan-out.
