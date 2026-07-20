@@ -6395,3 +6395,8 @@ B1=B2=B3=1.0 **PASS**. Hard re-cut is local where soft re-cut (E92) collateraled
 
 Soft DEMUX y=10/32/48; dual-cut; full restore; soft re-cut arm0.
 B1=B2=B3=1.0 **PASS**. Wide mid sep > soft radius fixes E92 collateral.
+
+## 2026-07-20 sequential - BP-E95 PASS hard DEMUX full restore re-cut
+
+Hard-kill all DEMUX arms; restore all; hard re-cut arm0.
+B1=B2=B3=1.0 **PASS**. Hard wipe/full/recut closed for shared-L DEMUX.

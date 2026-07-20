@@ -18,4 +18,4 @@ Seeds {2741,2751} trials 6. Budget ~10 min, hard cap 20 min.
 🔮 LEAN PASS. Miss if hard kill at I damages shared L ports for restore.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Hard DEMUX dual-kill full restore + hard re-cut arm0 selective.
