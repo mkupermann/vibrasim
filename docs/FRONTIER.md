@@ -65,6 +65,7 @@
 | PRIM9-D0 | **PASS** | Coincidence AND (2 firers → mid) |
 | PRIM10-D0 | **NULL** | Lateral charge inhibit no exclusive WTA |
 | C9 | **NULL** | Stationary free vel=0: no L4 form (pop=0) |
+| PRIM11-D0 | **NULL** | XOR: both-clear works; single-L OR end-latch fails |
 
 ## What works (engineered port curriculum)
 
@@ -77,6 +78,7 @@ See `docs/patterns/port_circuit_primitives.md` + `coincidence_and_gate.md` — r
 | Free talent @0.90 pure | Still blocked (C1–C9, PRIM7) |
 | Stationary free (vel=0) | No bind (C9) |
 | Soft lateral inhibit WTA | No exclusive winner (PRIM10) |
+| XOR (OR + AND-clear) | NULL PRIM11 — need cleaner inhibit timing/topology |
 | Attractor±free hybrid | CLOSED PARTIAL (C6–C7) |
 | AND without coincidence prim | No (E38); **with PRIM9 PASS** |
 | Order without decay | CLOSED (E3) |
