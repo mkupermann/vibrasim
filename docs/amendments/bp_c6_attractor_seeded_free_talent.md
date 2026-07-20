@@ -38,4 +38,19 @@ Most-likely miss: B1 fails (free still noisy).
 Pure free talent without seeds; understanding; brain.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20 night scheduler).
+
+| Bar | Value | thr | ok |
+|-----|------:|-----|:--:|
+| B1 hybrid spec | **1.000** | ≥0.90 | yes |
+| B2 free-only | **0.778** | ≤0.75 | **no** |
+| B3 hybrid pop | **1.000** | ≥0.80 | yes |
+| B4 χ | **0.000** | ≤0.15 | yes |
+
+### Calibration
+🔮 lean NULL — **HIT on overall NULL**; partial surprise: hybrid **does** hit 0.90 (B1), but free-only rose to **0.778** (above control bar 0.75; C5 FREE was 0.667). Seeds may help hybrid ceiling, but free-only is not reliably “weak enough” under this protocol to prove necessity of seeds. **No bar retune.**
+
+### Finding
+- Hybrid attractor+free **can** specialise at bar (B1).  
+- Defensible “seeds required” fails because free-only exceeds 0.75.  
+- Do not claim free talent solved; do not claim hybrid unique without stronger free-only control (new ID).

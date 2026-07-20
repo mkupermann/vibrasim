@@ -5973,3 +5973,16 @@ B1=0.96 B2 gap=0.62 B3 rewire gap=0.35 (need <=0.15). K=2 rewire often keeps two
 docs/amendments/bp_e22_e23_notable_map_closure.md
 Table-scored E20/E21 still stand. No third NULL farm on same K=2 control family.
 Next: free-talent new primitive OR table-free with K>=3 multi-sample.
+
+## 2026-07-20 scheduler — BP-C6 NULL attractor-seeded free talent
+
+Pre-reg d3857b4 before data. T=1000 seeds 3x3.
+
+| Bar | Val | thr | ok |
+|-----|-----|-----|----|
+| B1 hybrid | 1.000 | >=0.90 | yes |
+| B2 free-only | 0.778 | <=0.75 | no |
+| B3 pop | 1.000 | >=0.80 | yes |
+| B4 chi | 0.000 | <=0.15 | yes |
+
+**NULL.** Hybrid hits structural specialisation bar; free-only control too strong (0.78). No bar retune. Pure free talent not uniquely unlocked.
