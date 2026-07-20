@@ -21,4 +21,4 @@ Seeds {961,971} trials 10. N_write=12. Smoke 1×3.
 🔮 PASS — charge prop along path.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=1.0 B2=1.0 B3=1.0. Two-hop L→M→R charge relay works; no M–R silent.
