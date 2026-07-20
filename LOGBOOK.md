@@ -6183,3 +6183,8 @@ B1=B2=B3=1.0 **PASS**. Soft (E59) and hard (E60) 2x2 crossbar both closed.
 
 L-G-R coincidence gate on G: L-only OFF, L+G ON, G-only still ON.
 B1=1 B2=1 B3=0 **NULL**. Gate blocks lone L input but self-drive G->R remains.
+
+## 2026-07-20 sequential - BP-E62 NULL soft-disable AND input
+
+PRIM9 L1/L2->M->R; soft I near L1-M mid.
+B1=1 B2=0 B3=1 **NULL**: soft-cut does not disable AND (both still ON).

@@ -23,4 +23,5 @@ Seeds {1811,1821} trials 8. Budget ~4 min, hard cap 8 min.
 🔮 LEAN PASS. Miss if soft cut of L1–M also kills L2–M or M–R (collateral).
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1=1.0 B2=0.0 B3=1.0.  
+Soft I at L1–M mid did not silence dual-input AND (both-on still lights R). Likely soft radius misses L1–M endpoints or residual bridges keep coincidence.
