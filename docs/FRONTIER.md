@@ -121,6 +121,7 @@
 | C20 | **PASS** | Decay needs midplane wall (no-wall 0.33 vs wall 0.89) |
 | C16 family | **CLOSED PARTIAL** | free talent not locked (p_c16_family_partial_closure.md) |
 | E79 | **PASS** | Soft 2x2 dual-cut selective identity restore |
+| E80 | **PASS** | Soft 2x2 dual-cut selective swap restore |
 
 ## What works (engineered port curriculum)
 

@@ -18,4 +18,4 @@ Seeds {2441,2451} trials 6. Budget ~8 min, hard cap 16 min.
 🔮 LEAN PASS (E79 mirror for swap). Miss if identity residual bridges survive dual cut.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Dual soft-cut; selective swap restore recovers concurrent routing and L0→R1 map.
