@@ -164,6 +164,7 @@
 | E117 | **PASS** | Multi-trial R0 silence↔dual restore cycle |
 | E118 | **PASS** | Hard multi-trial R0 silence↔dual soft restore |
 | E119 | **PASS** | Split R0a/R0b: selective restore 00 is L-selective |
+| E120 | **PASS** | Hard split R0 cut + soft restore 00 L-selective |
 
 ## What works (engineered port curriculum)
 
