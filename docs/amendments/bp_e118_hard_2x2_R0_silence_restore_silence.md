@@ -19,4 +19,4 @@ Seeds {3281,3291} trials 6. Budget ~12 min, hard cap 24 min.
 🔮 LEAN PASS. Hard multi-trial shared silence matches soft E117.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Hard multi-trial R0 silence ↔ dual soft restore ↔ hard silence. Soft (E117) + hard multi-trial shared silence closed.
