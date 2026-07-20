@@ -25,4 +25,5 @@ Seeds {1231,1241} trials 10.
 🔮 LEAN PASS if Mand fires when both L and clears R after OR path lit; miss if timing leaves residual latch.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). After post-prop clear fix: X1=**0**, X2=**0**, X3=**1.0**.  
+Both-L clears R (X3), but single-L OR path also fails to leave end latch ≥1 (OR broken under this topology/timing). XOR not established. No bar retune.

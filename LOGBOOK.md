@@ -6058,3 +6058,9 @@ Pattern coincidence_and_gate.md
 PRIM10: exclusive path WTA 0.0; off both-on 1.0 **NULL**
 C9: vel=0 free dual: pop=0 no L4; moving 0.44 **NULL**
 Free talent still blocked. Port circuits + PRIM9 AND stand.
+
+## 2026-07-20 15m fire — PRIM11 XOR NULL
+
+fire_zero_latch_radius + k_zero_latch_emitter; post-prop clear.
+X1=0 X2=0 X3=1.0 **NULL**: dual-L clears R but single-L OR end latch fails under XOR topology.
+PRIM9 AND still stands. No XOR farm this fire.
