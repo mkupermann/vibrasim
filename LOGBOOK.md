@@ -6325,3 +6325,8 @@ B1=B2=B3=1.0 **PASS**.
 
 Soft-cut all 2x2 arms; restore 01+10 only.
 B1=B2=B3=1.0 **PASS**. Soft 2x2 selective recovery closed for identity (E79) and swap (E80).
+
+## 2026-07-20 sequential - BP-E81 PASS dual-cut full restore
+
+Soft-cut all 2x2 arms; restore all four; L0 fan-out both R.
+B1=B2=B3=1.0 **PASS**.
