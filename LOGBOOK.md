@@ -6100,3 +6100,8 @@ Two paths; I weakens path1 only; path2 stays; restore path1. B1=B2=B3=1.0 **PASS
 
 B1 freeze=0.444 B2 motion=0.667 B3 pop=0.556 B4 chi=0 **NULL**
 New free mechanism (ballistic seed then freeze) does not unlock 0.90 talent.
+
+## 2026-07-20 — BP-E46 PASS path-switch curriculum
+
+Both ON; cut path1; restore path1 + cut path2. B1=B2=B3=1.0 **PASS**
+Multi-trial soft routing curriculum on dual paths.
