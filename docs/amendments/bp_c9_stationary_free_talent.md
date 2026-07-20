@@ -22,4 +22,5 @@ Seeds {1201,1211,1221} trials 3; T=1000; N_SIDE=400.
 🔮 LEAN PASS: no mixing preserves band localization → bind specialisation.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1_stat=**0.000**, B2_moving=**0.444**, B3_pop=**0.000**, B4_χ=0.  
+vel=0 free field forms **no** L4 (no relative motion → no bind encounters). Stationary free is not a talent unlock.
