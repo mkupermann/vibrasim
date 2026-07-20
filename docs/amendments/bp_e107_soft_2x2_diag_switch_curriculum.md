@@ -19,4 +19,4 @@ Seeds {3041,3051} trials 6. Budget ~12 min, hard cap 24 min.
 🔮 LEAN PASS with disarm doctrine. Miss if multi-step soft residual accumulates.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Multi-trial swap↔identity via diagonal soft-cuts after full restore.
