@@ -6495,3 +6495,8 @@ B1=1.0 B2=1.0 B3=0.0 **NULL**. Shared R0: restoring one in-edge revives L1 path 
 
 Full restore; soft-cut 00+11; restore only 00.
 B1=1.0 B2=1.0 B3=0.0 **NULL**. Same selective-restore leak class as E110.
+
+## 2026-07-20 sequential - BP-E112 PASS dual restore after R0 silence
+
+Full restore; soft-cut 00+10; restore both 00+10.
+B1=B2=B3=1.0 **PASS**. Dual restore recovers both L paths; selective (E110) fails.
