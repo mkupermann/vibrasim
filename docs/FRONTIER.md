@@ -81,6 +81,7 @@
 | E48 | **PASS** | XOR cut then OR retrain restores path |
 | E49 | **PASS** | Three-path soft MUX curriculum |
 | E50 | **NULL** | Mid-hop soft cut silences; A–B-only restore fails |
+| E51 | **NULL** | Hard mid kill r=8 never reaches A/B (dist≈11); B2=0 |
 
 ## What works (engineered port curriculum)
 

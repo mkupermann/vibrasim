@@ -6122,3 +6122,9 @@ Select path 0/1/2 only in curriculum. B1=B2=B3=1.0 **PASS**
 
 B1=1 B2=1 B3=0 **NULL**: mid soft-cut silences 3-hop; restore A-B only insufficient.
 Full-path restore (E44) still required when I covers multiple hops.
+
+## 2026-07-20 sequential - BP-E51 NULL hard mid kill geometry
+
+Hard kill I at A-B mid, fire_kill_bridge_radius=8, restore A-B only.
+B1_on=1.0 B2_cut=0.0 B3_restore=1.0 **NULL**
+Diagnosis: A and B at ~11 from mid; r=8 never hits endpoints. PRIM12 endpoint-radius kill needs r>=~12 to touch A-B (and then also L-A/B-R sharing those endpoints). E50 soft r=12 silences but mid-only restore fails for that reason.
