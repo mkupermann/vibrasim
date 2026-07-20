@@ -72,10 +72,12 @@
 | PRIM12-D0 | **PASS** | Structural NOT: fire kills bridges |
 | E42 | **PASS** | XOR = OR + coincidence AND + structural kill |
 | E43 | **PASS** | Retrain restores path after structural cut |
+| PRIM13-D0 | **NULL** | Soft weaken silences; M–R-only restore fails |
+| E44 | **PASS** | Soft weaken + full path restore |
 
 ## What works (engineered port curriculum)
 
-See `docs/patterns/port_circuit_primitives.md` — relays, OR, AND, NOT, XOR, **retrain-after-cut**, curriculum, table-free map.
+See `docs/patterns/port_circuit_primitives.md` — relays, logic, **hard/soft cut + restore**, curriculum, table-free map.
 
 ## Boundaries locked
 
