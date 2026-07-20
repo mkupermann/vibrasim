@@ -20,4 +20,4 @@ Seeds {1141,1151} trials 8. Same topology as E34.
 🔮 **NULL** — E34 OR means B1/B2 fail.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1=0 B2=0 B3=1.0. Prediction HIT: OR not AND; single L still lights R. AND needs new primitive.
