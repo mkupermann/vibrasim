@@ -6410,3 +6410,8 @@ B1=1 B2=1 B3=0 **NULL**: separate L does not stop soft mid-radius collateral (sa
 
 Soft MUX y=10/32/48; dual-cut; full restore; soft re-cut path0.
 B1=B2=B3=1.0 **PASS**. Wide mid sep fixes soft re-cut collateral (E96).
+
+## 2026-07-20 sequential - BP-E98 PASS soft MUX hard re-cut
+
+Soft dual-cut all MUX; full restore; hard-kill path0 r=8.
+B1=B2=B3=1.0 **PASS**. Soft re-cut doctrine: wide-sep (E97) or hard re-cut (E98) after full restore.

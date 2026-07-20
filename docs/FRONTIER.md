@@ -139,6 +139,7 @@
 | E95 | **PASS** | Hard DEMUX dual-kill full restore + hard re-cut arm0 |
 | E96 | **NULL** | Soft MUX full restore OK; soft re-cut path0 collaterals |
 | E97 | **PASS** | Soft MUX wide-sep full restore + soft re-cut path0 |
+| E98 | **PASS** | Soft MUX tight full restore + hard re-cut path0 |
 
 ## What works (engineered port curriculum)
 
