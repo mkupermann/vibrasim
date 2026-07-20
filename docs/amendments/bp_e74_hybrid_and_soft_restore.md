@@ -23,4 +23,4 @@ Seeds {2171,2181} trials 8. Budget ~4 min, hard cap 8 min.
 🔮 LEAN PASS (E64+E72 on hybrid). Miss if L1 soft cut collaterally weakens L3–R.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Soft-disable AND on hybrid + disarm + L1–M restore; OR bypass stays ON.
