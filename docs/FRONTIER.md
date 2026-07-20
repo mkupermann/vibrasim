@@ -114,7 +114,8 @@
 | E76 | **PASS** | Dual soft-cut; selective OR-only restore |
 | E77 | **PASS** | Dual soft-cut; full AND+OR restore |
 | E78 | **PASS** | Hybrid path-switch OR↔AND multi-trial |
-| C16 | **PASS** | ILW strength-decay free dual **0.90 unlock** |
+| C16 | **PASS** | ILW strength-decay free dual **0.90 unlock** (seed-set) |
+| C17 | **NULL** | C16 held-out replicate fails (0.778); not locked |
 
 ## What works (engineered port curriculum)
 
@@ -124,7 +125,7 @@ See `docs/patterns/port_circuit_primitives.md` — relays, logic, cuts, MUX curr
 
 | Boundary | Status |
 |----------|--------|
-| Free talent @0.90 pure | C16 PASS with strength decay; C1–C15 closed classes remain blocked |
+| Free talent @0.90 pure | C16 seed-set PASS; C17 replicate NULL — free talent not locked; C1–C15 closed |
 | Stationary free (vel=0) | No bind (C9) |
 | Ballistic-then-freeze free | No 0.90 (C10) |
 | Soft lateral inhibit WTA | No exclusive winner (PRIM10) |
@@ -139,7 +140,7 @@ See `docs/patterns/port_circuit_primitives.md` — relays, logic, cuts, MUX curr
 
 ## Next hard only
 
-- Free talent: C16 strength-decay **PASS** — replicate/controls next; do not retune C1–C15  
+- Free talent: C16 seed PASS / C17 replicate NULL — effect partial/seedy; more controls before claim  
 - Soft inhibit: retrain-reversible (E44), durable without retrain (E55) — closed for two-hop  
 - Brain R9 still blocked until C reopen or deeper curriculum
 
