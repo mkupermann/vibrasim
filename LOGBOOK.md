@@ -6400,3 +6400,8 @@ B1=B2=B3=1.0 **PASS**. Wide mid sep > soft radius fixes E92 collateral.
 
 Hard-kill all DEMUX arms; restore all; hard re-cut arm0.
 B1=B2=B3=1.0 **PASS**. Hard wipe/full/recut closed for shared-L DEMUX.
+
+## 2026-07-20 sequential - BP-E96 NULL soft MUX full re-cut collateral
+
+Soft dual-cut all MUX paths; full restore; soft re-cut path0.
+B1=1 B2=1 B3=0 **NULL**: separate L does not stop soft mid-radius collateral (same as E92).

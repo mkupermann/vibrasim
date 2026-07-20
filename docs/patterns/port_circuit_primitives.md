@@ -72,6 +72,8 @@ E29–E37 PASS chain · PRIM5/6/8 · replace doctrine
 | Soft DEMUX dual-cut → full + re-cut | E92 NULL | full OK; re-cut arm0 collaterals |
 | Soft DEMUX full + hard re-cut | E93 PASS | hard r=8 local after full |
 | Soft DEMUX wide-sep + soft re-cut | E94 PASS | mid dist > soft radius |
+| Hard DEMUX full + hard re-cut | E95 PASS | structural shared-L recut |
+| Soft MUX full + soft re-cut | E96 NULL | separate-L still mid-collateral |
 
 ## Incompatible defaults
 - **replace ON** ↔ multi-hop chains (E30)
