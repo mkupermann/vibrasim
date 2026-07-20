@@ -19,4 +19,4 @@ Seeds {2781,2791} trials 6. Budget ~10 min, hard cap 20 min.
 🔮 LEAN PASS (E94 composition on multi-L). Miss if I offsets still overlap.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Wide-sep multi-L MUX soft re-cut path0 without collateral. Closes E96 geometry diagnosis.
