@@ -78,6 +78,7 @@ E29–E37 PASS chain · PRIM5/6/8 · replace doctrine
 | Soft MUX full + hard re-cut | E98 PASS | hard r=8 local on tight sep |
 | Hard MUX full + hard re-cut | E99 PASS | hard multi-L wipe-restore-recut |
 | Hard MUX wide + soft re-cut | E100 PASS | soft re-cut after hard wipe |
+| Soft 2×2 wide full + re-cut 00 | E101 NULL | fan-out OK; cut00 misses R0 silence |
 
 ## Soft re-cut doctrine (E92–E100)
 After full wipe+restore, selective soft re-cut needs **mid distance > soft radius** (E94/E97/E100) or use **hard local kill** (E93/E95/E98/E99). Separate-L alone does not fix soft mid-collateral. See `port_wipe_restore.md`.
