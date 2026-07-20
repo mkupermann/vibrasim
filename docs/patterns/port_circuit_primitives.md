@@ -36,6 +36,7 @@ E29–E37 PASS chain · PRIM5/6/8 · replace doctrine
 | Dual 3-hop selective hard kill | E56 PASS | y-sep > kill radius isolates |
 | Soft DEMUX shared L → 3 R | E57 PASS | fan-out select (≠ multi-L MUX) |
 | Hard 3-path MUX | E58 PASS | hard-kill select + restore |
+| Soft 2×2 crossbar | E59 PASS | identity/swap arm select |
 
 ## Incompatible defaults
 - **replace ON** ↔ multi-hop chains (E30)

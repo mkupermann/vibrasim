@@ -25,4 +25,5 @@ Seeds {1741,1751,1761} trials 3 each. T=1200. Budget ~15 min, hard cap 30 min.
 🔮 LEAN NULL (BTSP needs plateau fire on level-4 atoms; free bind may not drive enough firing for eligibility). Still maps whether BTSP class unlocks C.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1=0.778 B2=0.778 B3=1.0 B4=0.0.  
+BTSP ON matches control exactly at C1b-class specialisation; no unlock. Free dual inject + BTSP eligibility does not lift talent to 0.90.

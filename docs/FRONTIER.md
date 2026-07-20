@@ -90,6 +90,7 @@
 | E57 | **PASS** | Soft DEMUX shared L → three R arms |
 | E58 | **PASS** | Hard 3-path MUX curriculum |
 | E59 | **PASS** | Soft 2×2 crossbar identity/swap curriculum |
+| C11 | **NULL** | BTSP free dual = control 0.778; no talent unlock |
 
 ## What works (engineered port curriculum)
 
