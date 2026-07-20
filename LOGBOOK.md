@@ -6153,3 +6153,8 @@ B1=B2=B3=1.0 **PASS**. Soft silence is durable until retrain (E44 restores); not
 
 Two y-separated 3-hop paths; hard kill I0 mid path0 r=12; restore path0.
 B1=B2=B3=1.0 **PASS**. Selective hard cut isolates; path1 intact; retrain recovers path0.
+
+## 2026-07-20 sequential - BP-E57 PASS soft DEMUX shared L
+
+Shared L fans to three R arms; soft-cut curriculum selects arm.
+B1=B2=B3=1.0 **PASS**. True demux (one source) distinct from E49 multi-L MUX.

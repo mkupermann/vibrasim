@@ -20,4 +20,4 @@ Seeds {1661,1671} trials 6. Budget ~5 min, hard cap 10 min.
 🔮 LEAN PASS if y-sep keeps soft radii local. Miss if shared L bridges cross-arm or cut bleeds.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Soft DEMUX: shared L fan-out; soft-cut selects one of three R arms.

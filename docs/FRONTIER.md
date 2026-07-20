@@ -87,6 +87,7 @@
 | E54 | **PASS** | Hard mid kill r=12 + full three-hop restore |
 | E55 | **PASS** | Soft cut + idle: silence holds without retrain |
 | E56 | **PASS** | Dual 3-hop selective hard kill + restore path0 |
+| E57 | **PASS** | Soft DEMUX shared L → three R arms |
 
 ## What works (engineered port curriculum)
 
