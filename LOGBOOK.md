@@ -6555,3 +6555,8 @@ B1=B2=B3=1.0 **PASS**. Soft (E121) + hard multi-trial L-selective closed.
 
 Soft dual wipe; full restore both; soft re-cut path0.
 B1=1.0 B2=1.0 B3=0.0 **NULL**. Soft re-cut after wipe-restore fails on dual 3-hop (hard E56 pristine OK).
+
+## 2026-07-20 sequential - BP-E124 NULL dual 3-hop hard re-cut after wipe-restore
+
+Soft dual wipe; full restore both; hard re-cut path0.
+B1=1.0 B2=1.0 B3=0.0 **NULL**. Hard re-cut also fails after wipe-restore (E123 soft also fails).
