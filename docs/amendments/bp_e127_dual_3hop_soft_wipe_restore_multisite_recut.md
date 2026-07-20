@@ -19,4 +19,4 @@ Seeds {3461,3471} trials 6. Budget ~12 min, hard cap 24 min.
 🔮 LEAN PASS if single mid-port miss left residual hop bridges; multi-site severs full path0. NULL if restore rebuilds faster than multi-kill covers.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1=1.0 B2=1.0 B3=0.0. Multi-site hard re-cut along path0 hops after soft wipe-restore still fails. Single-I0 and multi-site re-cut classes both fail post wipe-restore on dual 3-hop (E123–E127).
