@@ -61,11 +61,12 @@
 | E35 | **PASS** | Diamond redundancy |
 | E36 | **PASS** | Four-hop relay |
 | E37 | **PASS** | Midplane dual isolated chains |
-| E38 | **NULL** | AND-gate absent (OR only; needs new prim) |
+| E38 | **NULL** | AND-gate absent without prim (OR only) |
+| PRIM9-D0 | **PASS** | Coincidence AND (2 firers → mid) |
 
 ## What works (engineered port curriculum)
 
-See `docs/patterns/port_circuit_primitives.md` — full circuit library (relay 2–4 hop, isolation, fan-in OR, diamond, midplane dual, curriculum, table-free map).
+See `docs/patterns/port_circuit_primitives.md` + `coincidence_and_gate.md` — relays, isolation, OR, diamond, **AND**, curriculum, table-free map.
 
 ## Boundaries locked
 
@@ -73,7 +74,7 @@ See `docs/patterns/port_circuit_primitives.md` — full circuit library (relay 2
 |----------|--------|
 | Free talent @0.90 pure | Still blocked (C1–C8, PRIM7) |
 | Attractor±free hybrid | CLOSED PARTIAL (C6–C7) |
-| AND-gate on fan-in | No (E38) without new primitive |
+| AND without coincidence prim | No (E38); **with PRIM9 PASS** |
 | Order without decay | CLOSED (E3) |
 | Generative partner from L alone | No (E12) |
 | Selective recall on all-to-all bridges | No (E15) |
@@ -82,8 +83,8 @@ See `docs/patterns/port_circuit_primitives.md` — full circuit library (relay 2
 
 ## Next hard only
 
-- AND / inhibition primitive for logic beyond OR  
 - Free talent only with mechanism **≠** known free dual classes  
+- Inhibition / soft competition beyond hard AND  
 - Brain R9 still blocked until C reopen or deeper curriculum
 
 ## Do not

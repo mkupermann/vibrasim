@@ -6046,3 +6046,9 @@ Pattern pair_replace_vs_multihop.md
 | E38 | NULL | AND absent (OR only) |
 
 Pattern port_circuit_primitives.md. Free talent still blocked. AND needs new primitive.
+
+## 2026-07-20 scheduler — PRIM9-D0 PASS coincidence AND
+
+k_coincidence_gate on mid + coincidence_and_enabled: single L silent, both L -> R.
+A1=A2=A3=1.0 **PASS**. Closes E38 AND boundary with new primitive.
+Pattern coincidence_and_gate.md

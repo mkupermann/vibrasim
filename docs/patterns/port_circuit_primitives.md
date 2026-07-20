@@ -17,6 +17,7 @@ E29–E37 PASS chain · PRIM5/6/8 · replace doctrine
 | Midplane dual chains | E37 PASS | half-box isolation |
 | Curriculum overwrite | E28 PASS | replace ON |
 | Table-free map + ablation | E25 PASS | |
+| Fan-in **AND** | PRIM9 PASS | coincidence_and + k_coincidence_gate |
 
 ## Incompatible defaults
 - **replace ON** ↔ multi-hop chains (E30)
