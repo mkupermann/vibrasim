@@ -6064,3 +6064,9 @@ Free talent still blocked. Port circuits + PRIM9 AND stand.
 fire_zero_latch_radius + k_zero_latch_emitter; post-prop clear.
 X1=0 X2=0 X3=1.0 **NULL**: dual-L clears R but single-L OR end latch fails under XOR topology.
 PRIM9 AND still stands. No XOR farm this fire.
+
+## 2026-07-20 15m — E40/E41 NULL NOT; latch-clear inhibit CLOSED
+
+E40 concurrent NOT: B1=1 B2=0 B3=1 **NULL**
+E41 sequential NOT: B1=1 B2=0 B3=1 **NULL**
+PRIM11+E40+E41: latch-zero inhibit family closed. PRIM9 AND stands.
