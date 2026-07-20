@@ -24,4 +24,4 @@ Seeds {2461,2471} trials 6. Budget ~8 min, hard cap 16 min.
 🔮 LEAN PASS. Miss if dual cut permanently damages nodes.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Dual soft-cut then full four-arm restore; concurrent ON; L0 fan-out both R.

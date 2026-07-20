@@ -122,6 +122,7 @@
 | C16 family | **CLOSED PARTIAL** | free talent not locked (p_c16_family_partial_closure.md) |
 | E79 | **PASS** | Soft 2x2 dual-cut selective identity restore |
 | E80 | **PASS** | Soft 2x2 dual-cut selective swap restore |
+| E81 | **PASS** | Soft 2x2 dual-cut full four-arm restore |
 
 ## What works (engineered port curriculum)
 
