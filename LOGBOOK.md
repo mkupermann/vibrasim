@@ -6575,3 +6575,8 @@ B1=1.0 B2=1.0 B3=0.0 **NULL**. Hard wipe base same re-cut failure as soft wipe c
 
 Soft dual wipe; full restore; hard multi-site path0 hop kills.
 B1=1.0 B2=1.0 B3=0.0 **NULL**. E123-E127 class closed: post wipe-restore re-cut fails single/multi-site soft/hard.
+
+## 2026-07-20 sequential - BP-C24 NULL port-seed free talent bootstrap
+
+ILW port seed L-low R-high then free dual inject vs free-only.
+B1=0.444 B2=0.667 B3=1.0 B4=-0.222 **NULL**. Port seed does not unlock free dual (hurts vs control).
