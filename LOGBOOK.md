@@ -6128,3 +6128,8 @@ Full-path restore (E44) still required when I covers multiple hops.
 Hard kill I at A-B mid, fire_kill_bridge_radius=8, restore A-B only.
 B1_on=1.0 B2_cut=0.0 B3_restore=1.0 **NULL**
 Diagnosis: A and B at ~11 from mid; r=8 never hits endpoints. PRIM12 endpoint-radius kill needs r>=~12 to touch A-B (and then also L-A/B-R sharing those endpoints). E50 soft r=12 silences but mid-only restore fails for that reason.
+
+## 2026-07-20 sequential - BP-E52 PASS mid soft full restore
+
+Same E50 mid soft-cut geometry; restore L-A + A-B + B-R.
+B1=B2=B3=1.0 **PASS**. Mid I collaterally weakens outer hops; full three-hop retrain recovers (E44-class). Mid-hop soft cut + full restore closed.

@@ -25,4 +25,4 @@ Seeds {1561,1571} trials 8. Time budget ~3 min, hard cap 6 min.
 🔮 LEAN PASS (mirrors E44). Miss if soft weaken permanently damages nodes not just bridge strength.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=1.0 B2=1.0 B3=1.0. Full three-hop restore recovers path after mid soft-cut. Closes E50 implication: mid I collaterally weakens outer hops; A–B-only insufficient; full L–A+A–B+B–R retrain works (E44-class).

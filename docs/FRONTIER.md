@@ -82,6 +82,7 @@
 | E49 | **PASS** | Three-path soft MUX curriculum |
 | E50 | **NULL** | Mid-hop soft cut silences; A–B-only restore fails |
 | E51 | **NULL** | Hard mid kill r=8 never reaches A/B (dist≈11); B2=0 |
+| E52 | **PASS** | Mid soft-cut + full three-hop restore (closes E50) |
 
 ## What works (engineered port curriculum)
 
