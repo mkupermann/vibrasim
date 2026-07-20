@@ -24,4 +24,4 @@ Seeds {1601,1611} trials 8. Budget ~3 min, hard cap 6 min.
 Miss if kill removes nodes/emitters needed for ILW rewrite, or if r=12 still insufficient on this geometry.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=1.0 B2=1.0 B3=1.0. Hard mid kill r=12 silences 3-hop; full three-hop ILW retrain restores. Complements E51 (r=8 miss) and E52 (soft full restore).

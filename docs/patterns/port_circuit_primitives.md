@@ -27,6 +27,11 @@ E29–E37 PASS chain · PRIM5/6/8 · replace doctrine
 | Graded soft attenuate | E47 PASS | frac=0.5 once keeps; many → silence |
 | XOR retrain | E48 PASS | after both-cut, rebuild OR path |
 | 3-path soft MUX | E49 PASS | select one of three via soft cut |
+| Mid soft + A–B-only restore | E50 NULL | collateral outer-hop damage |
+| Mid soft + outer-only restore | E53 NULL | mid hop also damaged |
+| Mid soft + full 3-hop restore | E52 PASS | all hops must be rewritten |
+| Hard mid r=8 | E51 NULL | endpoints out of radius |
+| Hard mid r=12 + full restore | E54 PASS | structural cut recoverable |
 
 ## Incompatible defaults
 - **replace ON** ↔ multi-hop chains (E30)
