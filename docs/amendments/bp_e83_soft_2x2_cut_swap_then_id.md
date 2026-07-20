@@ -18,4 +18,4 @@ Seeds {2501,2511} trials 6. Budget ~10 min, hard cap 20 min.
 🔮 LEAN PASS (E82 mirror). Miss if order-asymmetric residual.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Dual soft-cut → swap restore → identity reconfig (E82 mirror).
