@@ -140,10 +140,11 @@
 | E96 | **NULL** | Soft MUX full restore OK; soft re-cut path0 collaterals |
 | E97 | **PASS** | Soft MUX wide-sep full restore + soft re-cut path0 |
 | E98 | **PASS** | Soft MUX tight full restore + hard re-cut path0 |
+| E99 | **PASS** | Hard MUX full restore + hard re-cut path0 |
 
 ## What works (engineered port curriculum)
 
-See `docs/patterns/port_circuit_primitives.md` — relays, logic, cuts, MUX curriculum, table-free map.
+See `docs/patterns/port_circuit_primitives.md` and `docs/patterns/port_wipe_restore.md`.
 
 ## Boundaries locked
 
