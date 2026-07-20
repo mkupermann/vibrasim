@@ -23,4 +23,4 @@ Seeds {1951,1961} trials 8. Budget ~4 min, hard cap 8 min.
 🔮 LEAN PASS if soft at L3 is local. Miss if cut bleeds to M–R.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Soft-cut L3 bypass silences OR arm; AND path and L1-only silence intact.

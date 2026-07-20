@@ -6213,3 +6213,8 @@ B1=B2=B3=1.0 **PASS**. Soft endpoint works (E62 soft mid failed; E63 hard endpoi
 
 (L1 AND L2)->R via gated M; L3->R bypass.
 B1=B2=B3=1.0 **PASS**. Composed AND+OR on engineered ports.
+
+## 2026-07-20 sequential - BP-E66 PASS hybrid soft-cut bypass
+
+Soft-cut L3-R on E65 hybrid; AND still ON; L3 OFF; L1-only OFF.
+B1=B2=B3=1.0 **PASS**. Selective soft cut of OR bypass without AND collateral.
