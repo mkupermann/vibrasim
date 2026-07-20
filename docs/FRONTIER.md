@@ -102,6 +102,7 @@
 | E66 | **PASS** | Soft-cut OR bypass; AND path remains |
 | E67 | **PASS** | Soft 2×2 concurrent dual-drive under identity |
 | E68 | **PASS** | Soft 2×2 concurrent dual-drive under swap |
+| C14 | **NULL** | bridge_leak free dual = control 0.778; no unlock |
 
 ## What works (engineered port curriculum)
 
@@ -111,7 +112,7 @@ See `docs/patterns/port_circuit_primitives.md` — relays, logic, cuts, MUX curr
 
 | Boundary | Status |
 |----------|--------|
-| Free talent @0.90 pure | Still blocked (C1–C13, PRIM7) |
+| Free talent @0.90 pure | Still blocked (C1–C14, PRIM7) |
 | Stationary free (vel=0) | No bind (C9) |
 | Ballistic-then-freeze free | No 0.90 (C10) |
 | Soft lateral inhibit WTA | No exclusive winner (PRIM10) |
