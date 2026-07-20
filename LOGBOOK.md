@@ -6148,3 +6148,8 @@ B1=B2=B3=1.0 **PASS**. Hard and soft mid cuts both recoverable with full three-h
 
 Soft cut then T_hold=80 idle, no ILW rewrite.
 B1=B2=B3=1.0 **PASS**. Soft silence is durable until retrain (E44 restores); not spontaneous recovery.
+
+## 2026-07-20 sequential - BP-E56 PASS dual 3-hop hard selective
+
+Two y-separated 3-hop paths; hard kill I0 mid path0 r=12; restore path0.
+B1=B2=B3=1.0 **PASS**. Selective hard cut isolates; path1 intact; retrain recovers path0.

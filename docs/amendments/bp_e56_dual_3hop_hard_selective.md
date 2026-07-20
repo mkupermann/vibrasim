@@ -24,4 +24,4 @@ Seeds {1641,1651} trials 6. Budget ~4 min, hard cap 8 min.
 🔮 LEAN PASS if y-separation keeps kill local. Miss if kill radius bleeds to path1.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Hard selective kill path0 with y-sep=14 and r=12; path1 intact; full path0 retrain restores. Hard analogue of E45 on dual 3-hop.
