@@ -6405,3 +6405,8 @@ B1=B2=B3=1.0 **PASS**. Hard wipe/full/recut closed for shared-L DEMUX.
 
 Soft dual-cut all MUX paths; full restore; soft re-cut path0.
 B1=1 B2=1 B3=0 **NULL**: separate L does not stop soft mid-radius collateral (same as E92).
+
+## 2026-07-20 sequential - BP-E97 PASS soft MUX wide-sep re-cut
+
+Soft MUX y=10/32/48; dual-cut; full restore; soft re-cut path0.
+B1=B2=B3=1.0 **PASS**. Wide mid sep fixes soft re-cut collateral (E96).
