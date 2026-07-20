@@ -20,4 +20,4 @@ If B1∧B2: shared mid **leaks**. Isolation requires distinct mids (E31).
 🔮 PASS on all — shared M must light both R.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=1.0 B2=1.0 B3=1.0. Shared mid **leaks** to both R; separate mids isolate (E31).
