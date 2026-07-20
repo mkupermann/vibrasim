@@ -32,6 +32,8 @@ E29–E37 PASS chain · PRIM5/6/8 · replace doctrine
 | Mid soft + full 3-hop restore | E52 PASS | all hops must be rewritten |
 | Hard mid r=8 | E51 NULL | endpoints out of radius |
 | Hard mid r=12 + full restore | E54 PASS | structural cut recoverable |
+| Soft cut + idle no retrain | E55 PASS | silence durable until rewrite |
+| Dual 3-hop selective hard kill | E56 PASS | y-sep > kill radius isolates |
 
 ## Incompatible defaults
 - **replace ON** ↔ multi-hop chains (E30)
