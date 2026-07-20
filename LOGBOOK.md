@@ -6075,3 +6075,8 @@ PRIM11+E40+E41: latch-zero inhibit family closed. PRIM9 AND stands.
 
 fire_kill_bridge_radius + k_kill_bridge_emitter: I cuts path; L alone ON; after cut L silent.
 B1=B2=B3=1.0 **PASS**. Latch-clear NOT stays closed; structural inhibit works.
+
+## 2026-07-20 15m — BP-E42 PASS structural XOR
+
+OR path single-L ON; both-L coincidence Mand kills bridges; L silent after.
+B1=B2=B3=1.0 **PASS**. Logic set: OR AND NOT XOR on engineered ports.
