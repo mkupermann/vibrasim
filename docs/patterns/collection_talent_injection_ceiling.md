@@ -27,3 +27,14 @@ Saves lifetime: maps a dead-end design class once, under discipline.
 Prior dual-inject classes (freq/period, BTSP, STDP, dream, leak, consolidate) remain closed.  
 C16 is a **new mechanism class** (PRIM3 strength decay on free-formed nodes), not a bar retune of C1b.
 **C17 NULL:** held-out seeds B1=0.778 — C16 does not lock at 0.90; treat as provisional seed-set PASS only.
+
+
+## C16 family map (2026-07-20)
+
+| ID | Result | Note |
+|----|--------|------|
+| C16 | seed-set PASS | tau=30 dual-band wall |
+| C17 | NULL | held-out replicate 0.778 |
+| C18 | PASS | same-band no false talent |
+| C19 | NULL | flipped reverse fails |
+| C20 | PASS | no-wall fails; wall helps |
