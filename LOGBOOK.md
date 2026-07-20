@@ -6505,3 +6505,8 @@ B1=B2=B3=1.0 **PASS**. Dual restore recovers both L paths; selective (E110) fail
 
 Full restore; hard-kill 00+10; soft restore only 00.
 B1=1.0 B2=1.0 B3=0.0 **NULL**. Hard silence does not fix selective-restore L1 leak (E110 class).
+
+## 2026-07-20 sequential - BP-E114 PASS dual restore after identity-diag
+
+Full restore; soft-cut 00+11; restore both 00+11.
+B1=B2=B3=1.0 **PASS**. Dual restore recovers concurrent after pure swap (E111 selective failed).
