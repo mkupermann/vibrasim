@@ -18,4 +18,4 @@ Seeds {1061,1071} trials 8.
 🔮 PASS.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=1.0 B2=1.0 B3=1.0. Fan-in OR: either L lights R; no fire silent.
