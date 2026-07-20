@@ -14,4 +14,4 @@ Seeds {1101,1111} trials 8. T_prop=100.
 🔮 LEAN PASS; miss if charge attenuates.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=1.0 B2=1.0 B3=1.0. Four-hop relay holds; broken mid-edge silent.
