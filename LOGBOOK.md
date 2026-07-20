@@ -6455,3 +6455,8 @@ B1=B2=B3=1.0 **PASS**. Shared endpoint needs all in-edges cut (E101-E103 single-
 
 Large box 120x70x50 dual free vs standard 80x50x50.
 B1=0.778 B2=0.889 B3=0.778 B4=-0.11 **NULL**. Spatial scale-up does not unlock free talent.
+
+## 2026-07-20 sequential - BP-E105 PASS cut identity diagonal
+
+Soft dual-cut full restore; soft-cut 00+11.
+B1=B2=B3=1.0 **PASS**. Pure swap routing after post-full diagonal cut.

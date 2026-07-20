@@ -19,4 +19,4 @@ Seeds {3001,3011} trials 6. Budget ~10 min, hard cap 20 min.
 🔮 LEAN PASS (E104 composition on diagonal). Miss if soft cut collaterals swap mids.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Soft-cut identity diagonal after full restore yields pure swap routing.

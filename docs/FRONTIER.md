@@ -148,6 +148,7 @@
 | E103 | **NULL** | Soft 2×2 endpoint R0 cut: L0 OK; shared R0 kills L1 path |
 | E104 | **PASS** | Soft 2×2 cut both R0 in-edges (00+10) after full restore |
 | C22 | **NULL** | Large box free dual 0.778; no unlock |
+| E105 | **PASS** | Soft 2×2 cut identity diag after full → pure swap |
 
 ## What works (engineered port curriculum)
 
