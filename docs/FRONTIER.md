@@ -88,6 +88,7 @@
 | E55 | **PASS** | Soft cut + idle: silence holds without retrain |
 | E56 | **PASS** | Dual 3-hop selective hard kill + restore path0 |
 | E57 | **PASS** | Soft DEMUX shared L → three R arms |
+| E58 | **PASS** | Hard 3-path MUX curriculum |
 
 ## What works (engineered port curriculum)
 
@@ -113,7 +114,7 @@ See `docs/patterns/port_circuit_primitives.md` — relays, logic, cuts, MUX curr
 ## Next hard only
 
 - Free talent only with mechanism **≠** known free dual classes  
-- Soft reversible inhibit (structural kill is durable)  
+- Soft inhibit: retrain-reversible (E44), durable without retrain (E55) — closed for two-hop  
 - Brain R9 still blocked until C reopen or deeper curriculum
 
 ## Do not
