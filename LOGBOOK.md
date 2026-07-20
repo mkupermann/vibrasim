@@ -6475,3 +6475,8 @@ B1=B2=B3=1.0 **PASS**. Multi-trial post-full-restore diagonal routing closed.
 
 Soft dual-cut full restore; hard-kill 00+11.
 B1=B2=B3=1.0 **PASS**. Hard pure swap after full restore. Soft/hard diagonal select closed.
+
+## 2026-07-20 sequential - BP-E109 PASS hard swap diagonal cut
+
+Soft dual-cut full restore; hard-kill 01+10.
+B1=B2=B3=1.0 **PASS**. Hard pure identity after full restore. Soft/hard diagonal select matrix closed (E105-E109).
