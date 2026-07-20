@@ -25,4 +25,5 @@ Seeds {2861,2871,2881} trials 3. T=1200. Budget ~15 min, hard cap 30 min.
 🔮 LEAN NULL (valence may starve L4 formation or not affect decade structure). Maps valence class for free talent.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1=0.556 B2=0.889 B3=1.0 B4=−0.33.  
+atom_valence=2 **hurts** specialisation vs unlimited; valence class closed for free dual talent unlock.
