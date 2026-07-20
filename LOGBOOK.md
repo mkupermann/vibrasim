@@ -6032,3 +6032,17 @@ E29: two-hop L->M->R charge B1=B2=B3=1.0 **PASS**
 E30: replace ON kills L-M when adding M-R; bridges=0 **NULL**
 E31: replace OFF; fire L1 -> R1 on R2 off; both L both R. **PASS**
 Pattern pair_replace_vs_multihop.md
+
+## 2026-07-20 ~1h continuous port circuits E32-E38
+
+| ID | V | note |
+|----|---|------|
+| E32 | PASS | 3-hop |
+| E33 | PASS | shared mid leaks |
+| E34 | PASS | fan-in OR |
+| E35 | PASS | diamond redundancy |
+| E36 | PASS | 4-hop |
+| E37 | PASS | midplane dual chains |
+| E38 | NULL | AND absent (OR only) |
+
+Pattern port_circuit_primitives.md. Free talent still blocked. AND needs new primitive.

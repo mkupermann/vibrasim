@@ -55,34 +55,35 @@
 | E29 | **PASS** | Two-hop charge relay L→M→R |
 | E30 | **NULL** | Parallel paths + replace ON: 0 bridges (chain kill) |
 | E31 | **PASS** | Parallel path isolation with replace OFF |
+| E32 | **PASS** | Three-hop relay |
+| E33 | **PASS** | Shared mid crosstalk (leak) |
+| E34 | **PASS** | Fan-in OR |
+| E35 | **PASS** | Diamond redundancy |
+| E36 | **PASS** | Four-hop relay |
+| E37 | **PASS** | Midplane dual isolated chains |
+| E38 | **NULL** | AND-gate absent (OR only; needs new prim) |
 
 ## What works (engineered port curriculum)
 
-1. Side trace, multi-band storage, overwrite, recency (decay)  
-2. Multiset buffer (PRIM4)  
-3. Cross-port **exclusive** association edges (PRIM5)  
-4. Selective charge routing L-band → matched R-band (E16/E17)  
-5. Peak activity transfer + content-addressable partner (E14/E20)  
-6. **Latched** end-state partner mark (PRIM6 / E21)  
-7. **Table-free** multi-sample map with bridge ablation (E25)  
-8. **Curriculum overwrite** via pair-replace forget (PRIM8 / E28)  
-9. **Two-hop** charge relay along exclusive links (E29)  
-10. **Parallel path isolation** (E31; replace OFF) — see `pair_replace_vs_multihop`
+See `docs/patterns/port_circuit_primitives.md` — full circuit library (relay 2–4 hop, isolation, fan-in OR, diamond, midplane dual, curriculum, table-free map).
 
 ## Boundaries locked
 
 | Boundary | Status |
 |----------|--------|
-| Free talent @0.90 pure | Still blocked (C1–C5) |
-| Attractor±free hybrid | CLOSED PARTIAL (C6–C7) — free field dominates seeds |
+| Free talent @0.90 pure | Still blocked (C1–C8, PRIM7) |
+| Attractor±free hybrid | CLOSED PARTIAL (C6–C7) |
+| AND-gate on fan-in | No (E38) without new primitive |
 | Order without decay | CLOSED (E3) |
 | Generative partner from L alone | No (E12) |
 | Selective recall on all-to-all bridges | No (E15) |
 | End-state via membrane charge alone | No (E13/E18/E19) — peak or latch |
+| Multi-hop + replace ON | No (E30) |
 
 ## Next hard only
 
-- Free talent only with mechanism **≠** dual free inject / attractors / sideband / sequential  
+- AND / inhibition primitive for logic beyond OR  
+- Free talent only with mechanism **≠** known free dual classes  
 - Brain R9 still blocked until C reopen or deeper curriculum
 
 ## Do not
