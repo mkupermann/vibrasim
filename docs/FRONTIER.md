@@ -126,6 +126,7 @@
 | E82 | **PASS** | Soft 2x2 dual-cut → identity → swap reconfig |
 | E83 | **PASS** | Soft 2x2 dual-cut → swap → identity reconfig |
 | E84 | **PASS** | Hard 2x2 dual-kill selective identity restore |
+| E85 | **PASS** | Hard 2x2 dual-kill selective swap restore |
 
 ## What works (engineered port curriculum)
 
