@@ -6218,3 +6218,8 @@ B1=B2=B3=1.0 **PASS**. Composed AND+OR on engineered ports.
 
 Soft-cut L3-R on E65 hybrid; AND still ON; L3 OFF; L1-only OFF.
 B1=B2=B3=1.0 **PASS**. Selective soft cut of OR bypass without AND collateral.
+
+## 2026-07-20 sequential - BP-E67 PASS soft 2x2 concurrent
+
+Identity select; fire L0+L1 together both R ON; single-L isolation holds.
+B1=B2=B3=1.0 **PASS**. Concurrent routing on soft crossbar.
