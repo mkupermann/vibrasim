@@ -130,6 +130,7 @@
 | E86 | **PASS** | Soft DEMUX dual-cut selective arm restore |
 | E87 | **PASS** | Soft 3-path MUX dual-cut selective path restore |
 | E88 | **PASS** | Hard DEMUX dual-kill selective arm restore |
+| E89 | **PASS** | Hard 3-path MUX dual-kill selective path restore |
 
 ## What works (engineered port curriculum)
 
