@@ -6263,3 +6263,8 @@ B1=B2=B3=1.0 **PASS**. E71 NULL was residual weaken emitters re-zeroing rewrite.
 
 Hard-kill L3; disarm kill emitters; restore L3-R; AND ON.
 B1=B2=B3=1.0 **PASS**. Soft and hard OR-bypass cut+restore closed with emitter disarm doctrine.
+
+## 2026-07-20 sequential - BP-E74 PASS hybrid AND soft restore
+
+Soft-cut L1; disarm; restore L1-M; L3 bypass still ON.
+B1=B2=B3=1.0 **PASS**. Disarm doctrine works for AND arm of hybrid without collateral on OR.
