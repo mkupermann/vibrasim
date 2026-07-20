@@ -5,6 +5,7 @@ from pathlib import Path
 import numpy as np
 _ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(_ROOT))
+from dataclasses import replace
 from world.config import WorldConfig
 from world.physics import tick
 from world.state import World
@@ -40,7 +41,7 @@ def inject(w, rng, n, x0, x1, f0, f1):
     w.n_alive=int(w.s_alive.sum())
 
 def evolve(w, n, dream=False):
-    w.config.dream_mode_enabled = bool(dream)
+    w.config = replace(w.config, dream_mode_enabled=bool(dream))
     dt=float(w.config.dt)
     for _ in range(n):
         tick(w,dt); w.t+=dt
