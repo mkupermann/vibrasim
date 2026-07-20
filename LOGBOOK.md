@@ -6350,3 +6350,8 @@ B1=B2=B3=1.0 **PASS**. Hard analogue of E79 soft dual-cut identity restore.
 
 Hard-kill all arms; disarm; restore swap 01+10.
 B1=B2=B3=1.0 **PASS**. Hard wipe + identity (E84) and swap (E85) both closed.
+
+## 2026-07-20 sequential - BP-E86 PASS soft DEMUX dual-cut selective
+
+Soft-cut all three DEMUX arms; restore arm0 then arm1.
+B1=B2=B3=1.0 **PASS**. Shared-L DEMUX post-wipe selective recovery closed.
