@@ -6565,3 +6565,8 @@ B1=1.0 B2=1.0 B3=0.0 **NULL**. Hard re-cut also fails after wipe-restore (E123 s
 
 Soft dual wipe; full restore; soft re-cut path0; y-sep=24.
 B1=1.0 B2=1.0 B3=0.0 **NULL**. E123-E125 class closed: re-cut after wipe-restore fails soft/hard/wide.
+
+## 2026-07-20 sequential - BP-E126 NULL dual 3-hop hard wipe-restore-hard recut
+
+Hard dual wipe; full restore both; hard re-cut path0.
+B1=1.0 B2=1.0 B3=0.0 **NULL**. Hard wipe base same re-cut failure as soft wipe class.

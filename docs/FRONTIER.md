@@ -170,6 +170,7 @@
 | E123 | **NULL** | Dual 3-hop soft wipe-restore OK; soft re-cut p0 fails |
 | E124 | **NULL** | Dual 3-hop soft wipe-restore OK; hard re-cut p0 also fails |
 | E125 | **NULL** | Dual 3-hop wide soft wipe-restore; soft re-cut p0 still fails |
+| E126 | **NULL** | Dual 3-hop hard wipe-restore OK; hard re-cut p0 still fails |
 
 ## What works (engineered port curriculum)
 
