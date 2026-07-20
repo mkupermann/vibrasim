@@ -83,6 +83,7 @@
 | E50 | **NULL** | Mid-hop soft cut silences; A–B-only restore fails |
 | E51 | **NULL** | Hard mid kill r=8 never reaches A/B (dist≈11); B2=0 |
 | E52 | **PASS** | Mid soft-cut + full three-hop restore (closes E50) |
+| E53 | **NULL** | Mid soft + outer-only restore fails (A–B also damaged) |
 
 ## What works (engineered port curriculum)
 

@@ -27,4 +27,4 @@ Seeds {1581,1591} trials 8. Budget ~3 min, hard cap 6 min.
 PASS would mean mid A–B bridges survive soft cut better than outer hops.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1=1.0 B2=1.0 B3=0.0. Outer-only restore insufficient — mid A–B hop also damaged by soft I. Together with E50 (A–B-only fail) and E52 (full PASS): **all three hops must be restored** after mid soft-cut.

@@ -6133,3 +6133,8 @@ Diagnosis: A and B at ~11 from mid; r=8 never hits endpoints. PRIM12 endpoint-ra
 
 Same E50 mid soft-cut geometry; restore L-A + A-B + B-R.
 B1=B2=B3=1.0 **PASS**. Mid I collaterally weakens outer hops; full three-hop retrain recovers (E44-class). Mid-hop soft cut + full restore closed.
+
+## 2026-07-20 sequential - BP-E53 NULL outer-only restore
+
+Mid soft-cut; restore L-A + B-R only (skip A-B).
+B1=1 B2=1 B3=0 **NULL**. Mid hop also zeroed. E50/E52/E53 trio: only full three-hop retrain recovers mid soft-cut.
