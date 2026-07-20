@@ -66,6 +66,8 @@ E29–E37 PASS chain · PRIM5/6/8 · replace doctrine
 | Soft DEMUX dual-cut → select | E86 PASS | shared-L wipe + arm restore |
 | Soft MUX dual-cut → select | E87 PASS | multi-L wipe + path restore |
 | Hard DEMUX dual-kill → select | E88 PASS | structural shared-L wipe |
+| Hard MUX dual-kill → select | E89 PASS | multi-L structural wipe |
+| Soft MUX dual-cut → full restore | E90 PASS | all paths + isolation |
 
 ## Incompatible defaults
 - **replace ON** ↔ multi-hop chains (E30)
