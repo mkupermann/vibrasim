@@ -27,4 +27,7 @@ Seeds {981,991} trials 10. Smoke 1×3.
 🔮 PASS lean: exclusive links isolate paths. Miss: spatial proximity cross-links.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1=0 B2=1.0 B3=0 B4_bridges=**0**.  
+
+### Diagnosis
+`ilw_pair_replace_enabled=True` kills L–M when writing M–R (M endpoint replace). Multi-hop chains **incompatible** with replace-on. E29 used replace OFF.
