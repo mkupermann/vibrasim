@@ -2306,8 +2306,14 @@ def neuron_dynamics(world, dt: float) -> None:
     # the threshold check, so a strong bridge can drive this-tick firing.
     synaptic_transmission(world, dt)
 
-    # 3. Fire: any atom with charge ≥ theta_fire and not refractory emits.
-    can_fire = (world.k_charge[atom_indices] >= cfg.theta_fire) & (
+    # 3. Fire: any atom with charge ≥ theta and not refractory emits.
+    # PRIM9: k_theta_fire[i] > 0 overrides cfg.theta_fire for that node.
+    thr = np.full(len(atom_indices), float(cfg.theta_fire), dtype=np.float64)
+    if hasattr(world, "k_theta_fire"):
+        custom = world.k_theta_fire[atom_indices]
+        use = custom > 0
+        thr[use] = custom[use]
+    can_fire = (world.k_charge[atom_indices] >= thr) & (
         world.t >= world.k_refractory_until[atom_indices]
     )
     # G12: firing-eligibility gating during training. When a pattern is
