@@ -6340,3 +6340,8 @@ B1=B2=B3=1.0 **PASS**. Soft 2x2 recovery curriculum after total wipe closed (E79
 
 Soft-cut all; restore swap; reconfig identity.
 B1=B2=B3=1.0 **PASS**. Bidirectional soft 2x2 post-wipe reconfig (E82/E83).
+
+## 2026-07-20 sequential - BP-E84 PASS hard 2x2 dual-kill identity restore
+
+Hard-kill all arms; disarm; restore identity 00+11.
+B1=B2=B3=1.0 **PASS**. Hard analogue of E79 soft dual-cut identity restore.
