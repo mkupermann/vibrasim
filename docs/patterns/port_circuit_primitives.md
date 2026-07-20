@@ -48,6 +48,7 @@ E29–E37 PASS chain · PRIM5/6/8 · replace doctrine
 | Soft 2×2 concurrent under swap | E68 PASS | swap map concurrent |
 | Soft 2×2 reconfig concurrent | E69 PASS | id↔swap curriculum + concurrent |
 | Hard-cut OR bypass (hybrid) | E70 PASS | hard analogue of E66 |
+| Soft-cut + restore OR bypass | E71 NULL | L3–R-only restore fails |
 
 ## Incompatible defaults
 - **replace ON** ↔ multi-hop chains (E30)

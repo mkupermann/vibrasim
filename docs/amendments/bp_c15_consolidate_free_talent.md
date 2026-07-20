@@ -25,4 +25,5 @@ Seeds {2101,2111,2121} trials 3. T=1200. Budget ~15 min, hard cap 30 min.
 🔮 LEAN NULL (same C1b ceiling; consolidate may not bias decade structure). Maps consol class.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1=0.778 B2=0.667 B3=1.0 B4=0.11.  
+Consol slightly above control but fails 0.90 and delta≥0.15 bars. No talent unlock.
