@@ -6288,3 +6288,9 @@ B1=B2=B3=1.0 **PASS**. Full hybrid recovery; coincidence AND still requires both
 
 OR-only then AND-only then OR-only via soft-cut + disarm restore.
 B1=B2=B3=1.0 **PASS**. Multi-trial hybrid routing curriculum closed.
+
+## 2026-07-20 sequential - BP-C16 PASS free talent strength decay
+
+ilw_strength_decay_tau=30 free dual vs tau=0 control.
+B1=1.0 B2=0.778 B3=1.0 B4=0.222 **PASS**.
+First pre-registered free dual talent unlock at 0.90. Control stays at C1b ceiling.

@@ -25,4 +25,5 @@ Seeds {2271,2281,2291} trials 3. T=1200. Budget ~15 min, hard cap 30 min.
 🔮 LEAN NULL (decay may not act on free-formed node strengths the way ILW port writes do). Maps decay class.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=1.0 B2=0.778 B3=1.0 B4=0.222.  
+**First free dual talent unlock at pre-registered 0.90** with `ilw_strength_decay_tau=30`. Control remains ~C1b ceiling (0.778). Decay class opens free talent without engineered ports.

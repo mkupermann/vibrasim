@@ -20,3 +20,9 @@ Next talent work needs either:
 
 ## Value
 Saves lifetime: maps a dead-end design class once, under discipline.
+
+## Addendum C16 (2026-07-20)
+
+**Exception / new class:** ilw_strength_decay_tau>0 on free dual inject **PASS** (B1=1.0 vs control 0.778).  
+Prior dual-inject classes (freq/period, BTSP, STDP, dream, leak, consolidate) remain closed.  
+C16 is a **new mechanism class** (PRIM3 strength decay on free-formed nodes), not a bar retune of C1b.
