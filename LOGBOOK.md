@@ -6415,3 +6415,8 @@ B1=B2=B3=1.0 **PASS**. Wide mid sep fixes soft re-cut collateral (E96).
 
 Soft dual-cut all MUX; full restore; hard-kill path0 r=8.
 B1=B2=B3=1.0 **PASS**. Soft re-cut doctrine: wide-sep (E97) or hard re-cut (E98) after full restore.
+
+## 2026-07-20 sequential - BP-E99 PASS hard MUX full hard re-cut
+
+Hard dual-kill all MUX paths; full restore; hard re-cut path0.
+B1=B2=B3=1.0 **PASS**. Hard multi-L wipe-restore-recut closed. Pattern port_wipe_restore.md written.

@@ -18,4 +18,4 @@ Seeds {2821,2831} trials 6. Budget ~10 min, hard cap 20 min.
 🔮 LEAN PASS (E95/E98 composition on multi-L hard wipe). Completes hard MUX wipe-restore-recut.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Hard MUX dual-kill full restore + hard re-cut path0 selective.
