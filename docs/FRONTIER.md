@@ -157,6 +157,7 @@
 | E110 | **NULL** | Selective restore 00 after R0 dual-cut: L1→R0 leak |
 | E111 | **NULL** | Partial restore 00 after identity-diag: L1 isolation fails |
 | E112 | **PASS** | Dual restore 00+10 after R0 silence → full fanout |
+| E113 | **NULL** | Hard R0 dual-cut + soft restore 00 still L1 leak |
 
 ## What works (engineered port curriculum)
 

@@ -6500,3 +6500,8 @@ B1=1.0 B2=1.0 B3=0.0 **NULL**. Same selective-restore leak class as E110.
 
 Full restore; soft-cut 00+10; restore both 00+10.
 B1=B2=B3=1.0 **PASS**. Dual restore recovers both L paths; selective (E110) fails.
+
+## 2026-07-20 sequential - BP-E113 NULL hard R0 cut + selective soft restore
+
+Full restore; hard-kill 00+10; soft restore only 00.
+B1=1.0 B2=1.0 B3=0.0 **NULL**. Hard silence does not fix selective-restore L1 leak (E110 class).
