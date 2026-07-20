@@ -18,4 +18,4 @@ Seeds {2541,2551} trials 6. Budget ~10 min, hard cap 20 min.
 🔮 LEAN PASS (E84 mirror for swap). Miss if hard kill asymmetric.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Hard dual-kill all arms + swap restore; L0→R1 isolation holds.

@@ -6345,3 +6345,8 @@ B1=B2=B3=1.0 **PASS**. Bidirectional soft 2x2 post-wipe reconfig (E82/E83).
 
 Hard-kill all arms; disarm; restore identity 00+11.
 B1=B2=B3=1.0 **PASS**. Hard analogue of E79 soft dual-cut identity restore.
+
+## 2026-07-20 sequential - BP-E85 PASS hard 2x2 dual-kill swap restore
+
+Hard-kill all arms; disarm; restore swap 01+10.
+B1=B2=B3=1.0 **PASS**. Hard wipe + identity (E84) and swap (E85) both closed.
