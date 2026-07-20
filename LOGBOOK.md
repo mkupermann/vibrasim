@@ -6309,3 +6309,8 @@ B1_same=0.111 B2_pop=1.0 B3_dual=1.0 **PASS**. No false specialisation; dual-ban
 
 L high R low + tau=30 vs off.
 B1=0.556 B2=0.667 B3=1.0 B4=-0.11 **NULL**. Reverse specialisation not unlocked by decay.
+
+## 2026-07-20 sequential - BP-C20 PASS decay needs midplane wall
+
+Decay ON; wall off vs wall on dual-band.
+B1_nowall=0.333 B2_wall=0.889 B3=1.0 **PASS**. Spatial wall required; free talent still provisional.

@@ -118,6 +118,7 @@
 | C17 | **NULL** | C16 held-out replicate fails (0.778); not locked |
 | C18 | **PASS** | Same-band + decay no false spec; dual-band 1.0 |
 | C19 | **NULL** | Flipped reverse specialisation fails under decay |
+| C20 | **PASS** | Decay needs midplane wall (no-wall 0.33 vs wall 0.89) |
 
 ## What works (engineered port curriculum)
 
@@ -142,7 +143,7 @@ See `docs/patterns/port_circuit_primitives.md` — relays, logic, cuts, MUX curr
 
 ## Next hard only
 
-- Free talent: C16 seed PASS / C17 replicate NULL — effect partial/seedy; more controls before claim  
+- Free talent: C16 provisional; C17/C19 NULL; C18/C20 PASS controls — wall+band needed; reverse fails; not locked  
 - Soft inhibit: retrain-reversible (E44), durable without retrain (E55) — closed for two-hop  
 - Brain R9 still blocked until C reopen or deeper curriculum
 

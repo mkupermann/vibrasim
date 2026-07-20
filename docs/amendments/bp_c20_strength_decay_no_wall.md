@@ -20,4 +20,5 @@ Seeds {2391,2401,2411} trials 3. T=1200. Budget ~15 min, hard cap 30 min.
 🔮 LEAN PASS (wall required for spatial segregation). NULL if decay alone segregates without wall.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1_nowall=0.333 B2_wall=0.889 B3_pop=1.0.  
+Midplane wall required for dual-band specialisation under decay; without wall, mix kills decade structure.
