@@ -151,6 +151,7 @@
 | E105 | **PASS** | Soft 2×2 cut identity diag after full → pure swap |
 | E106 | **PASS** | Soft 2×2 cut swap diag after full → pure identity |
 | E107 | **PASS** | Soft 2×2 multi-trial diagonal switch after full restore |
+| E108 | **PASS** | Hard 2×2 cut identity diag after full → pure swap |
 
 ## What works (engineered port curriculum)
 

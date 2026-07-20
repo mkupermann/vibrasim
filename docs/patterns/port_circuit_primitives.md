@@ -84,6 +84,8 @@ E29–E37 PASS chain · PRIM5/6/8 · replace doctrine
 | Soft 2×2 cut both into R0 | E104 PASS | all R0 in-edges cut after full restore |
 | Soft 2×2 cut identity diag | E105 PASS | full restore then pure swap |
 | Soft 2×2 cut swap diag | E106 PASS | full restore then pure identity |
+| Soft 2×2 multi-trial diag switch | E107 PASS | swap↔identity after full |
+| Hard 2×2 cut identity diag | E108 PASS | hard pure swap after full |
 
 ## Soft re-cut doctrine (E92–E100)
 After full wipe+restore, selective soft re-cut needs **mid distance > soft radius** (E94/E97/E100) or use **hard local kill** (E93/E95/E98/E99). Separate-L alone does not fix soft mid-collateral. See `port_wipe_restore.md`.

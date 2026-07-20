@@ -19,4 +19,4 @@ Seeds {3061,3071} trials 6. Budget ~10 min, hard cap 20 min.
 🔮 LEAN PASS. Completes hard diagonal select after full restore.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Hard-cut identity diagonal after full restore yields pure swap.

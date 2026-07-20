@@ -6470,3 +6470,8 @@ B1=B2=B3=1.0 **PASS**. Pure identity routing. Post-full-restore diagonal select 
 
 Full restore; swap; identity; swap again via diagonal cuts.
 B1=B2=B3=1.0 **PASS**. Multi-trial post-full-restore diagonal routing closed.
+
+## 2026-07-20 sequential - BP-E108 PASS hard identity diagonal cut
+
+Soft dual-cut full restore; hard-kill 00+11.
+B1=B2=B3=1.0 **PASS**. Hard pure swap after full restore. Soft/hard diagonal select closed.
