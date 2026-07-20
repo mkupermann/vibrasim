@@ -18,4 +18,4 @@ Seeds {2641,2651} trials 6. Budget ~10 min, hard cap 20 min.
 🔮 LEAN PASS. Miss if full restore after wipe causes crosstalk.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Soft 3-path MUX dual-cut then full restore all paths; isolation holds.
