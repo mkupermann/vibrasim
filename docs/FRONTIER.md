@@ -33,15 +33,17 @@
 | PRIM5-D0 | PASS | Exclusive pair-link on dual write |
 | E16 | **PASS** | Selective L0→R0 charge recall |
 | E17 | **PASS** | Selective after decay hold |
-| E18 | **NULL** | Charge-weighted partner map readout fails |
+| E18 | **NULL** | Charge-weighted end-state partner fails |
+| E19 | **NULL** | Bridged end-state argmax fails (membrane) |
+| E20 | **PASS** | Bridged + **peak** argmax partner (multi-trial) |
 
 ## What works (engineered port curriculum)
 
 1. Side trace, multi-band storage, overwrite, recency (decay)  
 2. Multiset buffer (PRIM4)  
 3. Cross-port **exclusive** association edges (PRIM5)  
-4. Selective charge routing L-band → matched R-band (E16)  
-5. Peak (not sustained) activity transfer across midplane (E14)
+4. Selective charge routing L-band → matched R-band (E16/E17)  
+5. Peak activity transfer + content-addressable partner (E14/E20)  
 
 ## Boundaries locked
 
@@ -51,12 +53,12 @@
 | Order without decay | CLOSED (E3) |
 | Generative partner from L alone | No (E12) |
 | Selective recall on all-to-all bridges | No (E15) |
-| Sustained end-state cross charge | No (E13) without new hold |
+| End-state charge partner readout | No (E13/E18/E19) — use peak (pattern) |
 
 ## Next hard only
 
-- Multi-trial **learning** of pair map without baking table into readout  
-- Sustained cross-charge / latch (new hold primitive)  
+- Sustained cross-charge / **latch** primitive (end-state hold)  
+- Multi-trial map with **no** hidden scoring map at all  
 - Free-chemistry talent with **new** mechanism  
 - Brain R9 still blocked until C reopen or deeper curriculum  
 

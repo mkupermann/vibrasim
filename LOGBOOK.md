@@ -5936,3 +5936,17 @@ Next hard: multi-trial learning / sustained charge latch / free talent primitive
 E17: selective recall survives T_hold=500 with strength decay. PASS.
 E18: multi-trial graph partner via charge-weighted R freq **NULL** (B1=0). Bands present; continuous readout fails. E16 class-peak selectivity still stands.
 Scheduler 2h recurring night continue (ID logged in session).
+
+## 2026-07-20 scheduler — E19 NULL, E20 PASS (peak partner map)
+
+### E19 NULL
+Bridged-L end-state argmax B1=0. Bridged L present; fire-tick prop works (diag R peak 60) but membrane zeros end charge. Same family as E13.
+
+### E20 PASS
+Peak-during-window argmax partner: B1=1.0 B2_rewire=0.542 B3=1.0.
+Multi-trial PRIM5 + bridged probe + peak readout recovers exclusive partner without decoder centroid table.
+Pattern: peak_not_endstate_charge_readout.md
+
+### Map family
+E18/E19 end-state closed as readout failure mode. E20 peak content-addressable partner PASS (scoped engineered graph).
+Next hard: charge latch for sustained end-state, or free-talent primitive.
