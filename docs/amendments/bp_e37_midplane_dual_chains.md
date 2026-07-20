@@ -19,4 +19,4 @@ Seeds {1121,1131} trials 8.
 🔮 PASS — wall isolates free vibs; nodes don't cross midplane for ILW seeds.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1–B4 all 1.0. Midplane-half dual chains isolate end-to-end.
