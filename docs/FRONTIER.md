@@ -79,10 +79,11 @@
 | E46 | **PASS** | Multi-trial path switch soft cut curriculum |
 | E47 | **PASS** | Graded soft weaken: half keeps path, many silence |
 | E48 | **PASS** | XOR cut then OR retrain restores path |
+| E49 | **PASS** | Three-path soft MUX curriculum |
 
 ## What works (engineered port curriculum)
 
-See `docs/patterns/port_circuit_primitives.md` — relays, logic, cuts, attenuation, path-switch, **XOR retrain**, table-free map.
+See `docs/patterns/port_circuit_primitives.md` — relays, logic, cuts, MUX curriculum, table-free map.
 
 ## Boundaries locked
 

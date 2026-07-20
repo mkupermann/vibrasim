@@ -26,6 +26,7 @@ E29–E37 PASS chain · PRIM5/6/8 · replace doctrine
 | Path-switch curriculum | E46 PASS | cut1 → restore1+cut2 multi-trial |
 | Graded soft attenuate | E47 PASS | frac=0.5 once keeps; many → silence |
 | XOR retrain | E48 PASS | after both-cut, rebuild OR path |
+| 3-path soft MUX | E49 PASS | select one of three via soft cut |
 
 ## Incompatible defaults
 - **replace ON** ↔ multi-hop chains (E30)
