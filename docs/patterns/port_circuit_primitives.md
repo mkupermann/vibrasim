@@ -70,6 +70,8 @@ E29–E37 PASS chain · PRIM5/6/8 · replace doctrine
 | Soft MUX dual-cut → full restore | E90 PASS | all paths + isolation |
 | Hard MUX dual-kill → full restore | E91 PASS | structural full restore |
 | Soft DEMUX dual-cut → full + re-cut | E92 NULL | full OK; re-cut arm0 collaterals |
+| Soft DEMUX full + hard re-cut | E93 PASS | hard r=8 local after full |
+| Soft DEMUX wide-sep + soft re-cut | E94 PASS | mid dist > soft radius |
 
 ## Incompatible defaults
 - **replace ON** ↔ multi-hop chains (E30)

@@ -19,4 +19,4 @@ Seeds {2721,2731} trials 6. Budget ~10 min, hard cap 20 min.
 🔮 LEAN PASS if geometry was the E92 failure mode. Miss if shared-L soft cut is inherently non-local.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Wide y-sep (mid dist 18 > r=10) allows soft re-cut arm0 without collateral. Closes E92 geometry diagnosis.
