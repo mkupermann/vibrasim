@@ -85,6 +85,7 @@
 | E52 | **PASS** | Mid soft-cut + full three-hop restore (closes E50) |
 | E53 | **NULL** | Mid soft + outer-only restore fails (A–B also damaged) |
 | E54 | **PASS** | Hard mid kill r=12 + full three-hop restore |
+| E55 | **PASS** | Soft cut + idle: silence holds without retrain |
 
 ## What works (engineered port curriculum)
 

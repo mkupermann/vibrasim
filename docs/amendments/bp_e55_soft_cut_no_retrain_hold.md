@@ -26,4 +26,4 @@ Seeds {1621,1631} trials 8. Budget ~3 min, hard cap 6 min.
 NULL if strength rebounds or latch ghosts path.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Soft silence persists through idle hold without retrain. Soft inhibit is **retrain-reversible** (E44), not spontaneously reversible.
