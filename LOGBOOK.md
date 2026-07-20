@@ -6510,3 +6510,8 @@ B1=1.0 B2=1.0 B3=0.0 **NULL**. Hard silence does not fix selective-restore L1 le
 
 Full restore; soft-cut 00+11; restore both 00+11.
 B1=B2=B3=1.0 **PASS**. Dual restore recovers concurrent after pure swap (E111 selective failed).
+
+## 2026-07-20 sequential - BP-E115 PASS hard R0 silence + dual soft restore
+
+Full restore; hard-kill 00+10; soft restore both 00+10.
+B1=B2=B3=1.0 **PASS**. Dual restore recovers after hard shared silence (E113 selective fails).

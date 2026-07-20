@@ -20,4 +20,4 @@ Seeds {3221,3231} trials 6. Budget ~10 min, hard cap 20 min.
 🔮 LEAN PASS. Dual restore after hard silence should match E112 after soft silence.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Hard dual-cut R0 silence + dual soft restore recovers full fanout. Hard silence recoverable when **both** in-edges restored (selective E113 fails).
