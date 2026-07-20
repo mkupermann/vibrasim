@@ -24,4 +24,4 @@ Seeds {1771,1781} trials 6. Budget ~6 min, hard cap 12 min.
 🔮 LEAN PASS (E59+E58 composition). Miss if hard kill prevents multi-step restore curriculum.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Hard 2×2 crossbar identity/swap/re-identity.

@@ -6173,3 +6173,8 @@ B1=B2=B3=1.0 **PASS**. Full bipartite soft crossbar switch.
 
 BTSP+neuron free dual inject vs BTSP-off control (same denser C1b-class).
 B1=0.778 B2=0.778 B3=1.0 B4=0 **NULL**. BTSP adds zero delta; free talent still blocked under new prim class.
+
+## 2026-07-20 sequential - BP-E60 PASS hard 2x2 crossbar
+
+Hard-kill select identity then swap then re-identity on L0/L1 x R0/R1.
+B1=B2=B3=1.0 **PASS**. Soft (E59) and hard (E60) 2x2 crossbar both closed.
