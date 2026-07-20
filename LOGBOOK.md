@@ -6440,3 +6440,8 @@ B1=1 B2=0 B3=1 **NULL**: L0 fan-out OK; soft cut 00 does not silence L0->R0.
 
 Soft dual-cut full restore; hard-kill arm 00.
 B1=1 B2=0 B3=1 **NULL**: hard re-cut also fails L0->R0 silence (same as soft E101).
+
+## 2026-07-20 sequential - BP-E103 NULL 2x2 endpoint soft cut shared R0
+
+Soft dual-cut full restore; soft re-cut I at R0.
+B1=1 B2=1 B3=0 **NULL**: silences L0->R0 keeps L0->R1; shared R0 also kills L1->R0. 2x2 single-arm re-cut after full fan-out closed as unreliable (E101-E103).
