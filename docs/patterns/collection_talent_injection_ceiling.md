@@ -1,7 +1,7 @@
 # Pattern: collection talent via dual regional injection — ceiling
 
 ## Source
-BP-C1, C1b, C2 (frequency dual drive) + BP-C4 (temporal dual drive) + C5–C11 mechanism variants, all NULL under pre-registered bars (C11: BTSP free dual = control 0.778).
+BP-C1, C1b, C2 (frequency dual drive) + BP-C4 (temporal dual drive) + C5–C12 mechanism variants, all NULL under pre-registered bars (C11: BTSP free dual = control 0.778).
 
 ## Finding
 Driving two spatial regions with different **frequency bands** or different **injection periods**, then probing with matching stimuli, does **not** yield defensible dual-collection talent on the current EQMOD free-vibration + binding substrate.

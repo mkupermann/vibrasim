@@ -6188,3 +6188,8 @@ B1=1 B2=1 B3=0 **NULL**. Gate blocks lone L input but self-drive G->R remains.
 
 PRIM9 L1/L2->M->R; soft I near L1-M mid.
 B1=1 B2=0 B3=1 **NULL**: soft-cut does not disable AND (both still ON).
+
+## 2026-07-20 sequential - BP-C12 NULL STDP free talent
+
+STDP+neuron free dual vs STDP-off control.
+B1=0.778 B2=0.889 B3=1.0 B4=-0.11 **NULL**. STDP does not unlock free talent (matches C11 BTSP failure class).

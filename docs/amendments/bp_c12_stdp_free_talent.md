@@ -25,4 +25,5 @@ Seeds {1831,1841,1851} trials 3. T=1200. Budget ~15 min, hard cap 30 min.
 🔮 LEAN NULL (same firing scarcity that nullified BTSP C11). Maps STDP free class.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1=0.778 B2=0.889 B3=1.0 B4=−0.11.  
+STDP free dual does not beat control; control slightly higher. STDP class closed for free dual talent unlock.
