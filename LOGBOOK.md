@@ -6385,3 +6385,8 @@ B1=B2=B3=1.0 **PASS**. Soft (E90) and hard (E91) MUX full post-wipe restore clos
 
 Soft-cut all; restore all three; soft-cut arm0 only.
 B1=1 B2=1 B3=0 **NULL**: full restore works; selective re-cut after full fails (neighbor mid collateral r=10 vs y-sep=13).
+
+## 2026-07-20 sequential - BP-E93 PASS hard re-cut after DEMUX full restore
+
+Soft dual-cut all; restore all; hard-kill arm0 r=8.
+B1=B2=B3=1.0 **PASS**. Hard re-cut is local where soft re-cut (E92) collateraled.

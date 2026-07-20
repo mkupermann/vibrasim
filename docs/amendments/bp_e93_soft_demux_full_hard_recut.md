@@ -19,4 +19,4 @@ Seeds {2701,2711} trials 6. Budget ~10 min, hard cap 20 min.
 🔮 LEAN PASS if hard r=8 is more local than soft r=10. Miss if hard kill at I0 still hits M1.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. After soft dual-cut + full restore, **hard** re-cut arm0 silences R0 only; R1/R2 stay ON. Closes E92 soft-recut collateral with hard endpoint-local kill.
