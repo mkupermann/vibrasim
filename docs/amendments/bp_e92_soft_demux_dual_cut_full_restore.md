@@ -18,4 +18,5 @@ Seeds {2681,2691} trials 6. Budget ~10 min, hard cap 20 min.
 🔮 LEAN PASS. Miss if full restore after wipe loses fan-out independence.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1=1.0 B2=1.0 B3=0.0.  
+Full restore after dual-cut works; **post-restore selective soft-cut of arm0 fails to leave R1/R2 ON** — likely collateral weaken radius hits neighboring mids (y-sep=13, r=10).

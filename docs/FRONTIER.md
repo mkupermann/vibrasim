@@ -133,6 +133,7 @@
 | E89 | **PASS** | Hard 3-path MUX dual-kill selective path restore |
 | E90 | **PASS** | Soft 3-path MUX dual-cut full three-path restore |
 | E91 | **PASS** | Hard 3-path MUX dual-kill full three-path restore |
+| E92 | **NULL** | Soft DEMUX full restore OK; post-restore cut0 collaterals |
 
 ## What works (engineered port curriculum)
 
