@@ -77,10 +77,11 @@
 | E45 | **PASS** | Selective soft cut one of two paths |
 | C10 | **NULL** | Ballistic then freeze free dual: spec 0.44 |
 | E46 | **PASS** | Multi-trial path switch soft cut curriculum |
+| E47 | **PASS** | Graded soft weaken: half keeps path, many silence |
 
 ## What works (engineered port curriculum)
 
-See `docs/patterns/port_circuit_primitives.md` — relays, logic, cuts, **path-switch curriculum**, restore, table-free map.
+See `docs/patterns/port_circuit_primitives.md` — relays, logic, cuts, graded attenuation, path-switch, restore, table-free map.
 
 ## Boundaries locked
 

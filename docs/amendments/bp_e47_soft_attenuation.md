@@ -22,4 +22,4 @@ Seeds {1461,1471} trials 8.
 🔮 PASS lean: one half-weaken keeps path; repeated weaken silences.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=1.0 B2=1.0 B3=1.0. One half-weaken keeps path; repeated weaken silences.
