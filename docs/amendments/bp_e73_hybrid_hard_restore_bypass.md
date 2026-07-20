@@ -19,4 +19,4 @@ Seeds {2151,2161} trials 8. Budget ~4 min, hard cap 8 min.
 🔮 LEAN PASS (E43-class). Miss if hard kill destroys R ports needed for L3 rewrite.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Hard-kill OR bypass + disarm kill emitters + L3–R restore recovers bypass; AND intact.

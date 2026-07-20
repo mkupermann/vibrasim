@@ -6258,3 +6258,8 @@ B1=0.778 B2=0.667 B3=1.0 B4=0.11 **NULL**. Slight edge over control but fails 0.
 
 Soft-cut L3; disarm k_weaken; restore L3-R; AND stays.
 B1=B2=B3=1.0 **PASS**. E71 NULL was residual weaken emitters re-zeroing rewrite.
+
+## 2026-07-20 sequential - BP-E73 PASS hard restore OR bypass
+
+Hard-kill L3; disarm kill emitters; restore L3-R; AND ON.
+B1=B2=B3=1.0 **PASS**. Soft and hard OR-bypass cut+restore closed with emitter disarm doctrine.
