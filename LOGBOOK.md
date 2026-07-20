@@ -6109,3 +6109,7 @@ Multi-trial soft routing curriculum on dual paths.
 ## 2026-07-20 15m — BP-E47 PASS graded soft attenuation
 
 One I-fire frac=0.5: path still ON; many I-fires: path OFF. B1=B2=B3=1.0 **PASS**
+
+## 2026-07-20 — BP-E48 PASS XOR cut + OR retrain
+
+L1 ON; both-L cut silent; retrain OR (disarm Mand) L1 ON again. B1=B2=B3=1.0 **PASS**
