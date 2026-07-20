@@ -36,7 +36,7 @@ Single-arm re-cut after full fan-out restore fails (E101–E103).
 **Cut all in-edges** of a shared output (e.g. 00+10 into R0) to silence that R for all L (E104 PASS).  
 **Diagonal cuts after full restore:** soft-cut 00+11 → pure swap (E105); soft-cut 01+10 → pure identity (E106); multi-trial switch (E107); hard identity-diag (E108); hard swap-diag (E109). Soft+hard matrix closed.
 
-**Selective vs dual restore after shared-endpoint edit (E110–E115):** After dual-cut into R0 or after identity-diag cut, restoring a **single** arm reopens the intended L0 path but **does not preserve L1 isolation** (E110/E111/E113 B3=0). Hard dual-cut + soft selective same leak (E113). **Dual restore all cut arms** recovers cleanly: soft R0 silence (E112), identity-diag (E114), hard R0 silence (E115). Doctrine: after multi-arm silence of a shared R, restore **all** its in-edges — not one.
+**Selective vs dual restore after shared-endpoint edit (E110–E117):** After dual-cut into R0 or after identity-diag cut, restoring a **single** arm reopens the intended L0 path but **does not preserve L1 isolation** (E110/E111/E113 B3=0). Hard dual-cut + soft selective same leak (E113). **Dual restore all cut arms** recovers cleanly: soft R0 silence (E112), identity-diag (E114), hard R0 silence (E115), swap-diag (E116). Multi-trial silence↔dual-restore cycle (E117 PASS). Doctrine: after multi-arm silence of a shared R, restore **all** its in-edges — not one; re-cut both again for multi-trial silence.
 
 ## Not free talent
 All wipe/restore is engineered §4.8 ports + ILW + bridges + latch. Free dual talent remains CLOSED PARTIAL (C16 family).

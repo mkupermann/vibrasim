@@ -19,4 +19,4 @@ Seeds {3261,3271} trials 6. Budget ~12 min, hard cap 24 min.
 🔮 LEAN PASS. Multi-trial reconfig of shared R0 silence (E112 + re-cut).
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Multi-trial shared R0 silence → dual restore → silence again works. Multi-trial shared-endpoint reconfig closed.

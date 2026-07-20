@@ -6520,3 +6520,8 @@ B1=B2=B3=1.0 **PASS**. Dual restore recovers after hard shared silence (E113 sel
 
 Full restore; soft-cut 01+10; restore both 01+10.
 B1=B2=B3=1.0 **PASS**. Dual-restore matrix after both diagonals closed (E114/E116).
+
+## 2026-07-20 sequential - BP-E117 PASS multi-trial R0 silence cycle
+
+Silence 00+10; dual restore; silence again.
+B1=B2=B3=1.0 **PASS**. Multi-trial shared-endpoint silence/restore closed.
