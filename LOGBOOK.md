@@ -6168,3 +6168,8 @@ B1=B2=B3=1.0 **PASS**. Soft and hard MUX both work with full restore between sel
 
 Identity (00+11) then swap (01+10) then re-identity via soft cut.
 B1=B2=B3=1.0 **PASS**. Full bipartite soft crossbar switch.
+
+## 2026-07-20 sequential - BP-C11 NULL BTSP free talent
+
+BTSP+neuron free dual inject vs BTSP-off control (same denser C1b-class).
+B1=0.778 B2=0.778 B3=1.0 B4=0 **NULL**. BTSP adds zero delta; free talent still blocked under new prim class.
