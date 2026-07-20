@@ -6283,3 +6283,8 @@ B1=B2=B3=1.0 **PASS**. Mirror of E75: selective OR recovery; AND stays off.
 
 Soft-cut L1+L3; disarm; restore L1-M and L3-R.
 B1=B2=B3=1.0 **PASS**. Full hybrid recovery; coincidence AND still requires both inputs.
+
+## 2026-07-20 sequential - BP-E78 PASS hybrid path-switch
+
+OR-only then AND-only then OR-only via soft-cut + disarm restore.
+B1=B2=B3=1.0 **PASS**. Multi-trial hybrid routing curriculum closed.
