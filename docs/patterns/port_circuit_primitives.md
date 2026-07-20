@@ -21,6 +21,7 @@ E29–E37 PASS chain · PRIM5/6/8 · replace doctrine
 | Structural **NOT** | PRIM12 PASS | fire_kill_bridge_radius + emitter |
 | **XOR** | E42 PASS | OR path + coincidence Mand + structural kill |
 | Retrain after cut | E43 PASS | ILW pair_write rebuilds killed path |
+| Soft weaken + full restore | E44 PASS | strength→0 then re-strengthen L–M & M–R |
 
 ## Incompatible defaults
 - **replace ON** ↔ multi-hop chains (E30)

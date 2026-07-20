@@ -6085,3 +6085,9 @@ B1=B2=B3=1.0 **PASS**. Logic set: OR AND NOT XOR on engineered ports.
 
 Initial L->R ON; I cut silent; retrain path L->R ON again. B1=B2=B3=1.0 **PASS**
 Multi-trial recovery after structural NOT.
+
+## 2026-07-20 15m — PRIM13 NULL partial; E44 PASS soft full restore
+
+PRIM13: silence OK; M-R-only restore fails **NULL**
+E44: full L-M+M-R restore after soft weaken **PASS** B1=B2=B3=1.0
+Soft reversible inhibit established with full-path retrain.
