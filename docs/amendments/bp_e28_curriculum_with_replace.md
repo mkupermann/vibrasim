@@ -21,4 +21,5 @@ Seeds {911,921} trials 10.
 🔮 PASS if PRIM8-D0 works.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1_match_B=**1.000**, B2_residual_A=**0.000**, B3_A_only=**1.000**, B4=**1.000**.  
+Curriculum overwrite works with PRIM8 replace (E27 boundary closed by new mechanism).
