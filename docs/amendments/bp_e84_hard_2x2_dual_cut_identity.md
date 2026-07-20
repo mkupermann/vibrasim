@@ -18,4 +18,4 @@ Seeds {2521,2531} trials 6. Budget ~10 min, hard cap 20 min.
 🔮 LEAN PASS if hard wipe is restorable like soft. Miss if hard kill removes nodes needed for rewrite.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Hard dual-kill all arms + disarm + identity restore recovers concurrent routing and isolation.
