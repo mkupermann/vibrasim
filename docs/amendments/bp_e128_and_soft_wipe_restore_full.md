@@ -19,4 +19,4 @@ Seeds {3521,3531} trials 6. Budget ~8 min, hard cap 16 min.
 🔮 LEAN PASS. E75/E77 hybrid class; pure AND dual restore after soft wipe.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Coincidence AND soft dual wipe both L inputs → silence dual; full restore both arms → dual fire ON. Pure AND wipe-restore recovery closed.
