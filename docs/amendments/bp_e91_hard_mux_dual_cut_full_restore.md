@@ -18,4 +18,4 @@ Seeds {2661,2671} trials 6. Budget ~10 min, hard cap 20 min.
 🔮 LEAN PASS (E90 hard analogue). Miss if structural wipe permanently damages multi-path rewrite.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Hard 3-path MUX dual-kill then full restore; isolation holds.

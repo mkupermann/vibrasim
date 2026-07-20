@@ -6375,3 +6375,8 @@ B1=B2=B3=1.0 **PASS**. Soft (E87) and hard (E89) MUX post-wipe selective recover
 
 Soft-cut all three MUX paths; restore all three; isolation holds.
 B1=B2=B3=1.0 **PASS**. MUX post-wipe selective (E87/E89) and full (E90) recovery closed.
+
+## 2026-07-20 sequential - BP-E91 PASS hard MUX dual-kill full restore
+
+Hard-kill all three MUX paths; restore all three; isolation holds.
+B1=B2=B3=1.0 **PASS**. Soft (E90) and hard (E91) MUX full post-wipe restore closed.
