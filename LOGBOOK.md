@@ -6228,3 +6228,8 @@ B1=B2=B3=1.0 **PASS**. Concurrent routing on soft crossbar.
 
 Swap select; concurrent L0+L1 both R ON; L0->R1 and L1->R0 isolation.
 B1=B2=B3=1.0 **PASS**. Concurrent routing works for identity (E67) and swap (E68).
+
+## 2026-07-20 sequential - BP-C14 NULL bridge_leak free talent
+
+bridge_leak_rate free dual vs leak-off control.
+B1=0.778 B2=0.778 B3=1.0 B4=0 **NULL**. Leak class closed for free dual talent unlock.

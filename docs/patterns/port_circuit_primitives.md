@@ -45,6 +45,7 @@ E29–E37 PASS chain · PRIM5/6/8 · replace doctrine
 | (L1∧L2) OR L3 hybrid | E65 PASS | AND + independent OR bypass |
 | Soft-cut OR bypass (hybrid) | E66 PASS | AND path remains |
 | Soft 2×2 concurrent dual-drive | E67 PASS | both R ON; single-L isolated |
+| Soft 2×2 concurrent under swap | E68 PASS | swap map concurrent |
 
 ## Incompatible defaults
 - **replace ON** ↔ multi-hop chains (E30)

@@ -25,4 +25,5 @@ Seeds {2011,2021,2031} trials 3. T=1200. Budget ~15 min, hard cap 30 min.
 🔮 LEAN NULL (leak may also prune within-region bind before specialisation locks). Maps leak class for free talent.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1=0.778 B2=0.778 B3=1.0 B4=0.0.  
+Bridge leak free dual matches control; no talent unlock.
