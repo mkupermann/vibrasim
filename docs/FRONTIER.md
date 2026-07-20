@@ -167,6 +167,7 @@
 | E120 | **PASS** | Hard split R0 cut + soft restore 00 L-selective |
 | E121 | **PASS** | Multi-trial selective silence-restore-recut on split R0 |
 | E122 | **PASS** | Hard multi-trial selective on split R0 |
+| E123 | **NULL** | Dual 3-hop soft wipe-restore OK; soft re-cut p0 fails |
 
 ## What works (engineered port curriculum)
 

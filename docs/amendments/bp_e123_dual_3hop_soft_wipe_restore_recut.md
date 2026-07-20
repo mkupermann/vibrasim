@@ -20,4 +20,4 @@ Seeds {3381,3391} trials 6. Budget ~10 min, hard cap 20 min.
 🔮 LEAN PASS if soft re-cut local like E94/E97 wide-sep doctrine on 3-hop dual.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1=1.0 B2=1.0 B3=0.0. Soft dual wipe + full restore both works; soft re-cut path0 after full restore fails path0 silence / isolation (B3). Soft re-cut after wipe-restore on dual 3-hop does not match E56 hard-selective success on pristine train.
