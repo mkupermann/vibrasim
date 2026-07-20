@@ -95,6 +95,8 @@ E29–E37 PASS chain · PRIM5/6/8 · replace doctrine
 | Hard R0 dual-cut + dual soft restore | E115 PASS | hard silence recoverable dual |
 | Soft 2×2 dual restore after swap-diag | E116 PASS | both cut arms → concurrent |
 | Soft 2×2 multi-trial R0 silence cycle | E117 PASS | silence↔dual restore↔silence |
+| Hard 2×2 multi-trial R0 silence cycle | E118 PASS | hard silence↔dual soft restore |
+| Soft 2×2 split R0 selective restore | E119 PASS | non-shared R0a/R0b L-selective |
 
 ## Soft re-cut doctrine (E92–E100)
 After full wipe+restore, selective soft re-cut needs **mid distance > soft radius** (E94/E97/E100) or use **hard local kill** (E93/E95/E98/E99). Separate-L alone does not fix soft mid-collateral. See `port_wipe_restore.md`.

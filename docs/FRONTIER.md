@@ -163,6 +163,7 @@
 | E116 | **PASS** | Dual restore 01+10 after swap-diag → full fanout |
 | E117 | **PASS** | Multi-trial R0 silence↔dual restore cycle |
 | E118 | **PASS** | Hard multi-trial R0 silence↔dual soft restore |
+| E119 | **PASS** | Split R0a/R0b: selective restore 00 is L-selective |
 
 ## What works (engineered port curriculum)
 

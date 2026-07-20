@@ -6530,3 +6530,8 @@ B1=B2=B3=1.0 **PASS**. Multi-trial shared-endpoint silence/restore closed.
 
 Hard-kill 00+10; dual soft restore; hard-kill again.
 B1=B2=B3=1.0 **PASS**. Hard multi-trial shared silence closed (soft E117).
+
+## 2026-07-20 sequential - BP-E119 PASS split R0 selective restore
+
+R0a/R0b non-shared; soft-cut 00+10; restore only 00.
+B1=B2=B3=1.0 **PASS**. Non-shared endpoints allow L-selective restore (shared R0 E110 fails).

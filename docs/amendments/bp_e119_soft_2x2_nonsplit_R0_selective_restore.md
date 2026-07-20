@@ -20,4 +20,4 @@ Seeds {3301,3311} trials 6. Budget ~10 min, hard cap 20 min.
 🔮 LEAN PASS if shared endpoint was the E110 leak cause; NULL if ILW restore still cross-talks via mids/L.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Split non-shared R0a/R0b: selective restore 00 revives L0→R0a without reviving L1→R0b. **Shared endpoint was the E110 leak cause**; non-shared endpoints allow L-selective restore.
