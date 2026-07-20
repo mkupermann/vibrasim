@@ -6248,3 +6248,8 @@ B1=B2=B3=1.0 **PASS**. Soft (E66) and hard (E70) bypass cut both isolate OR with
 
 Soft-cut L3; AND ON; restore L3-R only.
 B1=1 B2=1 B3=0 **NULL**: bypass silence sticks; L3-R retrain insufficient after soft cut at L3.
+
+## 2026-07-20 sequential - BP-C15 NULL consolidate free talent
+
+bridge_consolidate free dual vs off control.
+B1=0.778 B2=0.667 B3=1.0 B4=0.11 **NULL**. Slight edge over control but fails 0.90 and delta bars.
