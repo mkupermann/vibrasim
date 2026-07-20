@@ -19,4 +19,4 @@ Seeds {3441,3451} trials 6. Budget ~10 min, hard cap 20 min.
 🔮 LEAN PASS if soft-wipe residual blocked re-cut; hard wipe may leave cleaner structure for hard re-cut. LEAN NULL if dual 3-hop re-cut after any wipe-restore is blocked.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1=1.0 B2=1.0 B3=0.0. Hard dual wipe + full restore both OK; hard re-cut I0 still fails path0 silence. Soft wipe base is not the sole cause — hard wipe base same failure mode.
