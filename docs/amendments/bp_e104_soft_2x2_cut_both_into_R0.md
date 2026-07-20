@@ -19,4 +19,4 @@ Seeds {2941,2951} trials 6. Budget ~10 min, hard cap 20 min.
 🔮 LEAN PASS if cutting both R0 in-edges silences R0 for all L. Miss if residual R0 bridges remain.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Soft-cut **both** R0 in-edges (00+10) after full restore silences R0 for L0 and L1 while R1 stays ON. Closes E101–E103: need cut all in-edges of a shared endpoint.
