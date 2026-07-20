@@ -78,10 +78,11 @@
 | C10 | **NULL** | Ballistic then freeze free dual: spec 0.44 |
 | E46 | **PASS** | Multi-trial path switch soft cut curriculum |
 | E47 | **PASS** | Graded soft weaken: half keeps path, many silence |
+| E48 | **PASS** | XOR cut then OR retrain restores path |
 
 ## What works (engineered port curriculum)
 
-See `docs/patterns/port_circuit_primitives.md` — relays, logic, cuts, graded attenuation, path-switch, restore, table-free map.
+See `docs/patterns/port_circuit_primitives.md` — relays, logic, cuts, attenuation, path-switch, **XOR retrain**, table-free map.
 
 ## Boundaries locked
 

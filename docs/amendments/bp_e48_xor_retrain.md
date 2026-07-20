@@ -21,4 +21,4 @@ Seeds {1481,1491} trials 8.
 🔮 PASS.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=1.0 B2=1.0 B3=1.0. XOR cut then OR retrain restores L1→R.
