@@ -18,4 +18,4 @@ Seeds {2801,2811} trials 6. Budget ~10 min, hard cap 20 min.
 🔮 LEAN PASS (E93 composition). Miss if hard kill at I0 still reaches path1 mid.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Tight-sep multi-L MUX: hard re-cut path0 local after full soft wipe+restore.

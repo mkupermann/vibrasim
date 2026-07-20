@@ -74,6 +74,11 @@ E29–E37 PASS chain · PRIM5/6/8 · replace doctrine
 | Soft DEMUX wide-sep + soft re-cut | E94 PASS | mid dist > soft radius |
 | Hard DEMUX full + hard re-cut | E95 PASS | structural shared-L recut |
 | Soft MUX full + soft re-cut | E96 NULL | separate-L still mid-collateral |
+| Soft MUX wide-sep + soft re-cut | E97 PASS | mid dist > soft radius |
+| Soft MUX full + hard re-cut | E98 PASS | hard r=8 local on tight sep |
+
+## Soft re-cut doctrine (E92–E98)
+After full wipe+restore, selective soft re-cut needs **mid distance > soft radius** (E94/E97) or use **hard local kill** (E93/E95/E98). Separate-L alone does not fix soft mid-collateral.
 
 ## Incompatible defaults
 - **replace ON** ↔ multi-hop chains (E30)
