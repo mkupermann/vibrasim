@@ -6080,3 +6080,8 @@ B1=B2=B3=1.0 **PASS**. Latch-clear NOT stays closed; structural inhibit works.
 
 OR path single-L ON; both-L coincidence Mand kills bridges; L silent after.
 B1=B2=B3=1.0 **PASS**. Logic set: OR AND NOT XOR on engineered ports.
+
+## 2026-07-20 15m — BP-E43 PASS retrain after cut
+
+Initial L->R ON; I cut silent; retrain path L->R ON again. B1=B2=B3=1.0 **PASS**
+Multi-trial recovery after structural NOT.

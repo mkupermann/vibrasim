@@ -71,10 +71,11 @@
 | Latch-clear NOT/XOR | **CLOSED** | `bp_inhibit_latch_clear_closure.md` |
 | PRIM12-D0 | **PASS** | Structural NOT: fire kills bridges |
 | E42 | **PASS** | XOR = OR + coincidence AND + structural kill |
+| E43 | **PASS** | Retrain restores path after structural cut |
 
 ## What works (engineered port curriculum)
 
-See `docs/patterns/port_circuit_primitives.md` — relays, OR, AND, NOT, **XOR**, curriculum, table-free map.
+See `docs/patterns/port_circuit_primitives.md` — relays, OR, AND, NOT, XOR, **retrain-after-cut**, curriculum, table-free map.
 
 ## Boundaries locked
 
