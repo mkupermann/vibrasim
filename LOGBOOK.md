@@ -6355,3 +6355,8 @@ B1=B2=B3=1.0 **PASS**. Hard wipe + identity (E84) and swap (E85) both closed.
 
 Soft-cut all three DEMUX arms; restore arm0 then arm1.
 B1=B2=B3=1.0 **PASS**. Shared-L DEMUX post-wipe selective recovery closed.
+
+## 2026-07-20 sequential - BP-E87 PASS soft MUX dual-cut selective
+
+Soft-cut all three MUX paths; restore path0 then path1.
+B1=B2=B3=1.0 **PASS**. Multi-L MUX post-wipe selective recovery closed.
