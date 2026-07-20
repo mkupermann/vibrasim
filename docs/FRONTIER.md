@@ -53,6 +53,8 @@
 | E28 | **PASS** | Curriculum A→B with replace: B=1.0 residual A=0 |
 | C8 | **NULL** | Sequential free inject 0.78; sim 0.89 — timing not unlock |
 | E29 | **PASS** | Two-hop charge relay L→M→R |
+| E30 | **NULL** | Parallel paths + replace ON: 0 bridges (chain kill) |
+| E31 | **PASS** | Parallel path isolation with replace OFF |
 
 ## What works (engineered port curriculum)
 
@@ -64,7 +66,8 @@
 6. **Latched** end-state partner mark (PRIM6 / E21)  
 7. **Table-free** multi-sample map with bridge ablation (E25)  
 8. **Curriculum overwrite** via pair-replace forget (PRIM8 / E28)  
-9. **Two-hop** charge relay along exclusive links (E29)
+9. **Two-hop** charge relay along exclusive links (E29)  
+10. **Parallel path isolation** (E31; replace OFF) — see `pair_replace_vs_multihop`
 
 ## Boundaries locked
 
