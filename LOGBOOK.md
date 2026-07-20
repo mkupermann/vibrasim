@@ -6223,3 +6223,8 @@ B1=B2=B3=1.0 **PASS**. Selective soft cut of OR bypass without AND collateral.
 
 Identity select; fire L0+L1 together both R ON; single-L isolation holds.
 B1=B2=B3=1.0 **PASS**. Concurrent routing on soft crossbar.
+
+## 2026-07-20 sequential - BP-E68 PASS soft 2x2 concurrent swap
+
+Swap select; concurrent L0+L1 both R ON; L0->R1 and L1->R0 isolation.
+B1=B2=B3=1.0 **PASS**. Concurrent routing works for identity (E67) and swap (E68).

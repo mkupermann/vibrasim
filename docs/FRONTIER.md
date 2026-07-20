@@ -101,6 +101,7 @@
 | E65 | **PASS** | (L1∧L2) OR L3 hybrid path |
 | E66 | **PASS** | Soft-cut OR bypass; AND path remains |
 | E67 | **PASS** | Soft 2×2 concurrent dual-drive under identity |
+| E68 | **PASS** | Soft 2×2 concurrent dual-drive under swap |
 
 ## What works (engineered port curriculum)
 
