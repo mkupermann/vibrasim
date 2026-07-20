@@ -150,6 +150,7 @@
 | C22 | **NULL** | Large box free dual 0.778; no unlock |
 | E105 | **PASS** | Soft 2×2 cut identity diag after full → pure swap |
 | E106 | **PASS** | Soft 2×2 cut swap diag after full → pure identity |
+| E107 | **PASS** | Soft 2×2 multi-trial diagonal switch after full restore |
 
 ## What works (engineered port curriculum)
 

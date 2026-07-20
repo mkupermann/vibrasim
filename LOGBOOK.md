@@ -6465,3 +6465,8 @@ B1=B2=B3=1.0 **PASS**. Pure swap routing after post-full diagonal cut.
 
 Soft dual-cut full restore; soft-cut 01+10.
 B1=B2=B3=1.0 **PASS**. Pure identity routing. Post-full-restore diagonal select closed (E105/E106).
+
+## 2026-07-20 sequential - BP-E107 PASS diagonal switch curriculum
+
+Full restore; swap; identity; swap again via diagonal cuts.
+B1=B2=B3=1.0 **PASS**. Multi-trial post-full-restore diagonal routing closed.
