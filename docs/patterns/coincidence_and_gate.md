@@ -9,5 +9,8 @@ With `coincidence_and_enabled` and `k_coincidence_gate[mid]=1`, bridge prop into
 ## Use
 Fan-in AND logic. Pair with E34 OR (gate off).
 
+## Wipe-restore
+Soft dual wipe both L inputs then full restore recovers dual-fire AND (E128 PASS). Hard single-arm disable/restore still E63/E64.
+
 ## Honesty
 Engineered coincidence filter — not emergent free chemistry.

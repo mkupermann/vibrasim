@@ -6580,3 +6580,8 @@ B1=1.0 B2=1.0 B3=0.0 **NULL**. E123-E127 class closed: post wipe-restore re-cut 
 
 ILW port seed L-low R-high then free dual inject vs free-only.
 B1=0.444 B2=0.667 B3=1.0 B4=-0.222 **NULL**. Port seed does not unlock free dual (hurts vs control).
+
+## 2026-07-20 sequential - BP-E128 PASS coincidence AND soft dual wipe-restore
+
+Soft dual-cut both L; restore both; dual fire ON (single still AND).
+B1=B2=B3=1.0 **PASS**. Pure AND wipe-restore recovery closed.
