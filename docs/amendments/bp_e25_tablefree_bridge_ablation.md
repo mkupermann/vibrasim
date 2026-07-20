@@ -22,4 +22,5 @@ Seeds {801,811} trials 8. Smoke 1×3.
 🔮 PASS: ablation zeros routing; treat keeps E24-level cons.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=1.0 B2=0.643 B3_ablation=0.0 B4=1.0.  
+Table-free map defensible with **bridge ablation** control (rewire was weak).

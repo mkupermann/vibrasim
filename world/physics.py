@@ -1903,6 +1903,20 @@ def apply_midplane_wall(world, dt: float) -> None:
         world.s_pos[hit_hi, 0] = L - eps
         world.s_vel[hit_hi, 0] = -np.abs(world.s_vel[hit_hi, 0])
 
+    # PRIM7: spectral purification — absorb free vibs in the wrong half-band.
+    if getattr(cfg, "midplane_sideband_cull_enabled", False):
+        gate = float(getattr(cfg, "midplane_gate_f_mid", 1581.14))
+        alive2 = world.s_alive
+        x2 = world.s_pos[:, 0]
+        f = world.s_freq
+        wrong_left = alive2 & (x2 < xw) & (f >= gate)
+        wrong_right = alive2 & (x2 >= xw) & (f < gate)
+        if np.any(wrong_left):
+            world.s_alive[wrong_left] = False
+        if np.any(wrong_right):
+            world.s_alive[wrong_right] = False
+        world.n_alive = int(world.s_alive.sum())
+
 
 def apply_charge_latch_decay(world, dt: float) -> None:
     """PRIM6: optional slow decay of k_latch. No-op if latch off or tau<=0 (hold)."""

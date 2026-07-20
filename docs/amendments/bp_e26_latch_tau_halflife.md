@@ -21,4 +21,5 @@ Seeds {821,831} trials 8. Smoke 1×3.
 🔮 PASS — exponential latch decay is deterministic.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1_tau2=**0.000** (end/peak≤0.5 fails), B2_tau0=1.0, B3=1.0.  
+tau=0 holds; tau=2 did not meet 0.5× residual under T_end=200. No bar retune.
