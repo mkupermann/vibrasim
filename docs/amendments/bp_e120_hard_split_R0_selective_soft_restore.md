@@ -19,4 +19,4 @@ Seeds {3321,3331} trials 6. Budget ~10 min, hard cap 20 min.
 🔮 LEAN PASS. Hard silence + non-shared endpoints should keep L-selective restore (unlike shared E113).
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Hard dual-cut on split R0a/R0b + soft selective restore 00 is L-selective. Soft (E119) + hard (E120) non-shared selective restore closed.
