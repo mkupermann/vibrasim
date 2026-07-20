@@ -24,4 +24,5 @@ Seeds {1351,1361} trials 10. prop_min=0.5 so strength 0 blocks.
 🔮 PASS: zero strength blocks prop; re-strengthen restores without full L–M retrain.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1=**1.0**, B2=**1.0**, B3_restore=**0.0**.  
+Soft silence works (I zeros strength → L silent). M–R-only re-strengthen insufficient (I also weakens L–M).
