@@ -6238,3 +6238,8 @@ B1=0.778 B2=0.778 B3=1.0 B4=0 **NULL**. Leak class closed for free dual talent u
 
 Identity->swap->identity with concurrent L0+L1 both R ON each step.
 B1=B2=B3=1.0 **PASS**. Multi-step soft crossbar reconfig under concurrent drive.
+
+## 2026-07-20 sequential - BP-E70 PASS hard-cut hybrid bypass
+
+Hard kill L3-R; AND still ON; L3 OFF; L1-only OFF.
+B1=B2=B3=1.0 **PASS**. Soft (E66) and hard (E70) bypass cut both isolate OR without AND collateral.
