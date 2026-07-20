@@ -23,4 +23,5 @@ Seeds {2081,2091} trials 8. Budget ~4 min, hard cap 8 min.
 🔮 LEAN PASS. Miss if soft cut also zeros M–R and B2 fails.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1=1.0 B2=1.0 B3=0.0.  
+Soft-cut silences bypass and AND stays; **L3–R-only retrain does not restore bypass**. Soft weaken at L3 may leave residual emitter/node damage or R-side state that single-hop rewrite does not fix.

@@ -6243,3 +6243,8 @@ B1=B2=B3=1.0 **PASS**. Multi-step soft crossbar reconfig under concurrent drive.
 
 Hard kill L3-R; AND still ON; L3 OFF; L1-only OFF.
 B1=B2=B3=1.0 **PASS**. Soft (E66) and hard (E70) bypass cut both isolate OR without AND collateral.
+
+## 2026-07-20 sequential - BP-E71 NULL restore OR bypass
+
+Soft-cut L3; AND ON; restore L3-R only.
+B1=1 B2=1 B3=0 **NULL**: bypass silence sticks; L3-R retrain insufficient after soft cut at L3.
