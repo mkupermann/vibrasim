@@ -6590,3 +6590,8 @@ B1=B2=B3=1.0 **PASS**. Pure AND wipe-restore recovery closed.
 
 Hard dual-kill both L; restore both; dual fire ON.
 B1=B2=B3=1.0 **PASS**. Soft (E128) + hard pure AND wipe-restore closed.
+
+## 2026-07-20 sequential - BP-E130 PASS multi-trial AND wipe-restore
+
+Soft dual wipe; restore; wipe; restore dual ON.
+B1=B2=B3=1.0 **PASS**. Pure AND multi-trial wipe-restore closed (E128-E130).

@@ -19,4 +19,4 @@ Seeds {3561,3571} trials 6. Budget ~12 min, hard cap 24 min.
 🔮 LEAN PASS. Multi-trial AND reconfig matches E117 shared-silence multi-trial class.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Multi-trial soft wipe-restore cycle on pure coincidence AND closed.
