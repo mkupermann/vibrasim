@@ -20,4 +20,4 @@ Seeds {3241,3251} trials 6. Budget ~10 min, hard cap 20 min.
 🔮 LEAN PASS. Completes dual-restore after both diagonals (E114 identity, E116 swap).
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Dual restore after swap-diag recovers full concurrent. Dual-restore matrix after both diagonals closed (E114 identity, E116 swap).
