@@ -1904,6 +1904,21 @@ def apply_midplane_wall(world, dt: float) -> None:
         world.s_vel[hit_hi, 0] = -np.abs(world.s_vel[hit_hi, 0])
 
 
+def apply_charge_latch_decay(world, dt: float) -> None:
+    """PRIM6: optional slow decay of k_latch. No-op if latch off or tau<=0 (hold)."""
+    cfg = world.config
+    if not getattr(cfg, "charge_latch_enabled", False):
+        return
+    if not hasattr(world, "k_latch"):
+        return
+    tau = float(getattr(cfg, "charge_latch_tau", 0.0) or 0.0)
+    if tau <= 0.0 or dt <= 0.0:
+        return  # permanent hold when enabled and tau<=0
+    factor = float(np.exp(-float(dt) / tau))
+    K = world.k_count
+    world.k_latch[:K] *= factor
+
+
 def apply_ilw_strength_decay(world, dt: float) -> int:
     """PRIM3: leak level≥4 k_strength toward 1.0 when ilw_strength_decay_tau > 0.
 
@@ -2632,6 +2647,7 @@ def tick(world, dt: float) -> None:
     from world.bridges import apply_correlation_plasticity, apply_bridge_charge_propagation
     apply_correlation_plasticity(world, dt)  # BET-099 — firing-coincidence bridge plasticity (no-op when rate=0)
     apply_bridge_charge_propagation(world, dt)  # BET-105 — non-broadcast write along bridges (no-op when rate=0)
+    apply_charge_latch_decay(world, dt)  # PRIM6 — latched prop mark (no-op unless latch on)
     apply_btsp(world, dt)          # NEW (G14) — second-scale eligibility-trace plasticity
     # G16: self-aware substrate — must run after apply_btsp so
     # eligibility traces and firings reflect this tick's reality.

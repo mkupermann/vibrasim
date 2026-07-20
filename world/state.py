@@ -47,6 +47,8 @@ class World:
         # PHASE4-R1/R2/R3: per-node integrate-and-fire state.
         # Only level-4 atoms use these; other rows stay at zero.
         self.k_charge = np.zeros(K, dtype=np.float64)
+        # PRIM6: bridge-prop latched activity (independent of membrane decay).
+        self.k_latch = np.zeros(K, dtype=np.float64)
         self.k_refractory_until = np.zeros(K, dtype=np.float64)
         # Plan A — per-node strength field (R2 strength-modulated decay).
         # Default 1.0 so newly-allocated nodes are not immediately decayed away.
@@ -197,6 +199,7 @@ class World:
             self.k_alive[i] = False
             self.k_locked_this_tick[i] = False
             self.k_charge[i] = 0
+            self.k_latch[i] = 0.0  # PRIM6
             self.k_refractory_until[i] = 0
             self.k_strength[i] = 1.0
             self.k_orientation[i] = 0.0  # Plan B: clear stale direction inherited from dead predecessor
