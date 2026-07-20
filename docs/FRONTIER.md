@@ -95,6 +95,7 @@
 | E61 | **NULL** | AND-gated relay: G-only still drives R |
 | E62 | **NULL** | Soft-cut L1–M fails to disable dual-input AND |
 | C12 | **NULL** | STDP free dual 0.778; control 0.889; no unlock |
+| E63 | **PASS** | Hard-kill L1 disables dual-input AND; restore re-enables |
 
 ## What works (engineered port curriculum)
 
