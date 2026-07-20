@@ -6540,3 +6540,8 @@ B1=B2=B3=1.0 **PASS**. Non-shared endpoints allow L-selective restore (shared R0
 
 Hard-kill 00+10 on R0a/R0b; soft restore only 00.
 B1=B2=B3=1.0 **PASS**. Hard silence + non-shared selective restore works (shared E113 fails).
+
+## 2026-07-20 sequential - BP-E121 PASS multi-trial selective on split R0
+
+Silence 00+10; restore 00; re-cut 00.
+B1=B2=B3=1.0 **PASS**. Multi-trial L-selective reconfig on non-shared endpoints closed.
