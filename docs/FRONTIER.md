@@ -141,6 +141,7 @@
 | E97 | **PASS** | Soft MUX wide-sep full restore + soft re-cut path0 |
 | E98 | **PASS** | Soft MUX tight full restore + hard re-cut path0 |
 | E99 | **PASS** | Hard MUX full restore + hard re-cut path0 |
+| E100 | **PASS** | Hard MUX wide full restore + soft re-cut path0 |
 
 ## What works (engineered port curriculum)
 
@@ -165,7 +166,8 @@ See `docs/patterns/port_circuit_primitives.md` and `docs/patterns/port_wipe_rest
 
 ## Next hard only
 
-- Free talent: C16 provisional; C17/C19 NULL; C18/C20 PASS controls — wall+band needed; reverse fails; not locked  
+- Free talent: C16 family CLOSED PARTIAL — need mechanism ≠ dual-inject+decay alone  
+- Port wipe-restore curriculum **closed** E71–E100 (port_wipe_restore.md)  
 - Soft inhibit: retrain-reversible (E44), durable without retrain (E55) — closed for two-hop  
 - Brain R9 still blocked until C reopen or deeper curriculum
 
