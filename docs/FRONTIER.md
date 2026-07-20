@@ -119,6 +119,8 @@
 | C18 | **PASS** | Same-band + decay no false spec; dual-band 1.0 |
 | C19 | **NULL** | Flipped reverse specialisation fails under decay |
 | C20 | **PASS** | Decay needs midplane wall (no-wall 0.33 vs wall 0.89) |
+| C16 family | **CLOSED PARTIAL** | free talent not locked (p_c16_family_partial_closure.md) |
+| E79 | **PASS** | Soft 2x2 dual-cut selective identity restore |
 
 ## What works (engineered port curriculum)
 
@@ -128,7 +130,7 @@ See `docs/patterns/port_circuit_primitives.md` — relays, logic, cuts, MUX curr
 
 | Boundary | Status |
 |----------|--------|
-| Free talent @0.90 pure | C16 seed-set PASS; C17 replicate NULL — free talent not locked; C1–C15 closed |
+| Free talent @0.90 pure | C16 family CLOSED PARTIAL (not locked); C1–C15 closed |
 | Stationary free (vel=0) | No bind (C9) |
 | Ballistic-then-freeze free | No 0.90 (C10) |
 | Soft lateral inhibit WTA | No exclusive winner (PRIM10) |

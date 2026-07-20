@@ -6314,3 +6314,9 @@ B1=0.556 B2=0.667 B3=1.0 B4=-0.11 **NULL**. Reverse specialisation not unlocked 
 
 Decay ON; wall off vs wall on dual-band.
 B1_nowall=0.333 B2_wall=0.889 B3=1.0 **PASS**. Spatial wall required; free talent still provisional.
+
+## 2026-07-20 sequential - C16 family CLOSED PARTIAL + BP-E79 PASS
+
+C16-C20 synthesised: free talent not locked (see bp_c16_family_partial_closure.md).
+E79: dual soft-cut all 2x2 arms; restore identity only.
+B1=B2=B3=1.0 **PASS**.
