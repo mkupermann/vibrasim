@@ -38,6 +38,9 @@
 | E20 | **PASS** | Bridged + **peak** argmax partner (multi-trial) |
 | PRIM6-D0 | **PASS** | `k_latch` holds bridge-prop mark |
 | E21 | **PASS** | End-state partner via latch (not membrane) |
+| E22 | **NULL** | Table-free map: rewire self-cons vacuous @K=2 |
+| E23 | **NULL** | Table-free map: rewire gap still high @K=2 |
+| Table-free map K=2 | **CLOSED PARTIAL** | `bp_e22_e23_notable_map_closure.md` |
 
 ## What works (engineered port curriculum)
 
@@ -60,7 +63,7 @@
 
 ## Next hard only
 
-- Multi-trial map with **no** hidden scoring map at all  
+- Table-free map only with **K≥3 multi-sample** or new control class  
 - Free-chemistry talent with **new** mechanism  
 - Brain R9 still blocked until C reopen or deeper curriculum  
 - Optional: latch tau>0 half-life characterisation

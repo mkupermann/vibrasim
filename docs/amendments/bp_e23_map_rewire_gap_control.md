@@ -30,4 +30,10 @@ Seeds `{701, 711}`, trials 12. Same protocol as E22. Budget 180s / hard 360s.
 🔮 LEAN NULL on B3: with 2 bridges rewired, two L may still attach to two different R → gap stays large. If so, K=2 exclusive graph cannot support this control either → close no-table map class for K=2.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20 night scheduler). B1=**0.958**, B2_gap=**0.616**, B3_rewire_gap=**0.348** (fail ≤0.15).
+
+### Calibration
+🔮 lean NULL on B3 — **HIT**. Rewire of 2 exclusive edges often still attaches each L to a **different** R → modal gap stays high. K=2 exclusive graph cannot host a defensible table-free rewire control.
+
+### Class close
+**No-hidden-scoring-table map under K=2 PRIM5 exclusive pairs: CLOSED PARTIAL.** Treat routing still PASS under table scoring (E20/E21). Table-free defensible controls fail at this cardinality.
