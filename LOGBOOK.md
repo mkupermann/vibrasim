@@ -6435,3 +6435,8 @@ B1=0.556 B2=0.889 B3=1.0 B4=-0.33 **NULL**. Linear valence does not unlock free 
 
 Soft dual-cut all; full restore; soft re-cut arm 00.
 B1=1 B2=0 B3=1 **NULL**: L0 fan-out OK; soft cut 00 does not silence L0->R0.
+
+## 2026-07-20 sequential - BP-E102 NULL hard re-cut 00 on 2x2
+
+Soft dual-cut full restore; hard-kill arm 00.
+B1=1 B2=0 B3=1 **NULL**: hard re-cut also fails L0->R0 silence (same as soft E101).

@@ -19,4 +19,5 @@ Seeds {2901,2911} trials 6. Budget ~10 min, hard cap 20 min.
 🔮 LEAN PASS (E98/E93 doctrine on 2×2). Miss if hard kill at M00 hits M01.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1=1.0 B2=0.0 B3=1.0.  
+Hard re-cut 00 also fails to silence L0→R0 after full restore (same failure mode as soft E101). 2×2 single-arm re-cut after full fan-out restore not reliable under this layout.
