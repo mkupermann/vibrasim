@@ -32,4 +32,5 @@ Seeds {931,941,951} trials 3; T_half=500 (T_full=1000). Smoke 1×1 T_half=150.
 🔮 LEAN NULL: simultaneous already ~0.67–0.78; sequential may not jump to 0.90.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1_seq=**0.778**, B2_sim=**0.889**, B3=1.0, B4_χ=0.  
+Sequential does **not** beat 0.90; simultaneous often *stronger*. Time-multiplex free inject is not a free-talent unlock.
