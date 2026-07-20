@@ -22,4 +22,5 @@ Seeds {1411,1421,1431} trials 3; T_total=1000; T_ball=100.
 🔮 LEAN NULL or borderline: freeze may leave L4 if formed in ballistic phase; may not hit 0.90.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1_freeze=**0.444**, B2_motion=**0.667**, B3_pop=**0.556**, B4_χ=0.  
+Ballistic-then-freeze does not hit 0.90 specialisation; pop incomplete. Free talent still blocked under this mechanism.

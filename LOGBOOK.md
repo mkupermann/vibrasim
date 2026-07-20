@@ -6095,3 +6095,8 @@ Soft reversible inhibit established with full-path retrain.
 ## 2026-07-20 15m — BP-E45 PASS selective soft cut
 
 Two paths; I weakens path1 only; path2 stays; restore path1. B1=B2=B3=1.0 **PASS**
+
+## 2026-07-20 15m — BP-C10 NULL freeze-after-inject free talent
+
+B1 freeze=0.444 B2 motion=0.667 B3 pop=0.556 B4 chi=0 **NULL**
+New free mechanism (ballistic seed then freeze) does not unlock 0.90 talent.

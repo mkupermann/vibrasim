@@ -75,6 +75,7 @@
 | PRIM13-D0 | **NULL** | Soft weaken silences; M–R-only restore fails |
 | E44 | **PASS** | Soft weaken + full path restore |
 | E45 | **PASS** | Selective soft cut one of two paths |
+| C10 | **NULL** | Ballistic then freeze free dual: spec 0.44 |
 
 ## What works (engineered port curriculum)
 
@@ -84,8 +85,9 @@ See `docs/patterns/port_circuit_primitives.md` — relays, logic, hard/soft cut,
 
 | Boundary | Status |
 |----------|--------|
-| Free talent @0.90 pure | Still blocked (C1–C9, PRIM7) |
+| Free talent @0.90 pure | Still blocked (C1–C10, PRIM7) |
 | Stationary free (vel=0) | No bind (C9) |
+| Ballistic-then-freeze free | No 0.90 (C10) |
 | Soft lateral inhibit WTA | No exclusive winner (PRIM10) |
 | XOR / NOT via latch-clear | **CLOSED** (PRIM11/E40/E41) |
 | Attractor±free hybrid | CLOSED PARTIAL (C6–C7) |
