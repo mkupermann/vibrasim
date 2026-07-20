@@ -20,4 +20,4 @@ Seeds {1081,1091} trials 8.
 🔮 PASS lean; miss if kill is incomplete.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=1.0 B2=1.0 B3=1.0. Diamond survives single-mid kill; both mids killed silent.
