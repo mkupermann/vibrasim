@@ -5960,3 +5960,16 @@ P1=1 P2=1 P3=1.
 ### E21 PASS
 End-state partner via k_latch argmax: B1=1.0; latch-off end charge argmax B2=0 (E19 regime); bridged L=1.
 Closes end-state gap with engineered latch channel. Pattern charge_latch_for_endstate.md
+
+## 2026-07-20 scheduler — E22/E23 NULL; table-free map K=2 CLOSED PARTIAL
+
+### E22 NULL
+B1 cons=1.0 B2 gap=0.64 B3 rewire cons=0.92. Size-1 median groups make rewire self-cons vacuous.
+
+### E23 NULL  
+B1=0.96 B2 gap=0.62 B3 rewire gap=0.35 (need <=0.15). K=2 rewire often keeps two distinct R.
+
+### Closure
+docs/amendments/bp_e22_e23_notable_map_closure.md
+Table-scored E20/E21 still stand. No third NULL farm on same K=2 control family.
+Next: free-talent new primitive OR table-free with K>=3 multi-sample.
