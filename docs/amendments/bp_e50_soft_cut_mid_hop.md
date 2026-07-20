@@ -22,4 +22,5 @@ Seeds {1521,1531} trials 8.
 🔮 PASS lean; miss if I also weakens L–A or B–R.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1=**1.0**, B2=**1.0**, B3_mid_restore=**0.0**.  
+Mid-cut silences path; A–B-only restore insufficient (I also weakens L–A and/or B–R).
