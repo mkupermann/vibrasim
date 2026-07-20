@@ -6299,3 +6299,8 @@ First pre-registered free dual talent unlock at 0.90. Control stays at C1b ceili
 
 Held-out seeds {2301,2311,2321} same tau=30 protocol.
 B1=0.778 B2=0.667 B3=1.0 B4=0.11 **NULL**. C16 unlock does not replicate; seed-dependent.
+
+## 2026-07-20 sequential - BP-C18 PASS same-band negative control
+
+Decay ON; same band both sides vs dual-band positive.
+B1_same=0.111 B2_pop=1.0 B3_dual=1.0 **PASS**. No false specialisation; dual-band still works on these seeds.
