@@ -25,4 +25,5 @@ Seeds {1881,1891,1901} trials 3. T_wake=900, T_dream=300 (control T=1200 wake). 
 🔮 LEAN NULL (dream needs eligibility seeds; free bind may not seed replay). Maps dream class for free talent.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1=0.667 B2=0.667 B3=1.0 B4=0.0.  
+Dream consolidation phase matches wake-only control; no free-talent unlock.
