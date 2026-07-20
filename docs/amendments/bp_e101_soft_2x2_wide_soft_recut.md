@@ -37,4 +37,5 @@ Seeds {2881,2891} trials 6. Budget ~10 min, hard cap 20 min.
 🔮 LEAN PASS if mids for 00 and 01 are > soft radius apart. Miss if L0 port clustering confuses.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1=1.0 B2=0.0 B3=1.0.  
+Full restore fan-out works; soft re-cut 00 fails to silence L0→R0 (B2=0). Residual 00 bridges or spatial I miss under this wide 2×2 layout.

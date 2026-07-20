@@ -143,6 +143,7 @@
 | E99 | **PASS** | Hard MUX full restore + hard re-cut path0 |
 | E100 | **PASS** | Hard MUX wide full restore + soft re-cut path0 |
 | C21 | **NULL** | atom_valence=2 hurts free dual (0.56 vs ctrl 0.89) |
+| E101 | **NULL** | Soft 2×2 wide full restore; soft re-cut 00 fails R0 silence |
 
 ## What works (engineered port curriculum)
 

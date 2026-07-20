@@ -38,3 +38,5 @@ C16 is a **new mechanism class** (PRIM3 strength decay on free-formed nodes), no
 | C18 | PASS | same-band no false talent |
 | C19 | NULL | flipped reverse fails |
 | C20 | PASS | no-wall fails; wall helps |
+
+| C21 | NULL | atom_valence=2 hurts free dual |

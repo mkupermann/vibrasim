@@ -6430,3 +6430,8 @@ B1=B2=B3=1.0 **PASS**. Soft re-cut after hard wipe works with wide sep. Port wip
 
 atom_valence=2 free dual vs unlimited control.
 B1=0.556 B2=0.889 B3=1.0 B4=-0.33 **NULL**. Linear valence does not unlock free talent; hurts vs control.
+
+## 2026-07-20 sequential - BP-E101 NULL soft 2x2 wide re-cut 00
+
+Soft dual-cut all; full restore; soft re-cut arm 00.
+B1=1 B2=0 B3=1 **NULL**: L0 fan-out OK; soft cut 00 does not silence L0->R0.
