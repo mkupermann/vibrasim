@@ -128,6 +128,8 @@ class WorldConfig:
     fire_inhibit_frac: float = 0.5
     # PRIM11: on fire, zero k_latch of other L4 within radius (0=off).
     fire_zero_latch_radius: float = 0.0
+    # PRIM12: on fire, kill bridges touching nodes within radius of emitter (0=off).
+    fire_kill_bridge_radius: float = 0.0
     flux_plasticity_rate: float = 0.0     # Bridge strengthening rate from vibration flux (0=off). Plasticity from physics.
     flux_threshold: float = 2.0           # Flux above this potentiates a bridge, below depresses.
     flux_decay: float = 0.05              # Strength decay per second for low-flux bridges.

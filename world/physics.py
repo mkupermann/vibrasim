@@ -1970,6 +1970,44 @@ def apply_fire_zero_latch(world) -> None:
                 world.k_latch[j] = 0.0
 
 
+def apply_fire_kill_bridges(world) -> None:
+    """PRIM12: emitters that fired this tick kill bridges near them."""
+    cfg = world.config
+    r_kb = float(getattr(cfg, "fire_kill_bridge_radius", 0.0) or 0.0)
+    if r_kb <= 0.0 or world.b_count == 0:
+        return
+    K = world.k_count
+    t_now = world.t
+    emitters = []
+    for tf, ai in world.firing_events:
+        if tf != t_now:
+            continue
+        ai = int(ai)
+        if ai < 0 or ai >= K:
+            continue
+        if hasattr(world, "k_kill_bridge_emitter") and int(world.k_kill_bridge_emitter[ai]) == 0:
+            continue
+        emitters.append(ai)
+    if not emitters:
+        return
+    box = np.asarray(cfg.box_size, dtype=np.float64)
+    r2k = r_kb * r_kb
+    for ai in emitters:
+        ap = world.k_pos[ai]
+        for b in range(world.b_count):
+            if not world.b_alive[b]:
+                continue
+            i, j = int(world.b_atom_i[b]), int(world.b_atom_j[b])
+            for node in (i, j):
+                if node < 0 or node >= K or not world.k_alive[node]:
+                    continue
+                d = world.k_pos[node] - ap
+                d -= box * np.round(d / box)
+                if float(np.dot(d, d)) <= r2k:
+                    world.b_alive[b] = False
+                    break
+
+
 def apply_ilw_strength_decay(world, dt: float) -> int:
     """PRIM3: leak level≥4 k_strength toward 1.0 when ilw_strength_decay_tau > 0.
 
@@ -2752,6 +2790,7 @@ def tick(world, dt: float) -> None:
     apply_correlation_plasticity(world, dt)  # BET-099 — firing-coincidence bridge plasticity (no-op when rate=0)
     apply_bridge_charge_propagation(world, dt)  # BET-105 — non-broadcast write along bridges (no-op when rate=0)
     apply_fire_zero_latch(world)  # PRIM11 — clear latch after prop (XOR inhibit)
+    apply_fire_kill_bridges(world)  # PRIM12 — structural cut after fire
     apply_charge_latch_decay(world, dt)  # PRIM6 — latched prop mark (no-op unless latch on)
     apply_btsp(world, dt)          # NEW (G14) — second-scale eligibility-trace plasticity
     # G16: self-aware substrate — must run after apply_btsp so
