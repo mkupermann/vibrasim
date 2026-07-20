@@ -18,4 +18,4 @@ Seeds {2481,2491} trials 6. Budget ~10 min, hard cap 20 min.
 🔮 LEAN PASS. Miss if multi-step residual after dual cut blocks swap reconfig.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Dual soft-cut → identity restore → swap reconfig multi-trial.
