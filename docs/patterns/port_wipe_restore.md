@@ -33,7 +33,8 @@ Identity↔swap after total soft wipe works both orders (E82/E83). Hybrid OR↔A
 
 ### 5. Shared bipartite endpoints (2×2)
 Single-arm re-cut after full fan-out restore fails (E101–E103).  
-**Cut all in-edges** of a shared output (e.g. 00+10 into R0) to silence that R for all L (E104 PASS).
+**Cut all in-edges** of a shared output (e.g. 00+10 into R0) to silence that R for all L (E104 PASS).  
+**Diagonal cuts after full restore:** soft-cut 00+11 → pure swap (E105); soft-cut 01+10 → pure identity (E106).
 
 ## Not free talent
 All wipe/restore is engineered §4.8 ports + ILW + bridges + latch. Free dual talent remains CLOSED PARTIAL (C16 family).

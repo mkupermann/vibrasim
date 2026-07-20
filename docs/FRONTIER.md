@@ -149,6 +149,7 @@
 | E104 | **PASS** | Soft 2×2 cut both R0 in-edges (00+10) after full restore |
 | C22 | **NULL** | Large box free dual 0.778; no unlock |
 | E105 | **PASS** | Soft 2×2 cut identity diag after full → pure swap |
+| E106 | **PASS** | Soft 2×2 cut swap diag after full → pure identity |
 
 ## What works (engineered port curriculum)
 

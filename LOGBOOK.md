@@ -6460,3 +6460,8 @@ B1=0.778 B2=0.889 B3=0.778 B4=-0.11 **NULL**. Spatial scale-up does not unlock f
 
 Soft dual-cut full restore; soft-cut 00+11.
 B1=B2=B3=1.0 **PASS**. Pure swap routing after post-full diagonal cut.
+
+## 2026-07-20 sequential - BP-E106 PASS cut swap diagonal
+
+Soft dual-cut full restore; soft-cut 01+10.
+B1=B2=B3=1.0 **PASS**. Pure identity routing. Post-full-restore diagonal select closed (E105/E106).
