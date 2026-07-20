@@ -23,4 +23,4 @@ Seeds {1911,1921} trials 8. Budget ~4 min, hard cap 8 min.
 🔮 LEAN PASS if soft endpoint hit equals hard (E63). Miss if residual strength still satisfies coincidence.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Soft weaken at L1 endpoint disables AND; restore re-enables. Soft mid (E62) failed; soft endpoint (E64) works like hard (E63).

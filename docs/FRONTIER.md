@@ -97,6 +97,7 @@
 | C12 | **NULL** | STDP free dual 0.778; control 0.889; no unlock |
 | E63 | **PASS** | Hard-kill L1 disables dual-input AND; restore re-enables |
 | C13 | **NULL** | Dream free dual = control 0.667; no unlock |
+| E64 | **PASS** | Soft-weaken at L1 disables dual-input AND |
 
 ## What works (engineered port curriculum)
 
