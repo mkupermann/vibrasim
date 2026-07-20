@@ -53,6 +53,8 @@ class World:
         self.k_theta_fire = np.zeros(K, dtype=np.float64)
         # PRIM9: if 1, bridge prop into this node requires ≥2 firers same tick.
         self.k_coincidence_gate = np.zeros(K, dtype=np.uint8)
+        # PRIM11: if 1, this node zeros nearby k_latch on fire.
+        self.k_zero_latch_emitter = np.zeros(K, dtype=np.uint8)
         self.k_refractory_until = np.zeros(K, dtype=np.float64)
         # Plan A — per-node strength field (R2 strength-modulated decay).
         # Default 1.0 so newly-allocated nodes are not immediately decayed away.
@@ -206,6 +208,7 @@ class World:
             self.k_latch[i] = 0.0  # PRIM6
             self.k_theta_fire[i] = 0.0  # PRIM9
             self.k_coincidence_gate[i] = 0
+            self.k_zero_latch_emitter[i] = 0
             self.k_refractory_until[i] = 0
             self.k_strength[i] = 1.0
             self.k_orientation[i] = 0.0  # Plan B: clear stale direction inherited from dead predecessor
