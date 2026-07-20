@@ -93,6 +93,7 @@
 | C11 | **NULL** | BTSP free dual = control 0.778; no talent unlock |
 | E60 | **PASS** | Hard 2×2 crossbar identity/swap curriculum |
 | E61 | **NULL** | AND-gated relay: G-only still drives R |
+| E62 | **NULL** | Soft-cut L1–M fails to disable dual-input AND |
 
 ## What works (engineered port curriculum)
 
