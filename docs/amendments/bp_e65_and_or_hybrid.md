@@ -24,4 +24,4 @@ Seeds {1931,1941} trials 8. Budget ~4 min, hard cap 8 min.
 🔮 LEAN PASS if spatial isolation keeps L3–R free of coincidence gating. Miss if L3 charge leaks into gated M.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. (L1∧L2) OR L3 hybrid: AND path, OR bypass, L1-only silent.

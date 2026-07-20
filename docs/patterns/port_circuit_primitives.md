@@ -41,6 +41,8 @@ E29–E37 PASS chain · PRIM5/6/8 · replace doctrine
 | AND-gated L–G–R relay | E61 NULL | G-only still drives R |
 | Soft-disable AND input | E62 NULL | L1–M soft cut fails |
 | Hard-disable AND input at L1 | E63 PASS | endpoint kill + restore |
+| Soft-disable AND input at L1 | E64 PASS | soft endpoint (mid fails E62) |
+| (L1∧L2) OR L3 hybrid | E65 PASS | AND + independent OR bypass |
 
 ## Incompatible defaults
 - **replace ON** ↔ multi-hop chains (E30)

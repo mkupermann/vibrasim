@@ -98,6 +98,7 @@
 | E63 | **PASS** | Hard-kill L1 disables dual-input AND; restore re-enables |
 | C13 | **NULL** | Dream free dual = control 0.667; no unlock |
 | E64 | **PASS** | Soft-weaken at L1 disables dual-input AND |
+| E65 | **PASS** | (L1∧L2) OR L3 hybrid path |
 
 ## What works (engineered port curriculum)
 

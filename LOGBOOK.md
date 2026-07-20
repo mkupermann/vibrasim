@@ -6208,3 +6208,8 @@ B1=0.667 B2=0.667 B3=1.0 B4=0 **NULL**. Dream consolidation does not unlock free
 
 Soft weaken I at L1 r=8; restore L1-M.
 B1=B2=B3=1.0 **PASS**. Soft endpoint works (E62 soft mid failed; E63 hard endpoint PASS).
+
+## 2026-07-20 sequential - BP-E65 PASS AND-OR hybrid
+
+(L1 AND L2)->R via gated M; L3->R bypass.
+B1=B2=B3=1.0 **PASS**. Composed AND+OR on engineered ports.
