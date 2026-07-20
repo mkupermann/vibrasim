@@ -6480,3 +6480,8 @@ B1=B2=B3=1.0 **PASS**. Hard pure swap after full restore. Soft/hard diagonal sel
 
 Soft dual-cut full restore; hard-kill 01+10.
 B1=B2=B3=1.0 **PASS**. Hard pure identity after full restore. Soft/hard diagonal select matrix closed (E105-E109).
+
+## 2026-07-20 sequential - BP-C23 NULL triple-band free ordered
+
+Three spatial thirds LOW/MID/HIGH vs same-band control; single midplane wall.
+B1=0.0 B2=0.0 B3=0.444 B4=0.0 **NULL**. Free triple-band ordered class does not unlock.

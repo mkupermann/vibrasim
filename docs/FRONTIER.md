@@ -153,6 +153,7 @@
 | E107 | **PASS** | Soft 2×2 multi-trial diagonal switch after full restore |
 | E108 | **PASS** | Hard 2×2 cut identity diag after full → pure swap |
 | E109 | **PASS** | Hard 2×2 cut swap diag after full → pure identity |
+| C23 | **NULL** | Triple-band free ordered 0.0; pop 0.44; no unlock |
 
 ## What works (engineered port curriculum)
 

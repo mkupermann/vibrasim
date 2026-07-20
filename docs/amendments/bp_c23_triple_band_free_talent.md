@@ -25,4 +25,4 @@ Seeds {3101,3111,3121} trials 3. T=1200. Box 90×50×50. Budget ~15 min, hard ca
 🔮 LEAN NULL (three-way order harder than dual; walls may fragment). Maps triple-band free class.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1=0.0 B2=0.0 (ctrl pass) B3=0.444 B4=0.0. Triple ordered never hit; thirds often unpopulated. Free triple-band class does not unlock with single midplane wall + third injects.
