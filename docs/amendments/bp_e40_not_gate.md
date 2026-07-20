@@ -20,4 +20,5 @@ Seeds {1251,1261} trials 10.
 🔮 PASS lean: simpler than XOR; L path uncontested unless I fires after/with L.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1=**1.0**, B2=**0.0**, B3=**1.0**.  
+L alone ON; I alone OFF; concurrent L+I fails to hold R off (path re-latches after clear).
