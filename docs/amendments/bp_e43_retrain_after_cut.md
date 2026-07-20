@@ -21,4 +21,4 @@ Seeds {1331,1341} trials 10.
 🔮 PASS: retrain rebuilds exclusive links.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=1.0 B2=1.0 B3=1.0. Path cut by I; retrain restores L→R.
