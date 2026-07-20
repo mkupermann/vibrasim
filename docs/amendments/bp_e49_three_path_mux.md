@@ -19,4 +19,4 @@ Seeds {1501,1511} trials 6 (heavier).
 🔮 LEAN PASS; miss if I radii overlap.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=1.0 B2=1.0 B3=1.0. Three-path soft MUX curriculum.
