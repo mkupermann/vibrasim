@@ -6052,3 +6052,9 @@ Pattern port_circuit_primitives.md. Free talent still blocked. AND needs new pri
 k_coincidence_gate on mid + coincidence_and_enabled: single L silent, both L -> R.
 A1=A2=A3=1.0 **PASS**. Closes E38 AND boundary with new primitive.
 Pattern coincidence_and_gate.md
+
+## 2026-07-20 — PRIM10 NULL; BP-C9 NULL stationary free
+
+PRIM10: exclusive path WTA 0.0; off both-on 1.0 **NULL**
+C9: vel=0 free dual: pop=0 no L4; moving 0.44 **NULL**
+Free talent still blocked. Port circuits + PRIM9 AND stand.
