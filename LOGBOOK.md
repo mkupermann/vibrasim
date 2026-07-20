@@ -6360,3 +6360,8 @@ B1=B2=B3=1.0 **PASS**. Shared-L DEMUX post-wipe selective recovery closed.
 
 Soft-cut all three MUX paths; restore path0 then path1.
 B1=B2=B3=1.0 **PASS**. Multi-L MUX post-wipe selective recovery closed.
+
+## 2026-07-20 sequential - BP-E88 PASS hard DEMUX dual-kill selective
+
+Hard-kill all three DEMUX arms; restore arm0 then arm1.
+B1=B2=B3=1.0 **PASS**. Soft (E86) and hard (E88) DEMUX post-wipe selective recovery closed.
