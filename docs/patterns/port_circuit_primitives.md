@@ -62,6 +62,8 @@ E29–E37 PASS chain · PRIM5/6/8 · replace doctrine
 | Soft 2×2 cut → id → swap | E82 PASS | multi-trial after wipe |
 | Soft 2×2 cut → swap → id | E83 PASS | reverse multi-trial |
 | Hard 2×2 dual-kill → identity | E84 PASS | structural wipe + restore |
+| Hard 2×2 dual-kill → swap | E85 PASS | structural wipe + swap restore |
+| Soft DEMUX dual-cut → select | E86 PASS | shared-L wipe + arm restore |
 
 ## Incompatible defaults
 - **replace ON** ↔ multi-hop chains (E30)

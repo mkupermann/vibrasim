@@ -18,4 +18,4 @@ Seeds {2561,2571} trials 6. Budget ~8 min, hard cap 16 min.
 🔮 LEAN PASS. Miss if shared L residual bridges light wrong R after selective restore.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Soft DEMUX dual-cut all arms OFF; selective restore arm0 then arm1.
