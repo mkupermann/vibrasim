@@ -19,4 +19,4 @@ Seeds {3021,3031} trials 6. Budget ~10 min, hard cap 20 min.
 🔮 LEAN PASS (E105 mirror). Completes post-full-restore diagonal select on 2×2.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Soft-cut swap diagonal after full restore yields pure identity routing.
