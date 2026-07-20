@@ -6178,3 +6178,8 @@ B1=0.778 B2=0.778 B3=1.0 B4=0 **NULL**. BTSP adds zero delta; free talent still 
 
 Hard-kill select identity then swap then re-identity on L0/L1 x R0/R1.
 B1=B2=B3=1.0 **PASS**. Soft (E59) and hard (E60) 2x2 crossbar both closed.
+
+## 2026-07-20 sequential - BP-E61 NULL AND-gated relay
+
+L-G-R coincidence gate on G: L-only OFF, L+G ON, G-only still ON.
+B1=1 B2=1 B3=0 **NULL**. Gate blocks lone L input but self-drive G->R remains.
