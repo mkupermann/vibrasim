@@ -20,4 +20,4 @@ Seeds {3141,3151} trials 6. Budget ~10 min, hard cap 20 min.
 🔮 LEAN PASS. Single cut-arm restore reopens one identity path without reopening L1 identity (11 still cut).
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1=1.0 B2=1.0 B3=0.0. Diag cut pure swap OK; restore 00 reopens L0 fanout **but breaks L1 pure-swap isolation** (same shared-endpoint selective-restore leak class as E110).

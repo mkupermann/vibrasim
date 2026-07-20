@@ -155,6 +155,7 @@
 | E109 | **PASS** | Hard 2×2 cut swap diag after full → pure identity |
 | C23 | **NULL** | Triple-band free ordered 0.0; pop 0.44; no unlock |
 | E110 | **NULL** | Selective restore 00 after R0 dual-cut: L1→R0 leak |
+| E111 | **NULL** | Partial restore 00 after identity-diag: L1 isolation fails |
 
 ## What works (engineered port curriculum)
 
