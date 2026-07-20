@@ -18,4 +18,4 @@ Seeds {2581,2591} trials 6. Budget ~10 min, hard cap 20 min.
 🔮 LEAN PASS (E49+E86 composition). Miss if path I radii overlap on cut.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Soft 3-path MUX dual-cut all OFF; selective path0 then path1 restore.
