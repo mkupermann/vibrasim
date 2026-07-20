@@ -38,4 +38,10 @@ Most-likely miss: rewire control still high if charge never flows (both arms fai
 Free talent; unsupervised discovery of map without any scoring map; generative partner (E12).
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20 night scheduler). B1=**0.000**, B2=**0.000**, B3=**1.000**.
+
+### Calibration
+🔮 PASS lean — **MISS**. Bridged L exist; exclusive prop does raise partner R charge on fire ticks (diag: R@7000 hits 60), but **end-of-window** argmax sees decayed charge 0 (same membrane pattern as E13). No bar retune.
+
+### Next
+E20: **peak-during-window** argmax R freq (transient), not end-state.
