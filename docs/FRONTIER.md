@@ -49,6 +49,8 @@
 | E26 | **NULL** | Latch tau=2 half-life bar not met |
 | PRIM7-D0 | **NULL** | Sideband cull hurts free spec (0.67 vs off 0.78) |
 | E27 | **NULL** | Map curriculum overwrite: A→B leaves 50/50 residual |
+| PRIM8-D0 | **PASS** | Pair-link replace (forget old partner) |
+| E28 | **PASS** | Curriculum A→B with replace: B=1.0 residual A=0 |
 
 ## What works (engineered port curriculum)
 
@@ -58,7 +60,8 @@
 4. Selective charge routing L-band → matched R-band (E16/E17)  
 5. Peak activity transfer + content-addressable partner (E14/E20)  
 6. **Latched** end-state partner mark (PRIM6 / E21)  
-7. **Table-free** multi-sample map with bridge ablation (E25)
+7. **Table-free** multi-sample map with bridge ablation (E25)  
+8. **Curriculum overwrite** via pair-replace forget (PRIM8 / E28)
 
 ## Boundaries locked
 
@@ -74,7 +77,6 @@
 ## Next hard only
 
 - Free talent only with mechanism **≠** dual free inject / attractors / sideband cull  
-- Map **overwrite/curriculum** needs new primitive (E27 both maps coexist)  
 - Brain R9 still blocked until C reopen or deeper curriculum
 
 ## Do not

@@ -25,4 +25,5 @@ Seeds {891,901} trials 8. Smoke 1×3.
 🔮 PASS — kill-other is mechanical.
 
 ## RESULT
-*(after)*
+### PRIM8-D0 **PASS** (2026-07-20)
+R1=1.0 R2=1.0 R3=1.0. Replace leaves one bridge; add-only multi; endpoints Map B.

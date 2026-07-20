@@ -6015,3 +6015,9 @@ Table-free map now defensible via ablation. Free talent still blocked.
 Pre-reg c8854b3 before data.
 B1 match B=0.50 B2 residual A=0.50 B3 A-only=1.0 B4=1.0  **NULL**
 PRIM5 multi-slot pair links accumulate; last map does not wipe first. Curriculum relearning blocked without new replace/forget mechanism.
+
+## 2026-07-20 — PRIM8 PASS + BP-E28 PASS curriculum replace
+
+PRIM8-D0: replace=1 bridge; off>=2; endpoints B. **PASS**
+E28: match B=1.0 residual A=0 A-only=1.0 **PASS**
+E27 boundary closed by engineered forget (ilw_pair_replace_enabled).
