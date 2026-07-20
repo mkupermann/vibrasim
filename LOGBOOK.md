@@ -6001,3 +6001,11 @@ Pre-reg 70e297b before data.
 B1 cons=1.0 B2 gap=0.643 B3 rewire=0.633 B4 multi=1.0  **NULL**
 Multi-sample fixes E22 vacuity; rewire control still too weak (0.63>0.55).
 Table-scored E20/E21 remain the defensible partner claim.
+
+## 2026-07-20 continuous — E25 PASS, E26 NULL, PRIM7 NULL
+
+E25 table-free + bridge ablation: B1=1 B2=0.64 B3_ablation=0 B4=1 **PASS**
+E26 latch tau half-life: B1=0 (tau2) B2=1 B3=1 **NULL**
+PRIM7 sideband cull: G1=0.67 G2_off=0.78 **NULL** (cull hurts free talent)
+
+Table-free map now defensible via ablation. Free talent still blocked.
