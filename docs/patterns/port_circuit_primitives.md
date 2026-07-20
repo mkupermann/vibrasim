@@ -56,6 +56,8 @@ E29–E37 PASS chain · PRIM5/6/8 · replace doctrine
 | Dual cut + selective OR restore | E76 PASS | AND stays silent |
 | Dual cut + full AND+OR restore | E77 PASS | both recover; L1-only gated |
 | Hybrid path-switch OR↔AND | E78 PASS | multi-trial curriculum |
+| Soft 2×2 dual-cut → identity | E79 PASS | selective restore after total cut |
+| Soft 2×2 dual-cut → swap | E80 PASS | selective swap restore |
 
 ## Incompatible defaults
 - **replace ON** ↔ multi-hop chains (E30)

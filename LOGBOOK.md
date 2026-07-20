@@ -6320,3 +6320,8 @@ B1_nowall=0.333 B2_wall=0.889 B3=1.0 **PASS**. Spatial wall required; free talen
 C16-C20 synthesised: free talent not locked (see bp_c16_family_partial_closure.md).
 E79: dual soft-cut all 2x2 arms; restore identity only.
 B1=B2=B3=1.0 **PASS**.
+
+## 2026-07-20 sequential - BP-E80 PASS dual-cut swap restore
+
+Soft-cut all 2x2 arms; restore 01+10 only.
+B1=B2=B3=1.0 **PASS**. Soft 2x2 selective recovery closed for identity (E79) and swap (E80).
