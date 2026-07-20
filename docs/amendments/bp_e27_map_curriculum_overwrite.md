@@ -36,4 +36,10 @@ Seeds {871,881} trials 10. Smoke 1×3. Budget 200s / hard 400s.
 🔮 LEAN NULL or borderline: PRIM5 strengthens same L atoms but may create **extra** bridges to both R partners (multislot R) so residual A stays high. Most-likely miss B2.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20 scheduler). B1_match_B=**0.500**, B2_residual_A=**0.500**, B3_A_only=**1.000**, B4=**1.000**.
+
+### Calibration
+🔮 lean NULL on B2 — **HIT**. After A→B both partners remain; latch routing ~chance between A and B maps. Multislot+pair_link **adds** links rather than replacing the curriculum. A-only still solid (B3).
+
+### Boundary
+Curriculum overwrite of exclusive pair maps is **not** achieved under current PRIM4/5. First and second maps coexist.
