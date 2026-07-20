@@ -6070,3 +6070,8 @@ PRIM9 AND still stands. No XOR farm this fire.
 E40 concurrent NOT: B1=1 B2=0 B3=1 **NULL**
 E41 sequential NOT: B1=1 B2=0 B3=1 **NULL**
 PRIM11+E40+E41: latch-zero inhibit family closed. PRIM9 AND stands.
+
+## 2026-07-20 15m — PRIM12-D0 PASS structural NOT
+
+fire_kill_bridge_radius + k_kill_bridge_emitter: I cuts path; L alone ON; after cut L silent.
+B1=B2=B3=1.0 **PASS**. Latch-clear NOT stays closed; structural inhibit works.

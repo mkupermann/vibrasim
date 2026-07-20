@@ -69,10 +69,11 @@
 | E40 | **NULL** | Concurrent NOT: L+I re-latches R |
 | E41 | **NULL** | Sequential NOT: L-then-I no clear |
 | Latch-clear NOT/XOR | **CLOSED** | `bp_inhibit_latch_clear_closure.md` |
+| PRIM12-D0 | **PASS** | Structural NOT: fire kills bridges |
 
 ## What works (engineered port curriculum)
 
-See `docs/patterns/port_circuit_primitives.md` + `coincidence_and_gate.md` — relays, isolation, OR, diamond, **AND**, curriculum, table-free map.
+See `docs/patterns/port_circuit_primitives.md` + `coincidence_and_gate.md` + `structural_not_gate.md` — relays, OR, **AND**, **structural NOT**, curriculum, table-free map.
 
 ## Boundaries locked
 
@@ -93,7 +94,7 @@ See `docs/patterns/port_circuit_primitives.md` + `coincidence_and_gate.md` — r
 ## Next hard only
 
 - Free talent only with mechanism **≠** known free dual classes  
-- New inhibit class (not latch-zero) for NOT/XOR  
+- Compose XOR from OR + structural NOT / coincidence  
 - Brain R9 still blocked until C reopen or deeper curriculum
 
 ## Do not

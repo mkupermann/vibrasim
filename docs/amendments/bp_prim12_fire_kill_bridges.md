@@ -24,4 +24,5 @@ Seeds {1291,1301} trials 10.
 🔮 PASS: killing M–R bridge silences R permanently until retrain.
 
 ## RESULT
-*(after)*
+### PRIM12-D0 **PASS** (2026-07-20)
+B1=1.0 B2=1.0 B3=1.0. Structural NOT: I-fire kills bridges; subsequent L silent at R.

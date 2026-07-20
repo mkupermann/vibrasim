@@ -18,6 +18,7 @@ E29–E37 PASS chain · PRIM5/6/8 · replace doctrine
 | Curriculum overwrite | E28 PASS | replace ON |
 | Table-free map + ablation | E25 PASS | |
 | Fan-in **AND** | PRIM9 PASS | coincidence_and + k_coincidence_gate |
+| Structural **NOT** | PRIM12 PASS | fire_kill_bridge_radius + emitter |
 
 ## Incompatible defaults
 - **replace ON** ↔ multi-hop chains (E30)
