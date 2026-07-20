@@ -89,6 +89,8 @@ E29–E37 PASS chain · PRIM5/6/8 · replace doctrine
 | Hard 2×2 cut swap diag | E109 PASS | hard pure identity after full |
 | Soft 2×2 selective restore after R0 dual-cut | E110 NULL | L0 OK; L1→R0 leak |
 | Soft 2×2 partial restore after identity-diag | E111 NULL | L0 fanout OK; L1 isolation fails |
+| Soft 2×2 dual restore after R0 silence | E112 PASS | both L fanout recovered |
+| Hard R0 dual-cut + soft restore 00 | E113 NULL | same L1 leak as E110 |
 
 ## Soft re-cut doctrine (E92–E100)
 After full wipe+restore, selective soft re-cut needs **mid distance > soft radius** (E94/E97/E100) or use **hard local kill** (E93/E95/E98/E99). Separate-L alone does not fix soft mid-collateral. See `port_wipe_restore.md`.

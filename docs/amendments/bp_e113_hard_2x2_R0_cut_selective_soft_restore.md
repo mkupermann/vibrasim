@@ -20,4 +20,4 @@ Seeds {3181,3191} trials 6. Budget ~10 min, hard cap 20 min.
 🔮 LEAN NULL or lean PASS. Hard kill may remove residual 10 bridges that soft restore of 00 re-amplified in E110. If shared R0 still couples, NULL again.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1=1.0 B2=1.0 B3=0.0. Hard dual-cut silences R0; soft restore 00 still revives L1→R0. Hard silence does **not** fix E110 selective-restore leak.
