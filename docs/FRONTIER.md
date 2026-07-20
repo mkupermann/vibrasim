@@ -66,6 +66,9 @@
 | PRIM10-D0 | **NULL** | Lateral charge inhibit no exclusive WTA |
 | C9 | **NULL** | Stationary free vel=0: no L4 form (pop=0) |
 | PRIM11-D0 | **NULL** | XOR: both-clear works; single-L OR end-latch fails |
+| E40 | **NULL** | Concurrent NOT: L+I re-latches R |
+| E41 | **NULL** | Sequential NOT: L-then-I no clear |
+| Latch-clear NOT/XOR | **CLOSED** | `bp_inhibit_latch_clear_closure.md` |
 
 ## What works (engineered port curriculum)
 
@@ -78,7 +81,7 @@ See `docs/patterns/port_circuit_primitives.md` + `coincidence_and_gate.md` — r
 | Free talent @0.90 pure | Still blocked (C1–C9, PRIM7) |
 | Stationary free (vel=0) | No bind (C9) |
 | Soft lateral inhibit WTA | No exclusive winner (PRIM10) |
-| XOR (OR + AND-clear) | NULL PRIM11 — need cleaner inhibit timing/topology |
+| XOR / NOT via latch-clear | **CLOSED** (PRIM11/E40/E41) |
 | Attractor±free hybrid | CLOSED PARTIAL (C6–C7) |
 | AND without coincidence prim | No (E38); **with PRIM9 PASS** |
 | Order without decay | CLOSED (E3) |
@@ -90,7 +93,7 @@ See `docs/patterns/port_circuit_primitives.md` + `coincidence_and_gate.md` — r
 ## Next hard only
 
 - Free talent only with mechanism **≠** known free dual classes  
-- Inhibition / soft competition beyond hard AND  
+- New inhibit class (not latch-zero) for NOT/XOR  
 - Brain R9 still blocked until C reopen or deeper curriculum
 
 ## Do not

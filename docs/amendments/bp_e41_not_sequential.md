@@ -23,4 +23,5 @@ Seeds {1271,1281} trials 10.
 🔮 PASS.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1=**1.0**, B2=**0.0**, B3=**1.0**.  
+L lights R; I alone silent; L-then-I does **not** clear R end latch. Zero-latch emitter path not effective under this protocol.
