@@ -44,6 +44,7 @@
 | C6 | **NULL** | Hybrid attractor+free specs 1.0; free-only 0.778>0.75 ctrl |
 | C7 | **NULL** | Scrambled seeds still specialise 0.67; correct 0.78 |
 | Attractor+free class | **CLOSED PARTIAL** | `bp_c6_c7_attractor_free_closure.md` |
+| E24 | **NULL** | K=3 multi-sample table-free: treat OK; rewire cons 0.63 |
 
 ## What works (engineered port curriculum)
 
@@ -67,10 +68,10 @@
 
 ## Next hard only
 
-- Table-free map only with **K≥3 multi-sample** or new control class  
+- Table-free map: need **stronger negative control** than rewire (E24 rewire only →0.63)  
 - Free talent only with mechanism **≠** dual free inject ± attractor seeds  
 - Brain R9 still blocked until C reopen or deeper curriculum  
-- Optional: latch tau>0 half-life; port curriculum curricula on E20/E21
+- Optional: latch tau>0; deepen E20/E21 curricula
 
 ## Do not
 

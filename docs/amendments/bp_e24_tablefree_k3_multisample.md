@@ -39,4 +39,10 @@ Most-likely miss: B3 rewire still high if charge routes by freq not bridge; or B
 Free talent; unsupervised free chemistry map.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1_cons=**1.000**, B2_gap=**0.643**, B3_rewire=**0.633** (fail ≤0.55), B4_multi=**1.000**.
+
+### Calibration
+🔮 lean PASS — **MISS on B3**. Multi-sample works (B4). Treat routing self-cons+gap strong. Rewire drops cons from ~1.0→0.63 but not under 0.55 (random bipartite still partly tertile-consistent).
+
+### Finding
+K≥3 multi-sample **fixes** E22 size-1 vacuity (B4 PASS). Rewire remains a **weak negative control** for table-free claim (0.63>0.55). No bar retune.

@@ -5994,3 +5994,10 @@ C7: correct-seed 0.778; scrambled 0.667; chi=0. **NULL**
 Free dual-band dominates seed polarity. C6-C7 class closed partial.
 docs/amendments/bp_c6_c7_attractor_free_closure.md
 No C8 seed retune. Next free talent needs new mechanism class.
+
+## 2026-07-20 — BP-E24 NULL table-free K=3 multi-sample
+
+Pre-reg 70e297b before data.
+B1 cons=1.0 B2 gap=0.643 B3 rewire=0.633 B4 multi=1.0  **NULL**
+Multi-sample fixes E22 vacuity; rewire control still too weak (0.63>0.55).
+Table-scored E20/E21 remain the defensible partner claim.
