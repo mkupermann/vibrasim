@@ -6143,3 +6143,8 @@ B1=1 B2=1 B3=0 **NULL**. Mid hop also zeroed. E50/E52/E53 trio: only full three-
 
 Hard kill mid r=12; restore L-A+A-B+B-R.
 B1=B2=B3=1.0 **PASS**. Hard and soft mid cuts both recoverable with full three-hop retrain; partial restore (E50/E53) fails.
+
+## 2026-07-20 sequential - BP-E55 PASS soft hold no retrain
+
+Soft cut then T_hold=80 idle, no ILW rewrite.
+B1=B2=B3=1.0 **PASS**. Soft silence is durable until retrain (E44 restores); not spontaneous recovery.
