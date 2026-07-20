@@ -5950,3 +5950,13 @@ Pattern: peak_not_endstate_charge_readout.md
 ### Map family
 E18/E19 end-state closed as readout failure mode. E20 peak content-addressable partner PASS (scoped engineered graph).
 Next hard: charge latch for sustained end-state, or free-talent primitive.
+
+## 2026-07-20 scheduler — PRIM6 PASS + E21 PASS (charge latch)
+
+### PRIM6-D0 PASS
+k_latch accumulates bridge-prop deposits; tau<=0 holds. Membrane k_charge still dies at end idle.
+P1=1 P2=1 P3=1.
+
+### E21 PASS
+End-state partner via k_latch argmax: B1=1.0; latch-off end charge argmax B2=0 (E19 regime); bridged L=1.
+Closes end-state gap with engineered latch channel. Pattern charge_latch_for_endstate.md
