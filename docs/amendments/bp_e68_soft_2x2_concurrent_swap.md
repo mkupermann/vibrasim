@@ -19,4 +19,4 @@ Seeds {1991,2001} trials 6. Budget ~6 min, hard cap 12 min.
 🔮 LEAN PASS (E67+E59 composition). Miss if swap residual arms leave identity bleed.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Concurrent dual-drive under swap: both R ON; L0→R1 and L1→R0 isolation holds.
