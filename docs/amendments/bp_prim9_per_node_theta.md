@@ -23,4 +23,5 @@ Seeds {1161,1171} trials 10.
 🔮 PASS: single-source prop blocked; dual same-tick opens M→R.
 
 ## RESULT
-*(after)*
+### PRIM9-D0 **PASS** (2026-07-20)
+A1=1.0 A2=1.0 A3=1.0. Coincidence AND: single L silent at R; both L light R. Closes E38 boundary with new primitive.
