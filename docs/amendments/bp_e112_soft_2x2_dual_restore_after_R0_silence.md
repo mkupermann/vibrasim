@@ -20,4 +20,4 @@ Seeds {3161,3171} trials 6. Budget ~10 min, hard cap 20 min.
 🔮 LEAN PASS. E110 failed selective; dual restore should recover both L paths into R0.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Dual restore of both R0 in-edges after shared silence recovers full fanout for L0 and L1. Selective (E110) fails; dual succeeds.
