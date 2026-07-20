@@ -18,4 +18,4 @@ Seeds {1441,1451} trials 8. I1 near M1, I2 near M2.
 🔮 PASS.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=1.0 B2=1.0 B3=1.0. Multi-trial switch: both → cut1 → restore1+cut2.
