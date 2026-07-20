@@ -18,4 +18,4 @@ Seeds {2621,2631} trials 6. Budget ~10 min, hard cap 20 min.
 🔮 LEAN PASS (E87 hard analogue). Miss if hard kill damages restore capacity across paths.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Hard 3-path MUX dual-kill all OFF; selective path0 then path1 restore.
