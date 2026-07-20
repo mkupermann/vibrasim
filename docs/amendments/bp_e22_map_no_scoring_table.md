@@ -35,4 +35,10 @@ Most-likely miss: single L atom per class → median split unstable; or rewire s
 Unsupervised discovery of map from free chemistry; free talent; generative partner.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20 night scheduler). B1_self_cons=**1.000**, B2_gap=**0.643**, B3_rewire=**0.917** (fail ≤0.55).
+
+### Calibration
+🔮 PASS lean — **MISS on B3**. With one L atom per exclusive pair, median groups are size-1 → self-consistency is **vacuously 1.0** even after rewire. Control definition inadequate for K=2 exclusive slots. No bar retune.
+
+### Finding
+Treat structure (cons+gap) looks right; rewire self-consistency is not a valid negative control at this cardinality.
