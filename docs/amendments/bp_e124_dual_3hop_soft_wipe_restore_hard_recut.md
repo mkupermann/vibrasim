@@ -19,4 +19,4 @@ Seeds {3401,3411} trials 6. Budget ~10 min, hard cap 20 min.
 🔮 LEAN PASS. Hard re-cut after full restore fixes soft collateral (E93-class).
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1=1.0 B2=1.0 B3=0.0. Soft wipe-restore both OK; hard re-cut path0 after full restore also fails (same B3=0 as E123 soft re-cut). Dual 3-hop post-wipe-restore re-cut resists soft and hard local kill at I0.
