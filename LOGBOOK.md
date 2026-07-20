@@ -6550,3 +6550,8 @@ B1=B2=B3=1.0 **PASS**. Multi-trial L-selective reconfig on non-shared endpoints 
 
 Hard dual silence; soft restore 00; hard re-cut 00.
 B1=B2=B3=1.0 **PASS**. Soft (E121) + hard multi-trial L-selective closed.
+
+## 2026-07-20 sequential - BP-E123 NULL dual 3-hop soft wipe-restore-recut
+
+Soft dual wipe; full restore both; soft re-cut path0.
+B1=1.0 B2=1.0 B3=0.0 **NULL**. Soft re-cut after wipe-restore fails on dual 3-hop (hard E56 pristine OK).
