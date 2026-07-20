@@ -6105,3 +6105,7 @@ New free mechanism (ballistic seed then freeze) does not unlock 0.90 talent.
 
 Both ON; cut path1; restore path1 + cut path2. B1=B2=B3=1.0 **PASS**
 Multi-trial soft routing curriculum on dual paths.
+
+## 2026-07-20 15m — BP-E47 PASS graded soft attenuation
+
+One I-fire frac=0.5: path still ON; many I-fires: path OFF. B1=B2=B3=1.0 **PASS**
