@@ -20,4 +20,5 @@ Seeds {2331,2341,2351} trials 3. T=1200. Budget ~15 min, hard cap 30 min.
 🔮 LEAN PASS (B1 low, B2 high, B3 high). NULL if decay invents false specialisation on same-band.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1_sameband=0.111 B2_pop=1.0 B3_dualband=1.0.  
+Decay does **not** invent decade structure without band difference; dual-band + decay still specialises on these seeds.
