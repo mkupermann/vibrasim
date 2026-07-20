@@ -42,7 +42,7 @@ Single-arm re-cut after full fan-out restore fails (E101–E103).
 
 Doctrine: (1) shared R → restore **all** cut in-edges (or re-cut all for multi-trial silence); (2) non-shared R copies → single-arm selective restore and multi-trial selective re-cut are L-selective (soft/hard).
 
-**Dual 3-hop soft wipe-restore-recut (E123 NULL):** Soft dual wipe + full restore both paths PASS; soft re-cut path0 after full restore fails (B3=0). Hard selective on pristine dual 3-hop (E56) still stands; soft re-cut after wipe-restore on dual 3-hop not closed — may need hard re-cut (E93-class) or wider sep.
+**Dual 3-hop wipe-restore-recut CLOSED NULL (E123–E125):** Soft dual wipe + full restore both PASS. Re-cut path0 after full restore fails for soft (E123), hard (E124), and wide soft y-sep=24 (E125) — all B3=0. Hard selective on **pristine** dual 3-hop (E56) still stands. **After soft wipe-restore, dual 3-hop re-cut (soft or hard) does not silence path0 under current I0 mid-port doctrine.** Boundary locked for this class without a new re-cut mechanism.
 
 ## Not free talent
 All wipe/restore is engineered §4.8 ports + ILW + bridges + latch. Free dual talent remains CLOSED PARTIAL (C16 family).
