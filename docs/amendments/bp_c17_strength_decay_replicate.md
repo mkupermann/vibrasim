@@ -21,4 +21,5 @@ Seeds {2301,2311,2321} trials 3. T=1200. Budget ~15 min, hard cap 30 min.
 🔮 LEAN PASS if C16 is real. NULL if C16 was seed-lucky.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1=0.778 B2=0.667 B3=1.0 B4=0.111.  
+Held-out seeds fail 0.90 bar. **C16 does not replicate** under pre-registered bars — seed-dependent partial effect (~0.78) not a locked unlock.

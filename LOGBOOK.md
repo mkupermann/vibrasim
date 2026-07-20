@@ -6294,3 +6294,8 @@ B1=B2=B3=1.0 **PASS**. Multi-trial hybrid routing curriculum closed.
 ilw_strength_decay_tau=30 free dual vs tau=0 control.
 B1=1.0 B2=0.778 B3=1.0 B4=0.222 **PASS**.
 First pre-registered free dual talent unlock at 0.90. Control stays at C1b ceiling.
+
+## 2026-07-20 sequential - BP-C17 NULL C16 replicate
+
+Held-out seeds {2301,2311,2321} same tau=30 protocol.
+B1=0.778 B2=0.667 B3=1.0 B4=0.11 **NULL**. C16 unlock does not replicate; seed-dependent.
