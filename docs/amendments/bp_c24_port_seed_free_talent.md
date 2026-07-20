@@ -23,4 +23,4 @@ Seeds {3481,3491,3501} trials 3. T=1200. Box 80×50×50 wall mid=40. Budget ~15 
 🔮 LEAN NULL. Port seed may bias local structure without lifting free dual to locked 0.90 on held-out-like multi-seed; maps port-bootstrap free class.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1=0.444 B2=0.667 (ctrl pass) B3=1.0 B4=−0.222. ILW port-seed bootstrap does **not** unlock free dual talent; treatment worse than free-only control.
