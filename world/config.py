@@ -112,6 +112,10 @@ class WorldConfig:
     # PRIM5: exclusive bridge between the two atoms just dual-written.
     ilw_pair_link_enabled: bool = False
     ilw_pair_link_delta: float = 1.0
+    # PRIM6: latched activity from bridge charge prop (separate from membrane).
+    # Default OFF. tau<=0 with enabled = no decay; tau>0 = exp decay seconds.
+    charge_latch_enabled: bool = False
+    charge_latch_tau: float = 0.0
     flux_plasticity_rate: float = 0.0     # Bridge strengthening rate from vibration flux (0=off). Plasticity from physics.
     flux_threshold: float = 2.0           # Flux above this potentiates a bridge, below depresses.
     flux_decay: float = 0.05              # Strength decay per second for low-flux bridges.

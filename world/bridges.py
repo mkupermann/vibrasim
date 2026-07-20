@@ -605,10 +605,17 @@ def apply_bridge_charge_propagation(world, dt: float) -> None:
             continue
         if bx > 0 and ((world.k_pos[i][0] < bx) != (world.k_pos[j][0] < bx)):
             continue  # cross-compartment bridge is cut — no propagation across
+        latch_on = bool(getattr(cfg, "charge_latch_enabled", False))
         if i in firing and world.k_alive[j]:
-            world.k_charge[j] += gain * s
+            dep = gain * s
+            world.k_charge[j] += dep
+            if latch_on and hasattr(world, "k_latch"):
+                world.k_latch[j] = float(world.k_latch[j]) + dep
         if j in firing and world.k_alive[i]:
-            world.k_charge[i] += gain * s
+            dep = gain * s
+            world.k_charge[i] += dep
+            if latch_on and hasattr(world, "k_latch"):
+                world.k_latch[i] = float(world.k_latch[i]) + dep
 
 
 def apply_structural_anchoring(world, dt: float) -> None:
