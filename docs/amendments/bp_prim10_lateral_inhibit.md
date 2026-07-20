@@ -23,4 +23,5 @@ Seeds {1181,1191} trials 10.
 🔮 LEAN NULL on I1: simultaneous fire both may still both peak before inhibit settles; or both suppressed.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). I1_exclusive=**0.000**, I2_off_both=1.0, I3=1.0.  
+Charge-scale inhibit after fire does not produce exclusive path winner when both L fire (both R still light). Soft WTA not achieved. No bar retune.
