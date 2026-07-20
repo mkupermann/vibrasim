@@ -25,4 +25,5 @@ Seeds {2961,2971,2981} trials 3. T=1200. Budget ~15 min, hard cap 30 min.
 🔮 LEAN NULL (C1b ceiling may be density/band, not box size). Maps large-box free dual class.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1=0.778 B2=0.889 B3=0.778 B4=−0.11.  
+Large box does not unlock free dual talent; slightly worse than standard control.

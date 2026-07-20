@@ -147,6 +147,7 @@
 | E102 | **NULL** | Soft 2×2 full restore; hard re-cut 00 also fails R0 silence |
 | E103 | **NULL** | Soft 2×2 endpoint R0 cut: L0 OK; shared R0 kills L1 path |
 | E104 | **PASS** | Soft 2×2 cut both R0 in-edges (00+10) after full restore |
+| C22 | **NULL** | Large box free dual 0.778; no unlock |
 
 ## What works (engineered port curriculum)
 
