@@ -74,10 +74,11 @@
 | E43 | **PASS** | Retrain restores path after structural cut |
 | PRIM13-D0 | **NULL** | Soft weaken silences; M–R-only restore fails |
 | E44 | **PASS** | Soft weaken + full path restore |
+| E45 | **PASS** | Selective soft cut one of two paths |
 
 ## What works (engineered port curriculum)
 
-See `docs/patterns/port_circuit_primitives.md` — relays, logic, **hard/soft cut + restore**, curriculum, table-free map.
+See `docs/patterns/port_circuit_primitives.md` — relays, logic, hard/soft cut, **selective soft cut**, restore, curriculum, table-free map.
 
 ## Boundaries locked
 

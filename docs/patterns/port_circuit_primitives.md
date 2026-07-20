@@ -22,6 +22,7 @@ E29–E37 PASS chain · PRIM5/6/8 · replace doctrine
 | **XOR** | E42 PASS | OR path + coincidence Mand + structural kill |
 | Retrain after cut | E43 PASS | ILW pair_write rebuilds killed path |
 | Soft weaken + full restore | E44 PASS | strength→0 then re-strengthen L–M & M–R |
+| Selective soft cut | E45 PASS | I near M1 only; path2 intact |
 
 ## Incompatible defaults
 - **replace ON** ↔ multi-hop chains (E30)

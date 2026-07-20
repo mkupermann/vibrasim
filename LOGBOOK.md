@@ -6091,3 +6091,7 @@ Multi-trial recovery after structural NOT.
 PRIM13: silence OK; M-R-only restore fails **NULL**
 E44: full L-M+M-R restore after soft weaken **PASS** B1=B2=B3=1.0
 Soft reversible inhibit established with full-path retrain.
+
+## 2026-07-20 15m — BP-E45 PASS selective soft cut
+
+Two paths; I weakens path1 only; path2 stays; restore path1. B1=B2=B3=1.0 **PASS**
