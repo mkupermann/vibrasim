@@ -39,4 +39,17 @@ Most-likely miss: B2 scrambled still ≥0.90.
 Pure free talent without seeds; C full reopen.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20).
+
+| Bar | Value | thr | ok |
+|-----|------:|-----|:--:|
+| B1 correct-seed | **0.778** | ≥0.90 | no |
+| B2 scrambled-seed | **0.667** | ≤0.55 | no |
+| B3 pop | **1.000** | ≥0.80 | yes |
+| B4 χ | **0.000** | ≤0.15 | yes |
+
+### Calibration
+🔮 lean NULL on B2 — **HIT**. Scrambled seeds still specialise ~2/3 (free dual-band dominates). Correct-seed also only 0.778 (not robust 0.90). Seeds are **not** causal drivers of free specialisation under this protocol.
+
+### Class
+Attractor-seeded free talent (C6–C7) **CLOSED PARTIAL**: hybrid can hit high rates in some samples (C6 B1=1.0) but polarity control fails; free-only already strong.

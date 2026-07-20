@@ -5986,3 +5986,11 @@ Pre-reg d3857b4 before data. T=1000 seeds 3x3.
 | B4 chi | 0.000 | <=0.15 | yes |
 
 **NULL.** Hybrid hits structural specialisation bar; free-only control too strong (0.78). No bar retune. Pure free talent not uniquely unlocked.
+
+## 2026-07-20 — BP-C7 NULL + attractor+free CLOSED PARTIAL
+
+Pre-reg 9ceb319 before data.
+C7: correct-seed 0.778; scrambled 0.667; chi=0. **NULL**
+Free dual-band dominates seed polarity. C6-C7 class closed partial.
+docs/amendments/bp_c6_c7_attractor_free_closure.md
+No C8 seed retune. Next free talent needs new mechanism class.

@@ -42,6 +42,8 @@
 | E23 | **NULL** | Table-free map: rewire gap still high @K=2 |
 | Table-free map K=2 | **CLOSED PARTIAL** | `bp_e22_e23_notable_map_closure.md` |
 | C6 | **NULL** | Hybrid attractor+free specs 1.0; free-only 0.778>0.75 ctrl |
+| C7 | **NULL** | Scrambled seeds still specialise 0.67; correct 0.78 |
+| Attractor+free class | **CLOSED PARTIAL** | `bp_c6_c7_attractor_free_closure.md` |
 
 ## What works (engineered port curriculum)
 
@@ -56,8 +58,8 @@
 
 | Boundary | Status |
 |----------|--------|
-| Free talent @0.90 pure | Still blocked (C1–C5; C6 free-only 0.78) |
-| Hybrid attractor+free | Spec can hit 0.90 (C6 B1) but not uniquely vs free-only under B2 |
+| Free talent @0.90 pure | Still blocked (C1–C5) |
+| Attractor±free hybrid | CLOSED PARTIAL (C6–C7) — free field dominates seeds |
 | Order without decay | CLOSED (E3) |
 | Generative partner from L alone | No (E12) |
 | Selective recall on all-to-all bridges | No (E15) |
@@ -66,10 +68,9 @@
 ## Next hard only
 
 - Table-free map only with **K≥3 multi-sample** or new control class  
-- Free talent: stronger free-only control / different seed mechanism (not C6 B2 retune)  
-- Pure free still short of unique bar
+- Free talent only with mechanism **≠** dual free inject ± attractor seeds  
 - Brain R9 still blocked until C reopen or deeper curriculum  
-- Optional: latch tau>0 half-life characterisation
+- Optional: latch tau>0 half-life; port curriculum curricula on E20/E21
 
 ## Do not
 
