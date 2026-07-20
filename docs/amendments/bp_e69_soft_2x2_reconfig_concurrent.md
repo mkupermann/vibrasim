@@ -23,4 +23,4 @@ Seeds {2041,2051} trials 6. Budget ~8 min, hard cap 16 min.
 🔮 LEAN PASS. Miss if multi-step soft cuts accumulate collateral damage.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Soft 2×2 reconfig identity→swap→identity with concurrent dual-drive probes.

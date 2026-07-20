@@ -103,6 +103,7 @@
 | E67 | **PASS** | Soft 2×2 concurrent dual-drive under identity |
 | E68 | **PASS** | Soft 2×2 concurrent dual-drive under swap |
 | C14 | **NULL** | bridge_leak free dual = control 0.778; no unlock |
+| E69 | **PASS** | Soft 2×2 reconfig concurrent identity/swap/identity |
 
 ## What works (engineered port curriculum)
 

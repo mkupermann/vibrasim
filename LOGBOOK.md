@@ -6233,3 +6233,8 @@ B1=B2=B3=1.0 **PASS**. Concurrent routing works for identity (E67) and swap (E68
 
 bridge_leak_rate free dual vs leak-off control.
 B1=0.778 B2=0.778 B3=1.0 B4=0 **NULL**. Leak class closed for free dual talent unlock.
+
+## 2026-07-20 sequential - BP-E69 PASS soft 2x2 reconfig concurrent
+
+Identity->swap->identity with concurrent L0+L1 both R ON each step.
+B1=B2=B3=1.0 **PASS**. Multi-step soft crossbar reconfig under concurrent drive.
