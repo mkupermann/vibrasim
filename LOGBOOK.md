@@ -6515,3 +6515,8 @@ B1=B2=B3=1.0 **PASS**. Dual restore recovers concurrent after pure swap (E111 se
 
 Full restore; hard-kill 00+10; soft restore both 00+10.
 B1=B2=B3=1.0 **PASS**. Dual restore recovers after hard shared silence (E113 selective fails).
+
+## 2026-07-20 sequential - BP-E116 PASS dual restore after swap-diag
+
+Full restore; soft-cut 01+10; restore both 01+10.
+B1=B2=B3=1.0 **PASS**. Dual-restore matrix after both diagonals closed (E114/E116).
