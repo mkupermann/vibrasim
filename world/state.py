@@ -57,6 +57,8 @@ class World:
         self.k_zero_latch_emitter = np.zeros(K, dtype=np.uint8)
         # PRIM12: if 1, this node kills nearby bridges on fire.
         self.k_kill_bridge_emitter = np.zeros(K, dtype=np.uint8)
+        # PRIM13: if 1, this node weakens nearby bridge strengths on fire.
+        self.k_weaken_bridge_emitter = np.zeros(K, dtype=np.uint8)
         self.k_refractory_until = np.zeros(K, dtype=np.float64)
         # Plan A — per-node strength field (R2 strength-modulated decay).
         # Default 1.0 so newly-allocated nodes are not immediately decayed away.
@@ -212,6 +214,7 @@ class World:
             self.k_coincidence_gate[i] = 0
             self.k_zero_latch_emitter[i] = 0
             self.k_kill_bridge_emitter[i] = 0
+            self.k_weaken_bridge_emitter[i] = 0
             self.k_refractory_until[i] = 0
             self.k_strength[i] = 1.0
             self.k_orientation[i] = 0.0  # Plan B: clear stale direction inherited from dead predecessor
