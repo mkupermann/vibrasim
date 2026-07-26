@@ -21,4 +21,4 @@ Seeds {5141,5151} trials 8. Budget ~18 min, hard cap 36 min.
 🔮 LEAN PASS. Missing terminal hop should block R select; complete paths work.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=B2=B3=1.0. Missing terminal hop blocks R fire-select; complete paths work. Cascade hop chain is necessary end-to-end (complements mid-hop kill E187).

@@ -250,6 +250,7 @@
 | E188 | **PASS** | Cascade mid-hop kill + restore multi-trial |
 | E189 | **PASS** | Cascade soft mid-hop kill; path1 survives |
 | E190 | **PASS** | Triple-hop content cascade L-M-A-R fire-select |
+| E191 | **PASS** | Incomplete cascade missing last hop fails select |
 
 ## What works (engineered port curriculum)
 
@@ -296,6 +297,7 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 - Cascade mid-hop kill+restore multi-trial **PASS** (E188)  
 - Cascade soft mid-hop kill **PASS** (E189)  
 - Triple-hop content cascade fire-select **PASS** (E190)  
+- Incomplete cascade negative control **PASS** (E191 missing hop fails)  
 - Multi-trial fire selective A→B→A **PASS** (E172)  
 - Fire-select bridge-dependent **PASS** (E173 hard kill silences; restore returns)  
 - Soft bridge weaken also silences fire-select **PASS** (E174)  

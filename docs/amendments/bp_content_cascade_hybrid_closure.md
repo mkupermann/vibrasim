@@ -12,15 +12,17 @@
 | E188 | PASS | Mid-hop kill + restore multi-trial |
 | E189 | PASS | Soft mid-hop kill parity |
 | E190 | PASS | Triple-hop L→M→A→R content cascade fire-select |
+| E191 | PASS | Incomplete cascade (missing last hop) fails R select |
 
 ## Doctrine
 1. Multi-hop **content** cascades support fire-select (not only one-hop pair residual).
 2. Mid-hop is **critical** for path prop and **path-local** under spatial split.
 3. Soft and hard mid-hop kill both work (E187/E189); multi-trial restore (E188).
 4. Doctrine **scales to three hops** (E190).
+5. **End-to-end hop chain necessary**: omit terminal hop → no R select (E191).
 
 ## Do not farm
-Re-running E186–E190 bars without new hop/topology question.
+Re-running E186–E191 bars without new hop/topology question.
 
 ## Open
 - Free talent still CLOSED PARTIAL

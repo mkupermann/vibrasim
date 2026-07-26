@@ -6992,3 +6992,8 @@ B1=B2=B3=1.0 **PASS**. Soft+hard mid-hop kill closed (E187/E189).
 
 L-M-A-R dual path content cascade fire-select.
 B1=B2=B3=1.0 **PASS**. Content+cascade hybrid E186-E190 CLOSED PASS (soft mid-hop + triple-hop).
+
+## 2026-07-26 sequential - BP-E191 PASS incomplete cascade negative
+
+L-M only no M-R; fire L fails R select; full paths work.
+B1=B2=B3=1.0 **PASS**. Terminal hop necessary for cascade fire-select.
