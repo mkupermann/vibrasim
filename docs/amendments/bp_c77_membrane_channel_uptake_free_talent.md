@@ -17,4 +17,4 @@ B1–B4. Seeds {6701,6711} trials 2. T=500. Budget ~8 min, hard cap 16 min.
 🔮 LEAN NULL. Uptake needs formed membrane atoms; free dual inject unlikely to unlock decade order via uptake toggle.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.25 B2=0.0 B3=0.5 B4=0.25. membrane_channel_uptake does not unlock free dual talent.
