@@ -7643,3 +7643,13 @@ B1=B2=B3=1.0 **PASS**. Multislot dual decade co-resides across temporal gap.
 
 audio_emit_pair_band 0.15 vs 0 free dual + wall.
 B1=0.25 B2=0.25 B3=0.25 B4=0.0 **NULL**. No free dual unlock.
+
+## 2026-07-26 sequential - BP-E257 PASS multislot OFF last-write gap
+
+Multislot OFF: A residual fails after gap+B; B selective; A-only OK.
+B1=B2=B3=1.0 **PASS**. Last-write residual without kill when multislot OFF (vs E256 ON).
+
+## 2026-07-26 sequential - BP-C100 NULL self_modify_rate free dual
+
+self_modify_rate 0.2 vs 0.05 (self_aware ON) free dual + wall.
+B1=0.25 B2=0.50 B3=0.25 B4=-0.25 **NULL**. No free dual unlock.
