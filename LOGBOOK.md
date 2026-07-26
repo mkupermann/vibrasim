@@ -7274,3 +7274,8 @@ B1=0.25 B2=0.25 B3=0.5 B4=0.0 **NULL**. Membrane channel does not unlock free du
 
 Soft kill M0; reverse p0 fail; reverse p1 survives.
 B1=B2=B3=1.0 **PASS**. Reverse soft mid-hop kill path-selective.
+
+## 2026-07-26 sequential - BP-C66 NULL anchor_damping free dual
+
+anchor_damping=0.7 vs 0 free dual + wall.
+B1=0.25 B2=0.0 B3=0.25 B4=0.25 **NULL**. Anchor damping does not unlock free dual talent.

@@ -304,6 +304,7 @@
 | E216 | **PASS** | Cascade reverse multi-trial switch 1→2→1 under G12 |
 | C65 | **NULL** | membrane_channel free dual; no unlock |
 | E217 | **PASS** | Cascade reverse soft mid-kill M0; reverse p1 survives |
+| C66 | **NULL** | anchor_damping free dual; no unlock |
 
 ## What works (engineered port curriculum)
 
@@ -332,7 +333,8 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 
 ## Next hard only
 
-- Free talent: C16 PARTIAL (strength-decay+wall); C42–C44 wide freq_tol **fragile**; C26 FAILED; C27–C41 NULL farm closed; C45–C65 NULL (C62 thermal delta+ fails 0.90)  
+- Free talent: C16 PARTIAL (strength-decay+wall); C42–C44 wide freq_tol **fragile**; C26 FAILED; C27–C41 NULL farm closed; C45–C66 NULL (C62 thermal delta+ fails 0.90)  
+
 
 
 
