@@ -22,4 +22,4 @@ Seeds {4701,4711} trials 8. Budget ~18 min, hard cap 36 min.
 🔮 LEAN PASS if spatial split segregates bridges (E176 failed on shared ports). NULL if cross-talk bridges share graph.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=B2=B3=1.0. Spatially split ports enable arm-selective hard kill: R0 kill silences c0 fire-select while c1 survives. Fixes E176 shared-port failure via spatial segregation.

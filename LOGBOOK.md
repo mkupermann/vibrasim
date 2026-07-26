@@ -6874,3 +6874,8 @@ Formal CLOSED: fire+pair-link select; multi-trial; soft/hard disrupt; pair-link 
 
 atom_repulsion_k=20 vs 0 free dual + wall.
 B1=0.25 B2=0.5 B3=0.25 B4=-0.25 **NULL**. Atom repulsion does not unlock free dual.
+
+## 2026-07-26 sequential - BP-E177 PASS split-port arm-selective kill
+
+L0/R0 vs L1/R1 spatial split; hard kill R0; c1 fire-select survives.
+B1=B2=B3=1.0 **PASS**. Spatial segregation enables arm-selective kill (E176 shared-port NULL).

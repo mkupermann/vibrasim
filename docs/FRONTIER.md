@@ -228,6 +228,7 @@
 | E175 | **NULL** | Fire-select without pair-link fails (B1=B2=B3=0) |
 | E176 | **NULL** | C0-arm kill silences L-lo but also kills L-hi select |
 | C30 | **NULL** | atom_repulsion free dual 0.25; hurts vs ctrl |
+| E177 | **PASS** | Split-port arm-selective kill (c0 off, c1 on) |
 
 ## What works (engineered port curriculum)
 
@@ -272,6 +273,7 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 - Soft bridge weaken also silences fire-select **PASS** (E174)  
 - Fire-select requires pair-link **NULL without** (E175 pure dual ILW)  
 - Fire-select curriculum **CLOSED** E171–E176 (`bp_fire_select_curriculum_closure.md`)  
+- Split-port arm-selective kill **PASS** (E177; spatial segregation fixes E176)  
 - Port circuit curriculum **CLOSED PARTIAL** E105–E153 (bp_port_circuit_curriculum_closure.md)  
 - Port wipe-restore E71–E100 closed; dual 3-hop re-cut after wipe-restore E123–E127 CLOSED NULL  
 - Soft inhibit: retrain-reversible (E44), durable without retrain (E55) — closed for two-hop  

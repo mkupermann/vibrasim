@@ -15,6 +15,7 @@
 | E174 | PASS | Soft R weaken silences; restore returns |
 | E175 | NULL | No pair-link → no fire-select (B1=B2=B3=0) |
 | E176 | NULL | C0-band kill silences L-lo but also L-hi (no arm-selective kill) |
+| E177 | PASS | Split-port arm-selective hard kill (c0 off, c1 on) |
 
 ## Doctrine
 1. **Capacity residual ≠ selective residual** (E162–E168 vs E169/E170).
@@ -22,15 +23,15 @@
 3. Multi-trial fire select durable without retrain (E172).
 4. Select is **bridge-dependent**: soft/hard R disruption silence prop; restore returns (E173/E174).
 5. Pair-link is **necessary** (E175).
-6. Association-specific (c0-only) bridge kill **not** achieved with simple band-endpoint emitters (E176 NULL).
+6. Association-specific kill on **shared** ports fails (E176 NULL).
+7. **Spatial split ports** enable arm-selective kill (E177 PASS).
 
 ## Patterns
 `docs/patterns/port_multi_trial_association_residual.md`
 
 ## Do not farm
-Re-running E171–E174 bars; residual means; full-port kill variants without new question.
+Re-running E171–E174 bars; residual means; full-port kill variants without new question; E177 re-run.
 
 ## Open / next hard
-- Arm-selective bridge surgery with finer targeting or replace-mode pair links
 - Free talent still CLOSED PARTIAL (C16); free dual still blocked
 - Brain R9 still blocked until free talent or deeper honest curriculum
