@@ -24,4 +24,4 @@ Seeds {4461,4471} trials 8. Budget ~12 min, hard cap 24 min.
 🔮 LEAN PASS if residual is accumulated content not coincidence-gated write. NULL if only same-tick dual co-write leaves residual (E162-class simultaneous-only).
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=B2=B3=1.0. Temporal-gap (L → 40 ticks → R) multi-trial still leaves R residual after L-only; residual is accumulated content, not same-tick coincidence-only.
