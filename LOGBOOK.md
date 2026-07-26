@@ -7234,3 +7234,8 @@ B1=0.25 B2=0.0 B3=0.5 B4=0.25 **NULL**. Fire inhibit does not unlock free dual t
 
 Hard kill L1; reverse pid2 fail; reverse pid1 OK; retrain restores reverse pid2.
 B1=B2=B3=1.0 **PASS**. Reverse hard surgery multi-trial reversible.
+
+## 2026-07-26 sequential - BP-C62 NULL node_thermal free dual
+
+node_thermal_speed=2 vs 0 free dual + wall.
+B1=0.75 B2=0.25 B3=0.75 B4=0.5 **NULL**. Positive delta but fails pre-registered 0.90 unlock (no bar retune).

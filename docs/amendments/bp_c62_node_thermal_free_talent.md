@@ -17,4 +17,4 @@ B1–B4. Seeds {6101,6111} trials 2. T=500. Budget ~8 min, hard cap 16 min.
 🔮 LEAN NULL. Mobile nodes may disrupt decade segregation rather than unlock ordered free dual talent.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.75 B2=0.25 B3=0.75 B4=0.5. node_thermal_speed shows positive delta but fails 0.90 unlock bar (no bar retune).
