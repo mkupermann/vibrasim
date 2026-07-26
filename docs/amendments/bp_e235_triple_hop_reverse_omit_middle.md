@@ -32,4 +32,6 @@ Not mid-kill. Not E233 A–R omit re-probe. Not free dual.
 
 ## RESULT
 
-*(filled after run)*
+**PASS** (2026-07-26). B1=1.0 B2=1.0 B3=1.0.  
+Omit middle M–A hops: reverse from R fails both paths. Full triple-hop reverse OK. Continuous middle hop required (distinct from E233 terminal A–R omit). Not mid-kill.
+
