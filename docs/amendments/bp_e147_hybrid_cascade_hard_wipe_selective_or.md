@@ -18,4 +18,4 @@ Seeds {3941,3951} trials 6. Budget ~12 min, hard cap 24 min.
 🔮 LEAN PASS. OR bypass selective restore under hybrid cascade.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Hybrid cascade hard dual wipe + selective OR restore; cascade AND stays OFF. Hybrid cascade selective AND/OR matrix closed (E146/E147).
