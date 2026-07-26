@@ -7563,3 +7563,13 @@ B1=B2=B3=1.0 **PASS**. Charge latch not required for reverse cascade readout her
 
 Concurrent fire three R ports; all three L lit.
 B1=B2=B3=1.0 **PASS**. Triple concurrent reverse works under Y-isolation.
+
+## 2026-07-26 sequential - BP-E249 NULL reverse AND gate
+
+R-only fails reverse; R+G succeeds; G-only also succeeds (B3=0).
+B1=1.0 B2=1.0 B3=0.0 **NULL**. Reverse not true AND — G alone sufficient.
+
+## 2026-07-26 sequential - BP-C92 NULL emit_freq free dual n_emit=2
+
+emit_freq 80k vs 30k free dual + wall.
+B1=B2=B3=B4=0.0 **NULL**. No unlock; finished under budget (unlike C80).
