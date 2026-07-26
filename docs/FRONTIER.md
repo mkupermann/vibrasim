@@ -178,6 +178,7 @@
 | E130 | **PASS** | Coincidence AND multi-trial soft wipe-restore cycle |
 | E131 | **NULL** | AND dual wipe OK; L1-only restore already dual ON |
 | E132 | **PASS** | Coincidence AND multi-trial hard wipe-restore cycle |
+| E133 | **PASS** | Hard dual wipe + selective L1 restore keeps dual OFF |
 
 ## What works (engineered port curriculum)
 

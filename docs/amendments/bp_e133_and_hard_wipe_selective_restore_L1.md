@@ -19,4 +19,4 @@ Seeds {3621,3631} trials 6. Budget ~10 min, hard cap 20 min.
 🔮 LEAN PASS if soft residual L2 caused E131 B2 fail; LEAN NULL if L1-only restore systematically re-enables dual regardless of wipe hardness.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Hard dual wipe + selective L1 restore keeps dual OFF until L2 restored. Soft residual L2 caused E131 fail; hard dual wipe enables true selective AND re-arm.

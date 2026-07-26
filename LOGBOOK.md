@@ -6605,3 +6605,8 @@ B1=1.0 B2=0.0 B3=1.0 **NULL**. L1-only restore already allows dual fire (not sel
 
 Hard dual wipe; restore; wipe; restore dual ON.
 B1=B2=B3=1.0 **PASS**. Soft (E130) + hard multi-trial pure AND closed.
+
+## 2026-07-20 sequential - BP-E133 PASS hard dual wipe selective L1 restore
+
+Hard dual-kill both L; restore L1 only dual OFF; restore L2 dual ON.
+B1=B2=B3=1.0 **PASS**. Hard wipe enables selective AND re-arm (soft E131 residual fails).
