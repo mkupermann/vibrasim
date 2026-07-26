@@ -17,4 +17,4 @@ B1–B4. Seeds {5901,5911} trials 2. T=500. Budget ~8 min, hard cap 16 min.
 🔮 LEAN NULL. Flux plasticity needs vibration flux through bridges; free dual inject may not form oriented bridges that unlock decade order.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.5 B2=0.5 B3=0.5 B4=0.0. flux_plasticity_rate does not unlock free dual talent.
