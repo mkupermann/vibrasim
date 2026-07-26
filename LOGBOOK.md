@@ -6675,3 +6675,8 @@ B1=B2=B3=1.0 **PASS**. Cascade multi-trial selective re-arm closed.
 
 Hard dual wipe; L2-only dual OFF; L1 chain dual ON.
 B1=B2=B3=1.0 **PASS**. Cascade selective re-arm both orders + multi-trial closed (E143-E145).
+
+## 2026-07-20 sequential - BP-E146 PASS hybrid cascade selective AND restore
+
+Hard dual wipe cascade AND + OR; restore cascade AND; OR OFF.
+B1=B2=B3=1.0 **PASS**. Hybrid cascade selective AND closed.
