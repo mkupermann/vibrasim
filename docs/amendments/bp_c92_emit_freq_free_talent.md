@@ -29,4 +29,6 @@ Seeds {7461,7471} trials 2. T=400 N=200. Budget ~10 min, hard cap 20 min.
 
 ## RESULT
 
-*(filled after run)*
+**NULL** (2026-07-26). B1=0.0 B2=0.0 B3=0.0 B4=0.0.  
+`emit_freq=80000` vs 30000 under n_emit=2 free dual: no unlock; treat pop collapsed. Budget finished cleanly (vs C80 hard-cap).
+

@@ -32,4 +32,6 @@ Not forward E61 re-probe. Not dual cascade reverse. Not free dual. Not XOR.
 
 ## RESULT
 
-*(filled after run)*
+**NULL** (2026-07-26). B1=1.0 B2=1.0 B3=0.0.  
+Fire R alone fails reverse (AND-like half). Fire R+G succeeds. But fire G alone **succeeds** reverse (B3 fail) — G is sufficient; reverse is not true AND under coincidence_and + this geometry. Finding: reverse gate is G-driven, not R∧G coincidence.
+
