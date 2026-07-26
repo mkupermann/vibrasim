@@ -6670,3 +6670,8 @@ B1=B2=B3=1.0 **PASS**. E133 selective doctrine transfers to cascade multi-hop.
 
 Hard wipe L1-only OFF; both ON; hard wipe L1-only OFF again.
 B1=B2=B3=1.0 **PASS**. Cascade multi-trial selective re-arm closed.
+
+## 2026-07-20 sequential - BP-E145 PASS cascade hard selective L2-first re-arm
+
+Hard dual wipe; L2-only dual OFF; L1 chain dual ON.
+B1=B2=B3=1.0 **PASS**. Cascade selective re-arm both orders + multi-trial closed (E143-E145).

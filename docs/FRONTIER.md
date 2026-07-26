@@ -191,6 +191,7 @@
 | E142 | **PASS** | Cascade AND multi-hop hard dual wipe-restore |
 | E143 | **PASS** | Cascade AND hard dual wipe + selective L1 re-arm |
 | E144 | **PASS** | Cascade multi-trial hard selective L1 re-arm |
+| E145 | **PASS** | Cascade hard dual wipe + L2-first selective re-arm |
 
 ## What works (engineered port curriculum)
 
