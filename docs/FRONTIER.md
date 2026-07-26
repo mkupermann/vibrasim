@@ -194,6 +194,7 @@
 | E145 | **PASS** | Cascade hard dual wipe + L2-first selective re-arm |
 | E146 | **PASS** | Hybrid cascade hard wipe + selective cascade AND |
 | E147 | **PASS** | Hybrid cascade hard wipe + selective OR restore |
+| E148 | **PASS** | Hybrid cascade multi-trial hard path-switch OR↔AND↔OR |
 
 ## What works (engineered port curriculum)
 
