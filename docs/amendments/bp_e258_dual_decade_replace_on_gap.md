@@ -32,4 +32,6 @@ Not reverse cascade pair_replace (E244). Not free dual. Not residual soft/hard k
 
 ## RESULT
 
-*(filled after run)*
+**NULL** (2026-07-26). B1=0.0 B2=1.0 B3=1.0.  
+pair_replace ON does **not** erase A residual after gap+B under multislot ON (B1 fails). B selective OK; replace OFF A survives. Finding: multislot co-residence dominates replace for dual decade shared-port curriculum (unlike E244 reverse cascade break under replace).
+

@@ -7653,3 +7653,13 @@ B1=B2=B3=1.0 **PASS**. Last-write residual without kill when multislot OFF (vs E
 
 self_modify_rate 0.2 vs 0.05 (self_aware ON) free dual + wall.
 B1=0.25 B2=0.50 B3=0.25 B4=-0.25 **NULL**. No free dual unlock.
+
+## 2026-07-26 sequential - BP-E258 NULL dual decade replace ON gap
+
+Replace ON: A residual still survives after gap+B (B1=0); B OK; replace OFF A OK.
+B1=0.0 B2=1.0 B3=1.0 **NULL**. Multislot co-residence beats replace for dual decade.
+
+## 2026-07-26 sequential - BP-C101 NULL dream_hallucination free dual
+
+dream_hallucination_strength 2 vs 1 (dream ON) free dual + wall.
+B1=0.0 B2=0.50 B3=0.25 B4=-0.50 **NULL**. No free dual unlock.
