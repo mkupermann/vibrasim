@@ -6782,3 +6782,7 @@ B1=B2=B3=1.0 **PASS**. R partner residual co-presence without baked readout map 
 
 triad_decay=80 vs 600 free dual + wall; budget-fit T=500 N=250.
 B1=0.5 B2=0.25 B3=0.75 B4=0.25 **NULL**. Short triad decay does not unlock free dual talent (C24-C28 family).
+
+## 2026-07-26 sequential - pattern port multi-trial association residual
+
+docs/patterns/port_multi_trial_association_residual.md from E162 PASS. Free dual decay-tau family C27/C28 both NULL — do not farm further pair/triad decay free dual.
