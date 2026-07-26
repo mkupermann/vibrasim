@@ -199,6 +199,7 @@
 | E150 | **PASS** | Dual cascade AND hard selective path0 silence + restore |
 | E151 | **PASS** | Dual cascade hard wipe both paths + full restore |
 | E152 | **PASS** | Dual cascade multi-trial hard selective path0 |
+| E153 | **PASS** | Dual cascade hard selective path1 silence + restore |
 
 ## What works (engineered port curriculum)
 

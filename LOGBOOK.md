@@ -6710,3 +6710,8 @@ B1=B2=B3=1.0 **PASS**. Dual cascade wipe-restore + selective (E150) closed.
 
 Silence path0; restore both ON; silence path0 again path1 ON.
 B1=B2=B3=1.0 **PASS**. Dual cascade multi-trial selective closed.
+
+## 2026-07-20 sequential - BP-E153 PASS dual cascade hard selective path1
+
+Hard cut path1 L; path0 stays; restore path1 both ON.
+B1=B2=B3=1.0 **PASS**. Dual cascade selective both paths + multi-trial closed (E150-E153).
