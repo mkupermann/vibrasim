@@ -32,4 +32,6 @@ Not free dual unlock. Not pair_replace. Not reverse cascade. Not residual soft/h
 
 ## RESULT
 
-*(filled after run)*
+**NULL** (2026-07-26). B1=0.50 B2=0.50 B3=1.0.  
+Strength decay alone (replace OFF) does not cleanly switch A→B: B match and residual A both ~0.50 (50/50 residual). A-only control OK. Confirms E27-class: without replace, curriculum leaves residual — strength decay τ=30 insufficient forget mechanism over curriculum gap.
+
