@@ -224,6 +224,7 @@
 | C29 | **NULL** | Asymmetric L/R speed free dual 0.25 ordered; no unlock |
 | E172 | **PASS** | Multi-trial fire selective residual A→B→A same world |
 | E173 | **PASS** | Fire-select killed by hard R bridge kill; restore returns |
+| E174 | **PASS** | Fire-select silenced by soft R bridge weaken; restore |
 
 ## What works (engineered port curriculum)
 
@@ -265,6 +266,7 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 - Fire-readout selective residual **PASS** (E171; L-fire → R partner latch)  
 - Multi-trial fire selective A→B→A **PASS** (E172)  
 - Fire-select bridge-dependent **PASS** (E173 hard kill silences; restore returns)  
+- Soft bridge weaken also silences fire-select **PASS** (E174)  
 - Port circuit curriculum **CLOSED PARTIAL** E105–E153 (bp_port_circuit_curriculum_closure.md)  
 - Port wipe-restore E71–E100 closed; dual 3-hop re-cut after wipe-restore E123–E127 CLOSED NULL  
 - Soft inhibit: retrain-reversible (E44), durable without retrain (E55) — closed for two-hop  
