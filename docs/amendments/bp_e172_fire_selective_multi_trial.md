@@ -21,4 +21,4 @@ Seeds {4581,4591} trials 8. Budget ~16 min, hard cap 32 min.
 🔮 LEAN PASS if E171 select is durable multi-trial without retrain. NULL if latch/state interference after first fire.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=B2=B3=1.0. Multi-trial fire-readout select A→B→A on one world without retrain closed.
