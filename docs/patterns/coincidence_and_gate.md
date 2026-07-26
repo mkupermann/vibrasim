@@ -16,7 +16,7 @@ Soft dual wipe both L inputs then full restore recovers dual-fire AND (E128 PASS
 
 Hard single-arm disable/restore still E63/E64.
 
-**Hybrid AND∨OR hard selective:** Hard dual wipe of AND arm + OR bypass, then restore AND-only (E137) or OR-only (E138) — both PASS. Completes hard matrix alongside soft E75/E76.
+**Hybrid AND∨OR hard selective:** Hard dual wipe of AND arm + OR bypass, then restore AND-only (E137) or OR-only (E138) — both PASS. Completes hard matrix alongside soft E75/E76. Multi-trial hard path-switch both orders (E139/E140) matches soft E78.
 
 ## Honesty
 Engineered coincidence filter — not emergent free chemistry.

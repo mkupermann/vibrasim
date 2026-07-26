@@ -19,4 +19,4 @@ Seeds {3761,3771} trials 6. Budget ~12 min, hard cap 24 min.
 🔮 LEAN PASS. Order-symmetric hard path-switch.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Hard multi-trial hybrid path-switch AND→OR→AND order-symmetric with E139. Soft (E78) + hard both orders (E139/E140) closed.

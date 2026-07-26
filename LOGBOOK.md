@@ -6640,3 +6640,8 @@ B1=B2=B3=1.0 **PASS**. Hard hybrid selective AND/OR restore matrix closed (E137/
 
 Hard-cut AND restore OR; hard-cut OR restore AND; hard-cut AND restore OR.
 B1=B2=B3=1.0 **PASS**. Hard analogue of E78 multi-trial path-switch.
+
+## 2026-07-20 sequential - BP-E140 PASS hybrid hard path-switch AND-OR-AND
+
+Hard-cut OR restore AND; hard-cut AND restore OR; hard-cut OR restore AND.
+B1=B2=B3=1.0 **PASS**. Hard path-switch both orders closed (E139/E140).
