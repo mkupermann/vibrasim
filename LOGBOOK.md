@@ -7011,3 +7011,8 @@ Formal synthesis: residual → fire-select → split-port → cascade hybrid clo
 
 lambda_dec=0.01 vs 0 free dual + wall.
 B1=0.5 B2=0.25 B3=0.5 B4=0.25 **NULL**. Free-vib decay does not unlock free dual talent.
+
+## 2026-07-26 sequential - BP-E192 PASS cascade graded bridge_prop_min
+
+Dual cascade train; probe with bridge_prop_min_strength=0.5.
+B1=B2=B3=1.0 **PASS**. Graded multi-hop prop works for content cascade fire-select.
