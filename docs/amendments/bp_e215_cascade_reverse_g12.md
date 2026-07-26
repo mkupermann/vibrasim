@@ -19,4 +19,4 @@ Seeds {6161,6171} trials 6. Budget ~20 min, hard cap 40 min.
 🔮 LEAN PASS if multi-hop reverse respects G12 like single-hop reverse E205.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=1.0 B2=1.0 B3=1.0. Cascade reverse under G12: correct reverse OK; wrong-pattern reverse blocked; reverse p1 OK.
