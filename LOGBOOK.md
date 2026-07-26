@@ -7184,3 +7184,8 @@ B1=0.25 B2=0.75 B3=0.25 B4=-0.5 **NULL**. G9.5 WTA does not unlock free dual tal
 
 Train-time tags; idle 400; reverse c0 and c1 under G12.
 B1=B2=B3=1.0 **PASS**. Reverse durable without retrain.
+
+## 2026-07-26 sequential - BP-C57 NULL flux_plasticity free dual
+
+flux_plasticity_rate=0.1 vs 0 free dual + wall.
+B1=0.5 B2=0.5 B3=0.5 B4=0.0 **NULL**. Flux plasticity does not unlock free dual talent.
