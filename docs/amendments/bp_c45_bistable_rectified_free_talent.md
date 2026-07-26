@@ -17,4 +17,4 @@ B1–B4. Seeds {5381,5391} trials 2. T=500. Budget ~8 min, hard cap 16 min.
 🔮 LEAN NULL. Rectified bistable drive alone unlikely to unlock free dual ordered talent without structured bridges.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.0 B2=0.25 B3=0.25 B4=-0.25. bistable_drive_rectified does not unlock free dual ordered talent.
