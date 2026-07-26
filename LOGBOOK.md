@@ -7134,3 +7134,8 @@ B1=0.25 B2=0.25 B3=0.50 B4=0.0 **NULL**. Mol fusion does not unlock free dual ta
 
 G13 bidir+G6 reverse R→L select vs G6 only.
 B1=B2=1.0 B3=0.0 **NULL**. Reverse works without bidir; G13 not load-bearing under pair-link+prop.
+
+## 2026-07-26 sequential - BP-C52 NULL self_aware free dual
+
+self_aware_enabled True vs False free dual + wall.
+B1=0.0 B2=0.0 B3=0.25 B4=0.0 **NULL**. G16 self-aware does not unlock free dual talent.

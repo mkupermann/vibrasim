@@ -17,4 +17,4 @@ B1–B4. Seeds {5701,5711} trials 2. T=500. Budget ~8 min, hard cap 16 min.
 🔮 LEAN NULL. Self-model/workspace needs pattern_id activity; free dual inject unlikely to unlock decade order via G16 alone.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.0 B2=0.0 B3=0.25 B4=0.0. self_aware_enabled does not unlock free dual talent.
