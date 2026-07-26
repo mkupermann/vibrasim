@@ -285,6 +285,7 @@
 | C55 | **NULL** | stdp_alignment_strict free dual; treat pop collapse |
 | E207 | **PASS** | Reverse train-time pattern_id (no post-hoc tag) |
 | C56 | **NULL** | bridge_prop WTA free dual; no unlock |
+| E208 | **PASS** | Reverse long-idle durability under G12 (T=400) |
 
 ## What works (engineered port curriculum)
 
