@@ -27,15 +27,16 @@
 
 ## Doctrine
 
-1. **C16 remains** the only free dual partial unlock: `ilw_strength_decay_tau` + midplane wall (seed-set). Not re-opened by bar retune.
-2. Single-knob free dual inject+wall **variants above do not unlock** ordered ≥0.90 with treat>control delta bars.
-3. Further free dual work requires a **new primitive class** (not another decay/speed/geometry/pop/plasticity toggle from this list).
+1. **C16** remains a free dual partial unlock: `ilw_strength_decay_tau` + midplane wall (seed-set).
+2. Single-knob free dual inject+wall **variants in this table (C27–C41) do not unlock** ordered ≥0.90.
+3. **C42 PASS (later):** wider `freq_tolerance=0.08` is a **separate** unlock class (not in this NULL list; not C16 retune). Budget-fit; replicate as C43.
+4. Further free dual work: replicate C42, or new primitive **not** in C27–C41 table and not silent bar retune of C16/C42.
 
 ## Do not farm
 
-pair/triad decay · speed asym/slow · atom_repulsion · n_emit · r_1/r_2 · sideband cull · lambda_gen/dec · tight freq_tol · corr_plasticity · compartment · N_SIDE asymmetry · latch-tau retry without design change
+pair/triad decay · speed asym/slow · atom_repulsion · n_emit · r_1/r_2 · sideband cull · lambda_gen/dec · **tight** freq_tol · corr_plasticity · compartment · N_SIDE asymmetry · latch-tau retry without design change
 
 ## Open
 
-- Free dual only with mechanism **not** in this table and **not** C16 retune.
-- Engineered port multi-trial curricula (E162–E192) closed separately — not free dual.
+- **C42 wide freq_tol** free dual — replicate larger N (C43).
+- Engineered port multi-trial curricula (E162–E193) closed separately — not free dual.

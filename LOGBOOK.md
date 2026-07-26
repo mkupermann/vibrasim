@@ -7030,3 +7030,8 @@ Formal stop farming free dual single-knob inject+wall variants. C16 PARTIAL rema
 
 Dual cascade train; idle 400; both path fire-select.
 B1=B2=B3=1.0 **PASS**. Multi-hop content cascade durable without retrain.
+
+## 2026-07-26 sequential - BP-C42 PASS wider freq_tolerance free dual unlock
+
+freq_tolerance=0.08 vs 0.03 free dual + wall; budget-fit 2x2.
+B1=1.0 B2=0.0 B3=1.0 B4=1.0 **PASS**. New free dual mechanism class (wide band match). Recommend C43 replicate.
