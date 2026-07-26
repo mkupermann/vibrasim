@@ -18,4 +18,4 @@ Seeds {5401,5411} trials 8. Budget ~18 min, hard cap 36 min.
 🔮 LEAN PASS if E194 gate is multi-trial durable (E172 class for pattern_id).
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=B2=B3=1.0. Pattern-id gate multi-trial switch 1→2→1 without retrain closed.

@@ -7055,3 +7055,8 @@ B1=B2=B3=1.0 **PASS**. G12 pattern-id gate is a new selective multi-trial readou
 
 bistable_drive_rectified True vs False free dual + wall.
 B1=0.0 B2=0.25 B3=0.25 B4=-0.25 **NULL**. Rectified bistable drive does not unlock free dual talent.
+
+## 2026-07-26 sequential - BP-E195 PASS pattern-id multi-trial switch
+
+pid1 → pid2 → pid1 fire-select without retrain.
+B1=B2=B3=1.0 **PASS**. G12 gate multi-trial durable.
