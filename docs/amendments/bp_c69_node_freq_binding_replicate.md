@@ -17,4 +17,5 @@ B1–B4 (identical to C68). Seeds {6361,6371,6381,6391,6401} trials 3. T=500 N=2
 🔮 LEAN NULL (C42-class): budget-fit PASS often fails larger-N; B1 may land 0.6–0.8. If B1≥0.90 still, C68 class is more robust than C42.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.80 B2=0.20 B3=1.0 B4=0.60 (n=15).  
+Larger-N falsifies C68 budget-fit unlock (B1 fails 0.90). Strong positive delta remains. **C68 fragile** (C42-class). No bar retune.
