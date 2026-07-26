@@ -7079,3 +7079,8 @@ B1=0.0 B2=0.0 B3=0.0 B4=0.0 **NULL**. Polarity segregation does not unlock free 
 ## 2026-07-26 sequential - pattern-id G12 curriculum closure E194-E197
 
 Formal CLOSED PASS: select, multi-trial, train-time tag, tags for wrong-arm block. See bp_pattern_id_g12_curriculum_closure.md.
+
+## 2026-07-26 sequential - BP-E198 NULL soft-kill wrong-arm spills to pid1
+
+Soft kill R-lo; pre pid2 OK; post pid2 fail; pid1 also fails.
+B1=0.0 B2=1.0 B3=1.0 **NULL**. Shared PORT_R soft kill not arm-selective (E176 class).

@@ -265,6 +265,7 @@
 | E196 | **PASS** | Train-time pattern_id (no post-hoc tag) fire-select |
 | E197 | **PASS** | Tags load-bearing for wrong-arm block (not positive select) |
 | C46 | **NULL** | Polarity segregation free dual; no unlock |
+| E198 | **NULL** | Soft-kill R-lo also kills pid1 (shared port spill) |
 
 ## What works (engineered port curriculum)
 
@@ -298,6 +299,8 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 - Pattern-id multi-trial switch **PASS** (E195)  
 - Train-time pattern_id tagging **PASS** (E196; no post-hoc tag needed)  
 - Tags required for wrong-arm block **PASS** (E197; ambient allows positive select)  
+- Pattern-id G12 curriculum **CLOSED PASS** E194–E197 (`bp_pattern_id_g12_curriculum_closure.md`)  
+- Soft-kill wrong-arm on shared R **NULL** (E198 spill; use split ports)  
 - Port multi-trial association residual without map **PASS** (E162) — co-presence not generative partner  
 - Multi-assoc last-write residual c0→c1 **PASS** (E163) multislot OFF  
 - Assoc residual survives soft R kill **PASS** (E164; E155-class content durability)  
