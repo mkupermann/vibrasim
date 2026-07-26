@@ -17,4 +17,5 @@ B1–B4. Seeds {5241,5251} trials 2. T=500. Budget ~6 min, hard cap 12 min.
 🔮 LEAN NULL. Wider tolerance may increase binding but blur decade specialisation; unlikely 0.90 unlock.
 
 ## RESULT
-**PASS** (2026-07-26). B1=1.0 B2=0.0 B3=1.0 B4=1.0. Wider `freq_tolerance=0.08` unlocks free dual ordered talent vs default 0.03 control (budget-fit 2×2 seeds×trials). **New free dual mechanism class** beyond C16 strength-decay: looser band matching under dual inject + wall. Not a C16 retune. Note small N (budget-fit); replication recommended as C43.
+**PASS budget-fit** (2026-07-26). B1=1.0 B2=0.0 B3=1.0 B4=1.0 (2×2 only).  
+**Replication C43 NULL:** B1=0.67 on n=15 — does **not** hold at larger N under same bars. Treat as **seed-set / fragile signal**, not locked free dual unlock.

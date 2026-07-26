@@ -29,8 +29,8 @@
 
 1. **C16** remains a free dual partial unlock: `ilw_strength_decay_tau` + midplane wall (seed-set).
 2. Single-knob free dual inject+wall **variants in this table (C27–C41) do not unlock** ordered ≥0.90.
-3. **C42 PASS (later):** wider `freq_tolerance=0.08` is a **separate** unlock class (not in this NULL list; not C16 retune). Budget-fit; replicate as C43.
-4. Further free dual work: replicate C42, or new primitive **not** in C27–C41 table and not silent bar retune of C16/C42.
+3. **C42 budget-fit PASS then C43 NULL:** wider `freq_tolerance=0.08` does **not** robustly unlock free dual at larger N (B1=0.67). Fragile seed-set signal; not a locked class.
+4. Further free dual work: new primitive **not** in C27–C41 table and not silent bar retune of C16/C42/C43.
 
 ## Do not farm
 
