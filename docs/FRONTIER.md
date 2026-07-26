@@ -284,6 +284,7 @@
 | E206 | **PASS** | Reverse multi-trial switch 1→2→1 under G12 |
 | C55 | **NULL** | stdp_alignment_strict free dual; treat pop collapse |
 | E207 | **PASS** | Reverse train-time pattern_id (no post-hoc tag) |
+| C56 | **NULL** | bridge_prop WTA free dual; no unlock |
 
 ## What works (engineered port curriculum)
 
@@ -312,7 +313,8 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 
 ## Next hard only
 
-- Free talent: C16 PARTIAL (strength-decay+wall); C42–C44 wide freq_tol **fragile**; C26 FAILED; C27–C41 NULL farm closed; C45–C55 NULL  
+- Free talent: C16 PARTIAL (strength-decay+wall); C42–C44 wide freq_tol **fragile**; C26 FAILED; C27–C41 NULL farm closed; C45–C56 NULL  
+
 
 
 
@@ -335,6 +337,7 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 - Reverse also works G6 OFF **NULL** (E204; pair-link + charge prop native)  
 - Reverse under G12 pattern gate **PASS** (E205)  
 - Reverse multi-trial switch under G12 **PASS** (E206)  
+- Reverse train-time pattern_id (no post-hoc) **PASS** (E207)  
 
 - Port multi-trial association residual without map **PASS** (E162) — co-presence not generative partner  
 - Multi-assoc last-write residual c0→c1 **PASS** (E163) multislot OFF  
