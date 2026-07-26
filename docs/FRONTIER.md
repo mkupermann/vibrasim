@@ -209,8 +209,11 @@
 | E159 | **NULL** | Multi-trial dual decade switch fails after first write |
 | E160 | **PASS** | Dual decade reverse overwrite works with multislot OFF |
 | E161 | **PASS** | Dual decade multi-trial switch with multislot OFF |
+| C27 | **NULL** | Short pair_decay free dual 0.5 ordered; no unlock |
 
 ## What works (engineered port curriculum)
+
+See also `docs/amendments/bp_port_content_curriculum_closure.md` (E154–E161).
 
 See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore.md`, and `docs/amendments/bp_port_circuit_curriculum_closure.md` (E105–E153 CLOSED PARTIAL).
 
