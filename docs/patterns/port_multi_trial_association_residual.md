@@ -32,5 +32,7 @@
 - **E172 PASS:** multi-trial A→B→A fire select on one world without retrain.
 - **E173 PASS / E174 PASS:** hard kill and soft weaken both silence fire-select; restore returns — select is **bridge-dependent**.
 - **E175 NULL:** pure dual ILW without pair-link → no fire-select (B1=B2=B3=0). PRIM5 pair-link is required.
+- **E176 NULL:** c0-band endpoint kill silences L-lo but also L-hi — arm-selective kill not achieved.
+- See `docs/amendments/bp_fire_select_curriculum_closure.md` (E171–E176 CLOSED).
 - Residual under generative/partner-from-L alone still No (E12) — E171 is activation of existing R content via bridge, not partner creation after R wipe.
 - Free talent still blocked; residual family is engineered-port content, not free dual.

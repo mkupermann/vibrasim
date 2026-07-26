@@ -226,6 +226,7 @@
 | E173 | **PASS** | Fire-select killed by hard R bridge kill; restore returns |
 | E174 | **PASS** | Fire-select silenced by soft R bridge weaken; restore |
 | E175 | **NULL** | Fire-select without pair-link fails (B1=B2=B3=0) |
+| E176 | **NULL** | C0-arm kill silences L-lo but also kills L-hi select |
 
 ## What works (engineered port curriculum)
 
