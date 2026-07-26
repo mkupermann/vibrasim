@@ -12,7 +12,7 @@ Fan-in AND logic. Pair with E34 OR (gate off).
 ## Wipe-restore
 Soft dual wipe both L inputs then full restore recovers dual-fire AND (E128 PASS). Hard dual wipe + restore same (E129 PASS). Multi-trial soft (E130) and hard (E132) wipe-restore cycles PASS.
 
-**Selective re-arm after dual wipe:** Soft dual wipe + restore L1 only (with or without M–R rewrite) already dual ON (E131/E134 NULL — soft residual L2–M). **Hard dual wipe** + restore L1 only keeps dual OFF until L2 restored (E133 PASS). Doctrine: selective single-arm re-arm of AND after dual silence needs **hard** dual wipe, not soft.
+**Selective re-arm after dual wipe:** Soft dual wipe + restore L1 only (with or without M–R rewrite) already dual ON (E131/E134 NULL — soft residual L2–M). **Hard dual wipe** + restore one arm only keeps dual OFF until the other is restored — L1-first (E133), L2-first (E136), multi-trial L1 cycle (E135). Doctrine: selective single-arm re-arm of AND after dual silence needs **hard** dual wipe, not soft; order-symmetric.
 
 Hard single-arm disable/restore still E63/E64.
 

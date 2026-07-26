@@ -6620,3 +6620,8 @@ B1=1.0 B2=0.0 B3=1.0 **NULL**. Soft residual L2 not fixed by hop-scoped restore;
 
 Hard wipe L1-only OFF; both ON; hard wipe L1-only OFF again.
 B1=B2=B3=1.0 **PASS**. Multi-trial hard selective re-arm closed.
+
+## 2026-07-20 sequential - BP-E136 PASS hard dual wipe L2-first selective re-arm
+
+Hard dual wipe; restore L2 only dual OFF; restore L1 dual ON.
+B1=B2=B3=1.0 **PASS**. Selective hard re-arm order-symmetric (E133/E136); multi-trial E135.

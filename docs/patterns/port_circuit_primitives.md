@@ -112,6 +112,8 @@ E29–E37 PASS chain · PRIM5/6/8 · replace doctrine
 | Coincidence AND multi-trial hard wipe-restore | E132 PASS | hard wipe↔restore cycle |
 | Coincidence AND hard dual wipe + selective L1 | E133 PASS | L1-only dual OFF until L2 |
 | Coincidence AND soft wipe + L1–M hop-only | E134 NULL | residual L2 still dual ON |
+| Coincidence AND multi-trial hard selective re-arm | E135 PASS | L1-only OFF both ON L1-only OFF |
+| Coincidence AND hard wipe L2-first selective | E136 PASS | order-symmetric re-arm |
 
 ## Soft re-cut doctrine (E92–E100)
 After full wipe+restore, selective soft re-cut needs **mid distance > soft radius** (E94/E97/E100) or use **hard local kill** (E93/E95/E98/E99). Separate-L alone does not fix soft mid-collateral. See `port_wipe_restore.md`.
