@@ -24,4 +24,4 @@ Seeds {5021,5031} trials 8. Budget ~18 min, hard cap 36 min.
 🔮 LEAN PASS if cascade bridges prop charge like E150-class paths with spatial split. NULL if mid-hop fails content discrimination.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=B2=B3=1.0. Content+cascade multi-hop fire-select: two L→M→R paths with content freqs; fire L endpoint selects correct R via multi-hop bridges.
