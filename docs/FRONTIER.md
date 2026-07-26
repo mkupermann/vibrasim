@@ -252,6 +252,7 @@
 | E190 | **PASS** | Triple-hop content cascade L-M-A-R fire-select |
 | E191 | **PASS** | Incomplete cascade missing last hop fails select |
 | C39 | **NULL** | compartment_boundary free dual 0.5 ordered; no unlock |
+| C40 | **NULL** | lambda_dec free dual 0.5 ordered; no unlock |
 
 ## What works (engineered port curriculum)
 
@@ -280,7 +281,7 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 
 ## Next hard only
 
-- Free talent: C16 family CLOSED PARTIAL — need mechanism ≠ dual-inject+decay / port-seed / local scaffold; C26 latch-tau **FAILED** hard-cap; C27–C39 NULL families (pair/triad decay, asym/slow speed, atom_repulsion, n_emit, r_1/r_2, PRIM7 sideband cull, lambda_gen, tight freq_tol, corr_plasticity, compartment)  
+- Free talent: C16 family CLOSED PARTIAL — need mechanism ≠ dual-inject+decay / port-seed / local scaffold; C26 latch-tau **FAILED** hard-cap; C27–C40 NULL families (see `bp_night_lab_port_curriculum_synthesis_e162_e191.md`)  
 - Port multi-trial association residual without map **PASS** (E162) — co-presence not generative partner  
 - Multi-assoc last-write residual c0→c1 **PASS** (E163) multislot OFF  
 - Assoc residual survives soft R kill **PASS** (E164; E155-class content durability)  
@@ -299,6 +300,7 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 - Cascade soft mid-hop kill **PASS** (E189)  
 - Triple-hop content cascade fire-select **PASS** (E190)  
 - Incomplete cascade negative control **PASS** (E191 missing hop fails)  
+- Night-lab synthesis E162–E191 **CLOSED** (`bp_night_lab_port_curriculum_synthesis_e162_e191.md`)  
 - Multi-trial fire selective A→B→A **PASS** (E172)  
 - Fire-select bridge-dependent **PASS** (E173 hard kill silences; restore returns)  
 - Soft bridge weaken also silences fire-select **PASS** (E174)  

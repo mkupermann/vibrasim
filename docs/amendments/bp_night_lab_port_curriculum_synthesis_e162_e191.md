@@ -45,6 +45,7 @@
 | tight freq_tol | C36 | NULL (pop collapse) |
 | corr_plasticity | C38 | NULL |
 | compartment_boundary | C39 | NULL |
+| lambda_dec | C40 | NULL |
 | latch-tau | C26 | FAILED hard-cap |
 
 ## Next hard (not farm)

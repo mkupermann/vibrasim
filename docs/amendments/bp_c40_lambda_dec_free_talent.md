@@ -17,4 +17,4 @@ B1–B4. Seeds {5181,5191} trials 2. T=500. Budget ~6 min, hard cap 12 min.
 🔮 LEAN NULL. Faster free-vib decay may thin population or fail to unlock ordered talent.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.50 B2=0.25 B3=0.50 B4=0.25. Elevated lambda_dec does not unlock free dual ordered talent.
