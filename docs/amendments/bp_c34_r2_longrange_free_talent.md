@@ -17,4 +17,4 @@ B1–B4. Seeds {4881,4891} trials 2. T=500. Budget ~6 min, hard cap 12 min.
 🔮 LEAN NULL. Larger r_2 unlikely to unlock free dual ordered talent (may increase cross-talk).
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.0 B2=0.25 B3=0.0 B4=-0.25. Elevated r_2 collapses treat population; does not unlock free dual ordered talent.
