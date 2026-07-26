@@ -32,4 +32,6 @@ Not mid-kill. Not two-hop incomplete re-probe alone. Not free dual.
 
 ## RESULT
 
-*(filled after run)*
+**PASS** (2026-07-26). B1=1.0 B2=1.0 B3=1.0.  
+Omit A–R hops: reverse from R fails both paths. Full triple-hop reverse OK. Terminal A–R required (extends E229 incomplete boundary to three hops). Not mid-kill.
+

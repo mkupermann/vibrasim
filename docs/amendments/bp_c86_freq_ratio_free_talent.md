@@ -29,4 +29,6 @@ Seeds {7021,7031} trials 2. T=500. Budget ~8 min, hard cap 16 min.
 
 ## RESULT
 
-*(filled after run)*
+**NULL** (2026-07-26). B1=0.0 B2=0.50 B3=0.0 B4=-0.50.  
+Elevated `freq_ratio=0.25` does not unlock free dual talent; treat pop collapses.
+

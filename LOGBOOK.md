@@ -7453,3 +7453,13 @@ B1=B2=B3=1.0 **PASS**. Forward concurrent dual co-activates (mirror of E230 reve
 
 repulsion_threshold_ratio=2 vs 1000 free dual + wall.
 B1=0.25 B2=0.25 B3=0.50 B4=0.0 **NULL**. No free dual unlock.
+
+## 2026-07-26 sequential - BP-E233 PASS triple-hop reverse incomplete
+
+Omit A-R: reverse fails; full path reverse OK.
+B1=B2=B3=1.0 **PASS**. Terminal A-R hop required (three-hop incomplete boundary).
+
+## 2026-07-26 sequential - BP-C86 NULL freq_ratio free dual
+
+freq_ratio=0.25 vs 0.08 free dual + wall.
+B1=0.0 B2=0.50 B3=0.0 B4=-0.50 **NULL**. No free dual unlock.
