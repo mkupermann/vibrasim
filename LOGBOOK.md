@@ -7463,3 +7463,13 @@ B1=B2=B3=1.0 **PASS**. Terminal A-R hop required (three-hop incomplete boundary)
 
 freq_ratio=0.25 vs 0.08 free dual + wall.
 B1=0.0 B2=0.50 B3=0.0 B4=-0.50 **NULL**. No free dual unlock.
+
+## 2026-07-26 sequential - BP-E234 PASS reverse retrain coexistence
+
+Train p0 then p1 no kill; both reverse coexist.
+B1=B2=B3=1.0 **PASS**. Dual reverse co-residence without mid-kill.
+
+## 2026-07-26 sequential - BP-C87 NULL compartment_mode soft free dual
+
+compartment_mode soft vs clamp (k=1 both) free dual + wall.
+B1=0.50 B2=0.25 B3=0.50 B4=0.25 **NULL**. Soft mode does not unlock free dual talent.
