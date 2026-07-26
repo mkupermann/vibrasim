@@ -18,4 +18,4 @@ Seeds {5681,5691} trials 6. Budget ~20 min, hard cap 40 min.
 🔮 LEAN PASS if G13 bidir + G6 prop enables reverse generative recall on pair-linked arms; LEAN NULL if pair-link charge prop is one-way only and G6 insufficient.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=1.0 B2=1.0 B3=0.0. Reverse R→L select works with treat, but **also** with ctrl (G6 ON, bidir OFF). G13 bidirectional not load-bearing for reverse fire-select under pair-link + bridge prop; reverse already available without bidir.
