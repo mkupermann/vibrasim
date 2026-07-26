@@ -6791,3 +6791,8 @@ docs/patterns/port_multi_trial_association_residual.md from E162 PASS. Free dual
 
 c0 L-lo R-hi then c1 L-hi R-lo; multislot OFF; L-only c1 probe.
 B1=B2=B3=1.0 **PASS**. Last-write association residual reconfig closed (E160/E161 + E162 class).
+
+## 2026-07-26 sequential - BP-E164 PASS assoc residual soft R kill
+
+Multi-trial c0; soft kill R; L-only probe; multislot OFF.
+B1=B2=B3=1.0 **PASS**. Residual co-presence survives soft port kill (E155 class).

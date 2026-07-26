@@ -24,4 +24,4 @@ Seeds {4401,4411} trials 8. Budget ~12 min, hard cap 24 min.
 🔮 LEAN PASS for residual survival (E155 soft kill leaves content). NULL if residual is more fragile than decade specialisation.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=B2=B3=1.0. Soft R-port kill does not clear multi-trial association residual; L-only probe still finds R-high co-presence. Aligns with E155 soft-kill content survival.
