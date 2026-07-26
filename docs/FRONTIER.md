@@ -244,6 +244,7 @@
 | C36 | **NULL** | freq_tol=0.01 free dual pop collapse; no unlock |
 | E185 | **PASS** | Interleaved multi-trial train fire-select |
 | C37 | **NULL** | Slow speed free dual 0.25 ordered; no unlock |
+| E186 | **PASS** | Content+cascade multi-hop fire-select dual path |
 
 ## What works (engineered port curriculum)
 
@@ -285,6 +286,7 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 - Fire-readout selective residual **PASS** (E171; L-fire → R partner latch)  
 - Fire-select long-idle durability **PASS** (E184 T=400 no retrain)  
 - Interleaved multi-trial train fire-select **PASS** (E185; blocked train not required)  
+- Content+cascade multi-hop fire-select **PASS** (E186 dual L→M→R paths)  
 - Multi-trial fire selective A→B→A **PASS** (E172)  
 - Fire-select bridge-dependent **PASS** (E173 hard kill silences; restore returns)  
 - Soft bridge weaken also silences fire-select **PASS** (E174)  
