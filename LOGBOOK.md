@@ -7279,3 +7279,8 @@ B1=B2=B3=1.0 **PASS**. Reverse soft mid-hop kill path-selective.
 
 anchor_damping=0.7 vs 0 free dual + wall.
 B1=0.25 B2=0.0 B3=0.25 B4=0.25 **NULL**. Anchor damping does not unlock free dual talent.
+
+## 2026-07-26 sequential - BP-E218 PASS cascade reverse long-idle
+
+Dual cascade train; idle 400; reverse both paths.
+B1=B2=B3=1.0 **PASS**. Cascade reverse durable without retrain.

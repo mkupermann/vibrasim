@@ -19,4 +19,4 @@ Seeds {6281,6291} trials 6. Budget ~20 min, hard cap 40 min.
 🔮 LEAN PASS if cascade reverse durable like forward cascade long-idle E193.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=1.0 B2=1.0 B3=1.0. Cascade reverse both paths durable after idle T=400.
