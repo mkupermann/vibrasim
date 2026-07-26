@@ -17,4 +17,4 @@ B1–B4. Seeds {5781,5791} trials 2. T=500. Budget ~8 min, hard cap 16 min.
 🔮 LEAN NULL. Workspace broadcast needs pattern_id winners; free dual inject unlikely to unlock via broadcast OFF/ON.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.25 B2=0.25 B3=0.25 B4=0.0. workspace_broadcast OFF vs ON does not unlock free dual talent.
