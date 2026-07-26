@@ -19,4 +19,4 @@ Seeds {5601,5611} trials 8. Budget ~18 min, hard cap 36 min.
 🔮 LEAN PASS if gate checks firing atom (L) pattern_id only; LEAN NULL if partner R tags also required.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=1.0 B2=1.0 B3=1.0. L-only pattern tags sufficient for correct select and wrong-arm block; R partner tags not required.

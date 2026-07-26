@@ -19,9 +19,10 @@
 - Mean selective residual NULL (E169/E170)
 - Split-port spatial surgery (E177–E183)
 
-## Doctrine (E197)
+## Doctrine (E197–E201)
 - Ambient (pid=0) fires under gate → **positive select works without tags**.
 - **Wrong-arm block requires non-zero mismatched tags** (E197).
+- **L-only tags suffice** for wrong-arm block; R partner tags not required (E201).
 
 ## Soft-kill arm surgery (E198–E200)
 - Shared PORT_R soft kill wrong-arm **spills** (E198 NULL) — silences both pid arms.

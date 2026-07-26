@@ -7109,3 +7109,8 @@ B1=B2=B3=1.0 **PASS**. Multi-trial soft surgery + restore under G12+split.
 
 bridge_atom_propagation_enabled True vs False free dual + wall.
 B1=0.25 B2=0.0 B3=0.25 B4=0.25 **NULL**. G6 does not unlock free dual talent.
+
+## 2026-07-26 sequential - BP-E201 PASS L-only pattern tags G12
+
+Tag only L endpoints; R stays pid=0. Correct + wrong-arm + both-end sanity.
+B1=B2=B3=1.0 **PASS**. Gate load-bearing on firing L atom tags; partner R tags not required.
