@@ -19,4 +19,4 @@ Seeds {3601,3611} trials 6. Budget ~12 min, hard cap 24 min.
 🔮 LEAN PASS. Hard multi-trial matches soft E130.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Hard multi-trial AND wipe-restore cycle closed. Soft (E130) + hard multi-trial pure AND reconfig complete.
