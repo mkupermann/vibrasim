@@ -17,4 +17,4 @@ B1–B4. Seeds {4921,4931} trials 2. T=500. Budget ~6 min, hard cap 12 min.
 🔮 LEAN NULL. Ambient regeneration may blur L/R specialization rather than unlock ordered talent.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.25 B2=0.25 B3=1.0 B4=0.0. Ambient lambda_gen does not unlock free dual ordered talent (pop ok, ordered not).
