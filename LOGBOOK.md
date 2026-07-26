@@ -6786,3 +6786,8 @@ B1=0.5 B2=0.25 B3=0.75 B4=0.25 **NULL**. Short triad decay does not unlock free 
 ## 2026-07-26 sequential - pattern port multi-trial association residual
 
 docs/patterns/port_multi_trial_association_residual.md from E162 PASS. Free dual decay-tau family C27/C28 both NULL — do not farm further pair/triad decay free dual.
+
+## 2026-07-26 sequential - BP-E163 PASS multi-assoc last-write residual
+
+c0 L-lo R-hi then c1 L-hi R-lo; multislot OFF; L-only c1 probe.
+B1=B2=B3=1.0 **PASS**. Last-write association residual reconfig closed (E160/E161 + E162 class).

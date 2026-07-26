@@ -26,4 +26,4 @@ Seeds {4381,4391} trials 8. Budget ~10 min, hard cap 20 min.
 🔮 LEAN PASS if multislot OFF last-write reconfig extends to residual co-presence. NULL if c0 residual bleeds into c1 probe.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=B2=B3=1.0. After c0→c1 multi-trial switch, L-only at c1 L yields R-low residual (c1); control c0-only does not spuriously produce c1 residual. Last-write residual reconfig under multislot OFF (extends E160/E161 + E162).
