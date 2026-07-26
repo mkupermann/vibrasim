@@ -18,4 +18,4 @@ Seeds {4041,4051} trials 6. Budget ~16 min, hard cap 32 min.
 🔮 LEAN PASS. Dual cascade multi-trial selective reconfig.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Dual cascade multi-trial hard selective path0 closed.

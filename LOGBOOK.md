@@ -6705,3 +6705,8 @@ B1=B2=B3=1.0 **PASS**. Dual cascade concurrent + selective silence closed.
 
 Hard cut all four L ports; restore both cascade paths dual ON.
 B1=B2=B3=1.0 **PASS**. Dual cascade wipe-restore + selective (E150) closed.
+
+## 2026-07-20 sequential - BP-E152 PASS dual cascade multi-trial hard selective
+
+Silence path0; restore both ON; silence path0 again path1 ON.
+B1=B2=B3=1.0 **PASS**. Dual cascade multi-trial selective closed.
