@@ -16,6 +16,7 @@
 | E208 | PASS | Long-idle T=400 durable |
 | E209 | PASS | Split soft-kill L1 silences reverse pid2; pid1 survives |
 | E210 | PASS | Soft-kill then retrain-restore reverse pid2 |
+| E212 | PASS | Hard-kill L1 silences reverse pid2; pid1 survives |
 
 ## Doctrine
 

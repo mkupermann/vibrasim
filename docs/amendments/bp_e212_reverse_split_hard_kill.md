@@ -18,4 +18,4 @@ Seeds {6041,6051} trials 6. Budget ~20 min, hard cap 40 min.
 🔮 LEAN PASS if hard kill isolates reverse arm like soft E209 / forward E177.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=1.0 B2=1.0 B3=1.0. Hard kill L1 silences reverse pid2; reverse pid1 survives under G12+split.

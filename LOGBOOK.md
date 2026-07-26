@@ -7219,3 +7219,8 @@ B1=B2=B3=1.0 **PASS**. Bidirectional select coexists multi-trial without retrain
 
 bistable_rate=0.05 vs 0 free dual + wall.
 B1=0.0 B2=0.0 B3=0.0 B4=0.0 **NULL**. Bistable rate collapses treat pop; no unlock.
+
+## 2026-07-26 sequential - BP-E212 PASS reverse split hard-kill
+
+Hard kill L1; reverse pid2 fail; reverse pid1 survives.
+B1=B2=B3=1.0 **PASS**. Reverse hard surgery arm-selective under split+G12.
