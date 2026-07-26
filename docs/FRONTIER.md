@@ -220,6 +220,7 @@
 | E168 | **PASS** | Write-order gap residual order-blind (Δ=0) |
 | E169 | **NULL** | Selective residual fails (B2=B3=0; capacity≠select) |
 | E170 | **NULL** | Pair-link selective residual same fail (B2=B3=0) |
+| E171 | **PASS** | Fire-readout selective residual (L-fire → R partner latch) |
 
 ## What works (engineered port curriculum)
 
@@ -243,7 +244,8 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 | Selective recall on all-to-all bridges | No (E15) |
 | End-state via membrane charge alone | No (E13/E18/E19) — peak or latch |
 | Multi-hop + replace ON | No (E30) |
-| Selective residual (probe L → R partner) | No (E169/E170) — capacity ≠ select |
+| Selective residual via L-only rewrite mean | No (E169/E170) — capacity ≠ select |
+| Selective residual via L-fire + bridge latch | **Yes (E171 PASS)** |
 
 ## Next hard only
 
@@ -256,7 +258,8 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 - Temporal-gap association residual **PASS** (E167; not simultaneous-only)  
 - Write-order residual order-blind **PASS** (E168)  
 - Map-free selective residual **NULL** (E169; capacity ≠ select partner)  
-- Pair-link selective residual **NULL** (E170; bridges ≠ selective readout)  
+- Pair-link selective residual **NULL** (E170; bridges ≠ selective mean readout)  
+- Fire-readout selective residual **PASS** (E171; L-fire → R partner latch)  
 - Port circuit curriculum **CLOSED PARTIAL** E105–E153 (bp_port_circuit_curriculum_closure.md)  
 - Port wipe-restore E71–E100 closed; dual 3-hop re-cut after wipe-restore E123–E127 CLOSED NULL  
 - Soft inhibit: retrain-reversible (E44), durable without retrain (E55) — closed for two-hop  
