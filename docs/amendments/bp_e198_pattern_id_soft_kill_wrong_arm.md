@@ -20,4 +20,4 @@ Seeds {5501,5511} trials 8. Budget ~20 min, hard cap 40 min.
 🔮 LEAN PASS if soft kill on R-lo endpoints silences c1 path only (spatial+freq local).
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.0 B2=1.0 B3=1.0. Soft kill R-lo silences pid2 (intended) but also kills pid1 select (B1 fail). Shared PORT_R spatial locality — soft weaken spills to both R bands (E176-class shared-port limit). Wrong-arm soft surgery needs split ports or finer targeting.
