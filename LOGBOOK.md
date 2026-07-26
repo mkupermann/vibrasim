@@ -7119,3 +7119,8 @@ B1=B2=B3=1.0 **PASS**. Gate load-bearing on firing L atom tags; partner R tags n
 
 lateral_inhibition + stdp vs stdp-only free dual + wall.
 B1=0.25 B2=0.0 B3=0.25 B4=0.25 **NULL**. G8 does not unlock free dual talent.
+
+## 2026-07-26 sequential - BP-E202 NULL R-only pattern tags G12
+
+Tag only R endpoints; L stays pid=0. Correct OK; wrong-arm still selects.
+B1=1.0 B2=0.0 B3=1.0 **NULL**. Partner tags alone do not suppress; complements E201 L-only PASS.
