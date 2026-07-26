@@ -17,4 +17,7 @@ B1–B4. Seeds {6341,6351} trials 2. T=500. Budget ~8 min, hard cap 16 min.
 🔮 LEAN NULL. Removing 8% node binding rule may increase mess without decade order unlock.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=1.0 B2=0.5 B3=1.0 B4=0.5.  
+`node_freq_binding=False` (proximity-only node→node bind) unlocks ordered free dual talent vs default ON.  
+**Prediction miss:** 🔮 LEAN NULL; outcome PASS — proximity binding helps decade segregation more than expected.  
+**Caution:** budget-fit 2×2; recommend larger-N replicate before treating as robust (C42-class risk).
