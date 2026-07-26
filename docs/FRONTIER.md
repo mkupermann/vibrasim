@@ -282,6 +282,7 @@
 | E205 | **PASS** | Reverse fire-select under G12 pattern gate |
 | C54 | **NULL** | workspace_broadcast OFF free dual; no unlock |
 | E206 | **PASS** | Reverse multi-trial switch 1→2→1 under G12 |
+| C55 | **NULL** | stdp_alignment_strict free dual; treat pop collapse |
 
 ## What works (engineered port curriculum)
 
@@ -310,7 +311,8 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 
 ## Next hard only
 
-- Free talent: C16 PARTIAL (strength-decay+wall); C42–C44 wide freq_tol **fragile**; C26 FAILED; C27–C41 NULL farm closed; C45–C54 NULL  
+- Free talent: C16 PARTIAL (strength-decay+wall); C42–C44 wide freq_tol **fragile**; C26 FAILED; C27–C41 NULL farm closed; C45–C55 NULL  
+
 
 
 

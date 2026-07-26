@@ -17,4 +17,4 @@ B1–B4. Seeds {5821,5831} trials 2. T=500. Budget ~8 min, hard cap 16 min.
 🔮 LEAN NULL. Strict orientation alignment filters STDP; free dual inject unlikely to unlock decade order.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.0 B2=0.5 B3=0.0 B4=-0.5. stdp_alignment_strict_threshold=0.95 collapses treat pop; does not unlock free dual talent.
