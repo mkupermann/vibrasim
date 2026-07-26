@@ -17,4 +17,4 @@ B1–B4. Seeds {5861,5871} trials 2. T=500. Budget ~8 min, hard cap 16 min.
 🔮 LEAN NULL. G9.5 WTA needs strong oriented bridges; free dual inject unlikely to unlock decade order.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.25 B2=0.75 B3=0.25 B4=-0.5. G9.5 bridge prop WTA does not unlock free dual talent; hurts vs G6-only ctrl.

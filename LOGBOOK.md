@@ -7174,3 +7174,8 @@ B1=0.0 B2=0.5 B3=0.0 B4=-0.5 **NULL**. Strict alignment collapses treat pop; no 
 
 Train with active_pattern_id; no post-hoc tag; reverse under G12.
 B1=B2=B3=1.0 **PASS**. Train-time tags suffice for reverse like E196 forward.
+
+## 2026-07-26 sequential - BP-C56 NULL bridge prop WTA free dual
+
+bridge_atom_propagation WTA True vs False free dual + wall (G6 on).
+B1=0.25 B2=0.75 B3=0.25 B4=-0.5 **NULL**. G9.5 WTA does not unlock free dual talent.
