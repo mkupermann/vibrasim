@@ -32,4 +32,6 @@ Not mid-kill. Not concurrent dual R. Not free dual. Not two-hop reverse re-probe
 
 ## RESULT
 
-*(filled after run)*
+**PASS** (2026-07-26). B1=1.0 B2=1.0 B3=1.0.  
+Triple-hop reverse cascade fire-select works for both dual paths. Reverse prop chains L←M←A←R like forward E190 / reverse E214. Not mid-kill.
+

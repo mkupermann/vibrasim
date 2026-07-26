@@ -31,4 +31,6 @@ Seeds {6941,6951} trials 2. T=500. Budget ~8 min, hard cap 16 min.
 
 ## RESULT
 
-*(filled after run)*
+**NULL** (2026-07-26). B1=0.0 B2=0.25 B3=0.0 B4=-0.25.  
+`polarity_split=0.9` does not unlock free dual talent; treat pop collapses (B3=0).
+
