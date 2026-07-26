@@ -7149,3 +7149,8 @@ B1=1.0 B2=0.0 B3=1.0 **NULL**. Reverse pair-link-native; G6 not required.
 
 bridge_lock_threshold=0.5 vs 0 free dual + wall (stdp on both).
 B1=0.5 B2=0.5 B3=0.5 B4=0.0 **NULL**. G9 lock does not unlock free dual talent.
+
+## 2026-07-26 sequential - BP-E205 PASS reverse under G12 gate
+
+Reverse R→L fire-select with pattern tags + eligibility gate.
+B1=B2=B3=1.0 **PASS**. Reverse path respects G12 wrong-pattern block.

@@ -279,6 +279,7 @@
 | C52 | **NULL** | self_aware free dual; no unlock |
 | E204 | **NULL** | Reverse works G6 OFF; pair-link-native reverse |
 | C53 | **NULL** | bridge_lock free dual; no unlock |
+| E205 | **PASS** | Reverse fire-select under G12 pattern gate |
 
 ## What works (engineered port curriculum)
 
@@ -326,6 +327,7 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 - R-only pattern tags **NULL** wrong-arm (E202; firing-side tags required)  
 - Reverse R→L fire-select works but G13 bidir not required **NULL** (E203 B3=0)  
 - Reverse also works G6 OFF **NULL** (E204; pair-link + charge prop native)  
+- Reverse under G12 pattern gate **PASS** (E205)  
 
 - Port multi-trial association residual without map **PASS** (E162) — co-presence not generative partner  
 - Multi-assoc last-write residual c0→c1 **PASS** (E163) multislot OFF  
