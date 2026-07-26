@@ -23,4 +23,4 @@ Seeds {4361,4371} trials 2. T=500. N_SIDE=250. n_nodes_max=8192. Budget ~6 min, 
 🔮 LEAN NULL. Shorter triad decay unlikely to unlock free dual ordered talent.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.50 B2=0.25 B3=0.75 B4=0.25. Short triad_decay_time does not unlock free dual ordered talent (B1/B3 fail). Same family as C24–C27 decay/inject ceiling.
