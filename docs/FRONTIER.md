@@ -249,6 +249,7 @@
 | E187 | **PASS** | Cascade mid-hop kill M0 silences path0; path1 on |
 | E188 | **PASS** | Cascade mid-hop kill + restore multi-trial |
 | E189 | **PASS** | Cascade soft mid-hop kill; path1 survives |
+| E190 | **PASS** | Triple-hop content cascade L-M-A-R fire-select |
 
 ## What works (engineered port curriculum)
 
@@ -294,6 +295,7 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 - Cascade mid-hop selective kill **PASS** (E187)  
 - Cascade mid-hop kill+restore multi-trial **PASS** (E188)  
 - Cascade soft mid-hop kill **PASS** (E189)  
+- Triple-hop content cascade fire-select **PASS** (E190)  
 - Multi-trial fire selective A→B→A **PASS** (E172)  
 - Fire-select bridge-dependent **PASS** (E173 hard kill silences; restore returns)  
 - Soft bridge weaken also silences fire-select **PASS** (E174)  

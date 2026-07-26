@@ -22,4 +22,4 @@ Seeds {5121,5131} trials 8. Budget ~24 min, hard cap 48 min.
 🔮 LEAN PASS if two-hop doctrine scales to three hops. NULL if extra hop attenuates latch below bar.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=B2=B3=1.0. Triple-hop L→M→A→R content cascade fire-select scales from two-hop (E186); dual paths both select.
