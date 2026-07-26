@@ -32,4 +32,6 @@ Not mid-kill. Not incomplete omit. Not free dual. Not three-hop re-probe.
 
 ## RESULT
 
-*(filled after run)*
+**PASS** (2026-07-26). B1=1.0 B2=1.0 B3=1.0.  
+Four-hop dual reverse cascade fire-select works both paths. Reverse prop extends through four hops. Not mid-kill.
+

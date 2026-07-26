@@ -7483,3 +7483,13 @@ B1=B2=B3=1.0 **PASS**. Middle hop required (distinct from E233 A-R omit).
 
 bistable_drive_mode absolute vs relative (rate=0.05) free dual + wall.
 B1=0.25 B2=0.50 B3=0.25 B4=-0.25 **NULL**. No free dual unlock.
+
+## 2026-07-26 sequential - BP-E236 PASS four-hop cascade reverse
+
+Four-hop dual reverse fire-select both paths.
+B1=B2=B3=1.0 **PASS**. Reverse extends through four hops (not mid-kill).
+
+## 2026-07-26 sequential - BP-C89 NULL synaptic_post_search free dual
+
+synaptic_post_search_samples=5 vs 1 free dual + wall.
+B1=0.0 B2=0.25 B3=0.25 B4=-0.25 **NULL**. No free dual unlock.
