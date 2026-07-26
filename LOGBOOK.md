@@ -7159,3 +7159,8 @@ B1=B2=B3=1.0 **PASS**. Reverse path respects G12 wrong-pattern block.
 
 workspace_broadcast OFF vs ON free dual + wall.
 B1=0.25 B2=0.25 B3=0.25 B4=0.0 **NULL**. Broadcast toggle does not unlock free dual talent.
+
+## 2026-07-26 sequential - BP-E206 PASS reverse multi-trial switch G12
+
+Reverse R→L pid1 → pid2 → pid1 without retrain.
+B1=B2=B3=1.0 **PASS**. Reverse multi-trial durable under G12 like E195 forward.

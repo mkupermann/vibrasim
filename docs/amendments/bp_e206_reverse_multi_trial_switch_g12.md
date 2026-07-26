@@ -19,4 +19,4 @@ Seeds {5801,5811} trials 6. Budget ~18 min, hard cap 36 min.
 🔮 LEAN PASS if reverse+G12 multi-trial durable like E195 forward path.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=1.0 B2=1.0 B3=1.0. Reverse multi-trial switch pid1→pid2→pid1 durable without retrain under G12.
