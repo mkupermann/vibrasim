@@ -6947,3 +6947,8 @@ B1=0.25 B2=0.25 B3=1.0 B4=0.0 **NULL**. Ambient regen does not unlock free dual 
 
 Train multi-assoc pair-link; idle 400; fire both arms select.
 B1=B2=B3=1.0 **PASS**. Fire-select persists without retrain over long idle.
+
+## 2026-07-26 sequential - BP-C36 NULL tight freq_tolerance free dual
+
+freq_tolerance=0.01 vs 0.03 free dual + wall.
+B1=0.0 B2=0.25 B3=0.0 B4=-0.25 **NULL**. Tighter tolerance collapses treat pop; no talent unlock.

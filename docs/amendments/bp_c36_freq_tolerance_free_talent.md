@@ -17,4 +17,4 @@ B1–B4. Seeds {4961,4971} trials 2. T=500. Budget ~6 min, hard cap 12 min.
 🔮 LEAN NULL. Tighter tolerance may reduce binding/pop more than it unlocks ordered talent.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.0 B2=0.25 B3=0.0 B4=-0.25. Tighter freq_tolerance collapses treat population; does not unlock free dual ordered talent.
