@@ -7353,3 +7353,8 @@ B1=0.7778 B2=0.7778 B3=1.0 B4=0.0 **NULL**. Ambient gate no-op; C16 unlock fails
 
 synaptic_transmission_strength=2 vs 0.5 free dual + wall.
 B1=0.0 B2=0.25 B3=0.25 B4=-0.25 **NULL**. Elevated synaptic transmission does not unlock free dual talent.
+
+## 2026-07-26 sequential - BP-E224 NULL cascade reverse graded soft mid
+
+Half soft mid M0 (frac=0.5) vs full (frac=1.0).
+B1=0.0 B2=1.0 B3=1.0 **NULL**. Half already silences reverse p0; reverse multi-hop fragile to soft mid weaken.
