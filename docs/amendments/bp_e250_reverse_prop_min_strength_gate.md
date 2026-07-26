@@ -32,4 +32,6 @@ Not free dual. Not mid-kill. Not reverse AND re-probe (E249).
 
 ## RESULT
 
-*(filled after run)*
+**NULL** (2026-07-26). B1=1.0 B2=0.0 B3=1.0.  
+min_strength=0 reverse OK. min_strength=50 does **not** block reverse (B2=0) — trained pair-link strengths exceed 50 or reverse prop does not strictly gate on min_strength under this scaffold. Finding: pre-registered min=50 is not a reverse silencer after standard dual train.
+
