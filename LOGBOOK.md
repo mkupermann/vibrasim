@@ -7099,3 +7099,8 @@ B1=B2=B3=1.0 **PASS**. Spatial split isolates soft surgery; pid1 survives under 
 
 sparse_firing_enabled top_k=3 vs off free dual + wall.
 B1=0.0 B2=0.75 B3=0.0 B4=-0.75 **NULL**. Sparse firing collapses treat pop; no talent unlock.
+
+## 2026-07-26 sequential - BP-E200 PASS split+G12 soft-kill then restore
+
+Soft kill R1; pid2 fail; pid1 survives; retrain L1-R1 restores pid2.
+B1=B2=B3=1.0 **PASS**. Multi-trial soft surgery + restore under G12+split.

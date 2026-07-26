@@ -18,4 +18,4 @@ Seeds {5561,5571} trials 6. Budget ~20 min, hard cap 40 min.
 🔮 LEAN PASS if retrain ILW rebuilds soft-weakened bridges on split R1 under G12 (E44-class restore + E199 isolation).
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=1.0 B2=1.0 B3=1.0. Soft kill R1 silences pid2; pid1 survives; retrain L1–R1 restores pid2 under G12+split.
