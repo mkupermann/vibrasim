@@ -7264,3 +7264,8 @@ B1=0.0 B2=0.25 B3=0.25 B4=-0.25 **NULL**. Curvature does not unlock free dual ta
 
 Cascade reverse pid1 → pid2 → pid1 without retrain.
 B1=B2=B3=1.0 **PASS**. Cascade reverse multi-trial durable under G12.
+
+## 2026-07-26 sequential - BP-C65 NULL membrane_channel free dual
+
+membrane_channel_k=1 vs 0 free dual + wall.
+B1=0.25 B2=0.25 B3=0.5 B4=0.0 **NULL**. Membrane channel does not unlock free dual talent.

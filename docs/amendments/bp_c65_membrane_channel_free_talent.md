@@ -17,4 +17,4 @@ B1–B4. Seeds {6221,6231} trials 2. T=500. Budget ~8 min, hard cap 16 min.
 🔮 LEAN NULL. Membrane channel needs formed membrane geometry; free dual inject unlikely to unlock decade order.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.25 B2=0.25 B3=0.5 B4=0.0. membrane_channel_k does not unlock free dual talent.
