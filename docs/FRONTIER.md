@@ -327,6 +327,7 @@
 | C77 | **NULL** | membrane_channel_uptake free dual; no unlock |
 | E227 | **PASS** | Cascade reverse hard mid-kill M1; reverse p0 survives |
 | C78 | **NULL** | flux_threshold free dual; no unlock |
+| E228 | **PASS** | Cascade reverse hard mid M1 kill then retrain-restore |
 
 ## What works (engineered port curriculum)
 
@@ -421,6 +422,7 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 - No content auto-tag without active_pattern_id **PASS** (E225)  
 - Cascade reverse soft mid-kill M1 symmetric **PASS** (E226)  
 - Cascade reverse hard mid-kill M1 symmetric **PASS** (E227)  
+- Cascade reverse hard mid M1 restore **PASS** (E228)  
 - G12+C16 free dual hybrid budget-fit **NULL** (E222; gate no-op ambient)  
 - G12+C16 free dual hybrid full C16 scale **NULL** (E223; B1=B2=0.78; neuron_dyn may break C16)  
 
