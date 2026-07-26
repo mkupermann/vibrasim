@@ -32,4 +32,6 @@ Not mid-kill graded soft (E224). Not free dual. Not hop-depth.
 
 ## RESULT
 
-*(filled after run)*
+**NULL** (2026-07-26). B1=0.0 B2=1.0 B3=1.0.  
+Weak pair-writes (N_WRITE=2, N_TRAIN=6) still produce reverse success — graded weak arm does not fail. Strong arm OK. Reverse cascade is **dose-robust** at low write counts under this scaffold (not mid-kill). Finding: weak≠fail at pre-registered weak dose.
+

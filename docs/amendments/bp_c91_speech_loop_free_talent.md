@@ -29,4 +29,6 @@ Seeds {7221,7231} trials 2. T=500. Budget ~8 min, hard cap 16 min.
 
 ## RESULT
 
-*(filled after run)*
+**NULL** (2026-07-26). B1=0.50 B2=0.75 B3=0.50 B4=-0.25.  
+`speech_loop_strength=1.0` does not unlock free dual talent.
+
