@@ -17,4 +17,4 @@ B1–B4. Seeds {5001,5011} trials 2. T=500. Budget ~6 min, hard cap 12 min.
 🔮 LEAN NULL. Symmetric slow speeds unlikely to unlock free dual ordered talent.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.25 B2=0.0 B3=0.25 B4=0.25. Symmetric slow speeds do not unlock free dual ordered talent.

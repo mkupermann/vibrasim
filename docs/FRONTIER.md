@@ -243,6 +243,7 @@
 | E184 | **PASS** | Fire-select durable after long idle T=400 |
 | C36 | **NULL** | freq_tol=0.01 free dual pop collapse; no unlock |
 | E185 | **PASS** | Interleaved multi-trial train fire-select |
+| C37 | **NULL** | Slow speed free dual 0.25 ordered; no unlock |
 
 ## What works (engineered port curriculum)
 
@@ -271,7 +272,7 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 
 ## Next hard only
 
-- Free talent: C16 family CLOSED PARTIAL — need mechanism ≠ dual-inject+decay / port-seed / local scaffold; C26 latch-tau **FAILED** hard-cap; C27–C36 NULL families (pair/triad decay, speed, atom_repulsion, n_emit, r_1/r_2, PRIM7 sideband cull, lambda_gen, tight freq_tol)  
+- Free talent: C16 family CLOSED PARTIAL — need mechanism ≠ dual-inject+decay / port-seed / local scaffold; C26 latch-tau **FAILED** hard-cap; C27–C37 NULL families (pair/triad decay, asym/slow speed, atom_repulsion, n_emit, r_1/r_2, PRIM7 sideband cull, lambda_gen, tight freq_tol)  
 - Port multi-trial association residual without map **PASS** (E162) — co-presence not generative partner  
 - Multi-assoc last-write residual c0→c1 **PASS** (E163) multislot OFF  
 - Assoc residual survives soft R kill **PASS** (E164; E155-class content durability)  
