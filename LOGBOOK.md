@@ -7398,3 +7398,8 @@ B1=0.25 B2=0.0 B3=0.25 B4=0.25 **NULL**. Elevated flux threshold does not unlock
 
 Hard kill M1; reverse p1 fail; reverse p0 OK; retrain path1 restores reverse p1.
 B1=B2=B3=1.0 **PASS**. Hard M1 mid-kill multi-trial reversible.
+
+## 2026-07-26 sequential - BP-C79 NULL compartment_boundary free dual
+
+compartment_boundary=1 vs 0 free dual + wall.
+B1=0.25 B2=0.5 B3=0.25 B4=-0.25 **NULL**. Compartment boundary does not unlock free dual talent.

@@ -17,4 +17,4 @@ B1–B4. Seeds {6781,6791} trials 2. T=500. Budget ~8 min, hard cap 16 min.
 🔮 LEAN NULL. Compartment boundary force unlikely to unlock free dual decade order.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.25 B2=0.5 B3=0.25 B4=-0.25. compartment_boundary does not unlock free dual talent.
