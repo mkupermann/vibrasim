@@ -6625,3 +6625,8 @@ B1=B2=B3=1.0 **PASS**. Multi-trial hard selective re-arm closed.
 
 Hard dual wipe; restore L2 only dual OFF; restore L1 dual ON.
 B1=B2=B3=1.0 **PASS**. Selective hard re-arm order-symmetric (E133/E136); multi-trial E135.
+
+## 2026-07-20 sequential - BP-E137 PASS hybrid hard wipe selective AND restore
+
+Hard dual-kill I1+I3; restore AND path; OR stays OFF.
+B1=B2=B3=1.0 **PASS**. Hard analogue of E75.
