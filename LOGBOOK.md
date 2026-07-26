@@ -7388,3 +7388,8 @@ B1=0.25 B2=0.0 B3=0.5 B4=0.25 **NULL**. Uptake does not unlock free dual talent.
 
 Hard kill M1; reverse p1 fail; reverse p0 survives.
 B1=B2=B3=1.0 **PASS**. Hard mid-kill symmetric to E220.
+
+## 2026-07-26 sequential - BP-C78 NULL flux_threshold free dual
+
+flux_threshold=5 vs 2 (flux_rate=0.1 both) free dual + wall.
+B1=0.25 B2=0.0 B3=0.25 B4=0.25 **NULL**. Elevated flux threshold does not unlock free dual talent.
