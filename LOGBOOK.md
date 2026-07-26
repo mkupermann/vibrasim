@@ -7318,3 +7318,8 @@ B1=0.25 B2=0.5 B3=0.25 B4=-0.25 **NULL**. Fusion bond block does not unlock free
 
 Hard kill M0; reverse p0 fail; reverse p1 survives.
 B1=B2=B3=1.0 **PASS**. Reverse hard mid-hop kill path-selective.
+
+## 2026-07-26 sequential - BP-C71 NULL compartment free dual
+
+compartment_k=1 vs 0 free dual + wall.
+B1=0.5 B2=0.0 B3=0.5 B4=0.5 **NULL**. Compartment delta positive but fails 0.90 unlock.

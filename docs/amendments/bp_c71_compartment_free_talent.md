@@ -17,4 +17,4 @@ B1–B4. Seeds {6451,6461} trials 2. T=500. Budget ~8 min, hard cap 16 min.
 🔮 LEAN NULL. Engineered compartment may trap vibrations without creating decade order unlock.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.5 B2=0.0 B3=0.5 B4=0.5. compartment_k does not unlock free dual talent (delta positive but fails 0.90).
