@@ -201,6 +201,7 @@
 | E152 | **PASS** | Dual cascade multi-trial hard selective path0 |
 | E153 | **PASS** | Dual cascade hard selective path1 silence + restore |
 | C26 | **FAILED** | Latch-tau free dual: capacity then hard-cap overrun |
+| E154 | **PASS** | Port dual decade specialisation via ILW only (no free) |
 
 ## What works (engineered port curriculum)
 

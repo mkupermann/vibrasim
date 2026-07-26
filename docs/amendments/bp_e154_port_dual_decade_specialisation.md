@@ -23,4 +23,4 @@ Seeds {4121,4131} trials 8. N_write=20, T_idle=150. Budget ~5 min, hard cap 10 m
 🔮 LEAN PASS. Port content storage (E4 class) should yield ordered decades under dual-band write.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=1.0 B2=0.0 B3=1.0 B4=1.0. Pure ILW dual-side ordered decade specialisation locked (no free inject). Honest §4.8 port content step.
