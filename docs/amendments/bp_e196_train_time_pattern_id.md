@@ -18,4 +18,4 @@ Seeds {5421,5431} trials 8. Budget ~18 min, hard cap 36 min.
 🔮 LEAN NULL to weak PASS — multislot rewrites may leave mixed pattern_ids on shared ports; post-hoc tag may be load-bearing for E194.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=B2=B3=1.0. Train-time `active_pattern_id` during c0/c1 dual writes tags L-lo with pid1 sufficiently; G12 gate select works **without** post-hoc tag_patterns.
