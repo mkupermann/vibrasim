@@ -18,4 +18,4 @@ Seeds {5921,5931} trials 6. Budget ~20 min, hard cap 40 min.
 🔮 LEAN PASS if spatial split isolates reverse soft kill on L1 like E199 on R1.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=1.0 B2=1.0 B3=1.0. Soft kill L1 silences reverse pid2; reverse pid1 survives under G12+split.
