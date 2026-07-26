@@ -328,6 +328,7 @@
 | E227 | **PASS** | Cascade reverse hard mid-kill M1; reverse p0 survives |
 | C78 | **NULL** | flux_threshold free dual; no unlock |
 | E228 | **PASS** | Cascade reverse hard mid M1 kill then retrain-restore |
+| C79 | **NULL** | compartment_boundary free dual; no unlock |
 
 ## What works (engineered port curriculum)
 
@@ -356,7 +357,8 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 
 ## Next hard only
 
-- Free talent: C16 PARTIAL (strength-decay+wall); C68 node_freq_binding OFF **fragile** (C69 B1=0.80); C42 fragile; C26 FAILED; C27–C41 NULL farm closed; C45–C78 NULL  
+- Free talent: C16 PARTIAL (strength-decay+wall); C68 node_freq_binding OFF **fragile** (C69 B1=0.80); C42 fragile; C26 FAILED; C27–C41 NULL farm closed; C45–C79 NULL  
+
 
 
 
