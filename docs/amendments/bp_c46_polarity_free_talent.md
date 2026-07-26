@@ -17,4 +17,4 @@ B1–B4. Seeds {5461,5471} trials 2. T=500. Budget ~6 min, hard cap 12 min.
 🔮 LEAN NULL. Polarity segregation unlikely to unlock free dual ordered decade talent.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.0 B2=0.0 B3=0.0 B4=0.0. Polarity segregation collapses treat pop / no ordered unlock.
