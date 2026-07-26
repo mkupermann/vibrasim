@@ -176,6 +176,7 @@
 | E128 | **PASS** | Coincidence AND soft dual wipe + full restore dual ON |
 | E129 | **PASS** | Coincidence AND hard dual wipe + full restore dual ON |
 | E130 | **PASS** | Coincidence AND multi-trial soft wipe-restore cycle |
+| E131 | **NULL** | AND dual wipe OK; L1-only restore already dual ON |
 
 ## What works (engineered port curriculum)
 
