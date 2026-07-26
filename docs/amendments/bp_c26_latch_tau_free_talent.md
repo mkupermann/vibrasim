@@ -23,4 +23,4 @@ Seeds {4081,4091,4101} trials 3. T=1200. Box 80×50×50 mid=40. Budget ~15 min, 
 🔮 LEAN NULL. Latch half-life may not improve free dual decade specialisation; maps latch-tau free class.
 
 ## RESULT
-*(after)*
+**FAILED (time overrun)** (2026-07-20). Hard cap 30 min exceeded without completion. First attempt: RuntimeError node capacity exhausted at n_nodes_max=4096. Retry with n_nodes_max=16384 still no verdict within hard cap (wallclock >30 min, only start line). No bar retune. Infrastructure fix + re-run requires new pre-reg ID or written re-attempt under budget.
