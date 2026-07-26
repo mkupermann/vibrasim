@@ -7002,3 +7002,7 @@ B1=B2=B3=1.0 **PASS**. Terminal hop necessary for cascade fire-select.
 
 compartment_boundary=40 vs 0 free dual + wall.
 B1=0.5 B2=0.25 B3=0.75 B4=0.25 **NULL**. Compartment modularity does not unlock free dual talent.
+
+## 2026-07-26 sequential - night-lab port curriculum synthesis E162-E191
+
+Formal synthesis: residual → fire-select → split-port → cascade hybrid closed. Free dual C27-C39 NULL. See bp_night_lab_port_curriculum_synthesis_e162_e191.md.
