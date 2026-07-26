@@ -232,6 +232,7 @@
 | C31 | **NULL** | n_emit free dual 0.25 ordered; no unlock |
 | E178 | **PASS** | Multi-trial split-port arm switch kill/restore |
 | E179 | **NULL** | Pair-replace does not exclusive-kill c0 fire-select |
+| E180 | **PASS** | Split-port soft arm weaken (c0 off, c1 on) |
 
 ## What works (engineered port curriculum)
 
@@ -279,6 +280,7 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 - Split-port arm-selective kill **PASS** (E177; spatial segregation fixes E176)  
 - Multi-trial split-port arm switch **PASS** (E178)  
 - Pair-replace arm exclusivity **NULL** (E179; last-write does not exclusive-kill c0 select)  
+- Split-port soft arm kill **PASS** (E180); soft+hard arm kill closed  
 - Port circuit curriculum **CLOSED PARTIAL** E105–E153 (bp_port_circuit_curriculum_closure.md)  
 - Port wipe-restore E71–E100 closed; dual 3-hop re-cut after wipe-restore E123–E127 CLOSED NULL  
 - Soft inhibit: retrain-reversible (E44), durable without retrain (E55) — closed for two-hop  

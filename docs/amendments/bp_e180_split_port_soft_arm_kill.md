@@ -19,4 +19,4 @@ Seeds {4781,4791} trials 8. Budget ~18 min, hard cap 36 min.
 🔮 LEAN PASS if soft weaken is arm-local under spatial split (hard already is).
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=B2=B3=1.0. Soft weaken R0 silences c0 fire-select; c1 survives. Soft+hard split-port arm kill closed (E177/E180).

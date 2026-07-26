@@ -6898,3 +6898,8 @@ B1=1.0 B2=0.0 B3=1.0 **NULL**. PRIM8 replace does not exclusive-kill prior arm f
 ## 2026-07-26 sequential - split-port arm curriculum closure E177-E179
 
 Formal CLOSED: spatial arm-select (E177), multi-trial switch (E178), replace exclusivity NULL (E179). See bp_split_port_arm_curriculum_closure.md.
+
+## 2026-07-26 sequential - BP-E180 PASS split-port soft arm kill
+
+Soft weaken R0; c0 fail; c1 survives.
+B1=B2=B3=1.0 **PASS**. Soft+hard split-port arm kill closed (E177/E180).
