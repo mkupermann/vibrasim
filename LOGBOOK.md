@@ -6690,3 +6690,8 @@ B1=B2=B3=1.0 **PASS**. Hybrid cascade selective AND/OR matrix closed (E146/E147)
 
 Hard-cut cascade AND restore OR; hard-cut OR restore cascade AND; hard-cut AND restore OR.
 B1=B2=B3=1.0 **PASS**. Hybrid cascade multi-trial path-switch closed (OR-first).
+
+## 2026-07-20 sequential - BP-E149 PASS hybrid cascade hard path-switch AND-OR-AND
+
+Hard-cut OR restore cascade AND; hard-cut AND restore OR; hard-cut OR restore cascade AND.
+B1=B2=B3=1.0 **PASS**. Hybrid cascade multi-trial path-switch both orders closed (E148/E149).
