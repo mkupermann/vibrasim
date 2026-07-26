@@ -189,6 +189,7 @@
 | E141 | **PASS** | Cascade AND multi-hop soft dual wipe-restore |
 | C25 | **NULL** | Local pair scaffold free dual 0.778 = ctrl; no unlock |
 | E142 | **PASS** | Cascade AND multi-hop hard dual wipe-restore |
+| E143 | **PASS** | Cascade AND hard dual wipe + selective L1 re-arm |
 
 ## What works (engineered port curriculum)
 
