@@ -7433,3 +7433,13 @@ B1=B2=B3=1.0 **PASS**. Reverse paths co-activate under dual R drive (not mid-kil
 
 r_integrate=12 vs 5 free dual + wall.
 B1=0.50 B2=0.25 B3=0.75 B4=0.25 **NULL**. Wider integrate radius does not unlock free dual talent.
+
+## 2026-07-26 sequential - BP-E231 PASS triple-hop cascade reverse
+
+L-M-A-R dual reverse fire-select both paths.
+B1=B2=B3=1.0 **PASS**. Three-hop reverse works (not mid-kill).
+
+## 2026-07-26 sequential - BP-C84 NULL polarity_split free dual
+
+polarity_split=0.9 vs 0.5 free dual + wall.
+B1=0.0 B2=0.25 B3=0.0 B4=-0.25 **NULL**. Biased polarity_split does not unlock free dual talent.
