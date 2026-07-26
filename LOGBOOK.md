@@ -7513,3 +7513,13 @@ B1=0.0 B2=1.0 B3=1.0 **NULL**. Reverse dose-robust at pre-registered weak dose (
 
 speech_loop_strength=1 vs 0 free dual + wall.
 B1=0.50 B2=0.75 B3=0.50 B4=-0.25 **NULL**. No free dual unlock.
+
+## 2026-07-26 sequential - BP-E239 PASS reverse content overwrite
+
+Overwrite path0 freqs ascending→descending no kill; reverse still exclusive.
+B1=B2=B3=1.0 **PASS**. Reverse structure survives content rewrite.
+
+## 2026-07-26 sequential - BP-E240 PASS concurrent forward-reverse cross
+
+Concurrent fire L0+R1: R0 and L1 both lit.
+B1=B2=B3=1.0 **PASS**. Mixed-direction dual-path drive coexists.

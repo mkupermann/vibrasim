@@ -32,4 +32,6 @@ Not pure concurrent reverse (E230). Not pure concurrent forward (E232). Not mid-
 
 ## RESULT
 
-*(filled after run)*
+**PASS** (2026-07-26). B1=1.0 B2=1.0 B3=1.0.  
+Concurrent fire L0 (forward→R0) + R1 (reverse→L1): both targets light. Mixed-direction dual-path drive coexists. Not pure concurrent re-probe.
+

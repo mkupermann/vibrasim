@@ -32,4 +32,6 @@ Not mid-kill. Not hop-depth. Not free dual. Not graded write re-probe (E238).
 
 ## RESULT
 
-*(filled after run)*
+**PASS** (2026-07-26). B1=1.0 B2=1.0 B3=1.0.  
+Content overwrite (ascending→descending freqs) on same reverse path without kill: reverse structure still selects L0 exclusively. Not mid-kill.
+
