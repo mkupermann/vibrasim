@@ -20,4 +20,4 @@ Seeds {5441,5451} trials 8. Budget ~18 min, hard cap 36 min.
 🔮 LEAN PASS. Tags required for wrong-pattern suppression; positive select works with ambient-only.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=B2=B3=1.0. Without tags, ambient atoms fire under gate (positive select + wrong-arm select both work). With train-time tags, wrong-arm is blocked. **Tags are load-bearing for wrong-pattern suppression**, not for positive fire-select.

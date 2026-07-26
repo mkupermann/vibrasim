@@ -7065,3 +7065,8 @@ B1=B2=B3=1.0 **PASS**. G12 gate multi-trial durable.
 
 active_pattern_id during c0/c1 train; no post-hoc tag; G12 gate select.
 B1=B2=B3=1.0 **PASS**. Train-time tagging sufficient. Pattern E194-E196 class closed PASS.
+
+## 2026-07-26 sequential - BP-E197 PASS tags load-bearing for wrong-arm block
+
+No-tag ambient select OK; tagged wrong-arm fail; no-tag wrong-arm selects.
+B1=B2=B3=1.0 **PASS**. Tags needed for wrong-pattern suppression only.

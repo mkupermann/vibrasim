@@ -19,6 +19,10 @@
 - Mean selective residual NULL (E169/E170)
 - Split-port spatial surgery (E177–E183)
 
+## Doctrine (E197)
+- Ambient (pid=0) fires under gate → **positive select works without tags**.
+- **Wrong-arm block requires non-zero mismatched tags** (E197).
+
 ## Open
 - Pattern_id on free dual talent
 - Auto-tag without engineered active_pattern_id curriculum
