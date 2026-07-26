@@ -236,6 +236,7 @@
 | C32 | **NULL** | r_1=12 free dual 0.75 ordered; below 0.90 unlock |
 | E181 | **PASS** | Triple-arm split-port fire-select capacity K=3 |
 | C33 | **NULL** | PRIM7 sideband cull free dual pop collapse; no unlock |
+| E182 | **PASS** | Triple-arm middle kill (c1 off; c0+c2 survive) |
 
 ## What works (engineered port curriculum)
 
@@ -285,6 +286,7 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 - Pair-replace arm exclusivity **NULL** (E179; last-write does not exclusive-kill c0 select)  
 - Split-port soft arm kill **PASS** (E180); soft+hard arm kill closed  
 - Triple-arm split-port fire-select **PASS** (E181 K=3)  
+- Triple-arm middle selective kill **PASS** (E182)  
 - Port circuit curriculum **CLOSED PARTIAL** E105–E153 (bp_port_circuit_curriculum_closure.md)  
 - Port wipe-restore E71–E100 closed; dual 3-hop re-cut after wipe-restore E123–E127 CLOSED NULL  
 - Soft inhibit: retrain-reversible (E44), durable without retrain (E55) — closed for two-hop  
