@@ -7199,3 +7199,8 @@ B1=B2=B3=1.0 **PASS**. Reverse soft surgery arm-selective under split+G12.
 
 resonance_coupling=0.5 vs 0 free dual + wall.
 B1=0.0 B2=0.5 B3=0.25 B4=-0.5 **NULL**. Kuramoto resonance does not unlock free dual talent.
+
+## 2026-07-26 sequential - BP-E210 PASS reverse soft-kill restore
+
+Soft kill L1; reverse pid2 fail; reverse pid1 OK; retrain restores reverse pid2.
+B1=B2=B3=1.0 **PASS**. Reverse multi-trial soft surgery reversible.

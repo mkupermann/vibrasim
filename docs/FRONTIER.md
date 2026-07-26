@@ -289,6 +289,7 @@
 | C57 | **NULL** | flux_plasticity free dual; no unlock |
 | E209 | **PASS** | Reverse split soft-kill L1; reverse pid1 survives |
 | C58 | **NULL** | resonance_coupling free dual; no unlock |
+| E210 | **PASS** | Reverse soft-kill then retrain-restore reverse pid2 |
 
 ## What works (engineered port curriculum)
 
