@@ -7308,3 +7308,8 @@ B1=1.0 B2=0.5 B3=1.0 B4=0.5 **PASS**. New free dual mechanism class (proximity-o
 
 Same bars 5 seeds x 3 trials node_freq_binding OFF vs ON.
 B1=0.80 B2=0.20 B3=1.0 B4=0.60 **NULL**. C68 budget-fit PASS fragile (C42-class). Strong delta but no 0.90 unlock. No bar retune.
+
+## 2026-07-26 sequential - BP-C70 NULL fusion_bond_block free dual
+
+fusion_bond_block=2 vs 0 free dual + wall.
+B1=0.25 B2=0.5 B3=0.25 B4=-0.25 **NULL**. Fusion bond block does not unlock free dual talent.

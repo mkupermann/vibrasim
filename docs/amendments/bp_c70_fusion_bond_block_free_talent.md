@@ -17,4 +17,4 @@ B1–B4. Seeds {6411,6421} trials 2. T=500. Budget ~8 min, hard cap 16 min.
 🔮 LEAN NULL. Fusion bond block constrains molecule fusion topology; unlikely free dual decade unlock.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.25 B2=0.5 B3=0.25 B4=-0.25. fusion_bond_block does not unlock free dual talent.
