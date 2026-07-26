@@ -7383,3 +7383,8 @@ B1=B2=B3=1.0 **PASS**. Symmetric path isolation to E217 M0 kill.
 
 membrane_channel_uptake True vs False (channel_k=1 both) free dual + wall.
 B1=0.25 B2=0.0 B3=0.5 B4=0.25 **NULL**. Uptake does not unlock free dual talent.
+
+## 2026-07-26 sequential - BP-E227 PASS cascade reverse hard mid-kill M1
+
+Hard kill M1; reverse p1 fail; reverse p0 survives.
+B1=B2=B3=1.0 **PASS**. Hard mid-kill symmetric to E220.

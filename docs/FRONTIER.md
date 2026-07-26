@@ -325,6 +325,7 @@
 | C76 | **NULL** | fire_zero_latch free dual; treat pop collapse |
 | E226 | **PASS** | Cascade reverse soft mid-kill M1; reverse p0 survives |
 | C77 | **NULL** | membrane_channel_uptake free dual; no unlock |
+| E227 | **PASS** | Cascade reverse hard mid-kill M1; reverse p0 survives |
 
 ## What works (engineered port curriculum)
 
