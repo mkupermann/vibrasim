@@ -293,6 +293,7 @@
 | C59 | **NULL** | bond_turnover free dual; no unlock |
 | E211 | **PASS** | Forward+reverse co-presence multi-trial under G12 |
 | C60 | **NULL** | bistable_rate free dual; treat pop collapse |
+| E212 | **PASS** | Reverse split hard-kill L1; reverse pid1 survives |
 
 ## What works (engineered port curriculum)
 
