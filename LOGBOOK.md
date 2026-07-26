@@ -7533,3 +7533,13 @@ B1=B2=B3=1.0 **PASS**. Diamond reverse without mid-kill.
 
 Fire R1 or R2 each reaches L via shared mid.
 B1=B2=B3=1.0 **PASS**. Reverse fan-in OR works.
+
+## 2026-07-26 sequential - BP-E243 PASS reverse shared-mid crosstalk
+
+Separate mids selective reverse; shared mid leaks reverse to wrong L.
+B1=B2=B3=1.0 **PASS**. Reverse shared-mid leak confirmed.
+
+## 2026-07-26 sequential - BP-E244 NULL reverse pair_replace curriculum
+
+pair_replace ON: path0 reverse fails baseline (B1=0); p1 also fails (B2=0).
+B1=0 B2=0 B3=1.0 **NULL**. pair_replace incompatible with reverse cascade scaffold (vs E234 replace OFF).

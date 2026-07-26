@@ -32,4 +32,6 @@ Not E234 re-probe (replace was OFF). Not mid-kill. Not free dual. Not G12.
 
 ## RESULT
 
-*(filled after run)*
+**NULL** (2026-07-26). B1=0.0 B2=0.0 B3=1.0.  
+With `ilw_pair_replace_enabled=True`, reverse cascade fails even after path0-only train (B1=0). B3 vacuously passes (p0 reverse fails). Finding: pair_replace ON is **incompatible** with reverse cascade co-residence under this scaffold (unlike E234 replace OFF). Not a curriculum switch — baseline reverse broken under replace.
+
