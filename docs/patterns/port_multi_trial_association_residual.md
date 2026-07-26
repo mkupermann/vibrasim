@@ -27,6 +27,7 @@
 5. Temporal gap L→R residual works (E167); write order order-blind (E168).
 
 ## Boundary: selective residual
-- **E169 NULL / E170 NULL:** after multi-assoc capacity train, L-only probe band does **not** select R partner mean (B2=B3=0). Pair-links do not fix. Capacity residual ≠ selective associative readout.
-- Residual under generative/partner-from-L alone still No (E12).
+- **E169 NULL / E170 NULL:** L-only rewrite residual **means** do not select R partner. Capacity ≠ selective mean readout.
+- **E171 PASS:** freq-matched **L fire** + pair-link bridges + latch score **does** select R partner (B1=B2=B3=1.0). Selective residual needs fire/bridge readout dynamics.
+- Residual under generative/partner-from-L alone still No (E12) — E171 is activation of existing R content via bridge, not partner creation after R wipe.
 - Free talent still blocked; residual family is engineered-port content, not free dual.

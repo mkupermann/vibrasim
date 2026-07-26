@@ -26,4 +26,4 @@ Seeds {4541,4551} trials 8. Budget ~16 min, hard cap 32 min.
 🔮 LEAN NULL if pair slots do not segregate bridges by band; LEAN PASS if multislot+pair links form band-matched bridges and fire prop selects partner.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=B2=B3=1.0. Freq-matched L fire + bridge charge prop selects R partner latch under multislot pair-link multi-assoc train. **Selective residual requires fire/bridge readout**, not L-only rewrite residual means (E169/E170 NULL).

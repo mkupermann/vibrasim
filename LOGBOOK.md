@@ -6830,3 +6830,8 @@ B1=1.0 B2=0.0 B3=0.0 **NULL**. Co-presence without partner selection (E166 capac
 
 Pair_write c0/c1 multislot+bridges; L-only probe A/B.
 B1=1.0 B2=0.0 B3=0.0 **NULL**. Selective residual class closed NULL for dual ILW and pair-link without new readout dynamics.
+
+## 2026-07-26 sequential - BP-E171 PASS fire-readout selective residual
+
+Pair-link multi-assoc; freq-matched L fire; R partner peak latch.
+B1=B2=B3=1.0 **PASS**. Selective residual needs fire/bridge readout (E169/E170 mean-rewrite NULL).
