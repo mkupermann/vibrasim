@@ -19,4 +19,4 @@ Seeds {3901,3911} trials 6. Budget ~12 min, hard cap 24 min.
 🔮 LEAN PASS. Order-symmetric cascade selective re-arm.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Cascade hard dual wipe + L2-first selective re-arm order-symmetric with E143. Cascade selective matrix closed (E143–E145).
