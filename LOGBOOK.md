@@ -7663,3 +7663,13 @@ B1=0.0 B2=1.0 B3=1.0 **NULL**. Multislot co-residence beats replace for dual dec
 
 dream_hallucination_strength 2 vs 1 (dream ON) free dual + wall.
 B1=0.0 B2=0.50 B3=0.25 B4=-0.50 **NULL**. No free dual unlock.
+
+## 2026-07-26 sequential - BP-E259 PASS dual pair strength_decay durability
+
+Dual Y-pair selective after strength_decay idle T=120.
+B1=B2=B3=1.0 **PASS**. Holds under decay idle (vs E255 long idle collapse).
+
+## 2026-07-26 sequential - BP-C102 NULL video_emit_pair_band free dual
+
+video_emit_pair_band 0.15 vs 0 free dual + wall.
+B1=0.25 B2=0.50 B3=0.25 B4=-0.25 **NULL**. No free dual unlock.
