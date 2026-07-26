@@ -30,4 +30,6 @@ Not E234 equal sequential retrain re-probe. Not pair_replace. Not free dual.
 
 ## RESULT
 
-*(filled after run)*
+**PASS** (2026-07-26). B1=1.0 B2=1.0 B3=1.0.  
+Heavy 3× retrain path0 (replace OFF): path0 reverse OK; path1 reverse survives. Asymmetric write pressure does not erase the other reverse path.
+
