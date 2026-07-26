@@ -7204,3 +7204,8 @@ B1=0.0 B2=0.5 B3=0.25 B4=-0.5 **NULL**. Kuramoto resonance does not unlock free 
 
 Soft kill L1; reverse pid2 fail; reverse pid1 OK; retrain restores reverse pid2.
 B1=B2=B3=1.0 **PASS**. Reverse multi-trial soft surgery reversible.
+
+## 2026-07-26 sequential - BP-C59 NULL bond_turnover free dual
+
+bond_turnover_rate=0.01 vs 0 free dual + wall.
+B1=0.25 B2=0.25 B3=0.75 B4=0.0 **NULL**. G53 bond turnover does not unlock free dual talent.
