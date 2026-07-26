@@ -6942,3 +6942,8 @@ Formal K=2+K=3 split-port arm family closed. Do not farm without new question.
 
 lambda_gen=0.001 vs 0 free dual + wall.
 B1=0.25 B2=0.25 B3=1.0 B4=0.0 **NULL**. Ambient regen does not unlock free dual talent.
+
+## 2026-07-26 sequential - BP-E184 PASS fire-select long-idle durability
+
+Train multi-assoc pair-link; idle 400; fire both arms select.
+B1=B2=B3=1.0 **PASS**. Fire-select persists without retrain over long idle.

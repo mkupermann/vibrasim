@@ -21,4 +21,4 @@ Seeds {4941,4951} trials 8. Budget ~20 min, hard cap 40 min.
 🔮 LEAN PASS if pair bridges/content persist over idle. NULL if pair_decay/structure decay erodes select.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=B2=B3=1.0. Fire-select both arms durable after T_IDLE=400 without retrain. Pair-link multi-assoc select persists temporally.
