@@ -6615,3 +6615,8 @@ B1=B2=B3=1.0 **PASS**. Hard wipe enables selective AND re-arm (soft E131 residua
 
 Soft dual wipe; restore L1-M only (no M-R); then L2.
 B1=1.0 B2=0.0 B3=1.0 **NULL**. Soft residual L2 not fixed by hop-scoped restore; hard wipe (E133) required.
+
+## 2026-07-20 sequential - BP-E135 PASS multi-trial hard selective AND re-arm
+
+Hard wipe L1-only OFF; both ON; hard wipe L1-only OFF again.
+B1=B2=B3=1.0 **PASS**. Multi-trial hard selective re-arm closed.

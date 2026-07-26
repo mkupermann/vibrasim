@@ -18,4 +18,4 @@ Seeds {3661,3671} trials 6. Budget ~12 min, hard cap 24 min.
 🔮 LEAN PASS. Multi-trial selective re-arm under hard dual wipe.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Multi-trial hard selective L1 re-arm cycle closed.
