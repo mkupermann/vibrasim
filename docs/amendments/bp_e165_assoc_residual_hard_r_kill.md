@@ -24,4 +24,4 @@ Seeds {4421,4431} trials 8. Budget ~12 min, hard cap 24 min.
 🔮 LEAN PASS (E156/E164 class). NULL if hard kill clears residual that soft left intact.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=B2=B3=1.0. Hard R-port kill does not clear multi-trial association residual (matches E164 soft + E156 hard content survival).

@@ -6796,3 +6796,8 @@ B1=B2=B3=1.0 **PASS**. Last-write association residual reconfig closed (E160/E16
 
 Multi-trial c0; soft kill R; L-only probe; multislot OFF.
 B1=B2=B3=1.0 **PASS**. Residual co-presence survives soft port kill (E155 class).
+
+## 2026-07-26 sequential - BP-E165 PASS assoc residual hard R kill
+
+Multi-trial c0; hard kill R; L-only probe; multislot OFF.
+B1=B2=B3=1.0 **PASS**. Residual co-presence survives hard port kill (E156/E164 class).
