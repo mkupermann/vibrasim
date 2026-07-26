@@ -22,4 +22,4 @@ Seeds {4981,4991} trials 8. Budget ~16 min, hard cap 32 min.
 🔮 LEAN PASS if multislot retains both under interleaved writes (E166 capacity class). NULL if interleaving prevents stable pair-links.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=B2=B3=1.0. Interleaved c0/c1 multi-trial train yields fire-select both arms; blocked curriculum not required.

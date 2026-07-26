@@ -6952,3 +6952,8 @@ B1=B2=B3=1.0 **PASS**. Fire-select persists without retrain over long idle.
 
 freq_tolerance=0.01 vs 0.03 free dual + wall.
 B1=0.0 B2=0.25 B3=0.0 B4=-0.25 **NULL**. Tighter tolerance collapses treat pop; no talent unlock.
+
+## 2026-07-26 sequential - BP-E185 PASS interleaved train fire-select
+
+Alternate c0/c1 dual pair_writes multi-trial; fire both arms.
+B1=B2=B3=1.0 **PASS**. Interleaved protocol works; blocked train not required.
