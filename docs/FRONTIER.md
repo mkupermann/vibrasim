@@ -205,6 +205,7 @@
 | E155 | **NULL** | Soft port wipe does not disrupt dual decade content |
 | E156 | **NULL** | Hard port kill also fails to disrupt dual decade |
 | E157 | **PASS** | Multislot K=3 dual-side band occupancy |
+| E158 | **NULL** | Dual decade reverse overwrite does not flip means |
 
 ## What works (engineered port curriculum)
 

@@ -19,4 +19,4 @@ Seeds {4201,4211} trials 8. Budget ~6 min, hard cap 12 min.
 🔮 LEAN PASS. E6 last-content wins extends to dual decade reverse.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1=1.0 B2=0.0 B3=1.0. First dual decade ordered OK; reverse overwrite does **not** flip mean decades (multislot may retain prior bands). Content overwrite of dual decade not last-write-dominant under multislot.
