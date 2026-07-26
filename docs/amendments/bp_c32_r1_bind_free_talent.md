@@ -17,4 +17,4 @@ B1–B4. Seeds {4801,4811} trials 2. T=500. Budget ~6 min, hard cap 12 min.
 🔮 LEAN NULL. Larger r_1 unlikely to unlock free dual ordered talent.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.75 B2=0.50 B3=1.0 B4=0.25. Elevated r_1 improves ordered rate vs control but fails B1≥0.90 unlock bar.
