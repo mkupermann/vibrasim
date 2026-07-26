@@ -14,6 +14,7 @@
 | E190 | PASS | Triple-hop L→M→A→R content cascade fire-select |
 | E191 | PASS | Incomplete cascade (missing last hop) fails R select |
 | E192 | PASS | Graded bridge_prop_min_strength=0.5 still supports fire-select |
+| E193 | PASS | Long-idle durability T=400 multi-hop fire-select |
 
 ## Doctrine
 1. Multi-hop **content** cascades support fire-select (not only one-hop pair residual).
@@ -22,9 +23,10 @@
 4. Doctrine **scales to three hops** (E190).
 5. **End-to-end hop chain necessary**: omit terminal hop → no R select (E191).
 6. **Graded prop** (BET-107) compatible with trained pair-link cascades (E192).
+7. Multi-hop fire-select **durable** after long idle (E193).
 
 ## Do not farm
-Re-running E186–E192 bars without new hop/topology question.
+Re-running E186–E193 bars without new hop/topology question.
 
 ## Open
 - Free talent still CLOSED PARTIAL

@@ -255,6 +255,7 @@
 | C40 | **NULL** | lambda_dec free dual 0.5 ordered; no unlock |
 | E192 | **PASS** | Cascade fire-select under graded bridge_prop_min |
 | C41 | **NULL** | Asymmetric N_SIDE free dual 0.5 ordered; no unlock |
+| E193 | **PASS** | Cascade fire-select durable after long idle T=400 |
 
 ## What works (engineered port curriculum)
 
@@ -304,6 +305,8 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 - Incomplete cascade negative control **PASS** (E191 missing hop fails)  
 - Night-lab synthesis E162–E191 **CLOSED** (`bp_night_lab_port_curriculum_synthesis_e162_e191.md`)  
 - Cascade graded bridge_prop_min **PASS** (E192)  
+- Cascade long-idle durability **PASS** (E193)  
+- Free dual NULL farm **CLOSED** C27–C41 (`bp_free_dual_null_farm_closure_c27_c41.md`)  
 - Multi-trial fire selective A→B→A **PASS** (E172)  
 - Fire-select bridge-dependent **PASS** (E173 hard kill silences; restore returns)  
 - Soft bridge weaken also silences fire-select **PASS** (E174)  
