@@ -186,6 +186,7 @@
 | E138 | **PASS** | Hybrid hard dual wipe + selective OR restore |
 | E139 | **PASS** | Hybrid hard multi-trial path-switch OR↔AND↔OR |
 | E140 | **PASS** | Hybrid hard multi-trial path-switch AND↔OR↔AND |
+| E141 | **PASS** | Cascade AND multi-hop soft dual wipe-restore |
 
 ## What works (engineered port curriculum)
 

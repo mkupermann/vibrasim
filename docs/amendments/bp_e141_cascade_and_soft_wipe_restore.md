@@ -19,4 +19,4 @@ Seeds {3781,3791} trials 6. Budget ~12 min, hard cap 24 min.
 🔮 LEAN PASS if third hop is reliable; NULL if cascade fails single-off or restore misses hop.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Cascade gated multi-hop AND soft dual wipe-restore closed.
