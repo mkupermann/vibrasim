@@ -6595,3 +6595,8 @@ B1=B2=B3=1.0 **PASS**. Soft (E128) + hard pure AND wipe-restore closed.
 
 Soft dual wipe; restore; wipe; restore dual ON.
 B1=B2=B3=1.0 **PASS**. Pure AND multi-trial wipe-restore closed (E128-E130).
+
+## 2026-07-20 sequential - BP-E131 NULL selective L1 restore after AND dual wipe
+
+Soft dual wipe; restore L1 only; then L2.
+B1=1.0 B2=0.0 B3=1.0 **NULL**. L1-only restore already allows dual fire (not selective silence).

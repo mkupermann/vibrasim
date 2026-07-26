@@ -19,4 +19,4 @@ Seeds {3581,3591} trials 6. Budget ~10 min, hard cap 20 min.
 🔮 LEAN PASS. AND semantics: one arm restore insufficient; both required.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1=1.0 B2=0.0 B3=1.0. Dual wipe silences; L1-only restore already allows dual fire (B2 fails — residual L2 or AND not requiring both after partial restore). Both restore dual ON.
