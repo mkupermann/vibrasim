@@ -6879,3 +6879,8 @@ B1=0.25 B2=0.5 B3=0.25 B4=-0.25 **NULL**. Atom repulsion does not unlock free du
 
 L0/R0 vs L1/R1 spatial split; hard kill R0; c1 fire-select survives.
 B1=B2=B3=1.0 **PASS**. Spatial segregation enables arm-selective kill (E176 shared-port NULL).
+
+## 2026-07-26 sequential - BP-C31 NULL n_emit free dual
+
+n_emit=4 vs 0 free dual + wall + neuron dynamics.
+B1=0.25 B2=0.25 B3=0.5 B4=0.0 **NULL**. Emission does not unlock free dual talent.
