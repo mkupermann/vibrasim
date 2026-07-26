@@ -18,4 +18,4 @@ Seeds {5721,5731} trials 6. Budget ~20 min, hard cap 40 min.
 🔮 LEAN NULL if pair-link + bridge_charge_prop already reverse (E203 ctrl had G6 ON). If B2 fails (reverse still works G6 OFF), reverse is pair-link-native. If B2 passes, G6 is load-bearing for reverse only.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=1.0 B2=0.0 B3=1.0. Reverse still works with G6 OFF; forward works G6 OFF. Reverse fire-select is **pair-link + bridge_charge_prop native** — neither G13 (E203) nor G6 (E204) required.
