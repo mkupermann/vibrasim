@@ -301,6 +301,7 @@
 | C63 | **NULL** | edge_closure free dual; no unlock |
 | E215 | **PASS** | Cascade reverse under G12 pattern gate |
 | C64 | **NULL** | curvature free dual; no unlock |
+| E216 | **PASS** | Cascade reverse multi-trial switch 1→2→1 under G12 |
 
 ## What works (engineered port curriculum)
 

@@ -7259,3 +7259,8 @@ B1=B2=B3=1.0 **PASS**. Multi-hop reverse respects G12 wrong-pattern block.
 
 curvature_k=2 vs 0 free dual + wall.
 B1=0.0 B2=0.25 B3=0.25 B4=-0.25 **NULL**. Curvature does not unlock free dual talent.
+
+## 2026-07-26 sequential - BP-E216 PASS cascade reverse multi-trial G12
+
+Cascade reverse pid1 → pid2 → pid1 without retrain.
+B1=B2=B3=1.0 **PASS**. Cascade reverse multi-trial durable under G12.
