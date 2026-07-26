@@ -7060,3 +7060,8 @@ B1=0.0 B2=0.25 B3=0.25 B4=-0.25 **NULL**. Rectified bistable drive does not unlo
 
 pid1 → pid2 → pid1 fire-select without retrain.
 B1=B2=B3=1.0 **PASS**. G12 gate multi-trial durable.
+
+## 2026-07-26 sequential - BP-E196 PASS train-time pattern_id fire-select
+
+active_pattern_id during c0/c1 train; no post-hoc tag; G12 gate select.
+B1=B2=B3=1.0 **PASS**. Train-time tagging sufficient. Pattern E194-E196 class closed PASS.
