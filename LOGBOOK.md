@@ -7154,3 +7154,8 @@ B1=0.5 B2=0.5 B3=0.5 B4=0.0 **NULL**. G9 lock does not unlock free dual talent.
 
 Reverse R→L fire-select with pattern tags + eligibility gate.
 B1=B2=B3=1.0 **PASS**. Reverse path respects G12 wrong-pattern block.
+
+## 2026-07-26 sequential - BP-C54 NULL workspace_broadcast free dual
+
+workspace_broadcast OFF vs ON free dual + wall.
+B1=0.25 B2=0.25 B3=0.25 B4=0.0 **NULL**. Broadcast toggle does not unlock free dual talent.
