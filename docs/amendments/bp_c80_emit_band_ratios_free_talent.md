@@ -37,4 +37,7 @@ Not multi-trial port curriculum. Not C16 strength-decay. Not retune of C31 n_emi
 
 ## RESULT
 
-*(filled after run)*
+**FAILED** (2026-07-26) — hard-cap overrun.  
+Pre-reg budget ~8 min, hard cap 16 min. Full 2×2×2 (seeds×trials×arms) at T=500 with `n_emit=8` + neuron dynamics did not finish within hard cap (~16.7 min wall; runner killed without `result.json`). No quiet extension. Smoke (T=200, 1 trial) completed NULL with B1=B3=0.  
+**Post-mortem:** Fire emission multiplies vibration population; wall-clock scales badly vs n_emit=0 free dual farm (C78–C79 ~minutes). Next emit_band_ratios probe needs smaller N/T or n_emit=1–2 as a *new* amendment id, not a bar retune of C80.
+
