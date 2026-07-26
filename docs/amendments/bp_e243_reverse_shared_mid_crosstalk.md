@@ -30,4 +30,6 @@ Not forward E33 re-probe. Not mid-kill. Not free dual. Not fan-in OR (E242).
 
 ## RESULT
 
-*(filled after run)*
+**PASS** (2026-07-26). B1=1.0 B2=1.0 B3=1.0.  
+Separate mids: reverse R1→L1 selective. Shared mid: reverse R1 reaches L1 and leaks to L2. Reverse crosstalk mirrors forward E33-class shared-mid leak.
+
