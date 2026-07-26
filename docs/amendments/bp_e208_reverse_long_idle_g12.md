@@ -19,4 +19,4 @@ Seeds {5881,5891} trials 6. Budget ~20 min, hard cap 40 min.
 🔮 LEAN PASS if reverse pair-link durable like cascade long-idle E193.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=1.0 B2=1.0 B3=1.0. Reverse fire-select under G12 durable after idle T=400 without retrain.

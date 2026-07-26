@@ -7179,3 +7179,8 @@ B1=B2=B3=1.0 **PASS**. Train-time tags suffice for reverse like E196 forward.
 
 bridge_atom_propagation WTA True vs False free dual + wall (G6 on).
 B1=0.25 B2=0.75 B3=0.25 B4=-0.5 **NULL**. G9.5 WTA does not unlock free dual talent.
+
+## 2026-07-26 sequential - BP-E208 PASS reverse long-idle G12
+
+Train-time tags; idle 400; reverse c0 and c1 under G12.
+B1=B2=B3=1.0 **PASS**. Reverse durable without retrain.
