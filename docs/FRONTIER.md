@@ -225,6 +225,7 @@
 | E172 | **PASS** | Multi-trial fire selective residual A→B→A same world |
 | E173 | **PASS** | Fire-select killed by hard R bridge kill; restore returns |
 | E174 | **PASS** | Fire-select silenced by soft R bridge weaken; restore |
+| E175 | **NULL** | Fire-select without pair-link fails (B1=B2=B3=0) |
 
 ## What works (engineered port curriculum)
 
@@ -249,7 +250,7 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 | End-state via membrane charge alone | No (E13/E18/E19) — peak or latch |
 | Multi-hop + replace ON | No (E30) |
 | Selective residual via L-only rewrite mean | No (E169/E170) — capacity ≠ select |
-| Selective residual via L-fire + bridge latch | **Yes (E171 PASS)** |
+| Selective residual via L-fire + bridge latch | **Yes (E171 PASS)** needs pair-link (E175 NULL without) |
 
 ## Next hard only
 
@@ -267,6 +268,7 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 - Multi-trial fire selective A→B→A **PASS** (E172)  
 - Fire-select bridge-dependent **PASS** (E173 hard kill silences; restore returns)  
 - Soft bridge weaken also silences fire-select **PASS** (E174)  
+- Fire-select requires pair-link **NULL without** (E175 pure dual ILW)  
 - Port circuit curriculum **CLOSED PARTIAL** E105–E153 (bp_port_circuit_curriculum_closure.md)  
 - Port wipe-restore E71–E100 closed; dual 3-hop re-cut after wipe-restore E123–E127 CLOSED NULL  
 - Soft inhibit: retrain-reversible (E44), durable without retrain (E55) — closed for two-hop  

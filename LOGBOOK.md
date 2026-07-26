@@ -6855,3 +6855,8 @@ B1=B2=B3=1.0 **PASS**. Fire-select is bridge-dependent (E171-E173 fire-select fa
 
 Soft R weaken; pre select / post fail / restore select.
 B1=B2=B3=1.0 **PASS**. Soft+hard bridge disruption both silence fire-select (E173/E174).
+
+## 2026-07-26 sequential - BP-E175 NULL fire-select without pair-link
+
+Pure dual ILW multislot; pair-link OFF; fire-select bars.
+B1=B2=B3=0.0 **NULL**. Fire-select requires engineered pair-link (E171-E175 doctrine closed).

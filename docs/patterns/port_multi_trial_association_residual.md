@@ -30,6 +30,7 @@
 - **E169 NULL / E170 NULL:** L-only rewrite residual **means** do not select R partner. Capacity ≠ selective mean readout.
 - **E171 PASS:** freq-matched **L fire** + pair-link bridges + latch score **does** select R partner (B1=B2=B3=1.0). Selective residual needs fire/bridge readout dynamics.
 - **E172 PASS:** multi-trial A→B→A fire select on one world without retrain.
-- **E173 PASS:** hard R bridge kill silences fire-select; pair_write restore returns — select is **bridge-dependent** (content residual can survive hard kill E165 without supporting select).
+- **E173 PASS / E174 PASS:** hard kill and soft weaken both silence fire-select; restore returns — select is **bridge-dependent**.
+- **E175 NULL:** pure dual ILW without pair-link → no fire-select (B1=B2=B3=0). PRIM5 pair-link is required.
 - Residual under generative/partner-from-L alone still No (E12) — E171 is activation of existing R content via bridge, not partner creation after R wipe.
 - Free talent still blocked; residual family is engineered-port content, not free dual.
