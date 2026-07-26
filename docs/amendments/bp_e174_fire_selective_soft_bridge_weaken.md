@@ -18,4 +18,4 @@ Seeds {4621,4631} trials 8. Budget ~18 min, hard cap 36 min.
 🔮 LEAN PASS if soft weaken also silences prop (E44-class soft cut). NULL if soft leave residual bridges enough for select.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=B2=B3=1.0. Soft R bridge weaken silences fire-select; pair_write restore returns. Soft+hard (E173/E174) both disrupt fire-select prop.

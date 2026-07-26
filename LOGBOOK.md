@@ -6850,3 +6850,8 @@ B1=B2=B3=1.0 **PASS**. Multi-trial fire-readout select without retrain closed.
 
 Pre-kill select; hard R kill; post-kill fail; pair restore select.
 B1=B2=B3=1.0 **PASS**. Fire-select is bridge-dependent (E171-E173 fire-select family).
+
+## 2026-07-26 sequential - BP-E174 PASS fire-select soft bridge weaken
+
+Soft R weaken; pre select / post fail / restore select.
+B1=B2=B3=1.0 **PASS**. Soft+hard bridge disruption both silence fire-select (E173/E174).
