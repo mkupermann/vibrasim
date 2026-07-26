@@ -32,4 +32,6 @@ Not pure reverse triple (E248). Not dual mix only (E240). Not mid-kill. Not free
 
 ## RESULT
 
-*(filled after run)*
+**PASS** (2026-07-26). B1=1.0 B2=1.0 B3=1.0.  
+Concurrent mixed drive L0(fwd)+R1(rev)+L2(fwd) lights R0, L1, R2. Mixed-direction triple concurrent works under Y-isolation.
+
