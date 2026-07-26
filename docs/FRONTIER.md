@@ -210,6 +210,7 @@
 | E160 | **PASS** | Dual decade reverse overwrite works with multislot OFF |
 | E161 | **PASS** | Dual decade multi-trial switch with multislot OFF |
 | C27 | **NULL** | Short pair_decay free dual 0.5 ordered; no unlock |
+| E162 | **PASS** | Multi-trial dual-port association residual without baked map |
 
 ## What works (engineered port curriculum)
 
@@ -236,7 +237,8 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 
 ## Next hard only
 
-- Free talent: C16 family CLOSED PARTIAL — need mechanism ≠ dual-inject+decay / port-seed / local scaffold; C26 latch-tau **FAILED** hard-cap  
+- Free talent: C16 family CLOSED PARTIAL — need mechanism ≠ dual-inject+decay / port-seed / local scaffold; C26 latch-tau **FAILED** hard-cap; C27 pair_decay NULL  
+- Port multi-trial association residual without map **PASS** (E162) — co-presence not generative partner  
 - Port circuit curriculum **CLOSED PARTIAL** E105–E153 (bp_port_circuit_curriculum_closure.md)  
 - Port wipe-restore E71–E100 closed; dual 3-hop re-cut after wipe-restore E123–E127 CLOSED NULL  
 - Soft inhibit: retrain-reversible (E44), durable without retrain (E55) — closed for two-hop  

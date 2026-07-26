@@ -6772,3 +6772,8 @@ Formal CLOSED PARTIAL E154-E161: dual decade write, multislot capacity vs reconf
 
 pair_decay=15 vs 60 free dual + wall; budget-fit.
 B1=0.5 B2=0.0 B3=0.5 B4=0.5 **NULL**. Short pair decay does not unlock free dual talent.
+
+## 2026-07-26 sequential - BP-E162 PASS multi-trial association residual no map
+
+Multislot OFF. Dual train L=500/R=5000 x15 then L-only probe; control L-only no train.
+B1=B2=B3=1.0 **PASS**. R partner residual co-presence without baked readout map (not generative E12).
