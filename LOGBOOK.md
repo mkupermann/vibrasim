@@ -7094,3 +7094,8 @@ B1=0.0 B2=0.0 B3=0.0 B4=0.0 **NULL**. Sparse global WTA does not unlock free dua
 
 Split L0/R0 pid1 + L1/R1 pid2; train-time tags; soft kill R1 only.
 B1=B2=B3=1.0 **PASS**. Spatial split isolates soft surgery; pid1 survives under G12.
+
+## 2026-07-26 sequential - BP-C48 NULL sparse_firing free dual
+
+sparse_firing_enabled top_k=3 vs off free dual + wall.
+B1=0.0 B2=0.75 B3=0.0 B4=-0.75 **NULL**. Sparse firing collapses treat pop; no talent unlock.

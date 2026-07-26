@@ -17,4 +17,4 @@ B1–B4. Seeds {5541,5551} trials 2. T=500. Budget ~8 min, hard cap 16 min.
 🔮 LEAN NULL. Sparse firing without named audio/video ports may no-op or fail to unlock ordered talent.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.0 B2=0.75 B3=0.0 B4=-0.75. sparse_firing_enabled top_k=3 collapses treat pop (B3=0); does not unlock ordered free dual talent. Control still partial-spec without unlock.
