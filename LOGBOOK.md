@@ -6728,3 +6728,8 @@ charge_latch_tau=2 free dual vs tau=0. First run: node capacity exhausted. Retry
 
 ILW L-low R-high vs same-band control; no free inject.
 B1=1.0 B2=0.0 B3=1.0 B4=1.0 **PASS**. Honest §4.8 port content dual decade.
+
+## 2026-07-20 sequential - BP-E155 NULL soft port wipe does not clear dual decade
+
+Soft dual wipe L/R ports after dual decade write; re-ILW restore.
+B1=1.0 B2=0.0 B3=1.0 **NULL**. Soft weaken does not disrupt decade specialisation (content survives).

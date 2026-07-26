@@ -19,4 +19,4 @@ Seeds {4141,4151} trials 8. Budget ~8 min, hard cap 16 min.
 🔮 LEAN PASS if soft weaken disrupts port content; LEAN NULL if decade nodes survive soft wipe without bridge-like kill.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1=1.0 B2=0.0 B3=1.0. Soft dual wipe of port regions does **not** disrupt dual decade specialisation (ordered survives). Soft bridge-weaken is not a content-wipe for decade nodes.
