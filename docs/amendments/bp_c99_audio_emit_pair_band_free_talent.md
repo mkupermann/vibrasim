@@ -29,4 +29,6 @@ Seeds {7741,7751} trials 2. T=500. Budget ~8 min, hard cap 16 min.
 
 ## RESULT
 
-*(filled after run)*
+**NULL** (2026-07-26). B1=0.25 B2=0.25 B3=0.25 B4=0.0.  
+`audio_emit_pair_band=0.15` does not unlock free dual talent (likely no-op without audio_io).
+

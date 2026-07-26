@@ -7633,3 +7633,13 @@ B1=B2=B3=0.0 **NULL**. Long idle erodes dual Y-pair selective recall (smoke shor
 
 workspace_broadcast_strength 0.3 vs 1.0 (self_aware ON) free dual + wall.
 B1=0.50 B2=0.50 B3=0.50 B4=0.0 **NULL**. No free dual unlock.
+
+## 2026-07-26 sequential - BP-E256 PASS dual decade temporal gap co-residence
+
+Train A, gap, train B; both selective partners OK.
+B1=B2=B3=1.0 **PASS**. Multislot dual decade co-resides across temporal gap.
+
+## 2026-07-26 sequential - BP-C99 NULL audio_emit_pair_band free dual
+
+audio_emit_pair_band 0.15 vs 0 free dual + wall.
+B1=0.25 B2=0.25 B3=0.25 B4=0.0 **NULL**. No free dual unlock.
