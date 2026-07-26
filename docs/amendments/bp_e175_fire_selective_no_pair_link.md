@@ -21,4 +21,4 @@ Seeds {4641,4651} trials 8. Budget ~16 min, hard cap 32 min.
 🔮 LEAN NULL — without pair-links, bridge graph may not connect matched L/R slots; fire prop fails select. PASS only if dual ILW spontaneously forms usable bridges.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=B2=B3=0.0. Pure dual ILW without pair-link does **not** support fire-select. Engineered pair bridges are necessary (E171 family depends on PRIM5 pair-link).
