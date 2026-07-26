@@ -25,4 +25,4 @@ Seeds {4501,4511} trials 8. Budget ~14 min, hard cap 28 min.
 🔮 LEAN NULL. Multislot capacity retains both R bands; L-only rewrite does not selectively suppress the non-partner (not generative E12; not associative readout).
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=1.0 B2=0.0 B3=0.0. Probe A shows R-high residual (co-presence), but probe B does not yield R-low and mean_R(A)>mean_R(B) never holds. Capacity ≠ selective residual; L-only rewrite does not select partner band.

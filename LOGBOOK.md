@@ -6820,3 +6820,8 @@ B1=1.0 B2=1.0 B3=0.0 **PASS**. Order-blind residual accumulation.
 ## 2026-07-26 sequential - residual curriculum closure E162-E168
 
 Formal CLOSED PASS: co-presence, last-write, soft/hard kill, multislot capacity, temporal gap, order-blind. Do not farm residual variants. See bp_port_residual_curriculum_closure.md.
+
+## 2026-07-26 sequential - BP-E169 NULL selective residual multislot
+
+Dual c0/c1 train multislot ON; L-only probe A lo / B hi.
+B1=1.0 B2=0.0 B3=0.0 **NULL**. Co-presence without partner selection (E166 capacity does not imply selective residual).
