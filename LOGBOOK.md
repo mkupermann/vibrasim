@@ -6918,3 +6918,8 @@ B1=B2=B3=1.0 **PASS**. Split-port doctrine scales to K=3.
 
 sideband_cull ON vs OFF free dual + wall.
 B1=0.0 B2=0.25 B3=0.0 B4=-0.25 **NULL**. Cull collapses treat population; no talent unlock.
+
+## 2026-07-26 sequential - BP-E182 PASS triple-arm middle kill
+
+Hard kill R1; c0 and c2 fire-select survive; c1 fails.
+B1=B2=B3=1.0 **PASS**. Selective arm surgery at K=3 closed.

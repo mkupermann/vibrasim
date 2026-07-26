@@ -19,4 +19,4 @@ Seeds {4861,4871} trials 8. Budget ~24 min, hard cap 48 min.
 🔮 LEAN PASS if spatial segregation isolates middle arm kill (E177 doctrine at K=3).
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=B2=B3=1.0. Triple-arm middle kill: c1 silenced; c0 and c2 fire-select survive. Selective arm surgery scales to K=3.
