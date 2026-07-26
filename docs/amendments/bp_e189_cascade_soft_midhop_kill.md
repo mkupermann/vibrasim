@@ -19,4 +19,4 @@ Seeds {5101,5111} trials 8. Budget ~20 min, hard cap 40 min.
 🔮 LEAN PASS if soft mid-hop disruption matches hard (E174/E180 class).
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=B2=B3=1.0. Soft mid-hop weaken at M0 silences path0; path1 survives. Soft+hard mid-hop kill closed (E187/E189).
