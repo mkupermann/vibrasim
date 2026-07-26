@@ -24,4 +24,4 @@ Seeds {4441,4451} trials 8. Budget ~12 min, hard cap 24 min.
 🔮 LEAN PASS if multislot retains both R bands after sequential train (E157 class). NULL if last-write erases first under residual scoring.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=B2=B3=1.0. Multislot ON retains both R high and R low bands after c0→c1 sequential train + L-only; c0-only control has high without low. Multi-assoc residual capacity closed under multislot.

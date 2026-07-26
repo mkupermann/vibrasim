@@ -16,7 +16,15 @@
 ## Extensions
 - **E163 PASS:** c0→c1 sequential train; last-write residual (c1 R-low) under multislot OFF; control no spurious c1.
 - **E164 PASS:** soft R-port kill does not clear residual (E155-class durability).
+- **E165 PASS:** hard R-port kill does not clear residual (E156-class).
+- **E166 PASS:** multislot ON retains both R high+low after c0+c1 train (capacity); c0-only high-only control.
+
+## Doctrine (E162–E166 CLOSED PASS family)
+1. Multi-trial dual train → residual co-presence without baked map.
+2. Multislot OFF → last-write residual reconfig (c0→c1).
+3. Soft/hard port kill does not wipe residual content.
+4. Multislot ON → multi-assoc capacity (both partner bands retained).
 
 ## Open
-- Hard R-port kill residual (vs soft E164).
-- Multislot ON multi-assoc residual capacity (interference / dual retention).
+- Residual under generative/partner-from-L alone still No (E12).
+- Free talent still blocked; residual family is engineered-port content, not free dual.

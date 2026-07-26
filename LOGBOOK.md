@@ -6801,3 +6801,8 @@ B1=B2=B3=1.0 **PASS**. Residual co-presence survives soft port kill (E155 class)
 
 Multi-trial c0; hard kill R; L-only probe; multislot OFF.
 B1=B2=B3=1.0 **PASS**. Residual co-presence survives hard port kill (E156/E164 class).
+
+## 2026-07-26 sequential - BP-E166 PASS multislot multi-assoc residual capacity
+
+Multislot ON; c0 then c1 dual train; L-only; both R bands present.
+B1=B2=B3=1.0 **PASS**. Residual family E162-E166 CLOSED PASS (co-presence, last-write, soft/hard kill, multislot capacity).
