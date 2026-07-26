@@ -6723,3 +6723,8 @@ Formal CLOSED PARTIAL synthesis E105-E153: wipe-restore, AND, cascade, hybrid ca
 ## 2026-07-20 sequential - BP-C26 FAILED latch-tau free dual (hard cap)
 
 charge_latch_tau=2 free dual vs tau=0. First run: node capacity exhausted. Retry 16k nodes: wallclock >30 min hard cap without verdict. **FAILED** time overrun — no quiet extension.
+
+## 2026-07-20 sequential - BP-E154 PASS port dual decade specialisation
+
+ILW L-low R-high vs same-band control; no free inject.
+B1=1.0 B2=0.0 B3=1.0 B4=1.0 **PASS**. Honest §4.8 port content dual decade.
