@@ -347,7 +347,8 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 
 ## Next hard only
 
-- Free talent: C16 PARTIAL (strength-decay+wall); C68 node_freq_binding OFF **fragile** (C69 B1=0.80); C42 fragile; C26 FAILED; C27–C41 NULL farm closed; C45–C73 NULL  
+- Free talent: C16 PARTIAL (strength-decay+wall); C68 node_freq_binding OFF **fragile** (C69 B1=0.80); C42 fragile; C26 FAILED; C27–C41 NULL farm closed; C45–C74 NULL  
+
 
 
 
