@@ -32,4 +32,6 @@ Not soft/hard mid-kill diamond. Not free dual. Not concurrent dual-path.
 
 ## RESULT
 
-*(filled after run)*
+**PASS** (2026-07-26). B1=1.0 B2=1.0 B3=1.0.  
+Diamond reverse: full and single-arm reverse R→L work; no-train fails. Redundant reverse arms without mid-kill.
+
