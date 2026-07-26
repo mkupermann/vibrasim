@@ -6894,3 +6894,7 @@ B1=B2=B3=1.0 **PASS**. Multi-trial arm switch with restore closed (E177/E178).
 
 Replace ON train c0 then c1; fire-select both arms.
 B1=1.0 B2=0.0 B3=1.0 **NULL**. PRIM8 replace does not exclusive-kill prior arm fire-select under multislot.
+
+## 2026-07-26 sequential - split-port arm curriculum closure E177-E179
+
+Formal CLOSED: spatial arm-select (E177), multi-trial switch (E178), replace exclusivity NULL (E179). See bp_split_port_arm_curriculum_closure.md.
