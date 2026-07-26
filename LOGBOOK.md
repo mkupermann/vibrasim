@@ -7358,3 +7358,8 @@ B1=0.0 B2=0.25 B3=0.25 B4=-0.25 **NULL**. Elevated synaptic transmission does no
 
 Half soft mid M0 (frac=0.5) vs full (frac=1.0).
 B1=0.0 B2=1.0 B3=1.0 **NULL**. Half already silences reverse p0; reverse multi-hop fragile to soft mid weaken.
+
+## 2026-07-26 sequential - BP-C75 NULL vibration_soft_cap free dual
+
+vibration_soft_cap=256 vs 0 free dual + wall.
+B1=0.0 B2=0.25 B3=0.0 B4=-0.25 **NULL**. Soft cap collapses treat pop; no unlock.

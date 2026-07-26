@@ -17,4 +17,4 @@ B1–B4. Seeds {6621,6631} trials 2. T=500. Budget ~8 min, hard cap 16 min.
 🔮 LEAN NULL. Soft cap limits vibration pool size; may thin dynamics without decade order unlock.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.0 B2=0.25 B3=0.0 B4=-0.25. vibration_soft_cap collapses treat pop; no free dual unlock.
