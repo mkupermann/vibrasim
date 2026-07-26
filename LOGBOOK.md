@@ -7403,3 +7403,13 @@ B1=B2=B3=1.0 **PASS**. Hard M1 mid-kill multi-trial reversible.
 
 compartment_boundary=1 vs 0 free dual + wall.
 B1=0.25 B2=0.5 B3=0.25 B4=-0.25 **NULL**. Compartment boundary does not unlock free dual talent.
+
+## 2026-07-26 sequential - BP-C80 FAILED emit_band_ratios free dual
+
+Decade-skew emit_band_ratios vs default under n_emit=8 free dual + wall.
+**FAILED** hard-cap overrun (~16 min). Smoke B1=B3=0 NULL-shaped. No quiet extension. n_emit=8 pathologically slow vs n_emit=0 farm.
+
+## 2026-07-26 sequential - BP-C81 NULL graceful_capacity free dual
+
+Tight n_nodes_max=96 + graceful_capacity vs ample free dual + wall.
+B1=0.0 B2=0.0 B3=0.0 B4=0.0 **NULL**. Capacity pressure collapses treat pop; no unlock.

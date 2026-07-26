@@ -37,4 +37,6 @@ Not that crashing-on-full is better. Not multi-trial port. Not C16. If treat cra
 
 ## RESULT
 
-*(filled after run)*
+**NULL** (2026-07-26). B1=0.0 B2=0.0 B3=0.0 B4=0.0.  
+Tight graceful capacity (n_nodes_max=96) collapses treat dual-side L4+ pop; no free dual talent unlock. Ample control also unordered at this budget/seeds.
+
