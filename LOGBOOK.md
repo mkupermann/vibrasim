@@ -6982,3 +6982,8 @@ B1=B2=B3=1.0 **PASS**. Mid-hop critical and path-local for content cascade.
 
 Kill M0; p1 on; restore path0; p1 durable.
 B1=B2=B3=1.0 **PASS**. Content+cascade hybrid E186-E188 CLOSED PASS.
+
+## 2026-07-26 sequential - BP-E189 PASS cascade soft mid-hop kill
+
+Soft weaken M0; path0 fails; path1 survives.
+B1=B2=B3=1.0 **PASS**. Soft+hard mid-hop kill closed (E187/E189).
