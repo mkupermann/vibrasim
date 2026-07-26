@@ -32,4 +32,6 @@ Not E255 long idle without decay. Not free dual. Not residual kill. Not curricul
 
 ## RESULT
 
-*(filled after run)*
+**PASS** (2026-07-26). B1=1.0 B2=1.0 B3=1.0.  
+Dual Y-pair selective recall holds after strength_decay idle T=120. Contrasts E255 long idle T=400 collapse without decay-specific failure at this shorter idle.
+
