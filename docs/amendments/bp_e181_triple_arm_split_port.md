@@ -24,4 +24,4 @@ Seeds {4821,4831} trials 8. Budget ~22 min, hard cap 44 min.
 🔮 LEAN PASS if dual-arm spatial doctrine scales to K=3. NULL if cross-talk collapses third arm.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=B2=B3=1.0. Triple-arm split-port fire-select capacity closed; dual-arm spatial doctrine scales to K=3.
