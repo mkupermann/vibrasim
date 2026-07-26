@@ -32,4 +32,6 @@ Not soft/hard residual kill. Not free dual. Not reverse cascade. Not E255 long i
 
 ## RESULT
 
-*(filled after run)*
+**PASS** (2026-07-26). B1=1.0 B2=1.0 B3=1.0.  
+Train A, temporal gap, train B on shared L–R ports: both pair decades remain selectively recallable. Multislot co-residence across gap without replace/kill.
+
