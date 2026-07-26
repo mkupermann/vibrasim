@@ -20,4 +20,4 @@ Seeds {4601,4611} trials 8. Budget ~18 min, hard cap 36 min.
 🔮 LEAN PASS if hard bridge kill silences latch prop while content remains. NULL if select survives hard kill (content-only path).
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=B2=B3=1.0. Hard R bridge kill silences fire-select; pair_write restore returns select. E171 select is **bridge-dependent**, not content-only (contrast E165 residual content survival under hard kill).
