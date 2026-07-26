@@ -19,4 +19,4 @@ Seeds {5761,5771} trials 6. Budget ~18 min, hard cap 36 min.
 🔮 LEAN PASS if reverse path respects G12 gate on firing R atom tags (symmetric to forward E194).
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=1.0 B2=1.0 B3=1.0. Reverse fire-select respects G12 gate: correct reverse OK; wrong-pattern reverse blocked; reverse c1 OK.

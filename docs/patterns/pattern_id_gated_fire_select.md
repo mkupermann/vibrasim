@@ -24,6 +24,7 @@
 - **Wrong-arm block requires non-zero mismatched tags** (E197).
 - **L-only tags suffice** for wrong-arm block; R partner tags not required (E201).
 - **R-only tags do not block** wrong-arm (E202 NULL); firing-side (L) tags are load-bearing.
+- **Reverse fire-select under G12** works (E205 PASS); wrong-pattern reverse blocked.
 
 ## Soft-kill arm surgery (E198–E200)
 - Shared PORT_R soft kill wrong-arm **spills** (E198 NULL) — silences both pid arms.
