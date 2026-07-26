@@ -240,6 +240,7 @@
 | C34 | **NULL** | r_2=50 free dual pop collapse; no unlock |
 | E183 | **PASS** | Triple-arm middle kill + restore multi-trial |
 | C35 | **NULL** | lambda_gen free dual 0.25 ordered; no unlock |
+| E184 | **PASS** | Fire-select durable after long idle T=400 |
 
 ## What works (engineered port curriculum)
 
@@ -279,6 +280,7 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 - Map-free selective residual **NULL** (E169; capacity ≠ select partner)  
 - Pair-link selective residual **NULL** (E170; bridges ≠ selective mean readout)  
 - Fire-readout selective residual **PASS** (E171; L-fire → R partner latch)  
+- Fire-select long-idle durability **PASS** (E184 T=400 no retrain)  
 - Multi-trial fire selective A→B→A **PASS** (E172)  
 - Fire-select bridge-dependent **PASS** (E173 hard kill silences; restore returns)  
 - Soft bridge weaken also silences fire-select **PASS** (E174)  
