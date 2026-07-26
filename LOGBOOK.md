@@ -7503,3 +7503,13 @@ B1=B2=B3=1.0 **PASS**. Reverse scales to five hops (not mid-kill).
 
 bridge_charge_prop_rate=2.5 vs 0 free dual + wall.
 B1=0.25 B2=0.0 B3=0.25 B4=0.25 **NULL**. No free dual unlock.
+
+## 2026-07-26 sequential - BP-E238 NULL reverse graded write
+
+Weak N_WRITE=2 still reverse succeeds; strong OK.
+B1=0.0 B2=1.0 B3=1.0 **NULL**. Reverse dose-robust at pre-registered weak dose (not mid-kill).
+
+## 2026-07-26 sequential - BP-C91 NULL speech_loop free dual
+
+speech_loop_strength=1 vs 0 free dual + wall.
+B1=0.50 B2=0.75 B3=0.50 B4=-0.25 **NULL**. No free dual unlock.
