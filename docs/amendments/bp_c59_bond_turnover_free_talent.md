@@ -17,4 +17,4 @@ B1–B4. Seeds {5981,5991} trials 2. T=500. Budget ~8 min, hard cap 16 min.
 🔮 LEAN NULL. Bond turnover may destabilize structure without creating decade order unlock.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.25 B2=0.25 B3=0.75 B4=0.0. bond_turnover_rate does not unlock free dual talent.
