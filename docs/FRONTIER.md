@@ -299,6 +299,7 @@
 | C62 | **NULL** | node_thermal free dual; delta+ but B1=0.75 fails 0.90 |
 | E214 | **PASS** | Cascade reverse multi-hop fire-select R→L |
 | C63 | **NULL** | edge_closure free dual; no unlock |
+| E215 | **PASS** | Cascade reverse under G12 pattern gate |
 
 ## What works (engineered port curriculum)
 
