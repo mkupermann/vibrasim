@@ -213,6 +213,7 @@
 | E162 | **PASS** | Multi-trial dual-port association residual without baked map |
 | C28 | **NULL** | Short triad_decay free dual 0.5 ordered; no unlock |
 | E163 | **PASS** | Multi-assoc c0→c1 last-write residual multislot OFF |
+| E164 | **PASS** | Assoc residual survives soft R-port kill |
 
 ## What works (engineered port curriculum)
 
@@ -242,6 +243,7 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 - Free talent: C16 family CLOSED PARTIAL — need mechanism ≠ dual-inject+decay / port-seed / local scaffold; C26 latch-tau **FAILED** hard-cap; C27 pair_decay NULL; C28 triad_decay NULL  
 - Port multi-trial association residual without map **PASS** (E162) — co-presence not generative partner  
 - Multi-assoc last-write residual c0→c1 **PASS** (E163) multislot OFF  
+- Assoc residual survives soft R kill **PASS** (E164; E155-class content durability)  
 - Port circuit curriculum **CLOSED PARTIAL** E105–E153 (bp_port_circuit_curriculum_closure.md)  
 - Port wipe-restore E71–E100 closed; dual 3-hop re-cut after wipe-restore E123–E127 CLOSED NULL  
 - Soft inhibit: retrain-reversible (E44), durable without retrain (E55) — closed for two-hop  

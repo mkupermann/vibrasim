@@ -13,6 +13,10 @@
 2. Control (no dual train) → no spurious R partner.
 3. Distinct from decade reconfig (E160/E161 multislot OFF last-write) and from content wipe (E155/E156 port kill leaves decade content).
 
+## Extensions
+- **E163 PASS:** c0→c1 sequential train; last-write residual (c1 R-low) under multislot OFF; control no spurious c1.
+- **E164 PASS:** soft R-port kill does not clear residual (E155-class durability).
+
 ## Open
-- Multi-association capacity (c0 vs c1 residual interference) not yet pre-reg'd.
-- Soft/hard port kill on residual (vs decade content survival) not yet tested as residual-specific bars.
+- Hard R-port kill residual (vs soft E164).
+- Multislot ON multi-assoc residual capacity (interference / dual retention).
