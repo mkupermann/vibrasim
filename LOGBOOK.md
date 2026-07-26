@@ -6987,3 +6987,8 @@ B1=B2=B3=1.0 **PASS**. Content+cascade hybrid E186-E188 CLOSED PASS.
 
 Soft weaken M0; path0 fails; path1 survives.
 B1=B2=B3=1.0 **PASS**. Soft+hard mid-hop kill closed (E187/E189).
+
+## 2026-07-26 sequential - BP-E190 PASS triple-hop content cascade
+
+L-M-A-R dual path content cascade fire-select.
+B1=B2=B3=1.0 **PASS**. Content+cascade hybrid E186-E190 CLOSED PASS (soft mid-hop + triple-hop).
