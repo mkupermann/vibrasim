@@ -7229,3 +7229,8 @@ B1=B2=B3=1.0 **PASS**. Reverse hard surgery arm-selective under split+G12.
 
 fire_inhibit_radius=8 vs 0 free dual + wall.
 B1=0.25 B2=0.0 B3=0.5 B4=0.25 **NULL**. Fire inhibit does not unlock free dual talent.
+
+## 2026-07-26 sequential - BP-E213 PASS reverse hard-kill restore
+
+Hard kill L1; reverse pid2 fail; reverse pid1 OK; retrain restores reverse pid2.
+B1=B2=B3=1.0 **PASS**. Reverse hard surgery multi-trial reversible.

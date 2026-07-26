@@ -18,4 +18,4 @@ Seeds {6081,6091} trials 6. Budget ~20 min, hard cap 40 min.
 🔮 LEAN PASS if retrain rebuilds after hard kill like E210 soft restore / E183 hard restore.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=1.0 B2=1.0 B3=1.0. Hard kill L1 silences reverse pid2; reverse pid1 survives; retrain restores reverse pid2.

@@ -295,6 +295,7 @@
 | C60 | **NULL** | bistable_rate free dual; treat pop collapse |
 | E212 | **PASS** | Reverse split hard-kill L1; reverse pid1 survives |
 | C61 | **NULL** | fire_inhibit free dual; no unlock |
+| E213 | **PASS** | Reverse hard-kill then retrain-restore reverse pid2 |
 
 ## What works (engineered port curriculum)
 
