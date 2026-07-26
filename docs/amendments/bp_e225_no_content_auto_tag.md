@@ -18,4 +18,4 @@ Seeds {6641,6651} trials 6. Budget ~18 min, hard cap 36 min.
 🔮 LEAN PASS. Substrate does not invent pattern_ids from content; tags require active_pattern_id at allocate or post-hoc script.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=1.0 B2=1.0 B3=1.0. Ambient train yields no non-zero tags; wrong-arm still selects under gate; post-hoc tags restore wrong-arm block. Emergent content auto-tag absent without active_pattern_id / engineered post-hoc.
