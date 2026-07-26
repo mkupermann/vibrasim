@@ -6758,3 +6758,8 @@ B1=1.0 B2=0.0 B3=0.0 **NULL**. Multi-trial switch not last-write-dominant (E158 
 
 Write L-low R-high then reverse; multislot OFF.
 B1=B2=B3=1.0 **PASS**. Multislot OFF enables last-write dual decade reconfig (E158 ON fails).
+
+## 2026-07-20 sequential - BP-E161 PASS multi-trial dual decade multislot OFF
+
+Forward reverse forward dual decade; multislot OFF.
+B1=B2=B3=1.0 **PASS**. Dual decade reconfig closed under multislot OFF (E160/E161).
