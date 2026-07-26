@@ -7338,3 +7338,8 @@ B1=0.25 B2=0.25 B3=0.5 B4=0.0 **NULL**. Molecule decay does not unlock free dual
 
 C16 decay + G12 gate vs decay only free dual budget-fit T=500.
 B1=0.25 B2=0.25 B3=0.25 B4=0.0 **NULL**. No C16-class unlock at budget-fit; ambient gate no-op.
+
+## 2026-07-26 sequential - BP-C73 NULL r_strengthen free dual
+
+r_strengthen=12 vs 5 free dual + wall.
+B1=0.0 B2=0.5 B3=0.0 B4=-0.5 **NULL**. Elevated r_strengthen collapses treat pop; no unlock.

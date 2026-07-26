@@ -316,6 +316,7 @@
 | E221 | **PASS** | Cascade reverse hard mid-kill then retrain-restore |
 | C72 | **NULL** | lambda_dec_mol free dual; no unlock |
 | E222 | **NULL** | G12+C16 free dual hybrid budget-fit no unlock |
+| C73 | **NULL** | r_strengthen free dual; treat pop collapse |
 
 ## What works (engineered port curriculum)
 
@@ -344,7 +345,8 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 
 ## Next hard only
 
-- Free talent: C16 PARTIAL (strength-decay+wall); C68 node_freq_binding OFF **fragile** (C69 B1=0.80); C42 fragile; C26 FAILED; C27–C41 NULL farm closed; C45–C72 NULL  
+- Free talent: C16 PARTIAL (strength-decay+wall); C68 node_freq_binding OFF **fragile** (C69 B1=0.80); C42 fragile; C26 FAILED; C27–C41 NULL farm closed; C45–C73 NULL  
+
 
 
 
@@ -400,6 +402,7 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 - Cascade reverse soft mid-kill restore **PASS** (E219)  
 - Cascade reverse hard mid-kill selective **PASS** (E220)  
 - Cascade reverse hard mid-kill restore **PASS** (E221)  
+- G12+C16 free dual hybrid budget-fit **NULL** (E222; gate no-op ambient)  
 
 - Port multi-trial association residual without map **PASS** (E162) — co-presence not generative partner  
 - Multi-assoc last-write residual c0→c1 **PASS** (E163) multislot OFF  
