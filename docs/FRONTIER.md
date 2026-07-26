@@ -310,6 +310,7 @@
 | E219 | **PASS** | Cascade reverse soft mid-kill then retrain-restore |
 | C68 | **PASS*** | node_freq_binding OFF free dual unlock (*fragile; C69 NULL) |
 | C69 | **NULL** | C68 replicate larger-N B1=0.80 fails 0.90 |
+| C70 | **NULL** | fusion_bond_block free dual; no unlock |
 
 ## What works (engineered port curriculum)
 
@@ -338,7 +339,8 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 
 ## Next hard only
 
-- Free talent: C16 PARTIAL (strength-decay+wall); C68 node_freq_binding OFF **fragile** (C69 B1=0.80); C42 fragile; C26 FAILED; C27–C41 NULL farm closed; C45–C69 NULL  
+- Free talent: C16 PARTIAL (strength-decay+wall); C68 node_freq_binding OFF **fragile** (C69 B1=0.80); C42 fragile; C26 FAILED; C27–C41 NULL farm closed; C45–C70 NULL  
+
 
 
 
