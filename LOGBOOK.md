@@ -7021,3 +7021,7 @@ B1=B2=B3=1.0 **PASS**. Graded multi-hop prop works for content cascade fire-sele
 
 L=500 R=150 vs equal 325 free dual + wall.
 B1=0.5 B2=0.75 B3=0.5 B4=-0.25 **NULL**. Density asymmetry does not unlock free dual talent.
+
+## 2026-07-26 sequential - free dual NULL farm closure C27-C41
+
+Formal stop farming free dual single-knob inject+wall variants. C16 PARTIAL remains sole unlock family. See bp_free_dual_null_farm_closure_c27_c41.md.
