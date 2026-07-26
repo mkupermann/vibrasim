@@ -6738,3 +6738,8 @@ B1=1.0 B2=0.0 B3=1.0 **NULL**. Soft weaken does not disrupt decade specialisatio
 
 Hard dual kill L/R ports after dual decade write; re-ILW restore.
 B1=1.0 B2=0.0 B3=1.0 **NULL**. Soft+hard port kill fail as content wipe (E155/E156).
+
+## 2026-07-20 sequential - BP-E157 PASS multislot K=3 dual-side occupancy
+
+Three bands L and R sequential ILW; multislot ON vs OFF.
+B1=1.0 B2=0.0 B3=1.0 **PASS**. Dual-side multislot capacity closed.
