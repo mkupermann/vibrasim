@@ -19,4 +19,4 @@ Seeds {5061,5071} trials 8. Budget ~20 min, hard cap 40 min.
 🔮 LEAN PASS if mid-hop is critical and spatially isolated (E186 doctrine + E177 arm-kill class).
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=B2=B3=1.0. Mid-hop hard kill at M0 silences path0 cascade fire-select; path1 survives. Multi-hop content cascade is mid-hop critical and path-local.
