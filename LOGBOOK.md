@@ -7075,3 +7075,7 @@ B1=B2=B3=1.0 **PASS**. Tags needed for wrong-pattern suppression only.
 
 L pol=0 R pol=1 vs random free dual + wall.
 B1=0.0 B2=0.0 B3=0.0 B4=0.0 **NULL**. Polarity segregation does not unlock free dual talent.
+
+## 2026-07-26 sequential - pattern-id G12 curriculum closure E194-E197
+
+Formal CLOSED PASS: select, multi-trial, train-time tag, tags for wrong-arm block. See bp_pattern_id_g12_curriculum_closure.md.
