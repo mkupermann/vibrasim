@@ -7613,3 +7613,13 @@ B1=B2=B3=1.0 **PASS**. Port concurrent dual recall works (not reverse cascade).
 
 btsp_excitability_bias=2 vs 0 (BTSP ON) free dual + wall.
 B1=0.50 B2=0.0 B3=0.50 B4=0.50 **NULL**. No free dual unlock.
+
+## 2026-07-26 sequential - BP-E254 PASS interleaved dual pair train-test
+
+Interleaved train A/probe A/train B/probe B; both selective.
+B1=B2=B3=1.0 **PASS**. Multi-trial interleaved port pairs hold without G12.
+
+## 2026-07-26 sequential - BP-C97 NULL freq_distribution free dual
+
+freq_distribution linear vs log free dual + wall.
+B1=0.0 B2=0.0 B3=0.25 B4=0.0 **NULL**. No free dual unlock.

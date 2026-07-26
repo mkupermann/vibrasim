@@ -32,4 +32,6 @@ Not G12. Not reverse cascade. Not free dual. Not concurrent dual re-probe alone 
 
 ## RESULT
 
-*(filled after run)*
+**PASS** (2026-07-26). B1=1.0 B2=1.0 B3=1.0.  
+Interleaved train/probe A then B multi-trial: both pairs stay selective without G12. Port multi-trial interleaved durability.
+
