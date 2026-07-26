@@ -6923,3 +6923,8 @@ B1=0.0 B2=0.25 B3=0.0 B4=-0.25 **NULL**. Cull collapses treat population; no tal
 
 Hard kill R1; c0 and c2 fire-select survive; c1 fails.
 B1=B2=B3=1.0 **PASS**. Selective arm surgery at K=3 closed.
+
+## 2026-07-26 sequential - BP-C34 NULL elevated r_2 free dual
+
+r_2=50 vs 28 free dual + wall.
+B1=0.0 B2=0.25 B3=0.0 B4=-0.25 **NULL**. Larger r_2 collapses treat pop; no talent unlock.
