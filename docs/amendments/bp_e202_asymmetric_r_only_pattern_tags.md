@@ -19,4 +19,4 @@ Seeds {5641,5651} trials 8. Budget ~18 min, hard cap 36 min.
 🔮 LEAN NULL on B2 (wrong-arm). L fires ambient under gate (E197/E201); R tags alone should not suppress wrong-arm select. B1/B3 may still pass.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=1.0 B2=0.0 B3=1.0. R-only tags: correct select OK; wrong-arm block fails (ambient L fires). Complements E201 — firing-side tags required for suppression.

@@ -273,6 +273,7 @@
 | C49 | **NULL** | bridge_atom_prop free dual; no unlock |
 | E201 | **PASS** | L-only pattern tags suffice for G12 wrong-arm block |
 | C50 | **NULL** | lateral_inhibition free dual; no unlock |
+| E202 | **NULL** | R-only pattern tags; wrong-arm block fails (ambient L) |
 
 ## What works (engineered port curriculum)
 
