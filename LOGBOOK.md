@@ -7373,3 +7373,8 @@ B1=B2=B3=1.0 **PASS**. Tags stay zero; wrong-arm still selects; post-hoc tags re
 
 fire_zero_latch_radius=8 vs 0 free dual + wall.
 B1=0.0 B2=0.0 B3=0.0 B4=0.0 **NULL**. Fire zero latch collapses treat pop; no unlock.
+
+## 2026-07-26 sequential - BP-E226 PASS cascade reverse soft mid-kill M1
+
+Soft kill M1; reverse p1 fail; reverse p0 survives.
+B1=B2=B3=1.0 **PASS**. Symmetric path isolation to E217 M0 kill.
