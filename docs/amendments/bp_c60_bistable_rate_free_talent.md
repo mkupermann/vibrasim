@@ -17,4 +17,4 @@ B1–B4. Seeds {6021,6031} trials 2. T=500. Budget ~8 min, hard cap 16 min.
 🔮 LEAN NULL. Bistable bridge wells need flux drive; free dual inject unlikely to unlock decade order via bistable_rate alone.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.0 B2=0.0 B3=0.0 B4=0.0. bistable_rate does not unlock free dual talent; treat pop collapse.

@@ -7214,3 +7214,8 @@ B1=0.25 B2=0.25 B3=0.75 B4=0.0 **NULL**. G53 bond turnover does not unlock free 
 
 Same world: fwd c0, rev c0, both dirs c1 under G12.
 B1=B2=B3=1.0 **PASS**. Bidirectional select coexists multi-trial without retrain.
+
+## 2026-07-26 sequential - BP-C60 NULL bistable_rate free dual
+
+bistable_rate=0.05 vs 0 free dual + wall.
+B1=0.0 B2=0.0 B3=0.0 B4=0.0 **NULL**. Bistable rate collapses treat pop; no unlock.
