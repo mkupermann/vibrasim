@@ -17,4 +17,4 @@ B1–B4. Seeds {6181,6191} trials 2. T=500. Budget ~8 min, hard cap 16 min.
 🔮 LEAN NULL. Spontaneous curvature for shell geometry unlikely to unlock decade order from free dual inject.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.0 B2=0.25 B3=0.25 B4=-0.25. curvature_k does not unlock free dual talent.

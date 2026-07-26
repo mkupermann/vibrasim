@@ -7254,3 +7254,8 @@ B1=0.0 B2=0.5 B3=0.25 B4=-0.5 **NULL**. Edge closure does not unlock free dual t
 
 Cascade reverse R→L with train-time tags + gate.
 B1=B2=B3=1.0 **PASS**. Multi-hop reverse respects G12 wrong-pattern block.
+
+## 2026-07-26 sequential - BP-C64 NULL curvature free dual
+
+curvature_k=2 vs 0 free dual + wall.
+B1=0.0 B2=0.25 B3=0.25 B4=-0.25 **NULL**. Curvature does not unlock free dual talent.
