@@ -17,4 +17,4 @@ B1–B4 as above. Seeds {4681,4691} trials 2. T=500. N_SIDE=250. Budget ~6 min, 
 🔮 LEAN NULL. Atom repulsion unlikely to unlock free dual ordered talent.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.25 B2=0.50 B3=0.25 B4=-0.25. Elevated atom_repulsion_k hurts vs control; no free dual unlock.

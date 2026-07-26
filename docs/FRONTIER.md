@@ -227,6 +227,7 @@
 | E174 | **PASS** | Fire-select silenced by soft R bridge weaken; restore |
 | E175 | **NULL** | Fire-select without pair-link fails (B1=B2=B3=0) |
 | E176 | **NULL** | C0-arm kill silences L-lo but also kills L-hi select |
+| C30 | **NULL** | atom_repulsion free dual 0.25; hurts vs ctrl |
 
 ## What works (engineered port curriculum)
 
@@ -255,7 +256,7 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 
 ## Next hard only
 
-- Free talent: C16 family CLOSED PARTIAL — need mechanism ≠ dual-inject+decay / port-seed / local scaffold; C26 latch-tau **FAILED** hard-cap; C27 pair_decay NULL; C28 triad_decay NULL; C29 asymmetric speed NULL  
+- Free talent: C16 family CLOSED PARTIAL — need mechanism ≠ dual-inject+decay / port-seed / local scaffold; C26 latch-tau **FAILED** hard-cap; C27 pair_decay NULL; C28 triad_decay NULL; C29 asymmetric speed NULL; C30 atom_repulsion NULL  
 - Port multi-trial association residual without map **PASS** (E162) — co-presence not generative partner  
 - Multi-assoc last-write residual c0→c1 **PASS** (E163) multislot OFF  
 - Assoc residual survives soft R kill **PASS** (E164; E155-class content durability)  
@@ -270,6 +271,7 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 - Fire-select bridge-dependent **PASS** (E173 hard kill silences; restore returns)  
 - Soft bridge weaken also silences fire-select **PASS** (E174)  
 - Fire-select requires pair-link **NULL without** (E175 pure dual ILW)  
+- Fire-select curriculum **CLOSED** E171–E176 (`bp_fire_select_curriculum_closure.md`)  
 - Port circuit curriculum **CLOSED PARTIAL** E105–E153 (bp_port_circuit_curriculum_closure.md)  
 - Port wipe-restore E71–E100 closed; dual 3-hop re-cut after wipe-restore E123–E127 CLOSED NULL  
 - Soft inhibit: retrain-reversible (E44), durable without retrain (E55) — closed for two-hop  

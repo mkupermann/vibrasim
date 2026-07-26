@@ -6869,3 +6869,8 @@ B1=1.0 B2=1.0 B3=0.0 **NULL**. Arm-selective bridge kill open.
 ## 2026-07-26 sequential - fire-select curriculum closure E171-E176
 
 Formal CLOSED: fire+pair-link select; multi-trial; soft/hard disrupt; pair-link necessary; arm-selective kill NULL. See bp_fire_select_curriculum_closure.md.
+
+## 2026-07-26 sequential - BP-C30 NULL atom_repulsion free dual
+
+atom_repulsion_k=20 vs 0 free dual + wall.
+B1=0.25 B2=0.5 B3=0.25 B4=-0.25 **NULL**. Atom repulsion does not unlock free dual.
