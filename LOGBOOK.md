@@ -7139,3 +7139,8 @@ B1=B2=1.0 B3=0.0 **NULL**. Reverse works without bidir; G13 not load-bearing und
 
 self_aware_enabled True vs False free dual + wall.
 B1=0.0 B2=0.0 B3=0.25 B4=0.0 **NULL**. G16 self-aware does not unlock free dual talent.
+
+## 2026-07-26 sequential - BP-E204 NULL reverse G6 ablation
+
+G6 ON reverse vs G6 OFF reverse fail + forward.
+B1=1.0 B2=0.0 B3=1.0 **NULL**. Reverse pair-link-native; G6 not required.
