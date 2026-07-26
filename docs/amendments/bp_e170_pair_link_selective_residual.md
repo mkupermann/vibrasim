@@ -23,4 +23,4 @@ Seeds {4521,4531} trials 8. Budget ~14 min, hard cap 28 min.
 🔮 LEAN NULL still — bridges alone do not reweight residual means under L-only rewrite without fire/readout dynamics. PASS only if pair links bias R content under L probe.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=1.0 B2=0.0 B3=0.0. Same failure mode as E169: pair-links do not enable selective residual under L-only rewrite. Engineered bridges ≠ associative readout of partner band.

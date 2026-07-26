@@ -26,7 +26,7 @@
 4. Multislot ON → multi-assoc capacity (both partner bands retained).
 5. Temporal gap L→R residual works (E167); write order order-blind (E168).
 
-## Open
+## Boundary: selective residual
+- **E169 NULL / E170 NULL:** after multi-assoc capacity train, L-only probe band does **not** select R partner mean (B2=B3=0). Pair-links do not fix. Capacity residual ≠ selective associative readout.
 - Residual under generative/partner-from-L alone still No (E12).
-- Map-free **selective** residual (probe L band selects which R partner) not yet pre-reg'd.
 - Free talent still blocked; residual family is engineered-port content, not free dual.

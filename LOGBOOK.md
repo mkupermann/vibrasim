@@ -6825,3 +6825,8 @@ Formal CLOSED PASS: co-presence, last-write, soft/hard kill, multislot capacity,
 
 Dual c0/c1 train multislot ON; L-only probe A lo / B hi.
 B1=1.0 B2=0.0 B3=0.0 **NULL**. Co-presence without partner selection (E166 capacity does not imply selective residual).
+
+## 2026-07-26 sequential - BP-E170 NULL pair-link selective residual
+
+Pair_write c0/c1 multislot+bridges; L-only probe A/B.
+B1=1.0 B2=0.0 B3=0.0 **NULL**. Selective residual class closed NULL for dual ILW and pair-link without new readout dynamics.
