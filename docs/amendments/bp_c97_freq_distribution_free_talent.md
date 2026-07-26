@@ -31,4 +31,6 @@ Seeds {7661,7671} trials 2. T=500. Budget ~8 min, hard cap 16 min.
 
 ## RESULT
 
-*(filled after run)*
+**NULL** (2026-07-26). B1=0.0 B2=0.0 B3=0.25 B4=0.0.  
+`freq_distribution=linear` vs log does not unlock free dual talent.
+
