@@ -17,4 +17,4 @@ B1–B4. Seeds {4721,4731} trials 2. T=500. Budget ~8 min, hard cap 16 min.
 🔮 LEAN NULL. Emission during free dual unlikely to unlock ordered talent.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.25 B2=0.25 B3=0.50 B4=0.0. n_emit=4 does not unlock free dual ordered talent vs n_emit=0.
