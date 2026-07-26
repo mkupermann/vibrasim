@@ -17,7 +17,7 @@ TAU = 2.0
 
 def cfg(seed, latch_tau):
     return WorldConfig(
-        n_initial_vibrations=0, box_size=(80.,50.,50.), n_vibrations_max=8192, n_nodes_max=4096,
+        n_initial_vibrations=0, box_size=(80.,50.,50.), n_vibrations_max=16384, n_nodes_max=16384,
         rng_seed=seed, r_1=5., r_2=28., freq_tolerance=0.03, pair_decay_time=60., triad_decay_time=600.,
         lambda_gen=0., lambda_dec=0., speed_min=5., speed_max=25.,
         midplane_wall_enabled=True, midplane_wall_x=MID,

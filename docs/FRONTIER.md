@@ -200,10 +200,11 @@
 | E151 | **PASS** | Dual cascade hard wipe both paths + full restore |
 | E152 | **PASS** | Dual cascade multi-trial hard selective path0 |
 | E153 | **PASS** | Dual cascade hard selective path1 silence + restore |
+| C26 | **FAILED** | Latch-tau free dual: capacity then hard-cap overrun |
 
 ## What works (engineered port curriculum)
 
-See `docs/patterns/port_circuit_primitives.md` and `docs/patterns/port_wipe_restore.md`.
+See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore.md`, and `docs/amendments/bp_port_circuit_curriculum_closure.md` (E105–E153 CLOSED PARTIAL).
 
 ## Boundaries locked
 
@@ -224,10 +225,11 @@ See `docs/patterns/port_circuit_primitives.md` and `docs/patterns/port_wipe_rest
 
 ## Next hard only
 
-- Free talent: C16 family CLOSED PARTIAL — need mechanism ≠ dual-inject+decay alone  
-- Port wipe-restore curriculum **closed** E71–E100 (port_wipe_restore.md)  
+- Free talent: C16 family CLOSED PARTIAL — need mechanism ≠ dual-inject+decay / port-seed / local scaffold; C26 latch-tau **FAILED** hard-cap  
+- Port circuit curriculum **CLOSED PARTIAL** E105–E153 (bp_port_circuit_curriculum_closure.md)  
+- Port wipe-restore E71–E100 closed; dual 3-hop re-cut after wipe-restore E123–E127 CLOSED NULL  
 - Soft inhibit: retrain-reversible (E44), durable without retrain (E55) — closed for two-hop  
-- Brain R9 still blocked until C reopen or deeper curriculum
+- Brain R9 still blocked until C reopen or honest deeper port-content curriculum
 
 ## Do not
 

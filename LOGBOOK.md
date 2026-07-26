@@ -6715,3 +6715,11 @@ B1=B2=B3=1.0 **PASS**. Dual cascade multi-trial selective closed.
 
 Hard cut path1 L; path0 stays; restore path1 both ON.
 B1=B2=B3=1.0 **PASS**. Dual cascade selective both paths + multi-trial closed (E150-E153).
+
+## 2026-07-20 sequential - port circuit curriculum closure
+
+Formal CLOSED PARTIAL synthesis E105-E153: wipe-restore, AND, cascade, hybrid cascade, dual cascade. Free talent still blocked. Dual 3-hop re-cut after wipe-restore remains CLOSED NULL.
+
+## 2026-07-20 sequential - BP-C26 FAILED latch-tau free dual (hard cap)
+
+charge_latch_tau=2 free dual vs tau=0. First run: node capacity exhausted. Retry 16k nodes: wallclock >30 min hard cap without verdict. **FAILED** time overrun — no quiet extension.
