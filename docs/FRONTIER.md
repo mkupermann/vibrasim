@@ -267,6 +267,7 @@
 | C46 | **NULL** | Polarity segregation free dual; no unlock |
 | E198 | **NULL** | Soft-kill R-lo also kills pid1 (shared port spill) |
 | C47 | **NULL** | global_wta_k free dual; no unlock |
+| E199 | **PASS** | Split-port G12 soft-kill R1; pid1 survives (fix E198) |
 
 ## What works (engineered port curriculum)
 
@@ -302,6 +303,8 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 - Tags required for wrong-arm block **PASS** (E197; ambient allows positive select)  
 - Pattern-id G12 curriculum **CLOSED PASS** E194–E197 (`bp_pattern_id_g12_curriculum_closure.md`)  
 - Soft-kill wrong-arm on shared R **NULL** (E198 spill; use split ports)  
+- Split-port + G12 soft-kill wrong arm **PASS** (E199 fixes E198)  
+
 - Port multi-trial association residual without map **PASS** (E162) — co-presence not generative partner  
 - Multi-assoc last-write residual c0→c1 **PASS** (E163) multislot OFF  
 - Assoc residual survives soft R kill **PASS** (E164; E155-class content durability)  
