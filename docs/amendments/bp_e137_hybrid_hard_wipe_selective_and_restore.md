@@ -19,4 +19,4 @@ Seeds {3701,3711} trials 6. Budget ~10 min, hard cap 20 min.
 🔮 LEAN PASS. Hard analogue of E75 selective AND restore after dual wipe.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Hard dual wipe hybrid + selective AND restore; OR stays OFF. Hard analogue of E75.
