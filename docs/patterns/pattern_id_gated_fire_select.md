@@ -26,6 +26,7 @@
 - **R-only tags do not block** wrong-arm (E202 NULL); firing-side (L) tags are load-bearing.
 - **Reverse fire-select under G12** works (E205 PASS); wrong-pattern reverse blocked.
 - **Reverse multi-trial switch** pid1→pid2→pid1 durable (E206 PASS).
+- **Reverse train-time tags** suffice without post-hoc (E207 PASS).
 
 ## Soft-kill arm surgery (E198–E200)
 - Shared PORT_R soft kill wrong-arm **spills** (E198 NULL) — silences both pid arms.

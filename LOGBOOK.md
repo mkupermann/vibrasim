@@ -7169,3 +7169,8 @@ B1=B2=B3=1.0 **PASS**. Reverse multi-trial durable under G12 like E195 forward.
 
 stdp_alignment_strict_threshold=0.95 vs 0 free dual + wall.
 B1=0.0 B2=0.5 B3=0.0 B4=-0.5 **NULL**. Strict alignment collapses treat pop; no unlock.
+
+## 2026-07-26 sequential - BP-E207 PASS reverse train-time pattern_id
+
+Train with active_pattern_id; no post-hoc tag; reverse under G12.
+B1=B2=B3=1.0 **PASS**. Train-time tags suffice for reverse like E196 forward.
