@@ -6967,3 +6967,8 @@ B1=0.25 B2=0.0 B3=0.25 B4=0.25 **NULL**. Slow global speeds do not unlock free d
 
 Two L-M-R paths content freqs; fire L selects R via cascade.
 B1=B2=B3=1.0 **PASS**. Multi-hop content fire-select closed (hybrid circuit+content).
+
+## 2026-07-26 sequential - BP-C38 NULL corr_plasticity free dual
+
+corr_plasticity_rate=0.5 vs 0 free dual + wall + neuron dynamics.
+B1=0.0 B2=0.0 B3=0.0 B4=0.0 **NULL**. Hebbian corr plasticity does not unlock free dual talent.
