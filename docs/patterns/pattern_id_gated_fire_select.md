@@ -32,6 +32,7 @@
 - **Reverse soft-kill restore** via retrain (E210 PASS).
 - **Forward+reverse coexist** same-world multi-trial (E211 PASS).
 - **Reverse split hard-kill** L1 arm-selective (E212 PASS; complements soft E209).
+- **Reverse hard-kill restore** via retrain (E213 PASS).
 
 ## Soft-kill arm surgery (E198–E200)
 - Shared PORT_R soft kill wrong-arm **spills** (E198 NULL) — silences both pid arms.
