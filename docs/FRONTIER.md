@@ -283,6 +283,7 @@
 | C54 | **NULL** | workspace_broadcast OFF free dual; no unlock |
 | E206 | **PASS** | Reverse multi-trial switch 1→2→1 under G12 |
 | C55 | **NULL** | stdp_alignment_strict free dual; treat pop collapse |
+| E207 | **PASS** | Reverse train-time pattern_id (no post-hoc tag) |
 
 ## What works (engineered port curriculum)
 
