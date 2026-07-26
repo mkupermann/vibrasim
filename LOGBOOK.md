@@ -7523,3 +7523,13 @@ B1=B2=B3=1.0 **PASS**. Reverse structure survives content rewrite.
 
 Concurrent fire L0+R1: R0 and L1 both lit.
 B1=B2=B3=1.0 **PASS**. Mixed-direction dual-path drive coexists.
+
+## 2026-07-26 sequential - BP-E241 PASS diamond reverse redundancy
+
+Full diamond and single-arm reverse R→L OK; no-train fails.
+B1=B2=B3=1.0 **PASS**. Diamond reverse without mid-kill.
+
+## 2026-07-26 sequential - BP-E242 PASS reverse fan-in OR
+
+Fire R1 or R2 each reaches L via shared mid.
+B1=B2=B3=1.0 **PASS**. Reverse fan-in OR works.

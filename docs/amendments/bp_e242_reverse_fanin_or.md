@@ -32,4 +32,6 @@ Not forward fan-in re-probe. Not mid-kill. Not free dual. Not exclusive WTA betw
 
 ## RESULT
 
-*(filled after run)*
+**PASS** (2026-07-26). B1=1.0 B2=1.0 B3=1.0.  
+Reverse fan-in OR: fire R1 or R2 each reaches L via shared mid. Not mid-kill.
+
