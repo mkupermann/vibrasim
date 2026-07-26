@@ -18,4 +18,4 @@ Seeds {4061,4071} trials 6. Budget ~14 min, hard cap 28 min.
 🔮 LEAN PASS. Order-symmetric dual cascade selective.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Dual cascade hard selective path1 order-symmetric with E150 path0. Dual cascade selective matrix + multi-trial closed (E150–E153).
