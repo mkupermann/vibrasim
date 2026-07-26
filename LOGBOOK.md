@@ -6660,3 +6660,8 @@ B1=0.778 B2=0.778 B3=1.0 B4=0.0 **NULL**. Scaffold does not unlock free dual (~0
 
 Hard dual wipe (L1 AND L2)->M->A->R then full restore.
 B1=B2=B3=1.0 **PASS**. Soft (E141) + hard cascade wipe-restore closed.
+
+## 2026-07-20 sequential - BP-E143 PASS cascade AND hard selective L1 re-arm
+
+Hard dual wipe cascade; restore L1 chain dual OFF; restore L2 dual ON.
+B1=B2=B3=1.0 **PASS**. E133 selective doctrine transfers to cascade multi-hop.

@@ -19,4 +19,4 @@ Seeds {3861,3871} trials 6. Budget ~12 min, hard cap 24 min.
 🔮 LEAN PASS. Cascade inherits E133 hard selective re-arm doctrine.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Cascade multi-hop AND hard dual wipe + selective L1 re-arm keeps dual OFF until L2 restored. E133 doctrine transfers to cascade.
