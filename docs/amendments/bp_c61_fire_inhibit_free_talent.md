@@ -17,4 +17,4 @@ B1–B4. Seeds {6061,6071} trials 2. T=500. Budget ~8 min, hard cap 16 min.
 🔮 LEAN NULL. Lateral fire inhibit may sparsify firing without unlocking decade order from free dual inject.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.25 B2=0.0 B3=0.5 B4=0.25. fire_inhibit_radius does not unlock free dual talent.
