@@ -7368,3 +7368,8 @@ B1=0.0 B2=0.25 B3=0.0 B4=-0.25 **NULL**. Soft cap collapses treat pop; no unlock
 
 Ambient dual ILW train; no post-hoc tag; gate ON.
 B1=B2=B3=1.0 **PASS**. Tags stay zero; wrong-arm still selects; post-hoc tags restore block. No substrate content auto-tag.
+
+## 2026-07-26 sequential - BP-C76 NULL fire_zero_latch free dual
+
+fire_zero_latch_radius=8 vs 0 free dual + wall.
+B1=0.0 B2=0.0 B3=0.0 B4=0.0 **NULL**. Fire zero latch collapses treat pop; no unlock.

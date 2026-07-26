@@ -17,4 +17,4 @@ B1–B4. Seeds {6661,6671} trials 2. T=500. Budget ~8 min, hard cap 16 min.
 🔮 LEAN NULL. Zeroing latch near firers may disrupt structure without decade order unlock.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.0 B2=0.0 B3=0.0 B4=0.0. fire_zero_latch_radius does not unlock free dual talent; treat pop collapse.
