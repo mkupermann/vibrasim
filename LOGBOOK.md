@@ -7144,3 +7144,8 @@ B1=0.0 B2=0.0 B3=0.25 B4=0.0 **NULL**. G16 self-aware does not unlock free dual 
 
 G6 ON reverse vs G6 OFF reverse fail + forward.
 B1=1.0 B2=0.0 B3=1.0 **NULL**. Reverse pair-link-native; G6 not required.
+
+## 2026-07-26 sequential - BP-C53 NULL bridge_lock free dual
+
+bridge_lock_threshold=0.5 vs 0 free dual + wall (stdp on both).
+B1=0.5 B2=0.5 B3=0.5 B4=0.0 **NULL**. G9 lock does not unlock free dual talent.

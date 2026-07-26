@@ -17,4 +17,4 @@ B1–B4. Seeds {5741,5751} trials 2. T=500. Budget ~8 min, hard cap 16 min.
 🔮 LEAN NULL. Bridge lock needs STDP-strengthened bridges; free dual inject unlikely to form locked multi-pattern memory that unlocks decade order.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.5 B2=0.5 B3=0.5 B4=0.0. bridge_lock_threshold does not unlock free dual talent.
