@@ -19,4 +19,4 @@ Seeds {4561,4571} trials 2. T=500. N_SIDE=250. n_nodes_max=8192. Budget ~6 min, 
 🔮 LEAN NULL. Speed asymmetry unlikely to unlock free dual ordered talent beyond C16 ceiling.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.25 B2=0.0 B3=0.25 B4=0.25. Asymmetric L/R speed does not unlock free dual ordered talent (pop also weak).
