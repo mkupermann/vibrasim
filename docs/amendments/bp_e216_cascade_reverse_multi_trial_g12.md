@@ -19,4 +19,4 @@ Seeds {6201,6211} trials 6. Budget ~20 min, hard cap 40 min.
 🔮 LEAN PASS if cascade reverse multi-trial durable like E206 single-hop reverse.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=1.0 B2=1.0 B3=1.0. Cascade reverse multi-trial switch pid1→pid2→pid1 durable under G12.

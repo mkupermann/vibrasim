@@ -34,6 +34,7 @@
 - **Reverse split hard-kill** L1 arm-selective (E212 PASS; complements soft E209).
 - **Reverse hard-kill restore** via retrain (E213 PASS).
 - **Cascade reverse under G12** multi-hop (E215 PASS).
+- **Cascade reverse multi-trial switch** under G12 (E216 PASS).
 
 ## Soft-kill arm surgery (E198–E200)
 - Shared PORT_R soft kill wrong-arm **spills** (E198 NULL) — silences both pid arms.
