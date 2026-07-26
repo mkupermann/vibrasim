@@ -216,6 +216,7 @@
 | E164 | **PASS** | Assoc residual survives soft R-port kill |
 | E165 | **PASS** | Assoc residual survives hard R-port kill |
 | E166 | **PASS** | Multislot ON multi-assoc residual both R bands |
+| E167 | **PASS** | Temporal-gap L→R association residual |
 
 ## What works (engineered port curriculum)
 
@@ -248,6 +249,7 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 - Assoc residual survives soft R kill **PASS** (E164; E155-class content durability)  
 - Assoc residual survives hard R kill **PASS** (E165; E156-class)  
 - Multislot multi-assoc residual capacity **PASS** (E166 both R bands)  
+- Temporal-gap association residual **PASS** (E167; not simultaneous-only)  
 - Port circuit curriculum **CLOSED PARTIAL** E105–E153 (bp_port_circuit_curriculum_closure.md)  
 - Port wipe-restore E71–E100 closed; dual 3-hop re-cut after wipe-restore E123–E127 CLOSED NULL  
 - Soft inhibit: retrain-reversible (E44), durable without retrain (E55) — closed for two-hop  
