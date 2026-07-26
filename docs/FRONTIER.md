@@ -221,6 +221,7 @@
 | E169 | **NULL** | Selective residual fails (B2=B3=0; capacity≠select) |
 | E170 | **NULL** | Pair-link selective residual same fail (B2=B3=0) |
 | E171 | **PASS** | Fire-readout selective residual (L-fire → R partner latch) |
+| C29 | **NULL** | Asymmetric L/R speed free dual 0.25 ordered; no unlock |
 
 ## What works (engineered port curriculum)
 
@@ -249,7 +250,7 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 
 ## Next hard only
 
-- Free talent: C16 family CLOSED PARTIAL — need mechanism ≠ dual-inject+decay / port-seed / local scaffold; C26 latch-tau **FAILED** hard-cap; C27 pair_decay NULL; C28 triad_decay NULL  
+- Free talent: C16 family CLOSED PARTIAL — need mechanism ≠ dual-inject+decay / port-seed / local scaffold; C26 latch-tau **FAILED** hard-cap; C27 pair_decay NULL; C28 triad_decay NULL; C29 asymmetric speed NULL  
 - Port multi-trial association residual without map **PASS** (E162) — co-presence not generative partner  
 - Multi-assoc last-write residual c0→c1 **PASS** (E163) multislot OFF  
 - Assoc residual survives soft R kill **PASS** (E164; E155-class content durability)  

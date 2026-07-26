@@ -6835,3 +6835,8 @@ B1=1.0 B2=0.0 B3=0.0 **NULL**. Selective residual class closed NULL for dual ILW
 
 Pair-link multi-assoc; freq-matched L fire; R partner peak latch.
 B1=B2=B3=1.0 **PASS**. Selective residual needs fire/bridge readout (E169/E170 mean-rewrite NULL).
+
+## 2026-07-26 sequential - BP-C29 NULL asymmetric speed free dual
+
+L slow R fast free dual + wall vs symmetric.
+B1=0.25 B2=0.0 B3=0.25 B4=0.25 **NULL**. Speed asymmetry does not unlock free dual talent.
