@@ -21,4 +21,4 @@ Seeds {4661,4671} trials 8. Budget ~18 min, hard cap 36 min.
 🔮 LEAN PASS if bridges are slot/band-local. NULL if kill on R-hi also severs c1 paths or L-lo kill not enough.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=1.0 B2=1.0 B3=0.0. C0-band hard kill silences L-lo select but **also** destroys L-hi select. Association-specific arm kill not achieved under this emitter targeting (bridge graph not fully arm-segregated for kill).

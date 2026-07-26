@@ -6860,3 +6860,12 @@ B1=B2=B3=1.0 **PASS**. Soft+hard bridge disruption both silence fire-select (E17
 
 Pure dual ILW multislot; pair-link OFF; fire-select bars.
 B1=B2=B3=0.0 **NULL**. Fire-select requires engineered pair-link (E171-E175 doctrine closed).
+
+## 2026-07-26 sequential - BP-E176 NULL c0-arm kill not association-selective
+
+Hard-kill L-lo + R-hi emitters; L-lo fails but L-hi also fails.
+B1=1.0 B2=1.0 B3=0.0 **NULL**. Arm-selective bridge kill open.
+
+## 2026-07-26 sequential - fire-select curriculum closure E171-E176
+
+Formal CLOSED: fire+pair-link select; multi-trial; soft/hard disrupt; pair-link necessary; arm-selective kill NULL. See bp_fire_select_curriculum_closure.md.
