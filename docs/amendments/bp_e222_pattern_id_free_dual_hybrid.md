@@ -19,4 +19,4 @@ Seeds {6511,6521} trials 2. T=500 N=250. Budget ~10 min, hard cap 20 min.
 🔮 LEAN NULL on B1/B2: budget-fit T=500 may not reach C16 unlock (C16 used T=1200 N=400). If both NULL, hybrid not informative at this budget; if both PASS, gate no-ops with ambient (E197).
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.25 B2=0.25 B3=0.25 B4=0.0. Budget-fit T=500 does not reach C16-class unlock; G12 ambient gate no-op (equal treat/ctrl). Hybrid not informative at this budget; no bar retune.

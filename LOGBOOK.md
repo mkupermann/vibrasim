@@ -7333,3 +7333,8 @@ B1=B2=B3=1.0 **PASS**. Reverse hard mid-kill multi-trial reversible.
 
 lambda_dec_mol=0.01 vs 0 free dual + wall.
 B1=0.25 B2=0.25 B3=0.5 B4=0.0 **NULL**. Molecule decay does not unlock free dual talent.
+
+## 2026-07-26 sequential - BP-E222 NULL pattern_id free dual hybrid
+
+C16 decay + G12 gate vs decay only free dual budget-fit T=500.
+B1=0.25 B2=0.25 B3=0.25 B4=0.0 **NULL**. No C16-class unlock at budget-fit; ambient gate no-op.
