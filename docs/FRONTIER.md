@@ -311,6 +311,7 @@
 | C68 | **PASS*** | node_freq_binding OFF free dual unlock (*fragile; C69 NULL) |
 | C69 | **NULL** | C68 replicate larger-N B1=0.80 fails 0.90 |
 | C70 | **NULL** | fusion_bond_block free dual; no unlock |
+| E220 | **PASS** | Cascade reverse hard mid-kill M0; reverse p1 survives |
 
 ## What works (engineered port curriculum)
 

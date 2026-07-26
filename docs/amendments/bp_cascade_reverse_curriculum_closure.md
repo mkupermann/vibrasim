@@ -14,6 +14,7 @@
 | E217 | PASS | Soft mid-kill M0 silences reverse p0; p1 survives |
 | E218 | PASS | Long-idle T=400 durable reverse cascade |
 | E219 | PASS | Soft mid-kill then retrain-restore reverse p0 |
+| E220 | PASS | Hard mid-kill M0 silences reverse p0; p1 survives |
 
 ## Doctrine
 
