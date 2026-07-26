@@ -32,4 +32,6 @@ Not reverse concurrent (E230). Not mid-kill. Not free dual.
 
 ## RESULT
 
-*(filled after run)*
+**PASS** (2026-07-26). B1=1.0 B2=1.0 B3=1.0.  
+Sequential forward select both paths OK; concurrent dual L fire lights both R. Symmetric to reverse concurrent E230. Not mid-kill.
+

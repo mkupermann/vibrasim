@@ -7443,3 +7443,13 @@ B1=B2=B3=1.0 **PASS**. Three-hop reverse works (not mid-kill).
 
 polarity_split=0.9 vs 0.5 free dual + wall.
 B1=0.0 B2=0.25 B3=0.0 B4=-0.25 **NULL**. Biased polarity_split does not unlock free dual talent.
+
+## 2026-07-26 sequential - BP-E232 PASS concurrent forward dual cascade
+
+Sequential select R0/R1 OK; concurrent fire L0+L1 both R lit.
+B1=B2=B3=1.0 **PASS**. Forward concurrent dual co-activates (mirror of E230 reverse).
+
+## 2026-07-26 sequential - BP-C85 NULL repulsion_threshold free dual
+
+repulsion_threshold_ratio=2 vs 1000 free dual + wall.
+B1=0.25 B2=0.25 B3=0.50 B4=0.0 **NULL**. No free dual unlock.
