@@ -17,4 +17,4 @@ B1–B4. Seeds {5221,5231} trials 2. T=500. Budget ~6 min, hard cap 12 min.
 🔮 LEAN NULL. Density asymmetry unlikely to unlock free dual ordered talent.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.50 B2=0.75 B3=0.50 B4=-0.25. Asymmetric N_SIDE density does not unlock free dual ordered talent (treat worse than equal control on ordered rate).

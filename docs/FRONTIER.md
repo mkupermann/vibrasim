@@ -254,6 +254,7 @@
 | C39 | **NULL** | compartment_boundary free dual 0.5 ordered; no unlock |
 | C40 | **NULL** | lambda_dec free dual 0.5 ordered; no unlock |
 | E192 | **PASS** | Cascade fire-select under graded bridge_prop_min |
+| C41 | **NULL** | Asymmetric N_SIDE free dual 0.5 ordered; no unlock |
 
 ## What works (engineered port curriculum)
 
@@ -282,7 +283,7 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 
 ## Next hard only
 
-- Free talent: C16 family CLOSED PARTIAL — need mechanism ≠ dual-inject+decay / port-seed / local scaffold; C26 latch-tau **FAILED** hard-cap; C27–C40 NULL families (see `bp_night_lab_port_curriculum_synthesis_e162_e191.md`)  
+- Free talent: C16 family CLOSED PARTIAL — need mechanism ≠ dual-inject+decay / port-seed / local scaffold; C26 latch-tau **FAILED** hard-cap; C27–C41 NULL families (see synthesis; + asymmetric N_SIDE)  
 - Port multi-trial association residual without map **PASS** (E162) — co-presence not generative partner  
 - Multi-assoc last-write residual c0→c1 **PASS** (E163) multislot OFF  
 - Assoc residual survives soft R kill **PASS** (E164; E155-class content durability)  
