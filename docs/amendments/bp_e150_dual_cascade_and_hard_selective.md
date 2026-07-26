@@ -19,4 +19,4 @@ Seeds {4001,4011} trials 6. Budget ~14 min, hard cap 28 min. y-sep=24 > kill r=8
 🔮 LEAN PASS if y-sep keeps kill local. Miss if gate/kill collaterals hit path1.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Dual cascade AND concurrent + hard selective path0 silence + restore closed.
