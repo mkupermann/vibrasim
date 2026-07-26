@@ -303,6 +303,7 @@
 | C64 | **NULL** | curvature free dual; no unlock |
 | E216 | **PASS** | Cascade reverse multi-trial switch 1→2→1 under G12 |
 | C65 | **NULL** | membrane_channel free dual; no unlock |
+| E217 | **PASS** | Cascade reverse soft mid-kill M0; reverse p1 survives |
 
 ## What works (engineered port curriculum)
 
@@ -374,6 +375,7 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 - Cascade reverse multi-hop fire-select **PASS** (E214)  
 - Cascade reverse under G12 gate **PASS** (E215)  
 - Cascade reverse multi-trial switch under G12 **PASS** (E216)  
+- Cascade reverse soft mid-kill selective **PASS** (E217)  
 
 - Port multi-trial association residual without map **PASS** (E162) — co-presence not generative partner  
 - Multi-assoc last-write residual c0→c1 **PASS** (E163) multislot OFF  
