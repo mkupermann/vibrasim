@@ -7189,3 +7189,8 @@ B1=B2=B3=1.0 **PASS**. Reverse durable without retrain.
 
 flux_plasticity_rate=0.1 vs 0 free dual + wall.
 B1=0.5 B2=0.5 B3=0.5 B4=0.0 **NULL**. Flux plasticity does not unlock free dual talent.
+
+## 2026-07-26 sequential - BP-E209 PASS reverse split soft-kill
+
+Soft kill L1; reverse pid2 fail; reverse pid1 survives.
+B1=B2=B3=1.0 **PASS**. Reverse soft surgery arm-selective under split+G12.

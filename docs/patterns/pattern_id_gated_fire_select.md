@@ -28,6 +28,7 @@
 - **Reverse multi-trial switch** pid1→pid2→pid1 durable (E206 PASS).
 - **Reverse train-time tags** suffice without post-hoc (E207 PASS).
 - **Reverse long-idle durable** after T=400 (E208 PASS).
+- **Reverse split soft-kill** L1 arm-selective (E209 PASS).
 
 ## Soft-kill arm surgery (E198–E200)
 - Shared PORT_R soft kill wrong-arm **spills** (E198 NULL) — silences both pid arms.

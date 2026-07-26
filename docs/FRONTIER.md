@@ -287,6 +287,7 @@
 | C56 | **NULL** | bridge_prop WTA free dual; no unlock |
 | E208 | **PASS** | Reverse long-idle durability under G12 (T=400) |
 | C57 | **NULL** | flux_plasticity free dual; no unlock |
+| E209 | **PASS** | Reverse split soft-kill L1; reverse pid1 survives |
 
 ## What works (engineered port curriculum)
 
