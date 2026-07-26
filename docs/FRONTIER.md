@@ -269,6 +269,7 @@
 | C47 | **NULL** | global_wta_k free dual; no unlock |
 | E199 | **PASS** | Split-port G12 soft-kill R1; pid1 survives (fix E198) |
 | C48 | **NULL** | sparse_firing free dual; treat pop collapse |
+| E200 | **PASS** | Split+G12 soft-kill R1 then retrain-restore pid2 |
 
 ## What works (engineered port curriculum)
 

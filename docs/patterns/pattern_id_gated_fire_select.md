@@ -23,9 +23,10 @@
 - Ambient (pid=0) fires under gate → **positive select works without tags**.
 - **Wrong-arm block requires non-zero mismatched tags** (E197).
 
-## Soft-kill arm surgery (E198–E199)
+## Soft-kill arm surgery (E198–E200)
 - Shared PORT_R soft kill wrong-arm **spills** (E198 NULL) — silences both pid arms.
 - Split-port soft kill R1 + G12 **PASS** (E199): pid2 silenced, pid1 survives.
+- Retrain restore after soft kill **PASS** (E200): pid2 returns without harming pid1 curriculum.
 
 ## Open
 - Pattern_id on free dual talent
