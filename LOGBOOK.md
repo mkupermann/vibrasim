@@ -6645,3 +6645,8 @@ B1=B2=B3=1.0 **PASS**. Hard analogue of E78 multi-trial path-switch.
 
 Hard-cut OR restore AND; hard-cut AND restore OR; hard-cut OR restore AND.
 B1=B2=B3=1.0 **PASS**. Hard path-switch both orders closed (E139/E140).
+
+## 2026-07-20 sequential - BP-E141 PASS cascade AND multi-hop wipe-restore
+
+(L1 AND L2)->M->A->R soft dual wipe then full restore.
+B1=B2=B3=1.0 **PASS**. Cascade gated multi-hop AND wipe-restore closed.
