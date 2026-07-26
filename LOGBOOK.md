@@ -7025,3 +7025,8 @@ B1=0.5 B2=0.75 B3=0.5 B4=-0.25 **NULL**. Density asymmetry does not unlock free 
 ## 2026-07-26 sequential - free dual NULL farm closure C27-C41
 
 Formal stop farming free dual single-knob inject+wall variants. C16 PARTIAL remains sole unlock family. See bp_free_dual_null_farm_closure_c27_c41.md.
+
+## 2026-07-26 sequential - BP-E193 PASS cascade long-idle durability
+
+Dual cascade train; idle 400; both path fire-select.
+B1=B2=B3=1.0 **PASS**. Multi-hop content cascade durable without retrain.
