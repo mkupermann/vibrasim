@@ -7104,3 +7104,8 @@ B1=0.0 B2=0.75 B3=0.0 B4=-0.75 **NULL**. Sparse firing collapses treat pop; no t
 
 Soft kill R1; pid2 fail; pid1 survives; retrain L1-R1 restores pid2.
 B1=B2=B3=1.0 **PASS**. Multi-trial soft surgery + restore under G12+split.
+
+## 2026-07-26 sequential - BP-C49 NULL bridge_atom_prop free dual
+
+bridge_atom_propagation_enabled True vs False free dual + wall.
+B1=0.25 B2=0.0 B3=0.25 B4=0.25 **NULL**. G6 does not unlock free dual talent.

@@ -270,6 +270,7 @@
 | E199 | **PASS** | Split-port G12 soft-kill R1; pid1 survives (fix E198) |
 | C48 | **NULL** | sparse_firing free dual; treat pop collapse |
 | E200 | **PASS** | Split+G12 soft-kill R1 then retrain-restore pid2 |
+| C49 | **NULL** | bridge_atom_prop free dual; no unlock |
 
 ## What works (engineered port curriculum)
 
@@ -298,7 +299,8 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 
 ## Next hard only
 
-- Free talent: C16 PARTIAL (strength-decay+wall); C42–C44 wide freq_tol **fragile**; C26 FAILED; C27–C41 NULL farm closed; C45–C48 NULL  
+- Free talent: C16 PARTIAL (strength-decay+wall); C42–C44 wide freq_tol **fragile**; C26 FAILED; C27–C41 NULL farm closed; C45–C49 NULL  
+
 
 - Pattern-id G12 gated fire-select **PASS** (E194) — new selective readout class  
 - Pattern-id multi-trial switch **PASS** (E195)  
@@ -307,6 +309,7 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 - Pattern-id G12 curriculum **CLOSED PASS** E194–E197 (`bp_pattern_id_g12_curriculum_closure.md`)  
 - Soft-kill wrong-arm on shared R **NULL** (E198 spill; use split ports)  
 - Split-port + G12 soft-kill wrong arm **PASS** (E199 fixes E198)  
+- Split+G12 soft-kill + retrain-restore multi-trial **PASS** (E200)  
 
 - Port multi-trial association residual without map **PASS** (E162) — co-presence not generative partner  
 - Multi-assoc last-write residual c0→c1 **PASS** (E163) multislot OFF  
