@@ -319,6 +319,7 @@
 | C73 | **NULL** | r_strengthen free dual; treat pop collapse |
 | E223 | **NULL** | G12+C16 full-budget hybrid; unlock fails both (gate no-op) |
 | C74 | **NULL** | synaptic_transmission free dual; no unlock |
+| E224 | **NULL** | Graded soft mid reverse; half already kills rev p0 |
 
 ## What works (engineered port curriculum)
 
@@ -405,6 +406,7 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 - Cascade reverse soft mid-kill restore **PASS** (E219)  
 - Cascade reverse hard mid-kill selective **PASS** (E220)  
 - Cascade reverse hard mid-kill restore **PASS** (E221)  
+- Cascade reverse graded soft mid **NULL** (E224; half already silences rev p0)  
 - G12+C16 free dual hybrid budget-fit **NULL** (E222; gate no-op ambient)  
 - G12+C16 free dual hybrid full C16 scale **NULL** (E223; B1=B2=0.78; neuron_dyn may break C16)  
 

@@ -18,4 +18,4 @@ Seeds {6601,6611} trials 6. Budget ~22 min, hard cap 44 min.
 🔮 LEAN PASS if reverse graded soft matches forward E47-class graded silence.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.0 B2=1.0 B3=1.0. Half soft mid-kill (frac=0.5) already silences reverse p0 (B1 fail). Full silences p0 and p1 survives. Reverse multi-hop more fragile to soft mid weaken than half-keep hypothesis; no bar retune.
