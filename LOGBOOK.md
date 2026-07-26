@@ -6889,3 +6889,8 @@ B1=0.25 B2=0.25 B3=0.5 B4=0.0 **NULL**. Emission does not unlock free dual talen
 
 Kill R0; c1 on; restore c0; c0+c1 both select.
 B1=B2=B3=1.0 **PASS**. Multi-trial arm switch with restore closed (E177/E178).
+
+## 2026-07-26 sequential - BP-E179 NULL pair-replace arm exclusivity
+
+Replace ON train c0 then c1; fire-select both arms.
+B1=1.0 B2=0.0 B3=1.0 **NULL**. PRIM8 replace does not exclusive-kill prior arm fire-select under multislot.
