@@ -18,4 +18,4 @@ Seeds {4901,4911} trials 8. Budget ~26 min, hard cap 52 min.
 🔮 LEAN PASS extending E182+E178 to K=3 restore.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=B2=B3=1.0. Triple-arm middle kill + restore: c0 survives kill; c1 restores; c2 durable. K=3 multi-trial surgery closed.
