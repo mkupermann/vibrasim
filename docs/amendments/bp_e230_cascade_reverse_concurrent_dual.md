@@ -36,4 +36,6 @@ Not mid-kill. Not G12. Not free dual. Not incomplete-path re-probe.
 
 ## RESULT
 
-*(filled after run)*
+**PASS** (2026-07-26). B1=1.0 B2=1.0 B3=1.0.  
+Sequential reverse both paths OK; concurrent dual R fire lights both L reverse targets. Spatially isolated reverse paths co-activate without WTA collapse. Not mid-kill.
+

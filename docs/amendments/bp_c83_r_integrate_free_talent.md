@@ -29,4 +29,6 @@ Seeds {6901,6911} trials 2. T=500. Budget ~8 min, hard cap 16 min.
 
 ## RESULT
 
-*(filled after run)*
+**NULL** (2026-07-26). B1=0.50 B2=0.25 B3=0.75 B4=0.25.  
+Elevated `r_integrate=12` does not meet treat order bar (B1); B4 delta passes alone but talent unlock fails. No free dual unlock.
+

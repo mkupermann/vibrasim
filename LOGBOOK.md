@@ -7423,3 +7423,13 @@ B1=B2=B3=1.0 **PASS**. Reverse cascade needs complete hops (E191-class boundary;
 
 tau_membrane=2.0 vs 0.5 free dual + wall.
 B1=0.0 B2=0.25 B3=0.25 B4=-0.25 **NULL**. Membrane tau does not unlock free dual talent.
+
+## 2026-07-26 sequential - BP-E230 PASS concurrent dual reverse
+
+Sequential rev p0/p1 OK; concurrent fire R0+R1 both L lit.
+B1=B2=B3=1.0 **PASS**. Reverse paths co-activate under dual R drive (not mid-kill).
+
+## 2026-07-26 sequential - BP-C83 NULL r_integrate free dual
+
+r_integrate=12 vs 5 free dual + wall.
+B1=0.50 B2=0.25 B3=0.75 B4=0.25 **NULL**. Wider integrate radius does not unlock free dual talent.
