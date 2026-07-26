@@ -32,4 +32,6 @@ Not reverse cascade. Not free dual. Not interleaved train-test re-probe (E254). 
 
 ## RESULT
 
-*(filled after run)*
+**NULL** (2026-07-26). B1=0.0 B2=0.0 B3=0.0.  
+After T_IDLE=400 (full), dual pair selective recall fails both paths. Smoke (T_IDLE=100) was PASS-shaped — long idle erodes dual Y-pair selective recall under this scaffold. Finding: dual pair durability does **not** match E184 fire-select long-idle at T_IDLE=400.
+

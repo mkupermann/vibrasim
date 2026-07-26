@@ -7623,3 +7623,13 @@ B1=B2=B3=1.0 **PASS**. Multi-trial interleaved port pairs hold without G12.
 
 freq_distribution linear vs log free dual + wall.
 B1=0.0 B2=0.0 B3=0.25 B4=0.0 **NULL**. No free dual unlock.
+
+## 2026-07-26 sequential - BP-E255 NULL dual pair long idle
+
+T_IDLE=400 after dual pair train; selective recall both fail.
+B1=B2=B3=0.0 **NULL**. Long idle erodes dual Y-pair selective recall (smoke short idle OK).
+
+## 2026-07-26 sequential - BP-C98 NULL workspace_broadcast_strength free dual
+
+workspace_broadcast_strength 0.3 vs 1.0 (self_aware ON) free dual + wall.
+B1=0.50 B2=0.50 B3=0.50 B4=0.0 **NULL**. No free dual unlock.
