@@ -7293,3 +7293,8 @@ Formal CLOSED PASS: multi-hop reverse, G12, multi-trial, soft mid-kill, long-idl
 
 bridge_cooldown=0.5 vs 0 free dual + wall.
 B1=0.25 B2=0.25 B3=0.25 B4=0.0 **NULL**. Bridge cooldown does not unlock free dual talent.
+
+## 2026-07-26 sequential - BP-E219 PASS cascade reverse soft mid-restore
+
+Soft kill M0; reverse p0 fail; reverse p1 OK; retrain path0 restores reverse p0.
+B1=B2=B3=1.0 **PASS**. Reverse soft mid-kill multi-trial reversible.

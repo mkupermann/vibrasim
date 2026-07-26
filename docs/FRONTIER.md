@@ -307,6 +307,7 @@
 | C66 | **NULL** | anchor_damping free dual; no unlock |
 | E218 | **PASS** | Cascade reverse long-idle durability (T=400) |
 | C67 | **NULL** | bridge_cooldown free dual; no unlock |
+| E219 | **PASS** | Cascade reverse soft mid-kill then retrain-restore |
 
 ## What works (engineered port curriculum)
 
@@ -383,6 +384,7 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 - Cascade reverse soft mid-kill selective **PASS** (E217)  
 - Cascade reverse long-idle durability **PASS** (E218)  
 - Cascade reverse curriculum **CLOSED PASS** E214–E218 (`bp_cascade_reverse_curriculum_closure.md`)  
+- Cascade reverse soft mid-kill restore **PASS** (E219)  
 
 - Port multi-trial association residual without map **PASS** (E162) — co-presence not generative partner  
 - Multi-assoc last-write residual c0→c1 **PASS** (E163) multislot OFF  
