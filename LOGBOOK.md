@@ -7284,3 +7284,12 @@ B1=0.25 B2=0.0 B3=0.25 B4=0.25 **NULL**. Anchor damping does not unlock free dua
 
 Dual cascade train; idle 400; reverse both paths.
 B1=B2=B3=1.0 **PASS**. Cascade reverse durable without retrain.
+
+## 2026-07-26 sequential - cascade reverse curriculum closure E214-E218
+
+Formal CLOSED PASS: multi-hop reverse, G12, multi-trial, soft mid-kill, long-idle. See bp_cascade_reverse_curriculum_closure.md.
+
+## 2026-07-26 sequential - BP-C67 NULL bridge_cooldown free dual
+
+bridge_cooldown=0.5 vs 0 free dual + wall.
+B1=0.25 B2=0.25 B3=0.25 B4=0.0 **NULL**. Bridge cooldown does not unlock free dual talent.
