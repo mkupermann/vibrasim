@@ -17,4 +17,4 @@ B1–B4. Seeds {4841,4851} trials 2. T=500. Budget ~6 min, hard cap 12 min.
 🔮 LEAN PASS if PRIM7 enforces L-low/R-high free vib geography enough for ordered talent unlock. NULL if cull kills population or ordered still fails.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.0 B2=0.25 B3=0.0 B4=-0.25. PRIM7 sideband cull collapses treat population (over-purification); does not unlock free dual ordered talent.
