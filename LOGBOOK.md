@@ -7493,3 +7493,13 @@ B1=B2=B3=1.0 **PASS**. Reverse extends through four hops (not mid-kill).
 
 synaptic_post_search_samples=5 vs 1 free dual + wall.
 B1=0.0 B2=0.25 B3=0.25 B4=-0.25 **NULL**. No free dual unlock.
+
+## 2026-07-26 sequential - BP-E237 PASS five-hop cascade reverse
+
+Five-hop dual reverse fire-select both paths.
+B1=B2=B3=1.0 **PASS**. Reverse scales to five hops (not mid-kill).
+
+## 2026-07-26 sequential - BP-C90 NULL bridge_charge_prop free dual
+
+bridge_charge_prop_rate=2.5 vs 0 free dual + wall.
+B1=0.25 B2=0.0 B3=0.25 B4=0.25 **NULL**. No free dual unlock.

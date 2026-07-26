@@ -29,4 +29,6 @@ Seeds {7181,7191} trials 2. T=500. Budget ~8 min, hard cap 16 min.
 
 ## RESULT
 
-*(filled after run)*
+**NULL** (2026-07-26). B1=0.25 B2=0.0 B3=0.25 B4=0.25.  
+`bridge_charge_prop_rate=2.5` free dual does not unlock talent (B1/B3 fail; B4 alone not enough).
+

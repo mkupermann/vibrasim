@@ -32,4 +32,6 @@ Not mid-kill. Not incomplete. Not free dual. Not four-hop re-probe.
 
 ## RESULT
 
-*(filled after run)*
+**PASS** (2026-07-26). B1=1.0 B2=1.0 B3=1.0.  
+Five-hop dual reverse cascade fire-select works both paths. Reverse prop scales to five hops. Not mid-kill.
+
