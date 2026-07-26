@@ -6972,3 +6972,8 @@ B1=B2=B3=1.0 **PASS**. Multi-hop content fire-select closed (hybrid circuit+cont
 
 corr_plasticity_rate=0.5 vs 0 free dual + wall + neuron dynamics.
 B1=0.0 B2=0.0 B3=0.0 B4=0.0 **NULL**. Hebbian corr plasticity does not unlock free dual talent.
+
+## 2026-07-26 sequential - BP-E187 PASS cascade mid-hop kill
+
+Hard kill M0; path0 fire-select fails; path1 survives.
+B1=B2=B3=1.0 **PASS**. Mid-hop critical and path-local for content cascade.
