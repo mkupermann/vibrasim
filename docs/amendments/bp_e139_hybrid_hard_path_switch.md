@@ -19,4 +19,4 @@ Seeds {3741,3751} trials 6. Budget ~12 min, hard cap 24 min.
 🔮 LEAN PASS. Hard multi-trial path-switch matches soft E78.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Hard multi-trial hybrid path-switch OR→AND→OR closed (hard E78).
