@@ -258,6 +258,7 @@
 | E193 | **PASS** | Cascade fire-select durable after long idle T=400 |
 | C42 | **PASS*** | Wider freq_tol budget-fit 1.0 (*fragile; C43 NULL) |
 | C43 | **NULL** | C42 replicate larger N B1=0.67 fails 0.90 bar |
+| C44 | **NULL** | Wide freq_tol wall ablation; ON 0.67 fails unlock |
 
 ## What works (engineered port curriculum)
 
@@ -286,7 +287,7 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 
 ## Next hard only
 
-- Free talent: C16 PARTIAL (strength-decay+wall); C42 budget-fit PASS **fragile** (C43 NULL B1=0.67); C26 FAILED; C27–C41 NULL farm closed  
+- Free talent: C16 PARTIAL (strength-decay+wall); C42–C44 wide freq_tol **fragile** (C43/C44 NULL B1≈0.67); C26 FAILED; C27–C41 NULL farm closed  
 - Port multi-trial association residual without map **PASS** (E162) — co-presence not generative partner  
 - Multi-assoc last-write residual c0→c1 **PASS** (E163) multislot OFF  
 - Assoc residual survives soft R kill **PASS** (E164; E155-class content durability)  

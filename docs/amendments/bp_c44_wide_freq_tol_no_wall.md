@@ -20,4 +20,4 @@ Seeds {5331,5341,5351} trials 3. T=500. N_SIDE=250. Budget ~12 min, hard cap 24 
 🔮 LEAN PASS if wall is required for dual-side specialisation under wide tol (C20 class). NULL if wide tol alone suffices without wall.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.6667 B2=0.3333 B3=1.0 B4=0.333. Wall ON beats OFF (delta OK) but wall ON ordered still fails ≥0.90 unlock bar (aligns with C43). Wide freq_tol free dual remains fragile; wall helps but does not lock 0.90.

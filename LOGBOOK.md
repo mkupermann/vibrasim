@@ -7040,3 +7040,8 @@ B1=1.0 B2=0.0 B3=1.0 B4=1.0 **PASS**. New free dual mechanism class (wide band m
 
 5 seeds x 3 trials same bars as C42.
 B1=0.6667 B2=0.2667 B3=1.0 B4=0.40 **NULL**. C42 budget-fit PASS fragile; no bar retune.
+
+## 2026-07-26 sequential - BP-C44 NULL wide freq_tol wall ablation
+
+ft=0.08 wall ON vs OFF; 3 seeds x 3 trials.
+B1=0.67 B2=0.33 B3=1.0 B4=0.33 **NULL**. Wall helps delta but not 0.90 unlock; C42 family fragile closed for now.
