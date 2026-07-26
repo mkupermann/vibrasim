@@ -29,4 +29,6 @@ Seeds {7701,7711} trials 2. T=500. Budget ~8 min, hard cap 16 min.
 
 ## RESULT
 
-*(filled after run)*
+**NULL** (2026-07-26). B1=0.50 B2=0.50 B3=0.50 B4=0.0.  
+`workspace_broadcast_strength=0.3` vs 1.0 (self_aware ON) does not unlock free dual talent; no positive delta.
+
