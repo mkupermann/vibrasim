@@ -19,4 +19,4 @@ Seeds {4241,4251} trials 8. Budget ~6 min, hard cap 12 min.
 🔮 LEAN PASS. Without multislot, last write replaces prior band content (E6-like).
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Multislot OFF: reverse overwrite flips dual decade means. Multislot ON (E158) blocked last-write reconfig; OFF enables it.

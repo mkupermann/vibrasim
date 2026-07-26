@@ -6753,3 +6753,8 @@ B1=1.0 B2=0.0 B3=1.0 **NULL**. Reverse overwrite does not flip mean decades unde
 
 Forward reverse forward dual decade writes.
 B1=1.0 B2=0.0 B3=0.0 **NULL**. Multi-trial switch not last-write-dominant (E158 class).
+
+## 2026-07-20 sequential - BP-E160 PASS dual decade reverse multislot OFF
+
+Write L-low R-high then reverse; multislot OFF.
+B1=B2=B3=1.0 **PASS**. Multislot OFF enables last-write dual decade reconfig (E158 ON fails).
