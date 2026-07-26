@@ -18,4 +18,4 @@ Seeds {5521,5531} trials 8. Budget ~18 min, hard cap 36 min.
 🔮 LEAN PASS if spatial split isolates soft kill (E177 + E180 class with G12).
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=1.0 B2=1.0 B3=1.0. Soft kill R1 silences pid2; pid1 on split L0/R0 survives. Fixes E198 shared-port spill: G12 + spatial split isolates soft surgery.

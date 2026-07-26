@@ -7089,3 +7089,8 @@ B1=0.0 B2=1.0 B3=1.0 **NULL**. Shared PORT_R soft kill not arm-selective (E176 c
 
 global_wta_k=8 vs 0 free dual + wall.
 B1=0.0 B2=0.0 B3=0.0 B4=0.0 **NULL**. Sparse global WTA does not unlock free dual talent.
+
+## 2026-07-26 sequential - BP-E199 PASS split-port G12 soft-kill fixes E198
+
+Split L0/R0 pid1 + L1/R1 pid2; train-time tags; soft kill R1 only.
+B1=B2=B3=1.0 **PASS**. Spatial split isolates soft surgery; pid1 survives under G12.

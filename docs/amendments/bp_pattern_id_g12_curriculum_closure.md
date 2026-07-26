@@ -12,6 +12,8 @@
 | E195 | PASS | Multi-trial switch pid1→pid2→pid1 without retrain |
 | E196 | PASS | Train-time `active_pattern_id` tags suffice (no post-hoc tag) |
 | E197 | PASS | Tags load-bearing for **wrong-arm block** only; ambient allows positive select |
+| E198 | NULL | Soft-kill wrong arm on **shared** PORT_R spills; kills pid1 too |
+| E199 | PASS | Soft-kill on **split** R1 silences pid2; pid1 survives (fix E198) |
 
 ## Doctrine
 
@@ -20,6 +22,7 @@
 3. Multi-trial switch of `active_pattern_id` is durable without retrain.
 4. Train-time tagging via `active_pattern_id` during ILW works on shared multislot ports.
 5. Engineered pattern_id curriculum is required for exclusive arm isolation under the gate.
+6. Soft-kill wrong-arm is arm-selective only with **split ports** (E199); shared R soft kill spills (E198).
 
 ## Distinct from
 
