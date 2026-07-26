@@ -17,4 +17,4 @@ B1–B4. Seeds {6141,6151} trials 2. T=500. Budget ~8 min, hard cap 16 min.
 🔮 LEAN NULL. Edge-closure membrane geometry unlikely to unlock decade order from free dual inject alone.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.0 B2=0.5 B3=0.25 B4=-0.5. edge_closure_k does not unlock free dual talent.
