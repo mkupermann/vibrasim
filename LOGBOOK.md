@@ -6777,3 +6777,8 @@ B1=0.5 B2=0.0 B3=0.5 B4=0.5 **NULL**. Short pair decay does not unlock free dual
 
 Multislot OFF. Dual train L=500/R=5000 x15 then L-only probe; control L-only no train.
 B1=B2=B3=1.0 **PASS**. R partner residual co-presence without baked readout map (not generative E12).
+
+## 2026-07-26 sequential - BP-C28 NULL short triad_decay free dual
+
+triad_decay=80 vs 600 free dual + wall; budget-fit T=500 N=250.
+B1=0.5 B2=0.25 B3=0.75 B4=0.25 **NULL**. Short triad decay does not unlock free dual talent (C24-C28 family).
