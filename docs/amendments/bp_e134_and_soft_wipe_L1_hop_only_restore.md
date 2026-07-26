@@ -19,4 +19,4 @@ Seeds {3641,3651} trials 6. Budget ~10 min, hard cap 20 min.
 🔮 LEAN PASS if E131 leak was M–R rewrite re-coupling residual L2; NULL if residual L2–M alone with intact M–R already dual-fires after L1–M restore.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1=1.0 B2=0.0 B3=1.0. Soft dual wipe + L1–M hop-only restore still dual ON. E131 leak is **not** solely M–R rewrite; residual L2–M after soft wipe suffices once L1–M is back. Hard dual wipe (E133) required for selective isolation.
