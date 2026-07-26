@@ -222,6 +222,7 @@
 | E170 | **NULL** | Pair-link selective residual same fail (B2=B3=0) |
 | E171 | **PASS** | Fire-readout selective residual (L-fire → R partner latch) |
 | C29 | **NULL** | Asymmetric L/R speed free dual 0.25 ordered; no unlock |
+| E172 | **PASS** | Multi-trial fire selective residual A→B→A same world |
 
 ## What works (engineered port curriculum)
 
@@ -261,6 +262,7 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 - Map-free selective residual **NULL** (E169; capacity ≠ select partner)  
 - Pair-link selective residual **NULL** (E170; bridges ≠ selective mean readout)  
 - Fire-readout selective residual **PASS** (E171; L-fire → R partner latch)  
+- Multi-trial fire selective A→B→A **PASS** (E172)  
 - Port circuit curriculum **CLOSED PARTIAL** E105–E153 (bp_port_circuit_curriculum_closure.md)  
 - Port wipe-restore E71–E100 closed; dual 3-hop re-cut after wipe-restore E123–E127 CLOSED NULL  
 - Soft inhibit: retrain-reversible (E44), durable without retrain (E55) — closed for two-hop  
