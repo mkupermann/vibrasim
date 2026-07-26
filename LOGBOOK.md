@@ -7124,3 +7124,8 @@ B1=0.25 B2=0.0 B3=0.25 B4=0.25 **NULL**. G8 does not unlock free dual talent.
 
 Tag only R endpoints; L stays pid=0. Correct OK; wrong-arm still selects.
 B1=1.0 B2=0.0 B3=1.0 **NULL**. Partner tags alone do not suppress; complements E201 L-only PASS.
+
+## 2026-07-26 sequential - BP-C51 NULL mol_fusion free dual
+
+mol_fusion_enabled True vs False free dual + wall.
+B1=0.25 B2=0.25 B3=0.50 B4=0.0 **NULL**. Mol fusion does not unlock free dual talent.

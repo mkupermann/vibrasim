@@ -274,6 +274,7 @@
 | E201 | **PASS** | L-only pattern tags suffice for G12 wrong-arm block |
 | C50 | **NULL** | lateral_inhibition free dual; no unlock |
 | E202 | **NULL** | R-only pattern tags; wrong-arm block fails (ambient L) |
+| C51 | **NULL** | mol_fusion free dual; no unlock |
 
 ## What works (engineered port curriculum)
 
@@ -302,7 +303,8 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 
 ## Next hard only
 
-- Free talent: C16 PARTIAL (strength-decay+wall); C42–C44 wide freq_tol **fragile**; C26 FAILED; C27–C41 NULL farm closed; C45–C50 NULL  
+- Free talent: C16 PARTIAL (strength-decay+wall); C42–C44 wide freq_tol **fragile**; C26 FAILED; C27–C41 NULL farm closed; C45–C51 NULL  
+
 
 
 
@@ -315,6 +317,7 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 - Split-port + G12 soft-kill wrong arm **PASS** (E199 fixes E198)  
 - Split+G12 soft-kill + retrain-restore multi-trial **PASS** (E200)  
 - L-only pattern tags suffice for G12 wrong-arm block **PASS** (E201)  
+- R-only pattern tags **NULL** wrong-arm (E202; firing-side tags required)  
 
 - Port multi-trial association residual without map **PASS** (E162) — co-presence not generative partner  
 - Multi-assoc last-write residual c0→c1 **PASS** (E163) multislot OFF  
