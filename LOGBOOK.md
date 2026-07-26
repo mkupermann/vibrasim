@@ -6977,3 +6977,8 @@ B1=0.0 B2=0.0 B3=0.0 B4=0.0 **NULL**. Hebbian corr plasticity does not unlock fr
 
 Hard kill M0; path0 fire-select fails; path1 survives.
 B1=B2=B3=1.0 **PASS**. Mid-hop critical and path-local for content cascade.
+
+## 2026-07-26 sequential - BP-E188 PASS cascade mid-hop kill+restore
+
+Kill M0; p1 on; restore path0; p1 durable.
+B1=B2=B3=1.0 **PASS**. Content+cascade hybrid E186-E188 CLOSED PASS.

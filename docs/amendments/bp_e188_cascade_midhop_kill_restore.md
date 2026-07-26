@@ -18,4 +18,4 @@ Seeds {5081,5091} trials 8. Budget ~22 min, hard cap 44 min.
 🔮 LEAN PASS if E187 mid-kill works and restore re-links cascade.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=B2=B3=1.0. Mid-hop kill + restore multi-trial: path1 on after M0 kill; path0 restore returns select; path1 durable.

@@ -247,6 +247,7 @@
 | E186 | **PASS** | Content+cascade multi-hop fire-select dual path |
 | C38 | **NULL** | corr_plasticity free dual pop collapse; no unlock |
 | E187 | **PASS** | Cascade mid-hop kill M0 silences path0; path1 on |
+| E188 | **PASS** | Cascade mid-hop kill + restore multi-trial |
 
 ## What works (engineered port curriculum)
 
@@ -290,6 +291,7 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 - Interleaved multi-trial train fire-select **PASS** (E185; blocked train not required)  
 - Content+cascade multi-hop fire-select **PASS** (E186 dual L→M→R paths)  
 - Cascade mid-hop selective kill **PASS** (E187)  
+- Cascade mid-hop kill+restore multi-trial **PASS** (E188)  
 - Multi-trial fire selective A→B→A **PASS** (E172)  
 - Fire-select bridge-dependent **PASS** (E173 hard kill silences; restore returns)  
 - Soft bridge weaken also silences fire-select **PASS** (E174)  
