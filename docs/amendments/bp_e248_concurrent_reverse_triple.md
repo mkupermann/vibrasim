@@ -32,4 +32,6 @@ Not dual concurrent re-probe only. Not free dual. Not mid-kill.
 
 ## RESULT
 
-*(filled after run)*
+**PASS** (2026-07-26). B1=1.0 B2=1.0 B3=1.0.  
+Concurrent fire R0+R1+R2 lights all three L reverse targets. Triple concurrent reverse scales under Y-isolation.
+

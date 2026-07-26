@@ -7553,3 +7553,13 @@ B1=B2=B3=1.0 **PASS**. Dual reverse does not require multislot under Y-separatio
 
 Equal train then heavy 3x path0 retrain; path1 reverse survives.
 B1=B2=B3=1.0 **PASS**. Asymmetric retrain (replace OFF) does not kill other reverse path.
+
+## 2026-07-26 sequential - BP-E247 PASS reverse charge_latch OFF ablation
+
+Latch ON both reverse OK; latch OFF reverse p0/p1 OK.
+B1=B2=B3=1.0 **PASS**. Charge latch not required for reverse cascade readout here.
+
+## 2026-07-26 sequential - BP-E248 PASS concurrent reverse triple
+
+Concurrent fire three R ports; all three L lit.
+B1=B2=B3=1.0 **PASS**. Triple concurrent reverse works under Y-isolation.

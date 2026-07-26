@@ -32,4 +32,6 @@ Not free dual. Not pair_replace. Not mid-kill. If OFF fails → latch load-beari
 
 ## RESULT
 
-*(filled after run)*
+**PASS** (2026-07-26). B1=1.0 B2=1.0 B3=1.0.  
+Latch ON dual reverse OK; latch OFF both reverse paths still work (peak charge during prop window). Charge latch not required for reverse cascade under this scaffold/readout.
+
