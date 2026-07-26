@@ -19,4 +19,4 @@ Seeds {3961,3971} trials 6. Budget ~14 min, hard cap 28 min.
 🔮 LEAN PASS. Hybrid cascade path-switch composes from E146/E147 + E139.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Hybrid cascade multi-trial hard path-switch OR→cascade AND→OR closed.
