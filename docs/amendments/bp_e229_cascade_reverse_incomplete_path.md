@@ -36,4 +36,6 @@ Not soft/hard mid-kill. Not restore. Not G12. Not free dual.
 
 ## RESULT
 
-*(filled after run)*
+**PASS** (2026-07-26). B1=1.0 B2=1.0 B3=1.0.  
+Incomplete L–M-only train: reverse from R fails for both paths. Full-path control reverse p0 succeeds. Reverse cascade requires complete M–R hops (parallel to forward E191 incomplete boundary). Not mid-kill.
+

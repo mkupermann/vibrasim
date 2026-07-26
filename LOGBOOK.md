@@ -7413,3 +7413,13 @@ Decade-skew emit_band_ratios vs default under n_emit=8 free dual + wall.
 
 Tight n_nodes_max=96 + graceful_capacity vs ample free dual + wall.
 B1=0.0 B2=0.0 B3=0.0 B4=0.0 **NULL**. Capacity pressure collapses treat pop; no unlock.
+
+## 2026-07-26 sequential - BP-E229 PASS cascade reverse incomplete-path
+
+L-M-only train (no M-R): fire R reverse fails; full-path reverse OK.
+B1=B2=B3=1.0 **PASS**. Reverse cascade needs complete hops (E191-class boundary; not mid-kill).
+
+## 2026-07-26 sequential - BP-C82 NULL tau_membrane free dual
+
+tau_membrane=2.0 vs 0.5 free dual + wall.
+B1=0.0 B2=0.25 B3=0.25 B4=-0.25 **NULL**. Membrane tau does not unlock free dual talent.
