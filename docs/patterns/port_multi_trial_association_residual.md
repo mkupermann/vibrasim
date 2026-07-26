@@ -19,12 +19,14 @@
 - **E165 PASS:** hard R-port kill does not clear residual (E156-class).
 - **E166 PASS:** multislot ON retains both R high+low after c0+c1 train (capacity); c0-only high-only control.
 
-## Doctrine (E162–E166 CLOSED PASS family)
+## Doctrine (E162–E168 CLOSED PASS — see bp_port_residual_curriculum_closure.md)
 1. Multi-trial dual train → residual co-presence without baked map.
 2. Multislot OFF → last-write residual reconfig (c0→c1).
 3. Soft/hard port kill does not wipe residual content.
 4. Multislot ON → multi-assoc capacity (both partner bands retained).
+5. Temporal gap L→R residual works (E167); write order order-blind (E168).
 
 ## Open
 - Residual under generative/partner-from-L alone still No (E12).
+- Map-free **selective** residual (probe L band selects which R partner) not yet pre-reg'd.
 - Free talent still blocked; residual family is engineered-port content, not free dual.
