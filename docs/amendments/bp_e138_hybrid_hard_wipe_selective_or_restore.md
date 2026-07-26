@@ -19,4 +19,4 @@ Seeds {3721,3731} trials 6. Budget ~10 min, hard cap 20 min.
 🔮 LEAN PASS. Hard analogue of E76 selective OR restore.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Hard dual wipe hybrid + selective OR restore; AND stays OFF. Hard analogue of E76. Soft (E75/E76) + hard (E137/E138) hybrid selective restore matrix closed.
