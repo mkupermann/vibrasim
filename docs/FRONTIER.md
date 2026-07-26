@@ -315,6 +315,7 @@
 | C71 | **NULL** | compartment free dual; delta+ fails 0.90 |
 | E221 | **PASS** | Cascade reverse hard mid-kill then retrain-restore |
 | C72 | **NULL** | lambda_dec_mol free dual; no unlock |
+| E222 | **NULL** | G12+C16 free dual hybrid budget-fit no unlock |
 
 ## What works (engineered port curriculum)
 
