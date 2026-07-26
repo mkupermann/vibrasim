@@ -7244,3 +7244,8 @@ B1=0.75 B2=0.25 B3=0.75 B4=0.5 **NULL**. Positive delta but fails pre-registered
 
 Dual L-M-R cascade; reverse fire R→L multi-hop both paths.
 B1=B2=B3=1.0 **PASS**. Multi-hop reverse works under pair-link+prop.
+
+## 2026-07-26 sequential - BP-C63 NULL edge_closure free dual
+
+edge_closure_k=5 vs 0 free dual + wall.
+B1=0.0 B2=0.5 B3=0.25 B4=-0.5 **NULL**. Edge closure does not unlock free dual talent.
