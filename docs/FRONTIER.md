@@ -323,6 +323,7 @@
 | C75 | **NULL** | vibration_soft_cap free dual; treat pop collapse |
 | E225 | **PASS** | No content auto-tag without active_pattern_id |
 | C76 | **NULL** | fire_zero_latch free dual; treat pop collapse |
+| E226 | **PASS** | Cascade reverse soft mid-kill M1; reverse p0 survives |
 
 ## What works (engineered port curriculum)
 
