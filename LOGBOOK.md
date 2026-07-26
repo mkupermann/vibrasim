@@ -7328,3 +7328,8 @@ B1=0.5 B2=0.0 B3=0.5 B4=0.5 **NULL**. Compartment delta positive but fails 0.90 
 
 Hard kill M0; reverse p0 fail; reverse p1 OK; retrain path0 restores reverse p0.
 B1=B2=B3=1.0 **PASS**. Reverse hard mid-kill multi-trial reversible.
+
+## 2026-07-26 sequential - BP-C72 NULL lambda_dec_mol free dual
+
+lambda_dec_mol=0.01 vs 0 free dual + wall.
+B1=0.25 B2=0.25 B3=0.5 B4=0.0 **NULL**. Molecule decay does not unlock free dual talent.
