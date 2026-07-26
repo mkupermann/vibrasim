@@ -288,6 +288,7 @@
 | E208 | **PASS** | Reverse long-idle durability under G12 (T=400) |
 | C57 | **NULL** | flux_plasticity free dual; no unlock |
 | E209 | **PASS** | Reverse split soft-kill L1; reverse pid1 survives |
+| C58 | **NULL** | resonance_coupling free dual; no unlock |
 
 ## What works (engineered port curriculum)
 
@@ -316,7 +317,8 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 
 ## Next hard only
 
-- Free talent: C16 PARTIAL (strength-decay+wall); C42–C44 wide freq_tol **fragile**; C26 FAILED; C27–C41 NULL farm closed; C45–C57 NULL  
+- Free talent: C16 PARTIAL (strength-decay+wall); C42–C44 wide freq_tol **fragile**; C26 FAILED; C27–C41 NULL farm closed; C45–C58 NULL  
+
 
 
 
@@ -343,6 +345,7 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 - Reverse multi-trial switch under G12 **PASS** (E206)  
 - Reverse train-time pattern_id (no post-hoc) **PASS** (E207)  
 - Reverse long-idle durability under G12 **PASS** (E208 T=400)  
+- Reverse split soft-kill L1 **PASS** (E209; reverse pid1 survives)  
 
 - Port multi-trial association residual without map **PASS** (E162) — co-presence not generative partner  
 - Multi-assoc last-write residual c0→c1 **PASS** (E163) multislot OFF  
