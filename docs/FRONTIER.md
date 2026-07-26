@@ -317,6 +317,8 @@
 | C72 | **NULL** | lambda_dec_mol free dual; no unlock |
 | E222 | **NULL** | G12+C16 free dual hybrid budget-fit no unlock |
 | C73 | **NULL** | r_strengthen free dual; treat pop collapse |
+| E223 | **NULL** | G12+C16 full-budget hybrid; unlock fails both (gate no-op) |
+| C74 | **NULL** | synaptic_transmission free dual; no unlock |
 
 ## What works (engineered port curriculum)
 
@@ -403,6 +405,7 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 - Cascade reverse hard mid-kill selective **PASS** (E220)  
 - Cascade reverse hard mid-kill restore **PASS** (E221)  
 - G12+C16 free dual hybrid budget-fit **NULL** (E222; gate no-op ambient)  
+- G12+C16 free dual hybrid full C16 scale **NULL** (E223; B1=B2=0.78; neuron_dyn may break C16)  
 
 - Port multi-trial association residual without map **PASS** (E162) — co-presence not generative partner  
 - Multi-assoc last-write residual c0→c1 **PASS** (E163) multislot OFF  

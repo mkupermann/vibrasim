@@ -17,4 +17,5 @@ B1–B4. Seeds {6551,6561,6571} trials 3. N=400 T=1200. Budget ~40 min, hard cap
 🔮 LEAN PASS if ambient G12 no-ops and C16-class unlock holds with neuron_dynamics; LEAN NULL if neuron_dynamics or seed shift breaks C16 unlock.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.7778 B2=0.7778 B3=1.0 B4=0.0 (n=9).  
+Full C16 scale with neuron_dynamics: neither arm reaches 0.90 unlock. Gate ambient is no-op (equal treat/ctrl). Neuron_dynamics may suppress C16-class unlock relative to original C16 (no neuron_dynamics). Hybrid class closed for ambient G12.

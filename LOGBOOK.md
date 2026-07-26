@@ -7343,3 +7343,13 @@ B1=0.25 B2=0.25 B3=0.25 B4=0.0 **NULL**. No C16-class unlock at budget-fit; ambi
 
 r_strengthen=12 vs 5 free dual + wall.
 B1=0.0 B2=0.5 B3=0.0 B4=-0.5 **NULL**. Elevated r_strengthen collapses treat pop; no unlock.
+
+## 2026-07-26 sequential - BP-E223 NULL G12+C16 hybrid full budget
+
+Full C16 scale (N=400 T=1200) decay+gate vs decay only; neuron_dynamics ON both.
+B1=0.7778 B2=0.7778 B3=1.0 B4=0.0 **NULL**. Ambient gate no-op; C16 unlock fails with neuron_dynamics (original C16 had none). Hybrid ambient G12 closed.
+
+## 2026-07-26 sequential - BP-C74 NULL synaptic_transmission free dual
+
+synaptic_transmission_strength=2 vs 0.5 free dual + wall.
+B1=0.0 B2=0.25 B3=0.25 B4=-0.25 **NULL**. Elevated synaptic transmission does not unlock free dual talent.

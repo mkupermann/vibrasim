@@ -17,4 +17,4 @@ B1–B4. Seeds {6581,6591} trials 2. T=500. Budget ~8 min, hard cap 16 min.
 🔮 LEAN NULL. Synaptic transmission needs strong bridges; free dual inject unlikely to unlock decade order via elevated charge deposit alone.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.0 B2=0.25 B3=0.25 B4=-0.25. Elevated synaptic_transmission_strength does not unlock free dual talent.
