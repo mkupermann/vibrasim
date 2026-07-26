@@ -7313,3 +7313,8 @@ B1=0.80 B2=0.20 B3=1.0 B4=0.60 **NULL**. C68 budget-fit PASS fragile (C42-class)
 
 fusion_bond_block=2 vs 0 free dual + wall.
 B1=0.25 B2=0.5 B3=0.25 B4=-0.25 **NULL**. Fusion bond block does not unlock free dual talent.
+
+## 2026-07-26 sequential - BP-E220 PASS cascade reverse hard mid-kill
+
+Hard kill M0; reverse p0 fail; reverse p1 survives.
+B1=B2=B3=1.0 **PASS**. Reverse hard mid-hop kill path-selective.

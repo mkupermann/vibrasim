@@ -18,4 +18,4 @@ Seeds {6431,6441} trials 6. Budget ~20 min, hard cap 40 min.
 🔮 LEAN PASS if hard mid-hop kill isolates reverse path0 like soft E217.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=1.0 B2=1.0 B3=1.0. Hard kill M0 silences reverse p0; reverse p1 survives.
