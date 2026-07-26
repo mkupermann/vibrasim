@@ -184,6 +184,7 @@
 | E136 | **PASS** | Hard dual wipe + L2-first selective re-arm (order OK) |
 | E137 | **PASS** | Hybrid hard dual wipe + selective AND restore |
 | E138 | **PASS** | Hybrid hard dual wipe + selective OR restore |
+| E139 | **PASS** | Hybrid hard multi-trial path-switch OR↔AND↔OR |
 
 ## What works (engineered port curriculum)
 
