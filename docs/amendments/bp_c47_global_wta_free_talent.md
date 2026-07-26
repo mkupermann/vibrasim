@@ -17,4 +17,4 @@ B1–B4. Seeds {5481,5491} trials 2. T=500. Budget ~8 min, hard cap 16 min.
 🔮 LEAN NULL. Global WTA may sparsify firing without unlocking ordered decade talent.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.0 B2=0.0 B3=0.0 B4=0.0. global_wta_k=8 collapses treat pop / no ordered unlock.

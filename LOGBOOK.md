@@ -7084,3 +7084,8 @@ Formal CLOSED PASS: select, multi-trial, train-time tag, tags for wrong-arm bloc
 
 Soft kill R-lo; pre pid2 OK; post pid2 fail; pid1 also fails.
 B1=0.0 B2=1.0 B3=1.0 **NULL**. Shared PORT_R soft kill not arm-selective (E176 class).
+
+## 2026-07-26 sequential - BP-C47 NULL global_wta free dual
+
+global_wta_k=8 vs 0 free dual + wall.
+B1=0.0 B2=0.0 B3=0.0 B4=0.0 **NULL**. Sparse global WTA does not unlock free dual talent.

@@ -266,6 +266,7 @@
 | E197 | **PASS** | Tags load-bearing for wrong-arm block (not positive select) |
 | C46 | **NULL** | Polarity segregation free dual; no unlock |
 | E198 | **NULL** | Soft-kill R-lo also kills pid1 (shared port spill) |
+| C47 | **NULL** | global_wta_k free dual; no unlock |
 
 ## What works (engineered port curriculum)
 
@@ -294,7 +295,7 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 
 ## Next hard only
 
-- Free talent: C16 PARTIAL (strength-decay+wall); C42–C44 wide freq_tol **fragile**; C26 FAILED; C27–C41 NULL farm closed; C45–C46 NULL  
+- Free talent: C16 PARTIAL (strength-decay+wall); C42–C44 wide freq_tol **fragile**; C26 FAILED; C27–C41 NULL farm closed; C45–C47 NULL  
 - Pattern-id G12 gated fire-select **PASS** (E194) — new selective readout class  
 - Pattern-id multi-trial switch **PASS** (E195)  
 - Train-time pattern_id tagging **PASS** (E196; no post-hoc tag needed)  
