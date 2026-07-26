@@ -6997,3 +6997,8 @@ B1=B2=B3=1.0 **PASS**. Content+cascade hybrid E186-E190 CLOSED PASS (soft mid-ho
 
 L-M only no M-R; fire L fails R select; full paths work.
 B1=B2=B3=1.0 **PASS**. Terminal hop necessary for cascade fire-select.
+
+## 2026-07-26 sequential - BP-C39 NULL compartment free dual
+
+compartment_boundary=40 vs 0 free dual + wall.
+B1=0.5 B2=0.25 B3=0.75 B4=0.25 **NULL**. Compartment modularity does not unlock free dual talent.
