@@ -6903,3 +6903,8 @@ Formal CLOSED: spatial arm-select (E177), multi-trial switch (E178), replace exc
 
 Soft weaken R0; c0 fail; c1 survives.
 B1=B2=B3=1.0 **PASS**. Soft+hard split-port arm kill closed (E177/E180).
+
+## 2026-07-26 sequential - BP-C32 NULL elevated r_1 free dual
+
+r_1=12 vs 5 free dual + wall.
+B1=0.75 B2=0.5 B3=1.0 B4=0.25 **NULL**. Larger bind radius does not unlock 0.90 ordered talent.
