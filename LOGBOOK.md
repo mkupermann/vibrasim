@@ -6811,3 +6811,12 @@ B1=B2=B3=1.0 **PASS**. Residual family E162-E166 CLOSED PASS (co-presence, last-
 
 L then T_GAP=40 then R multi-trial; L-only probe; multislot OFF.
 B1=B2=B3=1.0 **PASS**. Residual works without same-tick dual write (content accumulation).
+
+## 2026-07-26 sequential - BP-E168 PASS write-order gap residual order-blind
+
+L-first vs R-first temporal gap multi-trial; L-only residual rates.
+B1=1.0 B2=1.0 B3=0.0 **PASS**. Order-blind residual accumulation.
+
+## 2026-07-26 sequential - residual curriculum closure E162-E168
+
+Formal CLOSED PASS: co-presence, last-write, soft/hard kill, multislot capacity, temporal gap, order-blind. Do not farm residual variants. See bp_port_residual_curriculum_closure.md.

@@ -24,4 +24,4 @@ Seeds {4481,4491} trials 8. Budget ~14 min, hard cap 28 min.
 🔮 LEAN PASS both arms residual if E167 PASS (content accumulation order-blind). NULL if only L-first leaves residual.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=1.0 B2=1.0 B3=0.0. Write order L-first vs R-first does not affect residual availability after L-only (order-blind content accumulation; E3 class for ports).
