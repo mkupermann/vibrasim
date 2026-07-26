@@ -23,4 +23,4 @@ Seeds {3801,3811,3821} trials 3. T=1200. Box 80×50×50 mid=40. Budget ~15 min, 
 🔮 LEAN NULL. Local scaffolds may bias structure without locking free dual at 0.90 multi-seed; maps scaffold+free class.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1=0.778 B2=0.778 B3=1.0 B4=0.0. Local ILW pair scaffold does not lift free dual above ~0.78 ceiling; identical to free-only control.

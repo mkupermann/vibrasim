@@ -6650,3 +6650,8 @@ B1=B2=B3=1.0 **PASS**. Hard path-switch both orders closed (E139/E140).
 
 (L1 AND L2)->M->A->R soft dual wipe then full restore.
 B1=B2=B3=1.0 **PASS**. Cascade gated multi-hop AND wipe-restore closed.
+
+## 2026-07-20 sequential - BP-C25 NULL local pair scaffold free talent
+
+Local L/R pair scaffolds then free dual inject vs free-only.
+B1=0.778 B2=0.778 B3=1.0 B4=0.0 **NULL**. Scaffold does not unlock free dual (~0.78 ceiling).

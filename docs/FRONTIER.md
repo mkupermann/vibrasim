@@ -187,6 +187,7 @@
 | E139 | **PASS** | Hybrid hard multi-trial path-switch OR↔AND↔OR |
 | E140 | **PASS** | Hybrid hard multi-trial path-switch AND↔OR↔AND |
 | E141 | **PASS** | Cascade AND multi-hop soft dual wipe-restore |
+| C25 | **NULL** | Local pair scaffold free dual 0.778 = ctrl; no unlock |
 
 ## What works (engineered port curriculum)
 
