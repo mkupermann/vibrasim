@@ -294,6 +294,7 @@
 | E211 | **PASS** | Forward+reverse co-presence multi-trial under G12 |
 | C60 | **NULL** | bistable_rate free dual; treat pop collapse |
 | E212 | **PASS** | Reverse split hard-kill L1; reverse pid1 survives |
+| C61 | **NULL** | fire_inhibit free dual; no unlock |
 
 ## What works (engineered port curriculum)
 
@@ -322,7 +323,8 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 
 ## Next hard only
 
-- Free talent: C16 PARTIAL (strength-decay+wall); C42–C44 wide freq_tol **fragile**; C26 FAILED; C27–C41 NULL farm closed; C45–C60 NULL  
+- Free talent: C16 PARTIAL (strength-decay+wall); C42–C44 wide freq_tol **fragile**; C26 FAILED; C27–C41 NULL farm closed; C45–C61 NULL  
+
 
 
 
@@ -355,6 +357,7 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 - Reverse split soft-kill L1 **PASS** (E209; reverse pid1 survives)  
 - Reverse soft-kill + retrain-restore **PASS** (E210)  
 - Forward+reverse co-presence multi-trial under G12 **PASS** (E211)  
+- Reverse split hard-kill L1 **PASS** (E212; complements soft E209)  
 
 - Port multi-trial association residual without map **PASS** (E162) — co-presence not generative partner  
 - Multi-assoc last-write residual c0→c1 **PASS** (E163) multislot OFF  
