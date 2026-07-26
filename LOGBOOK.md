@@ -7209,3 +7209,8 @@ B1=B2=B3=1.0 **PASS**. Reverse multi-trial soft surgery reversible.
 
 bond_turnover_rate=0.01 vs 0 free dual + wall.
 B1=0.25 B2=0.25 B3=0.75 B4=0.0 **NULL**. G53 bond turnover does not unlock free dual talent.
+
+## 2026-07-26 sequential - BP-E211 PASS forward+reverse coexist G12
+
+Same world: fwd c0, rev c0, both dirs c1 under G12.
+B1=B2=B3=1.0 **PASS**. Bidirectional select coexists multi-trial without retrain.
