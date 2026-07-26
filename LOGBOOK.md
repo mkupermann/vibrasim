@@ -6743,3 +6743,8 @@ B1=1.0 B2=0.0 B3=1.0 **NULL**. Soft+hard port kill fail as content wipe (E155/E1
 
 Three bands L and R sequential ILW; multislot ON vs OFF.
 B1=1.0 B2=0.0 B3=1.0 **PASS**. Dual-side multislot capacity closed.
+
+## 2026-07-20 sequential - BP-E158 NULL dual decade reverse overwrite
+
+Write L-low R-high then L-high R-low.
+B1=1.0 B2=0.0 B3=1.0 **NULL**. Reverse overwrite does not flip mean decades under multislot.
