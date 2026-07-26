@@ -7050,3 +7050,8 @@ B1=0.67 B2=0.33 B3=1.0 B4=0.33 **NULL**. Wall helps delta but not 0.90 unlock; C
 
 Tag c0/c1 pattern_ids; eligibility gate; correct and wrong-pattern probes.
 B1=B2=B3=1.0 **PASS**. G12 pattern-id gate is a new selective multi-trial readout class.
+
+## 2026-07-26 sequential - BP-C45 NULL bistable_drive_rectified free dual
+
+bistable_drive_rectified True vs False free dual + wall.
+B1=0.0 B2=0.25 B3=0.25 B4=-0.25 **NULL**. Rectified bistable drive does not unlock free dual talent.

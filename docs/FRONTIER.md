@@ -260,6 +260,7 @@
 | C43 | **NULL** | C42 replicate larger N B1=0.67 fails 0.90 bar |
 | C44 | **NULL** | Wide freq_tol wall ablation; ON 0.67 fails unlock |
 | E194 | **PASS** | Pattern-id G12 gated fire-select correct/wrong arm |
+| C45 | **NULL** | bistable_drive_rectified free dual; no unlock |
 
 ## What works (engineered port curriculum)
 
@@ -288,7 +289,7 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 
 ## Next hard only
 
-- Free talent: C16 PARTIAL (strength-decay+wall); C42–C44 wide freq_tol **fragile** (C43/C44 NULL B1≈0.67); C26 FAILED; C27–C41 NULL farm closed  
+- Free talent: C16 PARTIAL (strength-decay+wall); C42–C44 wide freq_tol **fragile**; C26 FAILED; C27–C41 NULL farm closed; C45 bistable_rectified NULL  
 - Pattern-id G12 gated fire-select **PASS** (E194) — new selective readout class  
 - Port multi-trial association residual without map **PASS** (E162) — co-presence not generative partner  
 - Multi-assoc last-write residual c0→c1 **PASS** (E163) multislot OFF  
