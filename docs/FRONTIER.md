@@ -235,6 +235,7 @@
 | E180 | **PASS** | Split-port soft arm weaken (c0 off, c1 on) |
 | C32 | **NULL** | r_1=12 free dual 0.75 ordered; below 0.90 unlock |
 | E181 | **PASS** | Triple-arm split-port fire-select capacity K=3 |
+| C33 | **NULL** | PRIM7 sideband cull free dual pop collapse; no unlock |
 
 ## What works (engineered port curriculum)
 
@@ -263,7 +264,7 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 
 ## Next hard only
 
-- Free talent: C16 family CLOSED PARTIAL — need mechanism ≠ dual-inject+decay / port-seed / local scaffold; C26 latch-tau **FAILED** hard-cap; C27 pair_decay NULL; C28 triad_decay NULL; C29 asymmetric speed NULL; C30 atom_repulsion NULL; C31 n_emit NULL; C32 r_1 bind NULL (0.75)  
+- Free talent: C16 family CLOSED PARTIAL — need mechanism ≠ dual-inject+decay / port-seed / local scaffold; C26 latch-tau **FAILED** hard-cap; C27–C33 NULL families (pair/triad decay, speed, atom_repulsion, n_emit, r_1, PRIM7 sideband cull)  
 - Port multi-trial association residual without map **PASS** (E162) — co-presence not generative partner  
 - Multi-assoc last-write residual c0→c1 **PASS** (E163) multislot OFF  
 - Assoc residual survives soft R kill **PASS** (E164; E155-class content durability)  

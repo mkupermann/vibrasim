@@ -6913,3 +6913,8 @@ B1=0.75 B2=0.5 B3=1.0 B4=0.25 **NULL**. Larger bind radius does not unlock 0.90 
 
 Three spatial associations; fire each L selects correct R.
 B1=B2=B3=1.0 **PASS**. Split-port doctrine scales to K=3.
+
+## 2026-07-26 sequential - BP-C33 NULL PRIM7 sideband cull free dual
+
+sideband_cull ON vs OFF free dual + wall.
+B1=0.0 B2=0.25 B3=0.0 B4=-0.25 **NULL**. Cull collapses treat population; no talent unlock.
