@@ -297,6 +297,7 @@
 | C61 | **NULL** | fire_inhibit free dual; no unlock |
 | E213 | **PASS** | Reverse hard-kill then retrain-restore reverse pid2 |
 | C62 | **NULL** | node_thermal free dual; delta+ but B1=0.75 fails 0.90 |
+| E214 | **PASS** | Cascade reverse multi-hop fire-select R→L |
 
 ## What works (engineered port curriculum)
 
