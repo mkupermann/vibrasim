@@ -7393,3 +7393,8 @@ B1=B2=B3=1.0 **PASS**. Hard mid-kill symmetric to E220.
 
 flux_threshold=5 vs 2 (flux_rate=0.1 both) free dual + wall.
 B1=0.25 B2=0.0 B3=0.25 B4=0.25 **NULL**. Elevated flux threshold does not unlock free dual talent.
+
+## 2026-07-26 sequential - BP-E228 PASS cascade reverse hard mid M1 restore
+
+Hard kill M1; reverse p1 fail; reverse p0 OK; retrain path1 restores reverse p1.
+B1=B2=B3=1.0 **PASS**. Hard M1 mid-kill multi-trial reversible.

@@ -18,4 +18,4 @@ Seeds {6761,6771} trials 6. Budget ~22 min, hard cap 44 min.
 🔮 LEAN PASS if retrain path1 rebuilds after hard mid-kill like E221 path0.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=1.0 B2=1.0 B3=1.0. Hard kill M1 silences reverse p1; reverse p0 survives; retrain path1 restores reverse p1.
