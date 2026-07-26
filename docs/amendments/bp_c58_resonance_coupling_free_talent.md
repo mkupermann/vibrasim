@@ -17,4 +17,4 @@ B1–B4. Seeds {5941,5951} trials 2. T=500. Budget ~8 min, hard cap 16 min.
 🔮 LEAN NULL. Kuramoto node sync may homogenize freqs and hurt decade segregation rather than unlock ordered talent.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.0 B2=0.5 B3=0.25 B4=-0.5. resonance_coupling hurts/does not unlock free dual talent.
