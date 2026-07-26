@@ -300,6 +300,7 @@
 | E214 | **PASS** | Cascade reverse multi-hop fire-select R→L |
 | C63 | **NULL** | edge_closure free dual; no unlock |
 | E215 | **PASS** | Cascade reverse under G12 pattern gate |
+| C64 | **NULL** | curvature free dual; no unlock |
 
 ## What works (engineered port curriculum)
 
@@ -328,7 +329,8 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 
 ## Next hard only
 
-- Free talent: C16 PARTIAL (strength-decay+wall); C42–C44 wide freq_tol **fragile**; C26 FAILED; C27–C41 NULL farm closed; C45–C63 NULL (C62 thermal delta+ fails 0.90)  
+- Free talent: C16 PARTIAL (strength-decay+wall); C42–C44 wide freq_tol **fragile**; C26 FAILED; C27–C41 NULL farm closed; C45–C64 NULL (C62 thermal delta+ fails 0.90)  
+
 
 
 
@@ -367,6 +369,7 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 - Reverse split hard-kill L1 **PASS** (E212; complements soft E209)  
 - Reverse hard-kill + retrain-restore **PASS** (E213)  
 - Cascade reverse multi-hop fire-select **PASS** (E214)  
+- Cascade reverse under G12 gate **PASS** (E215)  
 
 - Port multi-trial association residual without map **PASS** (E162) — co-presence not generative partner  
 - Multi-assoc last-write residual c0→c1 **PASS** (E163) multislot OFF  
