@@ -7070,3 +7070,8 @@ B1=B2=B3=1.0 **PASS**. Train-time tagging sufficient. Pattern E194-E196 class cl
 
 No-tag ambient select OK; tagged wrong-arm fail; no-tag wrong-arm selects.
 B1=B2=B3=1.0 **PASS**. Tags needed for wrong-pattern suppression only.
+
+## 2026-07-26 sequential - BP-C46 NULL polarity free dual
+
+L pol=0 R pol=1 vs random free dual + wall.
+B1=0.0 B2=0.0 B3=0.0 B4=0.0 **NULL**. Polarity segregation does not unlock free dual talent.
