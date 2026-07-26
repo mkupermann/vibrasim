@@ -21,4 +21,4 @@ Seeds {4181,4191} trials 8. N_write=8 per band. Budget ~8 min, hard cap 16 min.
 🔮 LEAN PASS. Multislot dual-side extends E10 to both halves.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=1.0 B2=0.0 B3=1.0. Multislot ON holds K=3 bands on both L and R; legacy OFF fails all-six occupancy.
