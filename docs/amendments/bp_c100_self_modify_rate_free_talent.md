@@ -29,4 +29,6 @@ Seeds {7781,7791} trials 2. T=500. Budget ~8 min, hard cap 16 min.
 
 ## RESULT
 
-*(filled after run)*
+**NULL** (2026-07-26). B1=0.25 B2=0.50 B3=0.25 B4=-0.25.  
+Elevated `self_modify_rate=0.2` does not unlock free dual talent.
+

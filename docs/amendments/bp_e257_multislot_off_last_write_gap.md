@@ -32,4 +32,6 @@ Not residual kill. Not free dual. Not multislot ON co-residence re-probe.
 
 ## RESULT
 
-*(filled after run)*
+**PASS** (2026-07-26). B1=1.0 B2=1.0 B3=1.0.  
+Multislot OFF: train A, gap, train B → A residual fails; B selective; A-only OK. Last-write residual without kill when multislot OFF (contrasts E256 ON co-residence).
+
