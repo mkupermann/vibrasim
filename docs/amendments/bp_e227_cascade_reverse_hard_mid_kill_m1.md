@@ -18,4 +18,4 @@ Seeds {6721,6731} trials 6. Budget ~20 min, hard cap 40 min.
 🔮 LEAN PASS if hard mid isolation is symmetric to E220.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=1.0 B2=1.0 B3=1.0. Hard kill M1 silences reverse p1; reverse p0 survives. Symmetric to E220.
