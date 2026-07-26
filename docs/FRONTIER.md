@@ -203,6 +203,7 @@
 | C26 | **FAILED** | Latch-tau free dual: capacity then hard-cap overrun |
 | E154 | **PASS** | Port dual decade specialisation via ILW only (no free) |
 | E155 | **NULL** | Soft port wipe does not disrupt dual decade content |
+| E156 | **NULL** | Hard port kill also fails to disrupt dual decade |
 
 ## What works (engineered port curriculum)
 

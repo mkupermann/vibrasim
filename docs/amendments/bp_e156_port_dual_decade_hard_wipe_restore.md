@@ -19,4 +19,4 @@ Seeds {4161,4171} trials 8. Budget ~8 min, hard cap 16 min.
 🔮 LEAN PASS. Hard kill should clear local decade structure where soft weaken failed (E155).
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1=1.0 B2=0.0 B3=1.0. Hard kill at L/R ports also fails to disrupt dual decade specialisation. Soft (E155) and hard (E156) port kill/weaken do not content-wipe decade structure.
