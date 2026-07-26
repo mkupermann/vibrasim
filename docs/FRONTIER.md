@@ -253,6 +253,7 @@
 | E191 | **PASS** | Incomplete cascade missing last hop fails select |
 | C39 | **NULL** | compartment_boundary free dual 0.5 ordered; no unlock |
 | C40 | **NULL** | lambda_dec free dual 0.5 ordered; no unlock |
+| E192 | **PASS** | Cascade fire-select under graded bridge_prop_min |
 
 ## What works (engineered port curriculum)
 
@@ -301,6 +302,7 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 - Triple-hop content cascade fire-select **PASS** (E190)  
 - Incomplete cascade negative control **PASS** (E191 missing hop fails)  
 - Night-lab synthesis E162–E191 **CLOSED** (`bp_night_lab_port_curriculum_synthesis_e162_e191.md`)  
+- Cascade graded bridge_prop_min **PASS** (E192)  
 - Multi-trial fire selective A→B→A **PASS** (E172)  
 - Fire-select bridge-dependent **PASS** (E173 hard kill silences; restore returns)  
 - Soft bridge weaken also silences fire-select **PASS** (E174)  

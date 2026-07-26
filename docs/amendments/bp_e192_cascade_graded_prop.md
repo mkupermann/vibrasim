@@ -19,4 +19,4 @@ Seeds {5201,5211} trials 8. Budget ~18 min, hard cap 36 min.
 🔮 LEAN PASS if pair-link bridges reach ≥0.5 strength under train. NULL if graded gate silences prop.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=B2=B3=1.0. Content cascade fire-select survives graded bridge_prop_min_strength=0.5 at probe. Pair-link bridges are strong enough for BET-107 gated multi-hop prop.
