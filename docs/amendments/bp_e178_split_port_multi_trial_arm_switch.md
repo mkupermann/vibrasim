@@ -19,4 +19,4 @@ Seeds {4741,4751} trials 8. Budget ~20 min, hard cap 40 min.
 🔮 LEAN PASS extending E177 multi-trial restore.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=B2=B3=1.0. Multi-trial split-port arm switch: kill c0 → c1 on → restore c0 → both.

@@ -6884,3 +6884,8 @@ B1=B2=B3=1.0 **PASS**. Spatial segregation enables arm-selective kill (E176 shar
 
 n_emit=4 vs 0 free dual + wall + neuron dynamics.
 B1=0.25 B2=0.25 B3=0.5 B4=0.0 **NULL**. Emission does not unlock free dual talent.
+
+## 2026-07-26 sequential - BP-E178 PASS multi-trial split-port arm switch
+
+Kill R0; c1 on; restore c0; c0+c1 both select.
+B1=B2=B3=1.0 **PASS**. Multi-trial arm switch with restore closed (E177/E178).
