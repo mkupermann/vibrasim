@@ -292,6 +292,7 @@
 | E210 | **PASS** | Reverse soft-kill then retrain-restore reverse pid2 |
 | C59 | **NULL** | bond_turnover free dual; no unlock |
 | E211 | **PASS** | Forward+reverse co-presence multi-trial under G12 |
+| C60 | **NULL** | bistable_rate free dual; treat pop collapse |
 
 ## What works (engineered port curriculum)
 
@@ -351,6 +352,7 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 - Reverse long-idle durability under G12 **PASS** (E208 T=400)  
 - Reverse split soft-kill L1 **PASS** (E209; reverse pid1 survives)  
 - Reverse soft-kill + retrain-restore **PASS** (E210)  
+- Forward+reverse co-presence multi-trial under G12 **PASS** (E211)  
 
 - Port multi-trial association residual without map **PASS** (E162) — co-presence not generative partner  
 - Multi-assoc last-write residual c0→c1 **PASS** (E163) multislot OFF  
