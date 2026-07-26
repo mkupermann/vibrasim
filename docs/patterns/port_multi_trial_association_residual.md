@@ -36,3 +36,4 @@
 - See `docs/amendments/bp_fire_select_curriculum_closure.md` (E171–E176 CLOSED).
 - Residual under generative/partner-from-L alone still No (E12) — E171 is activation of existing R content via bridge, not partner creation after R wipe.
 - Free talent still blocked; residual family is engineered-port content, not free dual.
+- **E194 PASS:** G12 `firing_eligibility_gate` + `k_pattern_id` tags enable correct-arm fire-select and block wrong-pattern probes (new class beyond E171 freq-matched fire alone).

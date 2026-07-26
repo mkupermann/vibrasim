@@ -7045,3 +7045,8 @@ B1=0.6667 B2=0.2667 B3=1.0 B4=0.40 **NULL**. C42 budget-fit PASS fragile; no bar
 
 ft=0.08 wall ON vs OFF; 3 seeds x 3 trials.
 B1=0.67 B2=0.33 B3=1.0 B4=0.33 **NULL**. Wall helps delta but not 0.90 unlock; C42 family fragile closed for now.
+
+## 2026-07-26 sequential - BP-E194 PASS pattern-id G12 gated fire-select
+
+Tag c0/c1 pattern_ids; eligibility gate; correct and wrong-pattern probes.
+B1=B2=B3=1.0 **PASS**. G12 pattern-id gate is a new selective multi-trial readout class.

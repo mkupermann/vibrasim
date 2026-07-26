@@ -22,4 +22,4 @@ Seeds {5361,5371} trials 8. Budget ~18 min, hard cap 36 min.
 🔮 LEAN PASS if pattern_id tags stick and gate blocks cross-pattern fire. NULL if ILW atoms untagged or gate ineffective.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=B2=B3=1.0. G12 firing_eligibility_gate + pattern_id tags enable correct-arm fire-select and block wrong-pattern L-fire from selecting partner. New multi-trial selective readout class beyond pure freq-matched fire (E171).
