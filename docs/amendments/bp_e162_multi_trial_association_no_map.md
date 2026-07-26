@@ -24,4 +24,4 @@ Seeds {4341,4351} trials 8. Budget ~8 min, hard cap 16 min.
 🔮 LEAN PASS for residual co-presence (R survives L-only rewrite). NULL if L rewrite disrupts R under multislot OFF.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=B2=B3=1.0. Multi-trial dual-port train leaves R-side high-freq residual after L-only probe; control L-only has no R partner. Not generative (E12); co-presence residual without baked class map.
