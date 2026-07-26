@@ -278,6 +278,7 @@
 | E203 | **NULL** | Reverse fire-select works; bidir not load-bearing vs ctrl |
 | C52 | **NULL** | self_aware free dual; no unlock |
 | E204 | **NULL** | Reverse works G6 OFF; pair-link-native reverse |
+| C53 | **NULL** | bridge_lock free dual; no unlock |
 
 ## What works (engineered port curriculum)
 
@@ -306,7 +307,8 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 
 ## Next hard only
 
-- Free talent: C16 PARTIAL (strength-decay+wall); C42–C44 wide freq_tol **fragile**; C26 FAILED; C27–C41 NULL farm closed; C45–C52 NULL  
+- Free talent: C16 PARTIAL (strength-decay+wall); C42–C44 wide freq_tol **fragile**; C26 FAILED; C27–C41 NULL farm closed; C45–C53 NULL  
+
 
 
 
