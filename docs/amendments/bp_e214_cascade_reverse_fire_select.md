@@ -18,4 +18,4 @@ Seeds {6121,6131} trials 6. Budget ~20 min, hard cap 40 min.
 🔮 LEAN PASS if pair-link reverse works multi-hop like single-hop reverse (E204/E205 class).
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=1.0 B2=1.0 B3=1.0. Dual cascade reverse R→L multi-hop fire-select works both paths.

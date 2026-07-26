@@ -7239,3 +7239,8 @@ B1=B2=B3=1.0 **PASS**. Reverse hard surgery multi-trial reversible.
 
 node_thermal_speed=2 vs 0 free dual + wall.
 B1=0.75 B2=0.25 B3=0.75 B4=0.5 **NULL**. Positive delta but fails pre-registered 0.90 unlock (no bar retune).
+
+## 2026-07-26 sequential - BP-E214 PASS cascade reverse fire-select
+
+Dual L-M-R cascade; reverse fire R→L multi-hop both paths.
+B1=B2=B3=1.0 **PASS**. Multi-hop reverse works under pair-link+prop.
