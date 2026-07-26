@@ -7593,3 +7593,13 @@ B1=B2=B3=1.0 **PASS**. Mixed-direction triple concurrent works.
 
 synaptic_transmission_threshold 20 vs 5 free dual + wall.
 B1=0.50 B2=0.25 B3=0.50 B4=0.25 **NULL**. No free dual unlock.
+
+## 2026-07-26 sequential - BP-E252 NULL curriculum strength_decay A→B
+
+A→B with strength decay replace OFF: B match 0.50 residual A 0.50; A-only OK.
+B1=0.50 B2=0.50 B3=1.0 **NULL**. Decay alone does not forget A (E27-class residual).
+
+## 2026-07-26 sequential - BP-C95 NULL t_refractory free dual
+
+t_refractory 0.20 vs 0.05 free dual + wall.
+B1=0.25 B2=0.0 B3=0.25 B4=0.25 **NULL**. No free dual unlock.
