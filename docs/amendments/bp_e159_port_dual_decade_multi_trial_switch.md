@@ -19,4 +19,4 @@ Seeds {4221,4231} trials 8. Budget ~8 min, hard cap 16 min.
 🔮 LEAN PASS. Multi-trial content switch closes dual decade reconfig.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1=1.0 B2=0.0 B3=0.0. First ordered OK; reverse and final re-forward fail. Multi-trial dual decade switch not last-write-dominant under multislot (aligns with E158).

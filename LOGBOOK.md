@@ -6748,3 +6748,8 @@ B1=1.0 B2=0.0 B3=1.0 **PASS**. Dual-side multislot capacity closed.
 
 Write L-low R-high then L-high R-low.
 B1=1.0 B2=0.0 B3=1.0 **NULL**. Reverse overwrite does not flip mean decades under multislot.
+
+## 2026-07-20 sequential - BP-E159 NULL multi-trial dual decade switch
+
+Forward reverse forward dual decade writes.
+B1=1.0 B2=0.0 B3=0.0 **NULL**. Multi-trial switch not last-write-dominant (E158 class).
