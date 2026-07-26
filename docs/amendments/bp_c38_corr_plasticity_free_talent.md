@@ -17,4 +17,4 @@ B1–B4. Seeds {5041,5051} trials 2. T=500. Budget ~8 min, hard cap 16 min.
 🔮 LEAN NULL. Hebbian bridge corr during free dual unlikely to unlock ordered talent (may need structured co-fire).
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.0 B2=0.0 B3=0.0 B4=0.0. corr_plasticity free dual collapses treat pop; no ordered talent unlock.
