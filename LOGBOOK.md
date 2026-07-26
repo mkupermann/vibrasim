@@ -6695,3 +6695,8 @@ B1=B2=B3=1.0 **PASS**. Hybrid cascade multi-trial path-switch closed (OR-first).
 
 Hard-cut OR restore cascade AND; hard-cut AND restore OR; hard-cut OR restore cascade AND.
 B1=B2=B3=1.0 **PASS**. Hybrid cascade multi-trial path-switch both orders closed (E148/E149).
+
+## 2026-07-20 sequential - BP-E150 PASS dual cascade hard selective path0
+
+Two parallel cascade ANDs; hard cut path0 L; path1 stays; restore path0.
+B1=B2=B3=1.0 **PASS**. Dual cascade concurrent + selective silence closed.
