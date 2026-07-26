@@ -18,4 +18,4 @@ Seeds {5281,5291,5301,5311,5321} trials 3 (N=15 treat + 15 ctrl). T=500. N_SIDE=
 🔮 LEAN PASS if C42 is real. NULL if budget-fit C42 was seed-set lucky (honest failure mode).
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.6667 B2=0.2667 B3=1.0 B4=0.40 (n=15+15). Treat ordered **below** 0.90 bar despite positive delta. **C42 budget-fit PASS does not replicate** at larger N under same bars. Wide freq_tol free dual is **fragile / seed-set sensitive**, not a locked unlock. No bar retune.

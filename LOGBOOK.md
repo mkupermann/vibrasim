@@ -7035,3 +7035,8 @@ B1=B2=B3=1.0 **PASS**. Multi-hop content cascade durable without retrain.
 
 freq_tolerance=0.08 vs 0.03 free dual + wall; budget-fit 2x2.
 B1=1.0 B2=0.0 B3=1.0 B4=1.0 **PASS**. New free dual mechanism class (wide band match). Recommend C43 replicate.
+
+## 2026-07-26 sequential - BP-C43 NULL C42 wide freq_tol replicate fails
+
+5 seeds x 3 trials same bars as C42.
+B1=0.6667 B2=0.2667 B3=1.0 B4=0.40 **NULL**. C42 budget-fit PASS fragile; no bar retune.
