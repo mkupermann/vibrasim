@@ -7323,3 +7323,8 @@ B1=B2=B3=1.0 **PASS**. Reverse hard mid-hop kill path-selective.
 
 compartment_k=1 vs 0 free dual + wall.
 B1=0.5 B2=0.0 B3=0.5 B4=0.5 **NULL**. Compartment delta positive but fails 0.90 unlock.
+
+## 2026-07-26 sequential - BP-E221 PASS cascade reverse hard mid-restore
+
+Hard kill M0; reverse p0 fail; reverse p1 OK; retrain path0 restores reverse p0.
+B1=B2=B3=1.0 **PASS**. Reverse hard mid-kill multi-trial reversible.

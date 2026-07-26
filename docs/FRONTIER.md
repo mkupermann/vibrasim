@@ -313,6 +313,7 @@
 | C70 | **NULL** | fusion_bond_block free dual; no unlock |
 | E220 | **PASS** | Cascade reverse hard mid-kill M0; reverse p1 survives |
 | C71 | **NULL** | compartment free dual; delta+ fails 0.90 |
+| E221 | **PASS** | Cascade reverse hard mid-kill then retrain-restore |
 
 ## What works (engineered port curriculum)
 
