@@ -20,4 +20,4 @@ Seeds {4761,4771} trials 8. Budget ~18 min, hard cap 36 min.
 🔮 LEAN PASS if replace drops other endpoint bridges (PRIM8). NULL if multislot retains both paths under fire-select.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=1.0 B2=0.0 B3=1.0. Replace ON keeps c1 select and control c0 select, but **c0 fire-select still succeeds after c1 train** (B2 fail). PRIM8 replace does not enforce exclusive last-arm fire-select under multislot shared ports.
