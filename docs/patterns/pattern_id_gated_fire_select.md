@@ -30,6 +30,7 @@
 - **Reverse long-idle durable** after T=400 (E208 PASS).
 - **Reverse split soft-kill** L1 arm-selective (E209 PASS).
 - **Reverse soft-kill restore** via retrain (E210 PASS).
+- **Forward+reverse coexist** same-world multi-trial (E211 PASS).
 
 ## Soft-kill arm surgery (E198–E200)
 - Shared PORT_R soft kill wrong-arm **spills** (E198 NULL) — silences both pid arms.

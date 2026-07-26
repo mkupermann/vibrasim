@@ -291,6 +291,7 @@
 | C58 | **NULL** | resonance_coupling free dual; no unlock |
 | E210 | **PASS** | Reverse soft-kill then retrain-restore reverse pid2 |
 | C59 | **NULL** | bond_turnover free dual; no unlock |
+| E211 | **PASS** | Forward+reverse co-presence multi-trial under G12 |
 
 ## What works (engineered port curriculum)
 

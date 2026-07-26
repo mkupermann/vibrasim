@@ -19,4 +19,4 @@ Seeds {6001,6011} trials 6. Budget ~20 min, hard cap 40 min.
 🔮 LEAN PASS if pair-link supports bidirectional select without path destruction under sequential probes.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-26). B1=1.0 B2=1.0 B3=1.0. Same-world forward+reverse fire-select coexist under G12 multi-trial without retrain.
