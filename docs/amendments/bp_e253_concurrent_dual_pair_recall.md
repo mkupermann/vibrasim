@@ -32,4 +32,6 @@ Not reverse cascade concurrent. Not free dual. Not residual A→B curriculum.
 
 ## RESULT
 
-*(filled after run)*
+**PASS** (2026-07-26). B1=1.0 B2=1.0 B3=1.0.  
+Concurrent fire both L ports lights both correct R partners. Dual pair-link concurrent recall works under Y-separation. Not reverse cascade.
+

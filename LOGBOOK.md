@@ -7603,3 +7603,13 @@ B1=0.50 B2=0.50 B3=1.0 **NULL**. Decay alone does not forget A (E27-class residu
 
 t_refractory 0.20 vs 0.05 free dual + wall.
 B1=0.25 B2=0.0 B3=0.25 B4=0.25 **NULL**. No free dual unlock.
+
+## 2026-07-26 sequential - BP-E253 PASS concurrent dual pair recall
+
+Concurrent fire both L; both R partners lit.
+B1=B2=B3=1.0 **PASS**. Port concurrent dual recall works (not reverse cascade).
+
+## 2026-07-26 sequential - BP-C96 NULL btsp_excitability free dual
+
+btsp_excitability_bias=2 vs 0 (BTSP ON) free dual + wall.
+B1=0.50 B2=0.0 B3=0.50 B4=0.50 **NULL**. No free dual unlock.
