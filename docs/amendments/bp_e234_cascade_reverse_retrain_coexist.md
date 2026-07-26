@@ -32,4 +32,6 @@ Not mid-kill/restore. Not concurrent dual. Not free dual. Not split-port kill cu
 
 ## RESULT
 
-*(filled after run)*
+**PASS** (2026-07-26). B1=1.0 B2=1.0 B3=1.0.  
+Sequential retrain path0 then path1 without kill: both reverse paths coexist. No mid-kill required for dual reverse co-residence.
+
