@@ -7583,3 +7583,13 @@ B1=1.0 B2=0.0 B3=1.0 **NULL**. min=50 not a reverse silencer after standard trai
 
 emit_speed 60 vs 30 free dual + wall.
 B1=B2=B3=B4=0.0 **NULL**. No unlock; finished under budget.
+
+## 2026-07-26 sequential - BP-E251 PASS concurrent mixed triple
+
+Concurrent L0(fwd)+R1(rev)+L2(fwd); R0/L1/R2 all lit.
+B1=B2=B3=1.0 **PASS**. Mixed-direction triple concurrent works.
+
+## 2026-07-26 sequential - BP-C94 NULL synaptic_tx_threshold free dual
+
+synaptic_transmission_threshold 20 vs 5 free dual + wall.
+B1=0.50 B2=0.25 B3=0.50 B4=0.25 **NULL**. No free dual unlock.
