@@ -45,3 +45,5 @@ C16 is a **new mechanism class** (PRIM3 strength decay on free-formed nodes), no
 | C23 | NULL | triple-band thirds ordered 0.0; pop 0.44 |
 | C24 | NULL | port-seed bootstrap 0.44 < ctrl 0.67 |
 | C25 | NULL | local pair scaffold free dual 0.778 = ctrl |
+| C26 | FAILED | latch-tau free dual hard-cap overrun |
+| C27 | NULL | short pair_decay free dual 0.5 ordered |

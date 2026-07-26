@@ -6763,3 +6763,12 @@ B1=B2=B3=1.0 **PASS**. Multislot OFF enables last-write dual decade reconfig (E1
 
 Forward reverse forward dual decade; multislot OFF.
 B1=B2=B3=1.0 **PASS**. Dual decade reconfig closed under multislot OFF (E160/E161).
+
+## 2026-07-20 sequential - port content curriculum closure
+
+Formal CLOSED PARTIAL E154-E161: dual decade write, multislot capacity vs reconfig doctrine.
+
+## 2026-07-20 sequential - BP-C27 NULL short pair_decay free dual
+
+pair_decay=15 vs 60 free dual + wall; budget-fit.
+B1=0.5 B2=0.0 B3=0.5 B4=0.5 **NULL**. Short pair decay does not unlock free dual talent.

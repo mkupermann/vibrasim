@@ -23,4 +23,4 @@ Seeds {4321,4331} trials 2. T=500. N_SIDE=250. Box 80×50×50 mid=40. n_nodes_ma
 🔮 LEAN NULL. Faster pair decay may thin structure without unlocking ordered talent; maps pair-decay free class under tight wallclock.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-20). B1=0.5 B2=0.0 B3=0.5 B4=0.5. Short pair_decay_time does not unlock free dual talent (pop and ordered both short of bars).
