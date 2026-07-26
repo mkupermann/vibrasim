@@ -17,4 +17,4 @@ B1–B4. Seeds {5161,5171} trials 2. T=500. Budget ~8 min, hard cap 16 min.
 🔮 LEAN NULL to weak. Compartment may help side purity but unlikely full 0.90 unlock alone.
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.50 B2=0.25 B3=0.75 B4=0.25. Compartment boundary does not unlock free dual ordered talent (B1/B3 fail).
