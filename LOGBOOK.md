@@ -7298,3 +7298,8 @@ B1=0.25 B2=0.25 B3=0.25 B4=0.0 **NULL**. Bridge cooldown does not unlock free du
 
 Soft kill M0; reverse p0 fail; reverse p1 OK; retrain path0 restores reverse p0.
 B1=B2=B3=1.0 **PASS**. Reverse soft mid-kill multi-trial reversible.
+
+## 2026-07-26 sequential - BP-C68 PASS node_freq_binding OFF free dual unlock
+
+node_freq_binding=False vs True free dual + wall.
+B1=1.0 B2=0.5 B3=1.0 B4=0.5 **PASS**. New free dual mechanism class (proximity-only node binding). Prediction was LEAN NULL — miss. Budget-fit; recommend C69 larger replicate (no bar retune).

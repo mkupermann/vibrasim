@@ -308,6 +308,7 @@
 | E218 | **PASS** | Cascade reverse long-idle durability (T=400) |
 | C67 | **NULL** | bridge_cooldown free dual; no unlock |
 | E219 | **PASS** | Cascade reverse soft mid-kill then retrain-restore |
+| C68 | **PASS*** | node_freq_binding OFF free dual unlock (*budget-fit; replicate) |
 
 ## What works (engineered port curriculum)
 
@@ -336,7 +337,8 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 
 ## Next hard only
 
-- Free talent: C16 PARTIAL (strength-decay+wall); C42–C44 wide freq_tol **fragile**; C26 FAILED; C27–C41 NULL farm closed; C45–C67 NULL (C62 thermal delta+ fails 0.90)  
+- Free talent: C16 PARTIAL (strength-decay+wall); **C68 PASS*** node_freq_binding OFF (*budget-fit; needs replicate); C42 fragile; C26 FAILED; C27–C41 NULL farm closed; C45–C67 NULL  
+
 
 
 
