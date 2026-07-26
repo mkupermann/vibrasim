@@ -275,6 +275,7 @@
 | C50 | **NULL** | lateral_inhibition free dual; no unlock |
 | E202 | **NULL** | R-only pattern tags; wrong-arm block fails (ambient L) |
 | C51 | **NULL** | mol_fusion free dual; no unlock |
+| E203 | **NULL** | Reverse fire-select works; bidir not load-bearing vs ctrl |
 
 ## What works (engineered port curriculum)
 
@@ -318,6 +319,7 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 - Split+G12 soft-kill + retrain-restore multi-trial **PASS** (E200)  
 - L-only pattern tags suffice for G12 wrong-arm block **PASS** (E201)  
 - R-only pattern tags **NULL** wrong-arm (E202; firing-side tags required)  
+- Reverse R→L fire-select works but G13 bidir not required **NULL** (E203 B3=0)  
 
 - Port multi-trial association residual without map **PASS** (E162) — co-presence not generative partner  
 - Multi-assoc last-write residual c0→c1 **PASS** (E163) multislot OFF  
