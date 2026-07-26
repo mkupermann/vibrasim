@@ -181,6 +181,7 @@
 | E133 | **PASS** | Hard dual wipe + selective L1 restore keeps dual OFF |
 | E134 | **NULL** | Soft wipe + L1–M hop-only restore still dual ON |
 | E135 | **PASS** | Multi-trial hard selective L1 AND re-arm cycle |
+| E136 | **PASS** | Hard dual wipe + L2-first selective re-arm (order OK) |
 
 ## What works (engineered port curriculum)
 

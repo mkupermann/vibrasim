@@ -19,4 +19,4 @@ Seeds {3681,3691} trials 6. Budget ~10 min, hard cap 20 min.
 🔮 LEAN PASS. Order-symmetric selective re-arm under hard dual wipe.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Hard dual wipe + L2-first selective re-arm order-symmetric with E133 L1-first.
