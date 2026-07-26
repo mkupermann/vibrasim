@@ -19,4 +19,4 @@ Seeds {4021,4031} trials 6. Budget ~16 min, hard cap 32 min.
 🔮 LEAN PASS. Dual cascade hard wipe-restore of both paths.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Dual cascade hard wipe both paths + full restore both closed. Dual cascade curriculum closed with E150 selective.
