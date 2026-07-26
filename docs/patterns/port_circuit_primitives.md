@@ -127,6 +127,8 @@ E29–E37 PASS chain · PRIM5/6/8 · replace doctrine
 | Hybrid cascade hard selective OR | E147 PASS | OR restore AND stays off |
 | Hybrid cascade multi-trial path-switch OR first | E148 PASS | OR↔cascade AND↔OR |
 | Hybrid cascade multi-trial path-switch AND first | E149 PASS | cascade AND↔OR↔AND |
+| Dual cascade hard selective path0 | E150 PASS | parallel cascade AND y-sep |
+| Dual cascade hard wipe-restore both | E151 PASS | dual wipe full restore |
 
 ## Soft re-cut doctrine (E92–E100)
 After full wipe+restore, selective soft re-cut needs **mid distance > soft radius** (E94/E97/E100) or use **hard local kill** (E93/E95/E98/E99). Separate-L alone does not fix soft mid-collateral. See `port_wipe_restore.md`.
