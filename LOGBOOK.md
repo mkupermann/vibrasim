@@ -6665,3 +6665,8 @@ B1=B2=B3=1.0 **PASS**. Soft (E141) + hard cascade wipe-restore closed.
 
 Hard dual wipe cascade; restore L1 chain dual OFF; restore L2 dual ON.
 B1=B2=B3=1.0 **PASS**. E133 selective doctrine transfers to cascade multi-hop.
+
+## 2026-07-20 sequential - BP-E144 PASS cascade multi-trial hard selective re-arm
+
+Hard wipe L1-only OFF; both ON; hard wipe L1-only OFF again.
+B1=B2=B3=1.0 **PASS**. Cascade multi-trial selective re-arm closed.

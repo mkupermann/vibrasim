@@ -18,4 +18,4 @@ Seeds {3881,3891} trials 6. Budget ~14 min, hard cap 28 min.
 🔮 LEAN PASS. Cascade multi-trial selective re-arm.
 
 ## RESULT
-*(after)*
+**PASS** (2026-07-20). B1=B2=B3=1.0. Cascade multi-trial hard selective L1 re-arm closed.
