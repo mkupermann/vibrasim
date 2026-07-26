@@ -272,6 +272,7 @@
 | E200 | **PASS** | Split+G12 soft-kill R1 then retrain-restore pid2 |
 | C49 | **NULL** | bridge_atom_prop free dual; no unlock |
 | E201 | **PASS** | L-only pattern tags suffice for G12 wrong-arm block |
+| C50 | **NULL** | lateral_inhibition free dual; no unlock |
 
 ## What works (engineered port curriculum)
 
@@ -300,7 +301,8 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 
 ## Next hard only
 
-- Free talent: C16 PARTIAL (strength-decay+wall); C42–C44 wide freq_tol **fragile**; C26 FAILED; C27–C41 NULL farm closed; C45–C49 NULL  
+- Free talent: C16 PARTIAL (strength-decay+wall); C42–C44 wide freq_tol **fragile**; C26 FAILED; C27–C41 NULL farm closed; C45–C50 NULL  
+
 
 
 - Pattern-id G12 gated fire-select **PASS** (E194) — new selective readout class  

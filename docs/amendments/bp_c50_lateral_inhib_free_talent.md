@@ -17,4 +17,4 @@ B1–B4. Seeds {5621,5631} trials 2. T=500. Budget ~8 min, hard cap 16 min.
 🔮 LEAN NULL. Bridge competition unlikely to create decade order from free dual inject alone (C12 STDP already NULL).
 
 ## RESULT
-*(after)*
+**NULL** (2026-07-26). B1=0.25 B2=0.0 B3=0.25 B4=0.25. G8 lateral_inhibition + STDP does not unlock free dual talent.
