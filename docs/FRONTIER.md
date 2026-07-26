@@ -321,6 +321,7 @@
 | C74 | **NULL** | synaptic_transmission free dual; no unlock |
 | E224 | **NULL** | Graded soft mid reverse; half already kills rev p0 |
 | C75 | **NULL** | vibration_soft_cap free dual; treat pop collapse |
+| E225 | **PASS** | No content auto-tag without active_pattern_id |
 
 ## What works (engineered port curriculum)
 

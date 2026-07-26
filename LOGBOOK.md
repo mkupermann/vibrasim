@@ -7363,3 +7363,8 @@ B1=0.0 B2=1.0 B3=1.0 **NULL**. Half already silences reverse p0; reverse multi-h
 
 vibration_soft_cap=256 vs 0 free dual + wall.
 B1=0.0 B2=0.25 B3=0.0 B4=-0.25 **NULL**. Soft cap collapses treat pop; no unlock.
+
+## 2026-07-26 sequential - BP-E225 PASS no content auto-tag
+
+Ambient dual ILW train; no post-hoc tag; gate ON.
+B1=B2=B3=1.0 **PASS**. Tags stay zero; wrong-arm still selects; post-hoc tags restore block. No substrate content auto-tag.

@@ -42,5 +42,5 @@
 - Retrain restore after soft kill **PASS** (E200): pid2 returns without harming pid1 curriculum.
 
 ## Open
-- Pattern_id on free dual talent
-- Auto-tag without engineered active_pattern_id curriculum
+- Pattern_id on free dual talent (E222–E223 hybrid ambient NULL)
+- Auto-tag without engineered active_pattern_id: **closed negative** E225 PASS (no content auto-tag)
