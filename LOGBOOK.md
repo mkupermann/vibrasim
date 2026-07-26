@@ -6928,3 +6928,12 @@ B1=B2=B3=1.0 **PASS**. Selective arm surgery at K=3 closed.
 
 r_2=50 vs 28 free dual + wall.
 B1=0.0 B2=0.25 B3=0.0 B4=-0.25 **NULL**. Larger r_2 collapses treat pop; no talent unlock.
+
+## 2026-07-26 sequential - BP-E183 PASS triple-arm middle kill+restore
+
+Kill R1; c0 on; restore c1; c2 durable.
+B1=B2=B3=1.0 **PASS**. K=3 multi-trial surgery closed (E181-E183).
+
+## 2026-07-26 sequential - split-port curriculum CLOSED E177-E183
+
+Formal K=2+K=3 split-port arm family closed. Do not farm without new question.
