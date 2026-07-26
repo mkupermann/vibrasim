@@ -256,6 +256,7 @@
 | E192 | **PASS** | Cascade fire-select under graded bridge_prop_min |
 | C41 | **NULL** | Asymmetric N_SIDE free dual 0.5 ordered; no unlock |
 | E193 | **PASS** | Cascade fire-select durable after long idle T=400 |
+| C42 | **PASS** | Wider freq_tol=0.08 free dual 1.0 ordered unlock |
 
 ## What works (engineered port curriculum)
 
@@ -267,7 +268,7 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 
 | Boundary | Status |
 |----------|--------|
-| Free talent @0.90 pure | C16 family CLOSED PARTIAL (not locked); C1–C15 closed |
+| Free talent @0.90 pure | C16 PARTIAL; **C42 PASS** wide freq_tol (budget-fit); C1–C15 closed; C27–C41 NULL farm closed |
 | Stationary free (vel=0) | No bind (C9) |
 | Ballistic-then-freeze free | No 0.90 (C10) |
 | Soft lateral inhibit WTA | No exclusive winner (PRIM10) |
@@ -284,7 +285,7 @@ See `docs/patterns/port_circuit_primitives.md`, `docs/patterns/port_wipe_restore
 
 ## Next hard only
 
-- Free talent: C16 family CLOSED PARTIAL — need mechanism ≠ dual-inject+decay / port-seed / local scaffold; C26 latch-tau **FAILED** hard-cap; C27–C41 NULL families (see synthesis; + asymmetric N_SIDE)  
+- Free talent: C16 PARTIAL (strength-decay+wall); **C42 PASS** wider freq_tol=0.08 free dual unlock (budget-fit); C26 FAILED; C27–C41 NULL farm closed  
 - Port multi-trial association residual without map **PASS** (E162) — co-presence not generative partner  
 - Multi-assoc last-write residual c0→c1 **PASS** (E163) multislot OFF  
 - Assoc residual survives soft R kill **PASS** (E164; E155-class content durability)  
