@@ -7573,3 +7573,13 @@ B1=1.0 B2=1.0 B3=0.0 **NULL**. Reverse not true AND — G alone sufficient.
 
 emit_freq 80k vs 30k free dual + wall.
 B1=B2=B3=B4=0.0 **NULL**. No unlock; finished under budget (unlike C80).
+
+## 2026-07-26 sequential - BP-E250 NULL reverse prop min_strength gate
+
+min=0 reverse OK; min=50 still reverse succeeds (B2=0).
+B1=1.0 B2=0.0 B3=1.0 **NULL**. min=50 not a reverse silencer after standard train.
+
+## 2026-07-26 sequential - BP-C93 NULL emit_speed free dual n_emit=2
+
+emit_speed 60 vs 30 free dual + wall.
+B1=B2=B3=B4=0.0 **NULL**. No unlock; finished under budget.
