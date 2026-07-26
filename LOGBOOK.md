@@ -7543,3 +7543,13 @@ B1=B2=B3=1.0 **PASS**. Reverse shared-mid leak confirmed.
 
 pair_replace ON: path0 reverse fails baseline (B1=0); p1 also fails (B2=0).
 B1=0 B2=0 B3=1.0 **NULL**. pair_replace incompatible with reverse cascade scaffold (vs E234 replace OFF).
+
+## 2026-07-26 sequential - BP-E245 PASS reverse multislot OFF ablation
+
+Multislot ON both reverse OK; OFF reverse p0/p1 OK.
+B1=B2=B3=1.0 **PASS**. Dual reverse does not require multislot under Y-separation.
+
+## 2026-07-26 sequential - BP-E246 PASS reverse asymmetric retrain
+
+Equal train then heavy 3x path0 retrain; path1 reverse survives.
+B1=B2=B3=1.0 **PASS**. Asymmetric retrain (replace OFF) does not kill other reverse path.

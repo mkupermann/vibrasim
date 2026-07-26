@@ -32,4 +32,6 @@ Not free dual. Not pair_replace. Not mid-kill. If OFF fails reverse → NULL nam
 
 ## RESULT
 
-*(filled after run)*
+**PASS** (2026-07-26). B1=1.0 B2=1.0 B3=1.0.  
+Multislot ON dual reverse OK; multislot OFF both reverse paths still work. Dual reverse co-residence does not require multislot under Y-separated cascade scaffold.
+
