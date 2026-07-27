@@ -107,7 +107,7 @@ from typing import Any
 
 import yaml
 
-REPO_DEFAULT = Path("/Users/mkupermann/GitHub/EQMOD")
+REPO_DEFAULT = Path("/Users/mkupermann/Documents/GitHub/vibrasim")
 
 DEFAULT_INTERVAL_SECONDS = 60.0
 DEFAULT_MAX_RUNTIME_SECONDS = 3600  # 1h iteration cap

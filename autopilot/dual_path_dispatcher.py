@@ -266,6 +266,15 @@ class DualPathDispatcher:
             self.log("Global STOP marker present — return stopped")
             return {"action": "stopped", "reason": "global_stop"}
         
+        # First, run BetDispatcher tick for each path to handle completed items
+        results = []
+        for path_name in self.active_paths:
+            dispatcher = self._get_path_dispatcher(path_name)
+            path_result = dispatcher.tick()
+            if path_result.get("action") not in ("idle", "stopped"):
+                self.log(f"Path {path_name} tick: {path_result}", path_name)
+            results.append((path_name, path_result))
+        
         # Check for items to run
         next_item = self.get_next_item()
         
