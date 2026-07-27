@@ -35,4 +35,5 @@ Not the BET-103 engineered compartment (`compartment_boundary>0`). Not ILW ports
 
 ## RESULT
 
-*(filled after run)*
+**NULL** (2026-07-27). B1=0.25 B2=0.75 B3=0.50 B4=-0.50.
+The strongest untried free-chemistry lever — Hebbian correlational plasticity (BET-099) — does not unlock free dual. Treatment scored *below* control (negative delta), same signature as the emit-band / dream NULLs: turning the mechanism ON without a decade-selective write signal adds noise, not talent. Confirms free-chemistry co-firing plasticity alone cannot specialise sides at the 0.90 bar. Extends NULL farm C27–C103 → C104.
