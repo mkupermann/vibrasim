@@ -7688,3 +7688,8 @@ B1=0.0 B2=0.75 B3=0.25 B4=-0.75 **NULL**. Treatment below control; no free dual 
 
 Correlational co-firing bridge plasticity ON (rate=1.0) vs OFF, compartment_boundary=0 (free).
 B1=0.25 B2=0.75 B3=0.50 B4=-0.50 **NULL**. Strongest untried free-chemistry lever; treatment below control. Canonical Hebbian mechanism does not unlock free dual at 0.90 bar.
+
+## 2026-07-27 sequential - BP-C105 NULL btsp_potentiation free dual
+
+Elevated btsp_potentiation 150 vs 50 (both btsp ON) free dual + wall.
+B1=B2=B3=0.25 B4=0.00 **NULL**. Tripled one-shot potentiation has zero effect; nothing decade-selective to amplify.
