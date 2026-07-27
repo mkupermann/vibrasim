@@ -7683,3 +7683,8 @@ B1=B2=1.0 B3(abs delta)=0.0 **PASS**. Bidirectional residual independent of writ
 
 dream_replay_burst_size 16 vs 8 (dream ON) free dual + wall.
 B1=0.0 B2=0.75 B3=0.25 B4=-0.75 **NULL**. Treatment below control; no free dual unlock.
+
+## 2026-07-27 sequential - BP-C104 NULL corr_plasticity (Hebbian BET-099) free dual
+
+Correlational co-firing bridge plasticity ON (rate=1.0) vs OFF, compartment_boundary=0 (free).
+B1=0.25 B2=0.75 B3=0.50 B4=-0.50 **NULL**. Strongest untried free-chemistry lever; treatment below control. Canonical Hebbian mechanism does not unlock free dual at 0.90 bar.
