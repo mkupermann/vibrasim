@@ -35,4 +35,5 @@ Not C96 btsp_excitability_bias. Not ILW ports. Not engineered compartment. Not d
 
 ## RESULT
 
-*(filled after run)*
+**NULL** (2026-07-27). B1=0.25 B2=0.25 B3=0.25 B4=0.00.
+Elevated BTSP potentiation (150 vs 50) has zero effect — treatment identical to control (delta 0.00). Tripling the one-shot potentiation magnitude neither sharpens nor harms specialisation, because without a decade-selective plateau signal there is nothing selective to amplify. Extends NULL farm C27–C104 → C105.
