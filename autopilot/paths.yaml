@@ -1,0 +1,89 @@
+# Dual-Hypothesis Autopilot Configuration
+# 
+# Path A: Elimination - "Find what's not LLM"
+#   Original mandate: Pre-LLM substrate architectures without transformer mechanisms
+#   Goal: Prove non-statistical-pattern-matching substrates can learn
+#
+# Path B: Differentiation - "Build what LLMs can't do"
+#   New mandate: Brain-style systems with capabilities LLMs lack
+#   Goal: Systems that outperform LLMs on specific dimensions
+
+paths:
+  path_a_elimination:
+    name: "Elimination (Not LLM)"
+    description: |
+      Find substrate architectures that are fundamentally NOT large-language-model
+      family (no attention, no transformers, no embeddings, no BPE).
+      Pre-LLM era mechanisms only.
+    mandate: "Wir forschen solange bis wir was finden was nicht LLM ist"
+    success_criteria:
+      - Substrate passes T0-T9 + output-side bars
+      - Mechanism is provably not statistical pattern matching
+      - No gradient descent / backpropagation
+    queue_prefix: "EA-"  # Elimination Path A
+    state_dir: "~/.eqmod/autopilot/path_a"
+    
+  path_b_differentiation:
+    name: "Differentiation (LLM Advantage)"
+    description: |
+      Build systems with capabilities that LLMs fundamentally cannot match:
+      continual learning, energy efficiency, sensorimotor grounding,
+      unsupervised discovery. Base mechanism may use pattern matching
+      but must add brain-like properties.
+    mandate: "Build what LLMs can't do"
+    success_criteria:
+      - Outperforms LLM baselines on Brain-Advantage benchmarks
+      - Maintains core performance (discrimination, generation)
+      - Demonstrates at least one LLM-impossible capability
+    queue_prefix: "DB-"  # Differentiation Path B
+    state_dir: "~/.eqmod/autopilot/path_b"
+
+# Brain-Advantage Benchmarks (Path B targets)
+brain_advantage_benchmarks:
+  - name: "Continual Learning"
+    description: "100 sequential tasks, measure retention vs. forgetting"
+    metric: "Retention Score"
+    llm_baseline: "~50% (catastrophic forgetting)"
+    target: ">80% retention across all tasks"
+    
+  - name: "Energy Efficiency"
+    description: "Tokens per joule on equivalent tasks"
+    metric: "Efficiency Ratio"
+    llm_baseline: "1.0 (baseline)"
+    target: ">100x improvement"
+    
+  - name: "Distribution Shift Robustness"
+    description: "Train on A, test on B, C, D incrementally"
+    metric: "Accuracy Drop"
+    llm_baseline: ">30% drop on new distributions"
+    target: "<10% drop on any new distribution"
+    
+  - name: "Unsupervised Discovery"
+    description: "Category formation from raw sensory input, no labels"
+    metric: "Discovery Accuracy"
+    llm_baseline: "N/A (requires supervision)"
+    target: ">90% post-hoc classification accuracy"
+    
+  - name: "Sensorimotor Grounding"
+    description: "Embodied agent with closed-loop sensory feedback"
+    metric: "Task Completion Rate"
+    llm_baseline: "0% (no embodiment)"
+    target: ">70% on embodied tasks"
+
+# Autopilot settings
+autopilot:
+  tick_interval_seconds: 60
+  max_runtime_seconds: 3600
+  term_grace_seconds: 3
+  evaluate_timeout_seconds: 600
+  
+  # Balance between paths (percentage of iterations)
+  path_allocation:
+    path_a: 40  # 40% of iterations to elimination
+    path_b: 60  # 60% of iterations to differentiation
+  
+  # When to stop
+  stop_conditions:
+    - "Path A finds a non-LLM substrate that passes all bars"
+    - "Path B achieves >2x LLM baseline on all Brain-Advantage benchmarks"
+    - "12 months elapsed without progress on either path"

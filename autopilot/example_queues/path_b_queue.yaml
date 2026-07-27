@@ -1,0 +1,105 @@
+# Example queue for Path B: Differentiation (LLM Advantage)
+# These items build capabilities that LLMs fundamentally cannot match
+
+items:
+  # Continual Learning benchmark - 10 sequential tasks
+  - id: DB-001
+    hypothesis: |
+      SOM+replay with multi-slot memory will achieve >80% retention
+      across 10 sequential audio classification tasks (EN, WN, pink, EN2,
+      WN2, ...). Each task trains for 1,000 chunks, then moves to next
+      without forgetting. Standard SOM (no replay) will show catastrophic
+      forgetting as baseline.
+    references:
+      - "Kohonen, Self-Organization and Associative Memory, 1982"
+      - "Robins, Catastrophic Forgetting in Connectionist Networks, 1995"
+      - "LOGBOOK BET-012/014 replay mechanism"
+    pytest_target: tests/bet/test_continual_10_tasks.py
+    status: queued
+    attempts: 0
+    max_runtime_seconds: 3600
+    created_at: "2026-07-27T10:00:00"
+    path: path_b_differentiation
+    benchmarks:
+      - continual_learning
+      - distribution_shift_robustness
+    
+  # Energy Efficiency benchmark - compare with LLM baseline
+  - id: DB-002
+    hypothesis: |
+      Spiking SNN (Brian2) on EN-vs-WN classification will achieve
+      >100x better energy efficiency (tokens/joule) than equivalent
+      transformer model. Using estimated transformer energy from
+      literature (Strubell et al. 2019) as baseline.
+    references:
+      - "Strubell et al., Energy and Policy Considerations for Deep Learning, 2019"
+      - "LOGBOOK BET-065 SNN 98% accuracy"
+    pytest_target: tests/bet/test_energy_efficiency.py
+    status: queued
+    attempts: 0
+    max_runtime_seconds: 3600
+    created_at: "2026-07-27T10:00:00"
+    path: path_b_differentiation
+    benchmarks:
+      - energy_efficiency
+    
+  # Unsupervised Discovery - ART on mixed audio
+  - id: DB-003
+    hypothesis: |
+      ART substrate (Grossberg 1987) with vigilance=0.90 on mixed
+      EN/WN/pink audio (no labels, no segmentation) will discover
+      categories that achieve >90% post-hoc classification accuracy.
+      This is genuine unsupervised learning—no labels were provided
+      during training.
+    references:
+      - "Grossberg, Adaptive Resonance Theory, 1987"
+      - "LOGBOOK BET-051 ART 93% unsupervised"
+    pytest_target: tests/bet/test_unsupervised_art.py
+    status: queued
+    attempts: 0
+    max_runtime_seconds: 7200  # 2h for unsupervised training
+    created_at: "2026-07-27T10:00:00"
+    path: path_b_differentiation
+    benchmarks:
+      - unsupervised_discovery
+    
+  # R-STDP with critic-actor (solving BET-067 NULL)
+  - id: DB-004
+    hypothesis: |
+      Implementing Frémaux & Gerstner 2016 critic-actor R-STDP will
+      solve the credit assignment problem (BET-067, BET-071 NULL).
+      Brian2 2-layer SNN with R-STDP should achieve >75% balanced
+      accuracy on EN-vs-WN with class-selective motor pathways.
+    references:
+      - "Frémaux & Gerstner, Reward-Modulated STDP, 2016"
+      - "LOGBOOK BET-067/071 R-STDP NULL findings"
+    pytest_target: tests/bet/test_rstdp_critic_actor.py
+    status: queued
+    attempts: 0
+    max_runtime_seconds: 3600
+    created_at: "2026-07-27T10:00:00"
+    path: path_b_differentiation
+    benchmarks:
+      - agency
+      - closed_loop_sensorimotor
+    
+  # Distribution Shift Robustness - incremental corpus
+  - id: DB-005
+    hypothesis: |
+      Flux substrate trained incrementally on corpora A → B → C → D
+      will maintain >85% accuracy on each corpus. LLM baseline
+      (fine-tuned sequentially) will drop below 60% on later corpora
+      due to catastrophic forgetting. Tests the "lernend" property
+      under distribution shift.
+    references:
+      - "French, Catastrophic Forgetting in Neural Networks, 1999"
+      - "LOGBOOK Flux substrate T3 crystallization"
+    pytest_target: tests/bet/test_distribution_shift.py
+    status: queued
+    attempts: 0
+    max_runtime_seconds: 7200
+    created_at: "2026-07-27T10:00:00"
+    path: path_b_differentiation
+    benchmarks:
+      - distribution_shift_robustness
+      - continual_learning

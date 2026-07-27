@@ -1,0 +1,54 @@
+# Example queue for Path A: Elimination (Not LLM)
+# These items test pre-LLM substrate classes without transformer mechanisms
+
+items:
+  # ART with different vigilance parameters (continuing from BET-046/051)
+  - id: EA-001
+    hypothesis: |
+      ART at vigilance=0.90 will allocate 15-30 cells for 3-class audio,
+      achieving >85% classification accuracy with EN<WN cell count.
+      Previous BET-046 (0.85) allocated only 9 cells; BET-051 (0.95) allocated
+      88 cells but failed the cell-count bar direction. 0.90 is the midpoint.
+    references:
+      - "Grossberg, Adaptive Resonance Theory, 1987"
+      - "LOGBOOK BET-046/051 ART findings"
+    pytest_target: tests/bet/test_art_vigilance_090.py
+    status: queued
+    attempts: 0
+    max_runtime_seconds: 3600
+    created_at: "2026-07-27T10:00:00"
+    path: path_a_elimination
+    
+  # Predictive Coding with longer training
+  - id: EA-002
+    hypothesis: |
+      Predictive Coding (Rao & Ballard 1999) with 50,000 ticks (10x BET-055)
+      will develop class-specific decoders. BET-055 at 5,000 ticks showed
+      KL(D-EN, D-WN) = 0.043 (noise level). Longer training should allow
+      the decoder to differentiate EN vs WN patterns.
+    references:
+      - "Rao & Ballard, Predictive Coding in the Visual Cortex, 1999"
+      - "LOGBOOK BET-055 PC NULL finding"
+    pytest_target: tests/bet/test_predictive_coding_50k.py
+    status: queued
+    attempts: 0
+    max_runtime_seconds: 3600
+    created_at: "2026-07-27T10:00:00"
+    path: path_a_elimination
+    
+  # Developmental SNN minimal scaffolding (retry BET-058 with fixed params)
+  - id: EA-003
+    hypothesis: |
+      Developmental SNN with carefully tuned parameters (BET-058 diagnosed
+      issues: input_scale too low, weight_init too sparse, connectivity too
+      dense). Using goldilocks parameters from literature: input_scale=0.8,
+      hidden_synapse_gain=0.5, weight_init=0.1, connectivity_density=0.1.
+    references:
+      - "Izhikevich, Simple Model of Spiking Neurons, 2003"
+      - "LOGBOOK BET-058 diagnosis"
+    pytest_target: tests/bet/test_dev_snn_goldilocks.py
+    status: queued
+    attempts: 0
+    max_runtime_seconds: 3600
+    created_at: "2026-07-27T10:00:00"
+    path: path_a_elimination
