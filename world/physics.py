@@ -1847,6 +1847,417 @@ def apply_engineered_compartment(world, dt: float) -> None:
         _reflect_at_sphere(world, dt, centre, R, cfg.compartment_mode, box)
 
 
+def apply_midplane_wall(world, dt: float) -> None:
+    """PRIM1-D2: free vibrations confined to half-boxes (midplane + no x-wrap).
+
+    No-op when midplane_wall_enabled is False. Bound nodes untouched.
+    Uses world._s_pos_pre_x from tick (pre-move x) to detect crosses and wraps.
+    """
+    cfg = world.config
+    if not getattr(cfg, "midplane_wall_enabled", False):
+        return
+    alive = world.s_alive
+    if not np.any(alive):
+        return
+    xw = float(getattr(cfg, "midplane_wall_x", 40.0))
+    box = np.asarray(cfg.box_size, dtype=np.float64)
+    L = float(box[0])
+    eps = 1e-6
+    dt = float(dt) if dt != 0 else 1e-9
+    x = world.s_pos[:, 0]
+    vx = world.s_vel[:, 0]
+    pre = getattr(world, "_s_pos_pre_x", None)
+    if pre is None:
+        pre = x - vx * dt
+    pre = np.asarray(pre, dtype=np.float64)
+
+    # Undo periodic wrap on x (teleport left↔right)
+    wrapped = alive & (np.abs(x - pre) > 0.5 * L)
+    if np.any(wrapped):
+        from_left = wrapped & (pre < xw)
+        from_right = wrapped & (pre >= xw)
+        if np.any(from_left):
+            world.s_pos[from_left, 0] = eps
+            world.s_vel[from_left, 0] = np.abs(world.s_vel[from_left, 0])
+        if np.any(from_right):
+            world.s_pos[from_right, 0] = L - eps
+            world.s_vel[from_right, 0] = -np.abs(world.s_vel[from_right, 0])
+        x = world.s_pos[:, 0]
+
+    crossed_lr = alive & (pre < xw) & (x >= xw)
+    crossed_rl = alive & (pre >= xw) & (x < xw)
+    if np.any(crossed_lr):
+        world.s_pos[crossed_lr, 0] = xw - eps
+        world.s_vel[crossed_lr, 0] = -np.abs(world.s_vel[crossed_lr, 0])
+    if np.any(crossed_rl):
+        world.s_pos[crossed_rl, 0] = xw + eps
+        world.s_vel[crossed_rl, 0] = np.abs(world.s_vel[crossed_rl, 0])
+
+    x = world.s_pos[:, 0]
+    hit_lo = alive & (x <= 0.0)
+    hit_hi = alive & (x >= L)
+    if np.any(hit_lo):
+        world.s_pos[hit_lo, 0] = eps
+        world.s_vel[hit_lo, 0] = np.abs(world.s_vel[hit_lo, 0])
+    if np.any(hit_hi):
+        world.s_pos[hit_hi, 0] = L - eps
+        world.s_vel[hit_hi, 0] = -np.abs(world.s_vel[hit_hi, 0])
+
+    # PRIM7: spectral purification — absorb free vibs in the wrong half-band.
+    if getattr(cfg, "midplane_sideband_cull_enabled", False):
+        gate = float(getattr(cfg, "midplane_gate_f_mid", 1581.14))
+        alive2 = world.s_alive
+        x2 = world.s_pos[:, 0]
+        f = world.s_freq
+        wrong_left = alive2 & (x2 < xw) & (f >= gate)
+        wrong_right = alive2 & (x2 >= xw) & (f < gate)
+        if np.any(wrong_left):
+            world.s_alive[wrong_left] = False
+        if np.any(wrong_right):
+            world.s_alive[wrong_right] = False
+        world.n_alive = int(world.s_alive.sum())
+
+
+def apply_charge_latch_decay(world, dt: float) -> None:
+    """PRIM6: optional slow decay of k_latch. No-op if latch off or tau<=0 (hold)."""
+    cfg = world.config
+    if not getattr(cfg, "charge_latch_enabled", False):
+        return
+    if not hasattr(world, "k_latch"):
+        return
+    tau = float(getattr(cfg, "charge_latch_tau", 0.0) or 0.0)
+    if tau <= 0.0 or dt <= 0.0:
+        return  # permanent hold when enabled and tau<=0
+    factor = float(np.exp(-float(dt) / tau))
+    K = world.k_count
+    world.k_latch[:K] *= factor
+
+
+def apply_fire_zero_latch(world) -> None:
+    """PRIM11: after prop, emitters that fired this tick zero nearby k_latch.
+
+    Runs *after* bridge charge prop so XOR-style clear beats same-tick deposits.
+    """
+    cfg = world.config
+    r_zl = float(getattr(cfg, "fire_zero_latch_radius", 0.0) or 0.0)
+    if r_zl <= 0.0 or not hasattr(world, "k_latch"):
+        return
+    K = world.k_count
+    t_now = world.t
+    emitters = []
+    for tf, ai in world.firing_events:
+        if tf != t_now:
+            continue
+        ai = int(ai)
+        if ai < 0 or ai >= K:
+            continue
+        if hasattr(world, "k_zero_latch_emitter") and int(world.k_zero_latch_emitter[ai]) == 0:
+            continue
+        emitters.append(ai)
+    if not emitters:
+        return
+    box = np.asarray(cfg.box_size, dtype=np.float64)
+    r2z = r_zl * r_zl
+    emit_set = set(emitters)
+    for ai in emitters:
+        ap = world.k_pos[ai]
+        for j in range(K):
+            if j in emit_set or not world.k_alive[j] or int(world.k_level[j]) < 4:
+                continue
+            d = world.k_pos[j] - ap
+            d -= box * np.round(d / box)
+            if float(np.dot(d, d)) <= r2z:
+                world.k_latch[j] = 0.0
+
+
+def apply_fire_kill_bridges(world) -> None:
+    """PRIM12: emitters that fired this tick kill bridges near them."""
+    cfg = world.config
+    r_kb = float(getattr(cfg, "fire_kill_bridge_radius", 0.0) or 0.0)
+    if r_kb <= 0.0 or world.b_count == 0:
+        return
+    K = world.k_count
+    t_now = world.t
+    emitters = []
+    for tf, ai in world.firing_events:
+        if tf != t_now:
+            continue
+        ai = int(ai)
+        if ai < 0 or ai >= K:
+            continue
+        if hasattr(world, "k_kill_bridge_emitter") and int(world.k_kill_bridge_emitter[ai]) == 0:
+            continue
+        emitters.append(ai)
+    if not emitters:
+        return
+    box = np.asarray(cfg.box_size, dtype=np.float64)
+    r2k = r_kb * r_kb
+    for ai in emitters:
+        ap = world.k_pos[ai]
+        for b in range(world.b_count):
+            if not world.b_alive[b]:
+                continue
+            i, j = int(world.b_atom_i[b]), int(world.b_atom_j[b])
+            for node in (i, j):
+                if node < 0 or node >= K or not world.k_alive[node]:
+                    continue
+                d = world.k_pos[node] - ap
+                d -= box * np.round(d / box)
+                if float(np.dot(d, d)) <= r2k:
+                    world.b_alive[b] = False
+                    break
+
+
+def apply_fire_weaken_bridges(world) -> None:
+    """PRIM13: emitters scale down strength of nearby alive bridges (reversible)."""
+    cfg = world.config
+    r_wb = float(getattr(cfg, "fire_weaken_bridge_radius", 0.0) or 0.0)
+    frac = float(getattr(cfg, "fire_weaken_bridge_frac", 1.0) or 0.0)
+    if r_wb <= 0.0 or frac <= 0.0 or world.b_count == 0:
+        return
+    K = world.k_count
+    t_now = world.t
+    emitters = []
+    for tf, ai in world.firing_events:
+        if tf != t_now:
+            continue
+        ai = int(ai)
+        if ai < 0 or ai >= K:
+            continue
+        if hasattr(world, "k_weaken_bridge_emitter") and int(world.k_weaken_bridge_emitter[ai]) == 0:
+            continue
+        emitters.append(ai)
+    if not emitters:
+        return
+    box = np.asarray(cfg.box_size, dtype=np.float64)
+    r2w = r_wb * r_wb
+    scale = max(0.0, 1.0 - frac)
+    for ai in emitters:
+        ap = world.k_pos[ai]
+        for b in range(world.b_count):
+            if not world.b_alive[b]:
+                continue
+            i, j = int(world.b_atom_i[b]), int(world.b_atom_j[b])
+            for node in (i, j):
+                if node < 0 or node >= K or not world.k_alive[node]:
+                    continue
+                d = world.k_pos[node] - ap
+                d -= box * np.round(d / box)
+                if float(np.dot(d, d)) <= r2w:
+                    world.b_strength[b] = float(world.b_strength[b]) * scale
+                    break
+
+
+def apply_ilw_strength_decay(world, dt: float) -> int:
+    """PRIM3: leak level≥4 k_strength toward 1.0 when ilw_strength_decay_tau > 0.
+
+    Does not kill atoms (L4 identity permanence). Returns number of nodes touched.
+    No-op when tau <= 0.
+    """
+    cfg = world.config
+    tau = float(getattr(cfg, "ilw_strength_decay_tau", 0.0) or 0.0)
+    if tau <= 0.0 or dt <= 0.0:
+        return 0
+    factor = float(np.exp(-float(dt) / tau))
+    K = world.k_count
+    n = 0
+    for i in range(K):
+        if not world.k_alive[i]:
+            continue
+        if int(world.k_level[i]) < 4:
+            continue
+        s = float(world.k_strength[i])
+        if s <= 1.0:
+            continue
+        world.k_strength[i] = 1.0 + (s - 1.0) * factor
+        n += 1
+    return n
+
+
+def apply_ilw_port_event(world, port_pos, rng=None, seed_freq: float = 3000.0) -> dict:
+    """PRIM2: internal local write at *port_pos* — no free-vibration injection.
+
+    Returns stats dict: {mode, atom_idx, mol_idx, delta_strength}.
+    Engineered write; named as such. No-op if ilw_enabled is False.
+    *seed_freq* used when allocating a new level-4 atom (C5 dual-port bands).
+
+    PRIM4 (ilw_multislot_enabled): if no level≥4 in radius has relative freq
+    distance ≤ ilw_multislot_rel_freq to seed_freq, allocate a new L4 instead of
+    collapsing onto a mismatched band (multi-item port buffer).
+    """
+    cfg = world.config
+    out = {"mode": "none", "atom_idx": -1, "mol_idx": -1, "delta_strength": 0.0}
+    if not getattr(cfg, "ilw_enabled", False):
+        return out
+    port = np.asarray(port_pos, dtype=np.float64)
+    R = float(getattr(cfg, "ilw_radius", 8.0))
+    dS = float(getattr(cfg, "ilw_delta_strength", 0.5))
+    box = np.asarray(cfg.box_size, dtype=np.float64)
+    seed = float(seed_freq)
+    multislot = bool(getattr(cfg, "ilw_multislot_enabled", False))
+    rel_thr = float(getattr(cfg, "ilw_multislot_rel_freq", 0.35))
+    K = world.k_count
+    best_m, best_d2 = -1, R * R
+    best_a, best_ad2 = -1, R * R
+    # PRIM4: best same-band targets (may differ from nearest spatial)
+    best_m_band, best_m_band_d2 = -1, R * R
+    best_a_band, best_a_band_d2 = -1, R * R
+    for i in range(K):
+        if not world.k_alive[i]:
+            continue
+        d = world.k_pos[i] - port
+        d -= box * np.round(d / box)
+        d2 = float(np.dot(d, d))
+        if d2 > R * R:
+            continue
+        lvl = int(world.k_level[i])
+        f = float(world.k_freq[i])
+        rel = abs(f - seed) / max(abs(seed), abs(f), 1.0)
+        if lvl >= 5:
+            if d2 <= best_d2:
+                best_d2 = d2
+                best_m = i
+            if rel <= rel_thr and d2 <= best_m_band_d2:
+                best_m_band_d2 = d2
+                best_m_band = i
+        if lvl == 4:
+            if d2 <= best_ad2:
+                best_ad2 = d2
+                best_a = i
+            if rel <= rel_thr and d2 <= best_a_band_d2:
+                best_a_band_d2 = d2
+                best_a_band = i
+    if multislot:
+        # Prefer same-band mol, then same-band atom; else seed new slot.
+        if best_m_band >= 0:
+            world.k_strength[best_m_band] = float(world.k_strength[best_m_band]) + dS
+            world.k_freq[best_m_band] = 0.9 * float(world.k_freq[best_m_band]) + 0.1 * seed
+            out.update(mode="strengthen_mol", mol_idx=best_m_band, delta_strength=dS)
+            return out
+        if best_a_band >= 0:
+            world.k_strength[best_a_band] = float(world.k_strength[best_a_band]) + dS
+            world.k_freq[best_a_band] = 0.85 * float(world.k_freq[best_a_band]) + 0.15 * seed
+            out.update(mode="strengthen_atom", atom_idx=best_a_band, delta_strength=dS)
+            return out
+        # new slot even if other bands present
+        idx = world.allocate_node(
+            pos=port.copy(),
+            freq=seed,
+            pol=True,
+            level=4,
+            constituents=np.zeros(0, dtype=np.int32),
+            comp_kind=1,
+        )
+        if idx >= 0:
+            world.k_strength[idx] = 1.0 + dS
+            out.update(mode="seed_atom_slot", atom_idx=idx, delta_strength=dS)
+        return out
+    # --- legacy single-slot path (PRIM2) ---
+    if best_m >= 0:
+        world.k_strength[best_m] = float(world.k_strength[best_m]) + dS
+        world.k_freq[best_m] = 0.9 * float(world.k_freq[best_m]) + 0.1 * seed
+        out.update(mode="strengthen_mol", mol_idx=best_m, delta_strength=dS)
+        return out
+    if best_a >= 0:
+        world.k_strength[best_a] = float(world.k_strength[best_a]) + dS
+        world.k_freq[best_a] = 0.85 * float(world.k_freq[best_a]) + 0.15 * seed
+        out.update(mode="strengthen_atom", atom_idx=best_a, delta_strength=dS)
+        return out
+    idx = world.allocate_node(
+        pos=port.copy(),
+        freq=seed,
+        pol=True,
+        level=4,
+        constituents=np.zeros(0, dtype=np.int32),
+        comp_kind=1,
+    )
+    if idx >= 0:
+        world.k_strength[idx] = 1.0 + dS
+        out.update(mode="seed_atom", atom_idx=idx, delta_strength=dS)
+    return out
+
+
+def _ensure_bridge(world, i: int, j: int, delta: float = 1.0) -> int:
+    """Create or strengthen bridge between atoms i,j. Returns bridge index or -1."""
+    if i < 0 or j < 0 or i == j:
+        return -1
+    a, b = (i, j) if i < j else (j, i)
+    for bi in range(world.b_count):
+        if not world.b_alive[bi]:
+            continue
+        x, y = int(world.b_atom_i[bi]), int(world.b_atom_j[bi])
+        if (min(x, y), max(x, y)) == (a, b):
+            world.b_strength[bi] = float(world.b_strength[bi]) + float(delta)
+            return bi
+    bi = world.b_count
+    if bi >= world.b_alive.shape[0]:
+        return -1
+    world.b_alive[bi] = True
+    world.b_atom_i[bi] = i
+    world.b_atom_j[bi] = j
+    world.b_strength[bi] = float(delta)
+    world.b_count += 1
+    if hasattr(world, "k_bond_count"):
+        world.k_bond_count[i] = int(world.k_bond_count[i]) + 1
+        world.k_bond_count[j] = int(world.k_bond_count[j]) + 1
+    return bi
+
+
+def _kill_other_bridges_from(world, atom: int, keep_partner: int) -> int:
+    """PRIM8: kill alive bridges incident on *atom* except the one to keep_partner."""
+    n = 0
+    for bi in range(world.b_count):
+        if not world.b_alive[bi]:
+            continue
+        x, y = int(world.b_atom_i[bi]), int(world.b_atom_j[bi])
+        if atom not in (x, y):
+            continue
+        other = y if x == atom else x
+        if other == keep_partner:
+            continue
+        world.b_alive[bi] = False
+        if hasattr(world, "k_bond_count"):
+            if world.k_alive[x]:
+                world.k_bond_count[x] = max(0, int(world.k_bond_count[x]) - 1)
+            if world.k_alive[y]:
+                world.k_bond_count[y] = max(0, int(world.k_bond_count[y]) - 1)
+        n += 1
+    return n
+
+
+def apply_ilw_pair_write(world, port_L, port_R, seed_L: float, seed_R: float, rng=None) -> dict:
+    """PRIM5: dual ILW on L and R; optionally exclusive bridge between written slots.
+
+    PRIM8: if ilw_pair_replace_enabled, drop other bridges from each endpoint.
+    Returns {L, R, bridge, mode_L, mode_R}. No-op pieces if ilw disabled.
+    """
+    cfg = world.config
+    out_L = apply_ilw_port_event(world, port_L, rng, seed_freq=float(seed_L))
+    out_R = apply_ilw_port_event(world, port_R, rng, seed_freq=float(seed_R))
+    i = int(out_L.get("atom_idx", -1))
+    if i < 0:
+        i = int(out_L.get("mol_idx", -1))
+    j = int(out_R.get("atom_idx", -1))
+    if j < 0:
+        j = int(out_R.get("mol_idx", -1))
+    b = -1
+    killed = 0
+    if getattr(cfg, "ilw_pair_link_enabled", False) and i >= 0 and j >= 0:
+        d = float(getattr(cfg, "ilw_pair_link_delta", 1.0))
+        b = _ensure_bridge(world, i, j, delta=d)
+        if getattr(cfg, "ilw_pair_replace_enabled", False) and b >= 0:
+            killed += _kill_other_bridges_from(world, i, j)
+            killed += _kill_other_bridges_from(world, j, i)
+    return {
+        "L": out_L,
+        "R": out_R,
+        "atom_L": i,
+        "atom_R": j,
+        "bridge": b,
+        "killed_bridges": killed,
+    }
+
+
 def apply_scale_repulsion(world, dt: float) -> None:
     """§4.6 scale-separation repulsion.
 
@@ -2010,8 +2421,14 @@ def neuron_dynamics(world, dt: float) -> None:
     # the threshold check, so a strong bridge can drive this-tick firing.
     synaptic_transmission(world, dt)
 
-    # 3. Fire: any atom with charge ≥ theta_fire and not refractory emits.
-    can_fire = (world.k_charge[atom_indices] >= cfg.theta_fire) & (
+    # 3. Fire: any atom with charge ≥ theta and not refractory emits.
+    # PRIM9: k_theta_fire[i] > 0 overrides cfg.theta_fire for that node.
+    thr = np.full(len(atom_indices), float(cfg.theta_fire), dtype=np.float64)
+    if hasattr(world, "k_theta_fire"):
+        custom = world.k_theta_fire[atom_indices]
+        use = custom > 0
+        thr[use] = custom[use]
+    can_fire = (world.k_charge[atom_indices] >= thr) & (
         world.t >= world.k_refractory_until[atom_indices]
     )
     # G12: firing-eligibility gating during training. When a pattern is
@@ -2087,6 +2504,25 @@ def neuron_dynamics(world, dt: float) -> None:
         world.k_charge[ai] = 0.0
         world.k_refractory_until[ai] = world.t + cfg.t_refractory
         world.firing_events.append((float(world.t), int(ai)))
+
+    # PRIM10: lateral charge inhibition around firers (soft competition).
+    r_inh = float(getattr(cfg, "fire_inhibit_radius", 0.0) or 0.0)
+    frac_inh = float(getattr(cfg, "fire_inhibit_frac", 0.5) or 0.0)
+    if r_inh > 0.0 and frac_inh > 0.0 and len(firing_atoms) > 0:
+        box = np.asarray(cfg.box_size, dtype=np.float64)
+        r2i = r_inh * r_inh
+        scale = max(0.0, 1.0 - frac_inh)
+        fire_set = set(int(x) for x in firing_atoms)
+        K = world.k_count
+        for ai in firing_atoms:
+            ap = world.k_pos[int(ai)]
+            for j in range(K):
+                if j in fire_set or not world.k_alive[j] or int(world.k_level[j]) < 4:
+                    continue
+                d = world.k_pos[j] - ap
+                d -= box * np.round(d / box)
+                if float(np.dot(d, d)) <= r2i:
+                    world.k_charge[j] *= scale
 
     # R2 strengthening: every level-5+ molecule within r_strengthen of any
     # firing atom on this tick gets strength += dt.
@@ -2343,7 +2779,13 @@ def tick(world, dt: float) -> None:
     # END of the previous tick and the NEXT tick's move_vibrations
     # processes all of them. Default cap = 0 → no-op for legacy worlds.
     cull_excess_vibrations(world)
+    # PRIM1-D2 needs pre-move x to detect midplane cross and periodic wrap.
+    if getattr(world.config, "midplane_wall_enabled", False) and world.n_alive > 0:
+        world._s_pos_pre_x = world.s_pos[:, 0].copy()
+    else:
+        world._s_pos_pre_x = None
     move_vibrations(world.s_pos, world.s_vel, world.s_alive, box, dt)
+    apply_midplane_wall(world, dt)  # PRIM1-D2 — free-vib midplane reflect (no-op unless enabled)
     apply_membrane_channel(world, dt)  # G31 — selective-permeability barrier (no-op when membrane_channel_k=0)
     apply_engineered_compartment(world, dt)  # G33 — engineered port wall (no-op when compartment_k=0)
     apply_scale_repulsion(world, dt)
@@ -2374,6 +2816,7 @@ def tick(world, dt: float) -> None:
     apply_bond_turnover(world, dt)      # G53 — spontaneous bond break (fluid membrane); no-op when bond_turnover_rate=0
     decay_unstable_nodes(world, dt)
     decay_high_level_nodes(world, dt)   # NEW (R2)
+    apply_ilw_strength_decay(world, dt)  # PRIM3 — L4 strength leak (no-op unless tau>0)
     ambient_regeneration(world, dt)
     # G15: dream-state replay seeding. Must run BEFORE neuron_dynamics so
     # injected charge triggers firings within the same tick. No-op when
@@ -2386,6 +2829,10 @@ def tick(world, dt: float) -> None:
     from world.bridges import apply_correlation_plasticity, apply_bridge_charge_propagation
     apply_correlation_plasticity(world, dt)  # BET-099 — firing-coincidence bridge plasticity (no-op when rate=0)
     apply_bridge_charge_propagation(world, dt)  # BET-105 — non-broadcast write along bridges (no-op when rate=0)
+    apply_fire_zero_latch(world)  # PRIM11 — clear latch after prop (XOR inhibit)
+    apply_fire_kill_bridges(world)  # PRIM12 — structural cut after fire
+    apply_fire_weaken_bridges(world)  # PRIM13 — soft reversible bridge weaken
+    apply_charge_latch_decay(world, dt)  # PRIM6 — latched prop mark (no-op unless latch on)
     apply_btsp(world, dt)          # NEW (G14) — second-scale eligibility-trace plasticity
     # G16: self-aware substrate — must run after apply_btsp so
     # eligibility traces and firings reflect this tick's reality.

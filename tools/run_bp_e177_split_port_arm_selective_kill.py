@@ -1,0 +1,138 @@
+"""BP-E177 split-port arm-selective hard kill c0; c1 survives. Headless."""
+from __future__ import annotations
+import argparse, json, math, sys
+from pathlib import Path
+import numpy as np
+_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(_ROOT))
+from world.config import WorldConfig
+from world.physics import apply_ilw_pair_write, tick
+from world.state import World
+
+SEEDS, TRIALS = (4701, 4711), 8
+N_TRAIN, N_WRITE, T_PROP = 12, 12, 80
+MID = 40.0
+L0 = np.array([20., 15., 25.]); R0 = np.array([60., 15., 25.])
+L1 = np.array([20., 35., 25.]); R1 = np.array([60., 35., 25.])
+F_LO, F_HI = 500.0, 5000.0
+NEAR = 7.0
+
+def cfg(seed):
+    return WorldConfig(
+        n_initial_vibrations=0, box_size=(80.,50.,50.), n_vibrations_max=2048, n_nodes_max=2048,
+        rng_seed=seed, r_1=5., r_2=28., freq_tolerance=0.03, pair_decay_time=60., triad_decay_time=600.,
+        lambda_gen=0., lambda_dec=0., speed_min=0., speed_max=0.,
+        midplane_wall_enabled=True, midplane_wall_x=MID,
+        ilw_enabled=True, ilw_radius=6., ilw_delta_strength=0.5, atom_valence=0,
+        ilw_multislot_enabled=True,
+        ilw_pair_link_enabled=True, ilw_pair_link_delta=1.0, ilw_pair_replace_enabled=False,
+        neuron_dynamics_enabled=True, theta_fire=2., t_refractory=0.02, n_emit=0,
+        bridge_charge_prop_rate=2., bridge_prop_min_strength=0.,
+        charge_latch_enabled=True, charge_latch_tau=0.,
+        fire_kill_bridge_radius=10.0,
+    )
+
+def idle(w, n):
+    dt = float(w.config.dt)
+    for _ in range(n):
+        tick(w, dt); w.t += dt
+
+def train_both(w, rng):
+    for _ in range(N_TRAIN):
+        for __ in range(N_WRITE):
+            apply_ilw_pair_write(w, L0, R0, F_LO, F_HI, rng)
+        idle(w, 3)
+    for _ in range(N_TRAIN):
+        for __ in range(N_WRITE):
+            apply_ilw_pair_write(w, L1, R1, F_HI, F_LO, rng)
+        idle(w, 3)
+
+def clear_state(w):
+    w.k_charge[:] = 0
+    if hasattr(w, "k_latch"):
+        w.k_latch[:] = 0
+
+def fire_near(w, pos, n=T_PROP):
+    thr = float(w.config.theta_fire)
+    dt = float(w.config.dt)
+    for t in range(n):
+        if t % 6 == 0:
+            for i in range(w.k_count):
+                if w.k_alive[i] and int(w.k_level[i]) >= 4 and float(np.linalg.norm(w.k_pos[i] - pos)) <= NEAR:
+                    w.k_charge[i] = thr + 5.
+        tick(w, dt); w.t += dt
+
+def peak_near(w, pos):
+    m = 0.0
+    for i in range(w.k_count):
+        if w.k_alive[i] and int(w.k_level[i]) >= 4 and float(np.linalg.norm(w.k_pos[i] - pos)) <= NEAR:
+            lat = float(w.k_latch[i]) if hasattr(w, "k_latch") else float(w.k_charge[i])
+            m = max(m, lat)
+    return m
+
+def select_c0(w):
+    p0, p1 = peak_near(w, R0), peak_near(w, R1)
+    return p0 >= 1.0 and p0 > p1
+
+def select_c1(w):
+    p0, p1 = peak_near(w, R0), peak_near(w, R1)
+    return p1 >= 1.0 and p1 > p0
+
+def hard_cut_at(w, pos):
+    if hasattr(w, "k_kill_bridge_emitter"):
+        w.k_kill_bridge_emitter[:] = 0
+    for i in range(w.k_count):
+        if w.k_alive[i] and int(w.k_level[i]) >= 4 and float(np.linalg.norm(w.k_pos[i] - pos)) <= 6.0:
+            w.k_kill_bridge_emitter[i] = 1
+    thr = float(w.config.theta_fire)
+    dt = float(w.config.dt)
+    for t in range(36):
+        if t % 5 == 0:
+            for i in range(w.k_count):
+                if w.k_alive[i] and int(w.k_level[i]) >= 4 and float(np.linalg.norm(w.k_pos[i] - pos)) <= 7:
+                    w.k_charge[i] = thr + 5.
+        tick(w, dt); w.t += dt
+    if hasattr(w, "k_kill_bridge_emitter"):
+        w.k_kill_bridge_emitter[:] = 0
+
+def main(argv=None):
+    p = argparse.ArgumentParser(); p.add_argument("--smoke", action="store_true")
+    args = p.parse_args(argv)
+    seeds, trials = ((4701,), 2) if args.smoke else (SEEDS, TRIALS)
+    print(f"BP-E177 start smoke={args.smoke}", flush=True)
+    b1s, b2s, b3s = [], [], []
+    for seed in seeds:
+        for ti in range(trials):
+            rng = np.random.default_rng(seed * 3801 + ti * 107)
+            w = World(cfg(seed))
+            train_both(w, rng)
+            clear_state(w)
+            fire_near(w, L0)
+            b1s.append(select_c0(w))
+            hard_cut_at(w, R0)
+            idle(w, 10)
+            clear_state(w)
+            fire_near(w, L0)
+            b2s.append(not select_c0(w))
+            clear_state(w)
+            fire_near(w, L1)
+            b3s.append(select_c1(w))
+    a1, a2, a3 = map(float, (np.mean(b1s), np.mean(b2s), np.mean(b3s)))
+    p1, p2, p3 = a1 >= 0.90, a2 >= 0.70, a3 >= 0.80
+    verdict = "PASS" if all([p1, p2, p3]) else "NULL"
+    result = {"id": "BP-E177", "bars": {
+        "B1_pre_c0_select": {"value": a1, "threshold": 0.90, "pass": p1},
+        "B2_post_R0_kill_c0_fail": {"value": a2, "threshold": 0.70, "pass": p2},
+        "B3_c1_survives": {"value": a3, "threshold": 0.80, "pass": p3},
+    }, "verdict": verdict}
+    out = Path.home() / ".eqmod" / "bet" / "BP-E177"
+    out.mkdir(parents=True, exist_ok=True)
+    path = out / ("result_smoke.json" if args.smoke else "result.json")
+    path.write_text(json.dumps(result, indent=2), encoding="utf-8")
+    for k, v in result["bars"].items():
+        print(f"  {k}: {v['value']:.4f} thr={v['threshold']} pass={v['pass']}", flush=True)
+    print(f"--- VERDICT ---\nBP-E177: {verdict}\nwrote {path}\nDONE", flush=True)
+    return 0 if verdict == "PASS" else 1
+
+if __name__ == "__main__":
+    raise SystemExit(main())

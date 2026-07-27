@@ -594,6 +594,16 @@ def apply_bridge_charge_propagation(world, dt: float) -> None:
     # stimulus vibrations + correlation potentiation; propagation only sustains
     # what has already been written. 0 = ungated (BET-105/106 behaviour).
     prop_min = getattr(cfg, 'bridge_prop_min_strength', 0.0)
+    latch_on = bool(getattr(cfg, "charge_latch_enabled", False))
+    coin = bool(getattr(cfg, "coincidence_and_enabled", False))
+    coin_sources = {}
+    coin_deps = {}
+
+    def _gated(tgt: int) -> bool:
+        if not coin or not hasattr(world, "k_coincidence_gate"):
+            return False
+        return int(world.k_coincidence_gate[tgt]) != 0
+
     for b in range(world.b_count):
         if not world.b_alive[b]:
             continue
@@ -606,9 +616,31 @@ def apply_bridge_charge_propagation(world, dt: float) -> None:
         if bx > 0 and ((world.k_pos[i][0] < bx) != (world.k_pos[j][0] < bx)):
             continue  # cross-compartment bridge is cut — no propagation across
         if i in firing and world.k_alive[j]:
-            world.k_charge[j] += gain * s
+            dep = gain * s
+            if _gated(j):
+                coin_sources.setdefault(j, set()).add(i)
+                coin_deps[j] = coin_deps.get(j, 0.0) + dep
+            else:
+                world.k_charge[j] += dep
+                if latch_on and hasattr(world, "k_latch"):
+                    world.k_latch[j] = float(world.k_latch[j]) + dep
         if j in firing and world.k_alive[i]:
-            world.k_charge[i] += gain * s
+            dep = gain * s
+            if _gated(i):
+                coin_sources.setdefault(i, set()).add(j)
+                coin_deps[i] = coin_deps.get(i, 0.0) + dep
+            else:
+                world.k_charge[i] += dep
+                if latch_on and hasattr(world, "k_latch"):
+                    world.k_latch[i] = float(world.k_latch[i]) + dep
+    # PRIM9: coincidence-gated targets need ≥2 distinct firers same tick
+    for tgt, srcs in coin_sources.items():
+        if len(srcs) < 2:
+            continue
+        dep = float(coin_deps.get(tgt, 0.0))
+        world.k_charge[tgt] += dep
+        if latch_on and hasattr(world, "k_latch"):
+            world.k_latch[tgt] = float(world.k_latch[tgt]) + dep
 
 
 def apply_structural_anchoring(world, dt: float) -> None:

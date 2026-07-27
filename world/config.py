@@ -96,6 +96,43 @@ class WorldConfig:
     compartment_radius: float = 0.0       # Sphere radius; outbound free vibrations are reflected back inside.
     compartment_mode: str = "clamp"       # 'clamp' (G33, snap to R*0.999) or 'soft' (G35, revert the overshoot only — avoids a dense boundary layer that suppresses the write).
     compartments: tuple = ()              # G40: multiple engineered compartments, each (cx,cy,cz,R). When set, overrides the single compartment_centre/radius.
+    # PRIM1-D2: reflecting midplane slab (free vibrations cannot cross x = midplane_wall_x).
+    midplane_wall_enabled: bool = False
+    midplane_wall_x: float = 40.0
+    # PRIM2: internal local write (no free-vibration inject). Defaults OFF.
+    ilw_enabled: bool = False
+    ilw_radius: float = 8.0
+    ilw_delta_strength: float = 0.5
+    # PRIM3: exponential leak of level≥4 k_strength toward 1.0.
+    # 0.0 = off (legacy). Units: seconds (tau in s ← 1+(s-1)*exp(-dt/tau)).
+    ilw_strength_decay_tau: float = 0.0
+    # PRIM4: multi-slot ILW — allocate new L4 when nearest band differs.
+    ilw_multislot_enabled: bool = False
+    ilw_multislot_rel_freq: float = 0.35
+    # PRIM5: exclusive bridge between the two atoms just dual-written.
+    ilw_pair_link_enabled: bool = False
+    ilw_pair_link_delta: float = 1.0
+    # PRIM8: kill other bridges from each endpoint when forming a pair link.
+    ilw_pair_replace_enabled: bool = False
+    # PRIM6: latched activity from bridge charge prop (separate from membrane).
+    # Default OFF. tau<=0 with enabled = no decay; tau>0 = exp decay seconds.
+    charge_latch_enabled: bool = False
+    charge_latch_tau: float = 0.0
+    # PRIM7: kill free vibs on wrong side of midplane by frequency band.
+    midplane_sideband_cull_enabled: bool = False
+    midplane_gate_f_mid: float = 1581.1388300841897  # sqrt(500*5000)
+    # PRIM9: bridge prop only if ≥2 distinct firers hit same target this tick.
+    coincidence_and_enabled: bool = False
+    # PRIM10: on fire, scale down charge of other L4 within radius (0=off).
+    fire_inhibit_radius: float = 0.0
+    fire_inhibit_frac: float = 0.5
+    # PRIM11: on fire, zero k_latch of other L4 within radius (0=off).
+    fire_zero_latch_radius: float = 0.0
+    # PRIM12: on fire, kill bridges touching nodes within radius of emitter (0=off).
+    fire_kill_bridge_radius: float = 0.0
+    # PRIM13: on fire, scale b_strength of nearby bridges (0 radius=off).
+    fire_weaken_bridge_radius: float = 0.0
+    fire_weaken_bridge_frac: float = 1.0
     flux_plasticity_rate: float = 0.0     # Bridge strengthening rate from vibration flux (0=off). Plasticity from physics.
     flux_threshold: float = 2.0           # Flux above this potentiates a bridge, below depresses.
     flux_decay: float = 0.05              # Strength decay per second for low-flux bridges.

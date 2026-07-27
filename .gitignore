@@ -87,3 +87,5 @@ autopilot_output.txt
 # large re-downloadable datasets (removed as ballast 2026-06-06)
 data/FashionMNIST/
 data/MNIST/
+# k2a ingested memories
+.k2a/

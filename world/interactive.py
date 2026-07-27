@@ -116,12 +116,18 @@ class InteractiveViewer:
     # ------------------------------------------------------------------
     def run(self) -> int:
         import pyvista as pv
+        from world.gpu_viz import apply_plotter_gpu, configure_pyvista_gpu
 
+        configure_pyvista_gpu(0, True)
         bx, by, bz = self.config.box_size
-        pl = pv.Plotter(title="EQMOD — interactive substrate viewer")
+        pl = pv.Plotter(title="EQMOD — interactive substrate viewer", window_size=(1600, 1000))
         self._pl = pl
         pl.set_background("black")
-        pl.enable_anti_aliasing("msaa")
+        # Safe OpenGL — do not enable MSAA by default (AMD shader crashes)
+        try:
+            pl.disable_anti_aliasing()
+        except Exception:
+            pass
 
         # Static bounding box of the periodic substrate
         box = pv.Box(bounds=(0, bx, 0, by, 0, bz))
@@ -189,6 +195,7 @@ class InteractiveViewer:
 
         pl.camera_position = "iso"
         pl.show(interactive_update=True, auto_close=False)
+        apply_plotter_gpu(pl)
 
         # Main loop — single thread, no race conditions
         try:
@@ -236,37 +243,47 @@ class InteractiveViewer:
     # Geometry rebuilds (cheap, per frame)
     # ------------------------------------------------------------------
     def _rebuild_vibrations(self):
-        import pyvista as pv
+        """Free vibrations as continuous layered field (hidden dimensions)."""
         pl = self._pl
-        # Remove old
+        # remove previous field layers + legacy vib actor
         if self._vib_actor is not None:
             try:
                 pl.remove_actor(self._vib_actor, render=False)
             except Exception:
                 pass
             self._vib_actor = None
+        for i in range(8):
+            try:
+                pl.remove_actor(f"field_layer_{i}", render=False)
+            except Exception:
+                pass
+        try:
+            pl.remove_actor("vib_backbone", render=False)
+        except Exception:
+            pass
         if not self.show_vibrations:
             return
         w = self.world
-        if w.n_alive <= 0:
+        try:
+            from world.bet_live import build_vibration_field_layers
+            layers = build_vibration_field_layers(w, n_bands=4)
+        except Exception:
             return
-        mask = w.s_alive
-        pts = w.s_pos[mask]
-        if len(pts) == 0:
-            return
-        cloud = pv.PolyData(pts.copy())
-        pol = w.s_pol[mask]
-        colors = np.where(
-            pol[:, None],
-            np.array(COLOR_VIBR_EVEN),
-            np.array(COLOR_VIBR_ODD),
-        )
-        cloud["colors"] = (colors * 255).astype(np.uint8)
-        self._vib_actor = pl.add_mesh(
-            cloud, scalars="colors", rgb=True,
-            style="points", point_size=6, render_points_as_spheres=True,
-            name="vibrations",
-        )
+        for i, (grid, col, opacity) in enumerate(layers):
+            try:
+                actor = pl.add_mesh(
+                    grid,
+                    color=tuple(float(c) for c in col),
+                    opacity=opacity,
+                    smooth_shading=False,
+                    lighting=False,
+                    name=f"field_layer_{i}",
+                    show_edges=False,
+                )
+                if self._vib_actor is None:
+                    self._vib_actor = actor
+            except Exception:
+                pass
 
     def _rebuild_nodes(self):
         import pyvista as pv
@@ -310,8 +327,8 @@ class InteractiveViewer:
         glyphs = pc.glyph(geom=unit_sphere, scale="radius", orient=False)
         # The glyph operation broadcasts point arrays; colors carry through.
         self._node_actor = pl.add_mesh(
-            glyphs, scalars="colors", rgb=True, smooth_shading=True,
-            name="nodes",
+            glyphs, scalars="colors", rgb=True, smooth_shading=False,
+            lighting=False, name="nodes",
         )
 
         # Picking: bind picker to the original point cloud (not the glyph mesh)

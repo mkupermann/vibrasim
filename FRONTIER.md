@@ -1,5 +1,6 @@
-# FRONTIER — current state of the EQMOD/vibrasim substrate programme
+# FRONTIER — sharp discipline
 
+<<<<<<< HEAD
 **One-screen pointer so a new session knows where the frontier is WITHOUT re-deriving settled work.**
 Authoritative detail lives in `docs/amendments/FINDINGS_SUMMARY.md` (+ its addenda), `LOGBOOK.md` (append-only
 diary; newest at the bottom), and the per-experiment `docs/amendments/g*.md`. This file is a map, not a source
@@ -22,19 +23,29 @@ of truth — if it disagrees with those, they win. Last updated: 2026-06-12.
 | Communication | **POSITIVE, scoped** | Co-located real-time spatial codec; needs active reset between symbols; NOT transport over distance (G97–G105). |
 | Transport | **scoped** | Free carriers don't cross distance; continuously-driven matter does, slowly (G109–G112). |
 | Computation / optimization | **EQMOD substrate NEGATIVE; adjacent CIM hardware competitive (2026-06-05)** | G145's "8/8" rested on a sign-bugged greedy; the NAIVE oscillator ties correct greedy & loses to SA (G146–G149). But the textbook AHC-CIM (Leleu 2019) BEATS correct greedy & is in SA's league (G150), robust across both Gaussian & ±1/SK families (G151) and to n=600 (G152) — a real but *established, adjacent* physical-annealer result, NOT EQMOD. At **matched budget classical SA is marginally BEST** (~1.7% ahead, 8/8; G153), and far simpler. EQMOD's OWN dynamics still can't optimize (G135). Ordering: SA > CIM-AHC > correct-greedy. |
+=======
+**docs/DISCIPLINE_SHARP.md** · 2026-07-19 after **BP-C5**
 
-## Programme-wide honest conclusion
-The physics is **decorative everywhere tested**; standard classical methods carry every win. The deliverable was
-never the simulation succeeding — it is the rigorous, self-correcting **process** (pre-registration, matched
-negative controls, retracting over-claims like the G145 sign-bug). See `README.md` lines ~37–67 for Michael's
-own framing of this as the honest result.
+## BP-C5 result: **NULL** (informative)
 
-## If you are an autonomous session deciding the next step
-1. The substrate's positive threads (matter-memory, co-located codec) are SCOPED and characterized; the negative
-   threads (activity-memory, computation) are closed after exhaustive testing. There is no obvious open positive.
-2. Before launching a "new" experiment, confirm it is not already in `docs/amendments/` (G30–G149). Re-derivation
-   wastes compute (it happened this session).
-3. Genuinely valuable moves now are consolidation, reproducibility/process infrastructure, or a *clearly* novel
-   question — not churn. NULL is a valid finding; manufactured busywork is not. Honor pre-registration
-   discipline (bars in `docs/amendments/<name>.md` BEFORE the run; no post-hoc threshold tuning).
-</content>
+| Arm | Specialisation | Pop | χ |
+|-----|----------------|-----|---|
+| FREE + midplane | **0.667** (&lt;0.90) | 1.0 | **0.0** |
+| ILW + midplane | **1.000** | 1.0 | n/a |
+>>>>>>> c679923fa392cbb01adf61c7fecf45e2aee80be3
+
+- Walls work.  
+- **Engineered ILW** specialises halves (scoped, named engineering).  
+- **Free dual-band chemistry** still fails the 0.90 structural bar even with χ=0.
+
+## Board
+A/B PASS · C closed partial + C5 NULL · PRIM1-D2 PASS · PRIM2-D0 PASS · D1 PASS
+
+## Belief (honest)
+Collection **difference** via **ILW ports** is achievable as **engineered write**.  
+Collection talent from **free shared physics alone** remains **unproven** at locked bars.
+
+## Next (discipline)
+- Document ILW as §4.8 port doctrine for structural dual collections, **or**  
+- New pre-reg only if a *non-engineered* free-chemistry talent mechanism is proposed  
+- No lowering B1 from 0.90

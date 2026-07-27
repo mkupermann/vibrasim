@@ -4,12 +4,24 @@
 
 Bottom-up substrate simulator. Computational neuroscience / consciousness research. The goal is developing a deadlock-breaking process, not necessarily succeeding at the simulation.
 
+## Active programme (2026-07-19) — sharp discipline
+
+**Belief path.** Read first, in order:
+
+1. `docs/DISCIPLINE_SHARP.md` — operating rules (one question, pre-reg, no bar retune, no smoke theater)
+2. `docs/BELIEF_PATH.md` — spine
+3. `FRONTIER.md` — board
+
+Do **not** default to archive tracks (VSA/reservoir, Brian2, SA/CIM, BET-144+, GEO/LLM) unless Michael re-admits them.  
+Do **not** re-run dual-drive frequency talent (C1–C3 family). Headless default; no live 3D unless asked.
+
 ## Hard Constraints
 
 - **NO LLM, NO transformer, NO pretrained embedding model, NO BPE tokenizer** in any solution.
 - Stay strictly within the substrate's own primitives: STDP, BTSP eligibility traces, dream consolidation (G15/G18), k_pattern_id segregation (G10), SubstrateLibrary (mixture-of-experts memory), and engineered port topology (CONCEPT §4.8).
 - Ports are axonal-projection analogues, not emergent CTC. Ports are engineered; internals must emerge.
 - When asked for new capability (e.g., text output), propose amendments that reuse these primitives. Never bolt on neural-net layers.
+- On the belief path: every step must still reduce toward vibrations/binding/matter/collections — no replacing a rung with an established ML stack and calling it emergence.
 
 ## Pre-Registration Discipline
 
