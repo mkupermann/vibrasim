@@ -2,6 +2,10 @@
 # Master script to start all visualizations
 # Auto-detects the best Python environment and backend
 
+# Get repo directory
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+
 echo "=========================================="
 echo "  VIBRASIM Visualization Control Center"
 echo "=========================================="
@@ -43,31 +47,31 @@ echo ""
 case $choice in
     1)
         echo "Starting 3D Brain Model..."
-        $PYTHON autopilot/visualize_3d.py --type brain
+        cd "$REPO_DIR" && $PYTHON autopilot/visualize_3d.py --type brain
         ;;
     2)
         echo "Starting 3D Progress Towers..."
-        $PYTHON autopilot/visualize_3d.py --type tower
+        cd "$REPO_DIR" && $PYTHON autopilot/visualize_3d.py --type tower
         ;;
     3)
         echo "Starting 3D Research Landscape..."
-        $PYTHON autopilot/visualize_3d.py --type landscape
+        cd "$REPO_DIR" && $PYTHON autopilot/visualize_3d.py --type landscape
         ;;
     4)
         echo "Starting 3D Network Graph..."
-        $PYTHON autopilot/visualize_3d.py --type network
+        cd "$REPO_DIR" && $PYTHON autopilot/visualize_3d.py --type network
         ;;
     5)
         echo "Starting 3D Radar Chart..."
-        $PYTHON autopilot/visualize_3d.py --type radar
+        cd "$REPO_DIR" && $PYTHON autopilot/visualize_3d.py --type radar
         ;;
     6)
         echo "Starting ASCII Terminal Visualization..."
-        $PYTHON autopilot/visualize.py
+        cd "$REPO_DIR" && $PYTHON autopilot/visualize.py
         ;;
     7)
         echo "Starting all 3D visualizations in sequence..."
-        for type in brain tower landscape network radar; do
+        cd "$REPO_DIR" && for type in brain tower landscape network radar; do
             echo "=== $type ==="
             $PYTHON autopilot/visualize_3d.py --type $type --static
             sleep 3
