@@ -7673,3 +7673,13 @@ B1=B2=B3=1.0 **PASS**. Holds under decay idle (vs E255 long idle collapse).
 
 video_emit_pair_band 0.15 vs 0 free dual + wall.
 B1=0.25 B2=0.50 B3=0.25 B4=-0.25 **NULL**. No free dual unlock.
+
+## 2026-07-26 sequential - BP-E260 PASS write-order pairlink residual
+
+Pair-link ON, L-first vs R-first curriculum; R residual after L-only probe.
+B1=B2=1.0 B3(abs delta)=0.0 **PASS**. Bidirectional residual independent of write order (pair_link as E168 side-residual mechanism).
+
+## 2026-07-26 sequential - BP-C103 NULL dream_replay_burst free dual
+
+dream_replay_burst_size 16 vs 8 (dream ON) free dual + wall.
+B1=0.0 B2=0.75 B3=0.25 B4=-0.75 **NULL**. Treatment below control; no free dual unlock.

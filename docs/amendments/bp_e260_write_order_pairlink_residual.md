@@ -32,4 +32,5 @@ Not soft/hard residual kill. Not free dual. Not E168 re-probe without pair_link 
 
 ## RESULT
 
-*(filled after run)*
+**PASS** (2026-07-26). B1=1.0 B2=1.0 B3(abs delta)=0.0.
+Pair-link ON preserves bidirectional R residual independent of write order: L-first and R-first curricula both leave R residual high after L-only probe, with zero order asymmetry. Matches E168 side-residual behaviour with pair_link as the active mechanism.

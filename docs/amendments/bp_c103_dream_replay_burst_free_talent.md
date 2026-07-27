@@ -29,4 +29,5 @@ Seeds {7901,7911} trials 2. T=500. Budget ~8 min, hard cap 16 min.
 
 ## RESULT
 
-*(filled after run)*
+**NULL** (2026-07-26). B1=0.0 B2=0.75 B3=0.25 B4=-0.75.
+Larger dream replay burst (16 vs 8) did not unlock free dual decade specialisation — treatment scored *below* control on ordered fraction (negative delta), the opposite of an unlock. Extends the free-dual NULL farm C27–C102; `dream_replay_burst_size` is not a free-chemistry talent lever.
