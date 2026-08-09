@@ -23,6 +23,13 @@ from world.snapshot import save_snapshot, snapshot_filename
 
 def run_legacy(args: argparse.Namespace, cfg: WorldConfig) -> int:
     """Run the legacy substrate simulation."""
+    import warnings
+    warnings.warn(
+        "Legacy substrate is deprecated. Use --substrate flux instead. "
+        "Legacy will be removed in a future release.",
+        DeprecationWarning,
+        stacklevel=2
+    )
     if args.seed is not None:
         cfg = replace(cfg, rng_seed=args.seed)
     world = World(cfg)

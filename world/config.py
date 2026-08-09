@@ -41,7 +41,7 @@ class WorldConfig:
 
     # Capacity
     n_vibrations_max: int = 4096
-    n_nodes_max: int = 1024
+    n_nodes_max: int = 8192  # Increased from 1024 to support denser worlds
 
     # Vibration soft cap (0 = disabled, default). When > 0, after each
     # bind_vibrations_to_electrons step the substrate culls the oldest
