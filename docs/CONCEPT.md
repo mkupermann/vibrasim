@@ -194,10 +194,31 @@ The biological analogue is axonal projection. Real cortex contains long-range ax
 
 This is a **deliberate compromise**, and v3 names it because earlier framings risked overclaiming. The substrate's core thesis — *hierarchical structure from local rules + a sparse engineered topology* — is more honest than *everything from local rules alone*. The Communication-through-Coherence hypothesis (Fries 2005, 2015) describes how phase-coherent oscillation can preferentially gate communication between regions; whether genuinely emergent CTC arises in this substrate at the agent's port topology is an *open question*. Plan F provides the architectural precondition for testing it (a coupled cross-port path); it does not prove emergence.
 
-Two consequences follow:
+**Internal Local Write (ILW) — the port-write primitive (added 2026-08-10, from PRIM2/BP-C5/E-series).**
+The 2026-07 belief-path work added one further engineered non-locality to this layer:
+*Internal Local Write*. An ILW port event mutates bound matter within `ilw_radius` of a
+fixed port position — strengthening a nearby molecule/atom and pulling its frequency
+toward an engineered `seed_freq`, or allocating a new node if none is in range — while
+injecting **no traveling free vibration** into the global field. PRIM2-D0 verified the
+non-broadcast property (right-half free-count delta 0 vs 689 for a matched free burst).
+ILW is therefore a *port write*: the analogue of a synaptic terminal delivering a local
+change, not a broadcast. Under a midplane wall (PRIM1-D2, χ=0), dual ILW ports with
+different seed frequencies reliably produce structurally distinct collections
+(BP-C5: specialisation 1.000) — **sold as engineering, not emergence**: the separation
+lives in the engineered seed frequencies. Free dual-band chemistry under the same wall
+stayed at 0.667 against the locked 0.90 bar, so collection *talent from free shared
+physics remains unproven*; the dual free-injection mechanism class is formally closed
+(bp_c_partial_closure.md). Full doctrine: docs/patterns/ilw_port_doctrine.md.
+
+Three consequences follow:
 
 1. **Phase 7 (attention by global modulation) remains a local-rules claim.** The carrier-frequency selection mechanism in Phase 7 does not require non-local couplings; it operates on the substrate's existing binding rules. v3 leaves this claim untouched.
 2. **Cross-modal binding (Plan B + Plans C/D + Plan F)** is now framed honestly. The bridge molecules that form between video_input and audio_output ports under Plan B's STDP are local-rules dynamics. The port locations and the speech-loop are engineered topology. The bridge formation between them is what the substrate actually computes; the architectural skeleton is given.
+
+3. **The Brain rung (§2.5/R9) is blocked** until collection talent is either shown from
+   free shared physics under the locked bars, or the belief is amended to accept
+   ILW-engineered collections as its honest basis. Higher rungs built on ILW+wall must
+   name the engineering in every claim (see docs/patterns/ilw_port_doctrine.md).
 
 The cleanest test of this layered claim is the M4 acceptance criterion (§10.8 below). What the substrate gets to claim from a positive M4 result is precisely: "starting from a sparse engineered topology of 4 ports + 1 cross-port coupling, the local binding + STDP rules produce a path from video input to audio output that recovers the trained association." Nothing more. Nothing less.
 

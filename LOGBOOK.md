@@ -8098,3 +8098,22 @@ Consequence: any G15F-3 would need a training regime that decouples stimulus ene
 from local decay pressure (e.g. engineered cooling gaps, lower per-quantum energy,
 or off-floor consolidation zones) — new ID, only if re-admitted. Without persistent
 engrams, dream consolidation and G16F remain untestable on Flux in this regime family.
+
+## 2026-08-10  ILW §4.8 port doctrine anchored; DISCIPLINE_SHARP §4.1 staleness corrected
+
+FRONTIER's open doctrine item executed (documentation, not an experiment):
+- CONCEPT.md §4.8 now names **Internal Local Write** as the third engineered
+  non-locality (ports, speech-loop, ILW), with the PRIM2-D0 non-broadcast evidence
+  (Δfree_right 0 vs 689), the BP-C5 honesty framing (ILW specialisation 1.000 =
+  engineering; free chemistry 0.667 < 0.90 bar), and a new consequence 3: the Brain
+  rung is BLOCKED until free-physics talent passes the locked bars or the belief is
+  amended to accept ILW-engineered collections — with the word "engineered" carried
+  in every higher-rung claim.
+- docs/patterns/ilw_port_doctrine.md: explicit "Brain blocked until" statement added.
+- DISCIPLINE_SHARP §4.1 corrected: it still recommended "zeitliches Muster bei
+  gleichem Frequenzband" as a fresh C-hypothesis, but that exact mechanism closed as
+  BP-C4 NULL (rhythm P_L=30/P_R=90, control non-discriminating) and BP-C8 NULL
+  (sequential time-multiplexing), with C21–C79 adding ~60 single-knob free-dual NULLs.
+  A stale recommendation in the operating rules is a re-derivation trap (the G47–G49
+  failure mode); now points to "new primitive or different representation".
+- FRONTIER Next updated accordingly.

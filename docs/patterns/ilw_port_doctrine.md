@@ -15,3 +15,8 @@ PRIM2-D0 PASS · BP-C5 (ILW specialisation 1.000; FREE+wall 0.667 NULL overall) 
 ## Use
 Build higher rungs (capacity K>2, multi-trial association, curricula) on ILW+midplane **named as ports**.  
 Do not re-open pure free-injection talent without a new primitive.
+
+**Brain blocked until:** collection talent is shown from free shared physics at the
+locked bars (0.90 spec / Δ≥0.40 with clean controls), OR the belief is amended to
+accept ILW-engineered collections as the basis — every higher-rung claim then carries
+the word "engineered". (Anchored in CONCEPT §4.8, consequence 3.)

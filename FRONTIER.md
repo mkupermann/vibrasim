@@ -27,8 +27,9 @@ Collection **difference** via **ILW ports** is achievable as **engineered write*
 Collection talent from **free shared physics alone** remains **unproven** at locked bars.
 
 ### Next (discipline)
-- Document ILW as §4.8 port doctrine for structural dual collections, **or**
+- ~~Document ILW as §4.8 port doctrine~~ **done 2026-08-10** (CONCEPT §4.8 + ilw_port_doctrine.md + Brain-blocked statement)
 - New pre-reg only if a *non-engineered* free-chemistry talent mechanism is proposed
+  (temporal/rhythm at same band is ALREADY NULL: BP-C4, BP-C8, C21–C79 — DISCIPLINE_SHARP §4.1 corrected)
 - No lowering B1 from 0.90
 
 ## Engineering side-track status (2026-08-10, two honest NULLs, closed)

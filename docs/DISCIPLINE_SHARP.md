@@ -45,7 +45,7 @@ Meta-Ziel bleibt: ehrlicher Prozess (Pre-Reg, Kontrollen, NULL, Overclaim-Rückn
 
 ## 4. Nächste erlaubte Züge (Priorität)
 
-1. **Eine** neue C-Hypothese mit *anderem* Mechanismus (z. B. zeitliches Muster bei gleichem Frequenzband) — oder  
+1. **Eine** neue C-Hypothese mit *wirklich neuem* Mechanismus — zeitliches Muster / Rhythmus bei gleichem Band ist **bereits NULL** (BP-C4, BP-C8; dazu C21–C79 Einzel-Knopf-NULLs): nicht wiederholen. Neu heißt: neues Primitiv oder andere Repräsentation — oder  
 2. **Formale Teil-Schließung C** mit Pattern-Doc und explizitem „Brain blocked until …“ — oder  
 3. **Neues Primitiv** (Pre-Reg als G/BP-Amendment, warum die bisherigen Regeln nicht reichen).
 
