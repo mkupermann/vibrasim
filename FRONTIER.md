@@ -26,17 +26,21 @@ A/B PASS · C closed partial + C5 NULL · PRIM1-D2 PASS · PRIM2-D0 PASS · D1 P
 Collection **difference** via **ILW ports** is achievable as **engineered write**.
 Collection talent from **free shared physics alone** remains **unproven** at locked bars.
 
-### PRIM14 (2026-08-10): per-bond rest length — D0 PARTIAL, D1 NULL (informative)
+### PRIM14 (2026-08-10): per-bond rest length — D0 PARTIAL, D1 NULL, **D2 PASS**
 The G154 follow-on (R5). D0: displaced middle moves back toward stored geometry
 where the global-r_eq control does not (controls clean). D1 (tension×damping
 matrix): R ceilings at ~0.5 in every regime — STRUCTURAL, not dynamical. Mechanism
 census: a second bond forms DURING the probe at the displaced geometry
 (**measurement-write coupling** — formation-frozen rest lengths store every held
 geometry, including the measurement's), so all regimes settle at the two-attractor
-compromise. D0's "true attractor at stored geometry" inference is corrected: the
-substrate stores a superposition of stored + probe-held geometry. Next (NEW ID
-only): D2 with the write channel closed during probing (saturated valence /
-bond-formation freeze). LOGBOOK 2026-08-10.
+compromise. D2 closed the write channel (valence saturation, bond census verified)
+and the primitive PASSED with exact point predictions (P→17.0 stored, C→19.0
+global, NC frozen; 3/3 seeds): **the substrate's first verified stored-geometry
+attractor** — the property G154 isolated as missing. Caveat stands: the mechanism
+stores ANY held geometry (measurement-write coupling); downstream designs must
+gate the write channel during read-out. Restore times practical (settles <2000
+ticks at k=8/d=0.95). Admissible next: G154-style recall re-run as a NEW G-series
+pre-reg. LOGBOOK 2026-08-10.
 
 ### Next (discipline)
 - ~~Document ILW as §4.8 port doctrine~~ **done 2026-08-10** (CONCEPT §4.8 + ilw_port_doctrine.md + Brain-blocked statement)

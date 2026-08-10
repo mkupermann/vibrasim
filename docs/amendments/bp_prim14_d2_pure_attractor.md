@@ -2,6 +2,9 @@
 
 **Status: SIGNED OFF 2026-08-10 — committed before any data generation (D2 rule).
 Bars final per D3.**
+**Verdict 2026-08-10: PASS** — 3/3 seeds, point predictions exact (P→17.0, C→19.0,
+NC→21.0, all settled, bond census clean pre+post). Pure attractor property of
+per-bond rest length confirmed with the write channel closed. LOGBOOK 2026-08-10.
 
 ## 1. The one question (D1 rule)
 

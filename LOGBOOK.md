@@ -8215,3 +8215,36 @@ NC1's 0.733 was motion toward ITS formation geometry 21, consistent.
 Follow-up (NEW pre-reg only): PRIM14-D2 — same diagnostic with the write channel
 closed during probing (saturated valence or bridge-formation freeze), to measure
 the pure restore dynamics the D1 matrix was supposed to measure.
+
+## 2026-08-10  PRIM14-D2: pure attractor test — **PASS** (3/3 seeds, point predictions exact)
+
+Pre-reg: docs/amendments/bp_prim14_d2_pure_attractor.md (committed before data).
+Write channel closed via valence saturation (atom_valence=1); bond census verified
+pre AND post relax (exactly the 13↔17/rest-4 bond, no probe-time writes — the
+D0/D1 contamination is gone). Dynamics fixed at k=8.0/damping=0.95 (a D1-stable cell).
+
+| Arm | Predicted x* | Observed (all 3 seeds) |
+|-----|--------------|------------------------|
+| ARM-P (per-bond rest 4) | 17.0 ± 0.4 | **17.0**, settled |
+| ARM-C (global r_eq 6)   | 19.0 ± 0.4 | **19.0**, settled |
+| NC (bonds deleted)      | 21.0 ± 0.4 | **21.0**, frozen |
+
+**Verdict: PASS** per the frozen bars. The PRIM14 arc is complete and honest:
+D0 PARTIAL (probe contaminated by measurement-write coupling) → D1 NULL (found and
+verified the contamination mechanism) → D2 PASS (channel closed; the primitive's
+pure attractor property confirmed by exact quantitative equilibrium predictions).
+Prediction calibration: PASS was the 60% modal prediction; the named FAIL risk
+(valence not gating bridge formation) did not materialise — valence saturation is
+a valid write-channel switch in this code path.
+
+**What is now established:** a formation-frozen per-bond rest length gives the
+legacy substrate its first verified stored-geometry attractor (the property whose
+absence G154 isolated) — with the sharp caveat from D1 that the same mechanism
+stores ANY held geometry (measurement-write coupling), so downstream designs must
+control the write channel (valence or an explicit freeze) during read-out.
+Restore dynamics at k=8/d=0.95 settle well inside 2000 ticks → practical.
+
+Admissible next step per the PRIM14-D0 scope clause: a G154-style recall-by-content
+re-run under per-bond rest (multi-cell register, partial cue, Hopfield baseline at
+matched wallclock) as a NEW G-series pre-reg — the precondition ("only if restore
+times become practical") is now met.
