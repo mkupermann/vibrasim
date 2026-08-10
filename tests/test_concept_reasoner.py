@@ -7,6 +7,9 @@ NOT at 2D; aggregate held-out IS-A generalization >= ~0.85 at >= 5D on small tax
 import numpy as np
 import pytest
 
+pytest.importorskip("torch", reason="tools/concept_reasoner.py needs torch; "
+                    "not a declared dependency (archive JEP-28 track)")
+
 from tools.concept_reasoner import ConceptReasoner
 
 TAX = {

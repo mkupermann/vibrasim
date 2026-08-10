@@ -8008,3 +8008,15 @@ on first run.
 Resolved committed merge-conflict markers (HEAD G159-map vs. c679923 belief-path board): belief
 path now leads as active programme, archive thread table preserved below, engineering side-track
 note added.
+
+### Addendum: full fast slice (2026-08-10, fresh .venv)
+`pytest -m "not slow"`: 757 passed, 40 failed, 19 errors, 32 min. All reds are in
+`tests/bet/*` — archive-track experiment tests whose pre-registered NULL/FAIL verdicts
+fail by design, plus missing optional deps in the recreated venv (brian2, torch);
+untouched per discipline. Three stale non-archive tests fixed: `test_config.py` pinned
+`n_nodes_max` at the pre-Phase-0 value 1024 (deliberately 8192 since a9d9a8bd);
+`test_amendment_AP_upgrade_arrays.py` pinned shape (12,12) though `_MAX_LEVEL` moved
+to 33 with BET-084 (9098c052, 2026-05-27) — now asserts against the live constant;
+`test_concept_reasoner.py` now importorskips torch (undeclared dep, archive JEP-28).
+Legacy-side diffs in the flux commit are docstring-only deprecation notices — no
+behavior change, so the bet reds predate this session.

@@ -18,7 +18,7 @@ def test_default_config_matches_spec():
     assert cfg.dt == pytest.approx(1.0 / 60.0)
     assert cfg.rng_seed == 42
     assert cfg.n_vibrations_max == 4096
-    assert cfg.n_nodes_max == 1024
+    assert cfg.n_nodes_max == 8192                          # CHANGED 2026-08-09 (a9d9a8bd): 1024 was too small for dense/>3000-vibration worlds
 
 
 def test_box_size_is_three_tuple():

@@ -27,8 +27,14 @@ def test_upgrade_target_fusion_array_mirrors_dict():
 
 
 def test_upgrade_target_array_dtype_and_shape():
-    """Arrays are (12, 12) int8."""
-    assert _UPGRADE_TARGET_ARRAY.shape == (12, 12)
+    """Arrays are (_MAX_LEVEL, _MAX_LEVEL) int8.
+
+    Was pinned to (12, 12); the level ceiling moved to 33 with BET-084
+    (9098c052, 2026-05-27) and this pin went stale. Assert against the
+    live constant so the mirror property, not a historic size, is tested.
+    """
+    from world.physics import _MAX_LEVEL
+    assert _UPGRADE_TARGET_ARRAY.shape == (_MAX_LEVEL, _MAX_LEVEL)
     assert _UPGRADE_TARGET_ARRAY.dtype == np.int8
-    assert _UPGRADE_TARGET_FUSION_ARRAY.shape == (12, 12)
+    assert _UPGRADE_TARGET_FUSION_ARRAY.shape == (_MAX_LEVEL, _MAX_LEVEL)
     assert _UPGRADE_TARGET_FUSION_ARRAY.dtype == np.int8
