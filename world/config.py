@@ -87,6 +87,10 @@ class WorldConfig:
                                           #     equilibrium (b_rest_len) in apply_bridge_tension, making the
                                           #     stored geometry an attractor. Default off = global r_eq
                                           #     (r_2*0.5), bit-identical to pre-PRIM14 behaviour.
+    bridge_tension_k: float = 0.5         # PRIM14-D1: spring constant in apply_bridge_tension (was a
+                                          #     hardcoded literal; default = historic value).
+    bridge_tension_damping: float = 0.95  # PRIM14-D1: per-tick velocity damping factor on bridged atoms
+                                          #     in apply_bridge_tension (was hardcoded; default = historic).
     bond_turnover_rate: float = 0.0       # G53: per-bridge per-second probability of spontaneous break (frees valence). >0 makes the membrane FLUID (bonds break + reform -> remodeling, healing). 0=off (rigid).
     node_freq_binding: bool = True        # Apply 8% rule to node→node binding. False = proximity-only (freq selectivity only at vibration→electron).
     atom_repulsion_k: float = 0.0         # Repulsion between non-bonded atoms. With bridge tension, produces minimal-surface membranes.

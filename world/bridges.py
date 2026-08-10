@@ -149,7 +149,10 @@ def apply_bridge_tension(world, dt: float) -> None:
     """
     cfg = world.config
     r_eq_global = cfg.r_2 * 0.5  # equilibrium = 50% of binding radius
-    tension_k = 0.5  # spring constant (gentle)
+    # PRIM14-D1: spring constant and damping are config now; defaults equal
+    # the historic literals (0.5 / 0.95) — bit-identical by default.
+    tension_k = float(getattr(cfg, 'bridge_tension_k', 0.5))
+    damping = float(getattr(cfg, 'bridge_tension_damping', 0.95))
     box = np.asarray(cfg.box_size, dtype=np.float64)
     # PRIM14: per-bond rest length (formation-time distance) when enabled;
     # unset bonds (b_rest_len == 0) fall back to the global value.
@@ -186,8 +189,8 @@ def apply_bridge_tension(world, dt: float) -> None:
         world.k_vel[i] += direction * force / level_i
         world.k_vel[j] -= direction * force / level_j
         # Damping: bridged atoms slow down (viscous medium)
-        world.k_vel[i] *= 0.95
-        world.k_vel[j] *= 0.95
+        world.k_vel[i] *= damping
+        world.k_vel[j] *= damping
 
 
 def apply_atom_repulsion(world, dt: float) -> None:
