@@ -4,6 +4,18 @@ I have decided to challenge myself with a topic I have no background knowledge o
 
 ---
 
+## Active programme (since 2026-07-19): the belief path
+
+The active research question is the belief ladder — vibrations → field → binding →
+matter → collections → talent → brain — under sharp pre-registration discipline.
+Charter: `docs/BELIEF_PATH.md` · operating rules: `docs/DISCIPLINE_SHARP.md` ·
+live board: `FRONTIER.md`. Status: rungs A (field→bind) and B (molecules carry
+information) PASS under locked bars; rung C (collections get talent from free shared
+physics) is CLOSED PARTIAL after C1–C79 NULLs — engineered ILW ports specialise
+collections perfectly, free chemistry does not (CONCEPT §4.8 names this honestly);
+the brain rung is blocked until that changes. Adjacent tracks (VSA/reservoir, Brian2,
+SA/CIM, autopilot BET sweeps) are archive, not this path.
+
 ## Update — what this is and what not
 
 On the science side, what I built is a sandbox I can think against. It is not "verified emergence". The words I picked — vibration, electron, atom, molecule, bridge — are labels for abstract nodes that follow rules I wrote myself, one parameter at a time. They are not the physics they sound like. I keep the names because renaming them in the middle of all this would be its own kind of dishonesty, but I want to be the one to say out loud that they are nomenclature, not ontology.
@@ -214,13 +226,29 @@ Total suite: **313 non-slow tests + 22 slow tests passing**. Verified on macOS-a
 
 Since 2026-05-10 the repo carries two substrates side by side.
 
-- **Legacy** (`world/`, `agent/`) — **DEPRECATED as of 2026-08-10**. The engineered six-level binding rule set documented throughout this README. Honest scope as of 2026-05-10: single-pattern recall works (M4 contract A+B); G19 predictive-babble falsifier returned FAIL on the first real-corpus run with z-scores statistically indistinguishable from white noise; the README has been corrected (commit `d83b82c`) to remove overclaims and document the FAIL. **No new features will be added to Legacy; only critical bug fixes. Use Flux instead.**
-- **Flux** (`world/flux/`, `agent/flux/`) — **DEFAULT SUBSTRATE** as of 2026-07-27. A substrate where the six engineered levels are replaced by one principle: energy quanta flow through an open boundary, structures kondensieren wo sie diesen Fluss effizienter kanalisieren, learning is reconfiguration toward more efficient flux channelling. Spec: [`docs/superpowers/specs/2026-05-10-flux-substrate-design.md`](docs/superpowers/specs/2026-05-10-flux-substrate-design.md). Status as of 2026-07-27: F0 complete (skeleton + energy-conservation audit); F1a complete (binding + T-based decay + T3 crystallization, ratio 9.0); F1b complete (bridges + structure-flux + Hebbian plasticity + node dissociation, T4 decay-without-flux passes); **F1c complete (thermal layer + bidirectional injection landed; T2 Bénard test FIXED — now passes reliably with `pressure_coeff=0.0`)**; F2 (cochlea + synthesis + first audio input) is next.
+- **Legacy** (`world/`, `agent/`) — **DEPRECATED as of 2026-08-10**. The engineered six-level binding rule set documented throughout this README. Honest scope as of 2026-05-10: single-pattern recall works (M4 contract A+B); G19 predictive-babble falsifier returned FAIL on the first real-corpus run with z-scores statistically indistinguishable from white noise; the README has been corrected (commit `d83b82c`) to remove overclaims and document the FAIL. **Feature-frozen for general development — with one named exception: the active
+belief-path programme (docs/BELIEF_PATH.md) deliberately uses this substrate as its
+lab, and pre-registered belief-path primitives (PRIM-* amendments) land here.**
+- **Flux** (`world/flux/`, `agent/flux/`) — **DEFAULT SUBSTRATE** as of 2026-07-27. A substrate where the six engineered levels are replaced by one principle: energy quanta flow through an open boundary, structures kondensieren wo sie diesen Fluss effizienter kanalisieren, learning is reconfiguration toward more efficient flux channelling. Spec: [`docs/superpowers/specs/2026-05-10-flux-substrate-design.md`](docs/superpowers/specs/2026-05-10-flux-substrate-design.md). Status as of 2026-07-27: F0 complete (skeleton + energy-conservation audit); F1a complete (binding + T-based decay + T3 crystallization, ratio 9.0); F1b complete (bridges + structure-flux + Hebbian plasticity + node dissociation, T4 decay-without-flux passes); **F1c complete (thermal layer + bidirectional injection landed; T2 Bénard test FIXED — now passes reliably with `pressure_coeff=0.0`)**; F2 (cochlea + synthesis + first audio input) is next. 2026-08-10 addendum: G15/G16 (dreaming, self-awareness) are mechanically ported to
+Flux with a pattern-tagging path and energy-conserving dreaming (auditor holds 1e-9
+with dream active; `--energy-audit` is real in the CLI now). Two pre-registered
+experiments closed honestly: **G15F-1 NULL-T** and **G15F-2 NULL** — in the current
+regime family, tagged flux nodes are a ~2–5 s recency echo of the ongoing stimulus,
+not a persistent store (continuous stimulus even thermally destroys its own traces),
+so dream consolidation is untestable on Flux until a regime decouples stimulus energy
+from local decay pressure (docs/amendments/g15f*.md). Visualization is consolidated
+in `world/flux/visualize.py` (off-screen frames, main-thread).
 
 The two substrates do not share state. **Flux is now the default** (`python -m world run` uses Flux; use `--substrate legacy` for Legacy). The legacy substrate remains runnable as the comparison baseline; the flux substrate carries the unprejudiced learning hypothesis.
 
-> **⚠️ LEGACY DEPRECATION NOTICE (2026-08-10)**
-> The Legacy substrate is **deprecated** as of 2026-08-10. No new features will be added; only critical bug fixes will be accepted. All new development should use the **Flux substrate** instead. Legacy will be removed in a future release (target: 2027-01-01).
+> **Substrate roles (clarified 2026-08-10)**
+> **Flux** is the default substrate for substrate-engineering work (`python -m world run`).
+> **Legacy** is feature-frozen for general development, but it is NOT scheduled for
+> removal: the active research programme — the belief path (docs/BELIEF_PATH.md,
+> board in FRONTIER.md) — runs on the legacy engineered substrate by design, and
+> pre-registered belief-path primitives (PRIM-*) are the named exception to the
+> freeze. An earlier version of this notice announced removal by 2027-01-01; that
+> contradicted the active programme and is retracted.
 
 ---
 

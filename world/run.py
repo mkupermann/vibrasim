@@ -1,11 +1,11 @@
 """CLI entry point for the World of Vibrations simulation.
 
 Default substrate: Flux (F0-F1c, recommended).
-Use `--substrate legacy` for the original (deprecated).
+Use `--substrate legacy` for the original (feature-frozen; belief-path lab).
 
 Usage:
     python -m world run --substrate flux --duration 60.0  # Flux (default)
-    python -m world run --substrate legacy --duration 60.0  # Legacy (deprecated)
+    python -m world run --substrate legacy --duration 60.0  # Legacy (feature-frozen)
 """
 from __future__ import annotations
 import argparse
@@ -21,20 +21,19 @@ from world.snapshot import save_snapshot, snapshot_filename
 
 
 def run_legacy(args: argparse.Namespace, cfg: WorldConfig) -> int:
-    """Run the legacy substrate simulation (DEPRECATED).
-    
-    WARNING: Legacy substrate is deprecated as of 2026-08-10.
-    Use --substrate flux instead. Legacy will be removed in a future release.
-    No new features will be added to Legacy; only critical bug fixes.
+    """Run the legacy substrate simulation (feature-frozen).
+
+    Feature-frozen for general development (2026-08-10); NOT scheduled
+    for removal — the belief-path programme (docs/BELIEF_PATH.md) runs
+    on this substrate, and pre-registered PRIM-* primitives land here.
+    Flux is the default for substrate-engineering work.
     """
     import warnings
-    # Force deprecation warnings to be displayed
     warnings.filterwarnings("always", category=DeprecationWarning)
     warnings.warn(
-        "LEGACY SUBSTRATE IS DEPRECATED as of 2026-08-10. "
-        "Use --substrate flux instead. "
-        "Legacy will be removed in a future release. "
-        "No new features will be added; only critical bug fixes.",
+        "Legacy substrate is feature-frozen for general development "
+        "(2026-08-10). Flux is the default; belief-path PRIM work is the "
+        "named exception on this substrate. See docs/BELIEF_PATH.md.",
         DeprecationWarning,
         stacklevel=2
     )
@@ -123,7 +122,7 @@ def main(argv: list[str] | None = None) -> int:
     run = sub.add_parser("run", help="Run simulation (Flux by default)")
     run.add_argument("--substrate", type=str, default="flux",
                      choices=["flux", "legacy"],
-                     help="Substrate to use: 'flux' (default, F0-F1c, recommended) or 'legacy' (deprecated)")
+                     help="Substrate to use: 'flux' (default, F0-F1c) or 'legacy' (feature-frozen; belief-path lab)")
     run.add_argument("--config", type=Path, default=None,
                      help="Config file (legacy only)")
     run.add_argument("--duration", type=float, default=60.0)

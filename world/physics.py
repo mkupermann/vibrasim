@@ -1,5 +1,7 @@
-# FROZEN (2026-08-10): Legacy substrate is deprecated. No new features.
-# Only critical bug fixes allowed. Use Flux substrate instead.
+# Feature-frozen for GENERAL development (2026-08-10) — with one named exception:
+# pre-registered belief-path primitives (PRIM-* amendments, docs/BELIEF_PATH.md)
+# land here; this substrate is the active programme's lab. Flux is the default
+# for substrate-engineering work.
 from __future__ import annotations
 import math
 import numpy as np

@@ -8117,3 +8117,16 @@ FRONTIER's open doctrine item executed (documentation, not an experiment):
   A stale recommendation in the operating rules is a re-derivation trap (the G47–G49
   failure mode); now points to "new primitive or different representation".
 - FRONTIER Next updated accordingly.
+
+## 2026-08-10  README honesty update + freeze contradiction resolved
+
+README now leads with the active programme (belief path, charter/board links, honest
+C-closure status), the Flux bullet carries the 2026-08-10 addendum (G15/G16 port,
+G15F-1/G15F-2 NULLs with the recency-echo mechanism, consolidated viz), and the
+Legacy deprecation notice is REWRITTEN: the announced removal (target 2027-01-01)
+contradicted the active programme — the belief path runs on world/physics by design —
+and is explicitly retracted. New framing everywhere (README, world/run.py warning +
+docstrings, world/physics.py header, world/dream.py, world/self_aware.py,
+world/__init__.py): Legacy is feature-frozen for GENERAL development with one named
+exception, pre-registered belief-path primitives (PRIM-*). This unblocks PRIM work
+without reopening general legacy development.
