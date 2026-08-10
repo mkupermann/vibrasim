@@ -145,7 +145,7 @@ def run_flux_validation(cfg: ValidationConfig) -> dict:
     from world.flux.plasticity import PlasticityConfig
     from world.flux.bridges import Bridges
     from world.flux.structures import Nodes
-    from world.flux.dream import DreamConfig
+    from world.flux.dream import DreamConfig, apply_dream
     from world.flux.self_aware import SelfAwareConfig, SelfAwareState
     
     # Initialize Flux world
@@ -207,6 +207,14 @@ def run_flux_validation(cfg: ValidationConfig) -> dict:
     }
     
     for tick_index in range(n_ticks):
+        # G15 dreaming applied manually (not a tick() hook) so its
+        # injected energy stays bookable; see dynamics.py step-5 note.
+        if dream_cfg is not None:
+            apply_dream(
+                quanta, nodes, grid, dt,
+                cfg=dream_cfg, tick_index=tick_index,
+                rng=np.random.default_rng(cfg.seed + 3_000_000 + tick_index),
+            )
         tick(
             quanta, grid, dt,
             injector=injector,
@@ -216,9 +224,7 @@ def run_flux_validation(cfg: ValidationConfig) -> dict:
             bridges=bridges,
             plasticity_cfg=plasticity_cfg,
             thermal_cfg=thermal_cfg,
-            dream_cfg=dream_cfg,
             self_aware_cfg=self_aware_cfg,
-            dream_state=None,
             self_aware_state=self_aware_state,
             rng=np.random.default_rng(cfg.seed + tick_index),
             tick_index=tick_index,

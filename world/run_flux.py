@@ -60,12 +60,17 @@ def create_flux_world(
 
 
 def create_injector(grid: Grid, energy_per_tick: float = 100.0) -> Injector:
-    """Create a hot-floor injector for the Flux substrate."""
+    """Create a hot-floor injector for the Flux substrate.
+
+    Returns ENERGY injected per call (the Injector contract), not the
+    count — inject_hot_floor returns a count (review 2026-08-10)."""
     n_per_tick = 10
+    energy_per = energy_per_tick / n_per_tick
     def injector(quanta: Quanta, grid: Grid) -> float:
-        return inject_hot_floor(quanta, grid, n=n_per_tick,
-                                energy_per=energy_per_tick / n_per_tick,
-                                freq_mean=1000.0)
+        n_inj = inject_hot_floor(quanta, grid, n=n_per_tick,
+                                 energy_per=energy_per,
+                                 freq_mean=1000.0)
+        return n_inj * energy_per
     return injector
 
 
@@ -147,11 +152,19 @@ def main(argv: list[str] | None = None) -> int:
         )
         self_aware_state = SelfAwareState()
     
-    # Injector
-    injector = create_injector(grid, energy_per_tick=100.0)
-    
-    # Energy auditor
-    auditor = EnergyAuditor() if args.energy_audit else None
+    # Energy auditor (constructed BEFORE the injector so injections are booked)
+    auditor = None
+    if args.energy_audit:
+        auditor = EnergyAuditor(quanta=quanta, tol=1e-9, nodes=nodes)
+        auditor.record_initial()
+
+    # Injector (records into the auditor when auditing)
+    _base_injector = create_injector(grid, energy_per_tick=100.0)
+    def injector(q, g):
+        e = _base_injector(q, g)
+        if auditor:
+            auditor.record_injection(e)
+        return e
 
     # Visualization (off-screen frame export; PyVista must stay on the main thread)
     visualizer = None
@@ -178,11 +191,29 @@ def main(argv: list[str] | None = None) -> int:
     total_energy_exported = 0.0
     total_binding_heat = 0.0
     total_decay_heat = 0.0
+    total_dream_energy = 0.0
+    total_dream_seeds = 0
+    total_dream_blends = 0
     
     try:
         for tick_index in range(n_ticks):
             t = tick_index * dt
-            
+
+            # G15 dreaming is applied MANUALLY (not a tick() hook) so its
+            # external energy stays bookable; see dynamics.py step-5 note.
+            if dream_cfg is not None:
+                dream_out = apply_dream(
+                    quanta, nodes, grid, dt=dt, cfg=dream_cfg,
+                    tick_index=tick_index,
+                    rng=np.random.default_rng(args.seed + 3_000_000 + tick_index)
+                    if args.seed is not None else None,
+                )
+                total_dream_energy += dream_out["energy_injected"]
+                total_dream_seeds += dream_out["replay_seeds_fired"]
+                total_dream_blends += dream_out["blend_events"]
+                if auditor:
+                    auditor.record_injection(dream_out["energy_injected"])
+
             result = tick(
                 quanta, grid, dt,
                 injector=injector,
@@ -192,7 +223,6 @@ def main(argv: list[str] | None = None) -> int:
                 bridges=bridges,
                 plasticity_cfg=plasticity_cfg,
                 thermal_cfg=thermal_cfg,
-                dream_cfg=dream_cfg,
                 self_aware_cfg=self_aware_cfg,
                 self_aware_state=self_aware_state,
                 rng=np.random.default_rng(args.seed + tick_index) if args.seed is not None else None,
@@ -207,6 +237,15 @@ def main(argv: list[str] | None = None) -> int:
             else:
                 E_exported = result
                 total_energy_exported += E_exported
+
+            if auditor:
+                auditor.record_export(E_exported)
+                if nodes is not None:
+                    auditor.record_binding_heat(binding_heat)
+                    auditor.record_decay_heat(decay_heat)
+                auditor.step()
+                if (tick_index + 1) % 60 == 0:
+                    auditor.check()
             
             # Print stats every 60 ticks (~1 simulated second)
             if (tick_index + 1) % 60 == 0:
@@ -214,7 +253,8 @@ def main(argv: list[str] | None = None) -> int:
 
             # Save a visualization frame every viz_interval simulated seconds
             if visualizer and tick_index % max(1, int(args.viz_interval * 60)) == 0:
-                visualizer.update(t=t)
+                visualizer.update(t=t, dream_events=total_dream_seeds,
+                                  self_aware_events=0)
                 visualizer.save_frame(
                     str(Path(args.viz_dir) / f"frame_{tick_index:06d}.png"))
             
@@ -234,9 +274,17 @@ def main(argv: list[str] | None = None) -> int:
           f"({args.duration / wall:.1f}x real-time)")
     _print_stats(quanta, nodes, args.duration, total_energy_exported, bridges)
     
-    if args.energy_audit and auditor:
-        print(f"# Energy audit: exported={total_energy_exported:.2f}, "
-              f"binding_heat={total_binding_heat:.2f}, decay_heat={total_decay_heat:.2f}")
+    if dream_cfg is not None:
+        audited = "audited" if auditor else "unaudited"
+        print(f"# Dream: seeds={total_dream_seeds}, blends={total_dream_blends}, "
+              f"energy_injected={total_dream_energy:.2f} ({audited})")
+
+    if auditor:
+        auditor.check()
+        print(f"# Energy audit PASS (tol 1e-9): injected={auditor.E_injected_total:.2f}, "
+              f"exported={auditor.E_exported_total:.2f}, "
+              f"binding_heat={auditor.E_binding_heat_total:.2f}, "
+              f"decay_heat={auditor.E_decay_heat_total:.2f}")
     
     return 0
 
