@@ -1,12 +1,46 @@
 # FRONTIER — sharp discipline
 
-<<<<<<< HEAD
 **One-screen pointer so a new session knows where the frontier is WITHOUT re-deriving settled work.**
-Authoritative detail lives in `docs/amendments/FINDINGS_SUMMARY.md` (+ its addenda), `LOGBOOK.md` (append-only
-diary; newest at the bottom), and the per-experiment `docs/amendments/g*.md`. This file is a map, not a source
-of truth — if it disagrees with those, they win. Last updated: 2026-06-12.
+Authoritative detail lives in `docs/DISCIPLINE_SHARP.md` (operating rules), `docs/BELIEF_PATH.md` (spine),
+`docs/amendments/FINDINGS_SUMMARY.md` (+ addenda), `LOGBOOK.md` (append-only diary; newest at the bottom),
+and the per-experiment `docs/amendments/g*.md`. This file is a map, not a source of truth — if it disagrees
+with those, they win. Last updated: 2026-08-10 (merge-conflict resolution; content states 2026-07-19 + 2026-06-12).
 
-## Highest experiment numbers (check before starting anything)
+## Active programme: belief path (2026-07-19, after BP-C5)
+
+### BP-C5 result: **NULL** (informative)
+
+| Arm | Specialisation | Pop | χ |
+|-----|----------------|-----|---|
+| FREE + midplane | **0.667** (&lt;0.90) | 1.0 | **0.0** |
+| ILW + midplane | **1.000** | 1.0 | n/a |
+
+- Walls work.
+- **Engineered ILW** specialises halves (scoped, named engineering).
+- **Free dual-band chemistry** still fails the 0.90 structural bar even with χ=0.
+
+### Board
+A/B PASS · C closed partial + C5 NULL · PRIM1-D2 PASS · PRIM2-D0 PASS · D1 PASS
+
+### Belief (honest)
+Collection **difference** via **ILW ports** is achievable as **engineered write**.
+Collection talent from **free shared physics alone** remains **unproven** at locked bars.
+
+### Next (discipline)
+- Document ILW as §4.8 port doctrine for structural dual collections, **or**
+- New pre-reg only if a *non-engineered* free-chemistry talent mechanism is proposed
+- No lowering B1 from 0.90
+
+## Engineering side-track status (2026-08-10, not an experiment)
+Flux substrate: G15 (dreaming) / G16 (self-awareness) mechanically ported
+(`world/flux/dream.py`, `world/flux/self_aware.py`) but **functionally vacuous** — nothing in Flux
+assigns `pattern_id != 0` (the G10-style training/tagging path was not ported), so replay/blending
+can never fire. First validation run: 0 events on both substrates → honest **NULL**. Details in
+LOGBOOK 2026-08-10. No new gNNN opened; needs a pre-reg before any capability claim.
+
+## Archive threads (all honestly closed; do NOT reopen without re-admission)
+
+### Highest experiment numbers (check before starting anything)
 - **Substrate physics thread `gNNN`:** completed through **G159** (G154–G159 added 2026-06-12, in
   `docs/amendments/G15*.md` + LOGBOOK). `ls docs/amendments/g*.md | sort` and read the highest few before
   proposing a "new" gNNN — much of G30–G159 is already done.
@@ -14,7 +48,7 @@ of truth — if it disagrees with those, they win. Last updated: 2026-06-12.
 - Do NOT trust a stale start-of-session git snapshot for the frontier (it caused G47–G49 to be re-derived on
   2026-06-05). Trust `git log` + the highest `g*.md`/`jep*` docs.
 
-## Verdict by thread (all honestly closed; see FINDINGS_SUMMARY for the full case)
+### Verdict by thread (see FINDINGS_SUMMARY for the full case)
 | Thread | Status | Bottom line |
 |--------|--------|-------------|
 | Memory (activity representation) | **CLOSED NEGATIVE** | No stable blank state; any region latches activity → no written-vs-unwritten contrast (G83–G96, ~70 NULLs). |
@@ -23,29 +57,3 @@ of truth — if it disagrees with those, they win. Last updated: 2026-06-12.
 | Communication | **POSITIVE, scoped** | Co-located real-time spatial codec; needs active reset between symbols; NOT transport over distance (G97–G105). |
 | Transport | **scoped** | Free carriers don't cross distance; continuously-driven matter does, slowly (G109–G112). |
 | Computation / optimization | **EQMOD substrate NEGATIVE; adjacent CIM hardware competitive (2026-06-05)** | G145's "8/8" rested on a sign-bugged greedy; the NAIVE oscillator ties correct greedy & loses to SA (G146–G149). But the textbook AHC-CIM (Leleu 2019) BEATS correct greedy & is in SA's league (G150), robust across both Gaussian & ±1/SK families (G151) and to n=600 (G152) — a real but *established, adjacent* physical-annealer result, NOT EQMOD. At **matched budget classical SA is marginally BEST** (~1.7% ahead, 8/8; G153), and far simpler. EQMOD's OWN dynamics still can't optimize (G135). Ordering: SA > CIM-AHC > correct-greedy. |
-=======
-**docs/DISCIPLINE_SHARP.md** · 2026-07-19 after **BP-C5**
-
-## BP-C5 result: **NULL** (informative)
-
-| Arm | Specialisation | Pop | χ |
-|-----|----------------|-----|---|
-| FREE + midplane | **0.667** (&lt;0.90) | 1.0 | **0.0** |
-| ILW + midplane | **1.000** | 1.0 | n/a |
->>>>>>> c679923fa392cbb01adf61c7fecf45e2aee80be3
-
-- Walls work.  
-- **Engineered ILW** specialises halves (scoped, named engineering).  
-- **Free dual-band chemistry** still fails the 0.90 structural bar even with χ=0.
-
-## Board
-A/B PASS · C closed partial + C5 NULL · PRIM1-D2 PASS · PRIM2-D0 PASS · D1 PASS
-
-## Belief (honest)
-Collection **difference** via **ILW ports** is achievable as **engineered write**.  
-Collection talent from **free shared physics alone** remains **unproven** at locked bars.
-
-## Next (discipline)
-- Document ILW as §4.8 port doctrine for structural dual collections, **or**  
-- New pre-reg only if a *non-engineered* free-chemistry talent mechanism is proposed  
-- No lowering B1 from 0.90

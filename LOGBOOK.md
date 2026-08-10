@@ -7947,3 +7947,64 @@ result = run_encoder_free_training(
 
 ---
 
+
+## 2026-08-10  Session repair: Flux G15/G16 port audit (NULL), CLI restoration, review fixes
+
+### Context
+The 2026-08-09/10 sessions left ~1500 lines uncommitted and unlogged: a G15 (dreaming) /
+G16 (self-awareness) port to Flux (`world/flux/dream.py`, `world/flux/self_aware.py`, wired into
+`dynamics.py::tick`), four visualization modules (`visualize.py` → `visualize_highend.py` →
+`visualize_simple.py` → `visualize_live.py`, iterated in that order), validation scripts, and CLI flags.
+This entry reconstructs and closes that work honestly.
+
+### CLI restoration (world/run_flux.py)
+`python -m world.run_flux` was doubly broken: the `parse_args` call was deleted during editing, AND
+`create_flux_world` was written against a nonexistent API (`Quanta(n, rng=)`, `Nodes()` without
+capacity, wrong `inject_hot_floor` signature, `nodes.n_bridges()`). The latter was broken at HEAD
+already — this entry point had never run. Fixed against the real API; smoke: 4.7x real-time,
+nodes + bridges form, `--dream --self-aware` run without crash.
+
+### G15/G16 Flux validation: **NULL (vacuous)**
+`tools/validate_g15_g16.py` (10 simulated s, seed 42): **0 dream events, 0 self-aware events on BOTH
+substrates.** Structural, not statistical: nothing in Flux ever assigns `pattern_id != 0` — binding
+creates nodes with the default 0, and the G10-style training/tagging path was never ported. Dream
+replay (needs `pattern_id != 0` engrams) and blending can therefore never fire; `active_patterns`
+is equally vacuous. The port is mechanically wired but functionally untestable.
+Additional defects found:
+- The validation script double-applies dream/self_aware (manually AND via `tick()`'s own hooks).
+- `apply_dream` violates energy conservation: blend nodes are allocated with 50% of combined
+  source energy WITHOUT draining the sources; replay seeds inject unbooked energy.
+- Wallclock: Legacy arm 937 s for 10 simulated s (1000 vibrations, 60³ box); Flux arm 3 s.
+**No new gNNN opened.** Completing the port (pattern training + energy booking) requires a
+pre-registered protocol first. Parked; see FRONTIER "Engineering side-track status".
+
+### Visualization status (honest)
+`visualize_highend.py` renders a broken frame off-screen (single giant sphere, camera/radius
+mis-scaled — same failure class as the 2026-06 empty Blender render). The root test scripts
+(`test_visualization.py`, `test_cli_visualization.py`) hang: they drive one PyVista plotter from
+two threads plus a busy-wait `while True` without sleep (100% CPU). Known macOS/VTK constraint:
+plotter must stay on the main thread, off_screen in the constructor. Consolidation to one module
+is the open follow-up.
+
+### Cloud review (ultrareview, 14 changed files) — applied fixes
+- `--seed 0` no longer silently coerced to 42 (`is not None` in run.py ×2, run_flux.py ×1).
+- `quanta.polarity` int8 cast added in run.py (first real drift damage of the run.py/run_flux.py
+  code duplication — the duplication itself is a known open item).
+- `@njit` fallback stub in `world/flux/binding.py` — import without numba verified.
+- `--thermal/--binding/--plasticity` switched to `BooleanOptionalAction` (were no-op
+  `store_true, default=True`); `--no-plasticity` etc. now actually work.
+- `autopilot/logs/*.log` gitignored + dispatcher log untracked (was +1175 diff lines of idle ticks).
+- Dead `dream_state` kwarg removed from `tick()` and callers (was accepted, never forwarded).
+- False positive noted: "world/flux/dream.py missing" — the review bundle omitted untracked files;
+  commit rule derived: the flux dream/self_aware modules MUST land in the same commit as the
+  CLI wiring, or the default entry point crashes at import.
+
+### Environment note
+Repo-root `.venv` was missing (memory/CLAUDE.md expect it); Homebrew python is 3.14.6 and lacks
+scipy. Recreated `.venv` with uv (Python 3.13.15, `pip install -e ".[dev]"`). Numba JIT cache cold
+on first run.
+
+### FRONTIER.md
+Resolved committed merge-conflict markers (HEAD G159-map vs. c679923 belief-path board): belief
+path now leads as active programme, archive thread table preserved below, engineering side-track
+note added.

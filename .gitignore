@@ -81,6 +81,8 @@ autopilot_output.txt
 /*_output.txt
 /*.log
 /*.tar.gz
+# Autopilot scheduler runtime output (appends every tick; never review-relevant)
+autopilot/logs/*.log
 # Stray figures at root: real figures belong in docs/figures/
 /*.png
 
