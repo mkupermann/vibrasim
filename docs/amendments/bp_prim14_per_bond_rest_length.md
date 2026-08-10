@@ -1,6 +1,11 @@
 # PRIM14 — Per-bond rest length (D0 diagnostic)
 
 **Status: SIGNED OFF 2026-08-10, no conditions — committed before any data generation (D2). Bars final per D3.**
+**Verdict 2026-08-10: PARTIAL** — per-bond rest creates the attractor (ARM-P monotone
+toward stored, 3/3 seeds, R=0.357; ARM-C reproduces the G154 defect; NC1/NC2 clean),
+but damped dynamics miss the 0.5 recovery bar in 2000 ticks — the pre-named
+most-likely failure mode. Full case in LOGBOOK 2026-08-10; data in
+archive/run-logs/prim14/. Follow-ups require new IDs.
 
 ## 1. The one question (D1)
 

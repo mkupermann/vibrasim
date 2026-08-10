@@ -117,6 +117,12 @@ def form_bridges(world) -> int:
         world.b_atom_i[b] = i
         world.b_atom_j[b] = j
         world.b_strength[b] = 1.0
+        # PRIM14: freeze this bond's rest length to its formation distance
+        # (min-image). Only consumed when cfg.per_bond_rest_enabled.
+        d_form = world.k_pos[j] - world.k_pos[i]
+        box_form = np.asarray(cfg.box_size, dtype=np.float64)
+        d_form -= box_form * np.round(d_form / box_form)
+        world.b_rest_len[b] = float(np.sqrt((d_form * d_form).sum()))
         world.b_count += 1
 
         world.k_bond_count[i] += 1
@@ -142,9 +148,12 @@ def apply_bridge_tension(world, dt: float) -> None:
     and prevents bridge-connected atoms from clumping.
     """
     cfg = world.config
-    r_eq = cfg.r_2 * 0.5  # equilibrium = 50% of binding radius
+    r_eq_global = cfg.r_2 * 0.5  # equilibrium = 50% of binding radius
     tension_k = 0.5  # spring constant (gentle)
     box = np.asarray(cfg.box_size, dtype=np.float64)
+    # PRIM14: per-bond rest length (formation-time distance) when enabled;
+    # unset bonds (b_rest_len == 0) fall back to the global value.
+    per_bond = bool(getattr(cfg, 'per_bond_rest_enabled', False))
 
     for b in range(world.b_count):
         if not world.b_alive[b]:
@@ -153,6 +162,12 @@ def apply_bridge_tension(world, dt: float) -> None:
         j = int(world.b_atom_j[b])
         if not world.k_alive[i] or not world.k_alive[j]:
             continue
+
+        r_eq = r_eq_global
+        if per_bond:
+            rl = float(world.b_rest_len[b])
+            if rl > 0.0:
+                r_eq = rl
 
         # Periodic displacement
         d = world.k_pos[j] - world.k_pos[i]

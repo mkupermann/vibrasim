@@ -91,6 +91,10 @@ class World:
         self.b_atom_i = np.zeros(B, dtype=np.int32)
         self.b_atom_j = np.zeros(B, dtype=np.int32)
         self.b_strength = np.zeros(B, dtype=np.float64)
+        # PRIM14 — per-bond rest length, frozen to the endpoint distance at
+        # formation time. Used by apply_bridge_tension only when
+        # cfg.per_bond_rest_enabled; 0.0 = unset (global r_eq fallback).
+        self.b_rest_len = np.zeros(B, dtype=np.float64)
         self.b_count = 0
         # G10 — pattern_id ('memory cell') per node. 0 = ambient/unassigned.
         # When the user trains a specific pattern, world.active_pattern_id

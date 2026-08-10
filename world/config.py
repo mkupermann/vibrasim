@@ -83,6 +83,10 @@ class WorldConfig:
     node_thermal_speed: float = 0.0       # Brownian speed for nodes (0=stationary). Actual speed = thermal/sqrt(level).
     atom_valence: int = 0                 # Max bindings per atom (0=unlimited). 2=linear chains, 3=branched, 4=tetrahedral.
     bridge_cooldown: float = 0.0          # Seconds after bridging before atom can bridge again (0=instant).
+    per_bond_rest_enabled: bool = False   # PRIM14: each bridge uses its formation-time distance as its own
+                                          #     equilibrium (b_rest_len) in apply_bridge_tension, making the
+                                          #     stored geometry an attractor. Default off = global r_eq
+                                          #     (r_2*0.5), bit-identical to pre-PRIM14 behaviour.
     bond_turnover_rate: float = 0.0       # G53: per-bridge per-second probability of spontaneous break (frees valence). >0 makes the membrane FLUID (bonds break + reform -> remodeling, healing). 0=off (rigid).
     node_freq_binding: bool = True        # Apply 8% rule to node→node binding. False = proximity-only (freq selectivity only at vibration→electron).
     atom_repulsion_k: float = 0.0         # Repulsion between non-bonded atoms. With bridge tension, produces minimal-surface membranes.

@@ -2200,6 +2200,11 @@ def _ensure_bridge(world, i: int, j: int, delta: float = 1.0) -> int:
     world.b_atom_i[bi] = i
     world.b_atom_j[bi] = j
     world.b_strength[bi] = float(delta)
+    # PRIM14: freeze rest length at formation (min-image distance)
+    _d14 = world.k_pos[j] - world.k_pos[i]
+    _box14 = np.asarray(world.config.box_size, dtype=np.float64)
+    _d14 -= _box14 * np.round(_d14 / _box14)
+    world.b_rest_len[bi] = float(np.sqrt((_d14 * _d14).sum()))
     world.b_count += 1
     if hasattr(world, "k_bond_count"):
         world.k_bond_count[i] = int(world.k_bond_count[i]) + 1

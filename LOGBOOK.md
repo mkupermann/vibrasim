@@ -8130,3 +8130,45 @@ docstrings, world/physics.py header, world/dream.py, world/self_aware.py,
 world/__init__.py): Legacy is feature-frozen for GENERAL development with one named
 exception, pre-registered belief-path primitives (PRIM-*). This unblocks PRIM work
 without reopening general legacy development.
+
+## 2026-08-10  PRIM14-D0: per-bond rest length — **PARTIAL** (attractor exists, dynamics too slow)
+
+Pre-reg: docs/amendments/bp_prim14_per_bond_rest_length.md (committed before data;
+erratum 4a — the originally committed symmetric-chain protocol could not discriminate
+the mechanism at all and was corrected to an asymmetric stored chain {13,17,29}
+BEFORE any run, bars untouched; authoring error logged openly).
+
+Implementation: `World.b_rest_len` (state.py), frozen to min-image formation distance
+at both bridge-formation sites (bridges.py natural path + physics.py ILW pair path),
+consumed by `apply_bridge_tension` only under new `cfg.per_bond_rest_enabled`
+(default off = bit-identical behaviour; engineering tests
+tests/test_prim14_rest_length.py 3/3 green).
+
+**Bond-topology surprise (documented, not a defect):** `r_1 = 5.0` is the minimum
+bridge distance, so the short stored edge (l1=4) never bonds; ARM-P/ARM-C ran on the
+single long bond (17↔29). That single-bond system still discriminates the exact
+pre-registered question: rest=12 puts the middle's equilibrium at x=17 (stored),
+global r_eq=6 puts it at x=23.
+
+Result (seeds 42/7/13, deterministic — no thermal noise in this regime):
+| Arm | R at 2000 ticks | Behaviour |
+|-----|-----------------|-----------|
+| ARM-P (per-bond) | **0.357**, monotone toward stored (21 → 19.571) | attractor at stored geometry confirmed |
+| ARM-C (global) | −0.009 (drifts toward 23, away from stored) | reproduces the G154 defect |
+| NC1 (content-neutrality) | 0.733 toward FORMATION geometry | mechanism stores whatever formed — no pattern preference |
+| NC2 (bonds deleted) | 0.000 (frozen) | tension is the mechanism, not drift |
+
+**Verdict: PARTIAL** per the frozen bars (ARM-P monotone toward stored on 3/3 seeds
+with 0.2 < R < 0.5; all controls clean). The pre-registered most-likely failure mode
+(damped dynamics too slow for the 0.5 bar within 2000 ticks; predicted 25%) is
+exactly what occurred — the trajectory decelerates asymptotically toward 17 but
+covers only 36% of the displacement in the window. Prediction calibration: PASS was
+predicted at 55% (overconfident on speed), PARTIAL 25% (actual).
+
+What is now established: **per-bond rest length turns stored geometry into a true
+attractor** — the direction G154 proved impossible under the global rule — with
+content-neutral, bond-mediated restoring dynamics. What is NOT established: recall
+at useful speed (dynamics question: tension_k/damping were locked out of scope), and
+anything about multi-cell patterns or capacity. Follow-ups (each a NEW pre-reg):
+dynamics-regime D1 (tension_k/damping sweep as a registered matrix), then a
+G154-style recall re-run only if D1 reaches practical restore times.
