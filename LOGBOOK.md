@@ -8172,3 +8172,46 @@ at useful speed (dynamics question: tension_k/damping were locked out of scope),
 anything about multi-cell patterns or capacity. Follow-ups (each a NEW pre-reg):
 dynamics-regime D1 (tension_k/damping sweep as a registered matrix), then a
 G154-style recall re-run only if D1 reaches practical restore times.
+
+## 2026-08-10  PRIM14-D1: dynamics matrix — **NULL**, and it corrects the D0 story
+
+Pre-reg: docs/amendments/bp_prim14_d1_dynamics_matrix.md (bars committed, then the
+config plumbing bridge_tension_k / bridge_tension_damping committed, THEN data —
+per the sign-off condition). Raw data: archive/run-logs/prim14/d1.json.
+
+Result (3×3 matrix, seeds deterministic): R saturates at **0.48–0.495 in every
+strengthened regime** and SETTLES there — never approaching the 0.9 practical bar,
+and the best value misses even the 0.5 IMPROVED bar by 0.005. C0 anchor reproduces
+D0 exactly (0.357; no FAIL), ARM-C ≤ 0.2 everywhere, high-k regimes stable.
+**Verdict: NULL** per the frozen bars — and the reason is structural, not dynamical.
+
+**Mechanism-fired check (before believing the asymptote):** bond census during relax
+shows the real system. At consolidation, {13,17,29} forms ONE bond — the SHORT edge
+13↔17 with rest 4 (the first D0 reading claimed r_1 excludes the short edge and the
+long bond drives restore; **that was wrong** — corrected here and in
+tests/test_prim14_rest_length.py). During relax, the displaced middle (at 21,
+distance 8 to the right anchor) grows a SECOND bond 17↔29 with **rest 8 = the
+displaced geometry**. ARM-P equilibrium: rest-4 bond pulls toward 17, rest-8 bond
+pulls toward 21 → x = 19.0 exactly as observed (R ceiling 0.5). ARM-C with global
+r_eq 6/6 on the same two bonds: equilibrium exactly 21 (R ≈ 0) — also as observed.
+NC1's 0.733 was motion toward ITS formation geometry 21, consistent.
+
+**What this means for the primitive (honest):**
+1. D0's verdict (PARTIAL) stands as judged against its bars, but D0's INFERENCE
+   ("stored geometry becomes a true attractor; dynamics too slow") overclaims.
+   The truth: the system stores a SUPERPOSITION — the original geometry (old bond)
+   plus the geometry held during measurement (new bond formed mid-probe).
+2. **Measurement-write coupling:** under formation-frozen rest lengths, any probe
+   that HOLDS the system in a displaced state long enough for bond formation
+   writes that state into the substrate. The probe contaminates itself through
+   the free valence slot.
+3. Faster springs (D1) converge faster to the same compromise equilibrium —
+   the 0.5 ceiling is geometry, not damping. My §5 prediction (PASS 70%,
+   oscillation as main risk) was wrong twice over; the actual failure mode was
+   not in the predicted set. Lesson: before predicting dynamics, enumerate what
+   else the tick loop DOES during the measurement window (bond formation was
+   running throughout).
+
+Follow-up (NEW pre-reg only): PRIM14-D2 — same diagnostic with the write channel
+closed during probing (saturated valence or bridge-formation freeze), to measure
+the pure restore dynamics the D1 matrix was supposed to measure.

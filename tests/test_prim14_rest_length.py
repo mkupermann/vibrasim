@@ -42,12 +42,18 @@ def test_formation_freezes_rest_length():
     assert np.allclose(rest, 8.0, atol=0.5), rest
 
 
-def test_min_bridge_distance_r1_still_applies():
-    # l1=4 < r_1=5 cannot bridge; l2=12 <= r_2 can. Documented in the
-    # PRIM14-D0 LOGBOOK entry (bond-topology surprise).
+def test_consolidation_bonds_short_edge_only():
+    """At {13,17,29} consolidation forms exactly ONE bond — the SHORT edge
+    (13-17, rest 4); the long edge (dist 12) is outside the formation
+    radius. (Corrects the first D0 reading, which wrongly claimed r_1
+    excludes the short edge — see LOGBOOK 2026-08-10 D1 erratum.)"""
     w = World(_cfg(per_bond=True))
     _chain(w, (13.0, 17.0, 29.0))
-    assert int(w.b_alive[: w.b_count].sum()) == 1
+    alive = w.b_alive[: w.b_count]
+    assert int(alive.sum()) == 1
+    b = int(np.where(alive)[0][0])
+    assert {int(w.b_atom_i[b]), int(w.b_atom_j[b])} == {0, 1}
+    assert abs(float(w.b_rest_len[b]) - 4.0) < 0.5
 
 
 def test_disabled_flag_leaves_rest_length_unused():

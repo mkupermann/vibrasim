@@ -26,14 +26,17 @@ A/B PASS · C closed partial + C5 NULL · PRIM1-D2 PASS · PRIM2-D0 PASS · D1 P
 Collection **difference** via **ILW ports** is achievable as **engineered write**.
 Collection talent from **free shared physics alone** remains **unproven** at locked bars.
 
-### PRIM14 (2026-08-10): per-bond rest length — **PARTIAL**
-Stored geometry becomes a true attractor under a per-bond formation-frozen rest
-length (the direct G154 follow-on, R5): ARM-P restores monotonically toward the
-stored position where the global-r_eq control drifts away; content-neutrality and
-no-bond controls clean. Dynamics too slow for the 0.5 recovery bar (R=0.357 at
-2000 ticks) → PARTIAL. Next steps are NEW pre-regs: D1 dynamics-regime matrix
-(tension_k/damping), then a G154-style recall re-run only if restore times become
-practical. LOGBOOK 2026-08-10.
+### PRIM14 (2026-08-10): per-bond rest length — D0 PARTIAL, D1 NULL (informative)
+The G154 follow-on (R5). D0: displaced middle moves back toward stored geometry
+where the global-r_eq control does not (controls clean). D1 (tension×damping
+matrix): R ceilings at ~0.5 in every regime — STRUCTURAL, not dynamical. Mechanism
+census: a second bond forms DURING the probe at the displaced geometry
+(**measurement-write coupling** — formation-frozen rest lengths store every held
+geometry, including the measurement's), so all regimes settle at the two-attractor
+compromise. D0's "true attractor at stored geometry" inference is corrected: the
+substrate stores a superposition of stored + probe-held geometry. Next (NEW ID
+only): D2 with the write channel closed during probing (saturated valence /
+bond-formation freeze). LOGBOOK 2026-08-10.
 
 ### Next (discipline)
 - ~~Document ILW as §4.8 port doctrine~~ **done 2026-08-10** (CONCEPT §4.8 + ilw_port_doctrine.md + Brain-blocked statement)

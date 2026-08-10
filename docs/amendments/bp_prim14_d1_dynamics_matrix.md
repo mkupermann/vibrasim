@@ -1,6 +1,11 @@
 # PRIM14-D1 — restore-dynamics regime matrix (tension_k × damping)
 
 **Status: SIGNED OFF 2026-08-10 (condition: config plumbing committed before any run) — committed before data generation (D2). Bars final per D3.**
+**Verdict 2026-08-10: NULL** — R saturates at 0.48–0.495 (misses IMPROVED by 0.005),
+ceiling is STRUCTURAL: a second bond forms during relax at the displaced geometry
+(measurement-write coupling), so all regimes settle at the two-attractor compromise
+x=19. C0 reproduces D0; contrasts clean. This also corrects D0's inference — see
+LOGBOOK 2026-08-10. Follow-up (write channel closed during probe) = new ID.
 
 ## 1. The one question (D1)
 

@@ -1,0 +1,542 @@
+[
+  {
+    "condition": "C0",
+    "k": 0.5,
+    "damping": 0.95,
+    "seed": 42,
+    "P": {
+      "end_x": 19.571,
+      "R": 0.357,
+      "max_dev": 4.0,
+      "settled": false,
+      "unstable": true
+    },
+    "C": {
+      "end_x": 21.038,
+      "R": -0.009,
+      "max_dev": 4.038,
+      "settled": true,
+      "unstable": false
+    }
+  },
+  {
+    "condition": "C0",
+    "k": 0.5,
+    "damping": 0.95,
+    "seed": 7,
+    "P": {
+      "end_x": 19.571,
+      "R": 0.357,
+      "max_dev": 4.0,
+      "settled": false,
+      "unstable": true
+    },
+    "C": {
+      "end_x": 21.038,
+      "R": -0.009,
+      "max_dev": 4.038,
+      "settled": true,
+      "unstable": false
+    }
+  },
+  {
+    "condition": "C0",
+    "k": 0.5,
+    "damping": 0.95,
+    "seed": 13,
+    "P": {
+      "end_x": 19.571,
+      "R": 0.357,
+      "max_dev": 4.0,
+      "settled": false,
+      "unstable": true
+    },
+    "C": {
+      "end_x": 21.038,
+      "R": -0.009,
+      "max_dev": 4.038,
+      "settled": true,
+      "unstable": false
+    }
+  },
+  {
+    "condition": "C-a",
+    "k": 0.5,
+    "damping": 0.9,
+    "seed": 42,
+    "P": {
+      "end_x": 20.12,
+      "R": 0.22,
+      "max_dev": 4.0,
+      "settled": false,
+      "unstable": true
+    },
+    "C": {
+      "end_x": 21.049,
+      "R": -0.012,
+      "max_dev": 4.049,
+      "settled": true,
+      "unstable": false
+    }
+  },
+  {
+    "condition": "C-a",
+    "k": 0.5,
+    "damping": 0.9,
+    "seed": 7,
+    "P": {
+      "end_x": 20.12,
+      "R": 0.22,
+      "max_dev": 4.0,
+      "settled": false,
+      "unstable": true
+    },
+    "C": {
+      "end_x": 21.049,
+      "R": -0.012,
+      "max_dev": 4.049,
+      "settled": true,
+      "unstable": false
+    }
+  },
+  {
+    "condition": "C-a",
+    "k": 0.5,
+    "damping": 0.9,
+    "seed": 13,
+    "P": {
+      "end_x": 20.12,
+      "R": 0.22,
+      "max_dev": 4.0,
+      "settled": false,
+      "unstable": true
+    },
+    "C": {
+      "end_x": 21.049,
+      "R": -0.012,
+      "max_dev": 4.049,
+      "settled": true,
+      "unstable": false
+    }
+  },
+  {
+    "condition": "C-b",
+    "k": 0.5,
+    "damping": 0.98,
+    "seed": 42,
+    "P": {
+      "end_x": 19.079,
+      "R": 0.48,
+      "max_dev": 4.0,
+      "settled": true,
+      "unstable": false
+    },
+    "C": {
+      "end_x": 21.02,
+      "R": -0.005,
+      "max_dev": 4.02,
+      "settled": true,
+      "unstable": false
+    }
+  },
+  {
+    "condition": "C-b",
+    "k": 0.5,
+    "damping": 0.98,
+    "seed": 7,
+    "P": {
+      "end_x": 19.079,
+      "R": 0.48,
+      "max_dev": 4.0,
+      "settled": true,
+      "unstable": false
+    },
+    "C": {
+      "end_x": 21.02,
+      "R": -0.005,
+      "max_dev": 4.02,
+      "settled": true,
+      "unstable": false
+    }
+  },
+  {
+    "condition": "C-b",
+    "k": 0.5,
+    "damping": 0.98,
+    "seed": 13,
+    "P": {
+      "end_x": 19.079,
+      "R": 0.48,
+      "max_dev": 4.0,
+      "settled": true,
+      "unstable": false
+    },
+    "C": {
+      "end_x": 21.02,
+      "R": -0.005,
+      "max_dev": 4.02,
+      "settled": true,
+      "unstable": false
+    }
+  },
+  {
+    "condition": "C-c",
+    "k": 2.0,
+    "damping": 0.9,
+    "seed": 42,
+    "P": {
+      "end_x": 19.259,
+      "R": 0.435,
+      "max_dev": 4.0,
+      "settled": false,
+      "unstable": true
+    },
+    "C": {
+      "end_x": 21.097,
+      "R": -0.024,
+      "max_dev": 4.097,
+      "settled": true,
+      "unstable": false
+    }
+  },
+  {
+    "condition": "C-c",
+    "k": 2.0,
+    "damping": 0.9,
+    "seed": 7,
+    "P": {
+      "end_x": 19.259,
+      "R": 0.435,
+      "max_dev": 4.0,
+      "settled": false,
+      "unstable": true
+    },
+    "C": {
+      "end_x": 21.097,
+      "R": -0.024,
+      "max_dev": 4.097,
+      "settled": true,
+      "unstable": false
+    }
+  },
+  {
+    "condition": "C-c",
+    "k": 2.0,
+    "damping": 0.9,
+    "seed": 13,
+    "P": {
+      "end_x": 19.259,
+      "R": 0.435,
+      "max_dev": 4.0,
+      "settled": false,
+      "unstable": true
+    },
+    "C": {
+      "end_x": 21.097,
+      "R": -0.024,
+      "max_dev": 4.097,
+      "settled": true,
+      "unstable": false
+    }
+  },
+  {
+    "condition": "C-d",
+    "k": 2.0,
+    "damping": 0.95,
+    "seed": 42,
+    "P": {
+      "end_x": 19.06,
+      "R": 0.485,
+      "max_dev": 4.0,
+      "settled": true,
+      "unstable": false
+    },
+    "C": {
+      "end_x": 21.051,
+      "R": -0.013,
+      "max_dev": 4.051,
+      "settled": true,
+      "unstable": false
+    }
+  },
+  {
+    "condition": "C-d",
+    "k": 2.0,
+    "damping": 0.95,
+    "seed": 7,
+    "P": {
+      "end_x": 19.06,
+      "R": 0.485,
+      "max_dev": 4.0,
+      "settled": true,
+      "unstable": false
+    },
+    "C": {
+      "end_x": 21.051,
+      "R": -0.013,
+      "max_dev": 4.051,
+      "settled": true,
+      "unstable": false
+    }
+  },
+  {
+    "condition": "C-d",
+    "k": 2.0,
+    "damping": 0.95,
+    "seed": 13,
+    "P": {
+      "end_x": 19.06,
+      "R": 0.485,
+      "max_dev": 4.0,
+      "settled": true,
+      "unstable": false
+    },
+    "C": {
+      "end_x": 21.051,
+      "R": -0.013,
+      "max_dev": 4.051,
+      "settled": true,
+      "unstable": false
+    }
+  },
+  {
+    "condition": "C-e",
+    "k": 2.0,
+    "damping": 0.98,
+    "seed": 42,
+    "P": {
+      "end_x": 19.02,
+      "R": 0.495,
+      "max_dev": 4.0,
+      "settled": true,
+      "unstable": false
+    },
+    "C": {
+      "end_x": 21.02,
+      "R": -0.005,
+      "max_dev": 4.02,
+      "settled": true,
+      "unstable": false
+    }
+  },
+  {
+    "condition": "C-e",
+    "k": 2.0,
+    "damping": 0.98,
+    "seed": 7,
+    "P": {
+      "end_x": 19.02,
+      "R": 0.495,
+      "max_dev": 4.0,
+      "settled": true,
+      "unstable": false
+    },
+    "C": {
+      "end_x": 21.02,
+      "R": -0.005,
+      "max_dev": 4.02,
+      "settled": true,
+      "unstable": false
+    }
+  },
+  {
+    "condition": "C-e",
+    "k": 2.0,
+    "damping": 0.98,
+    "seed": 13,
+    "P": {
+      "end_x": 19.02,
+      "R": 0.495,
+      "max_dev": 4.0,
+      "settled": true,
+      "unstable": false
+    },
+    "C": {
+      "end_x": 21.02,
+      "R": -0.005,
+      "max_dev": 4.02,
+      "settled": true,
+      "unstable": false
+    }
+  },
+  {
+    "condition": "C-f",
+    "k": 8.0,
+    "damping": 0.9,
+    "seed": 42,
+    "P": {
+      "end_x": 19.105,
+      "R": 0.474,
+      "max_dev": 4.0,
+      "settled": true,
+      "unstable": false
+    },
+    "C": {
+      "end_x": 21.105,
+      "R": -0.026,
+      "max_dev": 4.105,
+      "settled": true,
+      "unstable": false
+    }
+  },
+  {
+    "condition": "C-f",
+    "k": 8.0,
+    "damping": 0.9,
+    "seed": 7,
+    "P": {
+      "end_x": 19.105,
+      "R": 0.474,
+      "max_dev": 4.0,
+      "settled": true,
+      "unstable": false
+    },
+    "C": {
+      "end_x": 21.105,
+      "R": -0.026,
+      "max_dev": 4.105,
+      "settled": true,
+      "unstable": false
+    }
+  },
+  {
+    "condition": "C-f",
+    "k": 8.0,
+    "damping": 0.9,
+    "seed": 13,
+    "P": {
+      "end_x": 19.105,
+      "R": 0.474,
+      "max_dev": 4.0,
+      "settled": true,
+      "unstable": false
+    },
+    "C": {
+      "end_x": 21.105,
+      "R": -0.026,
+      "max_dev": 4.105,
+      "settled": true,
+      "unstable": false
+    }
+  },
+  {
+    "condition": "C-g",
+    "k": 8.0,
+    "damping": 0.95,
+    "seed": 42,
+    "P": {
+      "end_x": 19.051,
+      "R": 0.487,
+      "max_dev": 4.0,
+      "settled": true,
+      "unstable": false
+    },
+    "C": {
+      "end_x": 21.051,
+      "R": -0.013,
+      "max_dev": 4.051,
+      "settled": true,
+      "unstable": false
+    }
+  },
+  {
+    "condition": "C-g",
+    "k": 8.0,
+    "damping": 0.95,
+    "seed": 7,
+    "P": {
+      "end_x": 19.051,
+      "R": 0.487,
+      "max_dev": 4.0,
+      "settled": true,
+      "unstable": false
+    },
+    "C": {
+      "end_x": 21.051,
+      "R": -0.013,
+      "max_dev": 4.051,
+      "settled": true,
+      "unstable": false
+    }
+  },
+  {
+    "condition": "C-g",
+    "k": 8.0,
+    "damping": 0.95,
+    "seed": 13,
+    "P": {
+      "end_x": 19.051,
+      "R": 0.487,
+      "max_dev": 4.0,
+      "settled": true,
+      "unstable": false
+    },
+    "C": {
+      "end_x": 21.051,
+      "R": -0.013,
+      "max_dev": 4.051,
+      "settled": true,
+      "unstable": false
+    }
+  },
+  {
+    "condition": "C-h",
+    "k": 8.0,
+    "damping": 0.98,
+    "seed": 42,
+    "P": {
+      "end_x": 19.02,
+      "R": 0.495,
+      "max_dev": 4.0,
+      "settled": true,
+      "unstable": false
+    },
+    "C": {
+      "end_x": 21.02,
+      "R": -0.005,
+      "max_dev": 4.022,
+      "settled": true,
+      "unstable": false
+    }
+  },
+  {
+    "condition": "C-h",
+    "k": 8.0,
+    "damping": 0.98,
+    "seed": 7,
+    "P": {
+      "end_x": 19.02,
+      "R": 0.495,
+      "max_dev": 4.0,
+      "settled": true,
+      "unstable": false
+    },
+    "C": {
+      "end_x": 21.02,
+      "R": -0.005,
+      "max_dev": 4.022,
+      "settled": true,
+      "unstable": false
+    }
+  },
+  {
+    "condition": "C-h",
+    "k": 8.0,
+    "damping": 0.98,
+    "seed": 13,
+    "P": {
+      "end_x": 19.02,
+      "R": 0.495,
+      "max_dev": 4.0,
+      "settled": true,
+      "unstable": false
+    },
+    "C": {
+      "end_x": 21.02,
+      "R": -0.005,
+      "max_dev": 4.022,
+      "settled": true,
+      "unstable": false
+    }
+  }
+]
