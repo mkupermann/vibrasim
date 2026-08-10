@@ -60,6 +60,28 @@ Arms:
 
 Metric: recovery fraction R = (8 − |x_mid(2000 ticks) − x_stored|) / 8.
 
+## 4a. ERRATUM (2026-08-10, before any data; approved, same ID)
+
+§4 as first committed was defective — an authoring error caught during harness
+construction, before any run: (i) it named positions {13,21,29} AND "as in the
+G154 probe" ({15,21,27}), which contradict each other; at probe geometry
+(spacing 6 = global r_eq) per-bond rest is IDENTICAL to global — zero contrast;
+at {13,21,29} "displace +8" lands exactly on the right anchor. (ii) More
+fundamentally, ANY symmetric pinned-end chain relaxes its middle to the
+geometric midpoint regardless of rest length (force balance k(l1−r)=k(l2−r) →
+l1=l2), so the symmetric design cannot discriminate the mechanism at all.
+
+Corrected protocol (question §1 unchanged, bars §5 numerically unchanged):
+- Stored chain ASYMMETRIC: {13, 17, 29} (l1=4, l2=12), ends pinned.
+- ARM-P (per-bond): rest lengths 4/12 → middle's attractor at 17 (stored).
+- ARM-C (global r_eq=6): middle's equilibrium at 21 (midpoint) — by
+  construction 4 units from stored.
+- Displacement: middle 17 → 21 (exactly ARM-C's equilibrium), release,
+  2000 ticks. Metric R = (4 − |x_mid − 17|) / 4.
+- NC1 (content-neutrality): bonds formed at {13,21,29} (8/8), middle set to 17,
+  released → must restore toward its FORMATION geometry (21).
+- NC2 unchanged (bridges deleted after displacement; drift within ±1).
+
 ## 5. Pre-registered bars (fixed before any data; D3)
 
 - **PASS:** ARM-P R ≥ 0.5 on ≥2/3 seeds AND ARM-C R ≤ 0.2 on ≥2/3 seeds AND
