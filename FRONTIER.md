@@ -31,13 +31,16 @@ Collection talent from **free shared physics alone** remains **unproven** at loc
 - New pre-reg only if a *non-engineered* free-chemistry talent mechanism is proposed
 - No lowering B1 from 0.90
 
-## Engineering side-track status (2026-08-10, closed for now)
+## Engineering side-track status (2026-08-10, two honest NULLs, closed)
 Flux G15/G16 port: tagging path + energy-conserving dreaming delivered and tested
-(E1–E3 green, auditor 1e-9 with dream active — see LOGBOOK 2026-08-10). The
-pre-registered consolidation experiment **G15F-1 = NULL-T**: tagged engrams do not
-survive training itself (N_T = {1, 0} vs bar ≥20 on 3/3 seeds); consolidation never
-testable at this regime. NC1 clean, no bar retune. Follow-up (persistent-engram
-training regime) requires a NEW pre-reg ID. G16F (self-model) still unwritten.
+(E1–E3 green, auditor 1e-9 with dream active). **G15F-1 = NULL-T** (tagged engrams
+don't survive training; consolidation never testable). **G15F-2 = NULL** (6-condition
+persistence map): tagged nodes are a ~2–5 s recency echo of the ongoing stimulus, not
+a store — decay threshold lifts the echo (C2/C5: ~25–32 nodes) but only for the
+last-trained pattern; continuous stimulus thermally destroys its own traces (C4: 0
+nodes); rest-phase survival S = 0.0 everywhere. Full case: LOGBOOK 2026-08-10.
+A G15F-3 would need stimulus-energy/decay-pressure decoupling — new ID, only if
+re-admitted. G16F untestable without persistent engrams. No bar was retuned.
 
 ## Archive threads (all honestly closed; do NOT reopen without re-admission)
 

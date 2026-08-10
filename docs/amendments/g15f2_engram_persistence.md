@@ -2,6 +2,10 @@
 
 **Status: SIGNED OFF 2026-08-10 (one condition applied: C4 wording clarified) —
 committed before any data generation (D2). Bars final per D3.**
+**Verdict 2026-08-10: NULL** — no condition TRAINABLE against the unchanged bars
+(C0 anchor reproduced G15F-1; no FAIL). Mechanism findings (recency echo, decay
+lever, thermal self-destruction) in LOGBOOK 2026-08-10; raw data in
+archive/run-logs/g15f2/.
 
 ## 1. The one question (D1)
 

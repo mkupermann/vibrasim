@@ -8055,3 +8055,46 @@ uniform-frequency whole-floor regime (~1300 nodes in 5 s) without accounting for
 populations, and (b) the windowed mono-frequency stimulus feeding far fewer coherent
 pairs per region. Lesson recorded: before gating an experiment on a population size,
 measure the PERSISTENCE of that population in the target regime, not its peak.
+
+## 2026-08-10  G15F-2: engram persistence condition map — **NULL** (informative)
+
+Pre-reg: docs/amendments/g15f2_engram_persistence.md (committed before data).
+Fixed 6x3 matrix (tools/run_g15f2_experiment.py), raw JSON in archive/run-logs/g15f2/.
+Auditor 1e-9 held in all 18 runs.
+
+| Cond | Change | N_T pattern A / B (3 seeds) | S after 60 s rest |
+|------|--------|------------------------------|--------------------|
+| C0 | anchor (G15F-1 regime) | 1/0, 1/0, 1/0 | 0 |
+| C1 | 5 s windows | 0/0 x3 | — |
+| C2 | T_decay_crit 0.05 | 25/0, 27/2, 24/1 | 0 |
+| C3 | gamma 20 | ~0 | — |
+| C4 | 30 s pattern A only | 0/0 x3 | — |
+| C5 | 5 s + 0.05 | 1/27, 0/32, 1/26 | 0 |
+
+**Verdict: NULL** per the frozen bars — no condition TRAINABLE (both patterns >= 20
+on >= 2/3 seeds; C4's single-pattern bar 0/3). C0 reproduced G15F-1 exactly (no FAIL).
+
+What the map established (mechanism, honest):
+1. **Recency window, not storage.** The >= 20 populations in C2/C5 belong exclusively
+   to the pattern being trained in the LAST window before the snapshot (A in C2,
+   B in C5). Tagged nodes are a trailing ~2-5 s echo of the ongoing stimulus.
+2. **Decay threshold is the direct lever** on that echo (1 -> ~25 nodes at 0.02 -> 0.05),
+   confirming the G15F-1 mechanism reading.
+3. **Thermal self-destruction.** C4 (continuous same-region stimulus, the intended
+   upper bound) yields ZERO nodes: the stimulus heats its own region past the decay
+   threshold faster than structures accumulate. Alternation's cooling gaps were
+   load-bearing, not incidental.
+4. **Rest-phase persistence is categorically absent** in this regime family (S = 0.0
+   everywhere, including at 2.5x decay threshold) — not marginal.
+
+Prediction calibration: predicted PASS 30 / PARTIAL 25 / NULL 40 / FAIL 5 — NULL was
+the modal prediction (adequate). Sub-predictions: "C2/C5 most likely TRAINABLE" half
+right (they lift only the recency echo); "C4 next" badly wrong — thermal self-heating
+was not in the model. The named most-likely failure mode ("decay is not the binding
+constraint") was itself wrong: decay IS the lever; the deeper structure is the
+recency window plus stimulus self-heating.
+
+Consequence: any G15F-3 would need a training regime that decouples stimulus energy
+from local decay pressure (e.g. engineered cooling gaps, lower per-quantum energy,
+or off-floor consolidation zones) — new ID, only if re-admitted. Without persistent
+engrams, dream consolidation and G16F remain untestable on Flux in this regime family.

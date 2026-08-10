@@ -1,0 +1,24 @@
+{
+  "condition": "C1",
+  "params": {
+    "window_s": 5.0,
+    "t_decay_crit": 0.02,
+    "gamma": 100.0,
+    "single_pattern": false
+  },
+  "seed": 42,
+  "N_T": {
+    "1": 0,
+    "2": 0
+  },
+  "N_end": {
+    "1": 0,
+    "2": 0
+  },
+  "S": {
+    "1": null,
+    "2": null
+  },
+  "audit_ok": true,
+  "wall_s": 16.9
+}
