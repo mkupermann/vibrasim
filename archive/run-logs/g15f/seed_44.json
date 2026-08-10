@@ -1,0 +1,64 @@
+{
+  "seed": 44,
+  "labeled": true,
+  "train_s": 30.0,
+  "rest_s": 60.0,
+  "N_T": {
+    "1": 1,
+    "2": 0
+  },
+  "arms": {
+    "D": {
+      "N_end": {
+        "1": 0,
+        "2": 0
+      },
+      "S": {
+        "1": 0.0,
+        "2": null
+      },
+      "audit_ok": true,
+      "replay_seeds_fired": 1,
+      "blend_events": 0,
+      "dream_energy_injected": 10.0
+    },
+    "N": {
+      "N_end": {
+        "1": 0,
+        "2": 0
+      },
+      "S": {
+        "1": 0.0,
+        "2": null
+      },
+      "audit_ok": true,
+      "replay_seeds_fired": 0,
+      "blend_events": 0,
+      "dream_energy_injected": 0.0
+    },
+    "R": {
+      "N_end": {
+        "1": 0,
+        "2": 0
+      },
+      "S": {
+        "1": 0.0,
+        "2": null
+      },
+      "audit_ok": true,
+      "replay_seeds_fired": 0,
+      "blend_events": 0,
+      "dream_energy_injected": 0.0
+    }
+  },
+  "audit_ok_train": true,
+  "wall_s": 93.4,
+  "NC1": {
+    "N_T": {
+      "1": 0,
+      "2": 0
+    },
+    "replay_seeds_fired": 0,
+    "blend_events": 0
+  }
+}

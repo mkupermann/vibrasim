@@ -31,12 +31,13 @@ Collection talent from **free shared physics alone** remains **unproven** at loc
 - New pre-reg only if a *non-engineered* free-chemistry talent mechanism is proposed
 - No lowering B1 from 0.90
 
-## Engineering side-track status (2026-08-10, not an experiment)
-Flux substrate: G15 (dreaming) / G16 (self-awareness) mechanically ported
-(`world/flux/dream.py`, `world/flux/self_aware.py`) but **functionally vacuous** — nothing in Flux
-assigns `pattern_id != 0` (the G10-style training/tagging path was not ported), so replay/blending
-can never fire. First validation run: 0 events on both substrates → honest **NULL**. Details in
-LOGBOOK 2026-08-10. No new gNNN opened; needs a pre-reg before any capability claim.
+## Engineering side-track status (2026-08-10, closed for now)
+Flux G15/G16 port: tagging path + energy-conserving dreaming delivered and tested
+(E1–E3 green, auditor 1e-9 with dream active — see LOGBOOK 2026-08-10). The
+pre-registered consolidation experiment **G15F-1 = NULL-T**: tagged engrams do not
+survive training itself (N_T = {1, 0} vs bar ≥20 on 3/3 seeds); consolidation never
+testable at this regime. NC1 clean, no bar retune. Follow-up (persistent-engram
+training regime) requires a NEW pre-reg ID. G16F (self-model) still unwritten.
 
 ## Archive threads (all honestly closed; do NOT reopen without re-admission)
 

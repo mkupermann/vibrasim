@@ -8020,3 +8020,38 @@ to 33 with BET-084 (9098c052, 2026-05-27) — now asserts against the live const
 `test_concept_reasoner.py` now importorskips torch (undeclared dep, archive JEP-28).
 Legacy-side diffs in the flux commit are docstring-only deprecation notices — no
 behavior change, so the bet reds predate this session.
+
+## 2026-08-10  G15F-1: Flux dream consolidation — **NULL-T** (gate missed, informative)
+
+Pre-reg: docs/amendments/g15f_dream_consolidation.md (committed before data).
+Engineering delivered first, all done-criteria green (tests/flux/test_g15f_engineering.py, 6/6):
+- E1: `Nodes.active_pattern_id` training signal (engineered write, mirror of Legacy
+  world/state.py:262); allocation inherits, explicit pid overrides, recycled slots cleared.
+- E2: `apply_dream` now conserves energy — blend nodes drain sources pro-rata (net creation 0),
+  replay-seed energy reported in the diagnostics dict and booked via `EnergyAuditor.record_injection`.
+  F0 ledger holds at 1e-9 over 60 simulated s with dream + blends active.
+- E3: labeled region+frequency training harness (`tools/run_g15f_experiment.py`,
+  `inject_hot_floor(x_window=...)`).
+
+One technical smoke (D8), then THE full run (seeds 42/43/44, arms Dream / energy-matched
+noise / rest, plus NC1 no-engram control). Raw JSON: archive/run-logs/g15f/.
+
+**Result: Gate G-T missed on 3/3 seeds** — N_T = {A: 1, B: 0} after 30 s of alternating
+labeled training (bar: >= 20 per pattern on >= 2/3 seeds). Tagged nodes form during a
+window and decay within seconds under the T-decay regime near the hot floor; at t=30 s
+only one node of the last-active pattern survives. Consolidation was therefore never
+testable. Secondary observations (no evidential weight for the primary question):
+NC1 clean (0 replay seeds, 0 blends — the mechanism gates correctly on trained engrams);
+auditor held 1e-9 in every phase of every arm; wallclock ~94 s per seed incl. NC1.
+
+**Verdict: NULL-T** per the frozen bars. No retry under this ID (D4). Any follow-up —
+e.g. a training regime that yields persistent tagged engrams (lower decay pressure,
+higher binding rate, or longer windows) — requires a NEW pre-registered ID.
+
+**Prediction calibration (honest):** author predicted NULL-T at 5% (G-T pass at 70%);
+actual outcome NULL-T. Model error: engram-formation rate was extrapolated from the
+uniform-frequency whole-floor regime (~1300 nodes in 5 s) without accounting for
+(a) node counts there being formation-vs-decay steady-state snapshots, not persistent
+populations, and (b) the windowed mono-frequency stimulus feeding far fewer coherent
+pairs per region. Lesson recorded: before gating an experiment on a population size,
+measure the PERSISTENCE of that population in the target regime, not its peak.

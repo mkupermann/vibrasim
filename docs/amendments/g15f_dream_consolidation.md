@@ -1,6 +1,9 @@
 # G15F-1 — Flux dream consolidation (engineered pattern tagging + conserving replay)
 
 **Status: SIGNED OFF 2026-08-10, no conditions — committed before any data generation (D2).**
+**Verdict 2026-08-10: NULL-T** — gate G-T missed on 3/3 seeds (N_T = {1, 0} vs ≥20 per
+pattern); consolidation never testable. Judged against the unchanged bars below; full
+case in LOGBOOK 2026-08-10, raw data in archive/run-logs/g15f/. No retry under this ID.
 Per D3 any bar change from here on requires a new ID. Per DISCIPLINE_SHARP §4 this is
 an engineering side-track amendment (flux capability parity), NOT a belief-path rung;
 re-admitted with the sign-off. Bars below are final.
