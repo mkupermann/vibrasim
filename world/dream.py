@@ -1,4 +1,7 @@
-"""G15 — The Dreaming Substrate.
+"""G15 — The Dreaming Substrate (LEGACY, FROZEN).
+
+FROZEN (2026-08-10): Legacy substrate is deprecated. No new features.
+Only critical bug fixes allowed. Use Flux substrate instead (see world/flux/dream.py).
 
 Offline replay + concept blending + cross-modal hallucination on top of
 the EQMOD continuous-physics emergent-atom substrate.

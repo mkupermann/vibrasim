@@ -1,3 +1,5 @@
+# FROZEN (2026-08-10): Legacy substrate is deprecated. No new features.
+# Only critical bug fixes allowed. Use Flux substrate instead.
 from __future__ import annotations
 import numpy as np
 from world.config import WorldConfig

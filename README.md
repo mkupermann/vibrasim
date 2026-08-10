@@ -214,10 +214,13 @@ Total suite: **313 non-slow tests + 22 slow tests passing**. Verified on macOS-a
 
 Since 2026-05-10 the repo carries two substrates side by side.
 
-- **Legacy** (`world/`, `agent/`) — the engineered six-level binding rule set documented throughout this README. Honest scope as of 2026-05-10: single-pattern recall works (M4 contract A+B); G19 predictive-babble falsifier returned FAIL on the first real-corpus run with z-scores statistically indistinguishable from white noise; the README has been corrected (commit `d83b82c`) to remove overclaims and document the FAIL.
+- **Legacy** (`world/`, `agent/`) — **DEPRECATED as of 2026-08-10**. The engineered six-level binding rule set documented throughout this README. Honest scope as of 2026-05-10: single-pattern recall works (M4 contract A+B); G19 predictive-babble falsifier returned FAIL on the first real-corpus run with z-scores statistically indistinguishable from white noise; the README has been corrected (commit `d83b82c`) to remove overclaims and document the FAIL. **No new features will be added to Legacy; only critical bug fixes. Use Flux instead.**
 - **Flux** (`world/flux/`, `agent/flux/`) — **DEFAULT SUBSTRATE** as of 2026-07-27. A substrate where the six engineered levels are replaced by one principle: energy quanta flow through an open boundary, structures kondensieren wo sie diesen Fluss effizienter kanalisieren, learning is reconfiguration toward more efficient flux channelling. Spec: [`docs/superpowers/specs/2026-05-10-flux-substrate-design.md`](docs/superpowers/specs/2026-05-10-flux-substrate-design.md). Status as of 2026-07-27: F0 complete (skeleton + energy-conservation audit); F1a complete (binding + T-based decay + T3 crystallization, ratio 9.0); F1b complete (bridges + structure-flux + Hebbian plasticity + node dissociation, T4 decay-without-flux passes); **F1c complete (thermal layer + bidirectional injection landed; T2 Bénard test FIXED — now passes reliably with `pressure_coeff=0.0`)**; F2 (cochlea + synthesis + first audio input) is next.
 
 The two substrates do not share state. **Flux is now the default** (`python -m world run` uses Flux; use `--substrate legacy` for Legacy). The legacy substrate remains runnable as the comparison baseline; the flux substrate carries the unprejudiced learning hypothesis.
+
+> **⚠️ LEGACY DEPRECATION NOTICE (2026-08-10)**
+> The Legacy substrate is **deprecated** as of 2026-08-10. No new features will be added; only critical bug fixes will be accepted. All new development should use the **Flux substrate** instead. Legacy will be removed in a future release (target: 2027-01-01).
 
 ---
 

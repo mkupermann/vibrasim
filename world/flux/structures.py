@@ -31,6 +31,7 @@ class Nodes:
         self.freq = np.zeros(N, dtype=np.float64)
         self.born_tick = np.zeros(N, dtype=np.int64)
         self.alive = np.zeros(N, dtype=np.bool_)
+        self.pattern_id = np.zeros(N, dtype=np.int64)  # G15: pattern_id for each node
         self._next_search = 0
 
     def n_alive(self) -> int:
@@ -40,7 +41,7 @@ class Nodes:
         return float(self.energy[self.alive].sum())
 
     def add(self, pos: Sequence[float], energy: float, freq: float,
-            born_tick: int) -> int:
+            born_tick: int, pattern_id: int = 0) -> int:
         N = self.max_nodes
         for i in range(N):
             j = (self._next_search + i) % N
@@ -49,6 +50,7 @@ class Nodes:
                 self.energy[j] = float(energy)
                 self.freq[j] = float(freq)
                 self.born_tick[j] = int(born_tick)
+                self.pattern_id[j] = int(pattern_id)
                 self.alive[j] = True
                 self._next_search = (j + 1) % N
                 return j

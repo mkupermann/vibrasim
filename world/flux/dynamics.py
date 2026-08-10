@@ -70,6 +70,9 @@ def tick(quanta: Quanta, grid: Grid, dt: float,
          bridges=None,
          plasticity_cfg=None,
          thermal_cfg=None,
+         dream_cfg=None,
+         self_aware_cfg=None,
+         self_aware_state=None,
          rng: np.random.Generator | None = None,
          tick_index: int = 0):
     """Run one tick.
@@ -83,6 +86,13 @@ def tick(quanta: Quanta, grid: Grid, dt: float,
     are applied right after move (step 3 in the amended tick order),
     and the thermal boundary clamp is applied right after the T-update
     (final step). Pure-substrate convection — no coupling to binding.
+    
+    G15 dreaming: when `dream_cfg` is provided, offline replay + concept
+    blending is applied after binding and before plasticity.
+    
+    G16 self-awareness: when `self_aware_cfg` is provided, self-model
+    updates + prediction error + workspace winner + self-modification
+    is applied after plasticity.
     """
     # 1. Inject
     if injector is not None:
@@ -120,7 +130,16 @@ def tick(quanta: Quanta, grid: Grid, dt: float,
             bridges=bridges,
         )
 
-    # 5. F1a T-based decay (handles hot-zone suppression). Sums into
+    # 5. Dreaming (G15) - offline replay + concept blending
+    if nodes is not None and dream_cfg is not None:
+        from world.flux.dream import apply_dream
+        rng_use = rng if rng is not None else np.random.default_rng()
+        apply_dream(
+            quanta=quanta, nodes=nodes, grid=grid,
+            dt=dt, cfg=dream_cfg, tick_index=tick_index, rng=rng_use,
+        )
+
+    # 6. F1a T-based decay (handles hot-zone suppression). Sums into
     # the same decay_heat channel as the F1b bridge-flux dissociation.
     decay_heat = 0.0
     if nodes is not None and decay_cfg is not None:
@@ -145,7 +164,15 @@ def tick(quanta: Quanta, grid: Grid, dt: float,
         decay_heat += prune_bridges_and_nodes(bridges, nodes,
                                                plasticity_cfg)
 
-    # 8. Temperature
+    # 8. Self-awareness (G16) - self-model + prediction error + workspace winner
+    if nodes is not None and self_aware_cfg is not None:
+        from world.flux.self_aware import apply_self_aware
+        apply_self_aware(
+            quanta=quanta, nodes=nodes, grid=grid,
+            dt=dt, cfg=self_aware_cfg, state=self_aware_state, tick_index=tick_index,
+        )
+
+    # 9. Temperature
     density = _compute_density(quanta, grid)
     grid.update_temperature(density)
 

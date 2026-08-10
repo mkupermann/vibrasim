@@ -1,5 +1,9 @@
 from __future__ import annotations
-import tomllib
+import sys
+try:
+    import tomllib
+except ImportError:
+    import tomli as tomllib
 from dataclasses import dataclass, replace, fields
 from pathlib import Path
 

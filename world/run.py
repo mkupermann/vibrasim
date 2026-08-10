@@ -1,11 +1,11 @@
 """CLI entry point for the World of Vibrations simulation.
 
-Now supports both Legacy and Flux substrates.
-Default: Flux (F0-F1c) for new users; use --substrate legacy for the original.
+Default substrate: Flux (F0-F1c, recommended).
+Use `--substrate legacy` for the original (deprecated).
 
 Usage:
     python -m world run --substrate flux --duration 60.0  # Flux (default)
-    python -m world run --substrate legacy --duration 60.0  # Legacy substrate
+    python -m world run --substrate legacy --duration 60.0  # Legacy (deprecated)
 """
 from __future__ import annotations
 import argparse
@@ -13,7 +13,6 @@ import sys
 import time
 from dataclasses import replace
 from pathlib import Path
-import numpy as np
 
 from world.config import WorldConfig, load_config
 from world.state import World
@@ -22,11 +21,20 @@ from world.snapshot import save_snapshot, snapshot_filename
 
 
 def run_legacy(args: argparse.Namespace, cfg: WorldConfig) -> int:
-    """Run the legacy substrate simulation."""
+    """Run the legacy substrate simulation (DEPRECATED).
+    
+    WARNING: Legacy substrate is deprecated as of 2026-08-10.
+    Use --substrate flux instead. Legacy will be removed in a future release.
+    No new features will be added to Legacy; only critical bug fixes.
+    """
     import warnings
+    # Force deprecation warnings to be displayed
+    warnings.filterwarnings("always", category=DeprecationWarning)
     warnings.warn(
-        "Legacy substrate is deprecated. Use --substrate flux instead. "
-        "Legacy will be removed in a future release.",
+        "LEGACY SUBSTRATE IS DEPRECATED as of 2026-08-10. "
+        "Use --substrate flux instead. "
+        "Legacy will be removed in a future release. "
+        "No new features will be added; only critical bug fixes.",
         DeprecationWarning,
         stacklevel=2
     )
@@ -67,32 +75,43 @@ def run_legacy(args: argparse.Namespace, cfg: WorldConfig) -> int:
 
 
 def run_flux(args: argparse.Namespace) -> int:
-    """Run the Flux substrate simulation (F0-F1c)."""
+    """Run the Flux substrate simulation by delegating to world.run_flux.
+
+    Single source of truth for the flux loop is world/run_flux.py::main —
+    this wrapper only translates the `world run` argparse namespace into
+    run_flux argv (review 2026-08-10: the previous inline copy of the loop
+    had already drifted from run_flux.py).
+    """
     from world.run_flux import main as flux_main
-    
-    # Convert args to flux-compatible format
-    flux_argv = [
-        f"--duration={args.duration}",
-    ]
-    if args.snapshot_every:
+
+    flux_argv = [f"--duration={args.duration}"]
+    if args.snapshot_every is not None:
         flux_argv.append(f"--snapshot-every={args.snapshot_every}")
-    if args.snapshot_dir:
+    if args.snapshot_dir is not None:
         flux_argv.append(f"--snapshot-dir={args.snapshot_dir}")
-    if args.seed:
+    if args.seed is not None:
         flux_argv.append(f"--seed={args.seed}")
     if args.cube:
-        flux_argv.append(f"--cube={' '.join(map(str, args.cube))}")
-    if args.n_quanta:
+        flux_argv.append("--cube")
+        flux_argv.extend(str(c) for c in args.cube)
+    if args.n_quanta is not None:
         flux_argv.append(f"--n-quanta={args.n_quanta}")
-    if hasattr(args, 'thermal') and args.thermal:
-        flux_argv.append("--thermal")
-    if hasattr(args, 'binding') and args.binding:
-        flux_argv.append("--binding")
-    if hasattr(args, 'plasticity') and args.plasticity:
-        flux_argv.append("--plasticity")
-    if hasattr(args, 'energy_audit') and args.energy_audit:
+    flux_argv.append("--thermal" if args.thermal else "--no-thermal")
+    flux_argv.append("--binding" if args.binding else "--no-binding")
+    flux_argv.append("--plasticity" if args.plasticity else "--no-plasticity")
+    if args.energy_audit:
         flux_argv.append("--energy-audit")
-    
+    if args.dream:
+        flux_argv.append("--dream")
+        flux_argv.append(f"--dream-seeds={args.dream_seeds}")
+        flux_argv.append(f"--dream-energy={args.dream_energy}")
+    if args.self_aware:
+        flux_argv.append("--self-aware")
+    if args.visualize:
+        flux_argv.append("--visualize")
+        flux_argv.append(f"--viz-interval={args.viz_interval}")
+        flux_argv.append(f"--viz-dir={args.viz_dir}")
+
     return flux_main(flux_argv)
 
 
@@ -104,7 +123,7 @@ def main(argv: list[str] | None = None) -> int:
     run = sub.add_parser("run", help="Run simulation (Flux by default)")
     run.add_argument("--substrate", type=str, default="flux",
                      choices=["flux", "legacy"],
-                     help="Substrate to use: 'flux' (default, F0-F1c) or 'legacy' (original)")
+                     help="Substrate to use: 'flux' (default, F0-F1c, recommended) or 'legacy' (deprecated)")
     run.add_argument("--config", type=Path, default=None,
                      help="Config file (legacy only)")
     run.add_argument("--duration", type=float, default=60.0)
@@ -120,15 +139,28 @@ def main(argv: list[str] | None = None) -> int:
                      help="Grid dimensions Lx Ly Lz (flux only, default: 80 40 10)")
     run.add_argument("--n-quanta", type=int, default=None,
                      help="Number of quanta (flux only, default: 10000)")
-    run.add_argument("--thermal", action="store_true", default=True,
+    run.add_argument("--thermal", action=argparse.BooleanOptionalAction, default=True,
                      help="Enable thermal dynamics (flux only, F1c)")
-    run.add_argument("--binding", action="store_true", default=True,
+    run.add_argument("--binding", action=argparse.BooleanOptionalAction, default=True,
                      help="Enable binding (flux only, F1a)")
-    run.add_argument("--plasticity", action="store_true", default=True,
+    run.add_argument("--plasticity", action=argparse.BooleanOptionalAction, default=True,
                      help="Enable plasticity (flux only, F1b)")
     run.add_argument("--energy-audit", action="store_true", default=False,
                      help="Enable energy conservation audit (flux only)")
-
+    run.add_argument("--dream", action="store_true", default=False,
+                     help="Enable G15 dreaming (flux only)")
+    run.add_argument("--self-aware", action="store_true", default=False,
+                     help="Enable G16 self-awareness (flux only)")
+    run.add_argument("--dream-seeds", type=int, default=5,
+                     help="Number of dream replay seeds per tick (flux only, default: 5)")
+    run.add_argument("--dream-energy", type=float, default=10.0,
+                     help="Energy to inject per dream seed (flux only, default: 10.0)")
+    run.add_argument("--visualize", action="store_true", default=False,
+                     help="Enable 3D visualization (saves frames to --viz-dir)")
+    run.add_argument("--viz-interval", type=float, default=2.0,
+                     help="Visualization update interval in seconds (default: 2.0)")
+    run.add_argument("--viz-dir", type=str, default="/tmp/flux_viz",
+                     help="Directory to save visualization frames (default: /tmp/flux_viz)")
     gui = sub.add_parser("gui", help="Open the interactive PyVista viewer (legacy only)")
     gui.add_argument("--config", type=Path, default=None)
     gui.add_argument("--seed", type=int, default=None)

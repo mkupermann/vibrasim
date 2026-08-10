@@ -24,6 +24,18 @@ from world.flux.quantum import Quanta
 from world.flux.grid import Grid
 from world.flux.structures import Nodes
 
+# Numba-accelerated pair finding (CPU-optimized)
+try:
+    from numba import njit
+    HAS_NUMBA = True
+except ImportError:
+    HAS_NUMBA = False
+
+    def njit(fn=None, **kwargs):
+        # Identity decorator so @njit doesn't NameError at import time;
+        # the HAS_NUMBA gate keeps the numpy path in use.
+        return fn if fn is not None else (lambda f: f)
+
 
 def pred_coherence(freq_a: float, freq_b: float,
                    eps: float = 1.0) -> float:
@@ -38,6 +50,31 @@ def pred_coherence(freq_a: float, freq_b: float,
     return 1.0 if abs(freq_a - freq_b) < eps else 0.0
 
 
+@njit
+def _find_pairs_within_numba(pos: np.ndarray, r2: float) -> np.ndarray:
+    """Numba-accelerated pair finding. Returns flat array of (i, j) pairs.
+    
+    Args:
+        pos: (n, 3) array of positions.
+        r2: Squared radius threshold.
+    
+    Returns:
+        Flat array of shape (2 * M,) where M is the number of pairs.
+        Pairs are stored as [i1, j1, i2, j2, ...].
+    """
+    n = pos.shape[0]
+    pairs = []
+    for i in range(n):
+        for j in range(i + 1, n):
+            dx = pos[i, 0] - pos[j, 0]
+            dy = pos[i, 1] - pos[j, 1]
+            dz = pos[i, 2] - pos[j, 2]
+            if dx * dx + dy * dy + dz * dz < r2:
+                pairs.append(i)
+                pairs.append(j)
+    return np.array(pairs, dtype=np.int64)
+
+
 def find_pairs_within(quanta: Quanta, r: float) -> np.ndarray:
     """Return shape (M, 2) int array of (i, j) pairs with i<j where the
     two alive quanta are within Euclidean distance r of each other.
@@ -50,6 +87,9 @@ def find_pairs_within(quanta: Quanta, r: float) -> np.ndarray:
     pair containing a scaffold anyway; filtering here keeps the O(N²)
     inner loop bounded by the floor-source population when the
     scaffold density is high.
+    
+    Uses Numba-accelerated implementation if available, falling back to
+    NumPy for compatibility.
     """
     alive_idx = np.where(quanta.alive & (quanta.polarity != -1))[0]
     n = alive_idx.size
@@ -57,17 +97,29 @@ def find_pairs_within(quanta: Quanta, r: float) -> np.ndarray:
         return np.zeros((0, 2), dtype=np.int64)
 
     pos = quanta.pos[alive_idx]  # (n, 3)
-    # Pairwise squared distances
-    diff = pos[:, None, :] - pos[None, :, :]  # (n, n, 3)
-    d2 = (diff * diff).sum(axis=-1)  # (n, n)
     r2 = r * r
 
-    # Upper-triangle mask, strictly within r (d2 < r2)
-    i_local, j_local = np.where(np.triu(d2 < r2, k=1))
-    if i_local.size == 0:
-        return np.zeros((0, 2), dtype=np.int64)
-    pairs = np.stack([alive_idx[i_local], alive_idx[j_local]], axis=1)
-    return pairs.astype(np.int64)
+    # Use Numba if available and n is large enough to benefit
+    if HAS_NUMBA and n > 100:
+        flat_pairs = _find_pairs_within_numba(pos, r2)
+        if flat_pairs.size == 0:
+            return np.zeros((0, 2), dtype=np.int64)
+        # Reshape into (M, 2)
+        pairs = flat_pairs.reshape(-1, 2)
+        # Map local indices back to global indices
+        global_pairs = np.stack([alive_idx[pairs[:, 0]], alive_idx[pairs[:, 1]]], axis=1)
+        return global_pairs.astype(np.int64)
+    else:
+        # Fallback to NumPy implementation
+        diff = pos[:, None, :] - pos[None, :, :]  # (n, n, 3)
+        d2 = (diff * diff).sum(axis=-1)  # (n, n)
+
+        # Upper-triangle mask, strictly within r (d2 < r2)
+        i_local, j_local = np.where(np.triu(d2 < r2, k=1))
+        if i_local.size == 0:
+            return np.zeros((0, 2), dtype=np.int64)
+        pairs = np.stack([alive_idx[i_local], alive_idx[j_local]], axis=1)
+        return pairs.astype(np.int64)
 
 
 @dataclass

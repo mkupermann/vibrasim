@@ -1,4 +1,7 @@
-"""G16 — The Self-Aware Substrate.
+"""G16 — The Self-Aware Substrate (LEGACY, FROZEN).
+
+FROZEN (2026-08-10): Legacy substrate is deprecated. No new features.
+Only critical bug fixes allowed. Use Flux substrate instead (see world/flux/self_aware.py).
 
 Operationalises the leading scientific theories of ACCESS consciousness
 in continuous-physics emergent-atom substrate form.
