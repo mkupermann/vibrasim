@@ -95,6 +95,11 @@ def apply_dream(
         "replay_seeds_fired": 0,
         "blend_events": 0,
         "co_active_patterns": 0,
+        # G15F E2 — external energy this call put into the system. The
+        # CALLER must book it via EnergyAuditor.record_injection(), or
+        # the F0 conservation ledger breaks. Blending is internally
+        # conservative (transfer, not creation) and needs no booking.
+        "energy_injected": 0.0,
     }
     
     if not cfg.dream_mode_enabled:
@@ -146,10 +151,12 @@ def apply_dream(
     )
     seed_global_indices = engram_indices[seed_local_indices]
     
-    # Inject energy into each seed node
+    # Inject energy into each seed node (external energy — booked by the
+    # caller from out["energy_injected"], see E2 note above)
     for idx in seed_global_indices:
         nodes.energy[idx] += cfg.dream_replay_seed_energy
-    
+    out["energy_injected"] += float(n_seeds * cfg.dream_replay_seed_energy)
+
     out["replay_seeds_fired"] = n_seeds
     
     # 3. Concept blending
@@ -182,23 +189,31 @@ def apply_dream(
                         nodes.pos[nodes1],
                         nodes.pos[nodes2]
                     ]), axis=0)
-                    total_energy = nodes.energy[nodes1].sum() + nodes.energy[nodes2].sum()
                     avg_freq = np.mean(np.concatenate([
                         nodes.freq[nodes1],
                         nodes.freq[nodes2]
                     ]))
-                    
-                    # Allocate new node (with new pattern_id)
+
+                    # G15F E2 — conservative transfer: the blend node's
+                    # energy is DRAINED pro-rata (50% each) from the two
+                    # source populations; net creation is exactly zero.
+                    # Drains apply only after slot allocation succeeds.
+                    drain1 = 0.5 * nodes.energy[nodes1]
+                    drain2 = 0.5 * nodes.energy[nodes2]
+                    blend_energy = float(drain1.sum() + drain2.sum())
+
                     new_pattern_id = max(nodes.pattern_id.max(), 0) + 1
                     new_slot = nodes.add(
                         pos=centroid,
-                        energy=total_energy * 0.5,  # 50% of combined energy
+                        energy=blend_energy,
                         freq=avg_freq,
                         born_tick=tick_index,
                         pattern_id=new_pattern_id
                     )
-                    
+
                     if new_slot >= 0:
+                        nodes.energy[nodes1] -= drain1
+                        nodes.energy[nodes2] -= drain2
                         out["blend_events"] += 1
     
     return out

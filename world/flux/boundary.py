@@ -27,7 +27,8 @@ def inject_hot_floor(quanta: Quanta, grid: Grid,
                      vel_xy_sigma: float = 0.1,
                      vel_z_sigma: float | None = None,
                      freq_hz_override: float | None = None,
-                     rng: np.random.Generator | None = None) -> int:
+                     rng: np.random.Generator | None = None,
+                     x_window: tuple[float, float] | None = None) -> int:
     """Inject up to `n` vibrations at the hot floor.
 
     Positions are uniform random in the z=0 voxel layer
@@ -59,9 +60,13 @@ def inject_hot_floor(quanta: Quanta, grid: Grid,
         if freq_hz_override is not None
         else None
     )
+    # G15F E3: optional x-restricted injection window for labeled
+    # training stimuli (region-segregated patterns).
+    x_lo, x_hi = (0.0, Lx * s) if x_window is None else (
+        max(0.0, float(x_window[0])), min(Lx * s, float(x_window[1])))
     injected = 0
     for _ in range(n):
-        x = rng.uniform(0.0, Lx * s)
+        x = rng.uniform(x_lo, x_hi)
         y = rng.uniform(0.0, Ly * s)
         z = rng.uniform(0.0, s)  # Z within first voxel layer
         vx = rng.normal(0.0, vel_xy_sigma)
