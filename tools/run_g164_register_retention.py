@@ -78,9 +78,11 @@ def run_one(pattern, seed: int, arm: str, idle_ticks: int) -> dict:
     thermal 0 exactly as G163.
     """
     per_bond = arm != "OLDREST"
-    idle_thermal = 0.0 if arm == "T0" else IDLE_THERMAL
+    kicks_on = arm != "T0"
     cfg_quiet = base_cfg(seed, per_bond, 0.0)
     w = World(cfg_quiet)
+    kick_rng = np.random.default_rng(
+        (seed * 1_000_003 + idle_ticks * 101 + hash(arm) % 997) & 0x7FFFFFFF)
 
     xs_enc = encoded_positions(pattern)
     slots = [w.allocate_node(np.array([x, BAND_Y, 30.0]), 1.0, True, 4,
@@ -100,13 +102,29 @@ def run_one(pattern, seed: int, arm: str, idle_ticks: int) -> dict:
     if arm == "NEG":
         w.b_alive[: w.b_count] = False
 
-    # IDLE — free dynamics, pins released, thermal per arm
-    w.config = replace(w.config, node_thermal_speed=idle_thermal)
+    # IDLE — free dynamics, pins released; agitation via periodic velocity
+    # kicks (erratum 2a: node_thermal_speed is allocation-time only)
     census_events = []
     new_pairs_total = 0
     lost_pairs_total = 0
+    KICK_EVERY = 50
+    KICK_SPEED = IDLE_THERMAL / np.sqrt(4.0)   # = allocate_node convention
+    rms_accum = 0.0
+    rms_n = 0
+    written = np.array([[x, BAND_Y, 30.0] for x in xs_enc])
     for t in range(idle_ticks):
+        if kicks_on and t % KICK_EVERY == 0:
+            for s_ in slots:
+                z = kick_rng.uniform(-1.0, 1.0)
+                phi = kick_rng.uniform(0.0, 2 * np.pi)
+                sq = np.sqrt(1 - z * z)
+                w.k_vel[s_] = KICK_SPEED * np.array(
+                    [sq * np.cos(phi), sq * np.sin(phi), z])
         tick(w, w.config.dt)
+        if (t + 1) % 10 == 0:
+            disp = np.array([w.k_pos[s_] for s_ in slots]) - written
+            rms_accum += float((disp ** 2).sum(axis=1).mean())
+            rms_n += 1
         if (t + 1) % CENSUS_EVERY == 0 and arm not in ("NEG",):
             c_now = census(w)
             pairs_now = {(min(a, b), max(a, b)) for a, b, _ in c_now}
@@ -117,8 +135,6 @@ def run_one(pattern, seed: int, arm: str, idle_ticks: int) -> dict:
                 pairs0 = pairs_now
     drift_max = float(max(
         abs(float(w.k_pos[s][0]) - x) for s, x in zip(slots, xs_enc)))
-    # back to quiet for scramble+retrieve
-    w.config = replace(w.config, node_thermal_speed=0.0)
 
     # SCRAMBLE
     for i, s in enumerate(slots):
@@ -145,10 +161,11 @@ def run_one(pattern, seed: int, arm: str, idle_ticks: int) -> dict:
         d = float(w.k_pos[slots[i + 1]][0] - w.k_pos[slots[i]][0])
         decoded.append(1 if d > UNIFORM else 0)
     acc = sum(int(a == b) for a, b in zip(decoded, pattern)) / K_BITS
+    rms = float(np.sqrt(rms_accum / max(1, rms_n)))
     return {"acc": acc, "write_valid": write_valid,
             "census_events": len(census_events),
             "new_bonds": new_pairs_total, "lost_bonds": lost_pairs_total,
-            "drift_max": round(drift_max, 2)}
+            "drift_max": round(drift_max, 2), "rms": round(rms, 4)}
 
 
 def main():
@@ -160,6 +177,8 @@ def main():
     new_bonds = {f"{a}@{n}": 0 for a, n in arms}
     lost_bonds = {f"{a}@{n}": 0 for a, n in arms}
     drift = {f"{a}@{n}": 0.0 for a, n in arms}
+    rms_sum = {f"{a}@{n}": 0.0 for a, n in arms}
+    rms_cnt = {f"{a}@{n}": 0 for a, n in arms}
     write_valid_all = True
 
     for seed in SEEDS:
@@ -178,6 +197,8 @@ def main():
                 new_bonds[key] += r["new_bonds"]
                 lost_bonds[key] += r["lost_bonds"]
                 drift[key] = max(drift[key], r["drift_max"])
+                rms_sum[key] += r["rms"]
+                rms_cnt[key] += 1
                 if a == "P":
                     write_valid_all &= r["write_valid"]
         for k in agg:
@@ -191,6 +212,7 @@ def main():
         "census_change_events": events,
         "new_bonds": new_bonds, "lost_bonds": lost_bonds,
         "drift_max": drift,
+        "rms_mean": {k: (rms_sum[k] / max(1, rms_cnt[k])) for k in rms_sum},
         "write_valid_all_P": bool(write_valid_all),
     }
     (OUT_DIR / "results.json").write_text(json.dumps(out, indent=2))
@@ -198,6 +220,7 @@ def main():
     print(f"# census_change_events={events}")
     print(f"# new_bonds={new_bonds} lost_bonds={lost_bonds}")
     print(f"# drift_max={drift}")
+    print("# rms_mean=" + json.dumps({k: round(v, 4) for k, v in out['rms_mean'].items()}))
     print(f"# write_valid_all_P={write_valid_all}")
     print(f"# written -> {OUT_DIR / 'results.json'}")
     return 0

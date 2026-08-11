@@ -45,6 +45,33 @@ Arms (8 patterns × seeds {42, 7, 13} each):
 - **ARM-OLDREST@50k:** global r_eq, thermal 2.0 — attribution control.
 - **ARM-NEG@50k:** bonds deleted before idle, thermal 2.0 — readout control.
 
+## 2a. ERRATUM (2026-08-11, before any VALID data; approved by sceptic D + physicist A)
+
+The first run was **INVALID** (archived as invalid_run1_results.json, no verdict
+assigned): `node_thermal_speed` is an allocation-time INITIAL velocity in this
+substrate, not ongoing noise — runtime config swaps do nothing to existing nodes
+(probe: init-set drift 12.9 vs runtime-set drift 0.0 over 1 000 ticks). All idle
+arms of run 1 were therefore effectively static; its uniform 1.000 decode has no
+evidential status (exactly the trivial-static PASS researcher C warned about).
+
+Corrected realization of the SAME registered intent (idle under substrate-normal
+agitation), bars untouched: at idle start and every 50 ticks, every register
+carrier's velocity is SET to a kick of magnitude 2.0/√level (= 1.0 at level 4)
+in a uniformly random 3D direction — the exact allocate_node distribution —
+from a dedicated, reproducibly seeded RNG. Kicks decay via the bridge damping
+(0.95/tick, ~14-tick half-life) → punctuated agitation. ARM-T0 receives no
+kicks (baseline unchanged). ARM-NEG receives kicks; bondless carriers have no
+damping and drift — the control stays a chance-level readout check.
+
+**Perturbation floor (researcher A's condition, fixed before any valid data):**
+RMS displacement of register carriers from written positions (3D magnitude,
+sampled every 10 ticks over the ENTIRE idle interval) in every kick arm must
+satisfy RMS_kick ≥ max(3 × RMS_T0, 0.1 units). RMS_T0 is numerically ~0, so
+the absolute floor 0.1 (1/40 of the bit distance) carries the requirement —
+a strengthening of the letter of the condition, fixed here, no adjustment.
+If violated: verdict **INCONCLUSIVE** (agitation too weak — the kick schedule
+needs a new erratum round), never PASS.
+
 ## 3. Pre-registered bars (fixed before any data; D3)
 
 Accuracy is defined on TOTAL bits per arm/seed (8 patterns × 6 bits = 48;
