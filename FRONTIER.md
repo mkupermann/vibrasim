@@ -49,8 +49,13 @@ scramble at midpoint 8.5), all 144 stored bits re-expressed themselves from
 substrate tension dynamics after full scrambling; global-rule and no-bond controls
 at chance; censuses clean. First substrate-physics retrieval of stored multi-bit
 content here — engineered write, single-anchor retrieval, NO association/capacity/
-retention claim. Follow-ups (new IDs): retention, capacity, interference,
-association on top, flux port. LOGBOOK 2026-08-10/11.
+retention claim. **G164 = PASS (2026-08-12): retention under agitation** — decode 1.000 at
+2k/10k/50k idle ticks with real kick agitation (RMS to 3.97, drift to 8.7),
+zero rebonding, controls clean; the content lives in rest lengths, not
+positions. (First G164 run was INVALID — node_thermal_speed is allocation-time
+only; agitation re-realized as kicks per erratum, honest archive kept.)
+Remaining follow-ups (new IDs): capacity, interference, association on top,
+flux port. LOGBOOK 2026-08-10/11/12.
 
 ### Next (discipline)
 - ~~Document ILW as §4.8 port doctrine~~ **done 2026-08-10** (CONCEPT §4.8 + ilw_port_doctrine.md + Brain-blocked statement)

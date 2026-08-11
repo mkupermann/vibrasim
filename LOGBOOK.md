@@ -8347,3 +8347,41 @@ the "800 ticks insufficient" risk did not materialise.
 Follow-ups (each a NEW pre-reg, none run): retention (idle interval between write
 and scramble), capacity (K, chain length, multiple registers), interference,
 association on TOP of geometry registers, flux port of PRIM14.
+
+## 2026-08-12  G164: register retention under agitation — **PASS (clean)**
+
+Pre-reg: docs/amendments/g164_register_retention.md incl. erratum 2a (first run
+INVALID: node_thermal_speed is allocation-time initial velocity, not ongoing
+noise — runtime swap did nothing; archived as invalid_run1_results.json, no
+verdict assigned; agitation re-realized as periodic velocity kicks) and the
+round-table conditions (rebonding threshold, closed verdict gap, total-bit
+metric, perturbation floor). Raw: archive/run-logs/g164/results.json.
+
+| Arm | decode (3 seeds) | RMS agitation | drift_max | new bonds |
+|-----|------------------|---------------|-----------|-----------|
+| P@2k | 1.000 ×3 | 0.82 | 0.91 | 0 |
+| P@10k | 1.000 ×3 | 1.87 | 2.36 | 0 |
+| P@50k | 1.000 ×3 | 3.97 | 8.72 | 0 |
+| T0@50k | 1.000 ×3 | 0.00 | 0.00 | 0 |
+| OLDREST@50k | 0.556 | 7.25 | 20.36 | 0 |
+| NEG@50k | 0.528 | 19.30 | 40.90 | 0 |
+
+All gates green: perturbation floor passed with margin (RMS ≫ 0.1; the 3×-T0
+factor was carried by the absolute floor as pre-registered, RMS_T0 = 0),
+rebonding = 0 everywhere (clean label, no confound), write censuses valid,
+T0 baseline holds, controls at chance.
+
+**Verdict: PASS (clean).** Carriers were displaced up to ~8.7 units (≈ two bit
+distances) during 50 000 ticks of punctuated agitation and the register still
+decoded 144/144 after scramble+retrieve — the information lives in the per-bond
+rest lengths, not in carrier positions. Together with G163: the rest-length
+register is written once, survives sustained perturbation, and re-expresses its
+content from substrate physics. Retention claim scope: 50 000 ticks, kick
+agitation at the allocate_node magnitude, 6 bits, no interference/capacity.
+
+Prediction calibration: PASS was given only 30% (PARTIAL-via-fold-bonds 35% was
+the modal prediction) — under-confident; the bonded chain never folded (census
+0 changes; the fold-bond risk did not materialise at this stiffness/agitation).
+Process notes: researcher C's bars vote arrived after quorum (not needed);
+sceptic D's initial NEIN was resolved by HARDENING the bars, and his
+destruction-worry was answered empirically (agitation real, register held).

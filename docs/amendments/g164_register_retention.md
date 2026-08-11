@@ -4,6 +4,10 @@
 members; the sceptic's first NEIN was resolved by hardening, not by relaxing:
 rebonding threshold and the closed verdict gap were added BEFORE data) —
 committed before any data generation (D2). Bars final per D3.**
+**Verdict 2026-08-12: PASS (clean)** — decode 1.000 at all three intervals on 3/3
+seeds under real agitation (RMS 0.82–3.97, drift to 8.7 units), rebonding 0,
+perturbation floor passed, T0 baseline 1.000, controls at chance. LOGBOOK
+2026-08-12; first run archived INVALID per erratum 2a.
 
 ## 1. The one question (D1)
 
