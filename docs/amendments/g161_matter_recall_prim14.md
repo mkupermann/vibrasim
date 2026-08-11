@@ -1,6 +1,10 @@
 # G161 — content-addressable matter recall under PRIM14 (capability question)
 
 **Status: SIGNED OFF 2026-08-11 — committed before any data generation (D2). Bars final per D3.**
+**Verdict 2026-08-11: NULL** — P mean 0.111 (« 0.75), OLDREST identical (PRIM14
+orthogonal to this register: stored spacing = global equilibrium), NEG 0.000,
+censuses clean, freeze killed 42 in-probe bond attempts. Capability remains absent;
+failure mode is the recall basin. LOGBOOK 2026-08-11.
 
 ## 1. The one question (D1)
 

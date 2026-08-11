@@ -36,11 +36,14 @@ geometry, including the measurement's), so all regimes settle at the two-attract
 compromise. D2 closed the write channel (valence saturation, bond census verified)
 and the primitive PASSED with exact point predictions (P→17.0 stored, C→19.0
 global, NC frozen; 3/3 seeds): **the substrate's first verified stored-geometry
-attractor** — the property G154 isolated as missing. Caveat stands: the mechanism
-stores ANY held geometry (measurement-write coupling); downstream designs must
-gate the write channel during read-out. Restore times practical (settles <2000
-ticks at k=8/d=0.95). Admissible next: G154-style recall re-run as a NEW G-series
-pre-reg. LOGBOOK 2026-08-10.
+attractor** — the property G154 isolated as missing. Caveats: the mechanism stores
+ANY held geometry (measurement-write coupling; gate the write channel during
+read-out), and **G161 (2026-08-11) = NULL**: on the G154 register the primitive is
+ORTHOGONAL (stored spacing = global equilibrium → P ≡ OLDREST at 0.111) and the
+capability failure is the recall basin (displace-14 outside any attractor).
+Recall-by-content stays NEGATIVE. Honest next questions (new IDs, not yet
+admitted): a register that stores NON-equilibrium geometry, or in-basin probes.
+LOGBOOK 2026-08-10/11.
 
 ### Next (discipline)
 - ~~Document ILW as §4.8 port doctrine~~ **done 2026-08-10** (CONCEPT §4.8 + ilw_port_doctrine.md + Brain-blocked statement)

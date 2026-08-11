@@ -8248,3 +8248,38 @@ Admissible next step per the PRIM14-D0 scope clause: a G154-style recall-by-cont
 re-run under per-bond rest (multi-cell register, partial cue, Hopfield baseline at
 matched wallclock) as a NEW G-series pre-reg — the precondition ("only if restore
 times become practical") is now met.
+
+## 2026-08-11  G161: matter recall under PRIM14 — **NULL** (capability still absent; primitive orthogonal to this register)
+
+Pre-reg: docs/amendments/g161_matter_recall_prim14.md (capability bars; efficiency
+question explicitly left closed per G154). Raw: archive/run-logs/g161/results.json.
+
+| Arm | mean bit-acc (seeds 42/7/13) |
+|-----|------------------------------|
+| P (per-bond rest + freeze + k=8) | **0.111** (0.062 / 0.208 / 0.062) |
+| OLDREST (global r_eq, same dynamics) | **0.111 — identical per seed** |
+| NEG (no bonds) | 0.000 |
+| Hopfield (context only) | 1.000 at 0.092 ms vs substrate 28.65 ms |
+
+Census clean in all runs; the recall-phase formation freeze killed 42 attempted
+in-probe bonds (write channel was live 42 times — the D1 lesson was real here too).
+
+**Verdict: NULL** per the frozen bars. Two sharp findings:
+1. **PRIM14 is orthogonal to the G154 register design.** Stored spacing (6) equals
+   the global equilibrium (r_eq = 6), so per-bond rest lengths coincide with the
+   global rule — P ≡ OLDREST to the third decimal. The primitive only acts where
+   stored geometry ≠ global equilibrium (exactly the D2 configuration, l=4). A
+   register that wants PRIM14 must STORE non-equilibrium geometry.
+2. **The capability failure is the recall basin, not the rest length:** carriers
+   displaced 14 units land outside any useful attractor basin and do not funnel
+   back through tension alone (predicted as the most-likely failure mode, 35%).
+
+Prediction calibration: PASS 35% was too optimistic; plain NULL (30% predicted)
+occurred via the named mechanism. The NULL-ATTRIB clause was not triggered
+(OLDREST 0.111 « 0.75).
+
+Consequence for the thread: recall-by-content on the matter register remains
+NEGATIVE (G154 verdict unchanged, now also under PRIM14). An honest next question
+would change the REGISTER (store non-equilibrium geometry so PRIM14 carries
+information) or the PROBE (cue-adjacent displacement inside the basin) — each a
+new pre-reg, neither run tonight without fresh sign-off.
