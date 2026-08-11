@@ -8283,3 +8283,31 @@ NEGATIVE (G154 verdict unchanged, now also under PRIM14). An honest next questio
 would change the REGISTER (store non-equilibrium geometry so PRIM14 carries
 information) or the PROBE (cue-adjacent displacement inside the basin) — each a
 new pre-reg, neither run tonight without fresh sign-off.
+
+## 2026-08-11  G162: rest-length register — **FAIL** (census gate; protocol geometry claim wrong)
+
+Pre-reg: docs/amendments/g162_rest_length_register.md. Raw: archive/run-logs/g162/.
+
+Decode numbers came out P = 0.979/1.000/0.979 (mean 0.986, far above the 0.90 bar),
+OLDREST 0.514 ≈ chance, NEG 0.500 — but the **census gate tripped**
+(census_valid_all_P = False), and the frozen bars say: census violated → FAIL,
+engineering stop. Mechanism verified before judging: for patterns with ADJACENT
+ZERO bits, spacings 4+4 put carriers i and i+2 at distance 8 — INSIDE the empirical
+bond-formation window — so a skip bond (i,i+2, rest 8) forms at write time and
+consumes carrier valence, which also drops a chain bond (verified census for
+[0,0,1,0,1,1]: bonds (0,1),(0,2),(1,2),(3,4),(4,5),(5,6) — bond (2,3) missing).
+The §2 protocol claim "i↔i+2 distances (≥12) cannot bond" was factually wrong for
+adjacent SHORTs. The register instantiated a DIFFERENT graph than pre-registered
+for a subset of patterns.
+
+**Verdict: FAIL** (engineering, per the frozen census clause). The 0.986 accuracy
+carries NO evidential status — it was measured on partially mis-instantiated
+registers. Observation recorded without claim: decoding survived the broken
+topology surprisingly well; if the geometry is fixed, the capability question is
+genuinely promising.
+
+Post-mortem (what to fix before any G163): the encoding must keep ALL
+non-consecutive pairwise distances outside the bond-formation window. That window
+is only bracketed empirically so far (4 and 8 form; 12 does not) — its upper bound
+in (8, 12] must be MEASURED first (engineering probe), then SHORT/LONG chosen such
+that SHORT+SHORT exceeds it. Budget honesty: G162 consumed ~1 h of its 3 h cap.

@@ -1,6 +1,11 @@
 # G162 — the rest-length register: geometry-coded bits under PRIM14
 
 **Status: SIGNED OFF 2026-08-11, no conditions — committed before any data generation (D2). Bars final per D3.**
+**Verdict 2026-08-11: FAIL** — census gate: adjacent zero bits put i↔i+2 at
+distance 8, inside the bond-formation window; skip bonds formed and a chain bond
+dropped (the §2 "≥12 cannot bond" claim was wrong). Decode numbers (P mean 0.986)
+carry no evidential status. Post-mortem in LOGBOOK 2026-08-11; fix requires
+measuring the formation window first — new ID.
 
 ## 1. The one question (D1)
 

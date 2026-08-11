@@ -41,9 +41,12 @@ ANY held geometry (measurement-write coupling; gate the write channel during
 read-out), and **G161 (2026-08-11) = NULL**: on the G154 register the primitive is
 ORTHOGONAL (stored spacing = global equilibrium → P ≡ OLDREST at 0.111) and the
 capability failure is the recall basin (displace-14 outside any attractor).
-Recall-by-content stays NEGATIVE. Honest next questions (new IDs, not yet
-admitted): a register that stores NON-equilibrium geometry, or in-basin probes.
-LOGBOOK 2026-08-10/11.
+Recall-by-content stays NEGATIVE. **G162 (rest-length register) = FAIL** at the
+census gate: adjacent-zero encodings put i↔i+2 inside the bond-formation window
+(skip bonds; §2 geometry claim wrong). Decode numbers (0.986) have NO evidential
+status but suggest the fixed-geometry question is promising. Before any G163:
+MEASURE the bond-formation window (upper bound is only bracketed in (8, 12]),
+then re-encode. LOGBOOK 2026-08-10/11.
 
 ### Next (discipline)
 - ~~Document ILW as §4.8 port doctrine~~ **done 2026-08-10** (CONCEPT §4.8 + ilw_port_doctrine.md + Brain-blocked statement)
