@@ -41,12 +41,16 @@ ANY held geometry (measurement-write coupling; gate the write channel during
 read-out), and **G161 (2026-08-11) = NULL**: on the G154 register the primitive is
 ORTHOGONAL (stored spacing = global equilibrium → P ≡ OLDREST at 0.111) and the
 capability failure is the recall basin (displace-14 outside any attractor).
-Recall-by-content stays NEGATIVE. **G162 (rest-length register) = FAIL** at the
-census gate: adjacent-zero encodings put i↔i+2 inside the bond-formation window
-(skip bonds; §2 geometry claim wrong). Decode numbers (0.986) have NO evidential
-status but suggest the fixed-geometry question is promising. Before any G163:
-MEASURE the bond-formation window (upper bound is only bracketed in (8, 12]),
-then re-encode. LOGBOOK 2026-08-10/11.
+Cue-based association stays NEGATIVE (G154, G161). **G162 = FAIL** (census gate:
+skip bonds from adjacent zeros; its post-mortem forced a direct measurement of the
+bond-formation window — bonds form below 12, sharp cutoff at r_2). **G163 = PASS
+(2026-08-11): the rest-length register.** With skip-bond-safe encoding (6.5/10.5,
+scramble at midpoint 8.5), all 144 stored bits re-expressed themselves from
+substrate tension dynamics after full scrambling; global-rule and no-bond controls
+at chance; censuses clean. First substrate-physics retrieval of stored multi-bit
+content here — engineered write, single-anchor retrieval, NO association/capacity/
+retention claim. Follow-ups (new IDs): retention, capacity, interference,
+association on top, flux port. LOGBOOK 2026-08-10/11.
 
 ### Next (discipline)
 - ~~Document ILW as §4.8 port doctrine~~ **done 2026-08-10** (CONCEPT §4.8 + ilw_port_doctrine.md + Brain-blocked statement)

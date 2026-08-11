@@ -8311,3 +8311,39 @@ non-consecutive pairwise distances outside the bond-formation window. That windo
 is only bracketed empirically so far (4 and 8 form; 12 does not) — its upper bound
 in (8, 12] must be MEASURED first (engineering probe), then SHORT/LONG chosen such
 that SHORT+SHORT exceeds it. Budget honesty: G162 consumed ~1 h of its 3 h cap.
+
+## 2026-08-11  G163: rest-length register (corrected) — **PASS** (1.000, all gates clean)
+
+Pre-reg: docs/amendments/g163_rest_length_register_corrected.md. Raw:
+archive/run-logs/g163/results.json.
+
+| Arm | mean bit-acc (seeds 42/7/13) |
+|-----|------------------------------|
+| P (per-bond rests, PRIM14) | **1.000 / 1.000 / 1.000** |
+| OLDREST (global r_eq) | 0.486 ≈ chance |
+| NEG (no bonds) | 0.486 ≈ chance |
+
+census_valid_all_P = True (encoding 6.5/10.5 makes skip bonds geometrically
+impossible — minimal cross distance 13 vs measured formation cutoff at 12);
+freeze_kills = 0 (no in-probe write attempts at all).
+
+**Verdict: PASS** per the frozen bars. All 144 stored bits (8 patterns × 3 seeds
+× 6 bits) re-expressed themselves from the substrate's own tension dynamics after
+full scrambling to the maximum-ignorance state (uniform 8.5). Attribution clean:
+identical protocol under the global rule decodes at chance.
+
+**Honest scope of the claim:** an ENGINEERED-write geometry register (driven
+consolidation imprints the rests; PRIM14 is the storage medium) with single-anchor
+retrieval. This is NOT cue-based association (G154/G161 stay NEGATIVE), not a
+capacity result (6 bits), not retention (no idle interval), not efficiency
+(closed per G154). What it IS: the first substrate-physics retrieval of stored
+content on this lab's matter register — the D2 attractor property scaled to a
+multi-bit code, with the G162 census discipline doing exactly its job on the way
+(the FAIL forced the window measurement that made this design sound).
+
+Prediction calibration: PASS 70% predicted, occurred; census-clean 90%, held;
+the "800 ticks insufficient" risk did not materialise.
+
+Follow-ups (each a NEW pre-reg, none run): retention (idle interval between write
+and scramble), capacity (K, chain length, multiple registers), interference,
+association on TOP of geometry registers, flux port of PRIM14.

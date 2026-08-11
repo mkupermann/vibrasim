@@ -1,6 +1,11 @@
 # G163 — rest-length register, corrected encoding (measured formation window)
 
 **Status: SIGNED OFF 2026-08-11, no conditions — committed before any data generation (D2). Bars final per D3.**
+**Verdict 2026-08-11: PASS** — P = 1.000 on 3/3 seeds (144/144 bits), OLDREST and
+NEG at chance, censuses clean, zero in-probe write attempts. First substrate-physics
+retrieval of stored multi-bit content on this register class. Honest scope (engineered
+write, single-anchor retrieval, no association/capacity/retention claim) in LOGBOOK
+2026-08-11.
 
 ## 1. The one question (D1)
 
