@@ -1,0 +1,137 @@
+{
+  "P@K24@2000": {
+    "per_seed": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "mean": 1.0,
+    "new_bonds": 0,
+    "lost_bonds": 0,
+    "min_nn": 12.223,
+    "frac_below_max": 0.0,
+    "boundary_rate": 0.0,
+    "rms_mean": 0.664,
+    "write_valid_all": true
+  },
+  "P@K24@10000": {
+    "per_seed": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "mean": 1.0,
+    "new_bonds": 0,
+    "lost_bonds": 0,
+    "min_nn": 10.972,
+    "frac_below_max": 0.3532,
+    "boundary_rate": 0.0,
+    "rms_mean": 1.402,
+    "write_valid_all": true
+  },
+  "P@K24@50000": {
+    "per_seed": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "mean": 1.0,
+    "new_bonds": 0,
+    "lost_bonds": 0,
+    "min_nn": 8.998,
+    "frac_below_max": 0.5843,
+    "boundary_rate": 0.0,
+    "rms_mean": 2.56,
+    "write_valid_all": true
+  },
+  "P@K6@2000": {
+    "per_seed": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "mean": 1.0,
+    "new_bonds": 0,
+    "lost_bonds": 0,
+    "min_nn": 12.223,
+    "frac_below_max": 0.0,
+    "boundary_rate": 0.0,
+    "rms_mean": 0.911,
+    "write_valid_all": true
+  },
+  "P@K6@10000": {
+    "per_seed": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "mean": 1.0,
+    "new_bonds": 0,
+    "lost_bonds": 0,
+    "min_nn": 11.692,
+    "frac_below_max": 0.0704,
+    "boundary_rate": 0.0,
+    "rms_mean": 1.881,
+    "write_valid_all": true
+  },
+  "P@K6@50000": {
+    "per_seed": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "mean": 1.0,
+    "new_bonds": 0,
+    "lost_bonds": 0,
+    "min_nn": 7.5,
+    "frac_below_max": 0.7609,
+    "boundary_rate": 0.0,
+    "rms_mean": 4.307,
+    "write_valid_all": true
+  },
+  "T0@K24@50000": {
+    "per_seed": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "mean": 1.0,
+    "new_bonds": 0,
+    "lost_bonds": 0,
+    "min_nn": 13.0,
+    "frac_below_max": 0.0,
+    "boundary_rate": 0.0,
+    "rms_mean": 0.0,
+    "write_valid_all": true
+  },
+  "OLDREST@K24@50000": {
+    "per_seed": [
+      0.5052,
+      0.4479,
+      0.4635
+    ],
+    "mean": 0.4722,
+    "new_bonds": 0,
+    "lost_bonds": 0,
+    "min_nn": 6.413,
+    "frac_below_max": 0.8566,
+    "boundary_rate": 0.0,
+    "rms_mean": 15.429,
+    "write_valid_all": true
+  },
+  "NEG@K24@50000": {
+    "per_seed": [
+      0.5677,
+      0.4792,
+      0.4323
+    ],
+    "mean": 0.4931,
+    "new_bonds": 0,
+    "lost_bonds": 0,
+    "min_nn": 13.0,
+    "frac_below_max": 0.0,
+    "boundary_rate": 0.0,
+    "rms_mean": 0.0,
+    "write_valid_all": true
+  }
+}

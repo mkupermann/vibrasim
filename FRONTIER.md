@@ -65,10 +65,13 @@ write + retain + scale, all PASS. **G166 (retention at scale) = INCONCLUSIVE** b
 flawless (1.000 at K=24 under 50k-tick agitation, rebonding 0 despite 74% of
 idle INSIDE the bonding window — formation between moving carriers needs more
 than proximity, a mechanism surprise), but the bondless NEG control drifted
-out of the box (no damping) and was never validly measured. Follow-ups (new
-IDs): G167 re-run with a measurable NEG design; bond-formation kinetics
-characterization; interference; association on top; Flux-kinematics
-programme decision. LOGBOOK 2026-08-10/11/12.
+out of the box (no damping) and was never validly measured. **G167 = PASS (clean, certified, 2026-08-13):** the re-run with static NEG +
+sensitivity gate certified retention-at-scale — 1.000 everywhere, NEG 0.493
+validly measured (the metric demonstrably falls). Register line certified:
+write + retain + scale + retain-at-scale. Follow-ups (new IDs): register
+interference (sharpened: free chain ends are the only write sites),
+association on top, Flux-kinematics programme decision.
+LOGBOOK 2026-08-10 … 13.
 
 ### Next (discipline)
 - ~~Document ILW as §4.8 port doctrine~~ **done 2026-08-10** (CONCEPT §4.8 + ilw_port_doctrine.md + Brain-blocked statement)

@@ -4,6 +4,12 @@
 their round-7 votes — static NEG, sensitivity gate — incorporated verbatim;
 D explicit JA; majority incl. external member) — committed before any data
 (D2). Bars final per D3.**
+**Verdict 2026-08-13: PASS (clean, certified)** — P 1.000 everywhere (K24 +
+K6 contrast, all intervals), rebonding 0, T0 1.000, OLDREST 0.472, NEG 0.493
+validly measured (sensitivity gate satisfied: the metric demonstrably falls).
+Note: P-arms replicated G166 statistically, not bit-identically (salted-hash
+kick seeds — fresh agitation, stronger result, prediction error recorded).
+LOGBOOK 2026-08-13.
 
 ## 1. The one question (D1)
 

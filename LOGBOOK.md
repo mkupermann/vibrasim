@@ -8479,3 +8479,39 @@ explains G164's and G166's rebonding = 0), and it concentrates exactly at
 free chain ends — which is where CROSS-REGISTER bonds would form between two
 registers. The interference question (two chains, four free ends) is
 therefore sharper than assumed.
+
+## 2026-08-13  G167: retention at scale, certified — **PASS (clean)**
+
+Pre-reg: docs/amendments/g167_retention_at_scale_valid_neg.md (static NEG per
+researcher A, sensitivity gate per researcher C). Raw: archive/run-logs/g167/.
+
+| Arm | mean (3 seeds) | notes |
+|-----|----------------|-------|
+| P@K24 @2k/10k/50k | 1.000 / 1.000 / 1.000 | rebonding 0, boundary 0 |
+| P@K6 contrast @2k/10k/50k | 1.000 ×3 | attribution mapping unused — nothing broke |
+| T0@50k | 1.000 | drift baseline |
+| OLDREST@50k | 0.472 | attribution at chance |
+| **NEG@50k (static)** | **0.493** | validly measured, < 0.90 AND ≤ 0.6 — **the metric demonstrably falls** |
+
+**Verdict: PASS (clean, certified)** — every frozen clause satisfied, for the
+first time including the sensitivity gate: a certified PASS now rests on an
+arm in which the score provably drops. The G166 INCONCLUSIVE is superseded by
+this certification run (G166 stands as recorded; its P-observations are now
+covered by a fully valid run).
+
+Honest calibration notes:
+1. My §4 prediction "P-arms reproduce G166 deterministically (95%)" was WRONG
+   mechanically: the kick RNG seeds used Python's salted hash(arm), so the
+   agitation sequences were fresh, not replayed (visible in min-NN: 8.998 vs
+   G166's 6.419 at K24@50k). The scientific effect is a STRONGER result — an
+   independent statistical replication of 1.000 under fresh agitation — but
+   the prediction failure is recorded, and any future harness needing true
+   replay must not seed via hash().
+2. Kill-resilience: the run was externally killed three times; the per-arm
+   incremental-save + resume pattern (committed pre-run, protocol untouched)
+   preserved 8/9 arms and finished on resume.
+
+Register line, certified: **write (G163) + retain (G164) + scale (G165) +
+retain-at-scale (G167)** — all PASS with clean controls. Open next: register
+interference (mechanistically sharpened: free chain ends are the only write
+sites), association on registers, Flux-kinematics programme decision.
