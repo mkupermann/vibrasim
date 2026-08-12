@@ -2,8 +2,9 @@
 
 **One-screen pointer so a new session knows where the frontier is WITHOUT re-deriving settled work.**
 Authoritative detail lives in `docs/DISCIPLINE_SHARP.md` (operating rules), `docs/BELIEF_PATH.md` (spine),
-`docs/amendments/FINDINGS_SUMMARY.md` (+ addenda), `LOGBOOK.md` (append-only diary; newest at the bottom),
-and the per-experiment `docs/amendments/g*.md`. This file is a map, not a source of truth — if it disagrees
+the `docs/*_SUMMARY.md` programme summaries (register line: `docs/REGISTER_PROGRAMME_SUMMARY.md`),
+`LOGBOOK.md` (append-only diary; newest at the bottom), and the per-experiment `docs/amendments/g*.md`.
+(A previously referenced docs/amendments/FINDINGS_SUMMARY.md never existed — dangling pointer removed 2026-08-12.) This file is a map, not a source of truth — if it disagrees
 with those, they win. Last updated: 2026-08-10 (merge-conflict resolution; content states 2026-07-19 + 2026-06-12).
 
 ## Active programme: belief path (2026-07-19, after BP-C5)
@@ -54,8 +55,12 @@ retention claim. **G164 = PASS (2026-08-12): retention under agitation** — dec
 zero rebonding, controls clean; the content lives in rest lengths, not
 positions. (First G164 run was INVALID — node_thermal_speed is allocation-time
 only; agitation re-realized as kicks per erratum, honest archive kept.)
-Remaining follow-ups (new IDs): capacity, interference, association on top,
-flux port. LOGBOOK 2026-08-10/11/12.
+**PRIM14F (2026-08-12, engineering note): NOT portable to Flux** — no node
+kinematics, no mechanical bonds; a port would be a substrate EXTENSION
+(programme decision). The register line is consolidated in
+docs/REGISTER_PROGRAMME_SUMMARY.md + docs/patterns/rest_length_register.md.
+Remaining follow-ups (new IDs): capacity (G165 draft exists), interference,
+association on top. LOGBOOK 2026-08-10/11/12.
 
 ### Next (discipline)
 - ~~Document ILW as §4.8 port doctrine~~ **done 2026-08-10** (CONCEPT §4.8 + ilw_port_doctrine.md + Brain-blocked statement)

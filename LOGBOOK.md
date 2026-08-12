@@ -8385,3 +8385,21 @@ the modal prediction) — under-confident; the bonded chain never folded (census
 Process notes: researcher C's bars vote arrived after quorum (not needed);
 sceptic D's initial NEIN was resolved by HARDENING the bars, and his
 destruction-worry was answered empirically (agitation real, register held).
+
+## 2026-08-12  PRIM14 portability to Flux — architectural finding (engineering note, no experiment)
+
+The round table's runoff chose testing substrate-independence of the register
+line. The question turned out to be decidable by code audit alone (no pre-reg
+burned; the sceptic explicitly rejected an audit-as-experiment as theater):
+
+**PRIM14 is NOT portable to Flux with existing flux primitives.** The mechanism
+chain needs (C1) mobile bound structures and (C2) mechanical bond coupling;
+Flux has neither — `world/flux/structures.py` Nodes carry no velocity state,
+`world/flux/dynamics.py` moves only quanta (line 104), and flux Bridges carry
+flux weights, not spring forces. (C3, formation-time geometry, would be
+trivially addable.) Porting the register line therefore means ADDING node
+kinematics + mechanical bonds to Flux — a substrate EXTENSION with programme-
+level consequences (it would import exactly the legacy mechanics that Flux was
+designed to replace), not a port. Recorded as the honest answer to the
+substrate-independence question: the G163/G164 register capability is, today,
+a LEGACY-substrate result.
