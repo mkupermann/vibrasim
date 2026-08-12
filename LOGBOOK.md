@@ -8468,3 +8468,14 @@ Prediction calibration: "PASS clean 40%" — the P-arms would have cleared it,
 but the INCONCLUSIVE path (5% predicted, via boundary) hit through the NEG
 arm nobody flagged: bondless + kicks + no damping = linear drift. Lesson:
 control arms need the same physics review as treatment arms.
+
+### G166 addendum (same day): the "mechanism surprise" has a mundane explanation
+form_bridges (world/bridges.py) forms bonds below r_2 ONLY where valence
+allows — and every interior chain carrier is saturated (2 bonds). Only the
+two chain ENDS carry a free slot, and end-to-end distance in a 24-carrier
+chain never approached the window. No exotic formation kinetics: the
+fold-freeze threat is structurally defused for saturated chains (retro-
+explains G164's and G166's rebonding = 0), and it concentrates exactly at
+free chain ends — which is where CROSS-REGISTER bonds would form between two
+registers. The interference question (two chains, four free ends) is
+therefore sharper than assumed.
