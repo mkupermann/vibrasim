@@ -181,9 +181,14 @@ def main():
             + [("P", 6, n) for n in IDLE_INTERVALS]      # C's contrast arm
             + [("T0", 24, 50_000), ("OLDREST", 24, 50_000),
                ("NEG", 24, 50_000)])
-    out = {}
+    # Resumable: load completed arms, skip them (kill-safe incremental runs)
+    res_path = OUT_DIR / "results.json"
+    out = json.loads(res_path.read_text()) if res_path.exists() else {}
     for arm, K, n in arms:
         key = f"{arm}@K{K}@{n}"
+        if key in out:
+            print(f"# {key}: already complete, skipped (resume)")
+            continue
         accs, aggr = [], {"new_bonds": 0, "lost_bonds": 0, "boundary": 0,
                           "min_nn": float("inf"), "frac_below": 0.0,
                           "rms": 0.0, "runs": 0}
@@ -226,7 +231,8 @@ def main():
               f"new_bonds={out[key]['new_bonds']} min_nn={out[key]['min_nn']} "
               f"frac_below={out[key]['frac_below_max']} "
               f"boundary={out[key]['boundary_rate']} rms={out[key]['rms_mean']}")
-    (OUT_DIR / "results.json").write_text(json.dumps(out, indent=2))
+        res_path.write_text(json.dumps(out, indent=2))  # incremental save
+    res_path.write_text(json.dumps(out, indent=2))
     print(f"# written -> {OUT_DIR / 'results.json'}")
     return 0
 
