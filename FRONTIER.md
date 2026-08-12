@@ -79,8 +79,14 @@ new channel — at transiently unsaturated interiors during sequential write)
 but decode separably (R1 1.000, R2 ≥ 0.917 everywhere). The point prediction
 was falsified (0.375): losses are R2-exclusive for unexplained reasons.
 Register line: write + retain + scale + retain-at-scale + coexistence, all
-certified. Open (new IDs): R2-asymmetry / LI-channel mechanism, association
-on top, Flux-kinematics programme decision. LOGBOOK 2026-08-10 … 13.
+certified. **G170 (2026-08-13) = H-INDEX CONFIRMED:** the R2-exclusive losses
+are an ALLOCATION-ORDER artifact of form_bridges' fixed pair scan (SWAP
+migrates them 100%; interleaved allocation destroys both registers via 111
+interior-interior bonds) — a substrate trap, now in the pattern doc, with the
+clean mitigation named (true sequential allocate-then-consolidate). Open
+(new IDs): association on top (C's two conditions on file; the named
+confound is now controllable), Flux-kinematics programme decision.
+LOGBOOK 2026-08-10 … 13.
 
 ### Next (discipline)
 - ~~Document ILW as §4.8 port doctrine~~ **done 2026-08-10** (CONCEPT §4.8 + ilw_port_doctrine.md + Brain-blocked statement)

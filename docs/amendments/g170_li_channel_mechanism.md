@@ -5,6 +5,12 @@ multi-arm condition — ARM-SIM absorbs E's xiv in substance; B2 abstention
 after two pings; C's (iv) association conditions are on file for the next
 round; D explicit bars-JA) — committed before any data (D2). Bars final
 per D3.**
+**Verdict 2026-08-13: H-INDEX CONFIRMED** — SWAP migrates losses 100% to R1,
+SIM (H-TIME's ~zero-loss prediction) shows 37 loss runs incl. 111
+interior-interior cross-bonds destroying both registers (mean 0.785). The
+R2-exclusivity is an allocation-index artifact of form_bridges' fixed
+pair-scan — a substrate trap, documented in the pattern doc. LOGBOOK
+2026-08-13.
 
 ## 1. The one question (D1)
 

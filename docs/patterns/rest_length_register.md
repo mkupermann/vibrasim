@@ -30,6 +30,14 @@ G162 (FAIL). Summary: docs/REGISTER_PROGRAMME_SUMMARY.md.
    identical dynamics must decode at chance), no-bond arm, write census,
    rebonding count = 0, total-bit accuracy metric (threshold granularity).
 
+8. **Allocation-order trap (G170):** form_bridges resolves valence races in
+   its FIXED pair-scan order over slot indices — in multi-register setups
+   the later-allocated register loses its bonds to cross-bonds
+   deterministically, and interleaved allocation destroys both registers
+   (interior-interior bonds). Geometry does not decide; slot order does.
+   Control it: allocate and consolidate each register strictly before the
+   next one exists, and record allocation order in every census.
+
 ## Scope honesty
 Engineered write; single-anchor retrieval; 6 bits demonstrated; legacy
 substrate only (Flux lacks node kinematics / mechanical bonds). Association

@@ -8590,3 +8590,39 @@ Register line status: write + retain + scale + retain-at-scale + coexistence
 (structurally coupled, informationally separable) — the first certified
 multi-register claim. Open: the R2-asymmetry, the LI-channel (write-order
 scheduling as an interference control?), association, kinematics dossier.
+
+## 2026-08-13  G170: LI-channel attribution — **H-INDEX CONFIRMED** (a substrate trap, not register physics)
+
+Pre-reg: docs/amendments/g170_li_channel_mechanism.md. Raw: archive/run-logs/g170/.
+
+| Arm (allocation order) | loss runs R1 / R2 | mean | cross-bond classes |
+|------------------------|-------------------|------|--------------------|
+| BASE (R1 block first) | 0 / 9 | 0.969 | 00:24, LI:13, LL:6 (G169 replicated) |
+| SWAP (R2 block first) | **7 / 0** | 0.976 | 00:24, LI:14, LL:5 |
+| SIM (interleaved) | **20 / 17** | 0.785 | **II:111**, 00:24, IL:12, 0I:11, LL:10 |
+
+**Verdict: H-INDEX CONFIRMED** per the frozen bars — SWAP migrates losses
+100% (≥80% bar) AND SIM shows massive both-register losses where H-TIME
+predicted ~zero. The loser register is simply the one whose slots come later
+in form_bridges' fixed triu pair-scan: cross pairs win the valence race
+against its own bonds. SIM's interior-interior explosion (111 II bonds) is
+the mechanism displayed in pure form: interleaved allocation puts both
+chains' interiors adjacent in scan order and destroys both registers.
+
+Consequences:
+1. **Substrate trap (researcher A's framing), now documented in the pattern
+   doc:** multi-body structure formation on this substrate depends on SLOT
+   ALLOCATION ORDER, not geometry. Every future multi-register or
+   association experiment must control it explicitly.
+2. **Clean mitigation identified (for the next pre-reg, not retrofitted):**
+   true sequential writes — allocate AND consolidate register N+1 only
+   after register N's bonds are locked. (G168/G169's "sequential" phases
+   were fictitious: all carriers existed and were pinned from tick 1.)
+3. G169's certificate COUPLED-BUT-SEPARABLE stands; its R2-attribution is
+   now explained as this artifact. A's proposed scan-randomization arm
+   (G171 candidate) is obsolete — attribution is sharp without it.
+
+Prediction calibration: chair H-INDEX 60% — correct; the SIM interior
+explosion (II class) was predicted by no one, in no direction: the
+hypothesis said "losses split", reality said "registers destroyed". The
+magnitude surprise is recorded.
