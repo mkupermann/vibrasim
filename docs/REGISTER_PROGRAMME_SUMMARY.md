@@ -34,6 +34,8 @@ NEGATIVE (G154, G161), and the capability is LEGACY-substrate-specific
 | G165 | capacity 6/12/24 bits | **PASS** | ≥0.986 at all K; real strain at K=24 (min-NN 11.68 < 12) |
 | G166 | retention at scale v1 | **INCONCLUSIVE** | control-arm artifact (undamped NEG drifted out); P-arms flawless |
 | G167 | retention at scale, certified | **PASS (clean)** | 1.000 everywhere incl. K6 contrast; NEG 0.493 validly measured (sensitivity gate) |
+| G168 | interference v1 | **UNCLASSIFIABLE** | bars gap: structural interference real, decode survived — one-axis scale |
+| G169 | interference, two axes | **COUPLED-BUT-SEPARABLE** + MECHANISM-OPEN | R1 1.000 / R2 ≥ 0.917; LI-channel discovered (write-order interior vulnerability); point prediction falsified (0.375) |
 | PRIM14F | portability to Flux | **not portable** (engineering note) | no node kinematics / spring bonds in Flux |
 
 ## What is established (honest scope)

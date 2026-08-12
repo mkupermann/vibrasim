@@ -73,9 +73,14 @@ write-interference is real and exactly as predicted (cross-bonds at chain
 ends consume valence, corrupting the register graph at write) — but decode
 stayed ≥ 0.979 anyway; the registered scale conflated structural and
 informational interference and covered only the diagonal. FAR (Δy=20) fully
-clean. No claim made. Follow-ups (new IDs): G169 interference re-run with a
-two-axis verdict scale; association on top; Flux-kinematics programme
-decision. LOGBOOK 2026-08-10 … 13.
+clean. **G169 = COUPLED-BUT-SEPARABLE (certified, 2026-08-13) + MECHANISM-OPEN:**
+two adjacent registers couple structurally (cross-bonds at free ends AND —
+new channel — at transiently unsaturated interiors during sequential write)
+but decode separably (R1 1.000, R2 ≥ 0.917 everywhere). The point prediction
+was falsified (0.375): losses are R2-exclusive for unexplained reasons.
+Register line: write + retain + scale + retain-at-scale + coexistence, all
+certified. Open (new IDs): R2-asymmetry / LI-channel mechanism, association
+on top, Flux-kinematics programme decision. LOGBOOK 2026-08-10 … 13.
 
 ### Next (discipline)
 - ~~Document ILW as §4.8 port doctrine~~ **done 2026-08-10** (CONCEPT §4.8 + ilw_port_doctrine.md + Brain-blocked statement)

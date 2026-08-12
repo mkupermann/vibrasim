@@ -5,6 +5,12 @@ re-certification, 4/5; A's margin metric + point-prediction axis and C's
 anti-tuning declaration + location logging incorporated verbatim; D explicit
 bars-JA — his mechanism-first position is embedded as the MECHANISM
 sub-verdict) — committed before any data (D2). Bars final per D3.**
+**Verdict 2026-08-13: COUPLED-BUT-SEPARABLE (structural BROKEN / informational
+INTACT — R1 1.000, R2 ≥ 0.917 on all seeds), MECHANISM-OPEN (point prediction
+falsified at 0.375: 13 LI bonds reveal a transient interior-vulnerability
+window during sequential write; R2-exclusivity of losses unexplained). All
+gates green. Harness aggregation gap disclosed and resolved by deterministic
+re-execution. LOGBOOK 2026-08-13.
 
 ## 1. The one question (D1)
 

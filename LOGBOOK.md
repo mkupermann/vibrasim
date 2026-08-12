@@ -8554,3 +8554,39 @@ the registered classes covered only the diagonal.
 Prediction calibration: "PARTIAL 40% via WRITE-X at NEAR" — half right
 (WRITE-X mechanism confirmed precisely) and half wrong (no decode
 degradation). PASS 30% / PARTIAL 40% both missed the off-diagonal cell.
+
+## 2026-08-13  G169: interference certified — **COUPLED-BUT-SEPARABLE**, mechanism model falsified
+
+Pre-reg: docs/amendments/g169_interference_two_axes.md. Raw: archive/run-logs/g169/.
+
+**Cell verdict (two-axis scale): (structural BROKEN, informational INTACT)
+= COUPLED-BUT-SEPARABLE.** Structural: 43 write + 2 idle cross-bonds at NEAR
+(≫10% of runs). Informational: per-register decomposition R1 = 1.000 ×3,
+R2 = 0.917/0.979/0.917 — every register ≥ 0.90 on every seed. FAR clean
+(1.000, zero cross-bonds), SENS fired (47+1), NEG 0.486 (sensitive), OLDREST
+0.510, boundary 0, order effect ≤ 0.104 (no label). Min flip margin 0.144.
+
+**Mechanism sub-verdict: MECHANISM-OPEN** — the pre-registered point
+prediction (far-end (L,L) bond ⇒ exactly one R2 error; else zero) scored
+**0.375**, decisively falsified. The census shows why: **13 LI bonds
+(chain-end ↔ INTERIOR)** — the valence-saturation assumption breaks during
+SEQUENTIAL write: while chain 1 consolidates, chain 2's interiors are not
+yet self-bonded and their valence is open. A transient interior-vulnerability
+window at write time — a genuinely new channel nobody predicted. The strict
+R2-exclusivity of losses (9/9 loss runs on R2, zero on R1) is real but
+unexplained — the open question for any successor.
+
+Process disclosures:
+1. **Harness gap:** the registered informational axis is per-register, but
+   the aggregation persisted only the combined mean. The G169 kick seeds are
+   fully deterministic (no hash()), so the NEAR arm was RE-EXECUTED
+   bit-identically to extract the registered metric — a pure re-read of the
+   same registered run, disclosed here, not a new experiment.
+2. C's sharpened count-form prediction (loss bits = number of (L,L) bonds)
+   coincides with the committed binary form for two registers (count ∈ {0,1});
+   both were fixed before data.
+
+Register line status: write + retain + scale + retain-at-scale + coexistence
+(structurally coupled, informationally separable) — the first certified
+multi-register claim. Open: the R2-asymmetry, the LI-channel (write-order
+scheduling as an interference control?), association, kinematics dossier.
