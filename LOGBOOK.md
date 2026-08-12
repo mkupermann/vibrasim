@@ -8515,3 +8515,42 @@ Register line, certified: **write (G163) + retain (G164) + scale (G165) +
 retain-at-scale (G167)** — all PASS with clean controls. Open next: register
 interference (mechanistically sharpened: free chain ends are the only write
 sites), association on registers, Flux-kinematics programme decision.
+
+## 2026-08-13  G168: register interference — **UNCLASSIFIABLE (bars gap; both findings real)**
+
+Pre-reg: docs/amendments/g168_register_interference.md. Raw: archive/run-logs/g168/.
+
+| Arm | decode mean | write cross-bonds | idle cross-bonds | min cross-dist | census |
+|-----|-------------|-------------------|------------------|----------------|--------|
+| NEAR (Δy=10) | 0.986 (1.0/0.979/0.979) | **41** | 4 | 2.99 | invalid (intra bonds missing) |
+| FAR (Δy=20) | 1.000 ×3 | 0 | 0 | 15.43 | valid |
+| SENS (Δy=6) | 0.993 | **47** | 0 | 2.00 | invalid |
+| OLDREST | 0.566 | 41 | 7 | — | — |
+| NEG (static) | 0.566 | 41 | 0 | — | — |
+
+Order effect ≈ 0 everywhere (no ORDER-EFFECT label); boundary 0; SENS fires ✓;
+controls at chance ✓.
+
+**The outcome fits NO pre-registered class.** PASS requires cross-bonds = 0
+(violated: 41+4). PARTIAL requires NEAR decode < 0.90 (not met: 0.986). NULL,
+INCONCLUSIVE, FAIL do not apply. Per the no-post-hoc rule the verdict is
+recorded as **UNCLASSIFIABLE (bars gap)** — no claim is made; a successor ID
+with a complete scale would be needed to claim anything.
+
+What the numbers show (recorded as observations, claim-free):
+1. **Structural write-interference is real and exactly as predicted** (A's
+   most-likely mode): chain ends cross-bond during consolidation at Δy ≤ 10,
+   and the cross-bonds CONSUME end valence, so the chains' own end bonds
+   cannot form — the register graph is corrupted at write (census invalid).
+2. **Informational robustness was NOT predicted:** despite corrupted graphs,
+   decode stays ≥ 0.979 — the rest-length code apparently tolerates a missing
+   end bond and even frozen cross-links at these geometries.
+3. FAR (Δy=20) is completely clean — separability by distance works.
+
+Bars-design lesson (recorded for the successor): the scale conflated
+structural and informational interference into one axis. They are TWO axes;
+the registered classes covered only the diagonal.
+
+Prediction calibration: "PARTIAL 40% via WRITE-X at NEAR" — half right
+(WRITE-X mechanism confirmed precisely) and half wrong (no decode
+degradation). PASS 30% / PARTIAL 40% both missed the off-diagonal cell.

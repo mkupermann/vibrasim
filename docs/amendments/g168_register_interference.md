@@ -4,6 +4,13 @@
 C's SENS arm + order permutation and A's structural framing incorporated
 verbatim; D explicit bars-JA) — committed before any data (D2). Bars final
 per D3.**
+**Verdict 2026-08-13: UNCLASSIFIABLE (bars gap)** — the outcome (structural
+write-interference real: 41/47 write-time cross-bonds consuming end valence,
+census invalid; yet decode ≥ 0.979 everywhere, FAR clean, SENS fired,
+controls clean) fits no registered class: PASS demands cross-bonds = 0,
+PARTIAL demands decode < 0.90. No claim; scale correction = new ID. The two
+interference axes (structural vs informational) were conflated in one scale.
+LOGBOOK 2026-08-13.
 
 ## 1. The one question (D1)
 

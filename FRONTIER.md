@@ -68,10 +68,14 @@ than proximity, a mechanism surprise), but the bondless NEG control drifted
 out of the box (no damping) and was never validly measured. **G167 = PASS (clean, certified, 2026-08-13):** the re-run with static NEG +
 sensitivity gate certified retention-at-scale — 1.000 everywhere, NEG 0.493
 validly measured (the metric demonstrably falls). Register line certified:
-write + retain + scale + retain-at-scale. Follow-ups (new IDs): register
-interference (sharpened: free chain ends are the only write sites),
-association on top, Flux-kinematics programme decision.
-LOGBOOK 2026-08-10 … 13.
+write + retain + scale + retain-at-scale. **G168 (interference) = UNCLASSIFIABLE (bars gap, 2026-08-13):** structural
+write-interference is real and exactly as predicted (cross-bonds at chain
+ends consume valence, corrupting the register graph at write) — but decode
+stayed ≥ 0.979 anyway; the registered scale conflated structural and
+informational interference and covered only the diagonal. FAR (Δy=20) fully
+clean. No claim made. Follow-ups (new IDs): G169 interference re-run with a
+two-axis verdict scale; association on top; Flux-kinematics programme
+decision. LOGBOOK 2026-08-10 … 13.
 
 ### Next (discipline)
 - ~~Document ILW as §4.8 port doctrine~~ **done 2026-08-10** (CONCEPT §4.8 + ilw_port_doctrine.md + Brain-blocked statement)
