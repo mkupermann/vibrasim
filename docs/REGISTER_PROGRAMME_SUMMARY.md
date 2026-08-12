@@ -31,6 +31,7 @@ NEGATIVE (G154, G161), and the capability is LEGACY-substrate-specific
 | G162 | rest-length register v1 | **FAIL** | census gate: skip bonds (4+4=8 < 12) |
 | G163 | rest-length register, corrected | **PASS** | 144/144 bits, controls at chance |
 | G164 | retention under agitation | **PASS (clean)** | 1.000 @ 2k/10k/50k ticks, rebonding 0 |
+| G165 | capacity 6/12/24 bits | **PASS** | ≥0.986 at all K; real strain at K=24 (min-NN 11.68 < 12) |
 | PRIM14F | portability to Flux | **not portable** (engineering note) | no node kinematics / spring bonds in Flux |
 
 ## What is established (honest scope)
@@ -43,7 +44,7 @@ NEGATIVE (G154, G161), and the capability is LEGACY-substrate-specific
   lengths, not positions).
 - Engineered write, single-anchor retrieval, 6 bits, legacy substrate.
   NOT established: association from partial cues (twice NEGATIVE), capacity
-  beyond 6 bits, interference, efficiency (Hopfield remains 546× cheaper —
+  beyond 24 bits, interference, efficiency (Hopfield remains 546× cheaper —
   closed, G154), substrate independence (explicitly absent).
 
 ## The two traps this arc found (load-bearing for any successor)

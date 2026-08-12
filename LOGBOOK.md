@@ -8403,3 +8403,36 @@ level consequences (it would import exactly the legacy mechanics that Flux was
 designed to replace), not a port. Recorded as the honest answer to the
 substrate-independence question: the G163/G164 register capability is, today,
 a LEGACY-substrate result.
+
+## 2026-08-12  G165: register capacity — **PASS** (scales to 24 bits, strain was real)
+
+Pre-reg: docs/amendments/g165_register_capacity.md (round-table bars: break
+classifier, strain metrics, anti-bias boundary gate, no-early-stop; the
+boundary-confounder objection by D/E was resolved by hardening into the
+INCONCLUSIVE@K gate). Raw: archive/run-logs/g165/results.json.
+
+| K | P mean (per seed) | OLDREST | strain (min non-neighbour dist) |
+|---|-------------------|---------|--------------------------------|
+| 6 | 1.000 (1/1/1) | 0.493 | 12.37 |
+| 12 | 0.986 (1 / 0.958 / 1) | 0.479 | 12.30 |
+| 24 | 1.000 (1/1/1) | 0.538 | **11.68 — below the formation window** |
+
+NEG@24 = 0.531. Boundary rate 0.0 everywhere (the gate never fired — box
+scaling worked). All write censuses valid; no W-FAIL, no X-BOND.
+
+**Verdict: PASS** per the frozen bars. The honest strain note researcher A
+demanded cuts the RIGHT way at K=24: non-neighbour carriers genuinely entered
+bonding range during retrieve (11.68 < 12) — real frustration pressure, not a
+trivially stretched chain — and the formation freeze + per-bond rests still
+restored 576/576 bits. Single blemish, reported: one clean D-FAIL run at
+K=12/seed 7 (register decoded 22/24 bits; seed mean 0.958 stays above the
+bar) — a sporadic dynamics event, not a systematic boundary.
+
+Prediction calibration: PASS was predicted at 45% (W-FAIL allocation risk 20%
+did not materialise; 25 nodes / 24 bonds allocate cleanly). The K=24
+stays-extended guess was half right: the chain folded enough to create real
+strain (gyration to 61.7) yet decoded perfectly.
+
+Register line now: write (G163) + retain (G164) + scale (G165), all PASS,
+all controls clean. Open: interference, association-on-registers, retention
+at scale, Flux-kinematics programme decision.

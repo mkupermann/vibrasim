@@ -5,6 +5,10 @@ B unresponsive→abstention per protocol; D/E's boundary-confounder objection wa
 resolved by HARDENING into the anti-bias INCONCLUSIVE@K gate, C's no-early-stop
 and anchor-FAIL conditions incorporated) — committed before any data (D2).
 Bars final per D3.**
+**Verdict 2026-08-12: PASS** — P ≥ 0.90 at all K on 3/3 seeds (K6 1.000, K12
+0.986, K24 1.000), controls ≤ 0.6, censuses valid, boundary rate 0.0, and real
+strain at K=24 (min non-neighbour distance 11.68 < formation window). LOGBOOK
+2026-08-12.
 
 ## 1. The one question (D1)
 

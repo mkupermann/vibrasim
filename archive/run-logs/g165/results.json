@@ -1,0 +1,101 @@
+{
+  "P@K6": {
+    "per_seed": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "mean": 1.0,
+    "break_classes": {
+      "OK": 24
+    },
+    "boundary_rate": 0.0,
+    "min_nn_dist": 12.37,
+    "gyration_max": 18.82
+  },
+  "OLDREST@K6": {
+    "per_seed": [
+      0.4167,
+      0.4583,
+      0.6042
+    ],
+    "mean": 0.4931,
+    "break_classes": {
+      "D-FAIL": 24
+    },
+    "boundary_rate": 0.0,
+    "min_nn_dist": 13.27,
+    "gyration_max": 15.27
+  },
+  "P@K12": {
+    "per_seed": [
+      1.0,
+      0.9583,
+      1.0
+    ],
+    "mean": 0.9861,
+    "break_classes": {
+      "D-FAIL": 1,
+      "OK": 23
+    },
+    "boundary_rate": 0.0,
+    "min_nn_dist": 12.3,
+    "gyration_max": 32.55
+  },
+  "OLDREST@K12": {
+    "per_seed": [
+      0.4792,
+      0.5208,
+      0.4375
+    ],
+    "mean": 0.4792,
+    "break_classes": {
+      "D-FAIL": 24
+    },
+    "boundary_rate": 0.0,
+    "min_nn_dist": 13.25,
+    "gyration_max": 30.53
+  },
+  "P@K24": {
+    "per_seed": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "mean": 1.0,
+    "break_classes": {
+      "OK": 24
+    },
+    "boundary_rate": 0.0,
+    "min_nn_dist": 11.68,
+    "gyration_max": 61.68
+  },
+  "OLDREST@K24": {
+    "per_seed": [
+      0.5365,
+      0.474,
+      0.6042
+    ],
+    "mean": 0.5382,
+    "break_classes": {
+      "D-FAIL": 24
+    },
+    "boundary_rate": 0.0,
+    "min_nn_dist": 13.25,
+    "gyration_max": 60.52
+  },
+  "NEG@K24": {
+    "per_seed": [
+      0.5052,
+      0.5365,
+      0.5521
+    ],
+    "mean": 0.5312,
+    "break_classes": {
+      "D-FAIL": 24
+    },
+    "boundary_rate": 0.0,
+    "min_nn_dist": 17.0,
+    "gyration_max": 61.29
+  }
+}

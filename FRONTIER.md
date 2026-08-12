@@ -59,8 +59,11 @@ only; agitation re-realized as kicks per erratum, honest archive kept.)
 kinematics, no mechanical bonds; a port would be a substrate EXTENSION
 (programme decision). The register line is consolidated in
 docs/REGISTER_PROGRAMME_SUMMARY.md + docs/patterns/rest_length_register.md.
-Remaining follow-ups (new IDs): capacity (G165 draft exists), interference,
-association on top. LOGBOOK 2026-08-10/11/12.
+**G165 = PASS (2026-08-12): capacity scales to 24 bits** (0.986–1.000 at all K,
+controls clean, real frustration strain at K=24 survived). Register line:
+write + retain + scale, all PASS. Remaining follow-ups (new IDs):
+interference, association on top, retention at scale, Flux-kinematics
+programme decision. LOGBOOK 2026-08-10/11/12.
 
 ### Next (discipline)
 - ~~Document ILW as §4.8 port doctrine~~ **done 2026-08-10** (CONCEPT §4.8 + ilw_port_doctrine.md + Brain-blocked statement)
