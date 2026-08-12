@@ -1,6 +1,14 @@
 # G171 — association as a bandwidth law: contact points k as the variable
 
-**Status: DRAFT — bars must be committed before any data (D2).**
+**Status: SIGNED OFF 2026-08-13 (A/C conditions authored-in; D JA after the
+exposure declaration; quantified curve derived before the registered run).**
+
+**Verdict 2026-08-13: INCONCLUSIVE** — K2/K6 census-invalid (cross-bond
+formation is PATTERN-DEPENDENT: end offsets Δx grow with chain length, many
+registered bonds geometrically unformable — a discovered writability limit);
+SCRAM-X in the 0.6–0.75 scale gap (span leak). K12 internally fully valid at
+1.000×3: the channel carries association at full anchoring. C's abort clause
+does NOT fire. LOGBOOK 2026-08-13.
 
 ## 1. The one question (D1)
 

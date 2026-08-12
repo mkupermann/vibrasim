@@ -8626,3 +8626,46 @@ Prediction calibration: chair H-INDEX 60% — correct; the SIM interior
 explosion (II class) was predicted by no one, in no direction: the
 hypothesis said "losses split", reality said "registers destroyed". The
 magnitude surprise is recorded.
+
+## 2026-08-13  G171: association bandwidth — **INCONCLUSIVE** (writability limit discovered; K12 clean at 1.000)
+
+Pre-reg: docs/amendments/g171_association_bandwidth.md (incl. exposure
+declaration). Raw: archive/run-logs/g171/.
+
+| Arm | mean (3 seeds) | cross census | note |
+|-----|----------------|--------------|------|
+| K2 | 0.479 | **INVALID** (39/48 bonds formed) | contaminated per registered clause |
+| K6 | 0.500 | **INVALID** (130/144) | contaminated |
+| K12 | **1.000 ×3** | valid (288/288 exact) | sensitivity gate FIRES — clean |
+| NEG | 0.479 | valid | clean control |
+| SCRAM-X | 0.618 | valid | in the 0.6–0.75 bar gap; span-leak suspicion |
+
+**Verdict: INCONCLUSIVE** per the frozen bars — the K2/K6 arms contain
+census-invalid runs ("any deviation = run INVALID") and SCRAM-X misses the
+≤0.6 cleanliness bar without reaching the ≥0.75 FAIL bar (a scale gap,
+recorded). No BANDWIDTH-LAW claim; no CLASS-NULL either (researcher C's
+abort clause explicitly does NOT fire — the widest arm succeeded perfectly).
+
+What the run established despite itself:
+1. **The K12 sub-result is internally fully valid** (every census exact):
+   perfect reconstruction of all 144 target bits through 12 cross-contacts
+   with the target's own bonds deleted — the cross-structure channel
+   demonstrably carries association at full anchoring.
+2. **A writability limit nobody derived:** cross-bond formation at write is
+   PATTERN-DEPENDENT — end-to-end distance is √(Δy² + Δx²) and Δx grows
+   with chain length (up to 24 at m=1), so many registered cross-bonds were
+   geometrically unformable (the cv=False mechanism). The k=2/6 lows
+   reflect unwritten channels as much as bandwidth. The derivation §4
+   missed this; QUANT-MATCH: OPEN (K6 off by 0.13).
+3. SCRAM-X at 0.618: a decoy-written cross-structure still leaks ~0.12
+   above chance — geometry statistics (span) are shared between decoy and
+   truth; a successor's control needs span-matched decoys.
+
+Prediction calibration: chair gave INCONCLUSIVE 20% (predicted via k=12
+dynamics — wrong sub-mechanism; the actual path was write-geometry). The
+"most-likely failure mode" was again mispredicted; the census gates did
+their job regardless.
+
+Successor design implication (for the table): fix cross-writability
+geometrically (e.g., contact stubs at pattern-independent positions) so k
+measures BANDWIDTH, not writability — then the law question becomes clean.

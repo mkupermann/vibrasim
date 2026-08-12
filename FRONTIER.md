@@ -83,10 +83,15 @@ certified. **G170 (2026-08-13) = H-INDEX CONFIRMED:** the R2-exclusive losses
 are an ALLOCATION-ORDER artifact of form_bridges' fixed pair scan (SWAP
 migrates them 100%; interleaved allocation destroys both registers via 111
 interior-interior bonds) — a substrate trap, now in the pattern doc, with the
-clean mitigation named (true sequential allocate-then-consolidate). Open
-(new IDs): association on top (C's two conditions on file; the named
-confound is now controllable), Flux-kinematics programme decision.
-LOGBOOK 2026-08-10 … 13.
+clean mitigation named (true sequential allocate-then-consolidate). **G171 (association bandwidth) = INCONCLUSIVE (2026-08-13):** K2/K6 arms
+census-invalid — cross-bond WRITABILITY is pattern-dependent (end offsets
+grow with chain length; many registered bonds geometrically unformable), a
+discovered limit the derivation missed. K12 internally fully valid at
+1.000×3: the cross-structure channel demonstrably carries association at
+full anchoring; C's abort clause does NOT fire. SCRAM-X span leak (0.618)
+noted for successor controls. Open (new IDs): G172 with pattern-independent
+contact geometry (bandwidth vs writability separated), Flux-kinematics
+programme decision. LOGBOOK 2026-08-10 … 13.
 
 ### Next (discipline)
 - ~~Document ILW as §4.8 port doctrine~~ **done 2026-08-10** (CONCEPT §4.8 + ilw_port_doctrine.md + Brain-blocked statement)
