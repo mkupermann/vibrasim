@@ -8436,3 +8436,35 @@ strain (gyration to 61.7) yet decoded perfectly.
 Register line now: write (G163) + retain (G164) + scale (G165), all PASS,
 all controls clean. Open: interference, association-on-registers, retention
 at scale, Flux-kinematics programme decision.
+
+## 2026-08-12  G166: retention at scale — **INCONCLUSIVE (control-arm artifact)**, with a mechanism surprise
+
+Pre-reg: docs/amendments/g166_retention_at_scale.md. Raw: archive/run-logs/g166/.
+
+P-arms were flawless: decode 1.000 at K=24 AND the K=6 contrast arm at all
+intervals (3/3 seeds), rebonding 0, write censuses valid, T0 baseline 1.000,
+OLDREST 0.472, P-boundary rate 0.0, perturbation floor passed (RMS to 2.99).
+
+**But the NEG control invalidated itself:** bondless carriers under kicks have
+no damping (damping lives in bridge tension), drifted linearly out of the box,
+boundary rate 1.0 → all NEG runs excluded → NEG was never validly measured at
+its only registered interval (50k). The frozen PASS-clean bar requires
+"boundary ≤ 10% everywhere" and a measured NEG ≤ 0.6 — neither satisfiable.
+**Verdict: INCONCLUSIVE per the frozen bars.** No post-data erratum (D3);
+a follow-up needs a NEG design that stays measurable (new ID). The P-arm
+numbers are reported without the certified-PASS label.
+
+**Mechanism surprise (researcher A's per-tick sampling made this visible):**
+at 50k the chain spent **74% of idle ticks with min-NN inside the bonding
+window** (min 6.4 — far below 12) and formed ZERO new bonds. The fold-freeze
+failure mechanism did not fire despite abundant geometric opportunity —
+bond formation between MOVING carriers appears to require more than
+proximity (kinetic/persistence conditions in form_bridges). This both
+explains G164/G166's clean rebonding AND weakens the assumed threat model;
+the formation kinetics deserve their own characterization before further
+"fold risk" reasoning.
+
+Prediction calibration: "PASS clean 40%" — the P-arms would have cleared it,
+but the INCONCLUSIVE path (5% predicted, via boundary) hit through the NEG
+arm nobody flagged: bondless + kicks + no damping = linear drift. Lesson:
+control arms need the same physics review as treatment arms.

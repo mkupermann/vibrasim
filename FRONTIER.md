@@ -61,8 +61,13 @@ kinematics, no mechanical bonds; a port would be a substrate EXTENSION
 docs/REGISTER_PROGRAMME_SUMMARY.md + docs/patterns/rest_length_register.md.
 **G165 = PASS (2026-08-12): capacity scales to 24 bits** (0.986–1.000 at all K,
 controls clean, real frustration strain at K=24 survived). Register line:
-write + retain + scale, all PASS. Remaining follow-ups (new IDs):
-interference, association on top, retention at scale, Flux-kinematics
+write + retain + scale, all PASS. **G166 (retention at scale) = INCONCLUSIVE** by control-arm artifact: P-arms
+flawless (1.000 at K=24 under 50k-tick agitation, rebonding 0 despite 74% of
+idle INSIDE the bonding window — formation between moving carriers needs more
+than proximity, a mechanism surprise), but the bondless NEG control drifted
+out of the box (no damping) and was never validly measured. Follow-ups (new
+IDs): G167 re-run with a measurable NEG design; bond-formation kinetics
+characterization; interference; association on top; Flux-kinematics
 programme decision. LOGBOOK 2026-08-10/11/12.
 
 ### Next (discipline)

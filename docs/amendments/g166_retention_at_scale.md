@@ -7,6 +7,12 @@ prior PASS-confidence selects for confirmatory experiments and contradicts
 the falsification discipline, where an uncertain outcome marks a GOOD
 experiment. A's per-tick strain sampling and C's K6 contrast arm + within-run
 T0 are incorporated) — committed before any data (D2). Bars final per D3.**
+**Verdict 2026-08-12: INCONCLUSIVE (control-arm artifact)** — P-arms flawless
+(1.000 everywhere, rebonding 0, 74% of idle inside the bonding window without
+a single new bond — mechanism surprise), but the NEG control drifted out of
+the box (boundary 1.0, no damping on bondless carriers) and was never validly
+measured; the frozen PASS bar is not certifiable. Follow-up NEG design = new
+ID. LOGBOOK 2026-08-12.
 
 ## 1. The one question (D1)
 
