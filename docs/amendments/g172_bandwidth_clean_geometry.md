@@ -5,6 +5,11 @@ bandwidth; A's engineered-disclosure and C's validation-first + permanent
 dual-gate conditions incorporated; D JA after the corners-majorize rebuttal
 of his selection-bias concern) — committed before any data (D2). Bars final
 per D3.**
+**Verdict 2026-08-13: FAIL** (SCRAM-X 1.000 ≥ 0.75 artifact clause) — the
+span-matched-decoy spec is logically impossible for 1-bit chains (weight
+determines arrangement); the implementation degenerated to decoy = truth.
+Collective spec miss; the gate refused certification correctly. Stage 1
+writability PASS stands as a reusable engineering result. LOGBOOK 2026-08-13.
 
 ## 1. The one question (D1)
 

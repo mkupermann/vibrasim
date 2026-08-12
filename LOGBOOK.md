@@ -8669,3 +8669,38 @@ their job regardless.
 Successor design implication (for the table): fix cross-writability
 geometrically (e.g., contact stubs at pattern-independent positions) so k
 measures BANDWIDTH, not writability — then the law question becomes clean.
+
+## 2026-08-13  G172: bandwidth on clean geometry — **FAIL** (specificity control spec-impossible at 1-bit chains)
+
+Pre-reg: docs/amendments/g172_bandwidth_clean_geometry.md. Raw: archive/run-logs/g172/.
+
+Stage 1 (writability validation): **PASS** — the centered-chain geometry
+(Δy=8) is writability-clean for every corner pattern; the G171 standalone
+finding has a working mitigation.
+
+Stage 2: K4 0.618 / K6 0.618 / K12 1.000, NEG 0.507, all censuses valid —
+but **SCRAM-X = 1.000 → FAIL** per the frozen ≥0.75 artifact clause.
+Diagnosis (before the verdict): the span-matched-decoy SPEC is logically
+IMPOSSIBLE for 1-bit chains — a single bit's weight fully determines its
+arrangement; no same-span-different-arrangement decoy exists. The
+implementation degenerated to decoy = truth, so SCRAM-X@k12 was literally
+the treatment arm. The spec was authored, implemented and approved by the
+whole table (C, chair, D) — a collective miss; the gate itself worked
+exactly as designed by refusing certification.
+
+Also recorded: K4 and K6 produced identical per-seed aggregates
+(0.5625/0.6042/0.6875) — probed before judging: m IS live (different
+fragmentation, different cross counts); the coincidence stems from shared
+rng pattern draws and 1/48 granularity. Both sit BELOW the derived curve
+(0.667/0.750) — no claims under FAIL, but the gap flags the derivation's
+edge-bit informativeness as optimistic for a successor to re-derive.
+
+Successor design note (for the table): specificity needs a PER-ARM
+construction. Candidate that is well-defined at every m: PERMUTED-ASSIGNMENT
+decoys — cross-bonds written with chain PAIRINGS permuted (A_i ↔ B_j, j≠i);
+spans identical, assignments wrong, defined even for 1-bit chains.
+
+Prediction calibration: FAIL was given 10%; the named most-likely mode
+(span leak beyond spans) was wrong — the actual failure was one level
+deeper: the control's definability. Third consecutive run where the gates
+caught what the designers missed.

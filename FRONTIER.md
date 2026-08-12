@@ -89,9 +89,14 @@ grow with chain length; many registered bonds geometrically unformable), a
 discovered limit the derivation missed. K12 internally fully valid at
 1.000×3: the cross-structure channel demonstrably carries association at
 full anchoring; C's abort clause does NOT fire. SCRAM-X span leak (0.618)
-noted for successor controls. Open (new IDs): G172 with pattern-independent
-contact geometry (bandwidth vs writability separated), Flux-kinematics
-programme decision. LOGBOOK 2026-08-10 … 13.
+noted for successor controls. **G172 = FAIL (2026-08-13):** Stage-1 writability validation PASSED (the
+centered-Δy8 geometry is clean — reusable), but the span-matched specificity
+decoy is LOGICALLY IMPOSSIBLE at 1-bit chains (collective spec miss);
+SCRAM-X degenerated to the treatment arm and the gate correctly refused
+certification. Successor needs per-arm-defined specificity
+(permuted-assignment decoys). Open (new IDs): G173 bandwidth with
+well-defined specificity, Flux-kinematics programme decision.
+LOGBOOK 2026-08-10 … 13.
 
 ### Next (discipline)
 - ~~Document ILW as §4.8 port doctrine~~ **done 2026-08-10** (CONCEPT §4.8 + ilw_port_doctrine.md + Brain-blocked statement)
