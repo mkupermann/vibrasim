@@ -94,8 +94,14 @@ centered-Δy8 geometry is clean — reusable), but the span-matched specificity
 decoy is LOGICALLY IMPOSSIBLE at 1-bit chains (collective spec miss);
 SCRAM-X degenerated to the treatment arm and the gate correctly refused
 certification. Successor needs per-arm-defined specificity
-(permuted-assignment decoys). Open (new IDs): G173 bandwidth with
-well-defined specificity, Flux-kinematics programme decision.
+(permuted-assignment decoys). **G173 = INCONCLUSIVE (2026-08-13), and the association arc RESOLVES:** the
+cross-structure channel is a STEP FUNCTION — span-only below full anchoring
+(arrangement decoys proved physically inert: spec degeneration #3), perfect
+content reconstruction exactly at full anchoring (1.000, 4× replicated).
+The graded bandwidth law is refuted; association-on-registers closes by
+CHARACTERIZATION (C's abort clause never fired). Register line complete:
+write, retain, scale, retain@scale, coexist, associate-at-full-anchoring.
+Open: Flux-kinematics programme decision, belief-path return.
 LOGBOOK 2026-08-10 … 13.
 
 ### Next (discipline)

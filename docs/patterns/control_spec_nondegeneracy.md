@@ -24,3 +24,9 @@ treatment is worse than no control: it converts into a false gate.
 - Pairing derangements need m ≥ 2 and are strain-visible unless restricted
   to equal-span classes — where they may coincide with content preservation
   (check per geometry).
+- **G173, degeneration #3:** a decoy that differs in CONTENT but in no
+  PHYSICALLY COUPLED variable is structurally inert (centered chains:
+  span-preserving permutations leave ends — and thus all cross rests —
+  identical). The domain check must walk the MEASUREMENT COUPLING, not just
+  combinatorial existence: in which physical variable does the decoy differ,
+  and is the measurement coupled to it?

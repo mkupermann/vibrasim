@@ -8704,3 +8704,49 @@ Prediction calibration: FAIL was given 10%; the named most-likely mode
 (span leak beyond spans) was wrong — the actual failure was one level
 deeper: the control's definability. Third consecutive run where the gates
 caught what the designers missed.
+
+## 2026-08-13  G173: bandwidth with defined specificity — **INCONCLUSIVE**, and the arc resolves: the channel is a STEP FUNCTION
+
+Pre-reg: docs/amendments/g173_bandwidth_defined_specificity.md. Raw:
+archive/run-logs/g173/ (incl. seed-granular progress).
+
+| Arm | mean | note |
+|-----|------|------|
+| K4 | 0.604 (d0 0.635 > d1 0.542) | distance order holds in aggregate |
+| K6 | 0.500 | at chance — bandwidth ordering INVERTED (K4 > K6) |
+| K12 (anchor) | **1.000 ×3** | fourth consecutive replication |
+| NEG | 0.507 | clean |
+| SCRAMX-K4 | **0.604 — identical to K4, per-seed** | gate fires (> 0.6) |
+| SCRAMX-K6 | 0.500 = K6 | inert |
+
+**Verdict: INCONCLUSIVE** per the frozen dual gate (SCRAM-X > 0.6). But the
+IDENTITY of decoy and treatment is the finding, not a leak:
+
+**Spec-degeneration #3 (the subtlest):** under CENTERED chains, a
+span-preserving arrangement permutation moves only INTERIOR carriers — the
+chain ENDS stay fixed (center ± L/2 with L unchanged), so the cross-bond
+formation distances, hence the frozen cross rests, are PHYSICALLY IDENTICAL
+between decoy and truth. The arrangement decoy differs in content but in no
+physically coupled variable — structurally inert. (Degeneration #1: span
+matching impossible at 1 bit. #2: subdomain draw undefined at 1 bit —
+caught as an infinite loop. #3: content-difference without physical
+difference.) The pattern doc gets the general rule: a decoy must differ in
+a variable the MEASUREMENT is coupled to.
+
+**The arc's resolution (G171 → G173, three runs, honest):** below full
+anchoring the cross-structure carries ONLY span information — K4's 0.604 is
+pure geometry signal (decoy-identical), K6 sits at chance, and the graded
+"bandwidth law" is REFUTED in its core: there is no graded content channel.
+Content association through cross-bonds exists exactly at FULL anchoring
+(every carrier cross-bonded): 1.000, four times replicated, census-clean.
+The association-on-registers question is hereby CHARACTERIZED: a step
+function, not a graded channel. C's abort clause never fired (the widest
+arm always succeeded); the class closes by characterization, not by NULL.
+
+Prediction calibration: DISTANCE-LAW CONFIRMED was given 55% — wrong; the
+distance order held but the whole sub-full-anchor signal turned out
+content-free, a possibility no one's model contained. K6-at-chance
+(vs derived 0.750) is explained by the same fact: 2-bit chains' end
+positions encode span only, and span decodes the second bit no better than
+chance once arrangement is unknown... (recorded as the successor derivation
+if anyone reopens; none is planned).

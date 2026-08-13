@@ -5,6 +5,14 @@ distance-law and C's domain-check conditions authored-in; D JA after the
 declared-subdomain fix of his weak-decoy objection; the domain walk caught
 a distance-2 spec ghost in the law wording before commit) — committed
 before any data (D2). Bars final per D3.**
+**Verdict 2026-08-13: INCONCLUSIVE** (SCRAM-X 0.604 > 0.6) — and decisive:
+decoy ≡ treatment per-seed, because span-preserving arrangement permutations
+leave centered-chain ENDS fixed → cross rests physically identical (spec
+degeneration #3, structurally inert decoy). The sub-full-anchor channel is
+span-only; content association exists exactly at full anchoring (K12 1.000,
+4× replicated). The graded bandwidth law is refuted; the channel is a STEP
+FUNCTION. Association-on-registers closes by CHARACTERIZATION. LOGBOOK
+2026-08-13.
 
 ## 1. The one question (D1)
 
