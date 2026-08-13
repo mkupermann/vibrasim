@@ -268,6 +268,8 @@ def main():
         return 1
     res_path = OUT_DIR / "results.json"
     out = json.loads(res_path.read_text()) if res_path.exists() else {}
+    prog_path = OUT_DIR / "progress.json"
+    prog = json.loads(prog_path.read_text()) if prog_path.exists() else {}
     for name, m, mode in ARMS:
         if name in out:
             print(f"# {name}: already complete, skipped (resume)")
@@ -277,8 +279,21 @@ def main():
         cross_tot = 0
         dist_agg = {0: [0, 0], 1: [0, 0]}
         for seed in SEEDS:
+            pkey = f"{name}@{seed}"
+            if pkey in prog:
+                r_saved = prog[pkey]
+                accs.append(r_saved["acc"])
+                wv_all &= r_saved["wv"]; cv_all &= r_saved["cv"]
+                cross_tot += r_saved["cross"]
+                for dd in (0, 1):
+                    dist_agg[dd][0] += r_saved["d"][str(dd)][0]
+                    dist_agg[dd][1] += r_saved["d"][str(dd)][1]
+                print(f"# {pkey}: resumed")
+                continue
             rng = np.random.default_rng(1730 + seed)
             a_sum = 0.0
+            seed_dist = {0: [0, 0], 1: [0, 0]}
+            seed_wv, seed_cv, seed_cross = True, True, 0
             for _ in range(N_PAIRS):
                 def draw():
                     # declared subdomain: EVERY chain mixed-weight
@@ -291,13 +306,23 @@ def main():
                 patA, patB = draw(), draw()
                 r = run_one(patA, patB, seed, m, mode)
                 a_sum += r["acc"]
-                wv_all &= r["write_valid"]
-                cv_all &= r["cross_valid"]
-                cross_tot += r["cross_formed"]
+                seed_wv &= r["write_valid"]
+                seed_cv &= r["cross_valid"]
+                seed_cross += r["cross_formed"]
                 for dd in (0, 1):
-                    dist_agg[dd][0] += r["by_dist"][dd][0]
-                    dist_agg[dd][1] += r["by_dist"][dd][1]
-            accs.append(a_sum / N_PAIRS)
+                    seed_dist[dd][0] += r["by_dist"][dd][0]
+                    seed_dist[dd][1] += r["by_dist"][dd][1]
+            acc_seed = a_sum / N_PAIRS
+            accs.append(acc_seed)
+            wv_all &= seed_wv; cv_all &= seed_cv; cross_tot += seed_cross
+            for dd in (0, 1):
+                dist_agg[dd][0] += seed_dist[dd][0]
+                dist_agg[dd][1] += seed_dist[dd][1]
+            prog[pkey] = {"acc": acc_seed, "wv": seed_wv, "cv": seed_cv,
+                          "cross": seed_cross,
+                          "d": {str(k): v for k, v in seed_dist.items()}}
+            prog_path.write_text(json.dumps(prog))
+            print(f"# {pkey}: saved")
         out[name] = {
             "per_seed": [round(a, 4) for a in accs],
             "mean": round(float(np.mean(accs)), 4),
