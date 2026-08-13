@@ -156,6 +156,11 @@ BEFORE any Stage-1 code runs; the Stage-1 harness READS the bands from the
 committed file (never recomputes) and logs that commit's SHA into the
 verdict artifact.
 
+**FROZEN BANDS (Stage 0, sealed): band_sym^100 = 0.02, band_sym^800 = 0.02, band_point^100 = 0.9696448080126194, band_point^800 = 1.013523889330239** — Stage-0 runs are seed-deterministic (thermal speed 0), both
+symmetry bands sit at the 0.02 floor; the point-prediction deviation is LARGE and systematic (F_800(U@Q4) = 0.588 vs 0.25 — the §5a integrator
+class measured; report-only axis, gates nothing). Reported std of Δ_U ≈ 0
+(determinism).
+
 **Stage 1 — measurement:** fresh seeds {101, 102, 103}; treatment cells in
 both configurations + U cells (12 treatment runs + 18 U runs incl. CB);
 censuses (write + probe, zero cross-lane bonds, formation freeze verified,
