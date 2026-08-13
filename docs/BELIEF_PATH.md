@@ -61,7 +61,7 @@ The belief path does **not** deny that honesty. It says: **act as if the ladder 
 | R5 Selective memory | Matter holds content | **ACTIVITY: CLOSED NEGATIVE** (write≈leak). **MATTER POSITION: POSITIVE, scoped** (G114–G119). **MATTER STRUCTURE: POSITIVE, scoped — LINE CLOSED 2026-08-13** (PRIM14 rest-length register G163–G173: write/retain/scale/coexist certified; association is a step function of anchoring, scoped; `docs/REGISTER_PROGRAMME_SUMMARY.md`) |
 | R6 Communication | Information moves | **POSITIVE, scoped** — co-located codec; free carriers do **not** carry symbols over distance |
 | R7 Molecules *carry information* | Internal molecular structure is the engram | **POSITIVE (BP-B1+B2+B3 PASS)** — engineered write (B1), emergent drive decode (B2), **3-class multi-bit** (B3). |
-| R8 Collections have *talent* | Light / sound / understanding specialize without modality-specific ML stacks | **CLOSED PARTIAL** (`bp_c_partial_closure.md`) — injection dual-drive class (freq+period) failed C1–C4. Reopen only via new primitive (PRIM1) or named §4.8 ports. |
+| R8 Collections have *talent* | Light / sound / understanding specialize without modality-specific ML stacks | **CLOSED PARTIAL** (`bp_c_partial_closure.md`) — injection dual-drive class failed C1–C4; **PRIM14 compliance angle closed (BP-C6 NULL, 2026-08-13: structured and structure-free chains indistinguishable from the linear invariant at equal amplitude and matched mismatch pattern)**; reopen requires a new named mechanism class. |
 | R9 Brain from collections | Cross-modal bind, learn, answer from matter assemblies | **OPEN** — later “cognition” wins used VSA/reservoir/Brian2 (**archive**, not this path) |
 | Computation / Ising / SA | Vibrations optimize hard problems | **CLOSED for EQMOD dynamics** — decorative; adjacent CIM is not EQMOD |
 
@@ -186,6 +186,7 @@ Shared helper: `world/bet_live.py`
 | 2026-07-20 | E1 NULL → E2 PASS (port side trace). E3 NULL: strength ≠ last-write order; family closed. E4 association next. |
 | 2026-07-20 | E4–E6 PASS (storage+overwrite). E-series port storage **CLOSED PARTIAL**. Next = multi-trial/no-map or new primitive only. |
 | 2026-08-13 | PRIM14 register line closed (R5 matter-structure POSITIVE, scoped). Rung-C reopen candidate via PRIM14 (new primitive postdates C1–C5) under pre-reg review: C6 history-congruent selectivity. |
+| 2026-08-13 | BP-C6 (G174) INVARIANT (NULL): PRIM14 compliance angle of the Rung-C reopen closed — exactly linear regime, pattern-blind stiffness confirmed to machine precision; the pre-reg review itself yielded two new standing traps (metric non-degeneracy, symmetry walk). |
 
 ---
 

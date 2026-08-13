@@ -107,8 +107,16 @@ scoped step-function statement, content-coupled-anchoring design candidate
 logged unscheduled). Programme decision: the Flux-kinematics fork WAITS until
 the belief-path spine says whether Flux needs kinematics at all — deciding
 the architecture before the requirement would repeat the
-threshold-without-mechanism error class. **Next: belief-path spine, next
-rung (docs/BELIEF_PATH.md).** LOGBOOK 2026-08-10 … 13.
+threshold-without-mechanism error class. **BP-C6 (G174) ran and closed
+2026-08-13: INVARIANT (NULL)** — the PRIM14 compliance angle of the Rung-C
+reopen is closed (structure cannot shape strain response in the exactly
+linear regime this configuration inhabits; Δ_T at machine epsilon, all
+gates clean, seal protocol held). Two standing traps extracted from the
+review (metric non-degeneracy, symmetry walk —
+docs/patterns/control_spec_nondegeneracy.md). Open: next-rung decision on
+the spine — R8 needs a NEW named mechanism class (recorded candidates:
+transverse probe components, bond-window amplitudes, collision excitation)
+or a different rung (R9 remains open). LOGBOOK 2026-08-10 … 13.
 
 ### Next (discipline)
 - ~~Document ILW as §4.8 port doctrine~~ **done 2026-08-10** (CONCEPT §4.8 + ilw_port_doctrine.md + Brain-blocked statement)
