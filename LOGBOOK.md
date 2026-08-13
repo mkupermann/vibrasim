@@ -8767,3 +8767,43 @@ next pre-reg, per the review's methodological priority. The anchor-distance
 order d0 > d1 is protocolled as a geometry signal, not content. Next per
 FRONTIER: belief-path spine; the Flux-kinematics fork waits for the spine's
 requirement.
+
+## 2026-08-13  BP-C6 (G174): structure-coupled invariance break — **INVARIANT (NULL)**
+
+Pre-reg: docs/amendments/bp_c6_congruence_selectivity.md (signed off, v3;
+v1/v2 withdrawn in review — the review history in the document is part of
+the finding: metric constant + 0/0 cell, endpoint collapse at k_p=k, mirror
+degeneracy, two named artifact classes). Raw: archive/run-logs/bp_c6/.
+Seal: Stage-0 bands frozen in their own commit 9443daca before Stage 1;
+Stage-1 harness read the committed bands and logged the SHA.
+
+Numbers: Δ_T ≈ 1e-15 on every seed, BOTH read-outs (F_100, F_800), BOTH
+configurations — machine epsilon, not merely sub-band (band 0.02, floor).
+Δ_U ≈ 0; CB(treatment) = 5.0e-4 / 8.7e-5 (the §5a directional integrator
+term is REAL and measurable, but 40× below band and arm-symmetric);
+censuses valid, no cross-lane bonds, min non-neighbor distance ≥ 12.1
+(atom-repulsion all-clear substantiated), max gap 11.33 < 11.5 (no window
+events). Treatment F equals structure-free U@Q4 F exactly (0.5878 both):
+the response is a function of the mismatch pattern alone, blind to the
+stored pattern. Residual/mismatch ratio identical at amplitude 2 and 4
+(0.412) — response linear in amplitude.
+
+**Verdict: INVARIANT (NULL).** Supported statement, exactly as
+pre-registered: structured and structure-free chains deviate
+INDISTINGUISHABLY from the linear invariant at equal strain amplitude and
+matched mismatch pattern. Explanation is analytic, not a measurement miss:
+with an axial probe, collinear chains and zero initial velocities, none of
+the named nonlinear channels (window events, transverse buckling,
+collisions) is excited — the substrate operates in an exactly linear
+regime where stiffness is pattern-blind (Hessian k·I; rest lengths shift
+the minimum only). The observed large SYMMETRIC deviation from the naive
+point predictions (F_800 = 0.588 vs 0.25; effective compliance ~4× softer)
+is the §5a integrator class, structure-free as classified in advance.
+
+Consequence (pre-scripted): the compliance angle of the PRIM14 Rung-C
+reopen is CLOSED; Rung C stays closed unless a different mechanism class
+is named in advance (candidates recorded, unscheduled: transverse/lateral
+probe components, amplitudes into the bond window, collision-term
+excitation). Prediction calibration: INVARIANT was given 50% (landed);
+the predicted most-likely failure mode (CB gate fires) did NOT occur —
+the directional term is 40× smaller than feared.
