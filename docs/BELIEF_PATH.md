@@ -58,7 +58,7 @@ The belief path does **not** deny that honesty. It says: **act as if the ladder 
 | R2 Binding → electrons → atoms → molecules | Hierarchy forms | **Done under current rules** — engineered table (8% etc.), fragile under structured stimuli |
 | R3 Energy field → bind threshold | Field drives matter formation | **POSITIVE, scoped (BP-A1 PASS)** — local free-vibration **density** enables binding (cluster≫sparse; scramble fails). Not a new energy equation; density *is* the field under current primitives. |
 | R4 Proto-collections (membrane) | Matter joins into a stable body | **POSITIVE, scoped** — proto-cell forms, homeostasis, set-point; repair only partial with bond turnover |
-| R5 Selective memory | Matter holds content | **ACTIVITY: CLOSED NEGATIVE** (write≈leak). **MATTER POSITION: POSITIVE, scoped** (G114–G119) |
+| R5 Selective memory | Matter holds content | **ACTIVITY: CLOSED NEGATIVE** (write≈leak). **MATTER POSITION: POSITIVE, scoped** (G114–G119). **MATTER STRUCTURE: POSITIVE, scoped — LINE CLOSED 2026-08-13** (PRIM14 rest-length register G163–G173: write/retain/scale/coexist certified; association is a step function of anchoring, scoped; `docs/REGISTER_PROGRAMME_SUMMARY.md`) |
 | R6 Communication | Information moves | **POSITIVE, scoped** — co-located codec; free carriers do **not** carry symbols over distance |
 | R7 Molecules *carry information* | Internal molecular structure is the engram | **POSITIVE (BP-B1+B2+B3 PASS)** — engineered write (B1), emergent drive decode (B2), **3-class multi-bit** (B3). |
 | R8 Collections have *talent* | Light / sound / understanding specialize without modality-specific ML stacks | **CLOSED PARTIAL** (`bp_c_partial_closure.md`) — injection dual-drive class (freq+period) failed C1–C4. Reopen only via new primitive (PRIM1) or named §4.8 ports. |
@@ -185,6 +185,7 @@ Shared helper: `world/bet_live.py`
 | 2026-07-19 | PRIM1-D2 + PRIM2-D0 PASS; C5 NULL (ILW eng. specialisation works; free talent still short). |
 | 2026-07-20 | E1 NULL → E2 PASS (port side trace). E3 NULL: strength ≠ last-write order; family closed. E4 association next. |
 | 2026-07-20 | E4–E6 PASS (storage+overwrite). E-series port storage **CLOSED PARTIAL**. Next = multi-trial/no-map or new primitive only. |
+| 2026-08-13 | PRIM14 register line closed (R5 matter-structure POSITIVE, scoped). Rung-C reopen candidate via PRIM14 (new primitive postdates C1–C5) under pre-reg review: C6 history-congruent selectivity. |
 
 ---
 
