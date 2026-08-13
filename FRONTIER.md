@@ -101,8 +101,14 @@ content reconstruction exactly at full anchoring (1.000, 4× replicated).
 The graded bandwidth law is refuted; association-on-registers closes by
 CHARACTERIZATION (C's abort clause never fired). Register line complete:
 write, retain, scale, retain@scale, coexist, associate-at-full-anchoring.
-Open: Flux-kinematics programme decision, belief-path return.
-LOGBOOK 2026-08-10 … 13.
+**Register line CLOSED and summarized 2026-08-13**
+(docs/REGISTER_PROGRAMME_SUMMARY.md: verdict table G15F…G173, five traps,
+scoped step-function statement, content-coupled-anchoring design candidate
+logged unscheduled). Programme decision: the Flux-kinematics fork WAITS until
+the belief-path spine says whether Flux needs kinematics at all — deciding
+the architecture before the requirement would repeat the
+threshold-without-mechanism error class. **Next: belief-path spine, next
+rung (docs/BELIEF_PATH.md).** LOGBOOK 2026-08-10 … 13.
 
 ### Next (discipline)
 - ~~Document ILW as §4.8 port doctrine~~ **done 2026-08-10** (CONCEPT §4.8 + ilw_port_doctrine.md + Brain-blocked statement)

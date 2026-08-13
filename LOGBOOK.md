@@ -8750,3 +8750,20 @@ content-free, a possibility no one's model contained. K6-at-chance
 positions encode span only, and span decodes the second bit no better than
 chance once arrangement is unknown... (recorded as the successor derivation
 if anyone reopens; none is planned).
+
+## 2026-08-13  Register line CLOSED — consolidation and scope (programme decision)
+
+docs/REGISTER_PROGRAMME_SUMMARY.md extended with G170–G173 and finalized.
+Two review outcomes worth the ink: (1) the step-function statement is SCOPED —
+it holds for centered chains with span-preserving contacts under the spacing
+encoding; a content-coupled contact variable reopens the class. The review's
+counter-proposal (anchor offset as a function of the bits) is logged in the
+summary as an unscheduled design candidate — it is a new encoding, not a
+decoy for the closed claim (offset is not a function of content under the
+frozen encoding, so it cannot certify content specificity). (2) After three
+consecutive spec degenerations, the measurement-coupling walk is now a
+STANDING pre-reg requirement (summary, trap #5) — written down before any
+next pre-reg, per the review's methodological priority. The anchor-distance
+order d0 > d1 is protocolled as a geometry signal, not content. Next per
+FRONTIER: belief-path spine; the Flux-kinematics fork waits for the spine's
+requirement.
