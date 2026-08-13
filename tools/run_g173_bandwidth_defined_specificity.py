@@ -296,10 +296,16 @@ def main():
             seed_wv, seed_cv, seed_cross = True, True, 0
             for _ in range(N_PAIRS):
                 def draw():
-                    # declared subdomain: EVERY chain mixed-weight
+                    # declared subdomain (amendment §2): mixed-weight chains
+                    # — defined ONLY for bits_per >= 2 (certifiable arms).
+                    # bits_per = 1 (k=12 anchor, NEG): standard draw.
                     bp = BITS // m
                     while True:
                         p = list(rng.integers(0, 2, BITS))
+                        if bp < 2:
+                            if 0 < sum(p) < BITS:
+                                return p
+                            continue
                         chains = [p[i*bp:(i+1)*bp] for i in range(m)]
                         if all(0 < sum(ch) < bp for ch in chains):
                             return p
