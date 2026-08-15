@@ -32,13 +32,14 @@ agent = [
 
 [project.scripts]
 world = "world.run:main"
+vibrasim2-view = "vibrasim2.wireframe:main"
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["world"]
+packages = ["world", "vibrasim2"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
