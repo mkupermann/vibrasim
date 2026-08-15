@@ -52,6 +52,7 @@ docs/logbook/*.png
 .claude/
 .playwright-mcp/
 .superpowers/
+.worktrees/
 
 # Debugging screenshots
 vibrasim_*.png
