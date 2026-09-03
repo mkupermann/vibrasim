@@ -110,6 +110,21 @@ Jede Ansicht trägt sichtbar den Hinweis: `RAW SIMULATION STATE — OBSERVATION 
 
 Das README wird auf eine einzige gegenwärtige Geschichte reduziert. Ziel ist kein Marketingtext, sondern eine belastbare Einladung, das Denken und die Evidenz nachzuvollziehen.
 
+Das Repository ist weder Kundenreferenz noch fertiges Produkt. Es ist ein
+öffentliches Forschungslabor und soll sichtbar machen, wie Michael arbeitet:
+Behauptungen präzisieren, Gegenbeweise vorab definieren, Ergebnisse festhalten
+und Sackgassen nicht aus der Geschichte entfernen. Die Oberfläche wird deshalb
+nicht auf Hochglanz bereinigt. Sie muss lediglich zuverlässig zwischen aktiver
+Frage, belegtem Ergebnis, historischem Pfad und persönlicher Hoffnung
+unterscheiden.
+
+Die Hoffnung, dass aus der Arbeit etwas Eigenständiges entsteht, darf im README
+ausgesprochen werden, aber nur als Hoffnung. Sie begründet weder eine
+Erfolgsprognose noch einen größeren wissenschaftlichen Claim. Die passende
+Haltung lautet sinngemäß: Ich weiß nicht, ob Vibrasim irgendwohin führt. Die
+Frage ist mir wichtig genug, sie so präzise zu bearbeiten, dass sie auch
+scheitern kann.
+
 Vorgesehene Struktur:
 
 1. Ein Satz: was Vibrasim II ist.
@@ -305,7 +320,9 @@ Das Vorhaben ist abgeschlossen, wenn:
 5. P0-Kern und reine Verdict-Funktion die registrierten Mechaniktests bestehen;
 6. `--observe` reale Snapshots zeigt, ohne Rohdaten oder Verdict gegenüber Headless zu verändern;
 7. Viewer-Abbruch und Frame-Überlast den wissenschaftlichen Run nicht stoppen;
-8. README-Befehle auf einem sauberen Checkout geprüft sind und keine nicht belegten Claims enthalten;
+8. das README das Repository als öffentliches Forschungslabor statt als Produkt
+   oder Kundenreferenz einordnet, seine Befehle auf einem sauberen Checkout
+   geprüft sind und keine nicht belegten Claims enthält;
 9. der Git-Diff keine unbeabsichtigten Änderungen historischer Daten enthält;
 10. vor Push, Lizenzänderung und Branch-Protection jeweils eine konkrete Freigabe vorliegt.
 
@@ -315,6 +332,10 @@ Das Vorhaben ist abgeschlossen, wenn:
 - **Observer effect:** Serialisierung und GUI dürfen den Lauf nicht beeinflussen. Gegenmaßnahme: separater Prozess, latest-only Queue und Headless/Observe-Gleichheitstest.
 - **Visuelle Überinterpretation:** Menschen lesen Formen schneller als Tabellen. Gegenmaßnahme: rohe Geometrie, neutrale Terminologie und sichtbarer Observation-only-Hinweis.
 - **Historische Umschreibung:** Eine neue Richtung darf alte NULLs nicht nachträglich heilen. Gegenmaßnahme: append-only Transition und Frozen-Hinweise statt Textbereinigung vergangener Verdicts.
+- **Überpolitur:** Ein zu glattes README würde genau die Arbeitsweise verdecken,
+  die das Repository nach außen zeigen soll. Gegenmaßnahme: Widersprüche,
+  unsichere Anweisungen und unklare Statussignale korrigieren, aber NULLs,
+  Sackgassen und die Entwicklung des Denkens sichtbar lassen.
 - **Plattformverhalten:** PyVista und Prozess-Start unterscheiden sich zwischen macOS und Windows. Die Architektur ist plausibel, aber die vollständige GUI-Funktion muss auf beiden Zielsystemen praktisch geprüft werden. **Unsicherheit:** mittel, bis beide Plattformen gelaufen sind.
 
 ## 12. Budgetgrenze
