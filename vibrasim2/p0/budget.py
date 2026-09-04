@@ -98,6 +98,7 @@ class BudgetLease:
     phase: str
     owner: str
     started_at_utc: datetime
+    scientific_core_sha256: str
 
 
 def _require_int(value: object, name: str) -> int:
@@ -450,7 +451,17 @@ def start_budget_interval(
         interval = BudgetInterval(started, None, None, phase, owner, None)
         active = replace(ledger, status="active", intervals=ledger.intervals + (interval,))
         _atomic_write(ledger_path, active)
-    return BudgetLease(ledger_path, expected_registration_sha256, repository_root, phase, owner, started)
+    if ledger.scientific_core_sha256 is None:
+        raise BudgetError("budget lease requires a validated scientific core digest")
+    return BudgetLease(
+        ledger_path,
+        expected_registration_sha256,
+        repository_root,
+        phase,
+        owner,
+        started,
+        ledger.scientific_core_sha256,
+    )
 
 
 def finish_budget_interval(

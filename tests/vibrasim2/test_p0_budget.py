@@ -241,6 +241,7 @@ def test_unknown_keys_and_boolean_integers_are_rejected(tmp_path):
 
 def test_start_and_finish_correction_are_atomic_and_update_digest(tmp_path):
     ledger = write_ledger(tmp_path)
+    authorized_core = load_budget_ledger(ledger).scientific_core_sha256
     lease = start_budget_interval(
         ledger,
         REGISTRATION,
@@ -250,6 +251,7 @@ def test_start_and_finish_correction_are_atomic_and_update_digest(tmp_path):
         started_at_utc=datetime(2026, 9, 4, 8, 2, tzinfo=UTC),
     )
     active = load_budget_ledger(ledger)
+    assert lease.scientific_core_sha256 == authorized_core
     assert active.status == "active"
     assert active.intervals[-1].owner == "fix-2"
     assert not ledger.with_name(ledger.name + ".lock").exists()
