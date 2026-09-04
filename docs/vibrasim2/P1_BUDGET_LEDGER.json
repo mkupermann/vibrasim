@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "registration_sha256": "91b0a592c1ab47b001987ada60df08d9d3da0c8ef0e381c484ddea4bde3d5d9a",
+  "registration_git_blob": "3a34049aa1e7b851be21ce45c81d82a5796fd2bf",
+  "hard_ceiling_seconds": 18000,
+  "status": "not_started",
+  "cumulative_elapsed_seconds": 0,
+  "budgeted_paths": [
+    "vibrasim2/p1/__init__.py",
+    "vibrasim2/p1/registration.py",
+    "vibrasim2/p1/budget.py",
+    "vibrasim2/p1/types.py",
+    "vibrasim2/p1/metrics.py",
+    "vibrasim2/p1/input.py",
+    "vibrasim2/p1/audit.py",
+    "vibrasim2/p1/artifacts.py",
+    "vibrasim2/p1/cli.py",
+    "tests/vibrasim2/test_p1_registration.py",
+    "tests/vibrasim2/test_p1_budget.py",
+    "tests/vibrasim2/test_p1_metrics.py",
+    "tests/vibrasim2/test_p1_input.py",
+    "tests/vibrasim2/test_p1_audit.py",
+    "tests/vibrasim2/test_p1_artifacts.py",
+    "tests/vibrasim2/test_p1_cli.py",
+    "tests/vibrasim2/test_program_authority.py",
+    "pyproject.toml"
+  ],
+  "intervals": []
+}
