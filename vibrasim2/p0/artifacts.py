@@ -563,12 +563,27 @@ def scientific_digest(output_dir: str | Path) -> str:
         for path in root.iterdir()
         if path.is_dir() and (path / "cell.json").is_file()
     }
-    if actual_cell_dirs != set(cell_order):
+    first_reproduction = next(
+        (
+            index
+            for index, slug in enumerate(cell_order)
+            if slug.startswith("reproduction-")
+        ),
+        len(cell_order),
+    )
+    if any(
+        not slug.startswith("reproduction-") for slug in cell_order[first_reproduction:]
+    ):
+        raise ArtifactError("run.json has invalid Stage-B cell ordering")
+    allowed_cell_scopes = {frozenset(cell_order)}
+    if first_reproduction < len(cell_order):
+        allowed_cell_scopes.add(frozenset(cell_order[:first_reproduction]))
+    if frozenset(actual_cell_dirs) not in allowed_cell_scopes:
         raise ArtifactError("run manifest/cell directory mismatch")
 
     hasher = sha256()
     _digest_part(hasher, "run", _canonical_json_bytes(scientific_manifest))
-    for slug in sorted(cell_order):
+    for slug in sorted(actual_cell_dirs):
         cell_dir = root / slug
         cell_manifest = _load_cell_manifest(cell_dir)
         _digest_part(hasher, f"cell:{slug}", _canonical_json_bytes(cell_manifest))

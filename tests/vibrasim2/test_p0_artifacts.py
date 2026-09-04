@@ -71,11 +71,11 @@ def make_record(tick: int, *, finite: bool = True) -> EnergyRecord:
     )
 
 
-def make_journal(path) -> CellJournal:
+def make_journal(path, *, cell: RunCell | None = None) -> CellJournal:
     return CellJournal(
         path,
         stage="A",
-        cell=make_cell(),
+        cell=cell or make_cell(),
         config=tiny_config(),
         coupling_sites=np.array(((0, 0),), dtype=np.int64),
         supplied_edges=np.empty((0, 2), dtype=np.int64),
@@ -288,6 +288,43 @@ def test_digest_includes_leased_core_digest(tmp_path):
     build_minimal_scientific_tree(left, core_digest="1" * 64)
     build_minimal_scientific_tree(right, core_digest="2" * 64)
     assert scientific_digest(left) != scientific_digest(right)
+
+
+def test_digest_allows_only_the_declared_stage_b_suffix_to_be_absent(tmp_path):
+    cycle = make_cell()
+    branch = RunCell(
+        Topology.BRANCH,
+        ChannelMode.FULL,
+        RunPurpose.PRIMARY,
+        (0, 0),
+        0.05,
+        20,
+    )
+    reproduction = RunCell(
+        Topology.CYCLE,
+        ChannelMode.FULL,
+        RunPurpose.REPRODUCTION,
+        (0, 0),
+        0.05,
+        20,
+    )
+    write_run_manifest(
+        tmp_path,
+        run_id="stage-a-closed",
+        config=tiny_config(),
+        cells=(cycle, branch, reproduction),
+        scientific_core_sha256="3" * 64,
+    )
+    for cell in (cycle, branch):
+        journal = make_journal(tmp_path / cell.slug, cell=cell)
+        journal.append_energy(make_record(0))
+        journal.append_snapshot(make_snapshot(0))
+
+    assert len(scientific_digest(tmp_path)) == 64
+
+    (tmp_path / branch.slug / "cell.json").unlink()
+    with pytest.raises(ArtifactError, match="manifest/cell directory mismatch"):
+        scientific_digest(tmp_path)
 
 
 def test_digest_uses_decoded_json_not_serialization_whitespace(tmp_path):
