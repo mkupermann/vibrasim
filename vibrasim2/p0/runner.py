@@ -408,11 +408,20 @@ def _run_execution(
         or verified_manifest.get("scientific_core_sha256") != execution_core
     ):
         raise ArtifactError("run manifest readback does not match execution identity")
-    observer = (
-        observer_factory(verified_manifest["run_id"])
-        if observer_factory is not None
-        else NullObservationSink()
-    )
+    if observer_factory is None:
+        observer = NullObservationSink()
+    else:
+        try:
+            observer = observer_factory(verified_manifest["run_id"])
+        except Exception as error:  # noqa: BLE001 - optional observer cannot gate science
+            _append_view_event_best_effort(
+                output,
+                {
+                    "event": "observer_factory_failed",
+                    "error": type(error).__name__,
+                },
+            )
+            observer = NullObservationSink()
     fixture_mode = scientific_core_sha256 is None
     observer = run_stage_a(output, matrix, observer)
     evidence = _build_evidence(

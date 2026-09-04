@@ -194,6 +194,26 @@ def test_observer_factory_and_callback_follow_persistence(tmp_path, monkeypatch)
     assert sink.events == [("A", tiny_execution().stage_a_cells[0].slug, 0)]
 
 
+def test_observer_factory_failure_falls_back_after_manifest(tmp_path, monkeypatch):
+    install_stage_a_result(monkeypatch, stage_a_fail_result())
+
+    def failing_factory(run_id):
+        raise RuntimeError("viewer unavailable")
+
+    result = _run_execution(
+        tmp_path,
+        tiny_execution(),
+        observer_factory=failing_factory,
+        run_id="factory-fallback",
+    )
+
+    assert result.verdict is Verdict.FAIL
+    assert read_json(tmp_path / "run.json")["run_id"] == "factory-fallback"
+    assert read_json(tmp_path / "result.json")["verdict"] == "FAIL"
+    events = (tmp_path / "view-events.jsonl").read_text(encoding="utf-8")
+    assert '"event":"observer_factory_failed"' in events
+
+
 def test_observer_failure_cannot_stop_science(tmp_path, monkeypatch):
     install_stage_a_result(monkeypatch, stage_a_fail_result())
 
