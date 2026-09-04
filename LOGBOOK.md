@@ -8832,3 +8832,21 @@ ceiling-rounded cumulative duration of 25,592 seconds. This exceeds the frozen
 No V2-P0 scientific run was started. The current registration is stopped before
 data and cannot authorize a run. Any scientific execution requires a separately
 reviewed and frozen successor registration; the existing budget is not extended.
+
+## 2026-09-04 — V2-P0 implementation-budget successor frozen
+
+The exceeded implementation ledger is preserved verbatim as
+`docs/vibrasim2/P0_BUDGET_LEDGER_OVERRUN_2026-09-04.json`; its 25,592 seconds are
+not erased, reduced, or carried forward as though they remained within the old
+cap. Before any further P0 implementation correction or scientific data, the
+successor decision was frozen in
+`docs/amendments/v2_p0_implementation_budget_successor.md` (canonical-file
+SHA-256 `e98214aeb7079e376a4c2f3c8926881b773e42cd1f386e348e68fefc2b540cbf`,
+Git blob `5be4730bfd8bfa1b446956263c6e4b9871e62d4f`).
+
+The successor keeps the scientific preregistration identity unchanged because
+it changes no model, fixture, scientific constant, threshold, evidence
+predicate, verdict ordering, or execution matrix. It creates a new independent
+19,800-second implementation ledger and initially authorizes only the reviewed
+lease/core closure correction. No V2-P0 scientific run has been started; any
+later run remains a separate explicit decision.
