@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import math
+import os
 import uuid
 from collections.abc import Callable
 from dataclasses import asdict, dataclass
@@ -481,15 +482,37 @@ def _validate_frozen_document(
         raise RegistrationError(f"frozen document Git blob mismatch: {path}")
 
 
+def _is_link_or_junction(path: Path) -> bool:
+    try:
+        if path.is_symlink():
+            return True
+        is_junction = getattr(path, "is_junction", None)
+        return bool(is_junction is not None and is_junction())
+    except OSError as error:
+        raise RegistrationError(f"cannot inspect output path: {path}") from error
+
+
+def _reject_redirected_run_root(repository: Path) -> None:
+    current = repository
+    for part in _RUN_ROOT.parts:
+        current /= part
+        if _is_link_or_junction(current):
+            raise RegistrationError(
+                "archive/run-logs/v2-p0 must not be a symlink or junction"
+            )
+
+
 def _validate_output_path(output_dir: Path, repository_root: Path) -> Path:
-    run_root = (repository_root / _RUN_ROOT).resolve()
-    output = output_dir.resolve()
+    repository = repository_root.resolve()
+    _reject_redirected_run_root(repository)
+    if os.path.lexists(output_dir):
+        raise RegistrationError("output directory already exists")
+    run_root = (repository / _RUN_ROOT).resolve()
+    output = Path(output_dir).resolve()
     if output == run_root or output.parent != run_root:
         raise RegistrationError(
             "output directory must be one fresh direct child of archive/run-logs/v2-p0"
         )
-    if output.exists():
-        raise RegistrationError("output directory already exists")
     return output
 
 

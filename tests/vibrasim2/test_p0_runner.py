@@ -23,8 +23,10 @@ from vibrasim2.p0.runner import (
     NullObservationSink,
     P0RunResult,
     PostRunBudgetError,
+    RegistrationError,
     _run_execution,
     _run_registered_p0,
+    _validate_output_path,
 )
 from vibrasim2.p0.types import (
     ChannelMode,
@@ -212,6 +214,40 @@ def test_observer_factory_failure_falls_back_after_manifest(tmp_path, monkeypatc
     assert read_json(tmp_path / "result.json")["verdict"] == "FAIL"
     events = (tmp_path / "view-events.jsonl").read_text(encoding="utf-8")
     assert '"event":"observer_factory_failed"' in events
+
+
+def test_redirected_run_root_is_rejected_before_output_creation(tmp_path):
+    target = tmp_path / "real-run-root"
+    target.mkdir()
+    run_root = tmp_path / "archive/run-logs/v2-p0"
+    run_root.parent.mkdir(parents=True)
+    try:
+        run_root.symlink_to(target, target_is_directory=True)
+    except OSError as error:
+        if getattr(error, "winerror", None) == 1314:
+            pytest.skip("creating a symlink requires the Windows developer privilege")
+        raise
+
+    with pytest.raises(RegistrationError, match="symlink or junction"):
+        _validate_output_path(run_root / "candidate", tmp_path)
+    assert not (target / "candidate").exists()
+
+
+def test_junction_run_root_is_rejected_before_output_creation(tmp_path, monkeypatch):
+    run_root = tmp_path / "archive/run-logs/v2-p0"
+    run_root.parent.mkdir(parents=True)
+    target = tmp_path / "real-run-root"
+    target.mkdir()
+    monkeypatch.setattr(
+        Path,
+        "is_junction",
+        lambda path: path == run_root,
+        raising=False,
+    )
+
+    with pytest.raises(RegistrationError, match="symlink or junction"):
+        _validate_output_path(run_root / "candidate", tmp_path)
+    assert not (target / "candidate").exists()
 
 
 def test_observer_failure_cannot_stop_science(tmp_path, monkeypatch):
