@@ -30,6 +30,10 @@ docker compose up -d postgres
 The compose file runs `schema.sql` and `seed.sql` automatically on first
 container start (via `docker-entrypoint-initdb.d`).
 
+Both published development ports are intentionally bound to `127.0.0.1`.
+PostgreSQL and the dashboard are reachable only from the local host; the
+container-internal Streamlit bind address remains unchanged.
+
 To reset the database:
 
 ```bash
