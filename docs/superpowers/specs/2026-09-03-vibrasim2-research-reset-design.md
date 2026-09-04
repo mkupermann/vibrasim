@@ -1,9 +1,17 @@
 # Vibrasim II: Forschungs-Neustart, sicherer Laborbetrieb und beobachtende 3D-Ansicht
 
-**Status:** zur Freigabe vor der Implementierungsplanung
+**Status:** freigegeben für die Implementierungsplanung am 2026-09-04
 **Owner:** Michael Kupermann
 **Datum:** 2026-09-03
 **Arbeitsbranch:** `work/vibrasim2-research-reset`
+
+**Freigabeumfang:** lokale Implementierungsplanung und anschließende lokale
+Umsetzung. Die Freigabe autorisiert weder einen wissenschaftlichen P0-Lauf noch
+Push, Veröffentlichung, Lizenzentscheidung oder Branch-Protection-Änderung.
+
+**Planungsreview:** Die am 2026-09-04 ergänzten Klarstellungen operationalisieren
+Konfigurationsnachweis, Budgetgrenze, Viewer-Abschluss und README-Reproduzierbarkeit.
+Sie ändern weder P0-Modell, Fixture, Schwellen noch Verdict-Tabelle.
 
 ## 1. Entscheidung
 
@@ -41,7 +49,7 @@ Das Vorhaben wird in vier voneinander prüfbare Lieferblöcke zerlegt. Kein Bloc
 5. BP-C6c/G175 als „UNEXECUTED DRAFT — ARCHIVED“ kennzeichnen; Inhalt und Review-Historie bleiben erhalten.
 6. Gefährliche oder externe Tests explizit markieren und aus dem Defaultlauf ausschließen.
 7. Einen statischen Auditor ergänzen, der lange Laufzeiten, `Path.home()`-Ausgaben und große Ressourcenparameter in unmarkierten Tests beanstandet.
-8. Einen minimalen GitHub-Workflow für den hermetischen Default-Testlauf, `git diff --check` und die Paketkonstruktion ergänzen.
+8. Einen minimalen, lockfile-basierten GitHub-Workflow für den sicheren Default-Testlauf, `git diff --check` und die Paketkonstruktion ergänzen. Er ist lokal reproduzierbar, aber wegen beweglicher Runner-Images und Action-Tags nicht vollständig hermetisch.
 
 Block A erzeugt noch keine wissenschaftlichen Daten.
 
@@ -103,8 +111,12 @@ Der Viewer darf nicht:
 Die sichtbare Pause friert nur die Ansicht ein. Die Simulation läuft weiter.
 Nach Abschluss liest ein Replay ausschließlich das append-only persistierte
 Snapshot-Journal; die verlustbehaftete Live-Queue ist niemals Replay-Quelle.
-
-Jede Ansicht trägt sichtbar den Hinweis: `RAW SIMULATION STATE — OBSERVATION ONLY — VERDICT PENDING` beziehungsweise nach Abschluss `VERDICT RECORDED IN result.json`.
+Während des Laufs trägt jede Live-Ansicht sichtbar den Hinweis
+`RAW SIMULATION STATE — OBSERVATION ONLY — VERDICT PENDING`. Ein letzter
+Live-Frame mit `VERDICT RECORDED IN result.json` bleibt wegen des bewusst
+verlustbehafteten Kanals best effort und ist keine Abschlussgarantie. Der Replay-
+Pfad liest `result.json` selbst und zeigt den Abschlussstatus nach erfolgreicher
+Validierung zuverlässig; ohne gültige Ergebnisdatei behauptet er keinen Abschluss.
 
 ### Block D: README und öffentliche Repository-Oberfläche
 
@@ -132,8 +144,10 @@ Vorgesehene Struktur:
 3. Die eine aktuelle Frage P0 und ihr enger Claim.
 4. „What this is / is not“ mit klaren Grenzen.
 5. Was das Vibrasim-I-Labor tatsächlich belegt hat, einschließlich NULLs und Retraktionen.
-6. Ein funktionierender Minimalstart für den sicheren Testlauf und P0.
-7. Optionaler Start der 3D-Beobachtung.
+6. Ein funktionierender Minimalstart für den sicheren Testlauf und ein sichtbar
+   als wissenschaftlich daten-erzeugend gekennzeichneter P0-Lauf nach dem
+   Pre-Run-Gate.
+7. Optionaler Start der 3D-Beobachtung, ebenfalls als daten-erzeugender P0-Lauf.
 8. Links zu Charter, P0-Pre-Registration, Frontier, Logbook und historischem
    Vibrasim-I-Material. `BELIEF_PATH.md` und `DISCIPLINE_SHARP.md` werden an
    jeder öffentlichen Verlinkung sichtbar als historisch/frozen bezeichnet.
@@ -157,8 +171,10 @@ recorded`), solange keine persönliche Prüfung durch Michael dokumentiert ist.
 
 Die README-Eröffnung enthält vier konkrete Anker: das Problem, durch das Michael
 sich nicht bluffen kann; Nomenklatur statt Ontologie; Deadlocks als Material;
-und genau ein aktuelles, nachprüfbares PASS-, NULL- oder FAIL-Ergebnis. Dadurch
-bleibt die Stimme spezifisch und fällt nicht in allgemeine Manifest-Sprache zurück.
+und genau ein letztes aufgezeichnetes, nachprüfbares PASS-, NULL- oder FAIL-
+Ergebnis. Solange P0 noch kein Resultat besitzt, ist dies G174 und wird ausdrücklich
+als historisches Vibrasim-I-Ergebnis bezeichnet. Dadurch bleibt die Stimme
+spezifisch und fällt nicht in allgemeine Manifest-Sprache zurück.
 
 Der Kern der Stimme bleibt: Ich habe ein Problem gewählt, durch das ich mich nicht bluffen kann; die Namen im Modell sind Nomenklatur, keine Ontologie; die Deadlocks sind das Material.
 
@@ -316,7 +332,7 @@ Das Vorhaben ist abgeschlossen, wenn:
 1. genau eine aktive Frage in AGENTS, Frontier, README und Logbook identisch benannt ist;
 2. P0s Fixture-Ausnahme vor Daten eindeutig dokumentiert ist;
 3. der Default-Testlauf nachweislich keine Experiment-, External- oder Resource-Intensive-Tests ausführt;
-4. der sichere CI-Workflow auf dem lokalen Stand reproduzierbar grün ist;
+4. die Befehle des sicheren CI-Workflows lokal erfolgreich sind; die GitHub-Ausführung bleibt bis zu einem autorisierten Push extern unbestätigt;
 5. P0-Kern und reine Verdict-Funktion die registrierten Mechaniktests bestehen;
 6. `--observe` reale Snapshots zeigt, ohne Rohdaten oder Verdict gegenüber Headless zu verändern;
 7. Viewer-Abbruch und Frame-Überlast den wissenschaftlichen Run nicht stoppen;
@@ -346,6 +362,9 @@ Modell, Schwellen noch Verdict-Tabelle verändern. Block B ist die in P0
 registrierte Implementierung. Überschreitet Block B den vorhandenen Hard Cap,
 wird vor Daten abgebrochen und eine versionierte Nachfolge-Registration mit
 realistisch neu begründetem Budget eingefroren; es gibt keine stille Verlängerung.
+Beginn, Ende und kumulierte Dauer von Block B werden in einem versionierten,
+maschinenlesbaren Ledger festgehalten. Der produktive P0-Start und das Pre-Run-
+Gate lehnen einen offenen oder überschrittenen Ledger-Status ab.
 
 ## 13. Auslieferung
 
