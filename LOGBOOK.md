@@ -8819,3 +8819,16 @@ Before implementation or data, the P0 supplied-edge exception was frozen in
 `docs/amendments/v2_p0_scope_addendum.md`. It changes no model, fixture,
 constant, threshold, verdict predicate, or budget. No P0 scientific data were
 generated during this programme transition.
+
+## 2026-09-04 — V2-P0 implementation budget closed over cap
+
+The registered implementation-and-test interval ran from
+`2026-09-04T07:28:32Z` to `2026-09-04T14:35:03.134629Z`, for a
+ceiling-rounded cumulative duration of 25,592 seconds. This exceeds the frozen
+19,800-second hard ceiling. The machine-readable ledger is therefore closed as
+`overrun_registration_required` with scientific-core SHA-256
+`c9b411c4350737bbc9b9be34687ffbcb28e144f83f49224a2ae9fb2ccf913721`.
+
+No V2-P0 scientific run was started. The current registration is stopped before
+data and cannot authorize a run. Any scientific execution requires a separately
+reviewed and frozen successor registration; the existing budget is not extended.

@@ -33,6 +33,7 @@ agent = [
 [project.scripts]
 world = "world.run:main"
 vibrasim2-view = "vibrasim2.wireframe:main"
+vibrasim2-p0 = "vibrasim2.p0.cli:main"
 
 [build-system]
 requires = ["hatchling"]
