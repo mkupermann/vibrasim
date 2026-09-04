@@ -44,7 +44,11 @@ packages = ["world", "vibrasim2"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = "test_*.py"
-addopts = "-v --strict-markers"
+addopts = "-v --strict-markers -m 'not experiment and not slow and not external and not resource_intensive and not gui'"
 markers = [
-    "slow: marks tests as slow (long-running integration/acceptance tests)",
+    "slow: unsuitable for the fast feedback loop",
+    "experiment: executes or evaluates a scientific research run",
+    "external: requires network, hardware, a user data set, notification service, or home-directory state",
+    "resource_intensive: requests hour-scale runtime or unusually large memory/CPU resources",
+    "gui: requires a real display and graphics stack",
 ]
