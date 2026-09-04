@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "registration_sha256": "28992a8b131100ed4eb2cd9147ddea7b3251921777211a63bb4b64e5524ca9e1",
+  "hard_ceiling_seconds": 19800,
+  "status": "active",
+  "cumulative_elapsed_seconds": 0,
+  "scientific_core_sha256": null,
+  "budgeted_paths": [
+    "tests/vibrasim2/test_p0_artifacts.py",
+    "tests/vibrasim2/test_p0_budget.py",
+    "tests/vibrasim2/test_p0_cli.py",
+    "tests/vibrasim2/test_p0_dynamics.py",
+    "tests/vibrasim2/test_p0_energy.py",
+    "tests/vibrasim2/test_p0_fixtures.py",
+    "tests/vibrasim2/test_p0_runner.py",
+    "tests/vibrasim2/test_p0_types.py",
+    "tests/vibrasim2/test_p0_verdict.py",
+    "vibrasim2/p0/__init__.py",
+    "vibrasim2/p0/artifacts.py",
+    "vibrasim2/p0/budget.py",
+    "vibrasim2/p0/cli.py",
+    "vibrasim2/p0/dynamics.py",
+    "vibrasim2/p0/energy.py",
+    "vibrasim2/p0/fixtures.py",
+    "vibrasim2/p0/runner.py",
+    "vibrasim2/p0/types.py",
+    "vibrasim2/p0/verdict.py"
+  ],
+  "intervals": [
+    {
+      "started_at_utc": "2026-09-04T07:28:32Z",
+      "ended_at_utc": null,
+      "elapsed_seconds": null,
+      "phase": "implementation",
+      "owner": "work/vibrasim2-research-reset",
+      "outcome": null
+    }
+  ]
+}
