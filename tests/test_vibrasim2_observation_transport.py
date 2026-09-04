@@ -48,4 +48,3 @@ def test_empty_eviction_and_broken_queue_are_non_raising_drops():
     outcome = LatestOnlyPublisher(BrokenQueue()).publish("new")
     assert outcome.dropped_new
     assert not outcome.published
-

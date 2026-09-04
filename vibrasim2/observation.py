@@ -116,4 +116,3 @@ class ObservationEnvelope:
             raise ValueError("frame must be a WireframeFrame")
         object.__setattr__(self, "source_centre", tuple(self.source_centre))
         object.__setattr__(self, "status", status)
-

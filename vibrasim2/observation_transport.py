@@ -38,4 +38,3 @@ class LatestOnlyPublisher:
             return PublishOutcome(published=True, evicted_previous=True)
         except Exception:
             return PublishOutcome(evicted_previous=True, dropped_new=True)
-
