@@ -1,68 +1,30 @@
-"""Simple real-time wireframe view over unmodified simulation frames.
+"""Simple real-time wireframe view over supplied observation frames.
 
-The renderer is deliberately dumb: it draws only particles, bonds and field
-paths supplied by the simulation.  It does not interpolate bonds, infer
-surfaces or turn sparse geometry into organisms.
+The renderer is deliberately dumb: it draws only particles, edges and field
+paths supplied by the observation process. It does not infer structure.
 """
 from __future__ import annotations
 
 import argparse
+import threading
 import time
 from dataclasses import dataclass
-from enum import Enum
+from pathlib import Path
+from queue import Empty, Full, Queue
 from typing import Callable, Iterable
 
 import numpy as np
 
-
-class BondState(str, Enum):
-    STABLE = "stable"
-    FORMING = "forming"
-    BREAKING = "breaking"
-
-
-BOND_COLORS = {
-    BondState.STABLE: (120, 220, 235),
-    BondState.FORMING: (80, 230, 140),
-    BondState.BREAKING: (245, 145, 65),
-}
-
-
-@dataclass(frozen=True)
-class WireframeFrame:
-    positions: np.ndarray
-    bonds: np.ndarray
-    bond_states: tuple[BondState, ...]
-    field_lines: tuple[np.ndarray, ...] = ()
-
-    def __post_init__(self) -> None:
-        positions = np.asarray(self.positions, dtype=float)
-        bonds = np.asarray(self.bonds, dtype=np.int32)
-        if positions.ndim != 2 or positions.shape[1:] != (3,):
-            raise ValueError("positions must have shape (n, 3)")
-        if bonds.size == 0:
-            bonds = np.empty((0, 2), dtype=np.int32)
-        if bonds.ndim != 2 or bonds.shape[1:] != (2,):
-            raise ValueError("bonds must have shape (m, 2)")
-        if len(self.bond_states) != len(bonds):
-            raise ValueError("one bond state is required for each bond")
-        if bonds.size and (int(bonds.min()) < 0 or int(bonds.max()) >= len(positions)):
-            raise ValueError("bond endpoint is outside the particle array")
-        field_lines = tuple(np.asarray(line, dtype=float) for line in self.field_lines)
-        if any(line.ndim != 2 or line.shape[1:] != (3,) or len(line) < 2
-               for line in field_lines):
-            raise ValueError("field lines must each have shape (n>=2, 3)")
-        object.__setattr__(self, "positions", positions.copy())
-        object.__setattr__(self, "bonds", bonds.copy())
-        object.__setattr__(self, "field_lines", tuple(line.copy() for line in field_lines))
+from vibrasim2.observation import EdgeKind, EdgeState, WireframeFrame
 
 
 @dataclass(frozen=True)
 class WireframeGeometry:
     particle_points: np.ndarray
-    bond_segments: np.ndarray
-    bond_states: tuple[BondState, ...]
-    bond_colors: np.ndarray
+    edge_segments: np.ndarray
+    edge_states: tuple[EdgeState, ...]
+    edge_colors: np.ndarray
+    edge_kinds: tuple[EdgeKind, ...]
     field_lines: tuple[np.ndarray, ...]
 
 
@@ -87,17 +49,21 @@ class RenderCadence:
 
 def build_geometry(frame: WireframeFrame) -> WireframeGeometry:
     """Map a frame to render arrays without inventing or smoothing geometry."""
-    segments = frame.positions[frame.bonds] if len(frame.bonds) else np.empty((0, 2, 3))
-    colors = np.asarray([BOND_COLORS[state] for state in frame.bond_states], dtype=np.uint8)
+    segments = frame.positions[frame.edges] if len(frame.edges) else np.empty((0, 2, 3))
+    colors = np.asarray([EDGE_COLORS[state] for state in frame.edge_states], dtype=np.uint8)
     if not len(colors):
         colors = np.empty((0, 3), dtype=np.uint8)
     return WireframeGeometry(
         particle_points=frame.positions.copy(),
-        bond_segments=segments.copy(),
-        bond_states=frame.bond_states,
-        bond_colors=colors,
+        edge_segments=segments.copy(),
+        edge_states=frame.edge_states,
+        edge_colors=colors,
+        edge_kinds=frame.edge_kinds,
         field_lines=tuple(line.copy() for line in frame.field_lines),
     )
+
+
+EDGE_COLORS = {EdgeState.SUPPLIED: (150, 170, 185)}
 
 
 def _line_mesh(segments: np.ndarray, colors: np.ndarray):
@@ -139,11 +105,11 @@ def _add_frame_actors(plotter, frame: WireframeFrame, *, render: bool = False) -
             render_points_as_spheres=False, lighting=False,
             name="particles", render=render,
         )
-    if len(geometry.bond_segments):
+    if len(geometry.edge_segments):
         plotter.add_mesh(
-            _line_mesh(geometry.bond_segments, geometry.bond_colors),
+            _line_mesh(geometry.edge_segments, geometry.edge_colors),
             scalars="state_rgb", rgb=True, line_width=2, lighting=False,
-            name="bonds", render=render,
+            name="edges", render=render,
         )
     if geometry.field_lines:
         plotter.add_mesh(
@@ -154,19 +120,26 @@ def _add_frame_actors(plotter, frame: WireframeFrame, *, render: bool = False) -
 
 
 class WireframeViewer:
-    """Single-threaded PyVista viewer for a stream of real simulation frames."""
+    """Single-threaded PyVista viewer for copied observation envelopes."""
 
     def __init__(
         self,
-        next_frame: Callable[[], WireframeFrame],
-        bounds: tuple[float, float, float, float, float, float],
-        frame_interval: float = 2.0,
+        frame_queue,
+        stop_event,
+        config,
+        *,
+        demo: bool = False,
     ) -> None:
-        self.next_frame = next_frame
-        self.bounds = bounds
-        self.cadence = RenderCadence(frame_interval=frame_interval)
-        self.playing = True
-        self.step_requested = False
+        from vibrasim2.viewer_process import ViewerController
+
+        self.frame_queue = frame_queue
+        self.stop_event = stop_event
+        self.config = config
+        self.controller = ViewerController()
+        self.cadence = RenderCadence(frame_interval=config.draw_interval_seconds)
+        self.demo = demo
+        rows, columns = config.grid_shape
+        self.bounds = (0.0, float(rows), 0.0, float(columns), -64.0, 64.0)
         self._plotter = None
 
     def run(self) -> int:
@@ -176,6 +149,16 @@ class WireframeViewer:
             pl = pv.Plotter(title="Vibrasim II — wireframe", window_size=(1400, 900))
             self._plotter = pl
             pl.set_background("black")
+            pl.camera_position = self.config.camera_position
+            try:
+                pl.camera.focal_point = self.config.camera_focal_point
+            except (AttributeError, RuntimeError):
+                pass
+            if self.demo:
+                pl.add_text(
+                    "ENGINEERING SMOKE — NOT SIMULATION DATA",
+                    name="engineering-smoke", position="upper_left", color="white",
+                )
             try:
                 pl.disable_anti_aliasing()
             except Exception:
@@ -187,20 +170,15 @@ class WireframeViewer:
                 color=(0.25, 0.28, 0.32), line_width=1, lighting=False,
                 name="bounds",
             )
-            pl.add_key_event("space", self._toggle_play)
-            pl.add_key_event("s", self._step)
-            pl.add_key_event("c", lambda: pl.view_isometric())
-            pl.camera_position = "iso"
-            self._draw(self.next_frame())
-            self.cadence.frame_due(time.perf_counter(), playing=True,
-                                   step_requested=False)
+            pl.add_key_event("space", self._toggle_freeze)
+            pl.add_key_event("c", lambda: setattr(pl, "camera_position", self.config.camera_position))
             pl.show(interactive_update=True, auto_close=False)
             while self._window_open(pl):
-                now = time.perf_counter()
-                if self.cadence.frame_due(now, self.playing, self.step_requested):
-                    self._draw(self.next_frame())
-                    self.step_requested = False
+                self._poll_and_draw(time.perf_counter())
                 pl.update()
+                if self.stop_event is not None and self.stop_event.is_set():
+                    self._final_drain(pl)
+                    break
                 time.sleep(1.0 / 60.0)
         except KeyboardInterrupt:
             pass
@@ -208,6 +186,24 @@ class WireframeViewer:
             if self._plotter is not None:
                 self._plotter.close()
         return 0
+
+    def _poll_and_draw(self, now: float) -> None:
+        self.controller.drain(self.frame_queue)
+        if self.cadence.frame_due(now, playing=True, step_requested=False):
+            frame = self.controller.next_drawable()
+            if frame is not None:
+                self._draw(frame)
+
+    def _final_drain(self, plotter) -> None:
+        deadline = time.perf_counter() + 0.25
+        while time.perf_counter() < deadline:
+            count = self.controller.drain(self.frame_queue)
+            frame = self.controller.next_drawable()
+            if frame is not None:
+                self._draw(frame)
+            plotter.update()
+            if count == 0:
+                break
 
     @staticmethod
     def _window_open(plotter) -> bool:
@@ -222,21 +218,21 @@ class WireframeViewer:
         except (AttributeError, RuntimeError):
             return False
 
-    def _draw(self, frame: WireframeFrame) -> None:
+    def _draw(self, envelope) -> None:
         pl = self._plotter
-        for name in ("particles", "bonds", "field"):
+        for name in ("particles", "edges", "field", "observation-hud"):
             try:
                 pl.remove_actor(name, render=False)
             except Exception:
                 pass
-        _add_frame_actors(pl, frame)
+        _add_frame_actors(pl, envelope.frame)
+        pl.add_text(
+            self.controller.hud(), name="observation-hud", position="lower_left",
+            color="white",
+        )
 
-    def _toggle_play(self) -> None:
-        self.playing = not self.playing
-
-    def _step(self) -> None:
-        if not self.playing:
-            self.step_requested = True
+    def _toggle_freeze(self) -> None:
+        self.controller.set_frozen(not self.controller.frozen)
 
 
 def _demo_source() -> Callable[[], WireframeFrame]:
@@ -252,30 +248,78 @@ def _demo_source() -> Callable[[], WireframeFrame]:
             (radius * np.cos(angles), radius * np.sin(angles),
              1.5 * np.sin(2.0 * angles - phase))
         )
-        bonds = np.column_stack((np.arange(32), np.roll(np.arange(32), -1)))
-        states = tuple(
-            BondState.FORMING if (i + int(phase * 4)) % 17 == 0 else
-            BondState.BREAKING if (i + int(phase * 3)) % 23 == 0 else
-            BondState.STABLE for i in range(32)
-        )
+        edges = np.column_stack((np.arange(32), np.roll(np.arange(32), -1)))
+        states = (EdgeState.SUPPLIED,) * len(edges)
+        kinds = (EdgeKind.MATTER,) * len(edges)
         paths = tuple(
             np.column_stack((np.linspace(-28, 28, 80),
                              np.full(80, y),
                              2.0 * np.sin(np.linspace(-3, 3, 80) + phase + y / 8)))
             for y in (-18.0, -9.0, 0.0, 9.0, 18.0)
         )
-        return WireframeFrame(positions, bonds, states, paths)
+        return WireframeFrame(positions, edges, states, kinds, paths)
 
     return next_frame
 
 
+def _put_latest(frame_queue: Queue, frame) -> None:
+    """Keep the transport bounded while preferring the newest observation."""
+    try:
+        frame_queue.put_nowait(frame)
+    except Full:
+        try:
+            frame_queue.get_nowait()
+            frame_queue.put_nowait(frame)
+        except (Empty, Full):
+            pass
+
+
 def main(argv: Iterable[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--demo", action="store_true", help="run a visual smoke demo")
+    sources = parser.add_mutually_exclusive_group(required=True)
+    sources.add_argument("--demo", action="store_true", help="run a visual smoke demo")
+    sources.add_argument(
+        "--replay", type=Path,
+        help="replay persisted observation snapshots without running dynamics",
+    )
     args = parser.parse_args(argv)
-    if not args.demo:
-        parser.error("a simulation frame source is required; use --demo for the visual smoke")
-    return WireframeViewer(_demo_source(), (-30, 30, -25, 25, -20, 20)).run()
+    from vibrasim2.viewer_process import viewer_config_for_registered_p0
+
+    if args.replay is not None and not args.replay.exists():
+        parser.error(f"replay path does not exist: {args.replay}")
+
+    frame_queue = Queue(maxsize=1)
+    stop_event = threading.Event()
+
+    def produce() -> None:
+        if args.demo:
+            source = _demo_source()
+            while not stop_event.is_set():
+                _put_latest(frame_queue, source())
+                stop_event.wait(0.1)
+            return
+
+        from vibrasim2.viewer_process import iter_replay_envelopes
+
+        try:
+            for envelope in iter_replay_envelopes(args.replay):
+                if stop_event.is_set():
+                    break
+                _put_latest(frame_queue, envelope)
+                # Yield to the renderer without manufacturing simulation time.
+                time.sleep(0.01)
+        finally:
+            stop_event.set()
+
+    producer = threading.Thread(target=produce, daemon=True)
+    producer.start()
+    try:
+        return WireframeViewer(
+            frame_queue, stop_event, viewer_config_for_registered_p0(), demo=args.demo
+        ).run()
+    finally:
+        stop_event.set()
+        producer.join(timeout=0.5)
 
 
 if __name__ == "__main__":

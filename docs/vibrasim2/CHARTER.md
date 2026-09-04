@@ -61,9 +61,9 @@ The live PyVista view is a wireframe observation instrument:
 
 - particles are points;
 - supplied coupling edges are lines and use the neutral state `SUPPLIED`;
+- edge kinds describe the declared equation term, never a lifecycle or success
+  state;
 - supplied field paths are thin lines;
-- `FORMING`, `STABLE`, and `BREAKING` remain reserved for later mechanisms
-  that actually calculate bond lifecycle state;
 - no inferred surfaces, organisms, smoothing or success animation;
 - UI events remain responsive while simulation frames may arrive up to two
   seconds late.
