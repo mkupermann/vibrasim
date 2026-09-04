@@ -3,7 +3,7 @@
   "registration_sha256": "28992a8b131100ed4eb2cd9147ddea7b3251921777211a63bb4b64e5524ca9e1",
   "hard_ceiling_seconds": 19800,
   "status": "within_cap",
-  "cumulative_elapsed_seconds": 108,
+  "cumulative_elapsed_seconds": 422,
   "scientific_core_sha256": "ba25c2899018c50902b30647ad3e2758149876844680e501c8ac2953d38c2ba3",
   "budgeted_paths": [
     "tests/vibrasim2/test_p0_artifacts.py",
@@ -41,6 +41,14 @@
       "elapsed_seconds": 108,
       "phase": "implementation_correction",
       "owner": "p1-lease-core-closure",
+      "outcome": "completed"
+    },
+    {
+      "started_at_utc": "2026-09-04T14:56:48.480092Z",
+      "ended_at_utc": "2026-09-04T15:02:01.773190Z",
+      "elapsed_seconds": 314,
+      "phase": "scientific_run",
+      "owner": "v2-p0-937cb75f32e34d1e8e7e04bad1497b20",
       "outcome": "completed"
     }
   ]

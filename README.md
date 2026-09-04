@@ -1,5 +1,28 @@
 # EQMOD
 
+## Update 2026-09-04 — Vibrasim II starts with a NULL
+
+I have reset the active programme around one smaller question: can a reciprocal
+field–matter channel produce a topology-dependent response under a frozen,
+falsifiable protocol? P0 is now implemented and the first registered 30-cell
+matrix has run. I watched the persisted simulation state through a separate 3D
+wireframe observer while it ran; that view was deliberately unable to change
+the calculation or the verdict.
+
+The result is `NULL`. The run was finite, stable, deterministic, sensitive to a
+deliberately broken reciprocal pair, and clean under the decoupled control. It
+did not clear the registered topology-difference gate. In plain language: the
+channel behaved coherently, but this experiment did not show that the two
+registered topologies matter differently enough to support the proposed effect.
+That is the finding, not a near miss and not a hidden success.
+
+The preregistration is in
+[`docs/amendments/v2_p0_reciprocal_channel.md`](docs/amendments/v2_p0_reciprocal_channel.md).
+The durable result is
+[`archive/run-logs/v2-p0/2026-09-04-observed-001/result.json`](archive/run-logs/v2-p0/2026-09-04-observed-001/result.json).
+Vibrasim I remains in this repository as research history; it is no longer the
+active programme.
+
 I have decided to challenge myself with a topic I have no background knowledge of. Why? In order to face challenges and unknown boundaries I picked the most far-fetched topic I could have imagined. The idea behind that is to create a process for solving problems which are in general unsolvable. I decided to go down this path to enhance the way I approach deadlocks.
 
 ---

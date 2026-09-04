@@ -8850,3 +8850,25 @@ predicate, verdict ordering, or execution matrix. It creates a new independent
 19,800-second implementation ledger and initially authorizes only the reviewed
 lease/core closure correction. No V2-P0 scientific run has been started; any
 later run remains a separate explicit decision.
+
+## 2026-09-04 — V2-P0 reciprocal channel — **NULL**
+
+The first registered V2-P0 matrix ran with the optional process-isolated 3D
+observer attached. Raw persisted state and the verdict are under
+`archive/run-logs/v2-p0/2026-09-04-observed-001/`. The observer consumed copied
+post-persistence snapshots through a latest-only queue and had no path back into
+the scientific state or verdict.
+
+All 30 registered cells completed. All values were finite; the initial-energy,
+stability, valid-arm energy and coupling-identity, decoupled-zero,
+broken-pair-sensitivity, topology-sign, timestep-convergence, exercised-channel,
+configuration and deterministic-rerun gates held. The registered
+`topology_difference_holds` gate did not hold. Ordered verdict: **NULL**.
+
+Scientific digest:
+`bdf94735ba80fb719ac7f8e5c78b75705f706b9e5d8a179f09c199b6d838826e`.
+Scientific core:
+`ba25c2899018c50902b30647ad3e2758149876844680e501c8ac2953d38c2ba3`.
+The scientific-run budget interval closed successfully at 314 seconds; the
+successor ledger remains `within_cap` at 422 cumulative seconds. No threshold,
+model, fixture or verdict rule was changed after seeing the data.
