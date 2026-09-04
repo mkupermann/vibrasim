@@ -477,6 +477,8 @@ def finish_budget_interval(
         ledger = load_budget_ledger(lease.ledger_path)
         if ledger.registration_sha256 != lease.expected_registration_sha256:
             raise BudgetError("budget lease registration identity does not match")
+        if ledger.scientific_core_sha256 != lease.scientific_core_sha256:
+            raise BudgetError("active ledger scientific core digest does not match the budget lease")
         if ledger.status != "active" or not ledger.intervals[-1].is_open:
             raise BudgetError("budget lease does not identify the active interval")
         current = ledger.intervals[-1]

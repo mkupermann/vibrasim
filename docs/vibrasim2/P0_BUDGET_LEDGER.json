@@ -3,8 +3,8 @@
   "registration_sha256": "28992a8b131100ed4eb2cd9147ddea7b3251921777211a63bb4b64e5524ca9e1",
   "hard_ceiling_seconds": 19800,
   "status": "within_cap",
-  "cumulative_elapsed_seconds": 0,
-  "scientific_core_sha256": "af9d1fdf0feaccef875becb606d8e756b4c5a5bd616005d5a040270a8a69a9dd",
+  "cumulative_elapsed_seconds": 108,
+  "scientific_core_sha256": "ba25c2899018c50902b30647ad3e2758149876844680e501c8ac2953d38c2ba3",
   "budgeted_paths": [
     "tests/vibrasim2/test_p0_artifacts.py",
     "tests/vibrasim2/test_p0_budget.py",
@@ -33,6 +33,14 @@
       "elapsed_seconds": 0,
       "phase": "implementation",
       "owner": "work/vibrasim2-research-reset",
+      "outcome": "completed"
+    },
+    {
+      "started_at_utc": "2026-09-04T14:52:45.788510Z",
+      "ended_at_utc": "2026-09-04T14:54:33.411095Z",
+      "elapsed_seconds": 108,
+      "phase": "implementation_correction",
+      "owner": "p1-lease-core-closure",
       "outcome": "completed"
     }
   ]

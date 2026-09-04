@@ -56,6 +56,20 @@ def write_core(root: Path) -> str:
     return digest.hexdigest()
 
 
+def read_core_digest(root: Path) -> str:
+    digest = hashlib.sha256()
+    for relative in BUDGETED_PATHS:
+        text = (root / relative).read_text(encoding="utf-8")
+        data = text.replace("\r\n", "\n").replace("\r", "\n").encode("utf-8")
+        encoded_path = relative.encode("utf-8")
+        digest.update(encoded_path)
+        digest.update(b"\0")
+        digest.update(str(len(data)).encode("ascii"))
+        digest.update(b"\0")
+        digest.update(data)
+    return digest.hexdigest()
+
+
 def timestamp(seconds: int) -> str:
     value = datetime(2026, 9, 4, 8, tzinfo=UTC) + timedelta(seconds=seconds)
     return value.isoformat().replace("+00:00", "Z")
@@ -306,6 +320,27 @@ def test_finish_requires_the_exact_lease_owner(tmp_path):
         finish_budget_interval(
             replace(lease, owner="not-the-owner"),
             ended_at_utc=datetime(2026, 9, 4, 8, 3, tzinfo=UTC),
+            outcome="completed",
+        )
+
+
+def test_finish_rejects_an_active_core_digest_that_differs_from_the_lease(tmp_path):
+    ledger = write_ledger(tmp_path)
+    lease = start_budget_interval(
+        ledger,
+        REGISTRATION,
+        tmp_path,
+        phase="scientific_run",
+        owner="run-with-leased-core",
+        started_at_utc=datetime(2026, 9, 4, 13, tzinfo=UTC),
+    )
+    (tmp_path / BUDGETED_PATHS[0]).write_text("changed after lease\n", encoding="utf-8")
+    rewrite(ledger, scientific_core_sha256=read_core_digest(tmp_path))
+
+    with pytest.raises(BudgetError, match="lease|core"):
+        finish_budget_interval(
+            lease,
+            ended_at_utc=datetime(2026, 9, 4, 13, 1, tzinfo=UTC),
             outcome="completed",
         )
 
