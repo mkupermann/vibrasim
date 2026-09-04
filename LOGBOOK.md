@@ -8807,3 +8807,15 @@ probe components, amplitudes into the bond window, collision-term
 excitation). Prediction calibration: INVARIANT was given 50% (landed);
 the predicted most-likely failure mode (CB gate fires) did NOT occur —
 the directional term is 40× smaller than feared.
+
+## 2026-09-04 — Vibrasim II programme transition
+
+The sole active question is now `V2-P0 reciprocal field–matter channel`.
+Vibrasim I remains preserved as completed research history; its last result,
+BP-C6 / G174, remains `INVARIANT (NULL)`. The proposed G175 transverse follow-up
+was never executed and is archived as an unexecuted draft.
+
+Before implementation or data, the P0 supplied-edge exception was frozen in
+`docs/amendments/v2_p0_scope_addendum.md`. It changes no model, fixture,
+constant, threshold, verdict predicate, or budget. No P0 scientific data were
+generated during this programme transition.

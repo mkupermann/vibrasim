@@ -4,16 +4,21 @@
 
 Bottom-up substrate simulator. Computational neuroscience / consciousness research. The goal is developing a deadlock-breaking process, not necessarily succeeding at the simulation.
 
-## Active programme (2026-07-19) — sharp discipline
+## Active programme (2026-09-04) — Vibrasim II
 
-**Belief path.** Read first, in order:
+**One active question:** `V2-P0 reciprocal field–matter channel`.
 
-1. `docs/DISCIPLINE_SHARP.md` — operating rules (one question, pre-reg, no bar retune, no smoke theater)
-2. `docs/BELIEF_PATH.md` — spine
-3. `FRONTIER.md` — board
+Read first, in order:
 
-Do **not** default to archive tracks (VSA/reservoir, Brian2, SA/CIM, BET-144+, GEO/LLM) unless Michael re-admits them.  
-Do **not** re-run dual-drive frequency talent (C1–C3 family). Headless default; no live 3D unless asked.
+1. `docs/vibrasim2/CHARTER.md` — active programme charter
+2. `docs/amendments/v2_p0_reciprocal_channel.md` — frozen P0 contract
+3. `docs/amendments/v2_p0_scope_addendum.md` — frozen pre-data scope
+4. `FRONTIER.md` — live one-screen board
+5. newest entry in `LOGBOOK.md` — append-only research record
+
+Vibrasim I and the Belief Path remain preserved as history. Do not reopen them
+without an explicit programme decision. P0 is headless by default; its 3D view
+is an observer, never evidence or a control surface.
 
 ## Hard Constraints
 

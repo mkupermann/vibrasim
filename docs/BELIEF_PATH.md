@@ -1,6 +1,6 @@
 # BELIEF PATH — the question we restart (lab kept)
 
-**Status:** active programme charter · written 2026-07-19  
+**Status:** historical programme charter — frozen; superseded by Vibrasim II.
 **Owner:** Michael Kupermann  
 **Rule:** if this file disagrees with a later pre-registered amendment, the amendment wins for that experiment; if an agent or session drifts into VSA / Brian2 / SA-CIM / gated-RNN side quests as if they were this path, **this file wins** — those tracks are archive, not the belief.
 

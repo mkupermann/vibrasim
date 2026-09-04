@@ -18,6 +18,9 @@ does not repair or reinterpret a prior NULL.
 
 - Every bond has finite lifetime. Persistence is not free.
 - Bond formation consumes locally available energy.
+- P0 alone uses supplied coupling edges as a deterministic verification
+  fixture. They are not formed or persistent bonds, carry no formation cost,
+  and have no lifetime. This exception ends at P1.
 - Matter changes field propagation through one universal constitutive law.
 - No frequency IDs, pattern IDs, target geometries, repair tables, labels,
   rewards, trained read-outs, neural networks or pretrained components.
@@ -57,9 +60,10 @@ table overrides this generic vocabulary when it assigns a particular gate.
 The live PyVista view is a wireframe observation instrument:
 
 - particles are points;
-- supplied bonds are lines;
+- supplied coupling edges are lines and use the neutral state `SUPPLIED`;
 - supplied field paths are thin lines;
-- stable/forming/breaking bonds are cyan/green/orange;
+- `FORMING`, `STABLE`, and `BREAKING` remain reserved for later mechanisms
+  that actually calculate bond lifecycle state;
 - no inferred surfaces, organisms, smoothing or success animation;
 - UI events remain responsive while simulation frames may arrive up to two
   seconds late.

@@ -1,5 +1,7 @@
 # Scharfe Disziplin — Belief Path (ab 2026-07-19)
 
+**Status:** historical operating doctrine — frozen; retained as method history.
+
 Michael: **mit schärferer Disziplin weitermachen.**  
 Das hier ist die Betriebsordnung. Verstöße = abbrechen und neu vorregistrieren.
 
