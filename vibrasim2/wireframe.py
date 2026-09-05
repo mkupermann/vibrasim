@@ -274,6 +274,29 @@ def _put_latest(frame_queue: Queue, frame) -> None:
             pass
 
 
+def iter_replay_cycles(
+    path: Path,
+    *,
+    loop: bool,
+    stop_event=None,
+    source_factory=None,
+):
+    """Replay persisted evidence once or repeatedly without altering frames."""
+    if source_factory is None:
+        from vibrasim2.viewer_process import iter_replay_envelopes
+
+        source_factory = iter_replay_envelopes
+    while True:
+        yielded = False
+        for envelope in source_factory(path):
+            yielded = True
+            yield envelope
+            if stop_event is not None and stop_event.is_set():
+                return
+        if not loop or not yielded or (stop_event is not None and stop_event.is_set()):
+            return
+
+
 def main(argv: Iterable[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     sources = parser.add_mutually_exclusive_group(required=True)
@@ -282,11 +305,17 @@ def main(argv: Iterable[str] | None = None) -> int:
         "--replay", type=Path,
         help="replay persisted observation snapshots without running dynamics",
     )
+    parser.add_argument(
+        "--loop", action="store_true",
+        help="repeat a persisted replay until its window is closed",
+    )
     args = parser.parse_args(argv)
     from vibrasim2.viewer_process import viewer_config_for_registered_p0
 
     if args.replay is not None and not args.replay.exists():
         parser.error(f"replay path does not exist: {args.replay}")
+    if args.loop and args.replay is None:
+        parser.error("--loop requires --replay")
 
     frame_queue = Queue(maxsize=1)
     stop_event = threading.Event()
@@ -299,10 +328,10 @@ def main(argv: Iterable[str] | None = None) -> int:
                 stop_event.wait(0.1)
             return
 
-        from vibrasim2.viewer_process import iter_replay_envelopes
-
         try:
-            for envelope in iter_replay_envelopes(args.replay):
+            for envelope in iter_replay_cycles(
+                args.replay, loop=args.loop, stop_event=stop_event
+            ):
                 if stop_event.is_set():
                     break
                 _put_latest(frame_queue, envelope)

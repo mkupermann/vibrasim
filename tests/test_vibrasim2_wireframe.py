@@ -1,7 +1,10 @@
+import threading
+from pathlib import Path
+
 import numpy as np
 
 from vibrasim2.observation import EdgeKind, EdgeState, WireframeFrame
-from vibrasim2.wireframe import RenderCadence, build_geometry
+from vibrasim2.wireframe import RenderCadence, build_geometry, iter_replay_cycles
 
 
 def test_build_geometry_preserves_real_particles_and_edges_only():
@@ -112,3 +115,34 @@ def test_render_cadence_keeps_ui_polling_separate_from_two_second_frames():
     assert cadence.frame_due(now=20.0, playing=False, step_requested=True)
     assert not cadence.frame_due(now=20.1, playing=True, step_requested=False)
     assert cadence.frame_due(now=22.0, playing=True, step_requested=False)
+
+
+def test_replay_cycles_repeat_only_when_requested():
+    calls = []
+
+    def source(_path):
+        calls.append(len(calls))
+        return iter(("a", "b"))
+
+    assert tuple(iter_replay_cycles(Path("run"), loop=False, source_factory=source)) == ("a", "b")
+    assert calls == [0]
+
+    stop = threading.Event()
+    values = []
+    for value in iter_replay_cycles(Path("run"), loop=True, stop_event=stop, source_factory=source):
+        values.append(value)
+        if len(values) == 5:
+            stop.set()
+    assert values == ["a", "b", "a", "b", "a"]
+    assert calls == [0, 1, 2, 3]
+
+
+def test_replay_cycles_do_not_spin_on_empty_source():
+    calls = []
+
+    def empty(_path):
+        calls.append(True)
+        return iter(())
+
+    assert tuple(iter_replay_cycles(Path("run"), loop=True, source_factory=empty)) == ()
+    assert calls == [True]
