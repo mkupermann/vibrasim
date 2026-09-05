@@ -70,8 +70,8 @@ class P2ObservationSink:
         if self.closed:
             return
         self.closed = True
-        try:
-            if result_recorded and self.last_envelope is not None and self.handle.publisher is not None:
+        if result_recorded and self.last_envelope is not None and self.handle.publisher is not None:
+            try:
                 self.handle.publisher.publish(
                     replace(
                         self.last_envelope,
@@ -80,8 +80,12 @@ class P2ObservationSink:
                         status=ObservationStatus.COMPLETE,
                     )
                 )
-        finally:
-            shutdown_viewer(self.handle)
+                # Keep the last real frame visible. The owning CLI process stays
+                # alive until the user closes the window or a later run replaces it.
+                return
+            except Exception:
+                pass
+        shutdown_viewer(self.handle)
 
 
 def make_p2_observer_factory(output_dir: Path):
@@ -90,4 +94,3 @@ def make_p2_observer_factory(output_dir: Path):
         return P2ObservationSink(handle, Path(output_dir), run_id)
 
     return factory
-

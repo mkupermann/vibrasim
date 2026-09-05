@@ -35,6 +35,7 @@ world = "world.run:main"
 vibrasim2-view = "vibrasim2.wireframe:main"
 vibrasim2-p0 = "vibrasim2.p0.cli:main"
 vibrasim2-p1 = "vibrasim2.p1.cli:main"
+vibrasim2-p2 = "vibrasim2.p2.cli:main"
 
 [build-system]
 requires = ["hatchling"]

@@ -150,8 +150,11 @@ def run_execution(
     return P2RunResult(verdict, evidence, output, digest)
 
 
-def run_registered_p2(output_dir: Path, *, observer_factory=None) -> P2RunResult:
+def run_registered_p2(
+    output_dir: Path, *, observer_factory=None, run_id: str | None = None
+) -> P2RunResult:
     config = P2Config.registered()
     config.assert_registered()
-    return run_execution(output_dir, config, observer_factory=observer_factory)
-
+    return run_execution(
+        output_dir, config, observer_factory=observer_factory, run_id=run_id
+    )
