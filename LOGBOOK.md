@@ -8872,3 +8872,12 @@ Scientific core:
 The scientific-run budget interval closed successfully at 314 seconds; the
 successor ledger remains `within_cap` at 422 cumulative seconds. No threshold,
 model, fixture or verdict rule was changed after seeing the data.
+
+## 2026-09-05 — V2-P1 mechanism audit activated
+
+The sole active question is now `V2-P1 P0 mechanism audit`. P0 remains closed
+with its `NULL` verdict. P1 is a prospective time-series analysis over the
+already existing P0 data, not a new simulation and not a pre-data registration.
+Its design was frozen before any P1 trace measurement. It cannot change P0 or
+admit conditional persistence directly. Any simultaneous 3D replay is a
+non-scientific observer of persisted P0 snapshots.
