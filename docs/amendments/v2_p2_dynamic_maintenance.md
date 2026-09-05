@@ -48,9 +48,10 @@ For every interval `[t, t + dt]`:
 1. evaluate reciprocal field/matter, live matter-bond, and permitted live
    field-bond forces;
 2. advance positions and momenta with velocity Verlet;
-3. capture `eta * max(0, F_couple * r * dt)` at each site, bounded by that
-   site's kinetic energy, by reducing `|r|` and crediting the exact reduction to
-   its reservoir;
+3. evaluate the reciprocal coupling force at the new positions and capture
+   `eta * max(0, F_couple * r * dt)` using the post-Verlet matter velocity at
+   each site, bounded by that site's kinetic energy, by reducing `|r|` and
+   crediting the exact reduction to its reservoir;
 4. age live bonds by `dt`;
 5. expire bonds whose age is at least `tau_b`, returning their instantaneous
    matter- and field-spring potential equally to endpoint reservoirs;
@@ -104,4 +105,3 @@ One registered run is allowed. No calibration or parameter sweep is permitted.
 A NULL closes this mechanism candidate. An INCONCLUSIVE permits only a repair
 that leaves scientific constants and gates unchanged and is documented before
 rerun.
-
