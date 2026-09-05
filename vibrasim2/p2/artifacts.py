@@ -43,6 +43,38 @@ def _atomic_create_json(path: Path, value: object) -> None:
         temporary.unlink(missing_ok=True)
 
 
+def atomic_write_json(path: Path, value: object, *, create_only: bool = False) -> None:
+    """Atomically write finite JSON, optionally refusing replacement."""
+    path = Path(path)
+    if create_only:
+        _atomic_create_json(path, value)
+        return
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_name(f".{path.name}.{uuid.uuid4().hex}.tmp")
+    try:
+        with temporary.open("xb") as stream:
+            stream.write(_json_bytes(value))
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary, path)
+    finally:
+        temporary.unlink(missing_ok=True)
+
+
+def read_json(path: Path) -> dict[str, object]:
+    try:
+        with Path(path).open(encoding="utf-8") as stream:
+            value = json.load(
+                stream,
+                parse_constant=lambda token: (_ for _ in ()).throw(ValueError(token)),
+            )
+    except (OSError, json.JSONDecodeError, ValueError) as exc:
+        raise P2ArtifactError(f"invalid JSON object: {path}") from exc
+    if not isinstance(value, dict):
+        raise P2ArtifactError(f"invalid JSON object: {path}")
+    return value
+
+
 def _cell_json(cell: P2Cell) -> dict[str, object]:
     return {
         "arm": cell.arm.value,
@@ -245,4 +277,3 @@ def scientific_digest(output_dir: Path) -> str:
         hasher.update(len(payload).to_bytes(8, "big"))
         hasher.update(payload)
     return hasher.hexdigest()
-
