@@ -4,21 +4,23 @@
 
 Bottom-up substrate simulator. Computational neuroscience / consciousness research. The goal is developing a deadlock-breaking process, not necessarily succeeding at the simulation.
 
-## Active programme (2026-09-04) — Vibrasim II
+## Active programme (2026-09-05) — Vibrasim II
 
-**One active question:** `V2-P0 reciprocal field–matter channel`.
+**One active question:** `V2-P1 P0 mechanism audit`.
 
 Read first, in order:
 
 1. `docs/vibrasim2/CHARTER.md` — active programme charter
-2. `docs/amendments/v2_p0_reciprocal_channel.md` — frozen P0 contract
-3. `docs/amendments/v2_p0_scope_addendum.md` — frozen pre-data scope
-4. `FRONTIER.md` — live one-screen board
-5. newest entry in `LOGBOOK.md` — append-only research record
+2. `docs/superpowers/specs/2026-09-04-v2-p1-mechanism-audit-design.md` — frozen P1 analysis contract
+3. `archive/run-logs/v2-p0/2026-09-04-observed-001/result.json` — fixed P0 NULL input identity
+4. `docs/amendments/v2_p0_reciprocal_channel.md` — historical frozen P0 contract
+5. `FRONTIER.md` — live one-screen board
+6. newest entry in `LOGBOOK.md` — append-only research record
 
 Vibrasim I and the Belief Path remain preserved as history. Do not reopen them
-without an explicit programme decision. P0 is headless by default; its 3D view
-is an observer, never evidence or a control surface.
+without an explicit programme decision. P1 is a read-only audit of persisted
+P0 energy traces. Any 3D replay is an observer, never evidence or a control
+surface.
 
 ## Hard Constraints
 

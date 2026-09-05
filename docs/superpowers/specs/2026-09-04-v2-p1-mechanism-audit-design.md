@@ -18,6 +18,9 @@ P1 creates no simulation data, changes no P0 threshold, and cannot change the
 P0 verdict. It makes no claim about persistence, bond formation, individuation,
 memory, talent, life or cognition.
 
+P1 is the sole active Vibrasim-II question while this audit is open. P0 remains
+the closed source experiment; it is not silently reopened by this analysis.
+
 ## 2. Evidence status
 
 The source data already exist at

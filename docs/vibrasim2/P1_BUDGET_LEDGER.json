@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "registration_sha256": "91b0a592c1ab47b001987ada60df08d9d3da0c8ef0e381c484ddea4bde3d5d9a",
-  "registration_git_blob": "3a34049aa1e7b851be21ce45c81d82a5796fd2bf",
+  "registration_sha256": "5276f7fb81b257ef865d4aad9dbdee5712e7dc3a26b3ca354dc030422a3438d8",
+  "registration_git_blob": "8668dc1c60d98159dedb95ff76b8c08f71f92027",
   "hard_ceiling_seconds": 18000,
-  "status": "not_started",
+  "status": "in_progress",
   "cumulative_elapsed_seconds": 0,
   "budgeted_paths": [
     "vibrasim2/p1/__init__.py",
@@ -25,5 +25,14 @@
     "tests/vibrasim2/test_program_authority.py",
     "pyproject.toml"
   ],
-  "intervals": []
+  "intervals": [
+    {
+      "started_at_utc": "2026-09-05T11:19:12.7988933Z",
+      "ended_at_utc": null,
+      "elapsed_seconds": null,
+      "phase": "implementation",
+      "owner": "work/vibrasim2-research-reset",
+      "outcome": null
+    }
+  ]
 }

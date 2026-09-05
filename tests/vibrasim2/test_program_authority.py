@@ -3,7 +3,7 @@ from hashlib import sha256
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-ACTIVE_QUESTION = "V2-P0 reciprocal field–matter channel"
+ACTIVE_QUESTION = "V2-P1 P0 mechanism audit"
 
 
 def read(path: str) -> str:
@@ -16,13 +16,13 @@ def canonical_lf_bytes(path: str) -> bytes:
 
 
 def test_vibrasim2_is_the_only_active_programme():
-    assert "## Active programme (2026-09-04) — Vibrasim II" in read("AGENTS.md")
-    assert "## Active programme (2026-09-04) — Vibrasim II" in read("CLAUDE.md")
+    assert "## Active programme (2026-09-05) — Vibrasim II" in read("AGENTS.md")
+    assert "## Active programme (2026-09-05) — Vibrasim II" in read("CLAUDE.md")
     assert read("AGENTS.md") == read("CLAUDE.md")
     frontier = read("FRONTIER.md")
-    assert "## Active programme: Vibrasim II / P0" in frontier
+    assert "## Active programme: Vibrasim II / P1" in frontier
     assert "one active question" in frontier.lower()
-    assert "reciprocal" in frontier.lower()
+    assert "mechanism audit" in frontier.lower()
     for path in ("AGENTS.md", "CLAUDE.md", "FRONTIER.md", "LOGBOOK.md"):
         assert ACTIVE_QUESTION in read(path), path
     for path in ("AGENTS.md", "CLAUDE.md", "FRONTIER.md"):

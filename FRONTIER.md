@@ -1,27 +1,30 @@
 # FRONTIER — Vibrasim II
 
-## Active programme: Vibrasim II / P0
+## Active programme: Vibrasim II / P1
 
-There is one active question: `V2-P0 reciprocal field–matter channel`.
+There is one active question: `V2-P1 P0 mechanism audit`.
 
-P0 asks whether a minimal field↔matter coupling can be energy-consistent,
-reciprocal, causally legible, and topology-sensitive under one frozen contract.
-It does not ask whether life, consciousness, individuation, or memory emerged.
+P0 returned `NULL`: the reciprocal channel was valid, but the registered
+topology-difference gate did not hold. P1 asks whether the already persisted
+P0 energy traces contain a converged time-structure difference that the P0 peak
+metric discarded, or whether the channel remained weak throughout.
 
 ## Authority
 
 1. `docs/vibrasim2/CHARTER.md`
-2. `docs/amendments/v2_p0_reciprocal_channel.md` — frozen pre-registration
-3. `docs/amendments/v2_p0_scope_addendum.md` — frozen pre-data scope
-4. newest entry in `LOGBOOK.md`
+2. `docs/superpowers/specs/2026-09-04-v2-p1-mechanism-audit-design.md` — frozen P1 contract
+3. `archive/run-logs/v2-p0/2026-09-04-observed-001/result.json` — fixed P0 NULL input
+4. `docs/amendments/v2_p0_reciprocal_channel.md` — historical P0 registration
+5. newest entry in `LOGBOOK.md`
 
 ## Current state
 
-- P0 implementation and observer-isolated 3D observation embedding are planned.
-- No P0 scientific data have been generated.
-- The visual layer is an instrument, not evidence and not a 3D-world claim.
-- The next valid scientific action is the single registered P0 run, but only
-  after implementation, focused tests, budget closure, and the pre-run gate.
+- P0 completed `NULL` with all 30 registered cells and a verified digest.
+- P1 is frozen after P0 data but before P1 time-series analysis.
+- P1 creates no simulation data and cannot change the P0 verdict.
+- The visual layer is a replay instrument, not evidence and not a 3D-world claim.
+- The next valid action is implementing the frozen read-only P1 audit, followed
+  by its separately budgeted execution against the fixed P0 digest.
 
 ## Preserved history
 
