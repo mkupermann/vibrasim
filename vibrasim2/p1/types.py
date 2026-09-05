@@ -33,3 +33,16 @@ class PairMetrics:
     best_lag: float
     zero_lag_correlation: float
     best_lag_correlation: float
+
+
+@dataclass(frozen=True)
+class TracePair:
+    cycle: Trace
+    branch: Trace
+
+
+@dataclass(frozen=True)
+class SourcePairs:
+    source_centre: tuple[int, int]
+    coarse: TracePair
+    convergence: TracePair
