@@ -48,16 +48,23 @@ def capture_positive_work(
     return replace(state, r=next_r, reservoirs=state.reservoirs + debit), captured
 
 
-def bond_spring_energy(state: P2State, bond: Bond, config: P2Config) -> float:
+def bond_spring_energy(
+    state: P2State,
+    bond: Bond,
+    config: P2Config,
+    arm: P2Arm = P2Arm.FULL,
+) -> float:
     sites = coupling_sites()
     matter_extension = state.q[bond.left] - state.q[bond.right] - bond.matter_rest
     left_site = tuple(sites[bond.left])
     right_site = tuple(sites[bond.right])
     field_extension = state.u[left_site] - state.u[right_site] - bond.field_rest
-    return float(
-        0.5 * config.k_m * matter_extension**2
-        + 0.5 * config.k_f * field_extension**2
+    field_energy = (
+        0.0
+        if arm is P2Arm.NO_FIELD_FEEDBACK
+        else 0.5 * config.k_f * field_extension**2
     )
+    return float(0.5 * config.k_m * matter_extension**2 + field_energy)
 
 
 def bond_forces(
@@ -83,7 +90,11 @@ def bond_forces(
 
 
 def age_and_expire_bonds(
-    state: P2State, config: P2Config, *, dt: float
+    state: P2State,
+    config: P2Config,
+    *,
+    dt: float,
+    arm: P2Arm = P2Arm.FULL,
 ) -> tuple[P2State, tuple[BondEvent, ...]]:
     """Age bonds, returning spring potential locally when lifetime is reached."""
     reservoirs = state.reservoirs.copy()
@@ -92,7 +103,7 @@ def age_and_expire_bonds(
     for bond in state.bonds:
         aged = replace(bond, age=bond.age + dt)
         if aged.age >= config.bond_lifetime:
-            returned = bond_spring_energy(state, bond, config) / 2.0
+            returned = bond_spring_energy(state, bond, config, arm) / 2.0
             reservoirs[bond.left] += returned
             reservoirs[bond.right] += returned
             events.append(BondEvent("expired", bond.left, bond.right))
@@ -154,4 +165,3 @@ def form_eligible_bonds(
         ),
         events,
     )
-
