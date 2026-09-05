@@ -118,13 +118,14 @@ def registered_step(
 def accounted_energy(state: P2State, arm: P2Arm, config: P2Config) -> float:
     """Return mechanical, stored, and irreversibly consumed formation energy."""
     sites = coupling_sites()
-    field = 0.5 * np.square(state.p).sum() + 0.5 * config.c**2 * (
-        np.square(np.roll(state.u, -1, axis=0) - state.u).sum()
-        + np.square(np.roll(state.u, -1, axis=1) - state.u).sum()
-    )
-    matter = 0.5 * np.square(state.r).sum()
-    mismatch = state.u[sites[:, 0], sites[:, 1]] - state.q
-    coupling = 0.5 * config.g * np.square(mismatch).sum()
+    with np.errstate(over="ignore", invalid="ignore"):
+        field = 0.5 * np.square(state.p).sum() + 0.5 * config.c**2 * (
+            np.square(np.roll(state.u, -1, axis=0) - state.u).sum()
+            + np.square(np.roll(state.u, -1, axis=1) - state.u).sum()
+        )
+        matter = 0.5 * np.square(state.r).sum()
+        mismatch = state.u[sites[:, 0], sites[:, 1]] - state.q
+        coupling = 0.5 * config.g * np.square(mismatch).sum()
     live_bonds = sum(bond_spring_energy(state, bond, config, arm) for bond in state.bonds)
     return float(
         field
@@ -134,4 +135,3 @@ def accounted_energy(state: P2State, arm: P2Arm, config: P2Config) -> float:
         + state.reservoirs.sum()
         + state.formation_sink
     )
-
