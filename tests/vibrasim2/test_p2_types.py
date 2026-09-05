@@ -1,8 +1,8 @@
 import numpy as np
 import pytest
 
-from vibrasim2.p2.fixtures import candidate_edges
-from vibrasim2.p2.types import Bond, P2Arm, P2Config, P2State
+from vibrasim2.p2.fixtures import candidate_edges, registered_cells
+from vibrasim2.p2.types import Bond, P2Arm, P2Config, P2Purpose, P2State
 
 
 def test_registered_configuration_is_exact():
@@ -88,3 +88,22 @@ def test_arm_names_are_scientific_contract():
         "full", "no_capture", "no_field_feedback"
     )
 
+
+def test_registered_matrix_has_exact_18_unique_cells():
+    config = P2Config.registered()
+    cells = registered_cells(config)
+
+    assert len(cells) == 18
+    assert len({cell.slug for cell in cells}) == 18
+    for source in config.source_centres:
+        source_cells = tuple(cell for cell in cells if cell.source_centre == source)
+        assert tuple((cell.purpose, cell.arm) for cell in source_cells) == (
+            (P2Purpose.PRIMARY, P2Arm.FULL),
+            (P2Purpose.PRIMARY, P2Arm.NO_CAPTURE),
+            (P2Purpose.PRIMARY, P2Arm.NO_FIELD_FEEDBACK),
+            (P2Purpose.CONVERGENCE, P2Arm.FULL),
+            (P2Purpose.CONVERGENCE, P2Arm.NO_FIELD_FEEDBACK),
+            (P2Purpose.REPRODUCTION, P2Arm.FULL),
+        )
+        assert source_cells[3].dt == config.dt / 2
+        assert source_cells[3].steps == config.steps * 2

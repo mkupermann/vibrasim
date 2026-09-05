@@ -22,6 +22,13 @@ class P2Purpose(str, Enum):
     REPRODUCTION = "reproduction"
 
 
+class Verdict(str, Enum):
+    PASS = "PASS"
+    NULL = "NULL"
+    INCONCLUSIVE = "INCONCLUSIVE"
+    FAIL = "FAIL"
+
+
 @dataclass(frozen=True)
 class P2Config:
     grid_shape: tuple[int, int]
@@ -128,4 +135,3 @@ class P2State:
         for name, value in zip(("u", "p", "q", "r", "reservoirs"), arrays, strict=True):
             object.__setattr__(self, name, value)
         object.__setattr__(self, "bonds", tuple(sorted(self.bonds)))
-

@@ -6,7 +6,7 @@ import math
 
 from vibrasim2.p0.fixtures import coupling_sites
 
-from .types import P2Config
+from .types import P2Arm, P2Cell, P2Config, P2Purpose
 
 
 def candidate_edges(config: P2Config) -> tuple[tuple[int, int], ...]:
@@ -23,4 +23,21 @@ def candidate_edges(config: P2Config) -> tuple[tuple[int, int], ...]:
             if math.hypot(dx, dy) <= config.candidate_radius:
                 result.append((left, right))
     return tuple(result)
+
+
+def registered_cells(config: P2Config) -> tuple[P2Cell, ...]:
+    """Return the exact frozen 18-cell matrix in execution order."""
+    cells: list[P2Cell] = []
+    for source in config.source_centres:
+        cells.extend(
+            (
+                P2Cell(P2Arm.FULL, P2Purpose.PRIMARY, source, config.dt, config.steps),
+                P2Cell(P2Arm.NO_CAPTURE, P2Purpose.PRIMARY, source, config.dt, config.steps),
+                P2Cell(P2Arm.NO_FIELD_FEEDBACK, P2Purpose.PRIMARY, source, config.dt, config.steps),
+                P2Cell(P2Arm.FULL, P2Purpose.CONVERGENCE, source, config.dt / 2, config.steps * 2),
+                P2Cell(P2Arm.NO_FIELD_FEEDBACK, P2Purpose.CONVERGENCE, source, config.dt / 2, config.steps * 2),
+                P2Cell(P2Arm.FULL, P2Purpose.REPRODUCTION, source, config.dt, config.steps),
+            )
+        )
+    return tuple(cells)
 
