@@ -89,7 +89,6 @@ def test_supplied_edge_colour_is_fixed_neutral_rgb():
         edge_kinds=(EdgeKind.MATTER, EdgeKind.RECIPROCAL_COUPLING,
                     EdgeKind.MATERIAL_ONLY_CONTROL),
     )
-
     geometry = build_geometry(frame)
 
     np.testing.assert_array_equal(
@@ -103,6 +102,12 @@ def test_supplied_edge_colour_is_fixed_neutral_rgb():
             dtype=np.uint8,
         ),
     )
+
+
+def test_dynamic_edge_colours_distinguish_available_and_live():
+    from vibrasim2.wireframe import EDGE_COLORS
+
+    assert EDGE_COLORS[EdgeState.AVAILABLE] != EDGE_COLORS[EdgeState.LIVE]
 
 
 def test_render_cadence_keeps_ui_polling_separate_from_two_second_frames():

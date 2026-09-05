@@ -21,6 +21,7 @@ from vibrasim2.observation import EdgeKind, EdgeState, WireframeFrame
 @dataclass(frozen=True)
 class WireframeGeometry:
     particle_points: np.ndarray
+    particle_values: np.ndarray
     edge_segments: np.ndarray
     edge_states: tuple[EdgeState, ...]
     edge_colors: np.ndarray
@@ -55,6 +56,7 @@ def build_geometry(frame: WireframeFrame) -> WireframeGeometry:
         colors = np.empty((0, 3), dtype=np.uint8)
     return WireframeGeometry(
         particle_points=frame.positions.copy(),
+        particle_values=frame.particle_values.copy(),
         edge_segments=segments.copy(),
         edge_states=frame.edge_states,
         edge_colors=colors,
@@ -63,7 +65,11 @@ def build_geometry(frame: WireframeFrame) -> WireframeGeometry:
     )
 
 
-EDGE_COLORS = {EdgeState.SUPPLIED: (150, 170, 185)}
+EDGE_COLORS = {
+    EdgeState.SUPPLIED: (150, 170, 185),
+    EdgeState.AVAILABLE: (70, 78, 88),
+    EdgeState.LIVE: (255, 154, 46),
+}
 
 
 def _line_mesh(segments: np.ndarray, colors: np.ndarray):
@@ -99,12 +105,21 @@ def _add_frame_actors(plotter, frame: WireframeFrame, *, render: bool = False) -
 
     geometry = build_geometry(frame)
     if len(geometry.particle_points):
-        plotter.add_mesh(
-            pv.PolyData(geometry.particle_points), style="points",
-            color=(0.85, 0.88, 0.92), point_size=5,
-            render_points_as_spheres=False, lighting=False,
-            name="particles", render=render,
-        )
+        particles = pv.PolyData(geometry.particle_points)
+        if len(geometry.particle_values):
+            particles.point_data["reservoir"] = geometry.particle_values
+            plotter.add_mesh(
+                particles, style="points", scalars="reservoir", cmap="plasma",
+                clim=(0.0, 1.0), point_size=6, show_scalar_bar=False,
+                render_points_as_spheres=False, lighting=False,
+                name="particles", render=render,
+            )
+        else:
+            plotter.add_mesh(
+                particles, style="points", color=(0.85, 0.88, 0.92), point_size=5,
+                render_points_as_spheres=False, lighting=False,
+                name="particles", render=render,
+            )
     if len(geometry.edge_segments):
         plotter.add_mesh(
             _line_mesh(geometry.edge_segments, geometry.edge_colors),

@@ -11,6 +11,8 @@ class EdgeState(str, Enum):
     """The observation reports supplied edges, not a lifecycle transition."""
 
     SUPPLIED = "supplied"
+    AVAILABLE = "available"
+    LIVE = "live"
 
 
 class EdgeKind(str, Enum):
@@ -37,6 +39,7 @@ class WireframeFrame:
     edge_states: tuple[EdgeState, ...]
     edge_kinds: tuple[EdgeKind, ...]
     field_lines: tuple[np.ndarray, ...] = ()
+    particle_values: np.ndarray | None = None
 
     def __post_init__(self) -> None:
         positions = np.asarray(self.positions, dtype=np.float64)
@@ -64,6 +67,12 @@ class WireframeFrame:
         if any(line.ndim != 2 or line.shape[1:] != (3,) or len(line) < 2
                or not np.isfinite(line).all() for line in field_lines):
             raise ValueError("field lines must each be finite with shape (n>=2, 3)")
+        if self.particle_values is None:
+            particle_values = np.empty(0, dtype=np.float64)
+        else:
+            particle_values = np.asarray(self.particle_values, dtype=np.float64)
+            if particle_values.shape != (len(positions),) or not np.isfinite(particle_values).all():
+                raise ValueError("particle_values must be finite with shape (n,)")
         object.__setattr__(self, "positions", _frozen_array(positions, dtype=np.float64, name="positions"))
         object.__setattr__(self, "edges", _frozen_array(edges, dtype=np.int32, name="edges"))
         object.__setattr__(self, "edge_states", edge_states)
@@ -72,6 +81,11 @@ class WireframeFrame:
             self,
             "field_lines",
             tuple(_frozen_array(line, dtype=np.float64, name="field line") for line in field_lines),
+        )
+        object.__setattr__(
+            self,
+            "particle_values",
+            _frozen_array(particle_values, dtype=np.float64, name="particle_values"),
         )
 
 
