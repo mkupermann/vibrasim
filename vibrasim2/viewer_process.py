@@ -386,7 +386,7 @@ def replay_verdict(path: Path) -> str | None:
     return value if value in {"PASS", "NULL", "INCONCLUSIVE", "FAIL"} else None
 
 
-def iter_replay_envelopes(path: Path):
+def iter_replay_envelopes(path: Path, *, result_valid: bool | None = None):
     """Yield observation envelopes from persisted snapshots, never simulating."""
     import time as _time
     root, cell_dirs, run_data = _ordered_cell_dirs(Path(path))
@@ -398,7 +398,7 @@ def iter_replay_envelopes(path: Path):
         raise ValueError("replay requires the registered display scale S=4")
     sequence = 0
     last_envelope = None
-    complete = _result_is_valid(root)
+    complete = _result_is_valid(root) if result_valid is None else bool(result_valid)
     for cell_dir in cell_dirs:
         cell_data = run_data if cell_dir == Path(path) and (Path(path) / "cell.json").is_file() else _read_json(cell_dir / "cell.json")
         topology = _topology_from_cell(cell_data, run_data)

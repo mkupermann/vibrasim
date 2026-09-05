@@ -323,6 +323,16 @@ def main(argv: Iterable[str] | None = None) -> int:
 
     frame_queue = Queue(maxsize=1)
     stop_event = threading.Event()
+    recorded_verdict = None
+    replay_source_factory = None
+    if args.replay is not None:
+        from vibrasim2.viewer_process import iter_replay_envelopes, replay_verdict
+
+        recorded_verdict = replay_verdict(args.replay)
+        result_valid = recorded_verdict is not None
+
+        def replay_source_factory(path):
+            return iter_replay_envelopes(path, result_valid=result_valid)
 
     def produce() -> None:
         if args.demo:
@@ -334,7 +344,10 @@ def main(argv: Iterable[str] | None = None) -> int:
 
         try:
             for envelope in iter_replay_cycles(
-                args.replay, loop=args.loop, stop_event=stop_event
+                args.replay,
+                loop=args.loop,
+                stop_event=stop_event,
+                source_factory=replay_source_factory,
             ):
                 if stop_event.is_set():
                     break
@@ -347,11 +360,6 @@ def main(argv: Iterable[str] | None = None) -> int:
     producer = threading.Thread(target=produce, daemon=True)
     producer.start()
     try:
-        recorded_verdict = None
-        if args.replay is not None:
-            from vibrasim2.viewer_process import replay_verdict
-
-            recorded_verdict = replay_verdict(args.replay)
         return WireframeViewer(
             frame_queue,
             stop_event,

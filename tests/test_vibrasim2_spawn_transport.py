@@ -108,3 +108,17 @@ def test_replay_reads_persisted_snapshots_and_validates_result_digest(tmp_path):
     assert [envelope.tick for envelope in complete] == [10, 20]
     assert complete[-1].status.value == "complete"
     assert complete[0].status.value == "running"
+
+
+def test_validated_replay_session_does_not_rehash_each_cycle(tmp_path, monkeypatch):
+    from vibrasim2.viewer_process import iter_replay_envelopes
+
+    _replay_tree(tmp_path)
+    monkeypatch.setattr(
+        "vibrasim2.viewer_process._result_is_valid",
+        lambda _root: (_ for _ in ()).throw(AssertionError("unexpected rehash")),
+    )
+
+    replay = tuple(iter_replay_envelopes(tmp_path, result_valid=True))
+
+    assert replay[-1].status.value == "complete"
