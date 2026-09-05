@@ -68,6 +68,23 @@ def test_complete_changes_only_the_neutral_footer():
     assert running_hud.replace("VERDICT PENDING", "VERDICT RECORDED IN result.json") == complete_hud
 
 
+def test_hud_names_experiment_stream_mode_and_recorded_verdict():
+    controller = ViewerController(stream_kind="replay", recorded_verdict="NULL")
+    envelope = ObservationEnvelope(
+        **{
+            **envelopes_at_ticks(10)[0].__dict__,
+            "run_id": "v2-p0-test",
+            "status": ObservationStatus.COMPLETE,
+        }
+    )
+    controller.accept(envelope)
+
+    hud = controller.hud(now_ns=2_000_000_000)
+
+    assert "VIBRASIM II · P0 · REPLAY" in hud
+    assert "VERDICT: NULL" in hud
+
+
 def test_broken_pair_hud_labels_nonreciprocal_sensitivity_control():
     controller = ViewerController()
     controller.accept(envelopes_at_ticks(10, kind=EdgeKind.MATERIAL_ONLY_CONTROL)[0])

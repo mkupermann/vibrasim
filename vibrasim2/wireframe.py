@@ -129,13 +129,17 @@ class WireframeViewer:
         config,
         *,
         demo: bool = False,
+        stream_kind: str = "live",
+        recorded_verdict: str | None = None,
     ) -> None:
         from vibrasim2.viewer_process import ViewerController
 
         self.frame_queue = frame_queue
         self.stop_event = stop_event
         self.config = config
-        self.controller = ViewerController()
+        self.controller = ViewerController(
+            stream_kind=stream_kind, recorded_verdict=recorded_verdict
+        )
         self.cadence = RenderCadence(frame_interval=config.draw_interval_seconds)
         self.demo = demo
         rows, columns = config.grid_shape
@@ -343,8 +347,18 @@ def main(argv: Iterable[str] | None = None) -> int:
     producer = threading.Thread(target=produce, daemon=True)
     producer.start()
     try:
+        recorded_verdict = None
+        if args.replay is not None:
+            from vibrasim2.viewer_process import replay_verdict
+
+            recorded_verdict = replay_verdict(args.replay)
         return WireframeViewer(
-            frame_queue, stop_event, viewer_config_for_registered_p0(), demo=args.demo
+            frame_queue,
+            stop_event,
+            viewer_config_for_registered_p0(),
+            demo=args.demo,
+            stream_kind="replay" if args.replay is not None else "live",
+            recorded_verdict=recorded_verdict,
         ).run()
     finally:
         stop_event.set()

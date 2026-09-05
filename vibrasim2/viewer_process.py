@@ -31,6 +31,14 @@ class ViewerController:
     frozen: bool = False
     displayed: ObservationEnvelope | None = None
     pending: ObservationEnvelope | None = None
+    stream_kind: str = "live"
+    recorded_verdict: str | None = None
+
+    def __post_init__(self) -> None:
+        if self.stream_kind not in {"live", "replay"}:
+            raise ValueError("stream_kind must be live or replay")
+        if self.recorded_verdict not in {None, "PASS", "NULL", "INCONCLUSIVE", "FAIL"}:
+            raise ValueError("recorded_verdict is invalid")
 
     def accept(self, envelope: ObservationEnvelope) -> None:
         if not isinstance(envelope, ObservationEnvelope):
@@ -66,7 +74,10 @@ class ViewerController:
         if now_ns is None:
             now_ns = time.monotonic_ns()
         age_seconds = max(0.0, (now_ns - envelope.emitted_monotonic_ns) / 1_000_000_000)
+        parts = envelope.run_id.lower().split("-")
+        experiment = parts[1].upper() if len(parts) > 1 and parts[0] == "v2" else "UNSPECIFIED"
         lines = (
+            f"VIBRASIM II · {experiment} · {self.stream_kind.upper()}",
             "RAW SIMULATION STATE — OBSERVATION ONLY",
             f"run={envelope.run_id} stage={envelope.stage} arm={envelope.arm}",
             f"source={envelope.source_centre} tick={envelope.tick} time={envelope.simulation_time:g}",
@@ -74,11 +85,12 @@ class ViewerController:
         )
         if EdgeKind.MATERIAL_ONLY_CONTROL in envelope.frame.edge_kinds:
             lines += ("NON-RECIPROCAL SENSITIVITY CONTROL",)
-        footer = (
-            "VERDICT RECORDED IN result.json"
-            if envelope.status is ObservationStatus.COMPLETE
-            else "VERDICT PENDING"
-        )
+        if self.recorded_verdict is not None and envelope.status is ObservationStatus.COMPLETE:
+            footer = f"VERDICT: {self.recorded_verdict}"
+        elif envelope.status is ObservationStatus.COMPLETE:
+            footer = "VERDICT RECORDED IN result.json"
+        else:
+            footer = "VERDICT PENDING"
         return "\n".join((*lines, footer))
 
 
@@ -363,6 +375,15 @@ def _result_is_valid(root: Path) -> bool:
         return scientific_digest(root) == expected
     except Exception:
         return False
+
+
+def replay_verdict(path: Path) -> str | None:
+    """Return a verdict only from a scientifically valid replay root."""
+    root, _, _ = _ordered_cell_dirs(Path(path))
+    if not _result_is_valid(root):
+        return None
+    value = _read_json(root / "result.json").get("verdict")
+    return value if value in {"PASS", "NULL", "INCONCLUSIVE", "FAIL"} else None
 
 
 def iter_replay_envelopes(path: Path):
