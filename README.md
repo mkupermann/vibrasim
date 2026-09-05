@@ -1,6 +1,35 @@
 # EQMOD
 
-## Update 2026-09-04 — Vibrasim II starts with a NULL
+## Update 2026-09-05 — Vibrasim II stops at P2, honestly
+
+I tested a replacement foundation after P0 returned `NULL` and the P1 trace
+audit returned `UNRESOLVED`. P2 asked whether a closed local loop between field,
+matter, captured energy and finite-lived bonds buys more post-drive bond-time
+than matched broken-loop controls. I froze the mechanism, constants, 18-cell
+matrix and decision gates before generating P2 data, then watched persisted
+state through the same process-isolated 3D observer used for P0.
+
+The result is `INCONCLUSIVE`. Energy accounting, the zero-capture control and
+exact reproduction all held. The registered effect did not: aggregate
+`full - no_field_feedback` bond-time was `-5.875`, against a required `+30.0`.
+The half-step result was `-8.7125`, a relative change of about `0.483`, outside
+the frozen `0.20` convergence limit. Because numerical validity has precedence,
+this is not a clean NULL even though the effect points the wrong way.
+
+I am stopping here. I found no implementation or artifact defect that can be
+repaired without changing the scientific identity after seeing the result.
+Changing the timestep, event rule, integrator, constants or gate would be a new
+experiment fitted to this one. P3 is therefore not open. That is less exciting
+than a result, but more useful than manufacturing a ladder to P100.
+
+The frozen contract is
+[`docs/amendments/v2_p2_dynamic_maintenance.md`](docs/amendments/v2_p2_dynamic_maintenance.md),
+the durable verdict is
+[`archive/run-logs/v2-p2/2026-09-05-observed-001/result.json`](archive/run-logs/v2-p2/2026-09-05-observed-001/result.json),
+and the closeout is
+[`docs/vibrasim2/P2_CLOSEOUT.md`](docs/vibrasim2/P2_CLOSEOUT.md).
+
+### P0 — reciprocal channel NULL
 
 I have reset the active programme around one smaller question: can a reciprocal
 field–matter channel produce a topology-dependent response under a frozen,
@@ -23,7 +52,7 @@ The durable result is
 Vibrasim I remains in this repository as research history; it is no longer the
 active programme.
 
-### P1 diagnostic — no rescue hidden in the time series
+### P1 — no rescue hidden in the time series
 
 I then audited the persisted P0 energy traces without rerunning the simulation.
 The diagnostic outcome is `UNRESOLVED`. The largest converged instantaneous
@@ -40,9 +69,9 @@ I have decided to challenge myself with a topic I have no background knowledge o
 
 ---
 
-## Active programme (since 2026-07-19): the belief path
+## Historical programme (2026): the belief path
 
-The active research question is the belief ladder — vibrations → field → binding →
+The earlier research question was the belief ladder — vibrations → field → binding →
 matter → collections → talent → brain — under sharp pre-registration discipline.
 Charter: `docs/BELIEF_PATH.md` · operating rules: `docs/DISCIPLINE_SHARP.md` ·
 live board: `FRONTIER.md`. Status: rungs A (field→bind) and B (molecules carry

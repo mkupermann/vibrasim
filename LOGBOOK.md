@@ -8903,3 +8903,35 @@ selection. P0 remains `NULL`, and conditional persistence is not admitted.
 Audit digest:
 `90f51a410d7429b9836a55f7329b5a8d99f20fd0157b18c7f7000b849a2161c2`.
 P1 budget: 512 cumulative seconds, `within_cap`.
+
+## 2026-09-05 — V2-P2 dynamic maintenance — **INCONCLUSIVE; STOP**
+
+After P1 closed `UNRESOLVED`, I froze an independently argued replacement
+foundation before generating data. P2 asked whether a closed local loop between
+field, matter, captured energy and finite-lived bonds creates at least three
+bond lifetimes more post-drive bond-time than a matched arm without field-bond
+feedback. Constants, the 18-cell matrix, controls, convergence test, verdict
+precedence and one-run limit were fixed in
+`docs/amendments/v2_p2_dynamic_maintenance.md`.
+
+The complete repository suite passed immediately before the run: 957 passed,
+5 skipped and 2 expected failures. The guarded run then completed all 18 cells
+with the process-isolated 3D observer attached. Its scientific digest is
+`530feabb76da1b4e8a5ec40dc10842e975a9cdba486088290eccf50def50a1f9`;
+the bound scientific core was
+`b0d356b515a06c8194d11479fcb45102e9b168ccbafe3f4ffcb4e2561199c9fd`.
+The one-run ledger closed `used` after 366 seconds.
+
+All artifacts and numeric values were valid. The energy, exact reproduction and
+zero-capture gates held. Aggregate primary `full - no_field_feedback` bond-time
+was `-5.875`, below the frozen `+30.0` gate. Half-step contrast was `-8.7125`;
+its relative difference of approximately `0.483` exceeded the frozen `0.20`
+convergence limit. Under the registered precedence the verdict is
+**INCONCLUSIVE**, not NULL.
+
+I found no artifact, implementation, accounting or reproduction defect that
+can be repaired while leaving the experiment unchanged. Altering the event
+rule, integrator, timestep, horizon, constants, statistic or gate after this
+result would create a data-informed successor mechanism. I therefore do not
+rerun P2 and do not open P3. Vibrasim II stops here unless a future programme
+decision supplies a genuinely independent physical argument before new data.

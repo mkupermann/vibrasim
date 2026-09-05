@@ -6,21 +6,24 @@ Bottom-up substrate simulator. Computational neuroscience / consciousness resear
 
 ## Active programme (2026-09-05) — Vibrasim II
 
-**No active scientific question.** V2-P1 is closed `UNRESOLVED`.
+**No active scientific question.** V2-P2 is closed `INCONCLUSIVE`; no eligible
+repair, rerun, or P3 is authorised.
 
 Read first, in order:
 
 1. `docs/vibrasim2/CHARTER.md` — active programme charter
-2. `docs/superpowers/specs/2026-09-04-v2-p1-mechanism-audit-design.md` — frozen P1 analysis contract
-3. `archive/run-logs/v2-p0/2026-09-04-observed-001/result.json` — fixed P0 NULL input identity
-4. `docs/amendments/v2_p0_reciprocal_channel.md` — historical frozen P0 contract
-5. `FRONTIER.md` — live one-screen board
-6. newest entry in `LOGBOOK.md` — append-only research record
+2. `docs/amendments/v2_p2_dynamic_maintenance.md` — frozen P2 contract
+3. `archive/run-logs/v2-p2/2026-09-05-observed-001/result.json` — fixed P2 verdict
+4. `docs/vibrasim2/P2_CLOSEOUT.md` — P2 evidence and stop decision
+5. `docs/superpowers/specs/2026-09-04-v2-p1-mechanism-audit-design.md` — historical P1 contract
+6. `docs/amendments/v2_p0_reciprocal_channel.md` — historical frozen P0 contract
+7. `FRONTIER.md` — live one-screen board
+8. newest entry in `LOGBOOK.md` — append-only research record
 
 Vibrasim I and the Belief Path remain preserved as history. Do not reopen them
-without an explicit programme decision. The fixed P0 dataset is closed for
-further design selection. Any 3D replay is an observer, never evidence or a
-control surface.
+without an explicit programme decision. The fixed P0 and P2 datasets are closed
+for further design selection. Any 3D live view or replay is an observer, never
+evidence or a control surface.
 
 ## Hard Constraints
 

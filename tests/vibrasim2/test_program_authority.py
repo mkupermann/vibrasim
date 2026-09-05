@@ -20,12 +20,13 @@ def test_vibrasim2_is_the_only_active_programme():
     assert "## Active programme (2026-09-05) — Vibrasim II" in read("CLAUDE.md")
     assert read("AGENTS.md") == read("CLAUDE.md")
     frontier = read("FRONTIER.md")
-    assert "## Active programme: Vibrasim II — no open experiment" in frontier
+    assert "## Active programme: Vibrasim II — stopped at P2" in frontier
     assert "no active scientific question" in frontier.lower()
-    assert "closed `UNRESOLVED`" in frontier
+    assert "closed `INCONCLUSIVE`" in frontier
     for path in ("AGENTS.md", "CLAUDE.md", "FRONTIER.md"):
         assert ACTIVE_QUESTION.lower() in read(path).lower(), path
     assert "V2-P1 mechanism audit — **UNRESOLVED**" in read("LOGBOOK.md")
+    assert "V2-P2 dynamic maintenance — **INCONCLUSIVE; STOP**" in read("LOGBOOK.md")
     for path in ("AGENTS.md", "CLAUDE.md", "FRONTIER.md"):
         current = read(path)
         assert "Active programme: belief path" not in current
