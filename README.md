@@ -23,6 +23,19 @@ The durable result is
 Vibrasim I remains in this repository as research history; it is no longer the
 active programme.
 
+### P1 diagnostic — no rescue hidden in the time series
+
+I then audited the persisted P0 energy traces without rerunning the simulation.
+The diagnostic outcome is `UNRESOLVED`. The largest converged instantaneous
+topology contrasts across the three source positions were approximately
+`0.00607`, `0.01650`, and `0.00839`. One position was too large to call the
+channel uniformly weak, but none reached the frozen `> 0.02` candidate bar and
+there was no qualifying phase-lag effect.
+
+That does not reopen P0. It closes this dataset for further design selection.
+The next experiment, if there is one, needs an independently argued mechanism;
+it cannot come from lowering the threshold or mining P0 again.
+
 I have decided to challenge myself with a topic I have no background knowledge of. Why? In order to face challenges and unknown boundaries I picked the most far-fetched topic I could have imagined. The idea behind that is to create a process for solving problems which are in general unsolvable. I decided to go down this path to enhance the way I approach deadlocks.
 
 ---

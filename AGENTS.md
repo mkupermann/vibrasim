@@ -6,7 +6,7 @@ Bottom-up substrate simulator. Computational neuroscience / consciousness resear
 
 ## Active programme (2026-09-05) — Vibrasim II
 
-**One active question:** `V2-P1 P0 mechanism audit`.
+**No active scientific question.** V2-P1 is closed `UNRESOLVED`.
 
 Read first, in order:
 
@@ -18,9 +18,9 @@ Read first, in order:
 6. newest entry in `LOGBOOK.md` — append-only research record
 
 Vibrasim I and the Belief Path remain preserved as history. Do not reopen them
-without an explicit programme decision. P1 is a read-only audit of persisted
-P0 energy traces. Any 3D replay is an observer, never evidence or a control
-surface.
+without an explicit programme decision. The fixed P0 dataset is closed for
+further design selection. Any 3D replay is an observer, never evidence or a
+control surface.
 
 ## Hard Constraints
 

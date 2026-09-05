@@ -1,13 +1,13 @@
 # FRONTIER — Vibrasim II
 
-## Active programme: Vibrasim II / P1
+## Active programme: Vibrasim II — no open experiment
 
-There is one active question: `V2-P1 P0 mechanism audit`.
+There is no active scientific question. V2-P1 is closed `UNRESOLVED`.
 
-P0 returned `NULL`: the reciprocal channel was valid, but the registered
-topology-difference gate did not hold. P1 asks whether the already persisted
-P0 energy traces contain a converged time-structure difference that the P0 peak
-metric discarded, or whether the channel remained weak throughout.
+P0 returned `NULL`. P1 found no registered time-structure candidate and could
+not classify the channel as uniformly weak because one source reached a
+converged instantaneous contrast of `0.01650`. The fixed P0 dataset is closed
+for further design selection.
 
 ## Authority
 
@@ -20,11 +20,12 @@ metric discarded, or whether the channel remained weak throughout.
 ## Current state
 
 - P0 completed `NULL` with all 30 registered cells and a verified digest.
-- P1 is frozen after P0 data but before P1 time-series analysis.
+- P1 completed `UNRESOLVED` under its frozen post-data analysis plan.
 - P1 creates no simulation data and cannot change the P0 verdict.
 - The visual layer is a replay instrument, not evidence and not a 3D-world claim.
-- The next valid action is implementing the frozen read-only P1 audit, followed
-  by its separately budgeted execution against the fixed P0 digest.
+- Any next experiment requires an independently argued mechanism and a new
+  registration. Lowering P0 thresholds or mining the same dataset again is not
+  a valid next action.
 
 ## Preserved history
 

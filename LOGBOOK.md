@@ -8881,3 +8881,25 @@ already existing P0 data, not a new simulation and not a pre-data registration.
 Its design was frozen before any P1 trace measurement. It cannot change P0 or
 admit conditional persistence directly. Any simultaneous 3D replay is a
 non-scientific observer of persisted P0 snapshots.
+
+## 2026-09-05 — V2-P1 mechanism audit — **UNRESOLVED**
+
+The registered read-only audit ran once against the fixed P0 scientific digest
+`bdf94735ba80fb719ac7f8e5c78b75705f706b9e5d8a179f09c199b6d838826e`.
+No dynamics were rerun. A separate 3D replay displayed persisted snapshots and
+did not enter the analysis.
+
+The converged `max_abs_contrast` values were `0.006068897761319959` at
+`(4,16)`, `0.01649513691072231` at `(16,4)`, and
+`0.008394198749805083` at `(4,4)`. RMS contrasts were respectively
+`0.0017522896079199505`, `0.004099692185217757`, and
+`0.0022413348793899977`. Best lags were `-0.025`, `+0.025`, and `-0.05`;
+none met the registered lag-and-correlation-gain condition.
+
+Ordered outcome: **UNRESOLVED**. Not enough sources exceeded `0.02` for
+`TIME_STRUCTURE_CANDIDATE`; not all sources stayed below `0.01` for
+`WEAK_CHANNEL`. Per the frozen consequence, this dataset is closed for design
+selection. P0 remains `NULL`, and conditional persistence is not admitted.
+Audit digest:
+`90f51a410d7429b9836a55f7329b5a8d99f20fd0157b18c7f7000b849a2161c2`.
+P1 budget: 512 cumulative seconds, `within_cap`.

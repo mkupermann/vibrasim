@@ -3,7 +3,7 @@ from hashlib import sha256
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-ACTIVE_QUESTION = "V2-P1 P0 mechanism audit"
+ACTIVE_QUESTION = "No active scientific question"
 
 
 def read(path: str) -> str:
@@ -20,11 +20,12 @@ def test_vibrasim2_is_the_only_active_programme():
     assert "## Active programme (2026-09-05) — Vibrasim II" in read("CLAUDE.md")
     assert read("AGENTS.md") == read("CLAUDE.md")
     frontier = read("FRONTIER.md")
-    assert "## Active programme: Vibrasim II / P1" in frontier
-    assert "one active question" in frontier.lower()
-    assert "mechanism audit" in frontier.lower()
-    for path in ("AGENTS.md", "CLAUDE.md", "FRONTIER.md", "LOGBOOK.md"):
-        assert ACTIVE_QUESTION in read(path), path
+    assert "## Active programme: Vibrasim II — no open experiment" in frontier
+    assert "no active scientific question" in frontier.lower()
+    assert "closed `UNRESOLVED`" in frontier
+    for path in ("AGENTS.md", "CLAUDE.md", "FRONTIER.md"):
+        assert ACTIVE_QUESTION.lower() in read(path).lower(), path
+    assert "V2-P1 mechanism audit — **UNRESOLVED**" in read("LOGBOOK.md")
     for path in ("AGENTS.md", "CLAUDE.md", "FRONTIER.md"):
         current = read(path)
         assert "Active programme: belief path" not in current
