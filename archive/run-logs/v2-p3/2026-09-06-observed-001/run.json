@@ -1,0 +1,63 @@
+{
+  "experiment": "P3 engineering",
+  "cells": [
+    {
+      "id": "full-primary",
+      "arm": "full",
+      "dt": 0.02
+    },
+    {
+      "id": "no_feedback-primary",
+      "arm": "no_feedback",
+      "dt": 0.02
+    },
+    {
+      "id": "no_capture-primary",
+      "arm": "no_capture",
+      "dt": 0.02
+    },
+    {
+      "id": "drive_off-primary",
+      "arm": "drive_off",
+      "dt": 0.02
+    },
+    {
+      "id": "damaged-primary",
+      "arm": "damaged",
+      "dt": 0.02
+    },
+    {
+      "id": "full-half",
+      "arm": "full",
+      "dt": 0.01
+    },
+    {
+      "id": "no_feedback-half",
+      "arm": "no_feedback",
+      "dt": 0.01
+    },
+    {
+      "id": "no_capture-half",
+      "arm": "no_capture",
+      "dt": 0.01
+    },
+    {
+      "id": "drive_off-half",
+      "arm": "drive_off",
+      "dt": 0.01
+    },
+    {
+      "id": "damaged-half",
+      "arm": "damaged",
+      "dt": 0.01
+    },
+    {
+      "id": "full-repeat",
+      "arm": "full",
+      "dt": 0.02
+    }
+  ],
+  "registration": "5a0be722c25cc24ac3a20f667d8166c0ca485e1a8e20d0a76e1e31bffb3c61bb",
+  "core": "0c7669e1a38835ce86bda72d6c77c37d7a1c6cbe8aed23968ea30ba9d69fb1e0",
+  "started": 1788664734.5336826
+}

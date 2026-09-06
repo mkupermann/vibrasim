@@ -8935,3 +8935,22 @@ rule, integrator, timestep, horizon, constants, statistic or gate after this
 result would create a data-informed successor mechanism. I therefore do not
 rerun P2 and do not open P3. Vibrasim II stops here unless a future programme
 decision supplies a genuinely independent physical argument before new data.
+
+## 2026-09-06 — V2-P3 seeded open maintenance — PASS, engineering scope
+
+I authorised a narrower engineering construction rather than reopening P2.
+The new registration (`74bf299f`) supplies a six-site ring, external energy,
+local capture and finite-lived paid bonds. Implementation (`df9b2027`) passed
+the affected V2 suite before the single eleven-cell matrix was executed.
+
+P3 returned PASS in 144.325 seconds. Full and damaged late means were 6 live
+bonds; no_feedback 2; no_capture and drive_off 0. Primary damage recovery
+reached five bonds at t=42.14. Timestep agreement, energy ledger and exact
+reproduction held. A separate readback reproduced the stored verdict and
+hashes. See `docs/vibrasim2/P3_CLOSEOUT.md` for evidence and limitations.
+
+This is engineered maintenance, not emergence or organisational memory.
+The P3 observer was verified visibly during stepping and at completion. The
+earlier P2 display buffered whole trajectories and must not be described as
+live solver-step observation. No old dataset, gate or NULL/INCONCLUSIVE result
+was changed. No post-result tuning or next experiment was run.

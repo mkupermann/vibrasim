@@ -1,13 +1,46 @@
 # EQMOD
 
-## Update 2026-09-05 — Vibrasim II stops at P2, honestly
+## Update 2026-09-06 — a smaller, explicitly engineered question
+
+I have reopened the programme with P3, not reopened the P2 result. The new
+question is deliberately narrower: can a supplied six-site ring use an open
+energy flow to pay for local bond renewal and recover after damage?
+The ring, its candidate edges and its energy source are supplied. This is an
+engineering test, not spontaneous organisation, matter or consciousness.
+It is also not the organisational-memory milestone called P3 in the original
+charter. The numbered run and that milestone must not be conflated.
+
+The [P3 contract](docs/amendments/v2_p3_open_maintenance.md) fixes eleven cells,
+controls, timesteps and acceptance gates before data. Each step is recorded;
+the 3D observer receives flushed snapshots while computation is still running.
+Height represents site energy, point colour the local reservoir, orange lines
+live bonds and grey lines available candidates. The geometry is a display,
+not a claim about physical space. A replay is labelled REPLAY.
+
+**Result: PASS for this engineered maintenance test.** Late mean live-bond
+counts are 6 for full and damaged, 2 without feedback, and 0 without capture
+or after source shutdown. After damage at t=40, the system reaches five live
+bonds at t=42.14. The registered timestep and reproduction checks hold.
+This establishes a working construction under these rules, not an emergent
+organism or proof that the larger research goal will work.
+The [P3 closeout](docs/vibrasim2/P3_CLOSEOUT.md) records the scope and evidence;
+the [durable result](archive/run-logs/v2-p3/2026-09-06-observed-001/result.json)
+contains all cell metrics and raw-file hashes.
+
+P0 remains NULL, P1 UNRESOLVED and P2 INCONCLUSIVE. A negative or numerically
+unresolved result closes that experiment; it does not prove that all further
+questions are forbidden. The previous programme-wide stop was too broad.
+
+### Historical update 2026-09-05 — P2 closeout
 
 I tested a replacement foundation after P0 returned `NULL` and the P1 trace
 audit returned `UNRESOLVED`. P2 asked whether a closed local loop between field,
 matter, captured energy and finite-lived bonds buys more post-drive bond-time
 than matched broken-loop controls. I froze the mechanism, constants, 18-cell
-matrix and decision gates before generating P2 data, then watched persisted
-state through the same process-isolated 3D observer used for P0.
+matrix and decision gates before generating P2 data. Persisted state was
+displayed through the same process-isolated 3D observer used for P0. A later
+code inspection found that P2 computed a complete trajectory before publishing
+its frames; that display was not live observation of individual solver steps.
 
 The result is `INCONCLUSIVE`. Energy accounting, the zero-capture control and
 exact reproduction all held. The registered effect did not: aggregate
@@ -16,11 +49,12 @@ The half-step result was `-8.7125`, a relative change of about `0.483`, outside
 the frozen `0.20` convergence limit. Because numerical validity has precedence,
 this is not a clean NULL even though the effect points the wrong way.
 
-I am stopping here. I found no implementation or artifact defect that can be
+I stopped P2 here. I found no implementation or artifact defect that can be
 repaired without changing the scientific identity after seeing the result.
 Changing the timestep, event rule, integrator, constants or gate would be a new
-experiment fitted to this one. P3 is therefore not open. That is less exciting
-than a result, but more useful than manufacturing a ladder to P100.
+experiment informed by this one. This is not a reason to manufacture a ladder
+to P100. The independently registered engineering question above supersedes
+the earlier programme-wide stop, without changing P2's verdict.
 
 The frozen contract is
 [`docs/amendments/v2_p2_dynamic_maintenance.md`](docs/amendments/v2_p2_dynamic_maintenance.md),

@@ -4,10 +4,13 @@
 
 Bottom-up substrate simulator. Computational neuroscience / consciousness research. The goal is developing a deadlock-breaking process, not necessarily succeeding at the simulation.
 
-## Active programme (2026-09-05) — Vibrasim II
+## Active programme (2026-09-06) — Vibrasim II
 
-**No active scientific question.** V2-P2 is closed `INCONCLUSIVE`; no eligible
-repair, rerun, or P3 is authorised.
+**P3 seeded open maintenance is authorised as an engineering experiment.**
+Read `docs/amendments/v2_p3_open_maintenance.md` first. Michael authorised this
+new programme decision on 2026-09-06. It is not evidence for emergence or the
+organisational-memory rung. V2-P2 stays closed `INCONCLUSIVE`; no P2 rerun is
+authorised. P3 has one frozen eleven-cell run, no post-data retuning.
 
 Read first, in order:
 

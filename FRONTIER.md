@@ -1,9 +1,11 @@
 # FRONTIER — Vibrasim II
 
-## Active programme: Vibrasim II — stopped at P2
+## Active programme: Vibrasim II — P3 engineering experiment
 
-There is no active scientific question. V2-P2 is closed `INCONCLUSIVE`, with no
-admissible invariant-preserving repair identified and no rerun authorised.
+P3 asks whether a supplied ring can fund its local renewal through open energy
+transport, lose that ability under controls, and recover after damage.
+The frozen contract is `docs/amendments/v2_p3_open_maintenance.md`.
+V2-P2 remains closed `INCONCLUSIVE`, with no rerun authorised.
 
 P0 returned `NULL`. P1 found no registered time-structure candidate and could
 not classify the channel as uniformly weak because one source reached a
@@ -29,6 +31,12 @@ failed the frozen `0.20` convergence gate. The ordered verdict is therefore
 
 ## Current state
 
+- P3 completed all eleven cells: `PASS` for engineered open maintenance only.
+  Full/damaged late means 6, no_feedback 2, no_capture/drive_off 0; primary
+  damage recovery t=42.14. See `docs/vibrasim2/P3_CLOSEOUT.md`.
+- No experiment is currently computing. The P3 observer shows COMPLETE PASS;
+  replay is available explicitly. Removing the supplied candidate topology
+  would be a new, separately registered question, not an established result.
 - P0 completed `NULL` with all 30 registered cells and a verified digest.
 - P1 completed `UNRESOLVED` under its frozen post-data analysis plan.
 - P2 completed all 18 registered cells with verified scientific digest
@@ -37,9 +45,9 @@ failed the frozen `0.20` convergence gate. The ordered verdict is therefore
   hold; energy, negative control and reproduction did hold.
 - The visual layer is an observer of persisted state, not evidence and not a
   claim that the wireframe is physical 3D space.
-- No P2 rerun or P3 is authorised. Any future restart requires a genuinely new
-  physical argument and a fresh pre-data programme decision, not threshold
-  changes or mining P2.
+- Michael authorised P3 on 2026-09-06 as an explicitly engineered transport
+  model, not a physical emergence claim or a repair of P2. No parameter search
+  or automatic escalation to P100 is authorised by this experiment.
 
 ## Preserved history
 

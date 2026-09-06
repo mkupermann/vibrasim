@@ -3,7 +3,7 @@ from hashlib import sha256
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-ACTIVE_QUESTION = "No active scientific question"
+ACTIVE_QUESTION = "P3"
 
 
 def read(path: str) -> str:
@@ -16,12 +16,12 @@ def canonical_lf_bytes(path: str) -> bytes:
 
 
 def test_vibrasim2_is_the_only_active_programme():
-    assert "## Active programme (2026-09-05) — Vibrasim II" in read("AGENTS.md")
-    assert "## Active programme (2026-09-05) — Vibrasim II" in read("CLAUDE.md")
+    assert "## Active programme (2026-09-06) — Vibrasim II" in read("AGENTS.md")
+    assert "## Active programme (2026-09-06) — Vibrasim II" in read("CLAUDE.md")
     assert read("AGENTS.md") == read("CLAUDE.md")
     frontier = read("FRONTIER.md")
-    assert "## Active programme: Vibrasim II — stopped at P2" in frontier
-    assert "no active scientific question" in frontier.lower()
+    assert "## Active programme: Vibrasim II — P3 engineering experiment" in frontier
+    assert "no rerun authorised" in frontier.lower()
     assert "closed `INCONCLUSIVE`" in frontier
     for path in ("AGENTS.md", "CLAUDE.md", "FRONTIER.md"):
         assert ACTIVE_QUESTION.lower() in read(path).lower(), path
