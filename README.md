@@ -1,8 +1,41 @@
 # VibraSim
 
-Research software for studying memory and learning in simulated physical systems.
+A bottom-up learning experiment, and a public record of working through problems
+without a familiar playbook.
 
-## Why VibraSim exists
+## Why I started this
+
+I started VibraSim by deliberately choosing a problem far outside my expertise.
+After thirty years of consulting, software architecture and technical work, I
+have familiar ways of getting past a deadlock. I wanted to find out how I work
+when those shortcuts are no longer available.
+
+The question I chose was ambitious: could a learning, brain-like system grow
+from a simulated world of simple interacting elements? I did not come to it as a physicist, chemist or neuroscientist. That
+unfamiliarity was part of the reason for choosing it. It forces me to read, make
+my assumptions explicit and discover where my explanations stop matching what
+actually happens.
+
+VibraSim is a **sandbox I can think against**. When a run does not converge, or a
+plausible idea fails its controls, the work is to find a better question and an
+experiment that can answer it. The deadlocks are part of what I came here to
+study: how to proceed when confidence, experience and more computation are not
+enough.
+
+The learning system gives this investigation a concrete target. The reason I
+began with such an unlikely target was to develop a reusable way of tackling
+difficult problems: the research discipline,
+software tools, AI-assisted workflows and orchestration patterns developed along
+the way. Those methods can be useful in engineering and business even if the
+simulation never reaches its most ambitious goal. That possibility does not
+reduce the standard of evidence required for claims about the simulator.
+
+I document the work publicly so that others can inspect both: what the model
+actually does, and how the investigation responds when it fails. The
+[experiment history](LOGBOOK.md), [reusable patterns](docs/patterns/)
+and [implementation](world/) are parts of the same project.
+
+## The research question
 
 VibraSim asks whether experience can become part of a material: whether sound,
 images and eventually text can change local bonds so that later cues produce
