@@ -1,0 +1,9 @@
+{
+  "scope": "Saved synthetic inputs and aggregate history; reconstructed equilibrium response from final state. No learning updates.",
+  "source_result": "archive/run-logs/mm1/20260912-024636-605403/result.json",
+  "state": "arms/trained is the final post-hold matrix; no additional retention decay applied",
+  "compared_retained_trials": 9,
+  "maximum_similarity_discrepancy": 0.0,
+  "individual_training_bond_trajectories_available": false,
+  "duration_seconds": 32
+}

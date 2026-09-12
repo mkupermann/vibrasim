@@ -1,0 +1,644 @@
+[
+  {
+    "segment": {
+      "start": 0.0,
+      "end": 8.0,
+      "phase": "teaching",
+      "piece": 0
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 2465,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "sham-00.npz",
+    "sha256": "a5d23de8cc58a8618664b71e74cd40da7c673bfcf79a224233401073bad87121"
+  },
+  {
+    "segment": {
+      "start": 8.0,
+      "end": 16.0,
+      "phase": "teaching",
+      "piece": 1
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 2465,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "sham-01.npz",
+    "sha256": "a7759895db770c877a50e515ab0b99812b797459dc0fd1ad276c38f8dfdea44d"
+  },
+  {
+    "segment": {
+      "start": 16.0,
+      "end": 36.0,
+      "phase": "hold",
+      "piece": 0
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 6065,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "sham-02.npz",
+    "sha256": "1c794fab5f9cfbaa31d9b61c05ac22929183b77b760d978cd1267d73c34bbeba"
+  },
+  {
+    "segment": {
+      "start": 36.0,
+      "end": 38.0,
+      "phase": "read",
+      "piece": 0,
+      "cycle": 1
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 641,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "sham-03.npz",
+    "sha256": "669ba601a79d33241eaacb7110e0a93acc5ee8add4da22941341c4f9b2092200"
+  },
+  {
+    "segment": {
+      "start": 38.0,
+      "end": 44.0,
+      "phase": "read",
+      "piece": 1,
+      "cycle": 1
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 1817,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "sham-04.npz",
+    "sha256": "b0969c49863b23ef9574b12706fd3acea4282b32f10db0abccbaca4cfec0bf7b"
+  },
+  {
+    "segment": {
+      "start": 44.0,
+      "end": 46.0,
+      "phase": "read",
+      "piece": 2,
+      "cycle": 1
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 716,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "sham-05.npz",
+    "sha256": "89def8bee478ba7f538548f1b06e0b088074e7cf1042163402da170b9a824c85"
+  },
+  {
+    "segment": {
+      "start": 46.0,
+      "end": 56.0,
+      "phase": "read",
+      "piece": 3,
+      "cycle": 1
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 3017,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "sham-06.npz",
+    "sha256": "bfe3a05ce70e91b0adc6e13210fe31901fe11a3c99cf0bd94de009ae31a5478b"
+  },
+  {
+    "segment": {
+      "start": 56.0,
+      "end": 58.0,
+      "phase": "read",
+      "piece": 0,
+      "cycle": 2
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 617,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "sham-07.npz",
+    "sha256": "557af1dfb6a0f7c07f7626c5d8c97df9e977de96794e25abab94c59d81d71376"
+  },
+  {
+    "segment": {
+      "start": 58.0,
+      "end": 64.0,
+      "phase": "read",
+      "piece": 1,
+      "cycle": 2
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 1817,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "sham-08.npz",
+    "sha256": "a497c8c597175d14225b3ba3ac71f8b8b1670dfe2041bc0db7395e4e7f7f908f"
+  },
+  {
+    "segment": {
+      "start": 64.0,
+      "end": 66.0,
+      "phase": "read",
+      "piece": 2,
+      "cycle": 2
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 692,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "sham-09.npz",
+    "sha256": "c43d14c7659c5ad0ac83fc67e4da6b349501fd436d0769c3aaa36ea485d651b3"
+  },
+  {
+    "segment": {
+      "start": 66.0,
+      "end": 76.0,
+      "phase": "read",
+      "piece": 3,
+      "cycle": 2
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 3017,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "sham-10.npz",
+    "sha256": "7c033f45e38a3ee3c1d4a1d7a59b5120934e82074c7d91d03c6f78bc82fb10ba"
+  },
+  {
+    "segment": {
+      "start": 76.0,
+      "end": 78.0,
+      "phase": "read",
+      "piece": 0,
+      "cycle": 3
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 617,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "sham-11.npz",
+    "sha256": "68881d96bb6e0ca6546e0b4586febdc7b874dfaea02bf5cd0d6b6a0672ce0744"
+  },
+  {
+    "segment": {
+      "start": 78.0,
+      "end": 84.0,
+      "phase": "read",
+      "piece": 1,
+      "cycle": 3
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 1817,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "sham-12.npz",
+    "sha256": "423769163fdcaa4e0a260ce86997c6935d1ac0485fc2b0ab5c80b5985d01d88b"
+  },
+  {
+    "segment": {
+      "start": 84.0,
+      "end": 86.0,
+      "phase": "read",
+      "piece": 2,
+      "cycle": 3
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 692,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "sham-13.npz",
+    "sha256": "0095a7aa1ae621b30d3ea4d46b90e8a7ea8e620d67bde85588bbec4b8e8d33ff"
+  },
+  {
+    "segment": {
+      "start": 86.0,
+      "end": 96.0,
+      "phase": "read",
+      "piece": 3,
+      "cycle": 3
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 3017,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "sham-14.npz",
+    "sha256": "b26e597655d352bb425129ddaa5c6af2f19c3588684cae43891f9fc561144d59"
+  },
+  {
+    "segment": {
+      "start": 96.0,
+      "end": 98.0,
+      "phase": "read",
+      "piece": 0,
+      "cycle": 4
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 617,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "sham-15.npz",
+    "sha256": "fe0406752a8f555f75fb4465d224d84eddf0de748ad04c696facfca1b6c7fc0e"
+  },
+  {
+    "segment": {
+      "start": 98.0,
+      "end": 104.0,
+      "phase": "read",
+      "piece": 1,
+      "cycle": 4
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 1817,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "sham-16.npz",
+    "sha256": "677e622ad9437f9492b0bae74604633084c26ebecfc70160921d4b5f21304a82"
+  },
+  {
+    "segment": {
+      "start": 104.0,
+      "end": 106.0,
+      "phase": "read",
+      "piece": 2,
+      "cycle": 4
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 728,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "sham-17.npz",
+    "sha256": "941166220fb9be9ac654258e750513f28cc3b7835037f10de9f2451eb7e11b83"
+  },
+  {
+    "segment": {
+      "start": 106.0,
+      "end": 116.0,
+      "phase": "read",
+      "piece": 3,
+      "cycle": 4
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 3017,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "sham-18.npz",
+    "sha256": "8a4a8df2e34ef5a22516d18acc6d0ac14ba93fae2bcf8b38523c3a087f2fee9a"
+  },
+  {
+    "segment": {
+      "start": 116.0,
+      "end": 118.0,
+      "phase": "read",
+      "piece": 0,
+      "cycle": 5
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 617,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "sham-19.npz",
+    "sha256": "d0605c11ec2acbc4a15ecf291b2b358135500740734dc092566258f91579eb4b"
+  },
+  {
+    "segment": {
+      "start": 118.0,
+      "end": 124.0,
+      "phase": "read",
+      "piece": 1,
+      "cycle": 5
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 1817,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "sham-20.npz",
+    "sha256": "71221b2699939033bf99ee920093cfcd32c417b9f58c9b2fa93c8083d4930177"
+  },
+  {
+    "segment": {
+      "start": 124.0,
+      "end": 126.0,
+      "phase": "read",
+      "piece": 2,
+      "cycle": 5
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 704,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "sham-21.npz",
+    "sha256": "fd5f4870a7987cc562e0b42d1a01160bf99f872fc10bf305295a2f9a5258d3e7"
+  },
+  {
+    "segment": {
+      "start": 126.0,
+      "end": 136.0,
+      "phase": "read",
+      "piece": 3,
+      "cycle": 5
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 3017,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "sham-22.npz",
+    "sha256": "46c0a6e2c6efae80f439d0b845afd403c88a1509e2be99f6e6614cced211e15b"
+  },
+  {
+    "segment": {
+      "start": 136.0,
+      "end": 138.0,
+      "phase": "read",
+      "piece": 0,
+      "cycle": 6
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 617,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "sham-23.npz",
+    "sha256": "37a0b70aa6d8f063026799cada52ea5a64a53085139ec16a7eb74009d3e6a2cb"
+  },
+  {
+    "segment": {
+      "start": 138.0,
+      "end": 144.0,
+      "phase": "read",
+      "piece": 1,
+      "cycle": 6
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 1817,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "sham-24.npz",
+    "sha256": "bf6601df49671a8bcaab48cf1b65337a593c3258f2b7b3508274f59da9893ab6"
+  },
+  {
+    "segment": {
+      "start": 144.0,
+      "end": 146.0,
+      "phase": "read",
+      "piece": 2,
+      "cycle": 6
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 701,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "sham-25.npz",
+    "sha256": "63f60354015b71b23e5529628abec9b770cda9081757e0b19674bd8454ad03b3"
+  },
+  {
+    "segment": {
+      "start": 146.0,
+      "end": 156.0,
+      "phase": "read",
+      "piece": 3,
+      "cycle": 6
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 3017,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "sham-26.npz",
+    "sha256": "100b878a91cc7d2c7245b67eb26e88f53571abae6af459e9d3b728ca3df31ad2"
+  },
+  {
+    "segment": {
+      "start": 156.0,
+      "end": 158.0,
+      "phase": "read",
+      "piece": 0,
+      "cycle": 7
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 617,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "sham-27.npz",
+    "sha256": "467d67a1c027822504de1d5637df45b4fa5a9912232c9868bd8b44a5fe1d7080"
+  },
+  {
+    "segment": {
+      "start": 158.0,
+      "end": 164.0,
+      "phase": "read",
+      "piece": 1,
+      "cycle": 7
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 1817,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "sham-28.npz",
+    "sha256": "703b2f8fc8e073a506c67eabfbda9a02188a100f11bf2e8ea300e2eaf19b4026"
+  },
+  {
+    "segment": {
+      "start": 164.0,
+      "end": 166.0,
+      "phase": "read",
+      "piece": 2,
+      "cycle": 7
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 701,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "sham-29.npz",
+    "sha256": "73dfe30d884d20d46911bcf245752221990766e1dd21b46825a69157b3f7b6ec"
+  },
+  {
+    "segment": {
+      "start": 166.0,
+      "end": 176.0,
+      "phase": "read",
+      "piece": 3,
+      "cycle": 7
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 3017,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "sham-30.npz",
+    "sha256": "5c5e03699d189ed391300e67253a1882b58ca5b1b93bb1685134b73f9d6ef27e"
+  },
+  {
+    "segment": {
+      "start": 176.0,
+      "end": 178.0,
+      "phase": "read",
+      "piece": 0,
+      "cycle": 8
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 617,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "sham-31.npz",
+    "sha256": "3245a4bcc2cba5d39ce01566ab31a668250c71d43ebe4decb1b54a9176e561af"
+  },
+  {
+    "segment": {
+      "start": 178.0,
+      "end": 184.0,
+      "phase": "read",
+      "piece": 1,
+      "cycle": 8
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 1817,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "sham-32.npz",
+    "sha256": "bf31ef3d3847d3316fce5b3c873c590804bed5fab577ea7e6423cbfce060c940"
+  },
+  {
+    "segment": {
+      "start": 184.0,
+      "end": 186.0,
+      "phase": "read",
+      "piece": 2,
+      "cycle": 8
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 653,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "sham-33.npz",
+    "sha256": "4f98569d00311b84c3532644455158fdb703fbcad8f2c107fbf38069c5259911"
+  },
+  {
+    "segment": {
+      "start": 186.0,
+      "end": 196.0,
+      "phase": "read",
+      "piece": 3,
+      "cycle": 8
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 3017,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "sham-34.npz",
+    "sha256": "11e83d18de4a49d2553c9639656db1b297c21bc6559b3da15b9baa674031199e"
+  },
+  {
+    "segment": {
+      "start": 196.0,
+      "end": 198.0,
+      "phase": "read",
+      "piece": 0,
+      "cycle": 9
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 617,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "sham-35.npz",
+    "sha256": "13b3bd91c254b6c5c54cb8d547a7c27e5a194905cc2d9440766b7206ea730be3"
+  },
+  {
+    "segment": {
+      "start": 198.0,
+      "end": 204.0,
+      "phase": "read",
+      "piece": 1,
+      "cycle": 9
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 1817,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "sham-36.npz",
+    "sha256": "0169e03e4289f6a0ac87b9e67e9df65f6f5e3ac624c2e44763791f71728373df"
+  },
+  {
+    "segment": {
+      "start": 204.0,
+      "end": 206.0,
+      "phase": "read",
+      "piece": 2,
+      "cycle": 9
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 701,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "sham-37.npz",
+    "sha256": "dc370027be8964fbda44a51c7a16ba3642d86c97c9b9c9edd7cbdaec430248e9"
+  },
+  {
+    "segment": {
+      "start": 206.0,
+      "end": 216.0,
+      "phase": "read",
+      "piece": 3,
+      "cycle": 9
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 3017,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "sham-38.npz",
+    "sha256": "fafbdb04b8fe3bb4bd3ab0689b7428cf9a26064a9f717b38c30a8c5af075bf79"
+  },
+  {
+    "segment": {
+      "start": 216.0,
+      "end": 218.0,
+      "phase": "read",
+      "piece": 0,
+      "cycle": 10
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 617,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "sham-39.npz",
+    "sha256": "612ddfd2f7b1ebc0be41dd5185fe6e855ef5f4ff3afa77d80cab916945c607cf"
+  },
+  {
+    "segment": {
+      "start": 218.0,
+      "end": 224.0,
+      "phase": "read",
+      "piece": 1,
+      "cycle": 10
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 1817,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "sham-40.npz",
+    "sha256": "544415923e14e4f94ea2fa4497ba3f6a0bd5f3211f2181586f581e2cc9457b8e"
+  },
+  {
+    "segment": {
+      "start": 224.0,
+      "end": 226.0,
+      "phase": "read",
+      "piece": 2,
+      "cycle": 10
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 725,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "sham-41.npz",
+    "sha256": "ae16754f064d0542e30ace365ff287983a4b367349cfbea5055b3ea31d4aea24"
+  },
+  {
+    "segment": {
+      "start": 226.0,
+      "end": 236.0,
+      "phase": "read",
+      "piece": 3,
+      "cycle": 10
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 3017,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "sham-42.npz",
+    "sha256": "db7ecfaf8e884b1e637585b1b6b7144a03cc808cd3b8520391b2946cf87d22a9"
+  }
+]
