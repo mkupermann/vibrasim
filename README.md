@@ -2,10 +2,24 @@
 
 Research software for studying memory and learning in simulated physical systems.
 
-VibraSim investigates whether local changes in material properties and bonds can
-store experience and produce useful responses to later inputs. The long-term
-question is learning from sensory streams without replacing the material with a
-trained classifier or language model.
+## Why VibraSim exists
+
+VibraSim asks whether experience can become part of a material: whether sound,
+images and eventually text can change local bonds so that later cues produce
+useful responses from the same physical system. The aim is to make storage,
+adaptation and recall consequences of material dynamics, with measurable energy
+costs and persistence.
+
+The underlying idea is that a learning system's structure should carry its
+history. Sensory input perturbs the substrate; local interactions change it;
+those changes influence what happens the next time a signal arrives. The research
+question is whether this can grow beyond simple memory into associations that
+remain useful on new experiences, without a classifier supplying the answers.
+
+This motivates the bottom-up approach: investigate the intermediate steps from
+interacting elements and bonds to persistent memory, selective responses and
+continued learning. Engineered sensors and boundary conditions are stated
+explicitly. The behavior attributed to learning must be measured in the substrate.
 
 **Current evidence:** controlled fixtures show local memory and finite changes in
 mechanical input preference. The tested real-audio and audiovisual transfer tasks
@@ -18,6 +32,41 @@ an open research objective.
 Right: mechanical preference reverses in a guided reference model; its separate
 return-to-rest requirement fails at every endpoint. These are different experiments
 and do not form a combined learning score.*
+
+## Learning from sound and video
+
+The audiovisual experiments make the idea concrete: expose the system to paired
+images and sound, retain the resulting spring state, then present sound alone
+and inspect the unforced visual response. The image shown to a viewer during an
+audio-only test is a reference; it is not supplied to the learner.
+
+[![Saved synthetic audiovisual experiment replay](docs/research/2026-09/audiovisual-replay.gif)](docs/research/2026-09/audiovisual-replay.mp4)
+
+[Watch the replay with sound](docs/research/2026-09/audiovisual-replay.mp4).
+This is a replay of saved **synthetic** inputs and measured aggregate spring
+history from MM1, followed by a reconstructed frozen-equilibrium readout from the
+saved final state. It is not a recording of individual bonds forming or a new
+training run. The full 18-second exposure, 5-second hold and nine audio-only
+probes are represented. The animation is silent; the linked MP4 includes audio.
+
+![Synthetic association, bell-video diagnostic and real-video transfer results](docs/research/2026-09/audiovisual-results.png)
+
+- **Synthetic audio–image association (MM1):** the engineered spring fixture
+  associated three shapes with three tones. Trained and retained conditions scored
+  9/9; frozen and erased controls received chance credit. This establishes the
+  designed association mechanism on that task.
+- **Bell video (MM2):** a separate bell Short was tested against saved memory.
+  Similarity to the previous bell image increased from 0.802 to 0.919, but that
+  image already ranked first before exposure. This is a diagnostic observation,
+  not proof of recognizing bells. [Source video](https://www.youtube.com/shorts/DLTbO3b6eLM)
+- **Transfer between real recordings (MM3):** six training recordings and three
+  test recordings did not produce useful scene retrieval. All conditions remained
+  at 1/3. The small, confounded dataset also limits the conclusion.
+
+The positive synthetic result and the negative real-video result answer different
+questions. Repeated video playback can change the instrument's springs; reliable
+learning from real video has not yet been demonstrated.
+[Video-experiment methods and replay provenance](docs/research/2026-09/REPORT.md#audiovisual-experiments-and-replay)
 
 ## What is implemented
 

@@ -1,5 +1,5 @@
 {
-  "description": "SHA-256 of published saved evidence. Numerical measurements unchanged; two internal review-routing fields omitted as listed. Not a fresh execution or independent replication.",
+  "description": "SHA-256 of published saved evidence. Numerical measurements unchanged; metadata omissions/path normalization listed explicitly. Not a fresh execution or independent replication.",
   "files": {
     "archive/run-logs/g183/first/canonical-church_bells-before.npz": "adf2811e9b720a9d23ee578b378049389463e2c3833662d583a3c8a1831aed1e",
     "archive/run-logs/g183/first/canonical-church_bells-exposed.npz": "45342ad3e8dc057d2b551fab9f72750091c96ebb1a2eb8ea6e521ccdfaf93a67",
@@ -1296,7 +1296,36 @@
     "archive/run-logs/mm3/20260912-first/progress.json": "d5a2671499f5e0dfde017d52139808e11bbcc349976da53e82298b21985aeb90",
     "archive/run-logs/mm3/20260912-first/result.json": "df4b70ee242218874bd650bce7ac466237cdf1941f5d28937e10c28664277080",
     "archive/run-logs/g185/repaired/result.json": "32b9817dabc06e87617eb4abfefc758e4b81a18dc3c48edc12d7e0e327034573",
-    "archive/run-logs/g185/first/FAILED.json": "bb25a0edae5e89717f3bcb268bf954caef6c02e57a08de86d1ce7b2b14741529"
+    "archive/run-logs/g185/first/FAILED.json": "bb25a0edae5e89717f3bcb268bf954caef6c02e57a08de86d1ce7b2b14741529",
+    "archive/run-logs/mm1/20260912-024636-605403/result.json": "fb5da56f8b62c68191402044773c2c25391e2b58515a0d5ad0c8aa952c943b44",
+    "archive/run-logs/mm1/20260912-024636-605403/test-000.npz": "7aa44d39930398b7932479f7416a60771204690b5b18eefeab5f6217e9200125",
+    "archive/run-logs/mm1/20260912-024636-605403/test-001.npz": "7e165b1d897f4d9bb775f30f4220a7e6df62a553eefdf7123f0783dace739bfb",
+    "archive/run-logs/mm1/20260912-024636-605403/test-002.npz": "996f7a28a622230b7f92d1e25204208cf458506153b52c5c66a8599338beb41a",
+    "archive/run-logs/mm1/20260912-024636-605403/test-003.npz": "0dc1b3e28e7be35bc7c64befca522e647bd025c2ce09e6f50e9a55e4a313a316",
+    "archive/run-logs/mm1/20260912-024636-605403/test-004.npz": "061ac18d333c9346a0b708552dd3317b365731494b6cd05483b61b39f99d8762",
+    "archive/run-logs/mm1/20260912-024636-605403/test-005.npz": "95165deafb73bacf059f9078f8e1085806cc790f3a17423265b41c518af414da",
+    "archive/run-logs/mm1/20260912-024636-605403/test-006.npz": "b446279495b09d9611db24e04902a55e4244f118078c950c0a545cc888e80c34",
+    "archive/run-logs/mm1/20260912-024636-605403/test-007.npz": "5c93ad4c2d7ec776db6a7716512063e469f1dd2d6005e505cdf918e4986a40d7",
+    "archive/run-logs/mm1/20260912-024636-605403/test-008.npz": "c40fb3003535e9385898896f1506c4bf58b773a84247856366fe16e37c2f4d1d",
+    "archive/run-logs/mm1/20260912-024636-605403/train-000.npz": "dd626a30a9ea9f99b3e1328aa2822fbd16988d97471e2d00c4987a83fff3db85",
+    "archive/run-logs/mm1/20260912-024636-605403/train-001.npz": "771d34d4c73aa38b8e1e5b580e8383bf6646e6de9c10a0c81b1ae3a159964426",
+    "archive/run-logs/mm1/20260912-024636-605403/train-002.npz": "95e5543ff433ef3584156b14d3ae2587c2e1b2f309dd11c2d3ca8253a918ce27",
+    "archive/run-logs/mm1/20260912-024636-605403/train-003.npz": "e9129c64cd9865d39144305735206339aa94d3f5969d84cd79190e3fabfce39c",
+    "archive/run-logs/mm1/20260912-024636-605403/train-004.npz": "ec033e48498d17a65e87566ace5df3d8d1b43803c8464d5a89b785c791453908",
+    "archive/run-logs/mm1/20260912-024636-605403/train-005.npz": "cb8c0fd9220457188e23a32d3089632f2af6ac927cf054fc7bd9a4f7cdf3ad03",
+    "archive/run-logs/mm1/20260912-024636-605403/train-006.npz": "50af9be1e652e068b56cc86f190cbf88c01282d8ba5131e11ce1321166284378",
+    "archive/run-logs/mm1/20260912-024636-605403/train-007.npz": "2e60dddf2d8adc558d8d8618ce09f7030c73780ab09cae1240f8ada8a02619cc",
+    "archive/run-logs/mm1/20260912-024636-605403/train-008.npz": "d0725cf43542c4724975b85a5136dbd44a350df176f19fb094c6c9839682de8b",
+    "archive/run-logs/mm1/20260912-024636-605403/train-009.npz": "2416c69d8d0568fe993a66d0067190da03bb509bc89c9c66883b9902d266f340",
+    "archive/run-logs/mm1/20260912-024636-605403/train-010.npz": "d5ee296681c6b9f405e3ddc142e1446c9c4231aff9e2c8dbf6489ed7afee0bd1",
+    "archive/run-logs/mm1/20260912-024636-605403/train-011.npz": "680ddf5eab8237d9ab68aa3ec3bde1200eb041cc330ba9f8cfe9f54cb57b7cbf",
+    "archive/run-logs/mm1/20260912-024636-605403/train-012.npz": "593f2c25251ef279bd295efabe6d60bd2bd3d772dd2208ff0f35f75730e2bd85",
+    "archive/run-logs/mm1/20260912-024636-605403/train-013.npz": "368120d5406d62523bd003e9abd4d22cd47fe8ccea2e1e73a304313f6162636a",
+    "archive/run-logs/mm1/20260912-024636-605403/train-014.npz": "be686e56b9f35f8682964b83002b1e30f55f6456f1fbfc2700104c73081c004f",
+    "archive/run-logs/mm1/20260912-024636-605403/train-015.npz": "6f7fad5e1092de938cc9fb4740c967df76dc88de89aebade53a9e6baba97ebb5",
+    "archive/run-logs/mm1/20260912-024636-605403/train-016.npz": "ebbb9af90503ef4e1753ced288654224f1295f2012244e405466db15211067a1",
+    "archive/run-logs/mm1/20260912-024636-605403/train-017.npz": "d1e856c84633ebc13001575133ca71d048be2e03bc57255458ad0a2e06f14db7",
+    "archive/run-logs/mm2/20260912-030202-607396/result.json": "aff8a4cf9f07f8b06a8bb145ac2744787d668c338066f7dbf9fb97a769451b83"
   },
   "metadata_omissions": {
     "archive/run-logs/g189/first/result.json": {
@@ -1308,6 +1337,17 @@
       "original_sha256": "0b3f29105706c370c0bf8aeb166db8f4a8cd4617c106dd6d69fec1a8d402bd06",
       "omitted_json_pointer": "/provenance/seal/review",
       "reason": "Internal review routing note; all measurements unchanged."
+    },
+    "archive/run-logs/mm2/20260912-030202-607396/result.json": {
+      "original_sha256": "02e4fa0cc725f01404792038272afaca2c73b9ec9007258b5697fba806bf17bd",
+      "reason": "Absolute workstation prefixes removed from checkpoint provenance; referenced MM2 checkpoint is not included. Numerical results unchanged.",
+      "modified_json_pointers": [
+        "/checkpoint",
+        "/candidate_provenance/0/checkpoint",
+        "/candidate_provenance/1/checkpoint",
+        "/candidate_provenance/2/checkpoint",
+        "/candidate_provenance/3/checkpoint"
+      ]
     }
   }
 }

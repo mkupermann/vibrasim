@@ -162,7 +162,8 @@ a valid evaluation across independent recordings.
 ## Evidence release and verification
 
 The [manifest](evidence-manifest.json) records SHA-256 hashes for the published saved
-measurements. Two internal review-routing fields were omitted from JSON metadata;
+measurements. Internal review-routing fields were omitted and absolute checkpoint provenance paths were
+normalized in JSON metadata;
 the manifest lists their locations and original file hashes. Numerical values and
 trajectory files are unchanged. The G183, G189 and G191 packages include numerical snapshots or
 trajectories as well as reported measurements. A separate read-only audit during
@@ -186,3 +187,46 @@ Provenance in the original JSON includes local
 experimental revision hashes; those revisions and all their dependencies are not
 part of this documentation branch. File integrity, arithmetic reproducibility,
 experimental replication and scientific generalization are different claims.
+
+
+## Audiovisual experiments and replay
+
+**MM1** is a deliberately engineered synthetic association task: 18 one-second
+paired exposures, a five-second silent hold, and nine one-second audio-only
+probes. Saved results are trained=1, retained=1, frozen=1/3, erased=1/3 and
+shuffled=0. Scores are fixed forced-choice credit, including fractional tie credit,
+not probabilities of understanding. The learner does not receive candidate labels.
+
+The [replay](audiovisual-replay.mp4) uses the saved synthetic train/test arrays and
+measured aggregate spring-strength history. Individual training-time bond states
+were not recorded and are not invented for this visualization. During the probe
+phase, the visual output is reconstructed with the archived fixed spectral encoder
+and final trained spring matrix using its declared equilibrium formula. No spring
+updates or new learning runs occur. The displayed reference image is observer-only
+during probes. The video has no claim to real-world video generalization.
+
+[MM1 saved result](../../../archive/run-logs/mm1/20260912-024636-605403/result.json)
+
+**MM2** tested a real bell Short against a different saved checkpoint. Mean cosine
+similarity to the previous bell image was approximately 0.919 after bell exposure
+and 0.802 before it. Both memories ranked that candidate first; erased memory
+produced a four-way tie. The distractors and single-video scope do not support a
+recognition claim. The checkpoint path is normalized in this release, but that
+separate checkpoint and the copyrighted input video are not distributed here.
+The saved result supports the reported diagnostic values, not a full replay.
+
+[MM2 saved result](../../../archive/run-logs/mm2/20260912-030202-607396/result.json) ·
+[Original bell video](https://www.youtube.com/shorts/DLTbO3b6eLM)
+
+**MM3**, described above, is the real-recording transfer test and remains NULL.
+Together these studies distinguish an implemented engineered association from
+unproven transfer to real video. They do not demonstrate that World autonomously
+assembles an audiovisual learner from its local physical primitives.
+
+To regenerate the audiovisual figures and synthetic replay from saved evidence:
+
+```sh
+uv run python tools/render_audiovisual_evidence.py
+```
+
+This additionally requires `ffmpeg` on PATH. No new training is performed.
