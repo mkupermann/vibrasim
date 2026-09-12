@@ -1,0 +1,9 @@
+{
+  "experiment": "G189",
+  "state": "completed_evidence",
+  "scope": "known local-aging reference; no multimodal learning claim",
+  "updated_unix": 1789247364.7362785,
+  "verdict": "REFERENCE_COMPLETE",
+  "rhs_evaluations": 501923,
+  "completed_segments": 301
+}

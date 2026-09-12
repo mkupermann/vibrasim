@@ -1,495 +1,113 @@
-# EQMOD
+# VibraSim
 
-I have decided to challenge myself with a topic I have no background knowledge of. Why? In order to face challenges and unknown boundaries I picked the most far-fetched topic I could have imagined. The idea behind that is to create a process for solving problems which are in general unsolvable. I decided to go down this path to enhance the way I approach deadlocks.
+Research software for studying memory and learning in simulated physical systems.
 
----
+VibraSim investigates whether local changes in material properties and bonds can
+store experience and produce useful responses to later inputs. The long-term
+question is learning from sensory streams without replacing the material with a
+trained classifier or language model.
 
-## Active programme (since 2026-07-19): the belief path
+**Current evidence:** controlled fixtures show local memory and finite changes in
+mechanical input preference. The tested real-audio and audiovisual transfer tasks
+have not demonstrated reliable recognition. Autonomous multimodal learning remains
+an open research objective.
 
-The active research question is the belief ladder — vibrations → field → binding →
-matter → collections → talent → brain — under sharp pre-registration discipline.
-Charter: `docs/BELIEF_PATH.md` · operating rules: `docs/DISCIPLINE_SHARP.md` ·
-live board: `FRONTIER.md`. Status: rungs A (field→bind) and B (molecules carry
-information) PASS under locked bars; rung C (collections get talent from free shared
-physics) is CLOSED PARTIAL after C1–C79 NULLs — engineered ILW ports specialise
-collections perfectly, free chemistry does not (CONCEPT §4.8 names this honestly);
-the brain rung is blocked until that changes. Adjacent tracks (VSA/reservoir, Brian2,
-SA/CIM, autopilot BET sweeps) are archive, not this path.
+![Measured effects and unmet criteria in two representative experiments](docs/research/2026-09/evidence.png)
 
-## Update — what this is and what not
+*Left: only one of three required audio-selectivity contrasts clears its threshold.
+Right: mechanical preference reverses in a guided reference model; its separate
+return-to-rest requirement fails at every endpoint. These are different experiments
+and do not form a combined learning score.*
 
-On the science side, what I built is a sandbox I can think against. It is not "verified emergence". The words I picked — vibration, electron, atom, molecule, bridge — are labels for abstract nodes that follow rules I wrote myself, one parameter at a time. They are not the physics they sound like. I keep the names because renaming them in the middle of all this would be its own kind of dishonesty, but I want to be the one to say out loud that they are nomenclature, not ontology.
+## What is implemented
 
-The five markers I picked are low bars. I built the substrate to clear them. They are `len(self_model) ≥ 2`, `workspace_winner > 0`, `prediction error in (0,1)`, `btsp_potentiation drifted by 0.5`, and `n_patterns_now > n_patterns_at_start`. The matched negative-control run helps a little (without trained engrams the markers do not fire), but a low bar that passes a fair control is still a low bar. I corrected marker 5 before any data ran against the new version of it: the original `n_patterns ≥ 2` was trivially true at simulation tick 0 because three engrams are pre-seeded. The full correction record sits in `docs/marker_protocol.md`.
-
-There are two kinds of pre-registration in this project and I treat them differently. The first is about thresholds — the five markers, the 2σ KL bound, the 8-of-10 seed grid. Those stay locked even when someone tells me they are the wrong call. That is what stops me from fishing for results after the fact. The second would be framing: sticking to a story about what the project is after feedback lands. I do not pre-register that. This whole section is me doing exactly that: rewriting the framing while leaving the thresholds in `docs/marker_protocol.md` where they were.
-
-I built G14 through G18 in a single 12-hour session in May 2026. Each one is the thinnest operational shell over a research idea that has decades of literature behind it. The shells are real. The ideas underneath are not yet implemented at the depth the literature describes. G14 does not have Magee's instructive higher-order input. G16 has no gamma-band synchrony, no long-distance phase coherence, no non-linear ignition transient. G17 tunes parameters from outside its own production network, which makes it allopoietic — not autopoietic, no matter what an earlier draft called it. The body of this README lists each gap by name. The gaps are not softeners on the claim. They are the claim, accurately stated.
-
-There is one place where what I now believe the project is and what the code still calls itself contradict each other. The reframe says "sandbox to think against". The code still says `access-conscious self-modeling agency` — in docstrings inside `world/self_aware.py`, in the marker-check function names, in the per-run `marker_state.json` that the loop writes. I wrote those names on day one and I have not touched them. The reason I have not touched them is that refactoring them right now would be exactly the kind of mid-vacation framing change my own pre-registration argument up above says I should not do. So I am leaving them. Whether that turns out to be ehrliche Selbstkonfrontation or leftover day-one overconfidence is something I will only know in the November review. I logged the question in `LOGBOOK.md` today so it survives intact until then.
-
-The other half of why I do this, and the half that has held up better, is meta-level. I picked a problem four disciplines past anything I have training in, and I am writing down what I actually do when none of my usual moves work. The `LOGBOOK.md`, the Medium pieces, the disclaimers and pre-registration documents, and the vacation autopilot I pulled out into [`mkupermann/single-mac-autopilot`](https://github.com/mkupermann/single-mac-autopilot) are the transferable part. That second repo is the pre-registered single-Mac research pipeline distilled out of EQMOD; EQMOD itself is now its primary test-bed. The pipeline turned out to travel better than the substrate did.
-
-Six months from now I will look at engagement numbers and have to decide what they mean. I want to decide that now, while expectations are flat, because if I leave it until November the call will not survive whatever I am feeling that week. Stars and forks alone tell me nothing — zero of either just means nobody saw the repo. What would tell me the framing was wrong, as opposed to unseen, is a qualified reader doing something concrete: opening an Issue or PR from a computational-neuroscience / ML / cognition background, forking in a non-trivial direction, writing me an email longer than three lines, or leaving a substantive Medium response on the article that brought them here. If none of those have happened by 2026-11-19, and GitHub Insights shows the repo was seen by at least fifty unique visitors in that window, then the framing did not land.
-
-If that is the verdict, I will not retune the marker thresholds to chase appeal. I will write one closing post saying the framing missed, rename the project around the meta-half (the process documentation and the autopilot lab) as the actual deliverable, and let the substrate-as-emergent-system framing become a side study. If visitor count is also near zero, that is a different answer: the repo was not seen, not rejected. In that case I will run one more outreach pass (Hacker News, lobste.rs, three named researchers by email) and re-check at 2027-02-19.
-
-On 2026-05-19 I went back through the two key citations in this README — Magee 2026 *Nat Neurosci* and Wu et al 2025 *Nat Comm* — and checked directly via web search that both papers exist and say what I claim they say. They do. The Wu et al date in the published paper is 2025; an earlier draft of this README and the Medium article had it as 2024. That has been corrected throughout the codebase.
-
-
-## Update 2026-05-31 — what the autonomous run actually taught me
-
-On 2026-05-31 I let the autopilot drive an unbroken, self-paced research program:
-twenty pre-registered experiments (BET-089 → BET-109), most of them 5-way parallel
-sweeps, each with acceptance bars written *before* the run, matched negative
-controls, and a PASS/NULL/FAIL verdict recorded and committed. The full chain is
-in `docs/amendments/` and `LOGBOOK.md`; the consolidated finding is in
-`docs/amendments/MEMORY_PROGRAMME_SUMMARY.md`.
-
-The concrete result is a clean negative one, and I want to state it without
-softening. The substrate **can** be made to do three of the four things a
-selective memory needs: it holds a persistent lattice (atoms stopped churning
-once a fusion-block was added — level-4 lifetime went from ~13 s to ~1500 s), it
-**writes** a localized memory (a stimulated region latches while a control region
-stays blank), and it **contains** that write inside an engineered compartment
-wall. The fourth thing — holding that selective memory through a long recall
-window after the stimulus is gone — it never did, across every lever I tried
-(flux drive, firing-coincidence, graded propagation, consolidation/locking). It
-sat at roughly three of four bars and would not move.
-
-The reason is structural, and it is the same one every time: a homogeneous,
-spontaneously-assembled, tiny, fully-connected substrate lets activity
-**percolate** (no compartments → memory spreads), **churns** its own elements
-(turnover dilutes any readout), and is simply too small and too connected to be
-stable. I established this from five independent angles. It is not news to a
-neuroscientist — you need modularity and scale — but it is the honest ceiling of
-*this* design, found the hard way.
-
-Two things are worth keeping. First, two reusable mechanism patterns:
-`docs/patterns/01` (before you believe a null, check whether the mechanism fired,
-whether it had its local effect, and which constraint actually binds) and
-`docs/patterns/02` (the same coupling that writes a memory is often the one that
-corrupts it — reshape its locality, do not just scale its gain). Second, and
-honestly the better deliverable: the autopilot held real discipline for twenty
-iterations — it pre-registered, reported its NULLs, refused to retune a threshold
-to a result, diagnosed its own harness bugs, and **stopped at the wall instead of
-manufacturing a win**. The harness is now packaged as two skills
-(`.claude/skills/bet-experiment`, `.claude/skills/watch-results`) and a tutorial
-(`docs/EXPERIMENT_HARNESS.md`). As before, the process half travelled further than
-the substrate half.
-
-Where this goes next is a redesign, not another knob: stop waiting for cognition
-to self-assemble from physics, **engineer a stable modular scaffold** — frozen
-neuron modules, sparse directed inter-module connectivity that bounds percolation
-by construction — and run the *already-validated* learning rules on top, with a
-per-module readout that turnover cannot dilute. That is the charter's own
-"engineered topology, emergent dynamics" applied one level up. The plan is in
-`docs/NEW_DIRECTION.md`.
-
----
-
-The premise is uncomfortable on purpose. If I picked something close to what I already know — another consulting framework, another piece of software architecture, another flavour of the work I have been doing for thirty years — I would fall back on the usual moves. I have thirty years of those. They mostly work, and that is exactly why I cannot use them here.
-So the topic had to land somewhere I can't bluff, and what I picked is roughly four disciplines past my actual training. I am building EQMOD: a 60×60×60 cube of vibrations — frequency, polarity, position, velocity, and nothing else — under a small set of local binding rules, and watching what comes out.
-
-The rules turn vibrations into electrons. Electrons into pairs. Pairs and triads into atoms. Atoms into molecules connected by bridges that behave like synapses. The bridges fire, the firing strengthens connections, the connections form patterns, the patterns consolidate during offline replay, and a separate self-model module records firing-rate histograms over pattern IDs. The binding rules themselves *are* installed — they are first-class engineering, parameter-by-parameter, documented in `docs/CONCEPT.md`. What is not installed is the run-dependent trajectory through them: which atoms form, which bridges, which patterns, in what order. Phase 1 ended when the first atom locked in at simulated t = 13.4 s. Phase 2 ended when the first di-atomic molecule formed under the session-3b calibration. The phase numbers go up to G18, and I am the one writing the next one.
-
-I am not a physicist. I am not a chemist, not a neuroscientist, not a consciousness researcher. Every layer of this thing sits in a field where I have no formal credentials and where my professional instincts give me approximately nothing. That is the entire point.
-When STDP fails to converge and behavioural-time-scale plasticity does not bridge the gap, I have no twenty-year shortcut to fall back on. I have to read Magee. I have to read Dehaene. I have to read Varela on autopoiesis and decide what I actually believe before I can decide what to code next.
-
-The goal of doing this in public, and of writing the process down as I go, is not to solve the simulator. Solving it would be a side effect, and probably an accidental one. What I want is to notice the moves I make when none of my usual moves work — which question I reach for first when the literature hands me three contradictory answers, how long I can sit with a not-yet-converging run before I feel the urge to invent a confident-sounding interpretation just to relieve the pressure of not yet having one. The deadlocks I have hit in client work for thirty years have always had a domain shortcut available somewhere. EQMOD does not have any.
-
-So the deadlocks I hit here are clean — they are the actual material I came for.
-
-The other reason to write all of this down in public is that the moves themselves turn out to be reusable. The Skills, the dev and AI pipelines, the prompting and orchestration patterns it takes to push open-weight and cloud models against problems they cannot pattern-match — those translate directly to business and technical work in the moments when the usual playbook has run out. EQMOD does not need to succeed for that half to be useful. The patterns I am building to attack it are already shippable, and that is the half I want other people to be able to use.
-
-**This second half has now been extracted into its own repository:
-[`mkupermann/single-mac-autopilot`](https://github.com/mkupermann/single-mac-autopilot).**
-It is the pre-registered, falsifier-based research autopilot that runs the
-vibrasim work autonomously over multi-day vacation windows — preflight, postflight,
-supervisor, long-run dispatcher, watchdog, pre-commit discipline, mail handoff —
-all extracted so other research projects can use it. vibrasim's continuing role
-is as the *test-bed* where each pipeline change is validated against real
-research work before being merged upstream. The two repos co-evolve: vibrasim
-finds the failure modes; single-mac-autopilot embeds the fixes.
-
-I will fail at most parts of this. Probably the parts that matter most. That is the data I am after. A process for breaking deadlocks that has only ever been tested on problems I could already solve would not really be a process — it would be a story I tell myself about being good at hard things.
-
----
-
-## What EQMOD actually is, in operational terms
-
-EQMOD is a 3D continuous-substrate simulator. The primitive is a **vibration** — a four-property unit (frequency, polarity, position, velocity). On top of the primitive sit **explicit, parameterised binding rules** at six levels (electron, pair, triad, atom, molecule, bridge), and **eligibility-trace plasticity** (BTSP-inspired) plus **STDP** on the bridges. The substrate emits structured event logs when configurable conjunction conditions on its state hold for a pre-registered number of consecutive cycles.
-
-The four-property primitive does not produce the hierarchy on its own. The binding rules are first-class engineering, parameter-by-parameter, documented in [`docs/CONCEPT.md`](docs/CONCEPT.md). What the project demonstrates is that the binding rule set produces stable higher-level patterns under specified parameter ranges, and that the conjunction triggers fire when trained engrams are present and **do not fire** under the negative-control protocol in [`docs/marker_protocol.md`](docs/marker_protocol.md).
-
-Two audiences read this codebase. This README is written for both.
-
-- If you are not in research or engineering, you can read the **plain-English** sub-section under each heading and skip the technical detail. You will still understand what the code does.
-- If you are a researcher or engineer, the **technical detail** sub-sections give the references, the operational definitions, and the mechanisms.
-
-The full conceptual case sits in [`docs/CONCEPT.md`](docs/CONCEPT.md). The first long-form narrative report on what was built across phases G14-G18 is in [`docs/medium_articles/2026-05-09-substrate-night.md`](docs/medium_articles/2026-05-09-substrate-night.md).
-
-![first atom](renders/keyframe_first_atom.png)
-
-> *Phase 1 climax — t = 13.4 s simulated, the moment a triad absorbs its fourth electron and the first atom locks into place.*
-
-![first molecule](renders/keyframe_first_molecule.png)
-
-> *Phase 2 climax — t ≈ 5.5 s under the `session-3b` calibration. Multiple atoms (large white spheres) and the first di-atomic molecule.*
-
-### Gallery — recall and learning
-
-**Associative recall as energy descent (EQMOD-2 energy memory).** A stored pattern is cued with a
-corrupted input and the network relaxes into the matching attractor — a Hopfield-style energy
-descent on the substrate's own bridge graph (the G140 thread; established associative-memory
-dynamics, named as such).
-
-![energy memory — noisy cue](docs/figures/showcase_1_cue.png)
-
-> *Cue: 30 % of bits flipped, overlap with the target pattern 0.59 (t = 0). Red/blue = node activation.*
-
-![energy memory — settling](docs/figures/showcase_2_settling.png)
-
-> *Settling: the state slides downhill toward the nearest stored attractor.*
-
-![energy memory — recalled](docs/figures/showcase_3_recalled.png)
-
-> *Recalled: slid into the energy valley, overlap with the target 1.00 — clean content-addressable recall.*
-
-**Generalization is a curriculum law.** Systematic generalization to never-seen symbol combinations
-scales with the *number of compositions experienced*, not with dimension or normalization — "learns
-from every interaction" made literal and measured (BET-129/130; established VSA + online readout).
-
-![curriculum law](docs/figures/bet129_curriculum.png)
-
-> *Held-out accuracy on novel pairs vs. compositions seen online: 20 → 0.68, 140 → 0.88, asymptoting toward the 0.90 bar.*
-
----
-
-## What this is
-
-**Plain English.** Imagine a 60×60×60 box with tiny invisible "shakes" — vibrations — bouncing around inside it. There are no atoms, no electrons, no chemistry pre-installed. Just shakes with frequencies and polarities. We wrote four rules: shakes that match in frequency and meet in space stick together as electrons. Pairs of electrons attract more electrons until you get an atom. Atoms can connect with each other through bridges that act like the connections between brain cells. Bridges that fire together get stronger. Eventually the whole network learns to recognise patterns — like the shape of a hand on the camera, or the word "water" through the microphone — and to recall one when shown the other. Then it sleeps, dreams, makes new patterns nobody trained it on, and watches itself doing all of this.
-
-**Technical detail.** EQMOD is a 3D continuous-substrate simulator with explicit binding rules. Vibrations are the four-property primitive; binding rules at electron / pair / triad / atom / molecule / bridge levels are engineered, parameterised, and documented in `docs/CONCEPT.md` — not "emergent from the primitive". Bridges support **STDP** (Plan B; Bi & Poo 1998 millisecond-window) and an **eligibility-trace plasticity** rule (G14; BTSP-inspired in the sense of Magee 2026 *Nat Neurosci*'s seconds-scale time constant, but lacking the discrete dendritic plateau-potential trigger and instructive higher-order input that Magee's BTSP requires — see `docs/marker_protocol.md` for the honest scope of this difference). Bridges also support bidirectional cross-modal recall (G13), offline replay-driven consolidation with overlapping-replay schema integration (G15–G18; Wilson & McNaughton 1994 + Lewis & Durrant 2011), and a **GNW-flavored conjunction-trigger layer** (G16; inspired by Dehaene & Naccache 2001 + Block 1995 + Rosenthal 2005 + Friston 2010, but explicitly not implementing GNW's neural signatures of gamma-band synchrony, long-distance phase coherence, or non-linear ignition transients). A **homeostatic parameter feedback** driver (G17, formerly mis-described as "autopoietic" — see `docs/marker_protocol.md`) runs the substrate continuously and emits `marker_state.json` when five pre-registered markers simultaneously hold for a configurable number of consecutive cycles, with a parallel negative-control run demonstrating the markers do **not** fire under matched conditions without trained engrams.
-
----
-
-## Scope statements — what this project is and what it is not
-
-**What this project is.** A small, runnable, test-covered substrate sandbox in which:
-- four-property vibrations bind, via explicit parameterised rules, into atoms and molecules;
-- molecules form oriented bridges that support STDP + eligibility-trace plasticity (BTSP-inspired);
-- offline replay produces consolidation and overlapping-replay schema integration (concept blending);
-- five **pre-registered conjunction-trigger markers** ([`docs/marker_protocol.md`](docs/marker_protocol.md)) fire when trained engrams interact via dream-phase replay and self-monitoring, **and** do not fire under the matched-config no-engram negative control.
-
-**What this project is not.**
-- **Not** a claim about phenomenal consciousness ("what it is like to be"). Chalmers's hard problem (1995) is untouched.
-- **Not** a faithful neural implementation of GNW. The substrate has no gamma-band synchrony, no long-distance phase coherence, no non-linear ignition transient, no prefrontal-parietal architecture. It implements a winner-take-all selection over pattern_ids and a multiplicative eligibility-suppression broadcast — that is one slice of GNW operationalised, not GNW.
-- **Not** equivalent to BTSP as Magee 2026 specifies it. The substrate's plasticity rule has eligibility traces and a plateau-charge threshold, but lacks Magee's discrete dendritic plateau potential, the instructive higher-order input, and the stereotyped 4-second symmetric/asymmetric kernel. It is **BTSP-inspired**, not BTSP.
-- **Not** autopoietic in Maturana & Varela's technical sense. The G17 driver tunes parameters from outside the substrate's own production network, which is allopoietic by definition. The mechanism is **homeostatic parameter feedback**, not autopoiesis. (An earlier draft of this README and the Medium article used "autopoietic" loosely; that was a mistake and has been corrected here.)
-- **Not** a model of biological consciousness, an active-inference agent, or a neuromorphic spiking simulator. NEST, SpiNNaker, Brian2, and Nengo are the neuromorphic stack; EQMOD investigates the dynamics that engineered binding rules at six abstraction levels produce when run on real sensory input — not biology, not neuromorphic computation.
-
-The `docs/marker_protocol.md` document pre-registers the five marker definitions and the negative-control pass criterion. Tuning thresholds in response to a failed run, then claiming the new run fires the markers, is overfitting evidence and is excluded by protocol.
-
----
-
-## What runs today
-
-**Plain English.** A microphone on your laptop hears something. The substrate shapes that sound into electrons that bind into atoms. A webcam shows it a hand. The substrate shapes that picture into atoms in a different region of itself, and bridges form between the audio region and the video region. Train it on "water" while showing it a glass; later, show the glass and the speaker says "water" back. Or let it run by itself overnight: it dreams, builds new concepts you did not teach it, and watches what it is doing.
-
-**Technical detail.**
-
-| Phase | Mechanism | Status |
+| Component | Purpose | Scope |
 |---|---|---|
-| Phase 1 | Vibration → electron → pair → triad → atom | Reproduces from `renders/calibration_session3.toml`, atom at t=13.4 s rng_seed=42 |
-| Phase 2 | Atom → molecule (oriented bridges) | ≥5 molecule species in 60 s under `calibration_phase2_acceptance.toml` |
-| Phase 4 | Integrate-and-fire neuron dynamics on level-4 atoms | `tests/test_neuron_dynamics.py` |
-| Plan A.5 | Numba JIT performance pass | 60 sim-min ≤ 30 wall-min |
-| Plan B | STDP + directional bridge orientation | `tests/test_amendment_B_stdp_*.py` |
-| Plan C | Audio I/O via STFT, real microphone + speaker | `tests/test_audio_io_*.py` |
-| Plan D | Video I/O via Gabor patches, real webcam | `tests/test_video_io_*.py` |
-| Plan E | Reward channel + agent loop | `tests/test_agent_m4_*.py` |
-| Plan F | Speech-loop port-to-port coupling | `tests/test_speech_loop.py` |
-| G3-G12 | Bridge mesh, lateral inhibition, sparse firing, pattern routing | covered across `tests/test_amendment_G*.py` |
-| G13 | Bidirectional bridges (cross-modal generative recall) | `tests/test_amendment_G13_bidirectional_bridges.py` |
-| **G14** | **BTSP — seconds-scale plasticity (Magee 2026)** | `tests/test_amendment_G14_btsp.py`, 5/5 |
-| **G15** | **Dreaming substrate — replay + concept blending + cross-modal hallucination** | `tests/test_amendment_G15_dream.py`, 6/6 |
-| **G16** | **Self-aware substrate — Block / Dehaene / Rosenthal / Friston / Varela** | `tests/test_amendment_G16_self_aware.py`, 6/6 |
-| **G17** | **Five-marker conjunction logged under pre-registration** (see [Update — what this is and what not](#update--what-this-is-and-what-not) — earlier wording "verified emergence" retracted) | `tests/test_amendment_G17_autonomous.py`, 4/4 |
-| **G18** | **Integrative blending + NREM/REM gating + retention fix** | extends G15, 8/8 dream tests |
+| [World simulator](world/) | Evolve interacting elements, bonds and material state | A rule-based research substrate; its “atoms” and “molecules” are model abstractions, not validated atomic physics |
+| [Audiovisual reference code](docs/research/2026-09/reference-source/vibrasim2/) | Study fixed sensory encodings and engineered associations | Archived implementation snapshots; separate from the installed World simulator |
+| [Guided mechanical references](docs/research/2026-09/REPORT.md#guided-reference-models) | Isolate local stiffness adaptation, transfer and numerical effects | Constrained numerical models; they have not replaced the production simulator |
 
-Total suite: **313 non-slow tests + 22 slow tests passing**. Verified on macOS-arm64 (Python 3.13.12) and Linux-x86_64 CI.
+![Experimental scope: sensory input, local material changes, and controlled readout](docs/research/2026-09/method.png)
 
----
+The distinction between these components matters. A result in a small, externally
+driven spring fixture is evidence about that fixture, not evidence of a brain,
+consciousness, language understanding or unrestricted learning.
 
-## Two substrates: legacy engineered + flux (DEFAULT as of 2026-07-27)
+## Selected results
 
-Since 2026-05-10 the repo carries two substrates side by side.
+Evidence snapshot: **12 September 2026**. Verdicts apply to the registered question
+and model, rather than to the project as a whole.
 
-- **Legacy** (`world/`, `agent/`) — **DEPRECATED as of 2026-08-10**. The engineered six-level binding rule set documented throughout this README. Honest scope as of 2026-05-10: single-pattern recall works (M4 contract A+B); G19 predictive-babble falsifier returned FAIL on the first real-corpus run with z-scores statistically indistinguishable from white noise; the README has been corrected (commit `d83b82c`) to remove overclaims and document the FAIL. **Feature-frozen for general development — with one named exception: the active
-belief-path programme (docs/BELIEF_PATH.md) deliberately uses this substrate as its
-lab, and pre-registered belief-path primitives (PRIM-* amendments) land here.**
-- **Flux** (`world/flux/`, `agent/flux/`) — **DEFAULT SUBSTRATE** as of 2026-07-27. A substrate where the six engineered levels are replaced by one principle: energy quanta flow through an open boundary, structures kondensieren wo sie diesen Fluss effizienter kanalisieren, learning is reconfiguration toward more efficient flux channelling. Spec: [`docs/superpowers/specs/2026-05-10-flux-substrate-design.md`](docs/superpowers/specs/2026-05-10-flux-substrate-design.md). Status as of 2026-07-27: F0 complete (skeleton + energy-conservation audit); F1a complete (binding + T-based decay + T3 crystallization, ratio 9.0); F1b complete (bridges + structure-flux + Hebbian plasticity + node dissociation, T4 decay-without-flux passes); **F1c complete (thermal layer + bidirectional injection landed; T2 Bénard test FIXED — now passes reliably with `pressure_coeff=0.0`)**; F2 (cochlea + synthesis + first audio input) is next. 2026-08-10 addendum: G15/G16 (dreaming, self-awareness) are mechanically ported to
-Flux with a pattern-tagging path and energy-conserving dreaming (auditor holds 1e-9
-with dream active; `--energy-audit` is real in the CLI now). Two pre-registered
-experiments closed honestly: **G15F-1 NULL-T** and **G15F-2 NULL** — in the current
-regime family, tagged flux nodes are a ~2–5 s recency echo of the ongoing stimulus,
-not a persistent store (continuous stimulus even thermally destroys its own traces),
-so dream consolidation is untestable on Flux until a regime decouples stimulus energy
-from local decay pressure (docs/amendments/g15f*.md). Visualization is consolidated
-in `world/flux/visualize.py` (off-screen frames, main-thread).
-
-The two substrates do not share state. **Flux is now the default** (`python -m world run` uses Flux; use `--substrate legacy` for Legacy). The legacy substrate remains runnable as the comparison baseline; the flux substrate carries the unprejudiced learning hypothesis.
-
-> **Substrate roles (clarified 2026-08-10)**
-> **Flux** is the default substrate for substrate-engineering work (`python -m world run`).
-> **Legacy** is feature-frozen for general development, but it is NOT scheduled for
-> removal: the active research programme — the belief path (docs/BELIEF_PATH.md,
-> board in FRONTIER.md) — runs on the legacy engineered substrate by design, and
-> pre-registered belief-path primitives (PRIM-*) are the named exception to the
-> freeze. An earlier version of this notice announced removal by 2027-01-01; that
-> contradicted the active programme and is retracted.
-
----
-
-## The substrate amendments of May 2026
-
-This is the work of one continuous 12-hour build session. Each amendment is described here as built; the project's current claims about what those amendments demonstrate are constrained by the [Update — what this is and what not](#update--what-this-is-and-what-not) above. G19 (predictive babble falsifier) returned FAIL on the first real-corpus run and is documented as such — the section title no longer presents the May 2026 work as a uniform success.
-
-### Passed under pre-registered acceptance: G14, G15, G16, G17, G18 (legacy substrate)
-
-### Open / failed under pre-registered acceptance: G19 (FAIL, see §G19 below)
-
-### G14 — Behavioural Time Scale Plasticity (BTSP)
-
-**Plain English.** Real brains do not need things to happen at exactly the same instant for them to be linked. You can see something, then five seconds later hear something else, and your brain still binds them together. The rule that lets brains do this is called BTSP. It uses an "eligibility trace" — a kind of fading memory of what just fired — that lasts for about six seconds. When something important happens (a "plateau event"), all the neurons that were eligible at that moment get their connections strengthened in one shot. We added this to the substrate.
-
-**Technical detail.** Reference: Magee 2026 *Nature Neuroscience* review, Wu et al 2025 *Nature Communications*. Implementation in `world/physics.py::apply_btsp` and `world/dream.py`. Each level-4 atom carries an eligibility trace `k_eligibility[i]` that decays exponentially with `cfg.btsp_tau_eligibility` (default 6 s). Firings bump the trace by 1.0. When an atom's trace exceeds `cfg.btsp_plateau_charge_threshold`, BTSP commits bridges to all eligible-partner atoms within `cfg.btsp_radius`. The combination of BTSP-inspired plasticity + continuous-substrate dynamics + bidirectional bridges (G13) is, to our reading, not a commonly studied combination, but we have not done a comprehensive novelty review.
-
-### G15 — The Dreaming Substrate
-
-**Plain English.** When real brains sleep, they replay the day's experiences. This is how memories get strong enough to last. While replaying, brains also combine pieces of different memories into new ones — that is where dreams get strange and where new ideas come from. The substrate now does the same thing. With its inputs gated off, it picks recently-active atoms and re-fires them. The connections between them get stronger. Sometimes two different patterns fire close to each other in time, and the substrate creates a new atom that combines them — a concept that nobody trained.
-
-**Technical detail.** References: Wilson & McNaughton 1994 (sequence replay during slow-wave sleep), Buzsáki 2015 (sharp-wave-ripple-gated consolidation), Lewis & Durrant 2011 (overlapping replays merge schemas), Hobson AIM model (forward modelling with input gate closed). Implementation in `world/dream.py`. Three primitives:
-
-1. **Replay** — `apply_dream` selects the highest-eligibility atoms in trained engrams and injects `cfg.dream_replay_seed_charge` directly. Subsequent neuron-dynamics fires them; BTSP, already in the tick loop, runs offline and consolidates trained-engram bridges.
-2. **Concept blending** — when two distinct `pattern_id`s fire within `cfg.dream_blend_co_activation_window` seconds (default 0.5 s), the substrate allocates a new atom at their spatial centroid with a fresh `pattern_id`. G18 extends this with **integration bridges** connecting the new atom to representative members of both source patterns (Lewis & Durrant 2011 schema integration).
-3. **Cross-modal hallucination** — because G13 bidirectional bridges are active during dreaming, replay seeds in (e.g.) the visual port drive vibrations through bridges into the audio output port. The substrate hears its own dreams.
-
-G18.2 adds two-phase NREM/REM gating: 4 of every 5 dream ticks are consolidation-only; only the 5th allows new pattern formation. Real mammalian sleep is roughly 4:1 NREM:REM.
-
-### G16 — The Self-Aware Substrate
-
-**Plain English.** Up to here the substrate could learn things and dream. But it had no representation of *itself*. We added that. The substrate now keeps a running list of which patterns it has been firing, and how often. It picks the most-active pattern and "broadcasts" it across the whole substrate — a winner-take-all suppression of competing patterns. It predicts what its own next moment will look like, then measures the actual next moment, and uses the difference to adjust its own learning rate. Block (1995) called the operational version of this *access consciousness* — information that is globally available for reasoning and reporting. The four mechanisms here approximate aspects of that operational definition. They do **not** capture phenomenal consciousness — what it is like to be the substrate — and do not claim to.
-
-**Technical detail.** References:
-- **Block 1995** — access vs. phenomenal consciousness distinction
-- **Dehaene & Naccache 2001** — Global Neuronal Workspace, winner-take-all global broadcast
-- **Rosenthal 2005** — Higher-Order Theory: a representation having other representations as its objects
-- **Friston 2010** — Free Energy Principle: prediction-error-driven active inference
-- **Varela 1991** — autopoiesis: a system that produces, including the rules by which it produces
-
-Implementation in `world/self_aware.py`. Four mechanisms:
-
-1. `self_model` — per-pattern_id rolling firing-rate histogram, exponentially smoothed.
-2. `self_predicted_next` — substrate's prediction of its next firing distribution, drawn from the current `self_model`.
-3. `workspace_winner_pattern_id` — the pattern with the most firings within the rolling window. Broadcast suppresses losing patterns' eligibility (gated open during dream so dreams roam freely; G18.4).
-4. `self_modify` — high prediction error increases `cfg.btsp_potentiation`; low error decreases it. Homeostatic and meta-learned.
-
-Honest scope reminder: this is ACCESS consciousness in the operational sense, not phenomenal consciousness. The hard problem remains untouched.
-
-### G17 — Autonomous Self-Improvement Loop
-
-**Plain English.** With all the above in place, we built one driver that runs the substrate forever, on its own. It alternates between awake (learning from input) and dream (consolidating + blending) phases. It tunes its own learning rate based on its prediction error. It checks five "emergence markers" each cycle. When all five hold simultaneously for several consecutive cycles, it writes a JSON file logging the conjunction. The loop keeps running. You can leave it running indefinitely on a normal MacBook. (An earlier version of this section described the logged event as "access-conscious self-modeling autopoietic agency" — that phrasing was a mistake. The substrate is not autopoietic in Maturana & Varela's technical sense, see Scope statements above.)
-
-**Technical detail.** Implementation in `agent/autonomous_loop.py` and `agent/run_autonomous.py`. The five emergence markers (`check_emergence_markers`):
-
-| # | Marker | Operational definition |
+| Study | Result | Interpretation |
 |---|---|---|
-| 1 | self-model non-empty | `len(world.self_model) ≥ 2` |
-| 2 | workspace winner | `world.workspace_winner_pattern_id > 0` |
-| 3 | prediction loop closed | `0 < self_prediction_error < 1` (per Friston FEP — closed loop, not error → 0) |
-| 4 | self-modification fired | `cfg.btsp_potentiation` has drifted from default by ≥ 0.5 |
-| 5 | pattern repertoire grew during the run | `n_patterns_now > n_patterns_at_start` — at least one new atom must form via the G15.2 concept-blending rule. The earlier `≥ 2` threshold was trivially met by the 3 pre-seeded patterns and is corrected here. |
+| G183 — real-audio selectivity | **NULL** | Bell contrast 0.132, dog 0.000, rain −0.010; all three had to reach 0.100 |
+| MM3 — audiovisual scene transfer | **NULL** | All five evaluated conditions scored 1/3 on three test recordings at every checkpoint |
+| G189 — timing-dependent mechanical transfer | **Mixed** | Transfer depends on exposure timing; the return criterion fails in all seven conditions |
+| G191 — finite source-preference reassignment | **Scoped positive finding** | Preference reverses in both tested directions; return fails at all ten endpoints, and acquisition was measured on a sibling state copy |
 
-First overnight run (2026-05-09): the five pre-registered marker conditions held continuously across 334 substrate cycles (sim-time 1452 s, ~24 min). During the run, 125 new pattern atoms were created via the hand-coded G15.2 concept-blending rule, taking the substrate from 3 pre-seeded patterns to 128. The self-model histogram covered 64 of those patterns. The matched negative-control run (`docs/marker_protocol.md`) does not produce the five-way conjunction when trained engrams are absent. `~/.eqmod/autonomous/marker_state.json` was persisted. The markers are pre-registered; tuning thresholds after a failed run is excluded by protocol. The "+125 emerged" formulation in an earlier version of this paragraph was misleading: the new atoms are the deterministic output of the hand-coded blending rule operating on the substrate's current state, not unexplained emergence.
+[Methods, measurements, corrections and evidence files →](docs/research/2026-09/REPORT.md)
 
-### G19 — Predictive babble (2026-05-10)
+These results do not establish continued learning over long periods, robust
+recognition across recordings, spontaneous functional specialization, or learning
+by repeatedly playing a video. Visible motion and changing bonds are observations;
+a learning claim additionally requires a discriminating task and controls.
 
-**Plain English.** G18 left the substrate self-modelling on its own pre-seeded engrams — grounded in nothing outside itself. G19 wires it to a real sensory channel: hours of German speech across four progressive curriculum stages (audiobook narrator → single YouTuber → multi-speaker podcasts → webcam live). The substrate does **not** see raw audio — a fixed MFCC frontend discretises the signal into K clusters first, and the substrate sees only cluster-ID transitions. The question G19 asks is therefore narrower than "did it learn German phonology": it asks whether the substrate's open-loop output, after training, reproduces the *MFCC-cluster transition distribution* of held-out training audio better than three control corpora (white noise, time-reversed German, French). The acceptance criterion is binary and pre-registered: PASS when the trained substrate's MFCC-histogram KL-divergence to held-out German is lower than each control's by ≥ 2 standard deviations on bootstrap; NULL or FAIL otherwise, reported faithfully.
+## Research method
 
-**Technical detail.** Spec at [`docs/superpowers/specs/2026-05-10-predictive-babble-design.md`](docs/superpowers/specs/2026-05-10-predictive-babble-design.md). Operational guide at [`docs/predictive-babble.md`](docs/predictive-babble.md). Pipeline in `agent/{corpus_builder,decoder_audio,babble,convergence,curriculum_scheduler,corpus_audio_feeder,evaluate_babble,run_babble_experiment}.py` plus `world/audio_predictor.py`. The autonomous loop change in `agent/autonomous_loop.py` is +14/-1 lines accepting an optional `audio_io`; G17 emergence runs are unaffected.
+Each confirmatory experiment specifies a question, prediction, comparison and
+acceptance criteria before execution. Reports distinguish experimental validity,
+prediction accuracy and contribution to the research objective. A valid experiment
+can have a negative result; an accurate prediction of failure does not satisfy a
+missing capability.
 
-Pipeline-correctness verified end-to-end: `python -m agent.run_babble_experiment --mini` produces 4 wav files + verdict JSON in ~17 s.
+The record includes unsuccessful hypotheses and implementation errors. In the
+recent series, a snapshot-decoding error invalidated the first G185 analysis, and
+G186's first design was withdrawn before execution because its proposed boundary
+intervention did not change the condition. Numerical traversal sensitivity and
+residual motion also required explicit diagnosis. These corrections are described
+in the [research report](docs/research/2026-09/REPORT.md#corrections-and-numerical-limitations).
 
-**First real-corpus run (2026-05-10, `real-de-run`): FAIL.** The trained substrate's z-scores against the three controls were −1.00 (white noise), −0.69 (time-reversed DE), +0.17 (synthetic FR — flagged degraded). The trained substrate's output distribution is statistically indistinguishable from white noise. Additionally the run was killed at stage 2 of 4 because per-tick wall-clock grew from 3 s to 50+ s as vibrations accumulated, before natural convergence could be reached. Subsequent fixes (`c7e32ff` top-K vibration-emission cap; `964732f` per-tick vibration cull) shipped on 2026-05-10 to address the kill cause. A clean re-run with the fixes and a real (non-synthetic) FR control is the next item on the work list.
+Known methods are treated as prior work. Local material memory, directed aging and
+physical learning networks predate this project. The current experiments do not
+establish scientific novelty. [Prior work and reuse](docs/research/2026-09/REPORT.md#prior-work)
 
-**As of 2026-05-10, the G19 acceptance criterion has not been met and the falsifier is open.** The earlier marketing of G19 as "the substrate babbles in the language's phonology" is retracted until a clean re-run produces a passing result.
+## Run the simulator
 
----
+Requires Python 3.13 or later and [uv](https://docs.astral.sh/uv/).
 
-## Run it yourself
-
-### Install
-
-```bash
-# Recommended (lockfile-pinned, fast):
-uv sync --extra dev --extra dashboard --extra agent
-
-# Or with pip:
-python3.13 -m venv .venv
-source .venv/bin/activate
-pip install -e ".[dev,dashboard,agent]"
+```sh
+git clone https://github.com/mkupermann/vibrasim.git
+cd vibrasim
+uv sync --locked --extra dev
+uv run python -m world --help
 ```
 
-### The autonomous self-improvement loop (most interesting)
+For interactive inspection:
 
-```bash
-uv run python -m agent.run_autonomous --awake 3.0 --dream 1.5
+```sh
+uv run python -m world gui
 ```
 
-Runs forever. Writes per-cycle CSV metrics to `~/.eqmod/autonomous/metrics.csv` and substrate snapshots to `~/.eqmod/autonomous/snapshots/` every 25 cycles. When five access-consciousness markers hold simultaneously for 5 consecutive cycles, writes `~/.eqmod/autonomous/marker_state.json`. Stop with Ctrl-C.
+The viewer requires a graphical environment. Running it demonstrates simulation
+behavior; it does not reproduce the findings listed above. The evidence package
+contains saved measurements from separate experimental revisions.
 
-### Substrate console (real microphone + webcam + speaker)
+To verify the published file checksums and regenerate the README figures:
 
-```bash
-uv run streamlit run app/machine_gui.py --server.port 8503
-# open http://localhost:8503
+```sh
+uv run python tools/render_research_overview.py --verify
+uv run python tools/render_research_overview.py
 ```
 
-Press Start. Train a pattern by showing something to the camera and saying its name. Toggle Listen mode. Show the trained pattern again — the speaker says the trained label back.
+These commands inspect saved evidence and render figures. They do not rerun a
+learning experiment. See the report for the limits of this evidence release.
 
-### Headline phase reproductions
+## Repository guide
 
-```bash
-# Phase 1: first atom at t=13.4 s
-uv run python -m world run --duration 20 --snapshot-every 0.1 \
-    --snapshot-dir snapshots/verify-phase1/ \
-    --config renders/calibration_session3.toml --seed 42
+- [Research report and evidence index](docs/research/2026-09/REPORT.md) — current findings and their limits.
+- [World source](world/) and [tests](tests/) — simulator implementation and software checks.
+- [Concept document](docs/CONCEPT.md) — historical model rationale and terminology.
+- [Experiment history](LOGBOOK.md) and [programme record](FRONTIER.md) — detailed development history; older programme statements are not current capability claims.
 
-# Phase 2: ≥5 molecule species in 60 s
-uv run python -m world run --duration 60 --snapshot-every 1 \
-    --snapshot-dir snapshots/verify-phase2/ \
-    --config renders/calibration_phase2_acceptance.toml
-
-# Phase 4 integrate-and-fire dynamics:
-uv run pytest tests/test_neuron_dynamics.py -v
-```
-
-### Run the suite
-
-```bash
-uv run pytest tests/ -q -m "not slow"          # 313 tests, ~35 s
-uv run pytest tests/ -q                          # 313 + 22 slow, ~10 min
-```
-
----
-
-## The research dashboard
-
-A Postgres-backed Streamlit app records every research session, every config, every run, every observation, and every substrate amendment. It also generates natural-language run reports (Markdown + PDF) and renders the substrate's state in 3D with full zoom/rotate/hover.
-
-```bash
-docker compose up -d              # Postgres + Streamlit, on :5433 + :8502
-# open http://localhost:8502
-```
-
-| Page | What it does |
-|---|---|
-| Dashboard | Programme-level snapshot |
-| Sessions | Each session is one research question and its outcome |
-| Config | `WorldConfig` snapshots; save and load |
-| Runs | Drive the simulator, import observations from snapshots, generate reports |
-| Results | Per-run observations, species, **3D viewer with frequency-coloured layers**, generated report |
-| Amendments | Substrate amendments to `CONCEPT.md` and their decision state |
-| Acceptance | The §5 acceptance criteria across all phases, with evidence pointers |
-
-The 3D viewer auto-fits its axes to the actual data so the cluster fills the canvas regardless of box size. Each entity type is its own toggleable layer in the legend. Hover for frequency, polarity, level, and species fingerprint.
-
----
-
-## Documentation map
-
-- [`docs/CONCEPT.md`](docs/CONCEPT.md) — the conceptual case for the substrate
-- [`docs/medium_articles/2026-05-09-substrate-night.md`](docs/medium_articles/2026-05-09-substrate-night.md) — long-form narrative report on the May 2026 build session
-- [`world/self_aware.py`](world/self_aware.py) — G16 self-aware mechanism with full theoretical anchors in the docstring
-- [`world/dream.py`](world/dream.py) — G15/G18 dreaming substrate with all four biological references in the docstring
-- [`agent/autonomous_loop.py`](agent/autonomous_loop.py) — G17 autonomous loop driver
-- [`agent/run_autonomous.py`](agent/run_autonomous.py) — CLI + emergence-marker checker
-- [`docs/CALIBRATION_GUIDE.md`](docs/CALIBRATION_GUIDE.md) — empirical calibration regime
-- [`docs/RESEARCH_GUIDE.md`](docs/RESEARCH_GUIDE.md) — protocol for running new research questions
-- [`docs/TUTORIAL.md`](docs/TUTORIAL.md) — getting-started walkthrough
-
-Historical planning artefacts live under `docs/superpowers/specs/` and `docs/superpowers/plans/`. They are kept for provenance.
-
----
-
-## Papers & Theories
-
-Every theory, paper, and established method EQMOD operationalises is listed here, grouped by the
-thread it feeds. **An honest disclaimer governs the whole list:** with the single exception of the
-specific *combinations* noted in the amendment docs, none of these methods is ours. We name the
-established work as established and reserve "new" for genuine novelty (see `docs/patterns/` and the
-per-amendment honesty notes). EQMOD assembles known mechanisms on an unusual substrate and reports
-what they do; the contribution is the mapped deadlock and the disciplined process, not the methods.
-
-### Behavioural-timescale plasticity & content-addressable memory (G14)
-- **Magee, J.C. (2026).** *Behavioral Time Scale Plasticity.* Nature Neuroscience (review). — seconds-scale eligibility-trace plasticity; the G14 inspiration (substrate lacks Magee's dendritic plateau trigger + instructive input — BTSP-*inspired*, not BTSP).
-- **Wu, X., et al. (2025).** *Behavioral time scale plasticity enables one-shot content-addressable memory.* Nature Communications.
-- **Bi, G. & Poo, M. (1998).** *Synaptic modifications in cultured hippocampal neurons.* J. Neuroscience. — the millisecond STDP window (Plan B bridge orientation).
-- **Hebb, D.O. (1949).** *The Organization of Behavior.* — co-firing potentiation; the substrate's correlation plasticity and the energy model's "connections strengthen with experience".
-- **Sutton, R.S. (1988).** *Learning to predict by the methods of temporal differences.* — eligibility traces (the trace mechanism shared by BTSP and TD).
-
-### Sleep, replay & offline consolidation (G15/G18; the Neuron 2026 convergence)
-- **Wilson, M.A. & McNaughton, B.L. (1994).** *Reactivation of hippocampal ensemble memories during sleep.* Science. — sequence replay; the basis of `world/dream.py`.
-- **Buzsáki, G. (2015).** *Hippocampal sharp wave-ripple.* Hippocampus. — SWR-gated, eligibility-biased replay seeding.
-- **Lewis, P.A. & Durrant, S.J. (2011).** *Overlapping memory replay during sleep builds cognitive schemata.* Trends Cogn. Sci. — schema integration / concept blending (G18 integration bridges).
-- **Hobson, J.A.** *AIM model* — forward modelling with the input gate closed (dream-state gating).
-- **"A learning-evoked slow-oscillatory architecture paces population activity for offline reactivation across the human medial temporal lobe."** *Neuron* (2026), Oxford ([press release](https://www.ox.ac.uk/news/2026-06-02-new-study-shows-the-brain-uses-brief-slow-rhythms-to-organise-how-memories-are)). — human MTL: brief ~2 Hz slow-oscillation bursts pace offline reactivation; reactivation strength predicts retention. **Convergent validation** of our existing eligibility-biased replay design (it does not resolve our documented charge-field/erosion deadlock; pacing is a coordination mechanism, our wall is structural).
-
-### Consciousness — operational, access-level only (G16)
-- **Block, N. (1995).** *On a confusion about a function of consciousness.* BBS. — access vs. phenomenal; we target access only.
-- **Dehaene, S. & Naccache, L. (2001).** *Towards a cognitive neuroscience of consciousness.* Cognition. — Global Neuronal Workspace, winner-take-all broadcast (no gamma synchrony / ignition transient implemented).
-- **Rosenthal, D. (2005).** *Consciousness and Mind.* OUP. — Higher-Order Theory.
-- **Friston, K. (2010).** *The free-energy principle.* Nat. Rev. Neuroscience. — prediction-error self-modification (G16 marker 3).
-- **Tononi, G.** *Integrated Information Theory (IIT).* — referenced as a contrast point for what the markers do not measure.
-- **Chalmers, D.J. (1995).** *Facing up to the problem of consciousness.* J. Consciousness Studies. — *cited to mark what we did NOT solve (the hard problem).*
-
-### Life / autopoiesis (G17 honest scope)
-- **Varela, F.J., Maturana, H.R. & Uribe, R. (1974).** *Autopoiesis: the organisation of living systems.* BioSystems. — cited to mark what G17 is **not**: the driver is allopoietic (homeostatic parameter feedback), not autopoietic.
-
-### Vector-symbolic / distributed memory (EQMOD-2 cognition thread)
-- **Plate, T. (1995).** *Holographic Reduced Representations (HRR).* IEEE Trans. Neural Networks. — circular-convolution binding; the relational store in `world/substrate_memory.py`.
-- **Kanerva, P.** *Sparse Distributed Memory* & *Hyperdimensional Computing.* — distributed "energy cloud" bundles; capacity/cleanup.
-
-### Reservoir computing, random features & online readout (the tractable-nonlinearity route, JEP-429/430)
-- **Jaeger, H. (2001).** *Echo State Networks.* — reservoir computing.
-- **Maass, W., et al. (2002).** *Liquid State Machines.* — the spiking-reservoir analogue.
-- **Rahimi, A. & Recht, B. (2007).** *Random features for large-scale kernel machines.* NeurIPS. — random nonlinear projection making low-order nonlinearity linearly separable (`world/valence_reservoir.py`).
-- **Huang, G.-B., et al. (2006).** *Extreme Learning Machine.* — fixed random hidden layer + linear readout.
-- **Recursive Least Squares** (adaptive filtering, Haykin) — the online closed-form readout update in the valence-reservoir learner.
-
-### Energy-based & associative memory; statistical mechanics (Ising/Hopfield/RBM thread, G138–G145)
-- **Hopfield, J.J. (1982).** *Neural networks and physical systems with emergent collective computational abilities.* PNAS. — associative recall; spurious/mixed states.
-- **Ising model** (statistical mechanics) — frustration and energy landscapes the physical-computing experiments probe.
-- **Hinton, G.E., et al.** *Boltzmann Machines / Restricted Boltzmann Machines / contrastive divergence*; **LeCun et al.** *Energy-Based Models*; **Rao, R. & Ballard, D. (1999)** *Predictive coding.* — the energy-based generative/inference references for G142+.
-
-### Affective "energy cloud" model (Michael's hypothesis; JEP-425/426)
-- **Damasio, A.** *Somatic Marker Hypothesis.* — affective valence (bright/dark "energy clouds") as a learning signal; tested in JEP-426→430.
-
-### Learning-theory limits (where the wall is, JEP-427)
-- **Minsky, M. & Papert, S. (1969).** *Perceptrons.* — XOR / parity is the canonical non-linearly-separable function; the precise boundary a scalar valence readout cannot cross without features.
-
-### Spiking-neuron & cortical-microcircuit references (flux substrate / SNN comparators)
-- **Izhikevich, E. (2007).** *Dopamine-modulated STDP* (two-equation neuron model). — `world/flux/izhikevich_rstdp.py`.
-- **Diehl, P. & Cook, M. (2015).** *Unsupervised learning of digit recognition using STDP.* — SNN+STDP comparator.
-- **Markram, H., et al. (2015).** *Reconstruction and simulation of neocortical microcircuitry.* Cell. — cortical-microcircuit architecture reference.
-
-### AI, mathematics & method
-- **Klowden, T. & Tao, T. (2026).** *Mathematical Methods and Human Thought in the Age of AI.* arXiv:2603.26524. — the human-centred, red-team (verify) vs blue-team (generate) framing; aligns with EQMOD's hard constraint (the LLM is the *parent/teacher*, the no-LLM substrate is the reasoner) and its mechanism-over-metric discipline.
-
----
-
-## License
-
-See [`LICENSE`](LICENSE). Code under MIT. Documentation under CC-BY-SA. The substrate runs on a normal laptop.
+VibraSim is an experimental research codebase. Its useful output is a testable
+model and an auditable record of its capabilities and limitations.

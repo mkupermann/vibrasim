@@ -1,0 +1,12 @@
+{
+  "description": "Unmodified implementation snapshots for inspection. Paths refer to the original experimental layout, not this archival directory. These are not a standalone runnable package.",
+  "sha256": {
+    "vibrasim2/learning.py": "597c333bf4a62751d23e330fc072f64a84845a709b85320497d40b12bd4a846a",
+    "vibrasim2/media.py": "ba3adc17d54118b4070b6f8e085aa6efb84018aea9481921b122883519eb723a",
+    "vibrasim2/transfer.py": "e4125f5cfecd6de9cf9f10ce0758e422b7fbd433a1da3499249df1eab415c42a",
+    "tools/run_g183_audio_material.py": "1709732c5be536314ee5836241fb14520632059ed2b3d2c18c1dfa7a3bd20646",
+    "tools/run_g188_continuous_reference.py": "443f8380c61e967d908991c77c3568facba8937585516b04f3251d9686105166",
+    "tools/run_g189_local_aging_transfer.py": "1686500852a1fc4daa68f858139d5885133a14853ff8529125da7353cacd6f2f",
+    "tools/run_g191_source_reassignment.py": "dfcb0d0cd9b784b1473f4362c4ea19478ede5cd882568c0cf6462cd24a4776b9"
+  }
+}
