@@ -15,8 +15,8 @@ echo ""
 if python3 -c "import matplotlib; import _tkinter" 2>/dev/null; then
     PYTHON=python3
     echo "✓ Using system Python with Tkinter"
-elif /Users/mkupermann/Documents/GitHub/vibrasim/.venv/bin/python3 -c "import matplotlib; import _tkinter" 2>/dev/null; then
-    PYTHON="/Users/mkupermann/Documents/GitHub/vibrasim/.venv/bin/python3"
+elif $REPO_DIR/.venv/bin/python3 -c "import matplotlib; import _tkinter" 2>/dev/null; then
+    PYTHON="$REPO_DIR/.venv/bin/python3"
     echo "✓ Using venv Python with Tkinter"
 elif python3 -c "import matplotlib; import _tkinter" 2>/dev/null; then
     PYTHON=python3

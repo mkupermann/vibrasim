@@ -536,8 +536,8 @@ def build_parser() -> argparse.ArgumentParser:
                    help="One-line human title (defaults to amendment id)")
     p.add_argument("--slug", default=None,
                    help="Filename slug for the test file (default: derived from title)")
-    p.add_argument("--author", default="Michael Kupermann",
-                   help="Spec author (default: Michael Kupermann)")
+    p.add_argument("--author", default="VibraSim contributors",
+                   help="Spec author (default: VibraSim contributors)")
     p.add_argument("--retry-of", default=None,
                    help="If this is a retry of a FAILED amendment, the id of the original (e.g. G21)")
     p.add_argument("--gate-status", default="Gated — see chain spec for prerequisites.",

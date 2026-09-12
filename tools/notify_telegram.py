@@ -16,7 +16,7 @@ Setup instructions (one-time, ~5 min):
 
     1. Open Telegram, message @BotFather.
     2. /newbot → choose a name (e.g. "EQMOD Autopilot") and a username
-       ending in "bot" (e.g. "eqmod_michael_bot").
+       ending in "bot" (e.g. "example_research_bot").
     3. BotFather replies with a token like "1234567890:AAA...". Save it.
     4. Search for your new bot in Telegram by its username, open the chat,
        press "Start" (or send "hello"). This creates a chat the bot can

@@ -1,8 +1,4 @@
-"""ingest — pull plain text out of the sources Michael wants the brain to read: .txt files, web URLs, and PDFs.
-
-No transformer, no pretrained model — just file reading, an HTTP fetch (requests/urllib), a regex HTML-stripper, and
-optional pypdf for PDFs. Returns plain text that `Conversation.read_text` then learns.
-"""
+'ingest research component.'
 import os
 import re
 import html as _html

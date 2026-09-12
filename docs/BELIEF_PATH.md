@@ -1,9 +1,5 @@
 # BELIEF PATH — the question we restart (lab kept)
 
-**Status:** active programme charter · written 2026-07-19  
-**Owner:** Michael Kupermann  
-**Rule:** if this file disagrees with a later pre-registered amendment, the amendment wins for that experiment; if an agent or session drifts into VSA / Brian2 / SA-CIM / gated-RNN side quests as if they were this path, **this file wins** — those tracks are archive, not the belief.
-
 ---
 
 ## 1. Why this document exists
@@ -67,11 +63,11 @@ The belief path does **not** deny that honesty. It says: **act as if the ladder 
 
 Archive (valid science, **off this path** unless explicitly re-admitted):
 
-- BET-144/145/146 temporal credit, e-prop, gated RNN  
-- Oscillator-Ising / CIM / SA (G135–G153)  
-- VSA + reservoir systematic generalization stack as *substitute* for molecules  
-- GEO / LLM track  
-- Autopilot BET spam  
+- BET-144/145/146 temporal credit, e-prop, gated RNN
+- Oscillator-Ising / CIM / SA (G135–G153)
+- VSA + reservoir systematic generalization stack as *substitute* for molecules
+- GEO / LLM track
+- Autopilot BET spam
 
 Use their LOGBOOK entries as **boundary conditions**, not as the next todo.
 
@@ -89,10 +85,10 @@ Use their LOGBOOK entries as **boundary conditions**, not as the next todo.
 
 ### Out of bounds (drift detectors)
 
-- “Just use a reservoir / VSA / LLM for understanding, call it substrate.”  
-- Winning a task by abandoning reduction to vibrations.  
-- Post-hoc threshold tuning.  
-- Re-deriving G30–G153 / memory activity NULLs without a new representation or rule.  
+- “Just use a reservoir / VSA / LLM for understanding, call it substrate.”
+- Winning a task by abandoning reduction to vibrations.
+- Post-hoc threshold tuning.
+- Re-deriving G30–G153 / memory activity NULLs without a new representation or rule.
 - Dressing known methods as novel emergence.
 
 ---
@@ -142,20 +138,14 @@ Do not start all three. Pick **one**. Bars below are *programme-level sketches*;
 
 ## 8. Explicit non-goals (for now)
 
-- Beating classical optimizers.  
-- Open-ended natural language with no-transformer stacks borrowed from the archive.  
-- Autopilot quantity of experiments over quality of ladder steps.  
+- Beating classical optimizers.
+- Open-ended natural language with no-transformer stacks borrowed from the archive.
+- Autopilot quantity of experiments over quality of ladder steps.
 - Renaming all historical code paths — archive may keep old names; **new work** is framed in belief-path language.
 
 ---
 
 ## 9. Session start checklist (for any AI or human)
-
-1. Read this file.  
-2. Read `FRONTIER.md`.  
-3. Skim newest `LOGBOOK.md` entry.  
-4. Confirm the next experiment is on Rung A, B, or C (or a pre-registered child of one).  
-5. If the proposed work is archive-shaped (VSA win, SA, Brian2, BET-146-style), **stop and ask Michael** — do not “helpfully” resume the old path.
 
 ### Live 3D during a BET
 
@@ -167,11 +157,11 @@ python tools/run_bp_b1_molecule_information.py --smoke --live
 python tools/run_bp_b2_emergent_species.py --smoke --live
 ```
 
-- `--live` — first treatment trial only (default for watching)  
-- `--live-all` — every trial (slow)  
-- Keys: `space` pause, `s` step, `q` finish rest headless  
+- `--live` — first treatment trial only (default for watching)
+- `--live-all` — every trial (slow)
+- Keys: `space` pause, `s` step, `q` finish rest headless
 
-Free playground (not a BET): `python -m world gui`  
+Free playground (not a BET): `python -m world gui`
 Shared helper: `world/bet_live.py`
 
 ---

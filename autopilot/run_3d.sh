@@ -21,7 +21,7 @@ REPO_DIR="$(cd "$REPO_DIR" && pwd)"
 if python3 -c "import matplotlib; import _tkinter" 2>/dev/null; then
     PYTHON=python3
 else
-    PYTHON="/Users/mkupermann/Documents/GitHub/vibrasim/.venv/bin/python3"
+    PYTHON="$REPO_DIR/.venv/bin/python3"
 fi
 
 # Check if matplotlib backend needs to be set

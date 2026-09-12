@@ -9,7 +9,7 @@ verdict criterion. The autopilot's plan-writing session passes by producing
 a plan file at docs/superpowers/plans/*-flux-substrate-F{2,3}.md with the
 required structural headings.
 
-If the plan files exist already (post-vacation), these tests pass; if not,
+If the plan files exist already, these tests pass; if not,
 they fail loudly so that postflight returns NULL/FAIL rather than silently
 passing.
 """
@@ -77,10 +77,9 @@ def test_training_EN_plan_exists_and_well_formed() -> None:
     """R-6 acceptance: training plan for the English audio corpus.
 
     The training plan is a separate concern from F2/F3 because it commits
-    the substrate to ENGLISH (not German, not French) per user instruction
-    2026-05-13. It also pre-registers Stage 1 + Stage 2 only (audiobook +
+    the substrate to English. It also pre-registers Stage 1 + Stage 2 only (audiobook +
     single YouTuber) — Stage 3 multi-speaker and Stage 4 user-recording
-    are out of vacation scope.
+    are outside this plan.
     """
     matches = sorted(PLANS_DIR.glob("*-flux-training-EN.md"))
     plan = matches[-1] if matches else None
@@ -94,7 +93,7 @@ def test_training_EN_plan_exists_and_well_formed() -> None:
     body = plan.read_text().lower()
     assert "english" in body, (
         f"training plan {plan.name} must explicitly commit to English as the "
-        "training language (per user instruction 2026-05-13: only English, no German, no French)"
+        "training language"
     )
     assert re.search(
         r"negative\s+control|matched.?wallclock", body
@@ -102,12 +101,11 @@ def test_training_EN_plan_exists_and_well_formed() -> None:
         f"training plan {plan.name} must pre-register a negative control "
         "(matched-wallclock substrate without input)"
     )
-    # Stage 4 substitute is required (user cannot record while away — substitution
-    # delegated 2026-05-13 23:38). The plan must commit to a specific public-domain
+    # Stage 4 requires a substitute. The plan must commit to a specific public-domain
     # or CC-licensed recording as a Stage 4 substitute distinct from Stages 1 + 2.
     assert "stage 4" in body, (
         f"training plan {plan.name} must address Stage 4 (the original spec calls "
-        "for a personal-voice recording, which the user delegated to a substitute)"
+        "for a voice recording, addressed here with a substitute)"
     )
     assert "substitute" in body or "substituted" in body, (
         f"training plan {plan.name} must use the word 'substitute' to make the "

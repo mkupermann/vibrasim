@@ -11,7 +11,7 @@ import re
 QUESTION_STARTS = ("is ", "are ", "can ", "does ", "do ", "what ", "why ", "who ", "how ", "where ", "which ",
                    "tell me ", "describe ")          # treat 'tell me about X' / 'describe X' as questions to answer
 
-# affective lexicon (Michael's energy-cloud valence: bright(+) / dark(-)), JEP-425. Established: affect/somatic-marker.
+# Research implementation.
 _AFFECT_POS = {"good", "kind", "beautiful", "wonderful", "happy", "love", "peace", "brave", "honest", "gentle",
                "wise", "noble", "pure", "joy", "joyful", "friendly", "generous", "loyal", "calm", "safe", "healthy"}
 _AFFECT_NEG = {"bad", "evil", "cruel", "ugly", "terrible", "hate", "war", "fear", "violent", "dishonest", "selfish",
@@ -504,7 +504,7 @@ class Conversation:
             if f and f not in set(self.sm.facts):
                 self.sm.add_fact(*f)
         # affective valence: tag each entity with a bright(+)/dark(-) charge when an affective word is asserted of it
-        # (Michael's energy-cloud model; established: affect/somatic-marker). JEP-425.
+        # Research implementation.
         for (a, r, b) in self.sm.facts[before:]:
             delta = 1.0 if b in _AFFECT_POS else -1.0 if b in _AFFECT_NEG else 0.0
             if delta == 0.0:
@@ -521,8 +521,7 @@ class Conversation:
              "place", "person", "event", "process", "material"}
 
     def read_text(self, text):
-        """Read a whole document into the durable brain (Michael: 'the substrate reads a new text'). Learns every
-        parseable sentence, the memory grows; the same brain accumulates across sessions/days. Returns a summary."""
+        'read text research component.'
         before = len(self.sm.facts)
         sents = [s.strip() for s in re.split(r"(?<=[.!?])\s+", text.replace("\n", " ")) if s.strip()]
         for s in sents:
@@ -564,11 +563,10 @@ class Conversation:
         top = max(g, key=lambda c: (ref[c], c))
         return top
 
-    READY_FACTS = 6                                      # "once it is ready" (Michael rule #1): enough connected facts
+    READY_FACTS = 6                                      # Research implementation.
 
     def _open_ended(self, text, subject):
-        """Open-ended Socratic question back, gated on readiness (Michael rule #1). The brain POSES it (it does not
-        creatively answer it -- the JEP-332 wall)."""
+        ' open ended research component.'
         if len(self.sm.facts) < self.READY_FACTS:
             return None
         low = text.lower()
@@ -589,9 +587,7 @@ class Conversation:
         return None
 
     def _connections(self, subject):
-        """Make connections (Michael's rule #2): the NEW entailments unlocked for `subject` by linking the new fact
-        to what is already known — deductive generation (JEP-331). Returns short English clauses, beyond the direct
-        parent."""
+        ' connections research component.'
         if not subject:
             return []
         from world.brain_query import BrainQuery

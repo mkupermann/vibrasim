@@ -1,17 +1,4 @@
-"""substrate_memory — make the substrate's memory DURABLE and GROWABLE (per Michael: 'it can't die when the program
-closes; store it and let it grow like a brain').
-
-Until now the memory lived only in RAM: the VSA relational store (facts superposed in one bundle vector + a
-cleanup dictionary) and the perceptual ActiveLearner (taught exemplars). This wraps both and serializes them to a
-real FOLDER OF FILES you can copy, back up, and keep growing:
-    <dir>/vectors.npz   - the superposed memory vector (accum), value vocabulary, exemplar block
-    <dir>/meta.json     - dimension, atom/value/fact registry, learner scalars
-
-Teach -> save -> close -> reopen -> load: the knowledge is still there, and you can add more without erasing the
-old (lifelong learning). Atom vectors are derived DETERMINISTICALLY from their name via hashlib (cross-process
-stable), so a separate program reading the folder reconstructs the identical vectors. No transformer, no
-pretrained model -- only the substrate's own VSA primitives (world/vsa).
-"""
+'substrate memory research component.'
 import os
 import re
 import json

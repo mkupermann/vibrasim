@@ -1,13 +1,4 @@
-"""GROUNDED UNDERSTANDING — the complete human-like loop in one demonstration (EQMOD-4, JEP-54..178).
-
-The engine PERCEIVES instances, READS structure from prose, REASONS over the combination (vision + reading), and
-COMMUNICATES — all with NO transformer, NO LLM, NO pretrained model. This is the fullest realization of Michael's
-goal (human-like LEARNING, UNDERSTANDING, COMMUNICATING) achievable under the substrate-legal / no-transformer
-constraint. Honest scope: perception here is toy (well-separated prototypes); the BINDING of perception to
-prose-learned structure is the point. Real grounding needs rich embodied perception (the open frontier).
-
-Run:  PYTHONPATH=. .venv/Scripts/python.exe tools/demo_grounded_understanding.py
-"""
+'demo grounded understanding research component.'
 import numpy as np
 from world.understanding import UnderstandingEngine
 

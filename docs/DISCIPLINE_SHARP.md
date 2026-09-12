@@ -1,14 +1,11 @@
 # Scharfe Disziplin — Belief Path (ab 2026-07-19)
 
-Michael: **mit schärferer Disziplin weitermachen.**  
-Das hier ist die Betriebsordnung. Verstöße = abbrechen und neu vorregistrieren.
-
 ---
 
 ## 1. Was wir sind
 
-Bottom-up-Prüfung des Glaubens (Vibrationen → Feld/Dichte → Bindung → Materie → Information → Talent → Gehirn).  
-**Kein** Lebenszeit-Optimierer für grüne Häkchen.  
+Bottom-up-Prüfung des Glaubens (Vibrationen → Feld/Dichte → Bindung → Materie → Information → Talent → Gehirn).
+**Kein** Lebenszeit-Optimierer für grüne Häkchen.
 **Kein** 3D-Show-Modus, solange nicht explizit verlangt.
 
 Meta-Ziel bleibt: ehrlicher Prozess (Pre-Reg, Kontrollen, NULL, Overclaim-Rücknahme).
@@ -45,8 +42,8 @@ Meta-Ziel bleibt: ehrlicher Prozess (Pre-Reg, Kontrollen, NULL, Overclaim-Rückn
 
 ## 4. Nächste erlaubte Züge (Priorität)
 
-1. **Eine** neue C-Hypothese mit *wirklich neuem* Mechanismus — zeitliches Muster / Rhythmus bei gleichem Band ist **bereits NULL** (BP-C4, BP-C8; dazu C21–C79 Einzel-Knopf-NULLs): nicht wiederholen. Neu heißt: neues Primitiv oder andere Repräsentation — oder  
-2. **Formale Teil-Schließung C** mit Pattern-Doc und explizitem „Brain blocked until …“ — oder  
+1. **Eine** neue C-Hypothese mit *wirklich neuem* Mechanismus — zeitliches Muster / Rhythmus bei gleichem Band ist **bereits NULL** (BP-C4, BP-C8; dazu C21–C79 Einzel-Knopf-NULLs): nicht wiederholen. Neu heißt: neues Primitiv oder andere Repräsentation — oder
+2. **Formale Teil-Schließung C** mit Pattern-Doc und explizitem „Brain blocked until …“ — oder
 3. **Neues Primitiv** (Pre-Reg als G/BP-Amendment, warum die bisherigen Regeln nicht reichen).
 
 Verboten ohne neue Pre-Reg-ID: C1b-Bar senken, C2-Probe retunen, B-Smokes endlos loopen.
@@ -55,16 +52,16 @@ Verboten ohne neue Pre-Reg-ID: C1b-Bar senken, C2-Probe retunen, B-Smokes endlos
 
 ## 5. Zeitbudget-Disziplin
 
-- Realistische Schätzung + **2× Hard Cap** in der Pre-Reg.  
-- Overrun → FAILED Post-Mortem in LOGBOOK, kein stilles Verlängern.  
+- Realistische Schätzung + **2× Hard Cap** in der Pre-Reg.
+- Overrun → FAILED Post-Mortem in LOGBOOK, kein stilles Verlängern.
 - Max **ein** Full-Run pro Frage; Smoke nur vor Full, wenn Technik unklar.
 
 ---
 
 ## 6. Stopp-Signale (Labor pausieren)
 
-- User sagt Stopp / Pause.  
-- Drei NULLs auf **derselben** Mechanismus-Familie → Mechanismus als Klasse schließen, nicht viertes Mal.  
+- User sagt Stopp / Pause.
+- Drei NULLs auf **derselben** Mechanismus-Familie → Mechanismus als Klasse schließen, nicht viertes Mal.
 - (C-Familie Dual-Drive ist mit C1–C3 **geschlossen**.)
 
 ---

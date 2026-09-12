@@ -1,11 +1,5 @@
 # Pattern: the recurring prediction-error classes (synthesis of the predict-calibrate log, JEP-92..180)
 
-Michael's directive was "make the prediction become 100% correct eventually." The honest synthesis: predictions
-converge WITHIN a settled domain, and a small set of RECURRING error classes account for almost every miss. Naming
-them is the transferable output of the discipline — anticipate these proactively and the miss doesn't recur. (Tally
-~70/96; the one forbidden outcome — repeating a *diagnosed* mistake — was avoided except for two bug-families now
-structurally guarded.)
-
 ## The error classes (each with the lesson that prevents recurrence)
 
 1. **Surface-form bugs are a CLASS, not incidents** (JEP-92/94/95/100/119). Articles (a/an is PHONETIC not

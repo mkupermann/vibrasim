@@ -1,8 +1,4 @@
-"""visualize — the durable brain DRAWS what it knows (Michael's teaching rule #3: visual aids).
-
-Renders the stored is-a taxonomy + properties as a hierarchy image. Pure plotting of the substrate's own facts —
-no neural net, no transformer.
-"""
+'visualize research component.'
 import os
 
 

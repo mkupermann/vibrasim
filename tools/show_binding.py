@@ -1,15 +1,4 @@
-"""show_binding — answer Michael's question: if 'Germany has politics' and 'Hungary has politics' share the SAME
-'politics', they'd share the same weights, so learning 'this politics is corrupt' would smear onto BOTH. How does
-the substrate keep them apart and learn like a human -- WITHOUT an LLM (the rule)?
-
-Answer = role-filler BINDING (the substrate's own primitive, world/vsa.py: bind(a,b)=a*b, Hadamard). 'German
-politics' is stored as bind(GERMANY, POLITICS) -- a DIFFERENT pattern from bind(HUNGARY, POLITICS) -- even though
-both share POLITICS. So 'corrupt' attaches to the BOUND instance, not to bare 'politics'. This is exactly how the
-brain avoids the 'binding problem' (superposition catastrophe): same concept, separate instances.
-
-No transformer, no pretrained model -- only the substrate's VSA primitives. Run:
-  PYTHONPATH=. .venv/Scripts/python.exe tools/show_binding.py
-"""
+'show binding research component.'
 import numpy as np
 from world.vsa import rand_hv, bind, unbind, bundle, sim, CleanupMemory
 
@@ -25,9 +14,9 @@ def main():
                     ("CORRUPT", CORRUPT), ("CLEAN", CLEAN)]:
         clean.add(name, v)
 
-    print("=== Michael's case: German politics is corrupt, Hungarian politics is not ===\n")
+    print("=== Example case: German politics is corrupt, Hungarian politics is not ===\n")
 
-    # ---- THE NAIVE WAY (what Michael feared): one shared 'politics' node ----
+    # Research implementation.
     # 'corrupt' gets attached to bare POLITICS -> both countries' politics read as corrupt. COLLISION.
     naive = bundle([bind(POLITICS, CORRUPT)])
     g_naive = clean.cleanup(unbind(naive, POLITICS))     # ask: German politics? (but politics is shared)

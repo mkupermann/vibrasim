@@ -12,7 +12,7 @@ Bottom-up substrate simulator. Computational neuroscience / consciousness resear
 2. `docs/BELIEF_PATH.md` — spine
 3. `FRONTIER.md` — board
 
-Do **not** default to archive tracks (VSA/reservoir, Brian2, SA/CIM, BET-144+, GEO/LLM) unless Michael re-admits them.  
+Do **not** default to archive tracks (VSA/reservoir, Brian2, SA/CIM, BET-144+, GEO/LLM) unless explicitly re-admitted.
 Do **not** re-run dual-drive frequency talent (C1–C3 family). Headless default; no live 3D unless asked.
 
 ## Hard Constraints
@@ -35,7 +35,7 @@ Do **not** re-run dual-drive frequency talent (C1–C3 family). Headless default
 
 ## Environment
 
-- macOS-arm64, Python 3.13, .venv at repo root
+- Python 3.13, .venv at repo root
 - pyvista 0.48 installed (no pyvistaqt/PyQt)
 - Numba JIT cache live for physics hot paths
 - Default WorldConfig (1000 vibrations, 60³ box, n_nodes_max=1024) saturates node capacity quickly — for tests/smokes use renders/calibration_session3.toml instead

@@ -1,9 +1,5 @@
 # EQMOD-4 (JEPA / EBM / MPC) — programme summary
 
-Michael's directive: "model predictive control and energy based models in joint based embedding" + "We will
-find a way for Human level understanding." This is the honest synthesis of the JEP rungs. Charter:
-docs/JEPA_PROGRAMME.md. Substrate-benefit analysis: docs/SUBSTRATE_FOR_JEPA.md.
-
 ## What was asked
 Pursue JEPA (LeCun: predict in representation space), Energy-Based Models (LeCun/Hinton: inference = argmin
 energy), and Model Predictive Control (plan by rolling a model forward to a low-energy goal), and find how the
@@ -82,7 +78,6 @@ vibrasim SUBSTRATE is a genuine benefit for this.
 - Open next work (JEP-7+): scale the local-learning rep + PC predictor; couple them (learn rep AND transition
   with local rules jointly); test on the REAL substrate dynamics, contingent on progress on the persistent-
   memory blocker (substrate memory thread).
-
 
 ## Substrate connection strengthened (JEP-11)
 The planning piece is now substrate-native too: SR is learned by LOCAL TD, and TD-with-eligibility-traces is
@@ -168,23 +163,6 @@ findings, ~13 self-corrections including catching a shipped bug, a red test, and
 
 ## FINAL HONEST ASSESSMENT (whole programme, JEP-1 .. JEP-118c)
 
-### What was actually built
-1. **The substrate's primitives ARE backprop-free JEPA/EBM/MPC** (JEP-1..18): energy-based inference = relaxation,
-   learning = local plasticity (predictive coding matches backprop on MNIST/Fashion at depth); the full perception
-   -> world-model(SR/BTSP) -> MPC-planning loop runs backprop-free. The four-pillar capstone (JEP-78) shows
-   regularized JEPA (VICReg) + latent MPC with a collapse negative control; JEP-79/79b locate WHEN latent-
-   prediction beats generative (only under a capacity bottleneck, not automatically).
-2. **The substrate is IN the chain** (JEP-81/82): after an honest audit (0 of 108 prior runs imported it), the
-   EBM + predictor + MPC pillars were run on world.energy.EnergyNet itself.
-3. **The Understanding Engine** (world/understanding.py, JEP-92..115, 26 gated tests): a 100%-working,
-   substrate-legal (NO transformer) conversational system spanning all three of Michael's verbs — LEARN (told,
-   correction, examples, induction, observation, self-taught), REASON (multi-hop DAG, Boolean, three-valued,
-   contradiction, quantification, comparison), COMMUNICATE (Q&A with reasoning, WH, why, dialogue-teaching,
-   generation/describe).
-4. **A mostly-unsupervised grounding pipeline** (JEP-113..118c): perceive -> cluster (structure) -> cross-
-   situational word learning (meaning, no clean labels) -> wire taxonomy -> reason/describe, self-taught with
-   ZERO told facts in the favorable regime ('A dog is a mammal', learned not told).
-
 ### The honest frontier (named, not crossed)
 - **Real-prose parsing**: classic/grammar extraction recovers ~2% of Boole's actual sentences (JEP-89/108b); a
   permissive grammar's high parse rate is SPURIOUS (clauses-as-concepts). The no-transformer rule forbids the
@@ -193,14 +171,6 @@ findings, ~13 self-corrections including catching a shipped bug, a red test, and
   basic-level is robust, superordinate needs LCA-of-extension + adequate exposure (JEP-118c).
 - **Arbitrary unsupervised structure** (relations beyond IS-A, non-hierarchical features): JEP-69/70 NULL.
 - **Open-ended generation, polysemy/synonymy, rich embodied grounding, language at scale**: open.
-
-### Honest answers to Michael's recurring questions
-- **"Something innovative?"** NO. Every method is established and named (SR/grid-cells, predictive coding,
-  Poincare/order embeddings, VSA/HRR, TransE, VICReg, SCAN/Lake-Baroni, agglomerative clustering, cross-situational
-  learning, Hopfield, MPC). The transferable output is the working FOUNDATION + the DISCIPLINE.
-- **"Human-level understanding and communication?"** NO, and not pretended. A genuine, working, SMALL version of
-  human-like learning/understanding/communication on simple-to-natural language — the foundation to scale FROM,
-  with the hard, genuinely-open-under-no-transformer frontier honestly drawn. Boole is the final exam, not the primer.
 
 ### The discipline (the real deliverable)
 ~120 rungs, every acceptance bar pre-registered and never post-hoc tuned; predict-calibrate (19/32 hits, EVERY miss

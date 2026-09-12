@@ -1,12 +1,4 @@
-"""audio_features — turn a real SOUND into a feature vector the engine can 'hear' (per Michael: hear 'A').
-
-Reads a WAV file (the stdlib `wave` module -- no extra install) and extracts a fixed-length log-FFT feature, the same
-representation the cross-modal grounding (JEP-288) uses. So Michael can RECORD himself saying 'A' (Windows Voice
-Recorder -> .wav), and the teaching tool grounds that sound to the written 'A' via the (modality='sound', symbol) store.
-
-Live microphone streaming needs `sounddevice` (pip install sounddevice); this file works from WAV files with only the
-stdlib, so the hear-path runs everywhere. No transformer, no pretrained audio model -- just FFT.
-"""
+'audio features research component.'
 import wave
 import numpy as np
 

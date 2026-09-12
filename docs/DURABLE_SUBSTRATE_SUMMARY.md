@@ -5,17 +5,12 @@
 > composes as one system with zero regressions across 45 amendments. (The intentional NULL→fix pairs 297→298,
 > 306→307, 313→315, 325→326 and the PARTIALs 328/334 are recorded findings, not failures.)
 
-
 One-page overview of the arc that turned the substrate's memory from RAM-only into a durable, growing, reasoning,
 self-organizing knowledge store — entirely on substrate-native VSA primitives (`world/vsa`,
 `world/substrate_memory`). **No LLM, no transformer, no pretrained model.** All methods are established (HRR/VSA
 binding, modular capacity, permutation binding, hash-routed associative memory, Kanerva analogy, ILP-style rule
 induction), named as such; the contribution is the substrate-native assembly + the measured envelope + the honest
 record.
-
-## The question it answers
-Michael: "How is the memory stored — is it a file? It can't die when the program closes. Store it and let it grow
-like a brain. Keep German politics and Hungarian politics distinct. Learn like a human."
 
 ## What was built (each an amendment, pre-registered, PASS unless noted)
 **Storage & durability**
