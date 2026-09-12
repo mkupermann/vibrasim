@@ -58,10 +58,10 @@ not establish real-video transfer.
 
 G189 and G191 use a declared, constrained spring model with local stiffness aging:
 
-\[
+$$
 E = \frac12\sum_e k_e\,\Delta\ell_e^2,\qquad
 \dot{k}_e = -\gamma k_e\,\Delta\ell_e^2.
-\]
+$$
 
 This is a published directed-aging mechanism, not a new VibraSim learning rule.
 An ideal guide supplies transverse stability. Mechanical node dynamics are
