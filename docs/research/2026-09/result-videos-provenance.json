@@ -1,0 +1,19 @@
+{
+  "scope": "Silent staged presentations of saved measurements. No simulation, training, interpolation, or new experiment.",
+  "videos": {
+    "mm3": {
+      "source": "archive/run-logs/mm3/20260912-first/result.json",
+      "source_sha256": "df4b70ee242218874bd650bce7ac466237cdf1941f5d28937e10c28664277080",
+      "stages": 3,
+      "seconds_per_stage": 4,
+      "output_sha256": "3872e1bb60dd4512f3401a4a3913d5e21e0f01f9d9f4b84a503316bfb43ff1ba"
+    },
+    "g191": {
+      "source": "archive/run-logs/g191/first/result.json",
+      "source_sha256": "7606f818de139c26ad563957e8ea7c658e34c7c289dfe2bd8c19ab60f1073c66",
+      "stages": 5,
+      "seconds_per_stage": 4,
+      "output_sha256": "18a5c6748d9973b6fb423824fdbefe3187acc64cf62ec915e221ad5a3261fad8"
+    }
+  }
+}

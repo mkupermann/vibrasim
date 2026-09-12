@@ -101,6 +101,40 @@ questions. Repeated video playback can change the instrument's springs; reliable
 learning from real video has not yet been demonstrated.
 [Video-experiment methods and replay provenance](docs/research/2026-09/REPORT.md#audiovisual-experiments-and-replay)
 
+## More evidence on video
+
+### Real recordings: the negative transfer result
+
+[![MM3: all five conditions remain at chance across three measured checkpoints](docs/research/2026-09/mm3-results.gif)](docs/research/2026-09/mm3-results.mp4)
+
+[Watch the 12-second MM3 result walkthrough](docs/research/2026-09/mm3-results.mp4).
+The video steps through the saved 6-, 12- and 24-second exposure checkpoints.
+All five conditions score 1/3 on three test recordings. These are measured
+checkpoints, with no interpolated improvement between them. The small, confounded
+sample does not establish a general limit on learning from video.
+[Original measurements](archive/run-logs/mm3/20260912-first/result.json).
+
+### Mechanical reassignment: what changed, and what failed
+
+[![G191: source preference reverses under opposite teaching, while return fails](docs/research/2026-09/g191-results.gif)](docs/research/2026-09/g191-results.mp4)
+
+[Watch the 20-second G191 result walkthrough](docs/research/2026-09/g191-results.mp4).
+The plotted response favors the newly taught source after opposite teaching in
+both tested directions. Continued teaching, separated exposure and frozen bonds
+provide comparisons. Each group is a separate branch from a saved state;
+the reveal order is **not a continuous learning trajectory**. Dots are repeated
+read probes, not independent experimental replications. The separate return-to-rest
+criterion fails at all ten endpoints. This guided mechanical reference uses
+scripted signals and does not establish recognition of real sounds or images.
+[Original measurements](archive/run-logs/g191/first/result.json).
+
+Both videos are silent presentations of archived results, not recordings of a
+running simulation. Four seconds per panel is presentation pacing, not simulated
+time. [Provenance](docs/research/2026-09/result-videos-provenance.json) records the
+input and MP4 hashes; [the renderer](tools/render_result_videos.py) regenerates
+them without executing physics. The original MM1 replay above is the example
+that includes saved sensory inputs and sound.
+
 ## What is implemented
 
 | Component | Purpose | Scope |
