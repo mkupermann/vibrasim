@@ -6,6 +6,24 @@ Bottom-up substrate simulator. Computational neuroscience / consciousness resear
 
 ## Active programme (2026-09-06) — Vibrasim II
 
+### Separate L0 design update (2026-09-16)
+
+For experiential-learning work read `docs/amendments/G176_l0_continuous_experience_learning.md`.
+It supersedes the rejected three-tone L0 draft with a continuous-action research
+specification. The candidate kernel and evaluator are now implemented and
+technically tested; see `docs/validation/l0-20260916.md`. The subsequently authorised
+G176/G177 30-seed run is now closed NULL; see `docs/l0/AI_EXPERIMENT.md` and
+`archive/run-logs/l0/2026-09-16-observed-001/result.json`. All seeds reproduced
+exactly; independent scoring passed. Absolute learning, adaptation and retention
+bars were not met. No novelty claim or automatic follow-on run is authorised.
+Keep G176/G177 and their manifest-hashed source files unchanged. `summarize` checks numeric inputs,
+not artifact provenance; do not treat synthetic test fixtures as research evidence.
+The historical substrate constraints below still govern those programmes; G176
+is a separately described candidate, not a claim of physical emergence. No P0–P3
+rerun or automatic learning experiment is authorised by this documentation update.
+The subsequent implementation instruction covered technical tests and a non-target
+resource benchmark; it did not execute the 30-seed research matrix.
+
 **P3 seeded open maintenance is authorised as an engineering experiment.**
 Read `docs/amendments/v2_p3_open_maintenance.md` first. Michael authorised this
 new programme decision on 2026-09-06. It is not evidence for emergence or the
