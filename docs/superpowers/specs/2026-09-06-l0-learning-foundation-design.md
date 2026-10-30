@@ -1,5 +1,10 @@
 # L0 — Grundlage eines erfahrungslernenden Systems
 
+> Historischer Entwurf, am 16.09.2026 ersetzt durch
+> [G176 / L0 — kontinuierliches Erfahrungslernen](../../amendments/G176_l0_continuous_experience_learning.md).
+> Die unten erhaltene Drei-Ton-Aufgabe entspricht nicht dem korrigierten Auftrag
+> und darf nicht als aktuelle Implementierungsvorgabe verwendet werden.
+
 Status: Entwurf zur Prüfung, keine implementierte Lernmaschine und keine
 Präregistrierung eines bereits festgelegten Algorithmus.
 

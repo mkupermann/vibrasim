@@ -1,0 +1,11 @@
+{
+  "status": "PASS",
+  "seeds": 30,
+  "arms": 5,
+  "training_events": 360000,
+  "evaluation_actions": 180000,
+  "score_tolerance": 1e-12,
+  "result_sha256": "e02da32190c6d5d8b788f7e4fa634b5195ae4481d31980466bc80a7191f1c79a",
+  "audit_source_sha256": "5a9ee7d3135eabc43750387ab2168121a7632a750fdeb3d8de2110ce89e110a9",
+  "scope": "Independent rewards, feedback assignment, splits, restart, per-seed means, SD and paired intervals; policy reproduced by frozen runner."
+}

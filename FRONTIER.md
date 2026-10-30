@@ -1,5 +1,18 @@
 # FRONTIER — Vibrasim II
 
+## Separate L0-Entwicklung — 16.09.2026
+
+Der nächste Entwurf für erfahrungsbasiertes Lernen ist
+[`G176 / L0`](docs/amendments/G176_l0_continuous_experience_learning.md).
+Er ersetzt die verworfene Drei-Ton-Vorgabe durch kontinuierliche eigene Versuche
+und spezifiziert einen begrenzten Erfahrungskandidaten samt Kontrollen.
+Status: Einmaliger G176/G177-Lauf über 30 Seeds abgeschlossen und exakt reproduziert.
+**NULL:** K1 erreicht in Phase A 0,4374 statt mindestens 0,50; klare Vorteile gegen
+Kontrollen und die einfache Erfahrungsreferenz, aber Umlernen und Behalten verfehlt.
+Siehe [Ergebnis und nächste Forschungsfrage](docs/l0/AI_EXPERIMENT.md).
+Keine Nachjustierung oder automatische weitere Variante. Die Verträge bleiben eingefroren.
+Mathematische Neuheit ist offen. P0–P3 bleiben geschlossen und unverändert.
+
 ## Active programme: Vibrasim II — P3 engineering experiment
 
 P3 asks whether a supplied ring can fund its local renewal through open energy

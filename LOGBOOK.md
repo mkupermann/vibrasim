@@ -8954,3 +8954,109 @@ The P3 observer was verified visibly during stepping and at completion. The
 earlier P2 display buffered whole trajectories and must not be described as
 live solver-step observation. No old dataset, gate or NULL/INCONCLUSIVE result
 was changed. No post-result tuning or next experiment was run.
+
+## 2026-09-16 — Separate L0 specification, continuous experiential candidate
+
+Following the decision review, I specified G176/L0 in
+`docs/amendments/G176_l0_continuous_experience_learning.md`. The previous L0
+draft is explicitly superseded: its three fixed response tones must not be
+used as the current requirement. The candidate instead explores continuous
+actuator values and records only its own attempts and assigned feedback.
+
+The specification defines state, bounded storage, action selection, delayed
+feedback, absence of feedback, conflicting experiences, persistence, controls,
+held-out evaluation, and separate learning/retention/adaptation verdicts.
+Known mathematical ingredients are identified; no novelty or learning success
+is claimed. The numerical hand examples and document links were checked.
+
+This is design work only. No learning implementation, device capture, audible
+output, registered experiment or P0–P3 rerun was performed. P0–P3 results and
+their evidence remain unchanged. The pre-existing uv.lock modification was
+not part of this work. Code and the final run contract must be frozen before
+generating research results.
+
+## 2026-09-16 — L0 kernel and evaluator, technical delivery
+
+On the follow-up instruction "Go", I implemented the isolated G176 candidate in
+`vibrasim2/l0/`: continuous proposal search, bounded own-experience storage,
+validated delayed feedback, frozen/random/nearest-experience controls, exact
+JSON restart and observational evaluation. Targets remain in the evaluator.
+The evaluator implements the A/B sequence, block derangement, raw event files,
+paired 30-seed statistics and separate learning/advantage/adaptation/retention.
+
+Technical verification: 45 L0 tests plus six existing P3 tests passed together
+in 2.13 seconds on Windows / Python 3.13.15. The initial tests failed before
+their modules existed; additional edge tests passed during final review.
+The safety auditor covered 259 modules with zero unclassified hazards.
+Only the shortened technical fixture used the end-to-end flow (seed 1001,
+20 training attempts per phase, four evaluation contexts); no research success
+was assessed. See `docs/validation/l0-20260916.md` for commands and boundaries.
+
+Non-target resource probe: 4096 experiences, independent random feedback, then
+64 measured actions and 64 evaluation actions. Elapsed 7.626 seconds, peak
+resident memory 44,244,992 bytes, persisted state 263,761 bytes. Raw timings,
+environment and source hashes are in `docs/validation/l0-20260916-resource.json`.
+The conservative full-run projection is 3561.5 seconds; the proposed two-times
+hard limit rounded to minutes is 7140 seconds. This is a projection, not an
+observed full research duration.
+
+No registered learning matrix, devices, audio, P0–P3 rerun, commit or push.
+The next research step still requires a frozen manifest, a mandatory resource
+guard and artifact provenance checking: the numeric summarizer cannot establish
+that its inputs came from the registered run. No learning or novelty claim.
+Pre-existing lockfile and archived raw-data changes were preserved.
+
+### Implementation budget post-mortem — FAILED
+
+Final filesystem timestamp review exposed a wall-clock budget violation:
+plan created 2026-09-16 00:17:58, first core tests 00:18:35, core implementation
+11:48:06, technical completion about 12:01 (local Europe/Berlin time).
+The 120-minute implementation ceiling was exceeded including the interruption.
+Active-only work time was not independently recorded; it cannot replace the
+registered wall-clock definition. I failed to recheck the deadline before
+continuing after the interruption. This is a process failure, not a scientific
+NULL and not invalidation of the separately recorded passing technical tests.
+Work stops at this delivered technical state. No research run follows. Future
+execution must recheck its original deadline on every resume, not silently reset it.
+
+## 2026-09-16 — G177 frozen L0 run closed NULL
+
+Michael authorised freeze/execution with a further "go". I added G177 and the
+mandatory manifest/resource/artifact runner. Work began about 12:05 local;
+57 technical tests passed in 2.03 seconds and the safety audit covered 260
+modules without unclassified hazards. The new launcher task stayed inside
+its separate 60-minute ceiling; the earlier implementation budget failure
+remains recorded above.
+
+The one fixed run began 12:08:53 local, master seeds 0–29, five arms, 1200
+training attempts per phase and 200 held-out contexts per task. Each seed was
+replayed exactly before inclusion. Runtime including replay was 403.746831
+seconds, peak resident memory 376,422,400 bytes. Both fixed limits (7140 seconds,
+2 GiB) held. Source/environment hashes and all 660 original seed artifacts
+were checked; the read-only assessment confirmed the saved verdict.
+
+Result: NULL. Full K1 phase-A J=0.4374426512 fails the 0.50 absolute gate.
+Frozen=-0.4880625241, shuffled=-0.0946214747, uniform=-0.5082215763,
+nearest-positive=0.2991394543. Paired control differences exceed their
+registered thresholds with positive interval lower bounds. The separate
+baseline advantage gate passes (difference 0.1383031969, CI95
+[0.0321287646, 0.2444776292]); this does not turn the overall NULL into PASS.
+
+Adaptation and retention both fail: phase-B J=-0.0884150983, old-task J after B
+=-0.1285435077, old-task loss 0.5659861589. The tasks conflict without a task
+indicator, so interference is a plausible interpretation, not independently
+identified mechanism evidence.
+
+An additional read-only audit imports neither learner nor evaluator and
+recomputed rewards, assignment, split separation, seed means/SD and paired
+intervals from 360,000 original training events and 180,000 evaluation actions.
+It passed at 1e-12 tolerance; see docs/validation/l0-20260916-independent-audit.json.
+The plotted result was rendered and visually inspected. Full closeout and
+reproduction links: docs/l0/AI_EXPERIMENT.md.
+
+Frozen manifest SHA-256:
+6d5416403716794f309810edb7a6e8226be22a3790be80e11f7a737cfc3a5bae.
+Result SHA-256:
+e02da32190c6d5d8b788f7e4fa634b5195ae4481d31980466bc80a7191f1c79a.
+No parameter/threshold changes after data, no next candidate, no P0–P3 rerun,
+no device capture/audio, no commit or push. Novelty/general learning remain open.
