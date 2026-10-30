@@ -169,4 +169,4 @@ python -m world run --config renders/calibration_session3.toml --seed 42
 ## 📝 Versionshistorie
 | Version | Datum       | Änderungen | Autor |
 |---------|-------------|-----------|-------|
-| 1.0     | 2026-07-28  | Erste Version | Michael Kupermann |
+| 1.0     | 2026-07-28  | Erste Version | Contributors |

@@ -31,7 +31,7 @@ from typing import Any
 import yaml
 
 # Repo root - update if needed
-REPO_DEFAULT = Path("/Users/mkupermann/Documents/GitHub/vibrasim")
+REPO_DEFAULT = Path(__file__).resolve().parents[1]
 
 DEFAULT_INTERVAL_SECONDS = 60.0
 DEFAULT_MAX_RUNTIME_SECONDS = 3600  # 1h iteration cap
@@ -40,7 +40,7 @@ DEFAULT_TERM_GRACE_SECONDS = 3
 
 class PathConfig:
     """Configuration for a single research path."""
-    
+
     def __init__(self, config: dict, paths_yaml_path: Path):
         self.name = config.get("name", "Unknown")
         self.description = config.get("description", "")
@@ -49,7 +49,7 @@ class PathConfig:
         self.queue_prefix = config.get("queue_prefix", "")
         self.state_dir_base = config.get("state_dir", "~/.eqmod/autopilot")
         self.paths_yaml_path = paths_yaml_path
-        
+
         # Expand state_dir
         self.state_dir = Path(self.state_dir_base).expanduser()
         self.queue_path = self.state_dir / "queue.yaml"
@@ -59,14 +59,14 @@ class PathConfig:
         self.dispatcher_log = self.state_dir / "dispatcher.log"
         self.logbook_path = self.state_dir / "LOGBOOK.md"
         self.path_key = Path(paths_yaml_path).stem  # e.g., "paths" -> use path name
-    
+
     def __repr__(self):
         return f"PathConfig(name={self.name!r}, prefix={self.queue_prefix!r})"
 
 
 class DualPathDispatcher:
     """Manages two parallel research paths with configurable allocation."""
-    
+
     def __init__(
         self,
         paths_config_path: Path | str | None = None,
@@ -79,39 +79,39 @@ class DualPathDispatcher:
         self.term_grace_seconds = float(term_grace_seconds)
         self.evaluate_timeout_seconds = float(evaluate_timeout_seconds)
         self.single_path = single_path
-        
+
         # Load paths configuration
         if paths_config_path is None:
             paths_config_path = self.repo / "autopilot" / "paths.yaml"
         self.paths_config_path = Path(paths_config_path)
-        
+
         if not self.paths_config_path.exists():
             raise FileNotFoundError(
                 f"Paths configuration not found: {self.paths_config_path}"
             )
-        
+
         self.paths_config = yaml.safe_load(self.paths_config_path.read_text())
         self.autopilot_config = self.paths_config.get("autopilot", {})
-        
+
         # Initialize path configs
         self.paths = {}
         for path_name, path_config in self.paths_config.get("paths", {}).items():
             self.paths[path_name] = PathConfig(path_config, self.paths_config_path)
-        
+
         # Get allocation percentages
         self.path_allocation = self.autopilot_config.get("path_allocation", {})
-        
+
         # Override with single_path if specified
         if single_path and single_path in self.paths:
             self.active_paths = [single_path]
         else:
             self.active_paths = list(self.paths.keys())
-    
+
     def log(self, msg: str, path_name: str | None = None) -> None:
         """Log a message, optionally for a specific path."""
         prefix = f"[{path_name}] " if path_name else ""
         line = f"[{_dt.datetime.now().isoformat()}] {prefix}{msg}\n"
-        
+
         # Log to each active path's dispatcher log
         if path_name and path_name in self.paths:
             log_path = self.paths[path_name].dispatcher_log
@@ -120,19 +120,19 @@ class DualPathDispatcher:
             log_dir = self.paths_config_path.parent / "logs"
             log_dir.mkdir(parents=True, exist_ok=True)
             log_path = log_dir / "dual_path_dispatcher.log"
-        
+
         log_path.parent.mkdir(parents=True, exist_ok=True)
         with log_path.open("a") as f:
             f.write(line)
-    
+
     def _get_path_dispatcher(self, path_name: str):
         """Import and return a BetDispatcher for a specific path."""
         # Add repo to sys.path so we can import tools.bet_dispatcher
         if str(self.repo) not in sys.path:
             sys.path.insert(0, str(self.repo))
-        
+
         from tools.bet_dispatcher import BetDispatcher
-        
+
         path_config = self.paths[path_name]
         return BetDispatcher(
             state_dir=path_config.state_dir,
@@ -140,7 +140,7 @@ class DualPathDispatcher:
             term_grace_seconds=self.term_grace_seconds,
             evaluate_timeout_seconds=self.evaluate_timeout_seconds,
         )
-    
+
     def load_all_queues(self) -> dict[str, list[dict]]:
         """Load queues for all paths."""
         queues = {}
@@ -150,36 +150,36 @@ class DualPathDispatcher:
             queue_data = dispatcher.load_queue()
             queues[path_name] = queue_data.get("items") or []
         return queues
-    
+
     def get_next_item(self) -> tuple[str, dict] | None:
         """Select next item to run based on path allocation.
-        
+
         Returns (path_name, item) or None if no items queued.
         """
         queues = self.load_all_queues()
-        
+
         # Get queued items for each path
         queued_items = {}
         for path_name in self.active_paths:
             items = [i for i in queues[path_name] if i.get("status") == "queued"]
             if items:
                 queued_items[path_name] = items
-        
+
         if not queued_items:
             return None
-        
+
         # If only one path has items, use it
         if len(queued_items) == 1:
             path_name = list(queued_items.keys())[0]
             return path_name, queued_items[path_name][0]
-        
+
         # Multiple paths have items - use allocation percentages
         # Get allocation weights
         total_weight = sum(self.path_allocation.get(p, 50) for p in queued_items)
         if total_weight == 0:
             # Default to equal distribution
             total_weight = len(queued_items) * 50
-        
+
         # Weighted random selection
         weights = {p: self.path_allocation.get(p, 50) for p in queued_items}
         path_name = random.choices(
@@ -187,14 +187,14 @@ class DualPathDispatcher:
             weights=list(weights.values()),
             k=1
         )[0]
-        
+
         return path_name, queued_items[path_name][0]
-    
+
     def get_path_status(self, path_name: str) -> dict:
         """Get current status of a path."""
         path_config = self.paths[path_name]
         dispatcher = self._get_path_dispatcher(path_name)
-        
+
         status = {
             "path": path_name,
             "name": path_config.name,
@@ -204,7 +204,7 @@ class DualPathDispatcher:
             "running_count": 0,
             "stopped": path_config.stop_path.exists(),
         }
-        
+
         if path_config.pid_path.exists():
             try:
                 pid = int(path_config.pid_path.read_text().strip())
@@ -214,16 +214,16 @@ class DualPathDispatcher:
                         status["current_item"] = path_config.current_item_path.read_text().strip()
             except (ValueError, OSError):
                 pass
-        
+
         queue = dispatcher.load_queue()
         for item in queue.get("items") or []:
             if item.get("status") == "queued":
                 status["queued_count"] += 1
             elif item.get("status") == "running":
                 status["running_count"] += 1
-        
+
         return status
-    
+
     def _pid_alive(self, pid: int) -> bool:
         """Check if a process is alive (not zombie)."""
         try:
@@ -252,20 +252,20 @@ class DualPathDispatcher:
         except Exception:
             pass
         return True
-    
+
     def tick(self) -> dict[str, Any]:
         """Run one dispatcher tick across all paths.
-        
+
         Returns a dict describing what happened.
         """
         self.log("--- dual-path autopilot tick")
-        
+
         # Check if global STOP marker exists
         global_stop = self.paths_config_path.parent / "STOP"
         if global_stop.exists():
             self.log("Global STOP marker present — return stopped")
             return {"action": "stopped", "reason": "global_stop"}
-        
+
         # First, run BetDispatcher tick for each path to handle completed items
         results = []
         for path_name in self.active_paths:
@@ -274,25 +274,25 @@ class DualPathDispatcher:
             if path_result.get("action") not in ("idle", "stopped"):
                 self.log(f"Path {path_name} tick: {path_result}", path_name)
             results.append((path_name, path_result))
-        
+
         # Check for items to run
         next_item = self.get_next_item()
-        
+
         if next_item is None:
             self.log("No queued items across any path — return idle")
             return {"action": "idle", "reason": "no_queued_items"}
-        
+
         path_name, item = next_item
         self.log(f"Selected path: {path_name}, item: {item.get('id')}", path_name)
-        
+
         # Use the path-specific dispatcher to launch
         dispatcher = self._get_path_dispatcher(path_name)
-        
+
         # Check if path is stopped
         if self.paths[path_name].stop_path.exists():
             self.log(f"Path {path_name} STOP marker present — skipping", path_name)
             return {"action": "skipped", "path": path_name, "reason": "path_stopped"}
-        
+
         # Check if something is already running on this path
         if dispatcher.pid_path.exists():
             try:
@@ -323,19 +323,19 @@ class DualPathDispatcher:
                     }
             except (ValueError, OSError):
                 pass
-        
+
         # Launch the item
         pid = dispatcher.launch_item(item)
         dispatcher.update_item_status(item["id"], "running")
         self.log(f"Launched {item.get('id')} on path {path_name} pid={pid}", path_name)
-        
+
         return {
             "action": "launched",
             "path": path_name,
             "item": item.get("id"),
             "pid": pid,
         }
-    
+
     def get_overall_status(self) -> dict:
         """Get status of all paths."""
         status = {
@@ -343,10 +343,10 @@ class DualPathDispatcher:
             "allocations": self.path_allocation,
             "active_paths": self.active_paths,
         }
-        
+
         for path_name in self.active_paths:
             status["paths"][path_name] = self.get_path_status(path_name)
-        
+
         return status
 
 
@@ -380,25 +380,25 @@ def main(argv: list[str] | None = None) -> int:
         "--status", action="store_true",
         help="print status and exit",
     )
-    
+
     args = parser.parse_args(argv)
-    
+
     dispatcher = DualPathDispatcher(
         paths_config_path=args.paths_config,
         repo=args.repo,
         single_path=args.path,
     )
-    
+
     if args.status:
         status = dispatcher.get_overall_status()
         print(json.dumps(status, default=str, indent=2))
         return 0
-    
+
     if args.once:
         result = dispatcher.tick()
         print(json.dumps(result, default=str))
         return 0
-    
+
     # Continuous polling
     while True:
         try:

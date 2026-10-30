@@ -65,7 +65,7 @@ def render_session_sidebar() -> str | None:
             st.caption("No sessions yet.")
             with st.form("sb_create_session", clear_on_submit=True):
                 t = st.text_input("Title", placeholder="e.g. Phase 5 calibration")
-                r = st.text_input("Researcher", value="Michael")
+                r = st.text_input("Researcher", value="")
                 if st.form_submit_button("Create + activate"):
                     if t and r:
                         sid = create_session(r, t)

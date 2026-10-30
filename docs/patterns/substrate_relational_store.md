@@ -1,11 +1,5 @@
 # Pattern: the substrate AS the Understanding Engine's relational memory (JEP-232/233/234)
 
-Michael's recurring question — "where is the substrate in the chain?" — answered for *relational knowledge*. The
-Understanding Engine (`world/understanding.py`) keeps its facts in Python dicts + VSA fact-vectors. They can instead
-live IN the energy-based substrate (`world.energy.EnergyNet`, a modular Hopfield/contrastive-Hebbian EBM), which
-then performs storage, multi-hop inference, AND relation typing on its own dynamics. All three pieces are
-ESTABLISHED methods (named as such — no novelty); the value is the demonstrated end-to-end connection + its envelope.
-
 ## The construction (single dense module, N=80: KEY=[0:40], VALUE=[40:80])
 1. **Codes.** Each concept and each relation type → a fixed random ±1 vector of length 40.
 2. **STORE a fact** `(subject, relation, object)` as the bipolar attractor

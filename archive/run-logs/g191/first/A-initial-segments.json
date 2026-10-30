@@ -1,0 +1,51 @@
+[
+  {
+    "segment": {
+      "start": 0.0,
+      "end": 8.0,
+      "phase": "teach",
+      "slot": 0,
+      "teacher": 0,
+      "dose": 0.2
+    },
+    "success": true,
+    "nfev": 2561,
+    "message": "The solver successfully reached the end of the integration interval."
+  },
+  {
+    "segment": {
+      "start": 8.0,
+      "end": 16.0,
+      "phase": "teach",
+      "slot": 1,
+      "teacher": 0,
+      "dose": 0.2
+    },
+    "success": true,
+    "nfev": 2555,
+    "message": "The solver successfully reached the end of the integration interval."
+  },
+  {
+    "segment": {
+      "start": 16.0,
+      "end": 24.0,
+      "phase": "teach",
+      "slot": 2,
+      "teacher": 0,
+      "dose": 0.2
+    },
+    "success": true,
+    "nfev": 2465,
+    "message": "The solver successfully reached the end of the integration interval."
+  },
+  {
+    "segment": {
+      "start": 24.0,
+      "end": 44.0,
+      "phase": "hold"
+    },
+    "success": true,
+    "nfev": 6041,
+    "message": "The solver successfully reached the end of the integration interval."
+  }
+]

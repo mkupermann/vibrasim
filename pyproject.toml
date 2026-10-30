@@ -4,7 +4,7 @@ version = "0.2.0"
 description = "World of Vibrations — 3D physics simulator toward emergent brain-like structure (Phase 1 v2)."
 readme = "README.md"
 requires-python = ">=3.13"
-authors = [{ name = "Michael Kupermann", email = "michael@kupermann.com" }]
+authors = [{ name = "VibraSim contributors" }]
 dependencies = [
     "numpy >= 1.26, <3.0",
     "numba >= 0.61, <0.70",

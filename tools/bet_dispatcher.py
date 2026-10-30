@@ -107,7 +107,7 @@ from typing import Any
 
 import yaml
 
-REPO_DEFAULT = Path("/Users/mkupermann/Documents/GitHub/vibrasim")
+REPO_DEFAULT = Path(__file__).resolve().parents[1]
 
 DEFAULT_INTERVAL_SECONDS = 60.0
 DEFAULT_MAX_RUNTIME_SECONDS = 3600  # 1h iteration cap

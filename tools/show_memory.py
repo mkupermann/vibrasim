@@ -1,13 +1,4 @@
-"""show_memory — answer Michael's question literally: what does the substrate's memory LOOK like, is it a file?
-
-Teaches two facts into a REAL EnergyNet, then dumps exactly what is stored:
-  - the weight matrix W (the 'memory') as numbers AND as a picture,
-  - the +-1 firing pattern of a fact,
-  - recall by energy relaxation (clamp half -> the rest lights up),
-  - where (little) gets written to disk.
-
-No transformer, no pretrained model. Run: PYTHONPATH=. .venv/Scripts/python.exe tools/show_memory.py
-"""
+'show memory research component.'
 import os
 import numpy as np
 from world.energy import EnergyNet

@@ -1,14 +1,5 @@
 # Energy Model + Discovery Frontier Summary (JEP-425 → 441)
 
-Consolidated end-state of the autonomous run that built Michael's affective "energy-cloud" model on
-the substrate and mapped the non-linear feature-discovery frontier. Written 2026-06-05. No
-transformer, no pretrained model, no backprop anywhere in the substrate path.
-
-## The vision (Michael's)
-Concepts are distributed **energy clouds** with a **valence** (bright/positive vs dark/negative);
-connections **strengthen with experience**; we **perceive the energies of the environment**, and the
-goal was to learn this through experiments — and to find what "new mathematics" it needs.
-
 ## What was BUILT (robust positives)
 1. **Affect + strengthening (JEP-425).** Per-concept valence (`sm.valence`) + Hebbian
    experience-strengthening (`sm.strength`). The VSA bundles were already the "cloud"; valence and
@@ -114,14 +105,6 @@ ALGEBRAIC structure-discovery module: it escapes the SQ wall (HYB-01), ROBUSTLY 
 mining the local learner's own misclassified residual (HYB-03), and tolerates label noise up to **~10%**
 with a sharp, interpretable breakdown governed by clean-subset probability (HYB-04/05). Actionable for the
 energy model: keep the local energy learning, add an algebraic module for the SQ-hard parts.
-
-**3. The new-science verdict — honest NO, rigorously earned.** Studying our own substrate as a novel
-system gave only a MODEST native regularity (characteristic ~140-atom structure size, explainable by
-valence-saturated shells — NSH-01/02); the memory deadlock resisted three fresh attacks including
-Michael's Neuron-2026 paced-reactivation paper (PR-01/ER-01/ER-02, all NULL, the deadlock characterized
-one level deeper); and the single best "unexplained" candidate resolved to a known barrier (SQ-hardness).
-So: **no new science** — but the energy model's fundamental boundary is precisely located and a working,
-fully-characterized architecture past it is in hand.
 
 **Honest meta.** Many self-corrections recorded over consistency (439, 445/456, 457, the JEP-459 mistaken
 "abort", HYB-02 fragile isolation, HYB-04 LPN over-pessimism). The value is the rigorous process — chase

@@ -1,0 +1,644 @@
+[
+  {
+    "segment": {
+      "start": 0.0,
+      "end": 8.0,
+      "phase": "teaching",
+      "piece": 0
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 2549,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "teacher-only-00.npz",
+    "sha256": "196fb94d304d03a1eef566b7d9c4208de25cda5993b69532ecd4afeb16b5f2ea"
+  },
+  {
+    "segment": {
+      "start": 8.0,
+      "end": 16.0,
+      "phase": "teaching",
+      "piece": 1
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 2465,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "teacher-only-01.npz",
+    "sha256": "2effdc2cb696dad1ea049ef0ce0afbef829ee68f674a25e4bf9423d95d5402e3"
+  },
+  {
+    "segment": {
+      "start": 16.0,
+      "end": 36.0,
+      "phase": "hold",
+      "piece": 0
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 6041,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "teacher-only-02.npz",
+    "sha256": "6241c39f2fc94d809d24530002f6665186a82fec889796fcf4e7f874387edcb0"
+  },
+  {
+    "segment": {
+      "start": 36.0,
+      "end": 38.0,
+      "phase": "read",
+      "piece": 0,
+      "cycle": 1
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 641,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "teacher-only-03.npz",
+    "sha256": "6e10e5f6c5e5f8c780970f543dd7eab46de09eff4499600dc706ef8fb4857217"
+  },
+  {
+    "segment": {
+      "start": 38.0,
+      "end": 44.0,
+      "phase": "read",
+      "piece": 1,
+      "cycle": 1
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 1817,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "teacher-only-04.npz",
+    "sha256": "75271176d45d779eb89effa00a1b07adb464ee59bbdaec25c98c7b28839aa267"
+  },
+  {
+    "segment": {
+      "start": 44.0,
+      "end": 46.0,
+      "phase": "read",
+      "piece": 2,
+      "cycle": 1
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 617,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "teacher-only-05.npz",
+    "sha256": "009c7ace16b71d6d51773c4f058e47b872a3f11b7a06b60283d6421c98ca95d9"
+  },
+  {
+    "segment": {
+      "start": 46.0,
+      "end": 56.0,
+      "phase": "read",
+      "piece": 3,
+      "cycle": 1
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 3017,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "teacher-only-06.npz",
+    "sha256": "14ebf341b10345e68f9e4b8bcfbae97fbbc63483e4d45c003694efb58006fcf4"
+  },
+  {
+    "segment": {
+      "start": 56.0,
+      "end": 58.0,
+      "phase": "read",
+      "piece": 0,
+      "cycle": 2
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 617,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "teacher-only-07.npz",
+    "sha256": "19f74a4009ae2626853b433ae57f7e0deb4beafcb99147141bd0794052c70045"
+  },
+  {
+    "segment": {
+      "start": 58.0,
+      "end": 64.0,
+      "phase": "read",
+      "piece": 1,
+      "cycle": 2
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 1817,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "teacher-only-08.npz",
+    "sha256": "96f2b6a9eee7f986e133591c100825f1592d886431a90b726b9648bfa9425e6f"
+  },
+  {
+    "segment": {
+      "start": 64.0,
+      "end": 66.0,
+      "phase": "read",
+      "piece": 2,
+      "cycle": 2
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 617,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "teacher-only-09.npz",
+    "sha256": "42d54e8b6dfa1844a3418503376946941987e745244b49358d316ffe783d66ce"
+  },
+  {
+    "segment": {
+      "start": 66.0,
+      "end": 76.0,
+      "phase": "read",
+      "piece": 3,
+      "cycle": 2
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 3017,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "teacher-only-10.npz",
+    "sha256": "572f0f2f2e590ec2e05aaabce452c748f093fa94939572f9eaa6415764d26d6d"
+  },
+  {
+    "segment": {
+      "start": 76.0,
+      "end": 78.0,
+      "phase": "read",
+      "piece": 0,
+      "cycle": 3
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 617,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "teacher-only-11.npz",
+    "sha256": "c6d2107b3c29a796223bc5e2e4428a7057b2afe982bc8797862bee613c879d94"
+  },
+  {
+    "segment": {
+      "start": 78.0,
+      "end": 84.0,
+      "phase": "read",
+      "piece": 1,
+      "cycle": 3
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 1817,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "teacher-only-12.npz",
+    "sha256": "32940928ec81b1d4bf76c7d9df63c339a679eb0259504caeda95460c04f7111d"
+  },
+  {
+    "segment": {
+      "start": 84.0,
+      "end": 86.0,
+      "phase": "read",
+      "piece": 2,
+      "cycle": 3
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 617,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "teacher-only-13.npz",
+    "sha256": "c1c215220a5840199d9ad8ae0a09b1d2a32464cf6cbe64192de4b481f8d3317a"
+  },
+  {
+    "segment": {
+      "start": 86.0,
+      "end": 96.0,
+      "phase": "read",
+      "piece": 3,
+      "cycle": 3
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 3017,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "teacher-only-14.npz",
+    "sha256": "01818e81ef740a9ae31c588364f576c84906a57d850584cd7547e425a0f69b5e"
+  },
+  {
+    "segment": {
+      "start": 96.0,
+      "end": 98.0,
+      "phase": "read",
+      "piece": 0,
+      "cycle": 4
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 617,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "teacher-only-15.npz",
+    "sha256": "587f8a4622153c8411d121ff3b88ef7bef49582752ecb9704c602763b099d3cc"
+  },
+  {
+    "segment": {
+      "start": 98.0,
+      "end": 104.0,
+      "phase": "read",
+      "piece": 1,
+      "cycle": 4
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 1817,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "teacher-only-16.npz",
+    "sha256": "f6e291450e20054ba35d291d09a9d28eae78e0fe65e6e1df40a0cc721a4c31ce"
+  },
+  {
+    "segment": {
+      "start": 104.0,
+      "end": 106.0,
+      "phase": "read",
+      "piece": 2,
+      "cycle": 4
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 617,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "teacher-only-17.npz",
+    "sha256": "5d2eeb989759015383f15c0e593726cc59859d7281ce27e3bb1766ede406a6b7"
+  },
+  {
+    "segment": {
+      "start": 106.0,
+      "end": 116.0,
+      "phase": "read",
+      "piece": 3,
+      "cycle": 4
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 3017,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "teacher-only-18.npz",
+    "sha256": "b689af18231f3fefb48d370561a9f9c1518815eb802646d2b4dca066cfdf7556"
+  },
+  {
+    "segment": {
+      "start": 116.0,
+      "end": 118.0,
+      "phase": "read",
+      "piece": 0,
+      "cycle": 5
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 617,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "teacher-only-19.npz",
+    "sha256": "9514c41ca81c6ad7196f2d39b28b1769b12112b831e0fd82f43edfe1042ee98e"
+  },
+  {
+    "segment": {
+      "start": 118.0,
+      "end": 124.0,
+      "phase": "read",
+      "piece": 1,
+      "cycle": 5
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 1817,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "teacher-only-20.npz",
+    "sha256": "4af24d681d41ebe8457c89d46a3c367b9115f48e85693acb4a4cdbd2dd2a6c20"
+  },
+  {
+    "segment": {
+      "start": 124.0,
+      "end": 126.0,
+      "phase": "read",
+      "piece": 2,
+      "cycle": 5
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 617,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "teacher-only-21.npz",
+    "sha256": "9c92eeffe46119209d382dca6db2d9a6dc578c6ff2f6a7f966b466375d182b6d"
+  },
+  {
+    "segment": {
+      "start": 126.0,
+      "end": 136.0,
+      "phase": "read",
+      "piece": 3,
+      "cycle": 5
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 3002,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "teacher-only-22.npz",
+    "sha256": "9811ab4bd3c97333846cd5f570b11d9ccfb0fd5ef78a49ab41b5c18ea65837f0"
+  },
+  {
+    "segment": {
+      "start": 136.0,
+      "end": 138.0,
+      "phase": "read",
+      "piece": 0,
+      "cycle": 6
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 602,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "teacher-only-23.npz",
+    "sha256": "e7d9ec1d81bb4d705893f8b1d5ec07ceebd1dae65962ed09ce333053120290ca"
+  },
+  {
+    "segment": {
+      "start": 138.0,
+      "end": 144.0,
+      "phase": "read",
+      "piece": 1,
+      "cycle": 6
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 1802,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "teacher-only-24.npz",
+    "sha256": "5ca5db30305612d5873373588a9264f27ed06ce8f08988a110c8f0d7c8964f77"
+  },
+  {
+    "segment": {
+      "start": 144.0,
+      "end": 146.0,
+      "phase": "read",
+      "piece": 2,
+      "cycle": 6
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 602,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "teacher-only-25.npz",
+    "sha256": "cc9aa1faca121d2065f73118577f15349df97b4b43b0810e86157d27cbdb1e9f"
+  },
+  {
+    "segment": {
+      "start": 146.0,
+      "end": 156.0,
+      "phase": "read",
+      "piece": 3,
+      "cycle": 6
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 3002,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "teacher-only-26.npz",
+    "sha256": "5e01c8017fc508abfd2fe96cf1093bd86c0df5e6ad7cb2ccffd541faf4a897b3"
+  },
+  {
+    "segment": {
+      "start": 156.0,
+      "end": 158.0,
+      "phase": "read",
+      "piece": 0,
+      "cycle": 7
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 602,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "teacher-only-27.npz",
+    "sha256": "8a2ef159b39b1f42384d919ba9656f897b4a08b5eef0e00b5d60143447ce3c6e"
+  },
+  {
+    "segment": {
+      "start": 158.0,
+      "end": 164.0,
+      "phase": "read",
+      "piece": 1,
+      "cycle": 7
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 1802,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "teacher-only-28.npz",
+    "sha256": "94de6d6ab600ba029910965fccddcbebcb37723b7219f33c75b15258b14da9b2"
+  },
+  {
+    "segment": {
+      "start": 164.0,
+      "end": 166.0,
+      "phase": "read",
+      "piece": 2,
+      "cycle": 7
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 602,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "teacher-only-29.npz",
+    "sha256": "443e6f264ecbbd3b7882fa9da0597be35f36dcb943ca8f21d6e9312d102c9e87"
+  },
+  {
+    "segment": {
+      "start": 166.0,
+      "end": 176.0,
+      "phase": "read",
+      "piece": 3,
+      "cycle": 7
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 3002,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "teacher-only-30.npz",
+    "sha256": "37884b73bb0053a72a2b06a730ffb13375c38cb816b50018868f0b5e9447c8ec"
+  },
+  {
+    "segment": {
+      "start": 176.0,
+      "end": 178.0,
+      "phase": "read",
+      "piece": 0,
+      "cycle": 8
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 602,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "teacher-only-31.npz",
+    "sha256": "e915f1ac74b59f523a2204716263ba7dfe206f84541960eaf789686ee0ed2657"
+  },
+  {
+    "segment": {
+      "start": 178.0,
+      "end": 184.0,
+      "phase": "read",
+      "piece": 1,
+      "cycle": 8
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 1802,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "teacher-only-32.npz",
+    "sha256": "6266b1e418f3a62efe7ca3f97c6e2dd73f12ea9f79e1c62362ea22520bc804e2"
+  },
+  {
+    "segment": {
+      "start": 184.0,
+      "end": 186.0,
+      "phase": "read",
+      "piece": 2,
+      "cycle": 8
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 602,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "teacher-only-33.npz",
+    "sha256": "4736ecc927eb4de8c771cdbda64ade835451495d49483a967a1d352240d880d0"
+  },
+  {
+    "segment": {
+      "start": 186.0,
+      "end": 196.0,
+      "phase": "read",
+      "piece": 3,
+      "cycle": 8
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 3002,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "teacher-only-34.npz",
+    "sha256": "cd52b68ddffb005ed0f6936c178b957b7af326762493b3d0740857ac24e6c983"
+  },
+  {
+    "segment": {
+      "start": 196.0,
+      "end": 198.0,
+      "phase": "read",
+      "piece": 0,
+      "cycle": 9
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 602,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "teacher-only-35.npz",
+    "sha256": "f5061180f945ef56307fc09a7dabd9ddedab7db55cf8396ee4445d38d9ec0383"
+  },
+  {
+    "segment": {
+      "start": 198.0,
+      "end": 204.0,
+      "phase": "read",
+      "piece": 1,
+      "cycle": 9
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 1802,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "teacher-only-36.npz",
+    "sha256": "4da1bbcadcba080cdb492ed5cab7cd262dd5b7427e98f608ce97155bf2a3380c"
+  },
+  {
+    "segment": {
+      "start": 204.0,
+      "end": 206.0,
+      "phase": "read",
+      "piece": 2,
+      "cycle": 9
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 602,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "teacher-only-37.npz",
+    "sha256": "652d6a14b30eb33e26da891d4e7b4f8a241d5c1c3bc1d5196943cfc3c908f4f7"
+  },
+  {
+    "segment": {
+      "start": 206.0,
+      "end": 216.0,
+      "phase": "read",
+      "piece": 3,
+      "cycle": 9
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 3002,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "teacher-only-38.npz",
+    "sha256": "5ea079b8bed596970ec9021d70a0d446f311f312fe1c4dbe5b8d4405ed10474d"
+  },
+  {
+    "segment": {
+      "start": 216.0,
+      "end": 218.0,
+      "phase": "read",
+      "piece": 0,
+      "cycle": 10
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 602,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "teacher-only-39.npz",
+    "sha256": "b6efcd0ae886a7825e9cc1e6089f543fa464c38415380e40ceae2823303d0c14"
+  },
+  {
+    "segment": {
+      "start": 218.0,
+      "end": 224.0,
+      "phase": "read",
+      "piece": 1,
+      "cycle": 10
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 1802,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "teacher-only-40.npz",
+    "sha256": "417817d1ee108d7f033cd0c03d0e2dc740283706a9c7c1d997a20e99a1ba8ea7"
+  },
+  {
+    "segment": {
+      "start": 224.0,
+      "end": 226.0,
+      "phase": "read",
+      "piece": 2,
+      "cycle": 10
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 602,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "teacher-only-41.npz",
+    "sha256": "e8d913114e7a7f62666dbf36be74268e7ff8af275df14807a30d72b43e74ca93"
+  },
+  {
+    "segment": {
+      "start": 226.0,
+      "end": 236.0,
+      "phase": "read",
+      "piece": 3,
+      "cycle": 10
+    },
+    "success": true,
+    "status": 0,
+    "nfev": 3002,
+    "message": "The solver successfully reached the end of the integration interval.",
+    "file": "teacher-only-42.npz",
+    "sha256": "fbfac73f11132d7d809202b3da9c23940cb3e989fd5cb137df35516434e8d5f3"
+  }
+]

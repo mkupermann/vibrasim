@@ -1,13 +1,4 @@
-"""Active-learning TEACHER loop (per Michael's steer: 'if the substrate is not sure it asks me').
-
-A modality-agnostic prototype learner that grounds SYMBOLS (letters now, words/sounds later) from perceptual
-examples, reports its CONFIDENCE, and ASKS a teacher only when UNSURE. The teacher answers correct/incorrect (or
-gives the label); later the same store accepts a second modality (audio) bound to the same symbol, so 'hear A' and
-'write A' ground the same 'A'. Established (active learning / uncertainty sampling + nearest-prototype), named; no
-novelty -- it is the teacher loop the directive asks for.
-
-No transformer, no pretrained model.
-"""
+'active learner research component.'
 import numpy as np
 
 

@@ -247,7 +247,7 @@ class BrainQuery:
     def ask(self, q):
         s = q.strip().lower().rstrip("?").strip()
         s = re.sub(r"\bwas\b", "is", s); s = re.sub(r"\bwere\b", "are", s)   # past tense -> present (JEP-405)
-        # affective valence (Michael's energy-cloud: bright/dark) — JEP-425
+        # Research implementation.
         m = re.match(r"^is\s+(?:a\s+|an\s+|the\s+)?(\w+)\s+(good|positive|bright|nice)$", s)
         if m:
             return self._valence(m.group(1)) > 0
@@ -384,7 +384,7 @@ class BrainQuery:
             ent = re.sub(r"^(?:your|the|a|an)\s+", "", m.group(2).strip())
             ent = "you" if ent in ("you", "yours") else self._sing(ent.split()[0])
             return self._attr(ent, self._sing(m.group(1)))
-        m = re.match(r"^what\s+is\s+([a-z]+)'s\s+([a-z]+)$", s)                      # "what is michael's role"
+        m = re.match(r"^what\s+is\s+([a-z]+)'s\s+([a-z]+)$", s)                      # Research implementation.
         if m:
             return self._attr(self._sing(m.group(1)), self._sing(m.group(2)))
         s = re.sub(r"\b(a|an|the)\b", " ", s)
@@ -435,7 +435,7 @@ class BrainQuery:
         if m:
             v, sc = self.mem.query(self._sing(m.group(1)), "located_in")
             return bool(v is not None and sc >= self.gate and v == self._sing(m.group(2)))
-        m = re.match(r"(?:does|do) (\w+) (\w+) (?:a |an |the )?(\w+)$", s)   # 'does Michael like coffee?' verify (JEP-410)
+        m = re.match(r"(?:does|do) (\w+) (\w+) (?:a |an |the )?(\w+)$", s)   # Research implementation.
         if m and m.group(2) != "have":
             x, verb, obj = self._sing(m.group(1)), m.group(2), self._sing(m.group(3))
             objs = []                                    # try verb variants (like<->likes) like what() does

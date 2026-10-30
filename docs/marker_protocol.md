@@ -70,7 +70,6 @@ A **GNW-flavored conjunction trigger** that fires when a substrate carries multi
 
 That is what this is. We will not call it more.
 
-
 ## Pre-data correction record
 
 Pre-registration discipline prevents post-hoc threshold tuning *to results*. It does not prevent correcting a threshold that was specified incorrectly **before any data was collected against it**. Such corrections must be logged explicitly here so a future reader can distinguish the two.
@@ -91,12 +90,7 @@ Pre-registration discipline prevents post-hoc threshold tuning *to results*. It 
 - The change is from `triviallySatisfied` to `nonTriviallySatisfied`, not from one acceptance-rate to another.
 - It is made **before** the next data-collection run that uses it.
 
-**Why this is logged here and not silently fixed:**
-- Without explicit pre-data logging, a future review cannot distinguish "Michael corrected a trivial threshold before running" from "Michael relaxed a failing threshold after running and pretended it was the original".
-- The git diff on this file is the cryptographic proof: this correction landed before any run that ever produced a marker-5 result under the new definition.
-
 Future corrections of this kind — pre-data, same-construct, mis-specification cleanup — will be logged here following the same template. Post-data threshold tuning *to a result* will not happen; it would void the pre-registration and is excluded by `CHARTER.md` §"NULL is a valid verdict".
-
 
 ---
 

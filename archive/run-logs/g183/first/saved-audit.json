@@ -1,0 +1,8 @@
+{
+  "query_traces_verified": 336,
+  "retention_trends_verified": 10,
+  "snapshot_hashes_verified": 32,
+  "max_arithmetic_discrepancy": 0.0,
+  "trace_sha256": "b0e9cee39fabf185462ec2699cebadf69d31d44bf08e51d9e5e01bc010bdf3ef",
+  "scope": "Saved arithmetic, state continuity, unloaded trend and checkpoint hashes; no physical replay"
+}

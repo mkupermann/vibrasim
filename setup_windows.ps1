@@ -51,7 +51,7 @@ for s in m['stages'].values():
     for f in s.get('files', []):
         old = f['path']
         # Replace Mac home with Windows home (forward slash form)
-        f['path'] = old.replace('/Users/mkupermann', home_str)
+        f['path'] = __import__('re').sub(r'^/Users/[^/]+', lambda _: home_str, old)
 p.write_text(json.dumps(m, indent=2))
 print('Manifest patched.')
 "@

@@ -1,7 +1,7 @@
 # Autopilot v2 Tutorial: Encoder-Free Training with Flux Substrate
 
-**Last Updated:** 2026-07-27  
-**Status:** Draft (Work in Progress)  
+**Last Updated:** 2026-07-27
+**Status:** Draft (Work in Progress)
 **Target Audience:** Computational neuroscientists, ML engineers, and solo researchers interested in **reproducible, automated experiments** with the Flux substrate.
 
 ---
@@ -386,7 +386,7 @@ We welcome contributions! Here's how to help:
 
 ### Join the Community
 - **GitHub Discussions:** [vibrasim Discussions](https://github.com/mkupermann/vibrasim/discussions)
-- **Email:** mkupermann (at) gmail (dot) com
+- **Email:** project issue tracker
 - **Hacker News:** [Discuss on HN](https://news.ycombinator.com/) (coming soon!)
 
 ---
@@ -394,16 +394,16 @@ We welcome contributions! Here's how to help:
 ## 🎉 Success Criteria
 
 You've successfully used Autopilot v2 if:
-1. ✅ You ran `run_encoder_free_training` **without errors**. 
-2. ✅ The **KL divergence decreased** over epochs. 
-3. ✅ You **validated the results** with the Flux substrate. 
+1. ✅ You ran `run_encoder_free_training` **without errors**.
+2. ✅ The **KL divergence decreased** over epochs.
+3. ✅ You **validated the results** with the Flux substrate.
 4. ✅ You **shared your findings** (Issue, PR, or email).
 
 ---
 
 **Next Steps:**
 - Try **Project 1** (Replicate a Speech Recognition Paper).
-- Experiment with **custom metrics**. 
+- Experiment with **custom metrics**.
 - Contribute a **new example project**!
 
 ---

@@ -48,7 +48,7 @@ evidence or a control surface.
 
 ## Environment
 
-- macOS-arm64, Python 3.13, .venv at repo root
+- Python 3.13, .venv at repo root
 - pyvista 0.48 installed (no pyvistaqt/PyQt)
 - Numba JIT cache live for physics hot paths
 - Default WorldConfig (1000 vibrations, 60³ box, n_nodes_max=1024) saturates node capacity quickly — for tests/smokes use renders/calibration_session3.toml instead

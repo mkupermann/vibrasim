@@ -22,16 +22,6 @@ domain, abstaining honestly outside.** Integration capstone (JEP-393/394): a fac
   gap and unlocks new reasoning. (JEP-392)
 - **Honest abstention:** says "I don't know" on anything not taught — never hallucinates. (throughout)
 
-## The engineering spine (the hard-won part)
-Michael's "no mistakes" gate exposed that consolidation-naive reasoning collapses at scale (adversarial 0.4). The fix
-chain, each pre-registered, with the NULLs that ruled out wrong hypotheses:
-- **Closure consolidation** (materialize the transitive closure → single-hop reasoning that doesn't compound per-hop
-  error). Dimension is NOT the lever (JEP-369/374 NULL — compounding, not noise).
-- **Consolidation-aware analog readout** for closed is-a — the deep floor was a `sign()`-quantization artifact (JEP-377),
-  closed by a magnitude-preserving cleanup (JEP-378). Edge reinforcement does NOT work under sign readout (376 NULL).
-- New durable APIs: `consolidate_closure(auto_scale)`, `edge_sim_analog`, `closed_relations` (persisted),
-  `Conversation.consolidate()`. Pattern: `docs/patterns/closure_consolidation.md`.
-
 ## The honest standing boundary
 - **Open-domain PhD competence is NOT reachable** without an LLM (the untaught knowledge tail; JEP-362 measured the
   Zipfian asymptote). The reachable target is a **bounded, taught, consolidated domain** — now genuinely error-free.

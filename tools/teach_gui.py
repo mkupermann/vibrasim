@@ -1,19 +1,4 @@
-"""teach_gui — the interactive TEACHING tool (per Michael's steer: 'if the substrate is not sure it asks me via GUI,
-I answer correct / not correct; later, sentences').
-
-Run:  PYTHONPATH=. .venv/Scripts/python.exe tools/teach_gui.py
-
-The engine shows you a WRITTEN LETTER it perceived, tells you its guess + how SURE it is, and:
-  - if it is CONFIDENT, it just states its answer (and learns nothing unless you correct it);
-  - if it is UNSURE, it ASKS YOU. You click [Correct] or [Not correct].
-    On 'Not correct' a small box appears -> type the right letter (later: a full sentence).
-Every answer you give teaches it (updates the letter's prototype), so it slowly grounds the alphabet from YOU.
-
-The cross-modal hook is built in: the same symbol store accepts an audio modality later, so 'hear A' binds to the
-same 'A' as 'write A'. No transformer, no pretrained model -- it learns only from what you teach it.
-
-This module is import-safe (no Tk window is created on import); the GUI launches only under __main__.
-"""
+'teach gui research component.'
 import os
 import sys
 import string
@@ -73,7 +58,7 @@ class TeachApp:
     def __init__(self, learner=None, seed=0, brain_dir=None):
         import tkinter as tk
         self.tk = tk
-        # DURABLE memory (JEP-295): persist what Michael teaches to a folder so it survives close+reopen and GROWS
+        # Research implementation.
         # across sessions. If a learner is injected (the experiment), stay in-memory and don't touch disk.
         self.sm = None
         if learner is not None:
@@ -104,7 +89,7 @@ class TeachApp:
         self.btns = tk.Frame(self.root); self.btns.pack(pady=8)
         self.next_btn = tk.Button(self.root, text="Show me a letter", command=self.next_item)
         self.next_btn.pack(pady=4)
-        # HEAR a sound (per Michael: hear 'A' <-> write 'A'). Record yourself (Windows Voice Recorder -> .wav),
+        # Research implementation.
         # then load it here and say which letter -> it grounds the SOUND to the same symbol as the written letter.
         self.sound_btn = tk.Button(self.root, text="I recorded a sound (load .wav)", command=self.load_sound)
         self.sound_btn.pack(pady=2)
@@ -190,7 +175,7 @@ class TeachApp:
             self._ask_truth()
         else:
             # ALWAYS offer correction -- even when 'confident'. A confidently-WRONG guess must be fixable,
-            # otherwise the tool can't be taught out of an early mistake (Michael's D-called-P bug).
+            # Research implementation.
             sure = "UNSURE — is this" if conf < self.al.tau else "fairly sure this is"
             self.msg.config(text=f"I'm {sure} the letter '{sym}'  (confidence {conf:.0%}).  Am I right?")
             self.tk.Button(self.btns, text="Yes, correct", command=lambda: self._feedback(sym, True)).pack(side="left", padx=6)
@@ -204,7 +189,7 @@ class TeachApp:
         def submit():
             ans = ent.get().strip()
             if ans:
-                # SENTENCE answer (Michael's "later, sentences"): name the percept + teach its facts in one go.
+                # Research implementation.
                 if " is " in ans.lower() or len(ans.split()) > 1:
                     name = self._teach_sentence(ans)
                     self.msg.config(text=f"Thank you — learned this as '{name}', and noted what you told me.")
@@ -217,8 +202,7 @@ class TeachApp:
         ent.bind("<Return>", lambda e: submit())
 
     def _teach_sentence(self, sentence):
-        """Michael answers with a sentence -> ground the percept from its first clause AND read its facts into the
-        engine (the JEP-291 mechanism). Lazily attaches an UnderstandingEngine the first time a sentence is used."""
+        ' teach sentence research component.'
         import re
         if not hasattr(self, "eng"):
             from world.understanding import UnderstandingEngine

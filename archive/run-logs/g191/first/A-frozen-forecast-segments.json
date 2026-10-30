@@ -1,0 +1,522 @@
+[
+  {
+    "segment": {
+      "start": 0.0,
+      "end": 2.0,
+      "phase": "read",
+      "piece": 0,
+      "cycle": 0,
+      "source": 0
+    },
+    "success": true,
+    "nfev": 641,
+    "message": "The solver successfully reached the end of the integration interval."
+  },
+  {
+    "segment": {
+      "start": 2.0,
+      "end": 8.0,
+      "phase": "read",
+      "piece": 1,
+      "cycle": 0,
+      "source": 0
+    },
+    "success": true,
+    "nfev": 1817,
+    "message": "The solver successfully reached the end of the integration interval."
+  },
+  {
+    "segment": {
+      "start": 8.0,
+      "end": 10.0,
+      "phase": "read",
+      "piece": 2,
+      "cycle": 0,
+      "source": 0
+    },
+    "success": true,
+    "nfev": 602,
+    "message": "The solver successfully reached the end of the integration interval."
+  },
+  {
+    "segment": {
+      "start": 10.0,
+      "end": 20.0,
+      "phase": "read",
+      "piece": 3,
+      "cycle": 0,
+      "source": 0
+    },
+    "success": true,
+    "nfev": 3017,
+    "message": "The solver successfully reached the end of the integration interval."
+  },
+  {
+    "segment": {
+      "start": 20.0,
+      "end": 22.0,
+      "phase": "read",
+      "piece": 0,
+      "cycle": 1,
+      "source": 1
+    },
+    "success": true,
+    "nfev": 602,
+    "message": "The solver successfully reached the end of the integration interval."
+  },
+  {
+    "segment": {
+      "start": 22.0,
+      "end": 28.0,
+      "phase": "read",
+      "piece": 1,
+      "cycle": 1,
+      "source": 1
+    },
+    "success": true,
+    "nfev": 1802,
+    "message": "The solver successfully reached the end of the integration interval."
+  },
+  {
+    "segment": {
+      "start": 28.0,
+      "end": 30.0,
+      "phase": "read",
+      "piece": 2,
+      "cycle": 1,
+      "source": 1
+    },
+    "success": true,
+    "nfev": 602,
+    "message": "The solver successfully reached the end of the integration interval."
+  },
+  {
+    "segment": {
+      "start": 30.0,
+      "end": 40.0,
+      "phase": "read",
+      "piece": 3,
+      "cycle": 1,
+      "source": 1
+    },
+    "success": true,
+    "nfev": 3017,
+    "message": "The solver successfully reached the end of the integration interval."
+  },
+  {
+    "segment": {
+      "start": 40.0,
+      "end": 42.0,
+      "phase": "read",
+      "piece": 0,
+      "cycle": 2,
+      "source": 0
+    },
+    "success": true,
+    "nfev": 617,
+    "message": "The solver successfully reached the end of the integration interval."
+  },
+  {
+    "segment": {
+      "start": 42.0,
+      "end": 48.0,
+      "phase": "read",
+      "piece": 1,
+      "cycle": 2,
+      "source": 0
+    },
+    "success": true,
+    "nfev": 1817,
+    "message": "The solver successfully reached the end of the integration interval."
+  },
+  {
+    "segment": {
+      "start": 48.0,
+      "end": 50.0,
+      "phase": "read",
+      "piece": 2,
+      "cycle": 2,
+      "source": 0
+    },
+    "success": true,
+    "nfev": 617,
+    "message": "The solver successfully reached the end of the integration interval."
+  },
+  {
+    "segment": {
+      "start": 50.0,
+      "end": 60.0,
+      "phase": "read",
+      "piece": 3,
+      "cycle": 2,
+      "source": 0
+    },
+    "success": true,
+    "nfev": 3017,
+    "message": "The solver successfully reached the end of the integration interval."
+  },
+  {
+    "segment": {
+      "start": 60.0,
+      "end": 62.0,
+      "phase": "read",
+      "piece": 0,
+      "cycle": 3,
+      "source": 1
+    },
+    "success": true,
+    "nfev": 617,
+    "message": "The solver successfully reached the end of the integration interval."
+  },
+  {
+    "segment": {
+      "start": 62.0,
+      "end": 68.0,
+      "phase": "read",
+      "piece": 1,
+      "cycle": 3,
+      "source": 1
+    },
+    "success": true,
+    "nfev": 1817,
+    "message": "The solver successfully reached the end of the integration interval."
+  },
+  {
+    "segment": {
+      "start": 68.0,
+      "end": 70.0,
+      "phase": "read",
+      "piece": 2,
+      "cycle": 3,
+      "source": 1
+    },
+    "success": true,
+    "nfev": 617,
+    "message": "The solver successfully reached the end of the integration interval."
+  },
+  {
+    "segment": {
+      "start": 70.0,
+      "end": 80.0,
+      "phase": "read",
+      "piece": 3,
+      "cycle": 3,
+      "source": 1
+    },
+    "success": true,
+    "nfev": 3017,
+    "message": "The solver successfully reached the end of the integration interval."
+  },
+  {
+    "segment": {
+      "start": 80.0,
+      "end": 82.0,
+      "phase": "read",
+      "piece": 0,
+      "cycle": 4,
+      "source": 0
+    },
+    "success": true,
+    "nfev": 617,
+    "message": "The solver successfully reached the end of the integration interval."
+  },
+  {
+    "segment": {
+      "start": 82.0,
+      "end": 88.0,
+      "phase": "read",
+      "piece": 1,
+      "cycle": 4,
+      "source": 0
+    },
+    "success": true,
+    "nfev": 1817,
+    "message": "The solver successfully reached the end of the integration interval."
+  },
+  {
+    "segment": {
+      "start": 88.0,
+      "end": 90.0,
+      "phase": "read",
+      "piece": 2,
+      "cycle": 4,
+      "source": 0
+    },
+    "success": true,
+    "nfev": 617,
+    "message": "The solver successfully reached the end of the integration interval."
+  },
+  {
+    "segment": {
+      "start": 90.0,
+      "end": 100.0,
+      "phase": "read",
+      "piece": 3,
+      "cycle": 4,
+      "source": 0
+    },
+    "success": true,
+    "nfev": 3017,
+    "message": "The solver successfully reached the end of the integration interval."
+  },
+  {
+    "segment": {
+      "start": 100.0,
+      "end": 102.0,
+      "phase": "read",
+      "piece": 0,
+      "cycle": 5,
+      "source": 1
+    },
+    "success": true,
+    "nfev": 617,
+    "message": "The solver successfully reached the end of the integration interval."
+  },
+  {
+    "segment": {
+      "start": 102.0,
+      "end": 108.0,
+      "phase": "read",
+      "piece": 1,
+      "cycle": 5,
+      "source": 1
+    },
+    "success": true,
+    "nfev": 1817,
+    "message": "The solver successfully reached the end of the integration interval."
+  },
+  {
+    "segment": {
+      "start": 108.0,
+      "end": 110.0,
+      "phase": "read",
+      "piece": 2,
+      "cycle": 5,
+      "source": 1
+    },
+    "success": true,
+    "nfev": 617,
+    "message": "The solver successfully reached the end of the integration interval."
+  },
+  {
+    "segment": {
+      "start": 110.0,
+      "end": 120.0,
+      "phase": "read",
+      "piece": 3,
+      "cycle": 5,
+      "source": 1
+    },
+    "success": true,
+    "nfev": 3017,
+    "message": "The solver successfully reached the end of the integration interval."
+  },
+  {
+    "segment": {
+      "start": 120.0,
+      "end": 122.0,
+      "phase": "read",
+      "piece": 0,
+      "cycle": 6,
+      "source": 0
+    },
+    "success": true,
+    "nfev": 617,
+    "message": "The solver successfully reached the end of the integration interval."
+  },
+  {
+    "segment": {
+      "start": 122.0,
+      "end": 128.0,
+      "phase": "read",
+      "piece": 1,
+      "cycle": 6,
+      "source": 0
+    },
+    "success": true,
+    "nfev": 1817,
+    "message": "The solver successfully reached the end of the integration interval."
+  },
+  {
+    "segment": {
+      "start": 128.0,
+      "end": 130.0,
+      "phase": "read",
+      "piece": 2,
+      "cycle": 6,
+      "source": 0
+    },
+    "success": true,
+    "nfev": 602,
+    "message": "The solver successfully reached the end of the integration interval."
+  },
+  {
+    "segment": {
+      "start": 130.0,
+      "end": 140.0,
+      "phase": "read",
+      "piece": 3,
+      "cycle": 6,
+      "source": 0
+    },
+    "success": true,
+    "nfev": 3017,
+    "message": "The solver successfully reached the end of the integration interval."
+  },
+  {
+    "segment": {
+      "start": 140.0,
+      "end": 142.0,
+      "phase": "read",
+      "piece": 0,
+      "cycle": 7,
+      "source": 1
+    },
+    "success": true,
+    "nfev": 602,
+    "message": "The solver successfully reached the end of the integration interval."
+  },
+  {
+    "segment": {
+      "start": 142.0,
+      "end": 148.0,
+      "phase": "read",
+      "piece": 1,
+      "cycle": 7,
+      "source": 1
+    },
+    "success": true,
+    "nfev": 1802,
+    "message": "The solver successfully reached the end of the integration interval."
+  },
+  {
+    "segment": {
+      "start": 148.0,
+      "end": 150.0,
+      "phase": "read",
+      "piece": 2,
+      "cycle": 7,
+      "source": 1
+    },
+    "success": true,
+    "nfev": 602,
+    "message": "The solver successfully reached the end of the integration interval."
+  },
+  {
+    "segment": {
+      "start": 150.0,
+      "end": 160.0,
+      "phase": "read",
+      "piece": 3,
+      "cycle": 7,
+      "source": 1
+    },
+    "success": true,
+    "nfev": 3002,
+    "message": "The solver successfully reached the end of the integration interval."
+  },
+  {
+    "segment": {
+      "start": 160.0,
+      "end": 162.0,
+      "phase": "read",
+      "piece": 0,
+      "cycle": 8,
+      "source": 0
+    },
+    "success": true,
+    "nfev": 617,
+    "message": "The solver successfully reached the end of the integration interval."
+  },
+  {
+    "segment": {
+      "start": 162.0,
+      "end": 168.0,
+      "phase": "read",
+      "piece": 1,
+      "cycle": 8,
+      "source": 0
+    },
+    "success": true,
+    "nfev": 1817,
+    "message": "The solver successfully reached the end of the integration interval."
+  },
+  {
+    "segment": {
+      "start": 168.0,
+      "end": 170.0,
+      "phase": "read",
+      "piece": 2,
+      "cycle": 8,
+      "source": 0
+    },
+    "success": true,
+    "nfev": 602,
+    "message": "The solver successfully reached the end of the integration interval."
+  },
+  {
+    "segment": {
+      "start": 170.0,
+      "end": 180.0,
+      "phase": "read",
+      "piece": 3,
+      "cycle": 8,
+      "source": 0
+    },
+    "success": true,
+    "nfev": 3017,
+    "message": "The solver successfully reached the end of the integration interval."
+  },
+  {
+    "segment": {
+      "start": 180.0,
+      "end": 182.0,
+      "phase": "read",
+      "piece": 0,
+      "cycle": 9,
+      "source": 1
+    },
+    "success": true,
+    "nfev": 602,
+    "message": "The solver successfully reached the end of the integration interval."
+  },
+  {
+    "segment": {
+      "start": 182.0,
+      "end": 188.0,
+      "phase": "read",
+      "piece": 1,
+      "cycle": 9,
+      "source": 1
+    },
+    "success": true,
+    "nfev": 1802,
+    "message": "The solver successfully reached the end of the integration interval."
+  },
+  {
+    "segment": {
+      "start": 188.0,
+      "end": 190.0,
+      "phase": "read",
+      "piece": 2,
+      "cycle": 9,
+      "source": 1
+    },
+    "success": true,
+    "nfev": 602,
+    "message": "The solver successfully reached the end of the integration interval."
+  },
+  {
+    "segment": {
+      "start": 190.0,
+      "end": 200.0,
+      "phase": "read",
+      "piece": 3,
+      "cycle": 9,
+      "source": 1
+    },
+    "success": true,
+    "nfev": 3002,
+    "message": "The solver successfully reached the end of the integration interval."
+  }
+]

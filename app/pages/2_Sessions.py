@@ -18,7 +18,7 @@ page_header("Sessions", "A session is a coherent block of work — one question,
 with st.expander("Create a new session", expanded=False):
     with st.form("new_session"):
         c1, c2 = st.columns(2)
-        researcher = c1.text_input("Researcher", value="Michael")
+        researcher = c1.text_input("Researcher", value="")
         title = c2.text_input("Title", placeholder="e.g. Phase 5 substrate calibration")
         question = st.text_area(
             "Research question",

@@ -1,11 +1,4 @@
-"""valence_reservoir — energy-driven non-linear learner (JEP-430).
-
-Couples Michael's affective VALENCE/energy signal to a RESERVOIR (random nonlinear features) + an online linear readout,
-so the system learns to predict the valence of NEW experiences from a non-linear rule WITHOUT enumerating conjunctions
-and without labels beyond the scalar energy. Established methods (random features / Extreme Learning Machine —
-Rahimi-Recht 2007, Huang 2006; recursive least squares), assembled — NO transformer, NO pretrained model. Ties to the
-EQMOD-2 reservoir thread.
-"""
+'valence reservoir research component.'
 import numpy as np
 
 

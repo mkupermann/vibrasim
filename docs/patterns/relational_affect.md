@@ -23,13 +23,6 @@ the energy-cloud valence (`[[affective_energy_generalization]]`), with no transf
 (is-a ancestor) → **propagated** (signed relations, this pattern) → **generalized** (statistical, gated
 to avoid hallucination) → neutral; plus **ambivalence** detection as a separate query.
 
-## Honest scope
-All established theory (Heider 1946; Cartwright-Harary 1956) and methods (graph BFS, sign products),
-named — the contribution is the substrate-native integration that realizes Michael's "energies interact
-through relationships", from individual valence up to emergent collective structure. NOT new science.
-The WEAK-balance / multi-faction regime (Davis 1967) is a different objective (allow all-negative triads)
-and was NOT built — flagged as out-of-core social-network theory (JEP-470).
-
 ## Reuse
 Any time a graded property should flow through typed/signed relations (affect, trust, alignment,
 reward-shaping over a relation graph), this is the shape: tag relations with a sign, propagate the
