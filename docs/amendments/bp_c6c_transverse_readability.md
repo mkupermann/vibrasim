@@ -1,6 +1,6 @@
 # BP-C6c (G175) — mechanical readability of stored patterns in the transverse channel
 
-**Status: DRAFT — under review; commits before any data once signed off.**
+**Status: UNEXECUTED DRAFT — ARCHIVED.**
 
 ## 0. Position in the programme
 

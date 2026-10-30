@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Vibrasim Research Lab — live 3D</title>
+<style>
+  :root {
+    --bg: #070b16;
+    --panel: #10182b;
+    --ink: #e8eefc;
+    --muted: #8fa0bf;
+    --accent: #5ee0c5;
+    --warn: #f0b429;
+    --bad: #f07178;
+    --good: #7fd962;
+    --line: #24314f;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 13px/1.45 "Segoe UI", system-ui, sans-serif;
+  }
+  header {
+    padding: 12px 16px; border-bottom: 1px solid var(--line);
+    display: flex; gap: 14px; align-items: baseline; flex-wrap: wrap;
+  }
+  h1 { font-size: 15px; margin: 0; font-weight: 600; }
+  .claim { color: var(--muted); max-width: 640px; font-size: 12px; }
+  .badge {
+    padding: 2px 8px; border-radius: 999px; font-size: 11px;
+    background: #1c2a44; color: var(--accent); border: 1px solid var(--line);
+  }
+  .badge.run { color: var(--warn); }
+  .badge.done { color: var(--good); }
+  main {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 10px; padding: 10px;
+  }
+  @media (max-width: 1200px) { main { grid-template-columns: 1fr; } }
+  section {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: 10px; padding: 10px 12px;
+  }
+  h2 {
+    margin: 0 0 8px; font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--muted); font-weight: 600;
+  }
+  #view3d {
+    width: 100%; height: 520px; border-radius: 8px;
+    background: radial-gradient(ellipse at 50% 30%, #152038 0%, #0a1020 70%);
+    display: block; cursor: grab;
+  }
+  #view3d:active { cursor: grabbing; }
+  canvas.chart { width: 100%; height: 180px; background: #0d1426; border-radius: 8px; display: block; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+  .stat {
+    flex: 1 1 100px; background: #0d1426; border: 1px solid var(--line);
+    border-radius: 8px; padding: 7px 9px;
+  }
+  .stat .k { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .stat .v { font-size: 16px; font-variant-numeric: tabular-nums; margin-top: 2px; }
+  .stat .v.small { font-size: 12px; }
+  .bar {
+    height: 7px; background: #0d1426; border-radius: 999px; overflow: hidden;
+    border: 1px solid var(--line); margin: 6px 0 2px;
+  }
+  .bar > i {
+    display: block; height: 100%; width: 0;
+    background: linear-gradient(90deg, var(--accent), #6eb6ff);
+    transition: width 0.15s linear;
+  }
+  table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: 11px; }
+  th, td { text-align: left; padding: 4px 5px; border-bottom: 1px solid var(--line); }
+  th { color: var(--muted); font-weight: 600; font-size: 10px; }
+  .pass { color: var(--good); }
+  .miss { color: var(--bad); }
+  .pend { color: var(--warn); }
+  #log {
+    max-height: 140px; overflow: auto; font: 10px/1.4 ui-monospace, Consolas, monospace;
+    color: var(--muted); background: #0d1426; border-radius: 8px; padding: 7px;
+    border: 1px solid var(--line);
+  }
+  .note { color: var(--muted); font-size: 10px; margin-top: 6px; }
+  .legend { display: flex; gap: 10px; flex-wrap: wrap; color: var(--muted); font-size: 10px; margin-top: 4px; }
+  .sw { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 3px; }
+  .toolbar { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
+  button {
+    background: #1c2a44; color: var(--ink); border: 1px solid var(--line);
+    border-radius: 6px; padding: 4px 10px; font-size: 11px; cursor: pointer;
+  }
+  button:hover { border-color: var(--accent); }
+</style>
+</head>
+<body>
+<header>
+  <h1>Vibrasim Research Lab · 3D</h1>
+  <div class="claim">Matter acquires function only if its organisation changes the field that funds it. Scene shows live integrator state — not a mock.</div>
+  <div class="badge run" id="phase">starting</div>
+  <div class="badge" id="method">method v1</div>
+  <div class="badge" id="cycle">cycle 0</div>
+</header>
+<main>
+  <section>
+    <h2>3D experiment scene — field / sites / bonds (live)</h2>
+    <canvas id="view3d"></canvas>
+    <div class="legend">
+      <span><span class="sw" style="background:#5ee0c5"></span>site energy (sphere size / colour)</span>
+      <span><span class="sw" style="background:#f0b429"></span>reservoir</span>
+      <span><span class="sw" style="background:#c792ea"></span>live bond</span>
+      <span><span class="sw" style="background:#6eb6ff"></span>field plane height = u</span>
+    </div>
+    <div class="toolbar">
+      <button id="btnAuto">Auto-rotate: on</button>
+      <button id="btnFront">Front</button>
+      <button id="btnTop">Top</button>
+      <button id="btnSide">Side</button>
+    </div>
+    <div class="bar"><i id="prog"></i></div>
+    <div class="row">
+      <div class="stat"><div class="k">Phase</div><div class="v small" id="phaseTxt">—</div></div>
+      <div class="stat"><div class="k">Cell</div><div class="v small" id="currentTxt">—</div></div>
+      <div class="stat"><div class="k">t (sim)</div><div class="v" id="simT">0</div></div>
+      <div class="stat"><div class="k">Progress</div><div class="v" id="progTxt">0%</div></div>
+      <div class="stat"><div class="k">Forecast</div><div class="v" id="scoreTxt">—</div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>E1 · Law R — survival vs detuning</h2>
+    <canvas id="c1" class="chart"></canvas>
+    <div class="row">
+      <div class="stat"><div class="k">peak χ*</div><div class="v" id="peakTxt">—</div></div>
+      <div class="stat"><div class="k">spread</div><div class="v" id="spreadTxt">—</div></div>
+      <div class="stat"><div class="k">bond-time</div><div class="v" id="liveBt">—</div></div>
+    </div>
+
+    <h2 style="margin-top:12px">E2 · Competition</h2>
+    <canvas id="c2" class="chart"></canvas>
+    <div class="row">
+      <div class="stat"><div class="k">variant</div><div class="v small" id="e2var">—</div></div>
+      <div class="stat"><div class="k">S_A / S_B</div><div class="v small" id="e2sb">—</div></div>
+      <div class="stat"><div class="k">gap</div><div class="v" id="e2gap">—</div></div>
+      <div class="stat"><div class="k">winner</div><div class="v" id="e2win">—</div></div>
+    </div>
+
+    <h2 style="margin-top:12px">E3 · Lock S(k_f)</h2>
+    <canvas id="c3" class="chart"></canvas>
+
+    <h2 style="margin-top:12px">Forecasts</h2>
+    <table>
+      <thead><tr><th>ID</th><th>Predicted</th><th>Observed</th><th>Result</th></tr></thead>
+      <tbody id="forecastBody">
+        <tr><td colspan="4" class="pend">waiting…</td></tr>
+      </tbody>
+    </table>
+    <h2 style="margin-top:12px">Log</h2>
+    <div id="log"></div>
+    <div class="note">3D + charts read /state every 250 ms from the running integrator (live_lab.py).</div>
+  </section>
+</main>
+<script type="importmap">
+{ "imports": {
+  "three": "https://unpkg.com/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://unpkg.com/three@0.170.0/examples/jsm/"
+}}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+// ---------- 3D scene (scientific wireframe style, project contract) ----------
+const canvas = document.getElementById('view3d');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(window.devicePixelRatio || 1);
+
+const scene = new THREE.Scene();
+scene.fog = new THREE.FogExp2(0x0a1020, 0.018);
+
+const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 200);
+camera.position.set(14, 12, 18);
+
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true;
+controls.dampingFactor = 0.06;
+controls.autoRotate = true;
+controls.autoRotateSpeed = 0.6;
+
+scene.add(new THREE.AmbientLight(0x8899bb, 0.55));
+const key = new THREE.DirectionalLight(0xffffff, 0.85);
+key.position.set(10, 20, 8);
+scene.add(key);
+const fill = new THREE.DirectionalLight(0x5ee0c5, 0.25);
+fill.position.set(-12, 6, -10);
+scene.add(fill);
+
+// ground grid
+const grid = new THREE.GridHelper(40, 40, 0x24314f, 0x1a2438);
+grid.position.y = -0.02;
+scene.add(grid);
+
+// field plane (height = field energy)
+const FN = 24;
+const planeGeo = new THREE.PlaneGeometry(24, 24, FN - 1, FN - 1);
+planeGeo.rotateX(-Math.PI / 2);
+const planeMat = new THREE.MeshBasicMaterial({
+  color: 0x6eb6ff, wireframe: true, transparent: true, opacity: 0.35,
+});
+const fieldPlane = new THREE.Mesh(planeGeo, planeMat);
+scene.add(fieldPlane);
+
+// sites (updated from live state)
+const siteGroup = new THREE.Group();
+scene.add(siteGroup);
+
+// bonds
+const bondMat = new THREE.LineBasicMaterial({ color: 0xc792ea, transparent: true, opacity: 0.9 });
+const bondGeom = new THREE.BufferGeometry();
+const bondPositions = new Float32Array(2 * 3);
+bondGeom.setAttribute('position', new THREE.BufferAttribute(bondPositions, 3));
+const bondLine = new THREE.Line(bondGeom, bondMat);
+siteGroup.add(bondLine);
+
+function makeSphere(color) {
+  return new THREE.Mesh(
+    new THREE.SphereGeometry(0.55, 24, 16),
+    new THREE.MeshStandardMaterial({
+      color, metalness: 0.25, roughness: 0.45,
+      emissive: color, emissiveIntensity: 0.15,
+    })
+  );
+}
+
+let siteMeshes = [];
+function rebuildSites(n) {
+  for (const m of siteMeshes) siteGroup.remove(m);
+  siteMeshes = [];
+  const cols = [0x5ee0c5, 0xc792ea, 0xf0b429, 0xf07178, 0x6eb6ff, 0x7fd962];
+  for (let i = 0; i < n; i++) {
+    const s = makeSphere(cols[i % cols.length]);
+    siteGroup.add(s);
+    siteMeshes.push(s);
+  }
+}
+
+function resize() {
+  const rect = canvas.getBoundingClientRect();
+  const w = Math.max(320, rect.width), h = Math.max(280, rect.height);
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+}
+
+// ---------- 2D charts ----------
+const $ = (id) => document.getElementById(id);
+
+function fitCanvas(c) {
+  const dpr = window.devicePixelRatio || 1;
+  const rect = c.getBoundingClientRect();
+  c.width = Math.max(280, rect.width * dpr);
+  c.height = Math.max(120, rect.height * dpr);
+  const ctx = c.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  return { ctx, w: rect.width, h: rect.height };
+}
+
+function axes(ctx, w, h, pad = 24) {
+  ctx.clearRect(0, 0, w, h);
+  ctx.strokeStyle = '#1a2438';
+  for (let i = 0; i <= 4; i++) {
+    const y = pad + (h - 2 * pad) * (i / 4);
+    ctx.beginPath(); ctx.moveTo(pad, y); ctx.lineTo(w - 6, y); ctx.stroke();
+    const x = pad + (w - pad - 6) * (i / 4);
+    ctx.beginPath(); ctx.moveTo(x, pad); ctx.lineTo(x, h - pad); ctx.stroke();
+  }
+  ctx.strokeStyle = '#24314f';
+  ctx.beginPath(); ctx.moveTo(pad, pad); ctx.lineTo(pad, h - pad); ctx.lineTo(w - 6, h - pad); ctx.stroke();
+}
+
+function series(ctx, xs, ys, color, w, h, pad = 24, yMin = 0, yMax = 100) {
+  if (!ys || !ys.length) return;
+  const x0 = xs[0], x1 = xs[xs.length - 1] || 1;
+  ctx.strokeStyle = color; ctx.lineWidth = 1.8; ctx.beginPath();
+  for (let i = 0; i < ys.length; i++) {
+    const x = pad + (w - pad - 6) * ((xs[i] - x0) / (x1 - x0 || 1));
+    const y = (h - pad) - (h - 2 * pad) * ((ys[i] - yMin) / (yMax - yMin || 1));
+    i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+  }
+  ctx.stroke();
+  ctx.fillStyle = color;
+  for (let i = 0; i < ys.length; i++) {
+    const x = pad + (w - pad - 6) * ((xs[i] - x0) / (x1 - x0 || 1));
+    const y = (h - pad) - (h - 2 * pad) * ((ys[i] - yMin) / (yMax - yMin || 1));
+    ctx.beginPath(); ctx.arc(x, y, 2.5, 0, Math.PI * 2); ctx.fill();
+  }
+}
+
+function drawE1(st) {
+  const { ctx, w, h } = fitCanvas($('c1'));
+  axes(ctx, w, h);
+  const chis = st.live.e1_chis || [];
+  const S = st.live.e1_S || [];
+  const Soff = st.live.e1_S_off || [];
+  series(ctx, chis.length === Soff.length ? chis : Soff.map((_, i) => i), Soff, '#f0b429', w, h);
+  series(ctx, chis.length === S.length ? chis : S.map((_, i) => i), S, '#5ee0c5', w, h);
+  if (S.length && chis.length === S.length) {
+    let bi = 0; for (let i = 1; i < S.length; i++) if (S[i] > S[bi]) bi = i;
+    $('peakTxt').textContent = chis[bi].toFixed(2);
+    $('spreadTxt').textContent = (Math.max(...S) - Math.min(...S)).toFixed(2);
+  }
+  $('liveBt').textContent = (st.live.e1_live_bond_time ?? 0).toFixed(3);
+}
+
+function drawE2(st) {
+  const { ctx, w, h } = fitCanvas($('c2'));
+  axes(ctx, w, h);
+  const hist = st.live.e2_history || [];
+  if (!hist.length) return;
+  const ts = hist.map(r => r.t);
+  series(ctx, ts, hist.map(r => r.S_A), '#5ee0c5', w, h);
+  series(ctx, ts, hist.map(r => r.S_B), '#c792ea', w, h);
+  series(ctx, ts, hist.map(r => (r.shared || 0) * 40), '#f0b429', w, h);
+  $('e2var').textContent = st.live.e2_variant || '—';
+  const a = st.live.e2_S_A ?? 0, b = st.live.e2_S_B ?? 0;
+  $('e2sb').textContent = `${a.toFixed(1)} / ${b.toFixed(1)}`;
+  $('e2gap').textContent = (Math.abs(a - b) / (a + b + 1e-9)).toFixed(3);
+  $('e2win').textContent = a === b ? 'tie' : (a > b ? 'A' : 'B');
+}
+
+function drawE3(st) {
+  const { ctx, w, h } = fitCanvas($('c3'));
+  axes(ctx, w, h);
+  const kfs = st.live.e3_kfs || [0, 0.05, 0.1, 0.2, 0.4, 0.8, 1.6, 3.2];
+  series(ctx, kfs, st.live.e3_closed || [], '#5ee0c5', w, h);
+  series(ctx, kfs, st.live.e3_driven || [], '#6eb6ff', w, h);
+  series(ctx, kfs, st.live.e3_cons || [], '#f07178', w, h);
+}
+
+function renderForecasts(st) {
+  const body = $('forecastBody');
+  const rows = [];
+  for (const exp of st.experiments || []) {
+    for (const ch of exp.score.checks) {
+      const cls = ch.passed ? 'pass' : 'miss';
+      const mark = ch.passed ? 'PASS' : 'MISS';
+      const obs = typeof ch.observed === 'object' ? JSON.stringify(ch.observed) : String(ch.observed);
+      rows.push(`<tr><td>${ch.id}</td><td>${ch.predicted}</td><td>${obs}</td><td class="${cls}">${mark}</td></tr>`);
+    }
+  }
+  body.innerHTML = rows.length
+    ? rows.join('')
+    : `<tr><td colspan="4" class="pend">waiting…</td></tr>`;
+  if (st.overall_score != null) $('scoreTxt').textContent = st.overall_score.toFixed(2);
+  $('method').textContent = 'method v' + (st.method_version || 1);
+  $('cycle').textContent = 'cycle ' + (st.cycle ?? 0);
+}
+
+// ---------- 3D update from live state ----------
+function update3D(st) {
+  const live = st.live || {};
+  // Prefer dedicated scene payload; fall back to two-site layout.
+  const sceneState = live.scene || null;
+
+  if (sceneState) {
+    const sites = sceneState.sites || [];
+    if (sites.length !== siteMeshes.length) rebuildSites(sites.length);
+    sites.forEach((s, i) => {
+      const m = siteMeshes[i];
+      m.position.set(s.x, s.y, s.z);
+      const e = Math.min(2.5, 0.45 + (s.energy || 0) * 2.2);
+      m.scale.setScalar(e);
+      m.material.emissiveIntensity = 0.12 + Math.min(0.7, (s.reservoir || 0) * 3);
+    });
+    const b = sceneState.bond;
+    if (b && b.live && sites.length >= 2) {
+      bondLine.visible = true;
+      bondPositions[0] = sites[b.a].x; bondPositions[1] = sites[b.a].y; bondPositions[2] = sites[b.a].z;
+      bondPositions[3] = sites[b.b].x; bondPositions[4] = sites[b.b].y; bondPositions[5] = sites[b.b].z;
+      bondGeom.attributes.position.needsUpdate = true;
+    } else {
+      bondLine.visible = false;
+    }
+    // field plane heights
+    const heights = sceneState.field;
+    const pos = planeGeo.attributes.position;
+    if (heights && heights.length === FN * FN) {
+      for (let i = 0; i < heights.length; i++) {
+        pos.setY(i, 0.15 + heights[i] * 2.8);
+      }
+      pos.needsUpdate = true;
+    }
+    $('simT').textContent = (sceneState.t ?? 0).toFixed(3);
+  } else {
+    // fallback: animate two sites from e1 / e2 numbers
+    if (siteMeshes.length !== 2) rebuildSites(2);
+    const t = performance.now() / 1000;
+    const bt = live.e1_live_bond_time ?? 0;
+    siteMeshes[0].position.set(-3 + Math.sin(t) * 0.15, 1.2 + Math.sin(t * 1.3) * 0.1, 0);
+    siteMeshes[1].position.set(3 + Math.cos(t) * 0.15, 1.2 + Math.cos(t * 1.1) * 0.1, 0);
+    siteMeshes[0].scale.setScalar(0.6 + Math.min(1.2, (live.e1_captured ?? 0) * 0.08));
+    siteMeshes[1].scale.setScalar(0.6 + Math.min(1.2, bt * 0.01));
+    const liveBond = bt > 0 && (st.phase || '').indexOf('E1') >= 0;
+    bondLine.visible = true;
+    bondPositions[0] = -3; bondPositions[1] = 1.2; bondPositions[2] = 0;
+    bondPositions[3] = 3; bondPositions[4] = 1.2; bondPositions[5] = 0;
+    bondGeom.attributes.position.needsUpdate = true;
+    bondMat.color.setHex(liveBond ? 0xc792ea : 0x24314f);
+    $('simT').textContent = ((st.progress || 0) * 100).toFixed(1);
+  }
+}
+
+function tick(st) {
+  $('prog').style.width = `${(100 * (st.progress || 0)).toFixed(1)}%`;
+  $('progTxt').textContent = `${(100 * (st.progress || 0)).toFixed(1)}%`;
+  $('phaseTxt').textContent = st.phase || '—';
+  $('currentTxt').textContent = st.current || '—';
+  const ph = $('phase');
+  ph.textContent = st.phase || 'starting';
+  ph.className = 'badge ' + (st.finished && (st.phase || '') === 'complete' ? 'done' : 'run');
+  drawE1(st); drawE2(st); drawE3(st); renderForecasts(st);
+  update3D(st);
+  $('log').innerHTML = (st.log || []).map(x => `<div>${x.t.slice(11, 19)}  ${x.msg}</div>`).join('');
+  $('log').scrollTop = $('log').scrollHeight;
+}
+
+async function poll() {
+  try {
+    const r = await fetch('/state', { cache: 'no-store' });
+    tick(await r.json());
+  } catch (e) { /* boot */ }
+}
+
+function animate() {
+  requestAnimationFrame(animate);
+  controls.update();
+  renderer.render(scene, camera);
+}
+
+resize();
+window.addEventListener('resize', () => { resize(); poll(); });
+$('btnAuto').onclick = () => {
+  controls.autoRotate = !controls.autoRotate;
+  $('btnAuto').textContent = 'Auto-rotate: ' + (controls.autoRotate ? 'on' : 'off');
+};
+$('btnFront').onclick = () => { camera.position.set(0, 8, 22); };
+$('btnTop').onclick = () => { camera.position.set(0, 28, 0.1); };
+$('btnSide').onclick = () => { camera.position.set(22, 8, 0); };
+
+setInterval(poll, 250);
+poll();
+animate();
+</script>
+</body>
+</html>

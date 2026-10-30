@@ -4,16 +4,47 @@
 
 Bottom-up substrate simulator. Computational neuroscience / consciousness research. The goal is developing a deadlock-breaking process, not necessarily succeeding at the simulation.
 
-## Active programme (2026-07-19) — sharp discipline
+## Active programme (2026-09-06) — Vibrasim II
 
-**Belief path.** Read first, in order:
+### Separate L0 design update (2026-09-16)
 
-1. `docs/DISCIPLINE_SHARP.md` — operating rules (one question, pre-reg, no bar retune, no smoke theater)
-2. `docs/BELIEF_PATH.md` — spine
-3. `FRONTIER.md` — board
+For experiential-learning work read `docs/amendments/G176_l0_continuous_experience_learning.md`.
+It supersedes the rejected three-tone L0 draft with a continuous-action research
+specification. The candidate kernel and evaluator are now implemented and
+technically tested; see `docs/validation/l0-20260916.md`. The subsequently authorised
+G176/G177 30-seed run is now closed NULL; see `docs/l0/AI_EXPERIMENT.md` and
+`archive/run-logs/l0/2026-09-16-observed-001/result.json`. All seeds reproduced
+exactly; independent scoring passed. Absolute learning, adaptation and retention
+bars were not met. No novelty claim or automatic follow-on run is authorised.
+Keep G176/G177 and their manifest-hashed source files unchanged. `summarize` checks numeric inputs,
+not artifact provenance; do not treat synthetic test fixtures as research evidence.
+The historical substrate constraints below still govern those programmes; G176
+is a separately described candidate, not a claim of physical emergence. No P0–P3
+rerun or automatic learning experiment is authorised by this documentation update.
+The subsequent implementation instruction covered technical tests and a non-target
+resource benchmark; it did not execute the 30-seed research matrix.
 
-Do **not** default to archive tracks (VSA/reservoir, Brian2, SA/CIM, BET-144+, GEO/LLM) unless explicitly re-admitted.
-Do **not** re-run dual-drive frequency talent (C1–C3 family). Headless default; no live 3D unless asked.
+**P3 seeded open maintenance is authorised as an engineering experiment.**
+Read `docs/amendments/v2_p3_open_maintenance.md` first. The project owner authorised this
+new programme decision on 2026-09-06. It is not evidence for emergence or the
+organisational-memory rung. V2-P2 stays closed `INCONCLUSIVE`; no P2 rerun is
+authorised. P3 has one frozen eleven-cell run, no post-data retuning.
+
+Read first, in order:
+
+1. `docs/vibrasim2/CHARTER.md` — active programme charter
+2. `docs/amendments/v2_p2_dynamic_maintenance.md` — frozen P2 contract
+3. `archive/run-logs/v2-p2/2026-09-05-observed-001/result.json` — fixed P2 verdict
+4. `docs/vibrasim2/P2_CLOSEOUT.md` — P2 evidence and stop decision
+5. `docs/superpowers/specs/2026-09-04-v2-p1-mechanism-audit-design.md` — historical P1 contract
+6. `docs/amendments/v2_p0_reciprocal_channel.md` — historical frozen P0 contract
+7. `FRONTIER.md` — live one-screen board
+8. newest entry in `LOGBOOK.md` — append-only research record
+
+Vibrasim I and the Belief Path remain preserved as history. Do not reopen them
+without an explicit programme decision. The fixed P0 and P2 datasets are closed
+for further design selection. Any 3D live view or replay is an observer, never
+evidence or a control surface.
 
 ## Hard Constraints
 

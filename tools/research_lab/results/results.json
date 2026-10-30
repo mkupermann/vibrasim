@@ -1,0 +1,280 @@
+{
+  "claim": "organisation must change the field that funds it",
+  "generated": "2026-10-20T06:41:58.655186+00:00",
+  "cycle": 340,
+  "experiments": [
+    {
+      "name": "E1_LawR",
+      "chis": [
+        -0.8,
+        -0.5,
+        -0.3,
+        -0.15,
+        0.0,
+        0.15,
+        0.3,
+        0.5,
+        0.8,
+        1.2
+      ],
+      "S": [
+        10.000000000000163,
+        10.000000000000163,
+        21.999999999999908,
+        99.94999999998159,
+        99.94999999998159,
+        99.94999999998159,
+        99.94999999998159,
+        99.94999999998159,
+        63.76700000001354,
+        20.000000000000306
+      ],
+      "S_drive_off": [
+        10.000000000000163,
+        10.000000000000163,
+        10.000000000000163,
+        10.000000000000163,
+        10.000000000000163,
+        10.000000000000163,
+        10.000000000000163,
+        10.000000000000163,
+        10.000000000000163,
+        10.000000000000163
+      ],
+      "peak_chi": -0.15,
+      "left_slope": 116.13984168863166,
+      "right_slope": -58.31464684012802,
+      "spread": 89.94999999998143,
+      "spread_drive_off": 0.0,
+      "score": {
+        "name": "E1_LawR",
+        "checks": [
+          {
+            "id": "F1.1",
+            "description": "peak |chi*| <= 0.5",
+            "passed": true,
+            "observed": -0.15,
+            "predicted": "|chi*|<=0.5",
+            "method_version": 1
+          },
+          {
+            "id": "F1.2",
+            "description": "left>0 and right<0",
+            "passed": true,
+            "observed": {
+              "left": 116.1398,
+              "right": -58.3146
+            },
+            "predicted": "left>0, right<0",
+            "method_version": 1
+          },
+          {
+            "id": "F1.3",
+            "description": "peak-trough >= 5",
+            "passed": true,
+            "observed": 89.95,
+            "predicted": ">=5",
+            "method_version": 1
+          },
+          {
+            "id": "F1.4",
+            "description": "drive-off collapses peak",
+            "passed": true,
+            "observed": 0.0,
+            "predicted": "<2",
+            "method_version": 1
+          }
+        ],
+        "method_version": 1,
+        "scored_at": "2026-10-20T06:41:13.334242+00:00",
+        "notes": "",
+        "score": 1.0,
+        "all_passed": true
+      }
+    },
+    {
+      "name": "E2_Competition",
+      "feedback_on": {
+        "A_bond_time": 60.00000000001224,
+        "B_bond_time": 20.000000000000306,
+        "share_A": 0.7500000000000261,
+        "share_B": 0.2499999999999615,
+        "share_gap": 0.5000000000000646,
+        "winner": "A",
+        "captured_A": 0.5949665354342436,
+        "captured_B": 0.25503346456556975,
+        "feedback": true,
+        "swap": false
+      },
+      "feedback_off": {
+        "A_bond_time": 40.00000000000201,
+        "B_bond_time": 40.00000000000201,
+        "share_A": 0.4999999999999938,
+        "share_B": 0.4999999999999938,
+        "share_gap": 0.0,
+        "winner": "tie",
+        "captured_A": 0.42499999999981697,
+        "captured_B": 0.42499999999981697,
+        "feedback": false,
+        "swap": false
+      },
+      "swapped": {
+        "A_bond_time": 20.000000000000306,
+        "B_bond_time": 60.00000000001224,
+        "share_A": 0.2499999999999615,
+        "share_B": 0.7500000000000261,
+        "share_gap": 0.5000000000000646,
+        "winner": "B",
+        "captured_A": 0.25503346456556975,
+        "captured_B": 0.5949665354342436,
+        "feedback": true,
+        "swap": true
+      },
+      "score": {
+        "name": "E2_Competition",
+        "checks": [
+          {
+            "id": "F2.1",
+            "description": "feedback-on share gap >= 0.15",
+            "passed": true,
+            "observed": 0.5,
+            "predicted": ">=0.15",
+            "method_version": 1
+          },
+          {
+            "id": "F2.2",
+            "description": "winner has higher captured income share",
+            "passed": true,
+            "observed": {
+              "winner": "A",
+              "winner_capture_share": 0.7
+            },
+            "predicted": ">0.5",
+            "method_version": 1
+          },
+          {
+            "id": "F2.3",
+            "description": "cut feedback shrinks gap < 0.08",
+            "passed": true,
+            "observed": 0.0,
+            "predicted": "<0.08",
+            "method_version": 1
+          },
+          {
+            "id": "F2.4",
+            "description": "swap flips ranking",
+            "passed": true,
+            "observed": {
+              "base": "A",
+              "swap": "B"
+            },
+            "predicted": "flips",
+            "method_version": 1
+          }
+        ],
+        "method_version": 1,
+        "scored_at": "2026-10-20T06:41:13.538264+00:00",
+        "notes": "",
+        "score": 1.0,
+        "all_passed": true
+      }
+    },
+    {
+      "name": "E3_Lock",
+      "kfs": [
+        0.0,
+        0.05,
+        0.1,
+        0.2,
+        0.4,
+        0.8,
+        1.6,
+        3.2
+      ],
+      "S_closed_dissipative": [
+        99.94999999998159,
+        99.94999999998159,
+        60.00000000001224,
+        40.00000000000201,
+        29.999999999998316,
+        29.999999999998316,
+        20.000000000000306,
+        20.000000000000306
+      ],
+      "S_driven_dissipative": [
+        99.94999999998159,
+        99.94999999998159,
+        99.94999999998159,
+        99.94999999998159,
+        99.94999999998159,
+        99.94999999998159,
+        99.94999999998159,
+        91.76799999998903
+      ],
+      "S_driven_conservative": [
+        99.94999999998159,
+        99.94999999998159,
+        99.94999999998159,
+        99.94999999998159,
+        99.94999999998159,
+        99.94999999998159,
+        99.94999999998159,
+        97.9629999999834
+      ],
+      "score": {
+        "name": "E3_Lock",
+        "checks": [
+          {
+            "id": "F3.1",
+            "description": "lock deltas <= 0",
+            "passed": true,
+            "observed": {
+              "max_delta": 0.0
+            },
+            "predicted": "<=0",
+            "method_version": 1
+          },
+          {
+            "id": "F3.2",
+            "description": "closed drop >= driven",
+            "passed": true,
+            "observed": {
+              "closed": 79.95,
+              "driven": 8.182
+            },
+            "predicted": "closed>=driven",
+            "method_version": 1
+          },
+          {
+            "id": "F3.3",
+            "description": "conservative S >= dissipative at some k_f>0",
+            "passed": true,
+            "observed": {
+              "cons_minus_diss": [
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                6.195
+              ]
+            },
+            "predicted": "cons-diss >= 1",
+            "method_version": 1
+          }
+        ],
+        "method_version": 1,
+        "scored_at": "2026-10-20T06:41:58.640389+00:00",
+        "notes": "",
+        "score": 1.0,
+        "all_passed": true
+      }
+    }
+  ],
+  "method_version": 1,
+  "method_notes": [
+    "v1: binary inequality checks on named metrics (FORECASTS.md)"
+  ]
+}

@@ -1,0 +1,13 @@
+{"kind":"formed","left":4,"right":5,"simulation_time":30.275000000000002,"tick":2422}
+{"kind":"expired","left":4,"right":5,"simulation_time":40.2875,"tick":3223}
+{"kind":"formed","left":0,"right":1,"simulation_time":47.587500000000006,"tick":3807}
+{"kind":"formed","left":3,"right":4,"simulation_time":51.862500000000004,"tick":4149}
+{"kind":"expired","left":0,"right":1,"simulation_time":57.6,"tick":4608}
+{"kind":"expired","left":3,"right":4,"simulation_time":61.875,"tick":4950}
+{"kind":"formed","left":4,"right":5,"simulation_time":71.10000000000001,"tick":5688}
+{"kind":"formed","left":1,"right":2,"simulation_time":73.7625,"tick":5901}
+{"kind":"expired","left":4,"right":5,"simulation_time":81.11250000000001,"tick":6489}
+{"kind":"formed","left":0,"right":5,"simulation_time":83.6875,"tick":6695}
+{"kind":"expired","left":1,"right":2,"simulation_time":83.775,"tick":6702}
+{"kind":"expired","left":0,"right":5,"simulation_time":93.7,"tick":7496}
+{"kind":"formed","left":2,"right":3,"simulation_time":99.625,"tick":7970}

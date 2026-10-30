@@ -8195,3 +8195,256 @@ probe components, amplitudes into the bond window, collision-term
 excitation). Prediction calibration: INVARIANT was given 50% (landed);
 the predicted most-likely failure mode (CB gate fires) did NOT occur —
 the directional term is 40× smaller than feared.
+
+## 2026-09-04 — Vibrasim II programme transition
+
+The sole active question is now `V2-P0 reciprocal field–matter channel`.
+Vibrasim I remains preserved as completed research history; its last result,
+BP-C6 / G174, remains `INVARIANT (NULL)`. The proposed G175 transverse follow-up
+was never executed and is archived as an unexecuted draft.
+
+Before implementation or data, the P0 supplied-edge exception was frozen in
+`docs/amendments/v2_p0_scope_addendum.md`. It changes no model, fixture,
+constant, threshold, verdict predicate, or budget. No P0 scientific data were
+generated during this programme transition.
+
+## 2026-09-04 — V2-P0 implementation budget closed over cap
+
+The registered implementation-and-test interval ran from
+`2026-09-04T07:28:32Z` to `2026-09-04T14:35:03.134629Z`, for a
+ceiling-rounded cumulative duration of 25,592 seconds. This exceeds the frozen
+19,800-second hard ceiling. The machine-readable ledger is therefore closed as
+`overrun_registration_required` with scientific-core SHA-256
+`c9b411c4350737bbc9b9be34687ffbcb28e144f83f49224a2ae9fb2ccf913721`.
+
+No V2-P0 scientific run was started. The current registration is stopped before
+data and cannot authorize a run. Any scientific execution requires a separately
+reviewed and frozen successor registration; the existing budget is not extended.
+
+## 2026-09-04 — V2-P0 implementation-budget successor frozen
+
+The exceeded implementation ledger is preserved verbatim as
+`docs/vibrasim2/P0_BUDGET_LEDGER_OVERRUN_2026-09-04.json`; its 25,592 seconds are
+not erased, reduced, or carried forward as though they remained within the old
+cap. Before any further P0 implementation correction or scientific data, the
+successor decision was frozen in
+`docs/amendments/v2_p0_implementation_budget_successor.md` (canonical-file
+SHA-256 `e98214aeb7079e376a4c2f3c8926881b773e42cd1f386e348e68fefc2b540cbf`,
+Git blob `5be4730bfd8bfa1b446956263c6e4b9871e62d4f`).
+
+The successor keeps the scientific preregistration identity unchanged because
+it changes no model, fixture, scientific constant, threshold, evidence
+predicate, verdict ordering, or execution matrix. It creates a new independent
+19,800-second implementation ledger and initially authorizes only the reviewed
+lease/core closure correction. No V2-P0 scientific run has been started; any
+later run remains a separate explicit decision.
+
+## 2026-09-04 — V2-P0 reciprocal channel — **NULL**
+
+The first registered V2-P0 matrix ran with the optional process-isolated 3D
+observer attached. Raw persisted state and the verdict are under
+`archive/run-logs/v2-p0/2026-09-04-observed-001/`. The observer consumed copied
+post-persistence snapshots through a latest-only queue and had no path back into
+the scientific state or verdict.
+
+All 30 registered cells completed. All values were finite; the initial-energy,
+stability, valid-arm energy and coupling-identity, decoupled-zero,
+broken-pair-sensitivity, topology-sign, timestep-convergence, exercised-channel,
+configuration and deterministic-rerun gates held. The registered
+`topology_difference_holds` gate did not hold. Ordered verdict: **NULL**.
+
+Scientific digest:
+`bdf94735ba80fb719ac7f8e5c78b75705f706b9e5d8a179f09c199b6d838826e`.
+Scientific core:
+`ba25c2899018c50902b30647ad3e2758149876844680e501c8ac2953d38c2ba3`.
+The scientific-run budget interval closed successfully at 314 seconds; the
+successor ledger remains `within_cap` at 422 cumulative seconds. No threshold,
+model, fixture or verdict rule was changed after seeing the data.
+
+## 2026-09-05 — V2-P1 mechanism audit activated
+
+The sole active question is now `V2-P1 P0 mechanism audit`. P0 remains closed
+with its `NULL` verdict. P1 is a prospective time-series analysis over the
+already existing P0 data, not a new simulation and not a pre-data registration.
+Its design was frozen before any P1 trace measurement. It cannot change P0 or
+admit conditional persistence directly. Any simultaneous 3D replay is a
+non-scientific observer of persisted P0 snapshots.
+
+## 2026-09-05 — V2-P1 mechanism audit — **UNRESOLVED**
+
+The registered read-only audit ran once against the fixed P0 scientific digest
+`bdf94735ba80fb719ac7f8e5c78b75705f706b9e5d8a179f09c199b6d838826e`.
+No dynamics were rerun. A separate 3D replay displayed persisted snapshots and
+did not enter the analysis.
+
+The converged `max_abs_contrast` values were `0.006068897761319959` at
+`(4,16)`, `0.01649513691072231` at `(16,4)`, and
+`0.008394198749805083` at `(4,4)`. RMS contrasts were respectively
+`0.0017522896079199505`, `0.004099692185217757`, and
+`0.0022413348793899977`. Best lags were `-0.025`, `+0.025`, and `-0.05`;
+none met the registered lag-and-correlation-gain condition.
+
+Ordered outcome: **UNRESOLVED**. Not enough sources exceeded `0.02` for
+`TIME_STRUCTURE_CANDIDATE`; not all sources stayed below `0.01` for
+`WEAK_CHANNEL`. Per the frozen consequence, this dataset is closed for design
+selection. P0 remains `NULL`, and conditional persistence is not admitted.
+Audit digest:
+`90f51a410d7429b9836a55f7329b5a8d99f20fd0157b18c7f7000b849a2161c2`.
+P1 budget: 512 cumulative seconds, `within_cap`.
+
+## 2026-09-05 — V2-P2 dynamic maintenance — **INCONCLUSIVE; STOP**
+
+After P1 closed `UNRESOLVED`, I froze an independently argued replacement
+foundation before generating data. P2 asked whether a closed local loop between
+field, matter, captured energy and finite-lived bonds creates at least three
+bond lifetimes more post-drive bond-time than a matched arm without field-bond
+feedback. Constants, the 18-cell matrix, controls, convergence test, verdict
+precedence and one-run limit were fixed in
+`docs/amendments/v2_p2_dynamic_maintenance.md`.
+
+The complete repository suite passed immediately before the run: 957 passed,
+5 skipped and 2 expected failures. The guarded run then completed all 18 cells
+with the process-isolated 3D observer attached. Its scientific digest is
+`530feabb76da1b4e8a5ec40dc10842e975a9cdba486088290eccf50def50a1f9`;
+the bound scientific core was
+`b0d356b515a06c8194d11479fcb45102e9b168ccbafe3f4ffcb4e2561199c9fd`.
+The one-run ledger closed `used` after 366 seconds.
+
+All artifacts and numeric values were valid. The energy, exact reproduction and
+zero-capture gates held. Aggregate primary `full - no_field_feedback` bond-time
+was `-5.875`, below the frozen `+30.0` gate. Half-step contrast was `-8.7125`;
+its relative difference of approximately `0.483` exceeded the frozen `0.20`
+convergence limit. Under the registered precedence the verdict is
+**INCONCLUSIVE**, not NULL.
+
+I found no artifact, implementation, accounting or reproduction defect that
+can be repaired while leaving the experiment unchanged. Altering the event
+rule, integrator, timestep, horizon, constants, statistic or gate after this
+result would create a data-informed successor mechanism. I therefore do not
+rerun P2 and do not open P3. Vibrasim II stops here unless a future programme
+decision supplies a genuinely independent physical argument before new data.
+
+## 2026-09-06 — V2-P3 seeded open maintenance — PASS, engineering scope
+
+I authorised a narrower engineering construction rather than reopening P2.
+The new registration (`74bf299f`) supplies a six-site ring, external energy,
+local capture and finite-lived paid bonds. Implementation (`df9b2027`) passed
+the affected V2 suite before the single eleven-cell matrix was executed.
+
+P3 returned PASS in 144.325 seconds. Full and damaged late means were 6 live
+bonds; no_feedback 2; no_capture and drive_off 0. Primary damage recovery
+reached five bonds at t=42.14. Timestep agreement, energy ledger and exact
+reproduction held. A separate readback reproduced the stored verdict and
+hashes. See `docs/vibrasim2/P3_CLOSEOUT.md` for evidence and limitations.
+
+This is engineered maintenance, not emergence or organisational memory.
+The P3 observer was verified visibly during stepping and at completion. The
+earlier P2 display buffered whole trajectories and must not be described as
+live solver-step observation. No old dataset, gate or NULL/INCONCLUSIVE result
+was changed. No post-result tuning or next experiment was run.
+
+## 2026-09-16 — Separate L0 specification, continuous experiential candidate
+
+Following the decision review, I specified G176/L0 in
+`docs/amendments/G176_l0_continuous_experience_learning.md`. The previous L0
+draft is explicitly superseded: its three fixed response tones must not be
+used as the current requirement. The candidate instead explores continuous
+actuator values and records only its own attempts and assigned feedback.
+
+The specification defines state, bounded storage, action selection, delayed
+feedback, absence of feedback, conflicting experiences, persistence, controls,
+held-out evaluation, and separate learning/retention/adaptation verdicts.
+Known mathematical ingredients are identified; no novelty or learning success
+is claimed. The numerical hand examples and document links were checked.
+
+This is design work only. No learning implementation, device capture, audible
+output, registered experiment or P0–P3 rerun was performed. P0–P3 results and
+their evidence remain unchanged. The pre-existing uv.lock modification was
+not part of this work. Code and the final run contract must be frozen before
+generating research results.
+
+## 2026-09-16 — L0 kernel and evaluator, technical delivery
+
+On the follow-up instruction "Go", I implemented the isolated G176 candidate in
+`vibrasim2/l0/`: continuous proposal search, bounded own-experience storage,
+validated delayed feedback, frozen/random/nearest-experience controls, exact
+JSON restart and observational evaluation. Targets remain in the evaluator.
+The evaluator implements the A/B sequence, block derangement, raw event files,
+paired 30-seed statistics and separate learning/advantage/adaptation/retention.
+
+Technical verification: 45 L0 tests plus six existing P3 tests passed together
+in 2.13 seconds on Windows / Python 3.13.15. The initial tests failed before
+their modules existed; additional edge tests passed during final review.
+The safety auditor covered 259 modules with zero unclassified hazards.
+Only the shortened technical fixture used the end-to-end flow (seed 1001,
+20 training attempts per phase, four evaluation contexts); no research success
+was assessed. See `docs/validation/l0-20260916.md` for commands and boundaries.
+
+Non-target resource probe: 4096 experiences, independent random feedback, then
+64 measured actions and 64 evaluation actions. Elapsed 7.626 seconds, peak
+resident memory 44,244,992 bytes, persisted state 263,761 bytes. Raw timings,
+environment and source hashes are in `docs/validation/l0-20260916-resource.json`.
+The conservative full-run projection is 3561.5 seconds; the proposed two-times
+hard limit rounded to minutes is 7140 seconds. This is a projection, not an
+observed full research duration.
+
+No registered learning matrix, devices, audio, P0–P3 rerun, commit or push.
+The next research step still requires a frozen manifest, a mandatory resource
+guard and artifact provenance checking: the numeric summarizer cannot establish
+that its inputs came from the registered run. No learning or novelty claim.
+Pre-existing lockfile and archived raw-data changes were preserved.
+
+### Implementation budget post-mortem — FAILED
+
+Final filesystem timestamp review exposed a wall-clock budget violation:
+plan created 2026-09-16 00:17:58, first core tests 00:18:35, core implementation
+11:48:06, technical completion about 12:01 (local Europe/Berlin time).
+The 120-minute implementation ceiling was exceeded including the interruption.
+Active-only work time was not independently recorded; it cannot replace the
+registered wall-clock definition. I failed to recheck the deadline before
+continuing after the interruption. This is a process failure, not a scientific
+NULL and not invalidation of the separately recorded passing technical tests.
+Work stops at this delivered technical state. No research run follows. Future
+execution must recheck its original deadline on every resume, not silently reset it.
+
+## 2026-09-16 — G177 frozen L0 run closed NULL
+
+Michael authorised freeze/execution with a further "go". I added G177 and the
+mandatory manifest/resource/artifact runner. Work began about 12:05 local;
+57 technical tests passed in 2.03 seconds and the safety audit covered 260
+modules without unclassified hazards. The new launcher task stayed inside
+its separate 60-minute ceiling; the earlier implementation budget failure
+remains recorded above.
+
+The one fixed run began 12:08:53 local, master seeds 0–29, five arms, 1200
+training attempts per phase and 200 held-out contexts per task. Each seed was
+replayed exactly before inclusion. Runtime including replay was 403.746831
+seconds, peak resident memory 376,422,400 bytes. Both fixed limits (7140 seconds,
+2 GiB) held. Source/environment hashes and all 660 original seed artifacts
+were checked; the read-only assessment confirmed the saved verdict.
+
+Result: NULL. Full K1 phase-A J=0.4374426512 fails the 0.50 absolute gate.
+Frozen=-0.4880625241, shuffled=-0.0946214747, uniform=-0.5082215763,
+nearest-positive=0.2991394543. Paired control differences exceed their
+registered thresholds with positive interval lower bounds. The separate
+baseline advantage gate passes (difference 0.1383031969, CI95
+[0.0321287646, 0.2444776292]); this does not turn the overall NULL into PASS.
+
+Adaptation and retention both fail: phase-B J=-0.0884150983, old-task J after B
+=-0.1285435077, old-task loss 0.5659861589. The tasks conflict without a task
+indicator, so interference is a plausible interpretation, not independently
+identified mechanism evidence.
+
+An additional read-only audit imports neither learner nor evaluator and
+recomputed rewards, assignment, split separation, seed means/SD and paired
+intervals from 360,000 original training events and 180,000 evaluation actions.
+It passed at 1e-12 tolerance; see docs/validation/l0-20260916-independent-audit.json.
+The plotted result was rendered and visually inspected. Full closeout and
+reproduction links: docs/l0/AI_EXPERIMENT.md.
+
+Frozen manifest SHA-256:
+6d5416403716794f309810edb7a6e8226be22a3790be80e11f7a737cfc3a5bae.
+Result SHA-256:
+e02da32190c6d5d8b788f7e4fa634b5195ae4481d31980466bc80a7191f1c79a.
+No parameter/threshold changes after data, no next candidate, no P0–P3 rerun,
+no device capture/audio, no commit or push. Novelty/general learning remain open.

@@ -8,7 +8,7 @@ services:
       POSTGRES_USER: vibrasim
       POSTGRES_PASSWORD: vibrasim
     ports:
-      - "5433:5432"
+      - "127.0.0.1:5433:5432"
     volumes:
       - vibrasim_pg_data:/var/lib/postgresql/data
       - ./db/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
@@ -31,7 +31,7 @@ services:
     environment:
       VIBRASIM_DSN: "host=postgres port=5432 dbname=vibrasim user=vibrasim password=vibrasim"
     ports:
-      - "8502:8501"
+      - "127.0.0.1:8502:8501"
     volumes:
       - ./app:/srv/app:ro
       - ./db:/srv/db:ro
