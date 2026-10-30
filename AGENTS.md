@@ -25,7 +25,7 @@ The subsequent implementation instruction covered technical tests and a non-targ
 resource benchmark; it did not execute the 30-seed research matrix.
 
 **P3 seeded open maintenance is authorised as an engineering experiment.**
-Read `docs/amendments/v2_p3_open_maintenance.md` first. Michael authorised this
+Read `docs/amendments/v2_p3_open_maintenance.md` first. The project owner authorised this
 new programme decision on 2026-09-06. It is not evidence for emergence or the
 organisational-memory rung. V2-P2 stays closed `INCONCLUSIVE`; no P2 rerun is
 authorised. P3 has one frozen eleven-cell run, no post-data retuning.

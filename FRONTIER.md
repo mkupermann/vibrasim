@@ -58,7 +58,7 @@ failed the frozen `0.20` convergence gate. The ordered verdict is therefore
   hold; energy, negative control and reproduction did hold.
 - The visual layer is an observer of persisted state, not evidence and not a
   claim that the wireframe is physical 3D space.
-- Michael authorised P3 on 2026-09-06 as an explicitly engineered transport
+- The project owner authorised P3 on 2026-09-06 as an explicitly engineered transport
   model, not a physical emergence claim or a repair of P2. No parameter search
   or automatic escalation to P100 is authorised by this experiment.
 
